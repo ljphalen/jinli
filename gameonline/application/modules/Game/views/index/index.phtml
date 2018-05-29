@@ -1,0 +1,238 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div id="page">
+		<a name="top"></a>
+		<header class="hd">
+			<?php if($bannel) {
+		       if( $bannel['ad_ptype'] == 1){
+		       	  $tid ='GID';
+		       } else if($bannel['ad_ptype'] == 2){
+		       	  $tid ='CID';
+		       } else if($bannel['ad_ptype'] == 3){
+		       	  $tid ='SID';
+		       } ?>
+		    <a style="display:none;" href="<?php echo Common::tjurl($tjUrl, $bannel['id'], 'AD11', $bannel['link'], '');?>&t_bi=<?php echo $source;?>"><img src="<?php echo $attachPath.$bannel['img'];?>" alt="">
+		    	<?php } ?>
+		   <div class="top-banner">
+		    <a class="search" href="<?php echo $webroot.'/search/index?stype=1&t_bi='.$source;?>"></a></a>
+		    </div>
+			
+			<nav>
+				<ul>
+					<li class="selected"><a  href="<?php echo $webroot.'?t_bi='.$source;?>">首页</a></li>
+					<li><a href="<?php echo $webroot.'/category/?t_bi='.$source;?>">分类</a></li>
+					<li><a href="<?php echo $webroot.'/subject/?t_bi='.$source;?>">专题</a></li>
+					<li><a href="<?php echo $webroot.'/rank/?flag='.$configs['game_client_rank'].'&t_bi='.$source;?>">排行</a></li>
+				</ul>
+			</nav>
+		</header>
+
+		<article class="ac">
+		    <?php if($ads){?>
+			<div class="slide-pic J_slidePic">
+				<div class="slideWrap">
+					<div class="pic">
+						<?php foreach($ads as $key=>$value) {
+							if( $value['ad_ptype'] == 1){
+								$tid ='GID';
+							} else if($value['ad_ptype'] == 2){
+								$tid ='CID';
+							} else if($value['ad_ptype'] == 3){
+								$tid ='SID';
+							}
+							$uaid = substr($value['link'],strpos($value['link'],'=')+1);
+						?>
+						<li>
+							 <a href="<?php echo Common::tjurl($tjUrl, $value['id'], 'AD2'.($key+1).'_'.'ADID'.$value['id'].'_'.$tid.$uaid, $value['link'], 'AD2'.($key+1).'_'.'ADID'.$value['id'].'_'.$tid.$uaid);?>&t_bi=<?php echo $source;?>"><img data-src="<?php echo $attachPath.$value['img'];?>" src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="<?php echo $value['name']?>" /></a>
+						</li>
+					   <?php } ?>
+					</div>
+				</div>
+				<div class="handle">
+				<?php foreach($ads as $key=>$value) {?>
+					<span class="<?php echo $key == 0? 'on':'';?>"></span>
+				<?php } ?>
+				</div>
+			</div>
+			<?php } ?>
+			
+			<?php if($games){?>
+			<div class="item-box list">
+				<h2>推荐游戏</h2>
+				<ul>
+					<?php foreach($games as $key=>$value) {?>
+					<?php foreach($value as $k=>$val) {
+						if( $val['ad_ptype'] == 1){
+							$tid ='GID';
+						} else if($val['ad_ptype'] == 2){
+							$tid ='CID';
+						} else if($val['ad_ptype'] == 3){
+							$tid ='SID';
+						}
+						$taid = substr($val['link'],strpos($val['link'],'=')+1);
+					?>
+					<li>
+						<a href="<?php echo Common::tjurl($tjUrl, $val['id'], 'AD4'.($key).($k+1).'_'.'ADID'.$val['id'].'_'.$tid.$taid, $val['link'],'AD4'.($key).($k+1).'_'.'ADID'.$val['id'].'_'.$tid.$taid);?>&t_bi=<?php echo $source;?>">
+							<div class="pic">
+								<img data-src="<?php echo $attachPath. $val['img'];?>" src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="<?php echo $val['title'];?>">
+							</div>
+							<div class="desc"><?php echo $val['title'];?></div>
+						</a>
+					</li>
+					<?php }?>
+					<?php }?>
+				</ul>
+			</div>
+			<?php }?>
+			
+            <!--  <div class="line"><span></span></div> -->
+            <?php if($bannel){?>
+            <div style="margin:.5rem .6rem">
+				<a style="width:23rem"  href="<?php echo Common::tjurl($tjUrl, $bannel['id'], 'AD11', $bannel['link'], '');?>&t_bi=<?php echo $source;?>">
+				<img style="width:23rem;" src="<?php echo $attachPath.$bannel['img'];?>" alt=""></a>
+			</div>
+			<?php }?>
+			
+			<?php if($newgames) {?>
+			<div class="item-box list">
+				<h2>最新游戏</h2>
+				<ul>
+				  <?php 
+					      if(count($newgames) % 4 == 0){
+					      	 $num =  count($newgames) -1;
+					      } else {
+					      	 $num = (intval(count($newgames) / 4)) * 4 - 1;
+					      }
+					?>
+					<?php foreach($newgames as $k=>$val) {?>
+					<?php  if($k <= $num) { ?>
+					<li>
+						<a href="<?php echo Common::tjurl($tjUrl, $val['id'], 'AD5'.($key).($k+1).'_'.'ADID'.$val['id'].'_'.'GID'.$val['id'], $webroot.'/index/detail/?id='.$val['id'],'AD5'.($key).($k+1).'_'.'ADID'.$val['id'].'_'.'GID'.$val['id']);?>&t_bi=<?php echo $source;?>">
+							<div class="pic">
+								<img data-src="<?php echo $val['big_img'] ? $val['big_img']: ($val['mid_img'] ? $val['mid_img'] : $val['img']);?>" src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="<?php echo $val['title'];?>">
+							</div>
+							<div class="desc"><?php echo $val['name'];?></div>
+						</a>
+					</li>
+					<?php }}?>
+				</ul>
+			</div>
+			<?php }?>
+			
+			<div class="line"><span></span></div>
+			<?php if($news){?>
+			<div class="item-list dynamicinfo">
+				<h2>资讯动态</h2>
+				<ul>
+				<?php foreach($news as $key=>$value) {?>
+					<li>
+					<?php 
+						if ($value['ntype'] == 1) $adtype = 'ZX';
+						if ($value['ntype'] == 3) $adtype = 'HD';
+					?>
+						<a class="detail" href="<?php echo Common::tjurl($tjUrl, $value['id'], 'AD8'.($key+1).'_'.$adtype.$value['id'], $webroot.'/news/detail?id='.$value['id'],'AD8'.($key+1).'_'.$adtype.$value['id']);?>&t_bi=<?php echo $source;?>">
+							<div class="desc">
+							<span class="title">
+								<?php echo $type[$value['ntype']];?>															
+								<span class="split">|</span>
+								</span>
+								<h3><?php echo $value['title'];?></h3>
+							</div>
+						</a>
+					</li>
+					<?php }?>
+				</ul>
+				<a href="<?php echo $webroot.'/news/index?t_bi='.$source;?>">
+					<div class="load-more">
+						<span>新闻中心</span>
+					</div>
+				</a>
+			</div>
+			<div class="line"><span></span></div>
+			<?php }?>
+			<?php if($evaluation){?>
+			<div class="item-list evaluate">
+				<h2>热门点评</h2>
+				<ul>
+				<?php $k = 1;?>
+				<?php foreach($evaluation as $key=>$value) {?>
+					<?php 
+						if ($k<=3) {
+							if($tjnews[$value['n_id']]) {
+					?>
+					<li>
+						<a class="detail" href="<?php echo Common::tjurl($tjUrl, $value['id'], 'AD7'.($key+1).'_'.'ADID'.$value['id'].'_'.'PC'.$value['n_id'], $webroot.'/evaluation/detail?id='.$value['n_id'],'AD7'.($key+1).'_'.'ADID'.$value['id'].'_'.'PC'.$value['n_id']);?>&t_bi=<?php echo $source;?>">
+							<div class="pic">
+								<img data-src="<?php echo $tjnews[$value['n_id']]['ctype'] == 2 ? $attachPath.$tjnews[$value['n_id']]['thumb_img'] : $tjnews[$value['n_id']]['thumb_img'];?>" src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="<?php echo $tjnews[$value['n_id']]['title'];?>">
+							</div>
+							<div class="desc">
+								<h3><?php echo $tjnews[$value['n_id']]['title'];?></h3>
+								<p><?php echo $tjnews[$value['n_id']]['resume'];?></p>
+							</div>
+						</a>
+					</li>
+					<?php
+						$k++;
+					   	}
+					  }
+					}?>
+				</ul>
+				<a href="<?php echo $webroot.'/evaluation/index?t_bi='.$source;?>">
+					<div class="load-more">
+						<span>评测中心</span>
+					</div>
+				</a>
+			</div>
+			<div class="line"><span></span></div>
+			<?php }?>
+			
+			<?php if($subjects){?>
+			<div class="item-box topic">
+				<h2>推荐专题</h2>
+				<ul>
+					<?php foreach($subjects as $key=>$value) {
+						if( $value['ad_ptype'] == 1){
+							$tid ='GID';
+						} else if($value['ad_ptype'] == 2){
+							$tid ='CID';
+						} else if($value['ad_ptype'] == 3){
+							$tid ='SID';
+						}
+						$aid = substr($value['link'],strpos($value['link'],'=')+1);
+					?>
+					<li>
+						<a href="<?php echo Common::tjurl($tjUrl, $value['id'], 'AD3'.($key+1).'_'.'ADID'.$value['id'].'_'.$tid.$aid, $value['link'], 'AD3'.($key+1).'_'.'ADID'.$value['id'].'_'.$tid.$aid);?>&t_bi=<?php echo $source;?>">
+							<div class="pic">
+								<img data-src="<?php echo $attachPath. $value['img'];?>" src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="<?php echo $value['title'];?>">
+							</div>
+							<div class="desc"></div>
+						</a>
+					</li>
+					<?php }?>
+				</ul>
+			</div>
+			<?php }?>
+
+		</article>
+        
+        <div class="goTop J_gotoTop">
+			<a ></a>
+		</div>
+		<footer class="ft">
+			<div class="wchat" >
+				<img src="<?php echo $staticResPath;?>/pic/wechat.png" alt="" />
+				<div>
+				<p>欢迎关注我们的微信公众帐号！</p>
+				<p>微信号：JXH-20121220</p>
+			    </div>
+			</div>
+			<div class="quick-links">
+				<a href="<?php echo $webroot.'/contact?t_bi='.$source;?>">联系我们</a>
+				<a href="<?php echo $webroot.'/feedback?t_bi='.$source;?>">意见反馈</a>
+				<a href="<?php echo strpos($configs['game_link'], '?') == false ? $configs['game_link'].'&t_bi='.$source :$configs['game_link'].'?t_bi='.$source;?>"><?php echo $configs['game_title'];?></a>
+			</div>
+		</footer>
+	</div>
+</body>
+<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

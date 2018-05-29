@@ -1,0 +1,78 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $indexUrl;?>?brand_id=<?php echo $info['brand_id'];?>">品牌商品列表</a></li>
+	    <li class="current"><a href="javascript:;">修改品牌商品</a></li>
+	</ul>
+</div>
+<div class="h_a">修改品牌商品</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+	<input name="num_iid" value="<?php echo $info['num_iid'];?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort'];?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">名称</th>
+				<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title'];?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">所属品牌</th>
+				<td class="td">
+				<select name="brand_id">
+					<option value="">请选择品牌</option>
+					<?php foreach($brand_list as $value) {?>				
+	                <option value="<?php echo $value['id'];?>" <?php if($info['brand_id'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['title'];?></option>
+					<?php }?>
+	           	</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">商品图片</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="AdImg">
+							<img src="<?php if(strpos($info['img'], 'http://') === false) {echo $attachPath,$info['img'];}else{echo $info['img'],'_120x120.',end(explode(".",  $info['img']));};?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>">
+						</li>
+					</ul>
+			</tr>
+			<tr class="tr">
+				<th class="th">起止时间</th>
+				<td class="td">
+					<div>
+						<input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $info['start_time']);?>" /> 至 
+						<input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s', $info['end_time']);?>" />
+					</div>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td">
+					<select class="wa" name="status">
+						<option value="1" <?php echo $info['status'] == 1 ? 'selected="selected"' : '';?>>上架</option>
+						<option value="2" <?php echo $info['status'] == 2 ? 'selected="selected"' : '';?>>下架</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//商品表单数据提交
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+    $('#end_time').datetimepicker();
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $indexUrl . '?s=1&brand_id=' . $info['brand_id'];?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,47 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">用户列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+			<th class="th">USERID</th>
+			<td class="td"><input class="input wb" type="text" name="out_uid" value="<?php echo $param['out_uid'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">ID</td>
+			<td>USERID</td>
+			<td>银币</td>
+			<td>冻结银币</td>
+			<td>金币</td>
+			<td>冻结金币</td>
+			<td>创建时间</td>
+		</tr>
+<?php foreach($users as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['out_uid'];?></td>
+			<td><?php echo $value['silver_coin'];?></td>
+			<td><?php echo $value['freeze_silver_coin'];?></td>
+			<td><?php echo $value['gold_coin'];?></td>
+			<td><?php echo $value['freeze_gold_coin'];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

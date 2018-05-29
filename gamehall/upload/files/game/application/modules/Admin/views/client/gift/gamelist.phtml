@@ -1,0 +1,68 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li class="current"><a href="<?php echo $gameListUrl;?>">游戏列表</a></li>
+        <li ><a href="<?php echo $privilegeGiftListUrl;?>">特权礼包</a></li>
+	</ul>
+</div>
+<form action="<?php echo $gameListUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr">
+			<th class="th">游戏ID</th>
+			<td class="td"><input type="text" class="input" name="game_id" value="<?php echo $s['game_id'];?>"></td>
+			<th class="th">游戏名称关键字</th>
+			<td class="td"><input type="text" class="input" name="title" value="<?php echo $s['title'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateGameListUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('sort');" type="submit">重新排序</button></span></span>
+   <!--   <span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">开启</button></span></span>
+    <span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">关闭</button></span></span>
+    --><span class="btn2"><span><a href="<?php echo $addUrl; ?>">添加礼包</a></span></span>
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td >排序</td>
+			<td >游戏ID</td>
+			<td >游戏名称</td>
+			<td >礼包数量（有效/总量）</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $value['game_id'];?>" type="checkbox"></td>
+			<td><input type="text" class="input" style="width:30px" name="sort[<?php echo $value['game_id'];?>]" value="<?php echo $value['game_sort'];?>"></td>
+			<td><?php echo $value['game_id'];?></td>
+			<td><?php echo $gameName[$value['game_id']];?></td>
+			<td><?php echo $remainGiftNum[$value['game_id']].'/'.$value['giftNum'];?></td>
+			<td>
+			<a href="<?php echo $listByGameUrl;?>/?game_id=<?php echo $value['game_id'];?>" class="mr10">礼包管理</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script>
+$(document).ready(function(){
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Client_Gift/gamelist');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

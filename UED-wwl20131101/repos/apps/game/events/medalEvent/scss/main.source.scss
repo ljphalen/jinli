@@ -1,0 +1,607 @@
+@charset "utf-8";
+@import "compass/css3";
+@import "reset";
+
+$bgColor:#ffbf4f;
+$fontColor:#ac651a;
+$prizeContainerBg:#fff;
+$btnBgImg:"../img/btn_bg.png";
+$btnBgImg-ex:"../img/btn_bg_exchange.png";
+$btnBgImg-disable:"../img/btn_bg_disable.png";
+$radius-s:4px;
+
+
+body{background: $bgColor;}
+
+.header,[class^="pic-container"],.footer{
+	img{
+		width: 100%;
+		max-height:80px;
+	}
+	img[src$="blank.gif"]{
+		background-image:inline-image("../img/default_bg_v2.png") !important;
+		background-color:#e1e1e1!important;
+		background-size:2.8rem 2.8rem !important;
+		background-repeat: no-repeat;
+		background-position: center center;
+	}
+}
+.pic-container-ac{
+	img{
+		max-height: 158px;
+	}
+}
+.header img{
+	max-height:220px;
+}
+.footer img{
+	max-height:125px;
+}
+.btn{
+	width: 100%;
+	background:url($btnBgImg);
+	display: block;
+	text-align:center;
+	height: 30px;
+	line-height:30px;
+	background-size:100% 100%;
+	font-size:13px;
+	color:$fontColor;
+	letter-spacing:1px;
+	border:0px ;
+}
+.btn-exchange{
+	background:url($btnBgImg-ex);
+	background-size:100% 100%;
+	color: #ff8008;
+}
+.btn-disable{
+	background:url($btnBgImg-disable);
+	background-size:100% 100%;
+	color: #fff;
+}
+.link{
+	text-decoration:underline;
+	color:#278bfb;
+	font-size:14px;
+	letter-spacing:1px;
+	&:hover{
+		color: #278bfb;
+	}
+}
+.title{
+	color: $fontColor;
+	font-size:20px; 
+	display: block;
+	font-weight: bold;
+}
+.sub-title{
+	@extend .title;
+	font-size:15px;
+}
+.omit{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.underline{
+	text-decoration:underline!important;
+}
+
+.prize-container,.medal-container,.notice-container,.rule-container,.address-info-container{
+	margin:0 5px;
+	background:$prizeContainerBg;
+	@include border-radius($radius-s);
+}
+
+//奖品兑换
+.prize-container{
+	padding-top:10px;
+	overflow: hidden;
+	position: relative;
+	.exchange-rule{
+		position: absolute;
+		right: 20px;
+		top:12px;
+	}
+	.prize-list{
+		margin:0 10px 16px 10px;
+		overflow: hidden;
+	}
+	li{
+		float: left;
+		width:30%;
+		margin-right:5%;
+		margin-top: 27px;
+		&:nth-child(3n) {
+			margin-right: 0;
+		}
+		.leftNum{
+			display: block;
+			text-align: center;
+			margin:5px auto 7px;
+			font-size: 11px;
+			color: #000;
+		}
+		.pic{
+			width: 88px;
+			height: 88px;
+			margin:0 auto;
+		}
+	}
+}
+
+//我的成就
+.medal-container{
+	padding:12px 10px;
+	position: relative;
+	.download-tips{
+		font-size: 12px;
+		color:#ff4444;
+		display: block;
+		margin-top: 10px;
+	}
+	.login-tips{
+		position: absolute;
+		top:20px;
+		right: 10px;
+		text-decoration:none;
+		color:#278bfb;
+		font-size:14px;
+		letter-spacing:1px;
+		&:hover{
+			color: #278bfb;
+		}
+	}
+	.medal-list-wrapper{
+		margin-top: 15px;
+		position: relative;
+		.medal-num{
+			position: absolute;
+			right: 10px;
+			top:0px
+		}
+	}
+	.medal-img-container{
+		margin-top: 10px;
+		/* img{
+			max-height: 60px;
+			max-width: 60px;
+		} */
+	}
+	li{
+		float: left;
+		width: 22%;
+		margin-right: 4%;
+		position: relative;
+		&:nth-child(4n){
+			margin-right: 0;
+		}
+		.pic{
+			width: 60px;
+			height: 60px;
+		}
+		.corner{
+			position: absolute;
+			background:#ff4444;
+			color: #fff;
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+			line-height: 20px;
+			font-size: 10px;
+			text-align:center;
+			@include border-radius(20px);
+			left: 50px;
+			top:-5px;
+			z-index: 99;
+		}
+	}
+	.unavailabile{
+		/* .corner{
+			display: none;
+		} */
+		/* img{
+			filter: gray; 
+			filter: grayscale(100%); 
+			-webkit-filter: grayscale(1);
+			-webkit-filter: grayscale(100%);
+			-moz-filter: grayscale(100%);
+		    -o-filter: grayscale(100%);
+		} */
+	}
+}
+//兑换榜单
+.notice-container{
+	.title{
+		padding:16px 0px 16px 10px;
+		position: relative;
+		&:after{
+			content: '';
+			position: absolute;
+			width: 100%;
+			height: 8px;
+			background:inline-image("../img/icon-vein.png");
+			background-repeat:repeat-x;
+			background-size:15px 100%;
+			left: 0;
+			bottom:0;
+		}
+	}
+	.sub-title{
+		&:after{
+			content: '';
+			width: 0;
+		}
+	}
+	li{
+		background:#ffe869;
+		overflow: hidden;
+		font-size: 13px;
+		color: $fontColor;
+		.nickname-container{
+			position: relative;
+		}
+		div{
+			float: left;
+			width: 29%;
+			height: 40px;
+			margin-left:2%;
+			margin-right: 2%;
+			line-height: 40px;
+			&:nth-child(1){
+				width: 28%;
+				margin-left: 0;
+				padding-left:4%;
+			}
+			&:nth-child(2){
+				text-align: center;
+			}
+		}
+		&:nth-child(2n){
+			background:#fff372;
+		}
+		.nickname, .prop,.prize{
+			padding:0;
+		}
+		.circle{
+			width: 22px;
+			height: 22px;
+			display: inline-block;
+			color: #adadad;
+			background:#fff;
+			@include border-radius(22px);
+			text-align: center;
+			line-height: 22px;
+			margin-right: 5px;
+			font-size: 8px;
+			font-weight: bold;
+		}
+		&:nth-child(2){
+			.circle{
+				color:#fff;
+				background:#ff6d2d;
+			}
+		}
+		&:nth-child(3){
+			.circle{
+				color: #fff;
+				background:#2d9aff;
+			}
+		}
+		&:nth-child(4){
+			.circle{
+				color: #fff;
+				background:#72d13f;
+			}
+		}
+	}
+	.look-all-container{
+		background:#fff;
+		padding:12px 0;
+		text-align:center;
+		.btn{
+			width: 120px;
+			margin:0 auto;
+		}
+		@include border-bottom-left-radius($radius-s);
+		@include border-bottom-right-radius($radius-s);
+	}
+}
+//活动介绍
+.activityDesc-container{
+	margin:20px 16px 10px 16px;
+	.desc-container{
+		color:$fontColor;
+		margin-top: 12px;
+		font-size: 13px;
+	}
+}
+
+//奖品兑换规则
+.rule-container{
+	padding:18px 10px 8px 10px;
+	margin-bottom:10px;
+	.rule-list{
+		margin-top: 25px;
+		li{
+			margin-bottom: 18px;
+			display: -webkit-box;
+			img{
+				width: 88px;
+				height: 88px;
+				margin-right: 14px;
+			}
+		}
+		.text-info{
+			-webkit-box-flex:1;
+			margin-top: 8px;
+			.rule-name{
+				color:$fontColor;
+				font-size: 15px;
+				display: block;
+				margin-bottom: 15px;
+			}
+			.rule-desc{
+				font-size: 13px;
+				color:#a3a3a3;
+				em{
+					font-weight:bold;
+				}
+			}
+		}
+	}
+}
+
+.game-info-tips{
+	margin:16px 8px 10px;
+	border-bottom:1px dashed #ff7709;
+	display: block;
+	padding:0 8px 16px;
+	line-height:16px;
+	font-size:14px;
+	color:$fontColor;
+}
+.medal-wrapper{
+	margin:0 13px 15px;
+	li{
+		float: left;
+		width: 22%;
+		margin-right: 4%;
+		&:last-child{
+			margin-right: 0;
+		}
+		.omit{
+			display: block;
+			text-align: center;
+			font-size: 12px;
+			color: $fontColor;
+			margin-top: 8px;
+		}
+		.pic{
+			width: 64px;
+			height: 64px;
+			margin:0 auto;
+		}
+	}
+}
+.game-list-container{
+	margin:15px 5px 14px;
+	background:$prizeContainerBg;
+	overflow: hidden;
+	@include border-radius($radius-s);
+	.game-list{
+		margin:12px;
+		@media all and (max-width: 359px){
+			margin:8px;
+		}
+	}
+	li{
+		float: left;
+		width: 30%;
+		margin-right: 5%;
+		margin-bottom: 2px;
+		&:nth-child(3n){
+			margin-right: 0;
+		}
+		@media all and (max-width: 359px){
+			&{
+				width: 32%;
+				margin-right: 2%;
+			}
+		}
+		a{
+			font-size: 10px;
+			color:#a3a3a3;
+		}
+		.name{
+			color: #000;
+			display: block;
+			text-align: center;
+			font-size: 12px;
+			margin:8px auto 5px;
+		}
+		.info{
+			word-break: break-all;
+			text-align: center;
+			display: block;
+			height: 24px;
+		}
+		.pic{
+			width: 60px;
+			height: 60px;
+			margin:0 auto;
+		}
+	}
+}
+
+.prize-tips-container{
+	margin:12px auto 15px 15px;
+	.sub-title{
+		font-size: 18px;
+		margin-bottom: 5px;
+	}
+	.prize-tips{
+		font-size: 15px;
+		color: $fontColor;
+	}
+}
+.address-info-container{
+	padding:15px 10px 24px;
+	margin-bottom:10px;
+	.exchange-tips{
+		font-size: 18px;
+		color: #ff4d4d;
+		font-weight: bold;
+	}
+	.address-info{
+		margin:35px auto 100px;
+		color: #a3a3a3;
+		font-size: 15px;
+		label{
+			font-weight: bold;
+			display: inline-block;
+			width: 75px;
+			vertical-align: top;
+		}
+		
+	}
+	.ui-form-item{
+		display: -webkit-box;
+		margin-bottom: 15px;
+		span{
+			-webkit-box-flex: 1;
+			display: block;
+		}
+		input,textarea{
+			-webkit-box-flex: 1;
+			background:#f5f5f5;
+			color: #000;
+			border:1px solid #cbcbcb;
+			display: block;
+			@include border-radius($radius-s);
+			font-size: 15px;
+			padding:8px 0 8px 10px;
+		}
+	}
+	.recive-tips{
+		font-size: 12px;
+		color: #ff7b10;
+		text-align: center;
+	}
+
+	.address-tips{
+		color: $fontColor;
+		font-size: 16px;
+		font-weight: bold;
+		margin-bottom: 24px;
+	}
+	.form{
+		margin-bottom: 50px;
+		label{
+			color: $fontColor;
+		}
+		.ui-form-item{
+			-webkit-box-align: center;
+			margin-bottom: 6px;
+		}
+	}
+	
+}
+.btn-container{
+	text-align: center;
+	.error-tips{
+		color: #ff5454;
+		font-size: 12px;
+		padding-bottom:12px;
+		display: block;
+	}
+	.btn{
+		width: 145px;
+		margin:0 auto;
+	}
+}
+.error{
+	background:#ffb9b9!important;
+}
+
+
+//各种弹窗
+.mask{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.5);
+	z-index: 99;
+}
+.dialog-container{
+	position: fixed;
+	background:$prizeContainerBg;
+	@include border-radius($radius-s);
+	top:150px;
+	left:20px;
+	right:20px;
+	padding:9px;
+	padding-bottom:15px;
+	img{
+		width: 100%;
+		max-height: 120px;
+	}
+	.num-tips{
+		font-size: 13px;
+		color: #333;
+		display: block;
+		margin:15px 0 20px;
+	}
+	.num{
+		color: #ff1f1f;
+		font-weight: bold;
+		display: inline-block;
+		margin:0 3px; 
+	}
+	.status-container{
+		text-align: center;
+		.success-tips{
+			color: #31bf35;
+			font-weight: bold;
+			display: block;
+			margin:24px auto  20px;
+			font-size: 18px;
+		}
+		.back-tips{
+			color: #9a9a9a;
+			font-size: 11px;
+		}
+		.fail-tips{
+			display: block;
+			font-size: 15px;
+			margin:24px auto  20px;
+			color: #a3a3a3;
+		}
+	}
+
+}
+.multile-btn-container{
+	position: relative;
+	overflow: hidden;
+	margin:0 10px;
+	.btn{
+		float: right;
+		width: 110px;
+	}
+	.btn-disable{
+		float: left;
+	}
+}
+
+//position 为absolute 的元素 垂直居中
+.absolute-vCenter{
+  position: absolute;
+  margin-top:auto;
+  margin-bottom: auto;
+  top:0;
+  bottom:0;
+
+}

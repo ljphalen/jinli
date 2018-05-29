@@ -1,0 +1,53 @@
+<?php echo $this->render("layout/header2.phtml"); ?>
+	<section class="main-content">
+		<form method="post" action="" id="editForm">
+			<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+			<header class="header navbar bg-default">
+				<ul class="nav navbar-nav">
+					<li class="active">
+						<a href="javascript:;">配置管理</a>
+					</li>
+				</ul>
+				<div class="btn-group pull-right mg-r-sm">
+					<button type="submit" name="sub" class="btn btn-sm btn-primary navbar-btn">
+						立即保存
+					</button>
+				</div>
+			</header>
+
+			<div class="content-wrap">
+				<div class="row">
+					<div class="col-lg-12">
+						<!-- table content start -->
+						<section class="panel">
+							<table class="table table-bordered table-striped no-margin">
+								<tr>
+									<td>浏览器在线时间领金币(一行一个列: 秒,金币数)</td>
+									<td>
+										<textarea name="browser_online_time" style="width: 450px; height: 100px;"><?php echo $configs['browser_online_time']; ?></textarea>
+									</td>
+								</tr>
+								<tr>
+									<td>浏览器升级版本领金币</td>
+									<td>
+										<input name="browser_up_ver_coin" type="text" class="form-control" value="<?php echo $configs['browser_up_ver_coin']; ?>">
+									</td>
+								</tr>
+							</table>
+						</section>
+					</div>
+				</div>
+
+			</div>
+		</form>
+	</section>
+
+	<script src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			ajaxForm('editForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Config/browserbase');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

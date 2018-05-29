@@ -1,0 +1,57 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body>
+
+<body data-pagerole="body">
+    <div class="module credit-rank">
+        <section class="header-pic J_lazyload_img">
+            <img src="<?php echo $staticResPath?>/pic/blank.gif" data-src="<?php echo $staticResPath?>/pic/credit-rank-bg.jpg">
+        </section>
+        <div class="rank-list">
+            <?php foreach($rank as $item): ?>
+            <?php if(empty($item)):?>
+            <ul class="list mid">
+                <li class="flex"><span></span><span></span><span></span></li>
+            </ul>
+            <?php continue; endif; ?>
+            <ul class="list <?php echo $item['is_me']?'current':'';  ?>">
+                <li class="first">
+                    <?php
+                        if($item['sum_score'] == 0){
+                            echo 0;
+                        }else{
+                            switch($item['pos']){
+                                case '1':
+                                    echo '<i class="icon-win-cup yellow"></i>';
+                                    break;
+                                case '2':
+                                    echo '<i class="icon-win-cup green"></i>';
+                                    break;
+                                case '3':
+                                    echo '<i class="icon-win-cup blue"></i>';
+                                    break;
+                                default:
+                                    echo $item['pos'];
+                            }
+                        }
+                    ?>
+                </li>
+                <li class="flex"><?php echo $item['nickname']?$item['nickname']:'购物大厅网友'; ?></li>
+                <li class="score"><?php echo $item['pos']<=3?'<em>':''; ?><?php echo $item['sum_score']; ?>分<?php echo $item['pos']<=3?'</em>':''; ?></li>
+            </ul>
+            <?php endforeach; ?>
+            <ul class="list mid">
+                <li class="flex"><span></span><span></span><span></span></li>
+            </ul>
+        </div>
+        <?php if($need_edit):?>
+        <div class="to-edit-bar">
+            <i class="icon-close" id="J_closeToEdit"></i>
+            <span>为了参与活动，请完善个人信息</span>
+            <a href="<?php echo $webroot . $edit_url . '?backurl=' . $curPageURL; ?>" class="to-edit" onclick="GOU.baiduStatic('android分数排行帮','android分数排行帮-去填写')">去填写</a>
+        </div>
+        <?php endif; ?>
+    </div>
+
+
+<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/newfooter.phtml");?>

@@ -1,0 +1,43 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $indexUrl; ?>">等级商品列表</a></li>
+			<li><a href="<?php echo $addUrl; ?>">添加权限商品</a></li>
+		</ul>
+	</div>
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+				<th class="th">分类</th>
+				<th class="th">用户等级</th>
+				<th class="th">产生／消耗积分数</th>
+				<th class="th">连续操作天数</th>
+				<th class="th">积分奖励</th>
+				<th class="th">单天操作次数
+				<th clas="th">积分奖励</th>
+				<th class="th">状态</th>
+				<th class="th">操作</th>
+			</tr>
+			<?php foreach ($data as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['id'];?></td>
+					<td class="td" align="left"><?=$group_id == 1 ? '签到' : $category['name'];?></td>
+					<td class="td" style="color:blue; "><strong><?php echo $v['user_level']; ?></strong></td>
+					<td clas="td" style="color: blue"><?php echo $v['scores']; ?></td>
+					<td class="td" style="color: blue"><?php echo $v['days']; ?></td>
+					<td class="td" style="color: blue"><?php echo $v['rewards']; ?></td>
+					<td class="td"><?php echo $v['times']; ?></td>
+					<td class="td"><?php echo $v["rewards2"]; ?></td>
+					<td class="td"><?php echo $v['status'] == '1' ? '开启' : '关闭'; ?></td>
+					<td class="td"><a href="<?php echo $editUrl; ?>/?id=<?php echo $v['id']; ?>">编辑</a>&nbsp;
+						<a href="javascript:void(0);" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $v['id']; ?>', '', event);">删除</a>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

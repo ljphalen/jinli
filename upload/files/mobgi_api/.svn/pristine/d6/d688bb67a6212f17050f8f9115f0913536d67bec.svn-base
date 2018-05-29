@@ -1,0 +1,160 @@
+<script type="text/javascript" charset="utf-8" src="{{rootUrl}}/js/jquery.progressbar.min.js"> </script>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">图片管理</p>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="toolbar tabs">
+                <ul class="fl">
+                    <li><a href="../imgManage/index">上传图片</a></li>
+                    <li><a href="../imgManage/lists">图片查看</a></li>
+                </ul>
+            </div>
+            <div class="devInfo">
+            <form action="../imgManage/confirm" method="POST"	enctype="multipart/form-data">
+                <ul class="form">
+                    <li>
+                        <span class="label">分类：</span>
+                        <div class="fc">
+                           <select name="category">
+                                <option value="imgmanage_a" <!-- if {{result.category}}=='imgmanage_a'||{{cate}}=='' --> selected<!-- endif -->>{{category.imgmanage_a}}</option>
+                                <option value="imgmanage_b" <!-- if {{result.category}}=='imgmaange_b' --> selected<!-- endif -->>	{{category.imgmanage_b}}</option>
+                                <option value="imgmanage_c" <!-- if {{result.category}}=='imgmanage_c' --> selected<!-- endif -->>	{{category.imgmanage_c}}</option>
+                                <option value="imgmanage_d" <!-- if {{result.category}}=='imgmanage_d' --> selected<!-- endif -->>	{{category.imgmanage_d}}</option>
+                           </select>
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">名字：</span>
+                        <div class="fc">
+                            <input type="text" name="name" id="name" placeholder="请输入图片名字" class="iText" required style="width:150px;" value="{{result.name}}" />
+                            <!-- if {{result.id}}=='' -->
+                            <select name="name_1" required id="name_1" class="required">
+                                <option value="横屏" >横屏</option>
+                                <option value="竖屏" >竖屏</option>
+                           </select>
+                           <select name="name_2" required id="name_2" class="required">
+                                <option value="全屏" >全屏</option>
+                                <option value="半屏" >半屏</option>
+                                <option value="横图" >横图</option>
+                           </select>
+                           <input type="text" name="name_3" id="name_3" placeholder="图片主题后缀" class="iText"  style="width:150px;" value="" />
+                            <!-- endif -->
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">描述：</span>
+                        <div class="fc">
+                            <input type="text" name="content" placeholder="请输入图片描述" class="iText required"  style="width:220px;" value="{{result.content}}" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label cpic">上传图片：</span>
+                        <div class="fc">
+                        	<input type="hidden" name="APC_UPLOAD_PROGRESS" id="progress_key" value="{{time()}}">
+                            <input type="file" <!-- if {{result.url}} == '' --> class="required" required <!-- endif --> name="url" value="选择图片" onchange="previewImage(this)"/>
+                            <p><img id="_img" src="{{result.url}}" width="150px" height="80px" /></p>
+                        </div>
+                        <input type="hidden" name='id' value="{{result.id}}"/>
+                        <input type="hidden" name='old_cagegory' value="{{result.category}}"/>
+                        <input type="hidden" name="old_url" value="{{result.url}}"/>
+                    </li>
+                    <li class="line">
+                    <div class="fc" id="progressbar"></div>
+                    </li>
+                    <li>
+                        <div class="fc">
+                            <input type="submit" value="保存" class="submit" />
+                            <input type="button" value="取消" class="cancel" onclick="window.location.href='/imgmanage/index'" />
+                        </div>
+                    </li>
+                </ul>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+var progress_key = $("#progress_key").val();
+$("#progressbar").hide();
+function beginUpload() {
+	    var i = setInterval(function() {
+		    var js = {
+		            type: "GET",
+		            url: "../imgManage/progress?progress_key=" + progress_key,
+		            async: false,
+		            success: function(msg) {
+	            if(parseInt(msg) > 0)
+	            {
+	            	$("#progressbar").fadeIn();
+		    		$("#progressbar").progressBar(parseInt(msg),{ 
+					barImage: '{{rootUrl}}/images/progressbg_orange.gif', 
+					showText: true,
+					boxImage: '{{rootUrl}}/images/progressbar.gif'});
+		    	if (parseInt(msg) == 100) {
+					//clearInterval(i);
+					//location.reload(true);
+					return;
+				}
+	            }
+	            beginUpload();
+				//var percentage = Math.floor(100 * parseInt(data.bytes_uploaded) / parseInt(data.bytes_total))
+				}
+		        };
+	           $.ajax(js);
+		}, 100);
+}
+
+$(document).ready(function(){
+		$("#progressbar").progressBar({ 
+										barImage: '{{rootUrl}}/images/progressbg_orange.gif', 
+										showText: true,
+										boxImage: '{{rootUrl}}/images/progressbar.gif'});
+		$(".submit").click(function(){
+			img_submit();
+			$(".form").submit();
+			//setTimeout(beginUpload(),500);
+			beginUpload();
+		});
+		     
+});
+function previewImage(file)  
+{   
+    if (file.files && file.files[0])  
+    {  
+        var img = document.getElementById('_img');  
+        var reader = new FileReader();  
+        reader.onload = function(evt){img.src = evt.target.result;}  
+        reader.readAsDataURL(file.files[0]);  
+    }  
+    else  
+    {  
+        file.select();  
+        var src = document.selection.createRange().text;  
+        var img = document.getElementById('_img');  
+        img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;  
+    }  
+}
+function img_submit()
+{
+	var name = $("#name").val();
+	var name_1 = $("#name_1").val();
+	var name_2 = $("#name_2").val();
+	var name_3 = $("#name_3").val();
+	if(name_1 && name_2 && name_3)
+	{
+		if(name_3 == "")
+			var realname = name+"_"+name_1+"_"+name_2;
+		else
+			var realname = name+"_"+name_1+"_"+name_2+"_"+name_3;
+	
+	$("#name").val(realname);
+	}
+	return true;
+}
+
+</script>

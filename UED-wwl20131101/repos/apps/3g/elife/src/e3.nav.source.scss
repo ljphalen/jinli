@@ -1,0 +1,81 @@
+@charset "UTF-8";
+@import "compass/css3";
+@import "E:/hankewins/github/compass-combo/lib/vars.scss";
+@import "E:/hankewins/github/compass-combo/lib/func.scss";
+@import "E:/hankewins/github/compass-combo/lib/reset.scss";
+@import "E:/hankewins/github/compass-combo/lib/ui-toolbar.scss";
+
+@include GIONEE_WEBSITE_REST("REST_ENV_PX");
+
+$link-text-color:#979797;
+$standard-bg-color:#E2E2E2;
+
+.ishide{display:none;}
+
+a:link,a:visited{color:$link-text-color;}
+
+.highlight{background:#ccc;}
+
+body{background:$standard-bg-color; min-width:$screen-min-width; font-size:$normal-font-size; line-height:30*$px; color:$text-main-color;}
+
+header,.content{background:#f5f5f5;}
+
+//导航菜单
+.nav-tab{
+	display:-webkit-box; overflow:hidden;
+	li{
+		-webkit-box-flex:1;
+		display:-webkit-box; -webkit-box-align:center; -webkit-box-pack:center; position:relative;
+		height:100*$px; color:#FFF; font-size:18*$px;
+		@include text-shadow(1px 1px 1px rgba(0,0,0,.2));
+		&::after{content:""; display:block; position:absolute; left:0; bottom:0; width:100%; height:10*$px; @include lg(top,transparent,#dcdcdc); @include opacity(.1)}
+	}
+	.ui-nav-icon,.ui-nav-icon-text{display:block;}
+	.t1{background-color:#3ab5e4; z-index:15;}
+	.t2{background-color:#3ad9ec; z-index:14; margin-right:-12*$px;}
+	.t3{background-color:#4ecf60; z-index:13; margin-right:-14*$px;}
+	.t4{background-color:#d4df28; z-index:12; margin-right:-16*$px;}
+	.t5{background-color:#e9a733; z-index:11; margin-right:-18*$px;}
+	.t6{background-color:#e37b36; z-index:10; margin-left: -10*$px;}
+	.sel{
+		width:20%; z-index:15;
+		-webkit-transition: width .1s ease-in-out;
+		&::before{content:""; position:absolute; left:50%; bottom:0; margin-left:-6*$px; width:0; height:0; border:solid; border-width:0 6px 6px 6px; border-color:transparent transparent #F5F5F5 transparent;}
+		&::after{display:none;}
+	}
+	.prevbg{
+		margin-right:0;
+		background-image: inline-image("../img/prev-shadow-bg.png");
+		background-repeat:no-repeat;
+		background-position:right top; @include background-size(24*$px 100%);
+	}
+	.nextbg{
+
+		background-image: inline-image("../img/next-shadow-bg.png");
+		background-repeat:no-repeat;
+		background-position:left top; @include background-size(24*$px 100%);
+	}
+}
+.content{
+	min-height:110*$px; overflow:hidden;
+	ul{
+		min-width:$screen-min-width; text-align:center; overflow:hidden;
+		li{
+			a{
+				display:-webkit-box; -webkit-box-align:center; -webkit-box-pack:center; width:100%; height:100%; color:#979797;border-right:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;
+			}
+			img, span{display:block; text-align:center; margin:0 auto; line-height:normal;}
+			img{width:100*$px; height:40*$px; max-width:100*$px; max-height:40*$px;}
+			float:left; width:33.3%; height:110*$px; //@include text-shadow(1px 1px 1px rgba(200,200,200,.5));
+		}
+
+		li:nth-child(3n+3) a{border-right:0;}
+		li:nth-child(3n+3) {width:33.4%;}
+	}
+}
+//导航底部INFO
+.nav-info{
+	color:#979797; padding-left:10*$px;
+	@include lg(top,#d4d4d4,#e2e2e2 20%);
+}
+

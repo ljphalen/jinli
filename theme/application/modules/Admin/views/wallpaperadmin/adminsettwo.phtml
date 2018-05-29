@@ -1,0 +1,165 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/jquery.datetimepicker.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<?php echo $staticPath ?>jssdk/farbtastic.js"></script>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- 页面唯一id标识符  套图管理-打包套图 - 添加-->
+    <div id="bz_admin_taotu_pack02">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">套图名称</label>
+                    <div class="tb_cont tb_cell"><input type="text" class="rd_1" name="setname"></div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">套图标签</label>
+                    <div class="tb_cont tb_cell">
+                        <div class="select_box">
+                            <label class="select_val">分类</label>
+                            <ul class="select_option">
+                                <?php foreach ($targs as $v) { ?>
+                                    <li val="<?php echo $v['w_type_id'] ?>"><?php echo $v["w_type_name"] ?></li>
+                                <?php } ?>
+
+                            </ul>
+                        </div><!-- select_box -->
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap color_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">套图颜色</label>
+                    <div class="tb_cont tb_cell">
+                        <input type="text" class="rd_1" name="color" value="#ffffff" id="taotuPickedColor">
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+            <div id="taotuColorPicker"></div>
+
+            <div class="line_title">选择壁纸</div>
+
+
+
+            <div class="drag_sort_wrap">
+                <div class="drag_sort">
+                    <label>待选壁纸</label>
+                    <ul class="drag_sort_list" id="dragSortTxtPack">
+                        <!--  目前是由js动态生成 webgBusiness_bz.js 内 bz_admin_taotu_pack02->initImgData()
+                                <li role="txtPack" targetImg="img01" data-url="image/t_img01.jpg">壁纸一</li>
+                                <li role="txtPack" targetImg="img02" data-url="image/t_img02.jpg">壁纸二</li>
+                                <li role="txtPack" targetImg="img03" data-url="image/t_img03.jpg">壁纸三</li>
+                                <li role="txtPack" targetImg="img04" data-url="image/t_img04.jpg">壁纸四</li>
+                                <li role="txtPack" targetImg="img05" data-url="image/t_img05.jpg">壁纸五</li>
+                                <li role="txtPack" targetImg="img06" data-url="image/t_img06.jpg">壁纸六</li>
+                        -->
+                    </ul>
+                    <div class="clear-fix"></div>
+                    <div><button class="btn_s3" id="packBzAdd">添加</button></div>
+                </div><!-- drag_sort end -->
+
+                <div class="drag_sort">
+                    <label>已选壁纸</label>
+                    <ul class="drag_sort_list" id="dragSortTxtPack2">
+
+                    </ul>
+                    <div class="clear-fix"></div>
+                    <div><button class="btn_s3" id="packBzDel">删除</button></div>
+                </div><!-- drag_sort end -->
+
+                <div class="drag_sort">
+                    <label>缩略图</label>
+                    <ul class="drag_sort_img" id="dragSortImgPack">
+
+                    </ul>
+                </div><!-- drag_sort end -->
+
+                <div class="clear-fix"></div>
+            </div><!-- drag_sor_wrap end -->
+
+            <div class="bnts_wrap"><button class="btn_s2 pop_btn submits" openPopId="fixTipView">提交</button><button class="btn_s2" id="bzAdminTaoTuP2Cancel">取消</button></div>
+
+
+        </div><!-- content end -->
+
+    </div>
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">保存?</p>
+                    <div class="tip_btns"><button class="btn_s2 save_ok">确定</button></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+
+<script type="text/javascript">
+    $(function () {
+        $(".submits").click(function () {
+
+            var setname = $("input[name=setname]").val();
+            var setcolor = $("input[name=color]").val();
+            var typeid = $(".select_val").attr("val");
+            if (typeid == undefined)
+                typeid = 0;
+
+            var check_name = checkdata(setname);
+
+            if (check_name) {
+                $(".tip_mes").html("名字不能为空！");
+                $(".save_ok").click(function () {
+                    $(".pop_wraper").removeClass("show");
+                })
+                return 0;
+            } else {
+                $(".tip_mes").html("保存?");
+            }
+
+            $(".save_ok").click(function (event) {
+                //event.stopPropagation();
+                $(".pop_wraper").removeClass("show");
+                var t = $("#dragSortImgPack >li").map(function () {
+                    return $(this).attr("targetimg");
+                }).get().join("_");
+                var data = "setname=" + setname + "&setcolor=" + setcolor + "&typeid=" + typeid + "&token=" + token + "&setids=" + t;
+
+
+                var url = "/Admin/wallpaperadmin/addsets";
+                $.post(url, data, function (d) {
+                    if (d)
+                        //window.location.href = "/Admin/wallpaperadmin/adminset";
+                        history.go(-1);
+                    else
+                        window.location.href = "/Admin/wallpaperadmin/addset";
+                });
+                return false;
+            })
+
+        });
+
+
+        function checkdata(exp) {
+            if (exp != "") {
+                return false;
+            } else {
+                return  true;
+            }
+        }
+    })
+</script>
+</body>
+</html>

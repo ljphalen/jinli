@@ -1,0 +1,57 @@
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="edit_form" enctype="multipart/form-data">
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr>
+			<th>名称</th>
+			<td><input type="text" class="easyui-textbox" name="key" value="<?php echo $info['key']; ?>"></td>
+		</tr>
+		<tr>
+			<th>内容</th>
+			<td><textarea style="width: 300px;height: 100px" name="val"><?php echo $info['val']; ?></textarea>
+		</tr>
+
+		<tr>
+			<th>图片</th>
+			<td>
+				<?php
+				if (!empty($info['img'])) {
+					echo '<img style="width:100px;height:100px;" src="' . $attachPath . $info['img'] . '" /><br>';
+				}
+				?>
+				<input type="file" id="img_upload" name="img"/>
+			</td>
+		</tr>
+		<tr>
+			<td>链接</td>
+			<td>
+				<input data-options="multiline:true" style="width:300px;height:50px" type="text" class="easyui-textbox" name="link" value="<?php echo $info['link']; ?>">
+			</td>
+		</tr>
+		<tr>
+			<td>类型</td>
+			<td>
+				<?php
+				$arr = array(1 => '文本', 2 => '图片', 3 => '图文');
+				foreach ($arr as $k => $name):
+				$checked = $info['type'] == $k ? 'checked="checked"' : '';
+				?>
+				<label><input type="radio" name="type" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+					<?php endforeach; ?>
+
+			</td>
+		</tr>
+		<tr>
+			<td>状态</td>
+			<td>
+				<?php
+				$arr = array(0 => '关闭', 1 => '开启');
+				foreach ($arr as $k => $name):
+				$checked = $info['status'] == $k ? 'checked="checked"' : '';
+				?>
+				<label><input type="radio" name="status" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+					<?php endforeach; ?>
+			</td>
+		</tr>
+	</table>
+</form>

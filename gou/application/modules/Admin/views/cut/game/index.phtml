@@ -1,0 +1,103 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li class="current"><a href="<?php echo $indexUrl;?>">日志列表</a></li>
+    </ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="get">
+    <input name="token" type="hidden" value="<?php echo $token;?>" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">UID</th>
+                <td class="td">
+                    <input type="text" class="wc" name="uid" value="<?php echo $params['uid']; ?>"/>
+                </td>
+                <th class="th" class="th">商品ID</th>
+                <td class="td">
+                    <input type="text" name="goods_id" value="<?php echo $params['goods_id']; ?>"/>
+                </td>
+            </tr>
+            <tr>
+                <th class="th" class="th">时间</th>
+                <td class="td">
+                    <div>
+                        <input class="input" type="text" id="start_time" name="start_time" value="<?php echo $params['start_time'];?>" /> 至
+                        <input class="input" type="text" id="end_time" name="end_time" value="<?php echo $params['end_time'];?>" />
+                    </div>
+                </td>
+                <th class="th" class="th"><span style="float:left;">当前游戏次数：<?php echo $total;?></th>
+                <td class="td">
+                    <span class="btn"><span><button type="submit">搜 索</button></span></span>
+                    <span class="btn"><span><button type="button" id="extportBtn">导出日志</button></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+<div class="table_list">
+    <table width="100%">
+        <tr class="hd">
+            <td width="5%">ID</td>
+            <td width="25%">UID</td>
+            <td width="8%">游戏用时</td>
+            <td width="5%">商品ID</td>
+            <td width="18%">商品名称</td>
+            <td width="8%">起拍价格</td>
+            <td width="5%">最低价</td>
+            <td width="5%">最高价</td>
+            <td width="8%">创建时间</td>
+            <td width="10%">操作</td>
+        </tr>
+        <?php foreach($data as $key => $value) {?>
+            <tr class="ct">
+                <td><?php echo $value['id']; ?></td>
+                <td><?php echo $value['uid']; ?></td>
+                <td><?php echo $value['fin_time']; ?></td>
+                <td><?php echo $value['goods_id']; ?></td>
+                <td><?php echo $goods[$value['goods_id']]['title']; ?></td>
+                <td><?php echo $goods[$value['goods_id']]['price']; ?></td>
+                <td><?php echo $goods[$value['goods_id']]['min_price']; ?></td>
+                <td><?php echo $goods[$value['goods_id']]['range']; ?></td>
+                <td><?php echo date('Y-m-d H:i:s', $value['create_time']); ?></td>
+                <td>
+                    <a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+                </td>
+            </tr>
+        <?php } ?>
+    </table>
+</div>
+<div class="mr10 cc">
+    <?php echo $pager;?>
+</div>
+
+<div class="mr10 cc">
+    <form action="<?php echo $downloadUrl;?>" method="post" id="exportForm">
+        <input name="token" type="hidden" value="<?php echo $token;?>" />
+        <input type="hidden" name="uid" value="<?php echo $params['uid'];?>">
+        <input type="hidden" name="goods_id" value="<?php echo $params['goods_id'];?>">
+        <input type="hidden" name="start_time" value="<?php echo $params['start_time'];?>">
+        <input type="hidden" name="end_time" value="<?php echo $params['end_time'];?>">
+    </form>
+</div>
+
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+    //导购表单数据提交
+    $(document).ready(function(){
+        $("#start_time").datepicker({
+            dateFormat : 'yy-mm-dd'
+        });
+        $("#end_time").datepicker({
+            dateFormat : 'yy-mm-dd'
+        });
+        $("#extportBtn").click(function(){
+            $("#exportForm").submit();
+        });
+        submitForm = function() {
+            $("#searchForm").submit();
+        };
+    })
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

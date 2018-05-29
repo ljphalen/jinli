@@ -1,0 +1,260 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<script type="text/javascript"
+src="<?php echo $staticroot . 'jssdk/jquery.min.js' ?>"></script>
+
+<script type="text/javascript"
+src="<?php echo $staticroot . 'jssdk/layer/layer.min.js' ?>"></script>
+<link rel="stylesheet" type="text/css"
+      href="<?php echo $staticroot . 'jssdk/targs/css/list.css' ?>"/>
+<script type="text/javascript"
+src="<?php echo $staticroot . 'jssdk/targs/js/ui.tab.js' ?>"></script>
+
+
+
+<style type="text/css">
+    .opt_del{
+        cursor: pointer;
+    }
+</style>
+<div class="nav">
+    <ul class="cc">
+        <li class=""><a href="<?php echo $listUrl; ?>">壁纸列表</a></li>
+        <li class="current"><a href="<?php echo $wallpaperlivelist; ?>">动态壁纸列表</a></li>
+        <li class=""><a href="<?php echo $actionwallpaper; ?>">动态壁纸包上传</a></li>
+    </ul>
+</div>
+<div class="h_a">动态壁纸列表</div>
+
+<style type="text/css">
+    .chk_style{
+        background-color:aqua;
+    }
+    .ch_status{
+        cursor: pointer;
+    }
+    #from_tars a {margin:2px 6px;}
+    #to {width:36em;}
+    .selected {background:#c00; color:#fff;}
+    .addition {margint-top:2em; text-align:right;}
+</style>
+
+<form action="<?php echo $wallpaperlivelist; ?>" method="post" id="searchForm">
+    <input name="token" type="hidden" value="<?php echo $token; ?>" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">名称</th>
+                <td class="td">
+                    <input type="text" class="input_title" name="title" value="<?php echo $search['title']; ?>">
+                    &nbsp;&nbsp; <input type="button" class="input_title_but" name="title" value="搜索"/>
+
+                </td>
+            </tr>
+            <?php foreach ($status as $key => $value) { ?>                                                                                                                                                                                                                                                                                                                               <option <?php echo ($search['status'] == $key) ? 'selected="selected"' : ''; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+            <?php } ?>
+
+
+            <tr class="tr">
+                <th class="th">状态</th>
+                <td class="td">
+                    <div class="mb8 tac">
+                        <span  class="btn"> <span>
+                                <input class ="stutus_val" type="hidden" value= 0 name="status"/>
+                                <button type="submit" class="btn_sub">所有状态</button>
+                            </span></span>
+                        <?php foreach ($status as $key => $value) { ?>
+
+                            <span class="btn">
+                                <span  <?php echo ($search['status'] == $key) ? 'style="background-color: black;"' : ''; ?>>
+                                    <input class ="stutus_val" type="hidden" value= <?php echo $key; ?> name="status"/>
+                                    <button   type="submit" class="btn_sub" value="<?php echo $key; ?>"><?php echo $value; ?></button>
+                                </span>
+                            </span>
+                        <?php } ?>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+<div class="table_list">
+    <table width="100%">
+        <tr class="hd">
+            <td  width="4%">选中</td>
+
+            <td  width="4%">id号</td>
+
+            <td >标题</td>
+
+            <td  width="7%">大小</td>
+
+            <td  width="15%">上传时间</td>
+
+            <td  width="15%">上架时间</td>
+
+            <td  width="4%">下载</td>
+            <td  width="4%">赞</td>
+            <td width="8%">状态</td>
+            <td width="5%">操作</td>
+
+            <td width="3%">预览</td>
+
+        </tr>
+        <?php foreach ($files as $key => $value) { ?>
+
+
+            <tr class="ct" >
+                <td><input type="checkbox" class="ids" value="<?php echo $value['wallpaperlive_id'] ?>"/></td>
+
+                <td ><?php echo $value['wallpaperlive_id']; ?></td>
+
+                <td><?php echo $value['wallpaperlive_name']; ?></td>
+
+                <td><?php echo $value['wallpaperlive_size'] . " M"; ?></td>
+                <td><?php echo date('Y-m-d H:i:s', $value['wallpaperlive_uploadtime']); ?></td>
+                <td><?php echo $value['wallpaperlive_onlinetime'] ? date('Y-m-d H:i:s', $value['wallpaperlive_onlinetime']) : ''; ?></td>
+
+                <td><?php echo $value['wallpaperlive_down']; ?></td>
+                <td><?php echo $value['wallpaperlive_like']; ?></td>
+                <td>
+                    <p class="ch_status" val="<?php echo $value['wallpaperlive_id']; ?>" status="<?php echo $value['wallpaperlive_status'] ?>"> <?php echo $status[$value['wallpaperlive_status']]; ?></p>
+                </td>
+                <td><p class="opt_del">删除</p></td>
+                <td> <img src="<?php echo $value["url"][0] ?>" alt="" width="100" /></td>
+            <div id="divs" style="display:none"><?php echo $value["url"][0]; ?></div>
+
+            </td>
+
+            </tr>
+        <?php } ?>
+    </table>
+</div>
+</form>
+<div class="mr10 cc">
+    <?php echo $pager; ?>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var adminroot = "<?php echo $adminroot; ?>";
+        $(".select-list dd a").click(function () {
+            var a = $(this).attr("val");
+            var str = ".sub_" + a;
+            //alert(str);
+            $(str).show();
+        });
+
+
+        //状态;
+        $(".btn_sub").click(function () {
+            var opts = $(this).attr("value");
+
+            var path = baseurl + "/Admin/Wallpaperlive/index";
+            var datas = "sta=" + opts;
+
+
+            $.ajax({
+                type: "get",
+                data: datas,
+                url: path,
+                cache: false,
+                async: false,
+            });
+
+
+        })
+        $(":submit").click(function () {
+            $(".stutus_val").val($(this).val());
+            $(this).submit();
+        });
+
+        $(".all_imges").click(function () {
+
+            var html = $(this).children("div").html();
+            $.layer({
+                type: 2,
+                maxmin: true,
+                scrolling: 'no',
+                shadeClose: true,
+                title: '全图预览',
+                shade: [0.1, '#fff'],
+                offset: ['10px', ''],
+                area: ['1000px', ($(window).height() - 50) + 'px'],
+                iframe: {src: html}
+            });
+        });
+        $(".ch_status").click(function () {
+            var status_id = 4;
+
+            var sta_val = $(this).attr("status");
+
+            msg = "您确定要将该状态改为上架吗？";
+
+            if (sta_val == 4) {
+                msg = "您确定要将该状态改为下架吗？";
+                status_id = 5;
+            }
+            var wallid = $(this).attr("val");
+            $.layer({
+                shade: [1],
+                area: ['auto', 'auto'],
+                dialog: {
+                    msg: msg,
+                    btns: 2,
+                    type: 4,
+                    btn: ['确定', '不用了'],
+                    yes: function () {
+                        var url = adminroot + "/Admin/Wallpaperlive/update_status";
+                        var data = "wallpaperliveid=" + wallid + "&status=" + status_id + "&token=" + token;
+
+                        $.post(url, data);
+                        layer.msg('成功', 1, 1, function () {
+                            location.reload();
+                        });
+                    }, no: function () {
+                        layer.msg('我X', 1, 13);
+                    }
+                }
+            });
+        })
+
+
+        //删除操作;
+        $(".opt_del").click(function () {
+            // var wallid = $(this).attr("val");
+            var wallid = $(this).parent().parent().children("td:nth-child(2)").html();
+
+            $.layer({
+                shade: [1],
+                area: ['auto', 'auto'],
+                dialog: {
+                    msg: '您确定要将壁纸删除吗？',
+                    btns: 2,
+                    type: 4,
+                    btn: ['确定', '不用了'],
+                    yes: function () {
+                        var url = adminroot + "/Admin/Wallpaperlive/delWallpaper";
+                        var data = "wallpaperliveid=" + wallid + "&token=" + token;
+
+                        $.post(url, data);
+                        layer.msg('成功', 1, 1, function () {
+                            location.reload();
+                        });
+                    }, no: function () {
+                        layer.msg('我X', 1, 13);
+                    }
+                }
+            });
+        });
+
+
+
+
+
+    })
+</script>
+
+
+
+<?php echo $this->render("layout/footer.phtml"); ?>

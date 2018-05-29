@@ -1,0 +1,43 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body id="detail" data-pagerole="body">
+	<div class="module">
+		<section id="content" data-ajaxurl="<?php echo $webroot;?>/api/h5/forum_detail?id=<?php echo $forum['id'];?>">
+			<div class="post-detail">
+				<h2 <?php if($forum['is_top']) echo 'class="theme-top"';?>><?php echo html_entity_decode($forum['title']);?></h2>
+				<em class="sub-title"><?php echo ($forum['user_id'] == 0 && $forum['category_id'] == 1) ? $forum['user_name'] : '用户'.$forum['user_name'];?> <?php echo date('m-d H:i',$forum['create_time']);?></em>
+				<p><?php echo html_entity_decode($forum['content']);?></p>
+				<?php foreach ($forum_img as $key=>$val) {?>
+				<p><span><img src="<?php echo $attachPath,$val['img'];?>" alt=""></span></p>
+				<?php }?>
+			</div>
+			<?php if($goods_data) {?>
+			<div class="hot-choose">
+				<h3>热门商品推荐</h3>
+				<ul>
+					<?php foreach ($goods_data as $key=>$val) {?>
+					<li><a href="<?php echo $val['link'];?>"><img src="<?php echo $val['img'];?>" /></a></li>
+					<?php }?>
+				</ul>
+			</div>
+			<?php }?>
+			<div class="comments">
+				<h4>全部评论: <?php echo $forum['reply_count'];?>条</h4>
+<?php 
+$i = 1;
+foreach ($forum_reply as $key=>$val) 
+{?>
+				<div class="item">
+					<div class="user-inf">
+						<em>用户<?php echo $val['username'];?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo date('m-d H:i',$val['create_time']);?></em>
+						<span <?php if($i < 4) echo 'class=ceil';?>><?php echo $i;?>楼</span>
+					</div>
+					<p><?php echo html_entity_decode($val['content']);?></p>
+				</div>
+<?php 
+$i ++;
+}
+?>
+			</div>
+		</section>
+	</div>
+<?php echo $this->render("layout/footer.phtml");?>

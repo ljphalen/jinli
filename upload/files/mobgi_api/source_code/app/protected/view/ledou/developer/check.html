@@ -1,0 +1,166 @@
+<div class="colMain">
+    <div class="title">
+        <p class="fl">{{title}}-开发者信息</p>
+    <!-- if {{result.dev_id}} -->
+        <a class="del" href="/developer/delete?dev_id={{result.dev_id}}">删除</a>
+    <!-- endif -->
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="toolbar tabs">
+                <ul class="fl">
+                    <li class="cur"><a href="../developer/edit?dev_id={{result.dev_id}}">基本信息</a></li>
+                </ul>
+            </div>
+            <div class="devInfo">
+                <ul class="form">
+                    <li>
+                        <span class="label">注册邮箱：</span>
+                        <div class="fc">{{result.email}}</div>
+                    </li>
+                    <li>
+                        <span class="label">手机：</span>
+                        <div class="fc">
+                            {{result.mobile}}
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">QQ：</span>
+                        <div class="fc">
+                            {{result.qq}}
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">通讯地址：</span>
+                        <div class="fc">
+                            {{result.address}}
+                        </div>
+                    </li>
+                    <li class="line"></li>
+                </ul>
+                <ul class="form">
+                    <li>
+                        <div class="fc">
+                            <span><input type="radio" <!-- if {{financials.ftype}} ==1 -->checked<!-- endif --> value="1" name="ftype" class="radio" />个人账户</span>
+                            <span><input type="radio" <!-- if {{financials.ftype}} ==2 -->checked<!-- endif --> value="2" name="ftype" class="radio" />公司账户</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label cname">证件姓名：</span>
+                        <div class="fc">
+                            {{financials.cred_name}}
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">开户银行：</span>
+                        <div class="fc">
+                            {{financials.bank}}
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">支行：</span>
+                        <div class="fc">{{financials.sub_branch}}</div>
+                    </li>
+                    <li>
+                        <span class="label">银行账号：</span>
+                        <div class="fc">
+                            {{financials.bank_account}}
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label ctype">证件类型：</span>
+                        <div class="fc">
+                            <!-- if {{financials.cred_type}} ==1 -->身份证<!-- endif -->
+                            <!-- if {{financials.cred_type}} ==2 -->护照<!-- endif -->
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label cnum">证件号码：</span>
+                        <div class="fc">
+                            {{financials.cred_num}}
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label cpic">证件正面：</span>
+                        <div class="fc">
+                            <img src="{{upload_path}}" width="150px" height="80px" />
+                        </div>
+                    </li>
+                    <li  id="pic1_li">
+                        <span class="label cpic1">证件背面：</span>
+                        <div class="fc">
+                            <img src="{{upload_path1}}" width="150px" height="80px" />
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">审批意见：</span>
+                        <div class="fc">
+                            <input type="text" name="msg" id="msg" value="{{result.check_msg}}" class="iText"/>
+                        </div>
+                    </li>
+                    
+                    <li class="line"></li>
+                    <li>
+                        <div class="fc">
+                            <input type="hidden" value="{{result.dev_id}}" name="dev_id" />
+                            <input type="button" onclick="checkDeverloper(1)" value="通过审批" class="submit" />
+                            <input type="button" onclick="checkDeverloper(-1)" value="审批驳回" class="cancel goahead" />
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<script>
+function checkDeverloper(ispass){
+    var msg=$("#msg").val();
+    if(msg=="" && ispass==-1){
+        $("#msg").focus();
+        alert("请输入审批意见");
+        return false;
+    }
+    ajaxPOST("/developer/CheckDevloper","dev_id={{result.dev_id}}&email={{result.email}}&ispass="+ispass+"&msg="+msg,function(data){
+        if(data.result==0){
+            alert(data.msg);
+            location.href="/developer/index?ischeck=0";
+        }else{
+            alert(data.msg)
+        }
+    })
+}
+$(function(){
+    var ftype="{{financials.ftype}}";
+    if ($("input[name='ftype']").val() == 2){
+        $(".cname").text("公司名称");
+        $(".cnum").text("营业执照号码");
+        $(".ctype").parent('li').hide();
+        $(".cpic").text("营业执照截图");
+        $(".cpic1").text("开户许可证截图");
+        $("#pic1_li").hide();
+    }
+    $("input[name='ftype']").click(function(){
+        if ($(this).val() == 2) {
+            $(".cname").text("公司名称");
+            $(".cnum").text("营业执照号码");
+            $(".ctype").parent('li').hide();
+            $(".cpic").text("营业执照截图");
+            $(".cpic1").text("开户许可证截图");
+            $("#pic1_li").hide();
+        }else{
+            $(".cname").text("证件姓名");
+            $(".cnum").text("证件号码");
+            $(".ctype").parent('li').show();
+            $(".cpic").text("证件正面");
+            $(".cpic1").text("证件背面");
+            $("#pic1_li").show();
+        }
+    });
+    if(ftype==2){
+        $("input[name='ftype']").click();
+    }
+})
+</script>

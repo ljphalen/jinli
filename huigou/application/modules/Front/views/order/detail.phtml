@@ -1,0 +1,66 @@
+<?php echo $this->render("layout/header.phtml");?>
+<section id="page">
+	<header id="header"><!-- HEADER --></header>
+	<!-- 主体内容 -->
+	<input type="hidden" id="silver_coin" value="<?php echo $goods['silver_coin'];?>"/>
+	<input type="hidden" id="goods_id" value="<?php echo $goods['id'];?>"/>
+	<input type="hidden" id="address_id" value="<?php echo $address['id'];?>"/>
+	<section id="content">
+		<section class="order">
+			<section class="create">
+				<ul class="mod-text-list">
+					<li>
+						<ul class="mod-tw-list">
+							<li><img src="<?php echo $attachPath,$goods['img'];?>" alt="" /></li>
+							<li>
+								<h3><?php echo $goods['title'];?></h3>
+								<p>单价：<span><?php echo $goods['price'];?>元</span></p>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<?php 
+						if($address) {
+							$url = $webroot.'/user/address/edit?id='.$address['id']."&gid=".$goods['id'];
+						} else {
+							$url = $webroot.'/user/address/add?gid='.$goods['id'];
+						}
+						?>
+						<a href="<?php echo $url;?>" class="r-arrow J_cneeLink">
+							<dl class="mod-dl-list">
+								<dd>收 货 人：<?php echo $address['realname'];?></dd>
+								<dd>手机号码：<?php echo $address['mobile'];?></dd>
+								<dd>收货地址：<?php echo $address['country'],$address['province'],$address['city'],$address['detail_address']?></dd>
+								<dd>邮编：<?php echo $address['postcode'];?></dd>
+							</dl>
+						</a>
+					</li>
+					<li>
+					   <dl class="mod-dl-list">
+					     <dd>购买数量：<input type="number" min='1' max='999999' autocomplete='off' value="1" class="quantity orderInput" style= "ime-mode:Disabled" /><span class="fr subtotal"><?php echo $goods['price'];?>元</span></dd>
+					     <dd class="mr-t10"><strong class="orange-dashed">限购<span class="maxLimitNum"><?php echo $goods['limit_num'];?></span>件</strong></dd>
+					   </dl>
+					</li>
+					</li>
+					<li>
+						<dl class="mod-dl-list">
+							<dd>可用银币：<input type="number" value="<?php echo $goods['silver_coin'];?>" autocomplete='off' min='1' max='999999' class="coinNum orderInput" /> 元<span class="fr subcointotal">- <?php echo $goods['silver_coin'];?>元</span></dd>
+							<dd class="mr-t10"><strong class="orange-dashed">账户可用银币余额为<span class="maxCoinLimit"><?php echo $user['silver_coin'];?></span>元</strong></dd>
+						</dl>
+					</li>
+					<li>
+						<dl class="mod-dl-list">
+							<dd>实际付款：<span class="total-price"><?php echo Common::money($goods['price'] - $goods['silver_coin']);?>元</span></dd>
+							<dd>支付方式：<?php if($goods['iscash'] == 1) {echo '货到付款';}else{echo '在线支付';};?></dd>
+							<dd class="button mr-t40"><button type="button" id="J_createOrder" data-ajaxUrl="<?php echo $webroot.'/order/create'?>" class="btn orange">确认订单</button></dd>
+						</dl>
+					</li>
+				</ul>
+			</section>
+		</section>
+	</section>
+	<!--  /主体内容 -->
+	<footer id="footer"><!-- FOOTER --></footer>
+</section>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li class="current"><a href="<?php echo $listUrl;?>">差分峰值列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">内存下限</th>
+			<td class="td"><input type="text" class="input" name="phone_ram_min" value="<?php echo $search['phone_ram_min'];?>"></td>
+			<th class="th">内存上限</th>
+			<td class="td"><input type="text" class="input" name="phone_ram_max" value="<?php echo $search['phone_ram_max'];?>"></td>
+			<th class="th">apk包峰值</th>
+			<td class="td"><input type="text" class="input" name="max_apk" value="<?php echo $search['max_apk'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+    <span class="btn2"><span><button onclick="$('#action').val('delete');" type="submit">批量删除</button></span></span>
+	<span class="btn2"><span><a href="<?php echo $addUrl;?>" style="text-decoration:none;color:#ffffff;">添加差分峰值</a></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="30"><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="50">内存下限</td>
+			<td width="50">内存上限</td>
+			<td width="50">apk包峰值</td>
+			<td width="100">操作</td>
+		</tr>
+		<?php foreach($list as $key => $value) {?>
+		<tr class="ct">
+			<td><input class="checkbox" name="keys[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><?php echo $value['phone_ram_min'];?></td>
+			<td><?php echo $value['phone_ram_max'];?></td>
+			<td><?php echo $value['max_apk'];?></td>
+			<td>
+				<a href="<?php echo $editUrl . "?" . "id=" . $value['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl . "?" . "id=" . $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+	 <?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc"><?php echo $pager;?></div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $listUrl;?>');
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

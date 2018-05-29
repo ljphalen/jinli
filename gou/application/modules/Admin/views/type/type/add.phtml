@@ -1,0 +1,108 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $indexUrl;?>">分类列表</a></li>
+    <li class="current"><a href="javascript:;">添加分类</a></li>
+	</ul>
+</div>
+<div class="h_a">添加分类</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input wb" name="sort" value=""></td>
+		</tr>
+        <tr class="tr">
+            <th class="th">分类</th>
+            <td class="td">
+                <select name="type_id" id="type">
+                    <?php foreach ($type as $key => $value) { ?>
+                        <option <?php echo ($info['type_id'] == $value['id']) ? 'selected="selected"' : ''; ?>
+                          value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                    <?php } ?>
+                </select>
+                子分类
+                <select name="ctype_id" id="child_type">
+                    <?php if(!empty($current_child_type)): ?>
+                    <?php foreach ($current_child_type as $key => $c) : ?>
+                        <option value="<?php echo $c['id']; ?>"><?php echo $c['name']; ?></option>
+                    <?php endforeach; ?>
+                    <?php else: ?>
+                    <option value="">请选择</option>
+                    <?php endif; ?>
+                </select>
+            </td>
+        </tr>
+		<tr class="tr">
+			<th class="th">名称</th>
+			<td class="td"><input type="text" class="input wc" name="name" value=""></td>
+		</tr>
+ 		<tr class="tr">
+			<th class="th">关键词</th>
+			<td class="td"><input type="text" class="input wc" name="keyword" value=""></td>
+		</tr>
+        <tr class="tr">
+            <th class="th">图片</th>
+            <td class="td">
+                <ul class="uploadImg">
+                    <li id="typeImg">
+                        <img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+                        <input type="hidden" name="img" value="">
+                    </li>
+                </ul>
+                <p style="clear:both;">
+                    <iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=typeImg'; ?>"
+                            style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                </p>
+            </td>
+        </tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				<select class="wa" name="status">
+					<option value="1">开启</option>
+					<option value="0">关闭</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+				<th class="th">是否推荐</th>
+				<td class="td"><select name="is_recommend" class="select">
+				<option value="0">否</option>
+					<option value="1">是</option>
+				</select></td>
+			</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+
+    $(function(){
+        $("select#type").change(function(){
+            var child_type_data = <?php  echo $child_type ; ?>;
+            var type_id = $(this).val();
+            var opt = child_type_data[type_id];
+            if(opt==undefined){
+                $("select#child_type").html('<option value="">请选择</option>');
+                return true;
+            }
+            var tpl = '';
+            $(opt).each(function (k, v) {
+                tpl += '<option value="' + v.id + '">' + v.name + '</option>';
+            });
+            $("select#child_type").html(tpl);
+        });
+    });
+
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, '<?php echo Util_Http::getServer('HTTP_REFERER'); ?>');
+	});
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

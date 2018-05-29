@@ -1,0 +1,28 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">消息日志列表</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">id</td>
+			<td>push_content</td>
+			<td>return_content</td>
+			<td width="140">create_time</td>
+		</tr>
+<?php foreach($logs as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['push_content'];?></td>
+			<td><?php echo $value['return_content'];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

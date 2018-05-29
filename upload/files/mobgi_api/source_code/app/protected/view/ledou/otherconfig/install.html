@@ -1,0 +1,166 @@
+<link rel="stylesheet" href="{{rootUrl}}/css/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/Categorywidget_sdk.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/float.js"></script>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">安装提醒音效</p>
+    </div>
+    <div class="main">
+        <div class="toolbar tabs" style="padding-left:20px;padding-top: 20px;padding-right: 20px;padding-bottom: 3px;overflow: auto ">
+            <a href="/othercf/index?type=install" class="fr add btn">添加配置</a>
+            <ul class="fl">
+                    <li class="cur"><a href="/othercf/index?type=install">安装提醒</a></li>
+                    <li><a href="/othercf/index?type=downloader">下载器管理</a></li>
+                    <li><a href="/othercf/index?type=pushcdnset">PUSH CDN 间隔</a></li>
+                    <li><a href="/othercf/index?type=quit">应用退出提示配置</a></li>
+                    <li><a href="/othercf/index?type=channellink">渠道下载地址配置</a></li>
+                    <li><a href="/othercf/index?type=channelimit">渠道限制配置</a></li>
+                    <li><a href="/othercf/index?type=carousel">BANNER轮播配置</a></li>
+                    <li><a href="/othercf/index?type=showdetails">是否显示详情</a></li>
+                    <!--<li><a href="/othercf/rtb">RTB报价配置</a></li>-->
+                    <li><a href="/othercf/index?type=tcaggr">腾讯聚合广告配置</a></li>
+                    <li><a href="/othercf/index?type=directpush">定向推送</a></li>
+            </ul>
+        </div>
+        <div class="app-detail">
+            <h3>配置列表</h3>
+            <ul class="form">
+                <li>
+                    <table width="100%" style="margin-left: 40px;text-align:center;">
+                    <thead>
+                        <tr>
+                            <th>配置项名称</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                        <tbody>
+                            <!-- if {{list}} -->
+                                <!-- loop list -->
+                                <tr>
+                                    <td>{{list' value.config_name}}</td>
+                                    <td><a href="/othercf/index?type=install&config_name={{list' value.config_name}}">编辑</a> <a href="/othercf/del?type=install&config_name={{list' value.config_name}}">删除</a></td>
+                                </tr>
+                                <!-- endloop -->
+                            <!-- endif -->
+                        </tbody>
+                    </table>
+                </li>
+            </ul>
+        <form action="/othercf/configsave" method="POST" >
+            <input type="hidden" name="id" value='{{result.id}}' />
+            <h3>基础配置</h3>
+            <ul class="form">
+                <li>
+                    <span class="label">配置名称：</span>
+                    <div class="fc">
+                        <input type="text" <!-- if {{id}} -->readonly<!-- endif --> class="iText config_name" name="config_name" value="{{config_name}}" />
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">应用：</span>
+                    <div class="fc">
+                        <script>
+                            function appkey(){
+                                <!-- if {{appkey}} -->
+                                    <!-- loop appkey -->
+                                        $("#appkey").append("<option selected value='{{appkey' value.appkey}}'>{{appkey' value.app_name}}</option>");
+                                    <!-- endloop -->
+                                <!-- endif -->
+                            }
+                        </script>
+                        <div class="clearfix config" id="games_box"></div>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">渠道：</span>
+                    <div class="fc addChannel">
+                        <div class="clearfix config" id="channels_box"></div>
+                        <script>
+                            function channel_id(){
+                                <!-- if {{channel}} -->
+                                    <!-- loop channel -->
+                                        $("#channel_id").append("<option selected value='{{channel_id' key}}'>{{channel_id' value}}</option>")
+                                    <!-- endloop -->
+                                <!-- endif -->
+                            }
+                        </script>
+                    </div>
+                </li>
+                <li>
+                    <input type="hidden" name="types" value="install" />
+                    <span class="label">安装提醒音效：</span>
+                    <div class="fc">
+                        <input type="radio" class="checkbox" <!-- if {{config_detail.sound}}=="true" -->  checked <!-- endif -->name="data[sound]" value="true"><label for="state1">开启</label>
+                        <input type="radio" class="checkbox"  name="data[sound]" <!-- if {{config_detail.sound}}=="false" -->  checked <!-- endif --> value="false"><label for="state2">关闭</label>
+                    </div>
+                </li>
+                <li class="line"></li>
+                <li>
+                    <div class="fc">
+                        <input type="submit" value="保存" class="submit" />
+                    </div>
+                </li>
+            </ul>
+        </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function(){
+        //应用
+        var Gs = new Categorywidget_sdk({
+            interfaceName: 'Gs',
+            boxId: 'games_box',
+            ComboId: 'games_list',
+            ComboName: 'n2',
+            ComboSaveId: 'appkey',
+            ComboSaveName: 'appkey[]',
+            DataConfig: {text: 'app_name', value: 'appkey'},
+            DataSourceConfig: {
+                CategoryListCombo: '{{siteUrl}}developer/retDeveloperList',
+                CategoryDataUrl: '{{siteUrl}}apps/retDevelopsApp',
+                DataType: 'dev_id'
+            }
+        });
+        //渠道
+        var Cs = new Categorywidget_sdk({
+            interfaceName: 'Cs',
+            boxId: 'channels_box',
+            ComboId: 'channels_list',
+            ComboName: 'n1',
+            ComboSaveId: 'channel_id',
+            ComboSaveName: 'channel_id[]',
+            DataConfig: {text: 'realname', value: 'identifier'},
+            DataSourceConfig: {
+                CategoryListCombo: '{{channelUrl}}sys_groups/getCategoryListCombo',
+                CategoryDataUrl: '{{channelUrl}}channels_in_groups/GetLinkChannels',
+                DataType: 'channels'
+            }
+        });
+        $("form").submit(function(){
+            if ($(".config_name").val()==""){
+                alert("请输入配置名称");
+                $(".config_name").focus();
+                return false;
+            }
+            if ($("#appkey").val()==""){
+                alert("请选择应用");
+                $("#appkey").focus();
+                return false;
+            }
+            if ($("#channel_id").val()==""){
+                alert("请选择渠道");
+                $("#channel_id").focus();
+                return false;
+            }
+            $("#channel_id > option").each(function(){
+                $(this).attr("selected","selected");
+            });
+        });
+        appkey();
+        channel_id();
+    });
+</script>

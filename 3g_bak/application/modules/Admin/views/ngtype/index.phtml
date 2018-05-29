@@ -1,0 +1,51 @@
+<?php echo $this->render("layout/header2.phtml"); ?>
+	<section class="main-content">
+		<header class="header navbar bg-default">
+			<ul class="nav navbar-nav">
+				<li class="active">
+					<a href="<?php echo $listUrl . '?page_id=' . $pageId; ?>">分类列表</a>
+				</li>
+				<li>
+					<a href="<?php echo $addUrl . '?page_id=' . $pageId; ?>">添加分类</a>
+				</li>
+			</ul>
+		</header>
+		<div class="content-wrap">
+			<div class="row">
+				<div class="col-lg-12">
+					<!-- table content start -->
+					<section class="panel">
+						<table class="table table-bordered table-striped no-margin">
+							<tr>
+								<th width="50">ID</th>
+								<th width="50">排序</th>
+								<th width="200">名称</th>
+								<th width="100">图标</th>
+								<th>描述
+								</td>
+								<th width="300">操作</th>
+							</tr>
+							<?php foreach ($list as $key => $value) { ?>
+								<tr>
+									<td><?php echo $value['id']; ?></td>
+									<td><?php echo $value['sort']; ?></td>
+									<td><?php echo $value['name']; ?></td>
+									<td>
+										<img src="<?php echo $value['icon'] ? $attachPath . $value['icon'] : ''; ?>" width="30"/>
+									</td>
+									<td><?php echo $value['description']; ?></td>
+									<td class="center">
+										<a href="<?php echo $listColumnUrl; ?>/?type_id=<?php echo $value['id']; ?>" class="mr10">查看栏目</a>
+										<a href="<?php echo $addColumnUrl; ?>/?type_id=<?php echo $value['id']; ?>" class="mr10">添加栏目</a>
+										<a href="<?php echo $editUrl . '/?id=' . $value['id'] . '&page_id=' . $value['page_id']; ?>" class="mr10">编辑分类</a>
+										<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除分类</a>
+									</td>
+								</tr>
+							<?php } ?>
+						</table>
+					</section>
+				</div>
+			</div>
+		</div>
+	</section>
+<?php echo $this->render("layout/footer.phtml"); ?>

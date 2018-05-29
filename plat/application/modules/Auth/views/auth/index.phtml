@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>HotWifi安全认证</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="format-detection" content="email=no" />
+
+<link rel="stylesheet" href="/static/css/phonecore.css?v=<?php echo $version;?>" />
+<link rel="stylesheet" href="/static/css/auth.source.css?v=<?php echo $version;?>" />
+<script type="text/javascript" src="/static/js/jquery.js?v=<?php echo $version;?>"></script>
+
+</head>
+<body class="<?php echo $udata['theme']?$udata['theme'].'-style':"";?>">
+	<header  class="header">
+        <div class="hd-bg"></div>
+		<div class="hd-img">
+			<a href=""><img src="<?php echo $attachPath,$udata['baner'];?>" alt=""></a>
+		</div>
+        <div class="logo">
+            <img class="logo-icon" src="<?php echo $attachPath,$udata['logo'];?>" alt="">
+            <p class="title">欢迎光临<?php echo $udata['title'];?></p>
+        </div>
+	</header>
+    <div class="content-wrap">
+	<div class="main-content">
+<?php if ($user) {?>
+		<div class="auth-pass">
+            <h1>欢迎光临<?php echo $udata['title'];?></h1>
+			<form id="login-form">
+				<input type="hidden" name="refer" value="<?php echo $params['refer']?>">
+				<input type="hidden" name="token" value="<?php echo $token;?>">
+				<input type="hidden" name="ht" value="<?php echo $params['ht'];?>">
+				<input type="hidden" name="uht" value="<?php echo $params['uht'];?>">
+				<label class="text">您之前已经通过登录认证，欢迎使用!</label>
+				<div onclick="Submit()" class="btn-login">已认证，免费接入WIFI</div>
+			</form>
+		</div>
+		
+<?php } else {?>
+	<?php if($ptner['login_mode'] == 1) {?>
+		<div class="auth-pass">
+            <h1>欢迎光临<?php echo $udata['title'];?></h1>
+			<form id="login-form">
+				<input type="hidden" name="refer" value="<?php echo $params['refer']?>">
+				<input type="hidden" name="token" value="<?php echo $token;?>">
+				<input type="hidden" name="ht" value="<?php echo $params['ht'];?>">
+				<input type="hidden" name="uht" value="<?php echo $params['uht'];?>">
+				<label class="text">无需认证，欢迎使用!</label>
+				<div onclick="Submit()" class="btn-login">免费接入WIFI</div>
+			</form>
+		</div>
+	<?php } else if ($ptner['login_mode'] == 2) {?>
+		<div class="get-password-content">
+            <h1>欢迎光临<?php echo $udata['title'];?></h1>
+			<form id="login-form">
+				<input type="hidden" name="refer" value="<?php echo $params['refer']?>">
+				<input type="hidden" name="token" value="<?php echo $token;?>">
+				<input type="hidden" name="ht" value="<?php echo $params['ht'];?>">
+				<input type="hidden" name="uht" value="<?php echo $params['uht'];?>">
+				<p class="password">
+					<input type="password" name="passwd" class="input" placeholder="请输入认证密码">
+					<label class="text">密码请向工作人员索取</label>
+				</p>
+				<div onclick="Submit()" class="btn-login">免费接入WIFI</div>
+			</form>
+		</div>
+	<!-- 手机认证 -->
+	<?php } else if ($ptner['login_mode'] == 3) {?>
+		<div class="login-content">
+			<form id="login-form">
+                <h1>欢迎光临<?php echo $udata['title'];?></h1>
+				<input type="hidden" name="refer" value="<?php echo $params['refer']?>">
+				<input type="hidden" name="token" value="<?php echo $token;?>">
+				<input type="hidden" name="ht" value="<?php echo $params['ht'];?>">
+				<input type="hidden" name="uht" value="<?php echo $params['uht'];?>">
+				<span class="J_alert alert"></span>
+
+                <div class="wrap">
+					<label class="reminder">手机号码:</label>
+					<input type="text" name="phone" class="phone input" value="<?php echo $phone;?>" placeholder="请输入手机号码">
+				<div class="code">
+					<label class="reminder">验证码:</label>
+					<input type="text" name="code" class="input" placeholder="请输入验证码">
+					<div class="btn-get">获取验证码</div>
+				</div>
+                </div>
+				<p class="ck">
+				<input checked="checked" type="checkbox">我已阅读并接受用户协议所包含的内容
+				</p>
+				<div onclick="Submit()" class="btn-login">免费接入WIFI</div>
+			</form>
+		</div>
+	<?php } else if ($ptner['login_mode'] == 4) {?>
+        <div class="get-password-content">
+            <h1>欢迎光临<?php echo $udata['title'];?></h1>
+            <div class="text-tip text">
+                <p>温馨提示：</p>
+                <p>1.关注微信公众号“<?php echo $ptner['weixin_name'];?>”</p>
+                <p>2.发送“wifi”，获取密码</p>
+                <p>3.输入密码，免费上网</p>
+            </div>
+            <form id="login-form">
+                <input type="hidden" name="refer" value="<?php echo $params['refer']?>">
+                <input type="hidden" name="token" value="<?php echo $token;?>">
+                <input type="hidden" name="ht" value="<?php echo $params['ht'];?>">
+                <input type="hidden" name="uht" value="<?php echo $params['uht'];?>">
+                <p class="password">
+                    <input type="password" name="passwd" class="input" placeholder="请输入认证密码">
+                </p>
+                <div onclick="Submit()" class="btn-login">免费接入WIFI</div>
+            </form>
+        </div>
+    <?php }?>
+<?php }?>		
+	</div>
+    </div>
+	<footer class="footer">	
+		<div class="copyright">
+			<p>Powered by  HotWifi.CC</p>
+			<p>copyright ©深圳金立通信设备有限公司 </p>
+            <img src="<?php echo $statUrl,'?ht=',$params['ht'];?>" class="hidden"/>
+		</div>
+	</footer>
+	<div class="J_tipBox tip-box hidden">
+		<p></p>
+		<div class="mask"></div>
+	</div>
+<script type="text/javascript">
+
+
+function showError(msg) {
+	var tip = $('.J_tipBox'), dw = $(document).width(), bw = tip.width();
+	tip.find('p').html(msg);
+	tip.css('left', (dw-bw)/2+'px').removeClass('hidden');
+	setTimeout(function(){
+		tip.addClass('hidden');
+		tip.find('p').html(msg);
+	},3000);
+	return false;
+}
+
+
+// 此函数为和路由器交互的函数
+function login (p) {
+	$.ajax({
+	async:false,
+	type:"POST",
+    url:'http://hotwifi.me/api/login.cgi',                    
+	dataType: 'jsonp',
+	jsonp: 'jsonpcallback',  
+	data: { "token": p.token },		    
+	timeout: 1000,
+
+	success:function(data){
+		if (data.ret > 0){
+          	window.location = p.url;
+		}else {
+			showError("认证失败!");
+		}
+	},
+	error:function(){	
+		console.log("与服务器通讯失败!");
+	}
+	});
+}
+
+
+// 此函数为和服务器交互,获取token的并自动和路由器交互的函数
+function Submit() {
+	var phone = $("input[name=phone]");
+	if (phone.length && !phone.val()) {
+		showError("手机号码不能为空.");
+		return false;
+	}
+	var code = $("input[name=code]");
+	if (code.length && !code.val()) {
+		showError("验证码不能为空.");
+		return false;
+	}
+
+	var passwd = $("input[name=passwd]");
+	if (passwd.length && !passwd.val()) {
+		showError("密码不能为空.");
+		return false;
+	}
+	
+	$.ajax({
+		async:false,
+		type:"POST",
+		url:'<?php echo $webroot.$tokenUrl?>',
+	    data:$("#login-form").serialize(),
+		dataType: 'json',
+		timeout: 1000
+	}).done(function(ret){ 
+		if (ret.success) {
+			login(ret.data);
+		} else {
+			showError(ret.msg)
+		}
+	}).fail(function( jqXHR, textStatus ) {
+		showError( "Request failed: " + textStatus );
+	});
+}
+
+var it = null;
+$(".btn-get").click(function(event){
+	event.preventDefault();
+	var i = 120;
+	var s = $(this);
+	if (it) return false;
+
+	var phone = $("input[name=phone]");
+	if (!phone.val()) {
+		showError("手机号码不能为空.");
+		return false;
+	}
+
+	$.ajax({
+		url: "<?php echo $webroot,$smsUrl;?>",
+        method:"POST",
+		data:"phone="+phone.val()+"&uht=<?php echo $params['uht'];?>",
+		success:function(ret) {
+			if (ret.success == true) {
+			} else {
+				showError(ret.msg);
+				return false;
+			}
+		}
+	})
+
+	it = window.setInterval(function timeout() {
+		if (i>0) {
+			s.val(--i+"秒");
+		} else {
+			window.clearInterval(it);
+			it = null;
+			s.val("获取验证码");					
+		}
+	}, 1000);
+});
+</script>
+    <script type="text/javascript">
+        var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+        document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F3b5ba05956733a194dfb9da41125ab8b' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</body>
+</html>

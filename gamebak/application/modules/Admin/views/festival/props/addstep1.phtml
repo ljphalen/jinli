@@ -1,0 +1,174 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<style>
+.step2 li{
+    width: 23%;
+}
+.step2 li.line{
+	position: static;
+}
+</style>
+<div class="nav">
+	<ul class="cc">
+	   <li ><a href="<?php echo $indexUrl;?>">道具兑换</a></li>
+       <li class="current"><a href="javascript:;">添加兑换活动</a></li>
+	</ul>
+</div>
+<div class="step step2 mb10">
+		<ul class="cc">
+			<li class="current">添加活动</li>
+			<li class="line"></li>
+			<li><span class="fl"><em></em></span>添加道具</li>
+			<li class="line"></li>
+			<li><span class="fl"><em></em></span>添加游戏</li>
+			<li class="line"></li>
+			<li><span class="fl"><em></em></span>添加奖品</li>
+		</ul>
+</div>
+<form method="post" action="<?php echo $addStep1PostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">活动标题</th>
+			<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">生效时间</th>
+			<td class="td">
+			     <div>
+			         <input class="input" type="text" maxlength="30" style="width:143px;" id="startTime" name="startTime" value="" />
+			          至 
+			         <input class="input" type="text" maxlength="30" style="width:143px;" id="endTime" name="endTime" value="" />
+			     </div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">广告图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="bannerImg" value="">
+					</li>
+				</ul>			
+                <p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动说明</th>
+			<td class="td">
+			         <textarea name="description" style="height:240px;width:800px"></textarea>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏大厅版本</th>
+			<td class="td">
+			    <span><label>请选择最低参与版本<br/></label></span>
+			    <?php foreach ($clientConfig as $key=>$item):?>
+				<span><label><input type="radio" name="clientVersion" value="<?php echo $key;?>"><?php echo $item;?></label></span>
+				<?php endforeach;?>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status">
+                	<option value="1">开启</option>
+                	<option value="0">关闭</option>
+            </select></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">首页配置图片一</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg1">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="config[img1]" value="">
+					</li>
+				</ul>			
+                <p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg1';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+			 </p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">首页配置图片二</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg2">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="config[img2]" value="">
+					</li>
+				</ul>			
+                <p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg2';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+			 </p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">首页配置图片三</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg3">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="config[img3]" value="">
+					</li>
+				</ul>			
+                <p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg3';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+			 </p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">首页配置图片四</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg4">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="config[img4]" value="">
+					</li>
+				</ul>			
+                <p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg4';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+			 </p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">版本过低图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg5">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="config[img5]" value="">
+					</li>
+				</ul>			
+                <p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg5';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+			 </p></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">下一步</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 var editor;
+	 KindEditor.ready(function(K) {
+	     K.token = '<?php echo $token;?>';
+	        editor = K.create('textarea[name="description"]', {
+	        resizeType : 1,
+	        allowPreviewEmoticons : false,
+	        allowImageUpload : true,
+	        uploadJson : '<?php echo $uploadImgUrl;?>',
+	        items : EDITOR_ITEMS
+	   });
+     });
+	 $('#startTime').datetimepicker();
+     $('#endTime').datetimepicker();
+	 ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $addStep2Url;?>');
+	 }, function(){
+			editor.sync();
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

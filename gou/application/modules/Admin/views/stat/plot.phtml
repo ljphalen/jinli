@@ -1,0 +1,119 @@
+<?php echo $this->render("layout/header.phtml");?>
+    <div class="table_full">
+        <form action="<?php echo $baseUrl;?>" method="POST">
+            <input type="hidden" name="token" value="<?php echo $token;?>" />
+            <table width="100%" cellspacing="0" cellpadding="0">
+                <tr class="tr1">
+                    <td class="td1">
+                        时间:
+                    </td>
+                    <td class="td1">
+                        <input class="input" type="text" maxlength="30" id="start_time" name="start_time" value="<?php echo $search['start_time'];?>"> 至
+                        <input class="input" type="text" id="end_time" maxlength="30" name="end_time" value="<?php echo $search['end_time'];?>">
+                        <input id="search_btn" type="submit" value="叠加生成点阵" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div class="h_a">数据报表</div>
+    <table width="100%" cellspacing="0" cellpadding="0">
+        <tr class="tr1">
+            <td class="td2">
+                <div id="container" style="height: 800px; margin: 0 auto"></div>
+            </td>
+        </tr>
+    </table>
+    <script src="<?php echo $staticPath;?>/js/admin/highcharts.js"></script>
+    <script src="<?php echo $staticPath;?>/js/admin/exporting.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#start_time").datepicker({
+                dateFormat : 'yy-mm-dd'
+            });
+            $("#end_time").datepicker({
+                dateFormat : 'yy-mm-dd'
+            });
+
+            $("#search_btn").click(function(){
+                var start_time = $("#start_time").val();
+                var end_time = $("#end_time").val();
+                var sd = new Date(start_time);
+                var ed = new Date(end_time);
+                if (sd.getMonth() !== ed.getMonth()) {
+                    showError('提示', '开始,结束时间请选择同一个月份.');
+                    return false;
+                }
+                if (ed < sd) {
+                    showError('提示', '结束时间不能小于开始时间.');
+                    return false;
+                }
+            });
+
+            var ydata = eval(<?php echo $ydata;?>);
+            $('#container').highcharts({
+                chart: {
+                    type: 'scatter',
+                    zoomType: 'xy'
+                },
+                title: {
+                    text: '用户访问24小时时间点阵'
+                },
+                subtitle: {
+                    text: '<?php echo $search['start_time'],'至',$search['end_time'];?>'
+                },
+                xAxis: {
+                    title: {
+                        enabled: true,
+                        text: '时间'
+                    },
+                    labels: {
+                        formatter: function() {
+                            return this.value+":00";
+                        }
+                    },
+                    categories : <?php echo $x;?>
+                },
+                yAxis: {
+                    title: {
+                        text: '版本'
+                    },
+                    labels: {
+                        formatter: function() {
+                            return ydata[this.value];
+                        }
+                    },
+                    categories: <?php echo $y;?>
+                },
+                credits : {
+                    enabled : false
+                },
+                legend:{
+                    enabled : false
+                },
+                plotOptions: {
+                    scatter: {
+                        marker: {
+                            radius: 3,
+                            states: {
+                                hover: {
+                                    enabled: true,
+                                    lineColor: 'rgb(100,100,100)'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            pointFormat: '{point.x}/{point.y}'
+                        }
+                    }
+                },
+                series: [{
+                    name:'时间分布:',
+                    color: 'rgba(119, 152, 191, .6)',
+                    data: <?php echo $lineData;?>
+                }]
+            });
+        });
+
+    </script>
+<?php echo $this->render("layout/footer.phtml");?>

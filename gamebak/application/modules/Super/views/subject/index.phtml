@@ -1,0 +1,37 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+</script>
+	<div id="page" class="superfile">
+		<a name="top"></a>
+		<article class="ac">
+			<div class="item-box topic J_topicItem">
+				<ul>
+				  <?php foreach($subjects as $key=>$value) {?>
+					<li>
+						<a href="<?php echo Common::tjurl($tjUrl, $value['id'], 'SUBJECT', $webroot.'/super/subject/detail/?id='.$value['id'].'&intersrc=SUBJECT');?>">
+							<div class="pic">
+								<img src="<?php echo $attachPath.$value['icon'];?>" alt="<?php echo $value['title'];?>">
+							</div>
+							<div class="desc"><?php echo $value['title'];?></div>
+							<div class="mask"></div>
+						</a>
+					</li>
+					<?php }?>
+				</ul>
+			</div>
+			<?php if($hasnext) {?>
+			<div class="load-more J_loadMore" data-ajaxUrl="<?php echo $webroot.'/super/subject/more/';?>" data-hasnext="<?php echo $hasnext;?>" data-curpage="<?php echo $page;?>">
+				<span>加载更多</span>
+			</div>
+			<?php } ?>
+		</article>
+
+		<footer class="ft">
+			<div class="back-top"><a class="btn" href="#top">返回顶部</a></div>
+		</footer>
+	</div>
+</body>
+<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

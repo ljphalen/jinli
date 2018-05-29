@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html >
+<head>
+	<meta charset="UTF-8">
+	<title><?php echo $title ? $title: '金立游戏大厅';?></title> 
+	<meta name="keyword" content="金立, 金立游戏, 游戏大厅" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="email=no" />
+    <link rel="stylesheet" href="<?php echo $staticroot; ?>/apps/game/apkv1/assets/css/points.css?v=<?php echo $version;?>"/>
+    <script>
+    var token = '<?php echo $token;?>';
+    var isLogin = '<?php echo $isLogin ? 'true': 'false';?>';
+    var preheatData = {
+			timeStart:<?php echo Common::getTime();?>,
+			timeEnd:<?php echo $seckillGoods['end_time'];?>
+		}
+    </script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/jquery.js"></script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/Common.js"></script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/lazyload-jquery.js"></script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/fastclick.js"></script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/points/index.js"></script>
+    <meta charset="UTF-8">
+</head>
+<body >
+	<div class="myinfo-container">
+		<div class="avatorContainer" id="account">
+			<img class="avator" src="<?php echo $staticResPath; ?>/pic/blankAvator.gif" data-src="<?php echo $attachPath. $userInfo['avatar'];?>" alt="">
+		</div>
+		<div class="info">
+			<span class="name omit" name="mypoint"><?php echo $userInfo['nickname']; ?></span>
+			<span class="points" name="mypoint"><?php echo intval($userInfo['points']); ?>积分</span>
+			<div class="get-money" id="getInte">
+				<i class="icon icon-money"></i>
+				领积分
+			</div>
+			<div class="my-trophy" id="prize">
+				<i class="icon icon-trophy"></i>
+				我的奖品
+			</div>
+		</div>
+		
+		   
+		
+	</div>
+	<?php if($seckillGoods){?>
+	<?php
+		list($detailUrl, $discountPoint, $discountArr) = Mall_Service_Goods::assembleGoodInfo($seckillGoods, $parmes);
+		$discountCss = '';
+		$isDiscountCss = '';
+		if($seckillGoods['discountArr'] && $discountArr['discount_start_time'] <= Common::getTime() && $discountArr['discount_end_time'] > Common::getTime()){
+		    $discountCss = 'discount';
+		    $isDiscountCss = Mall_Service_Goods::getGoodDiscountCss($discountPoint);
+		}
+	?>
+	<a href="<?php echo $webroot; ?>/client/Mall/seckillDetail/?goodId=<?php echo $seckillGoods['id'].'&puuid='.$userInfo['uuid'].'&uname='.$userInfo['uname'].'&serverId='.$parmes['serverId'].'&sp='.$parmes['sp'];?>">
+	<div class="block">
+		<div class="title">
+			<h1>限时秒杀</h1>
+			<div class="end-time">
+				距<?php if($seckillGoods['start_time'] <= Common::getTime()){?>结束<?php } else if($seckillGoods['start_time'] > Common::getTime()){?>开始<?php }?>仅：<i id="endTime"></i>
+			</div>
+		</div>
+		<div class="content discount">
+			<img src="<?php echo $attachPath. $seckillGoods['img'];?>" />
+			<div class="info">
+				<h1 class="omit"><?php echo $seckillGoods['title'];?></h1>
+				<div>剩余：<span class="font-orange"><?php echo $seckillGoods['remaind_num']; ?></span>个</div>
+				<div>
+				   积分：<span class="font-orange <?php echo $discountCss;?>"><?php echo Mall_Service_Goods::convertPointVal($seckillGoods['consume_point']); ?></span>
+				  <?php echo $isDiscountCss;?>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+	</a>
+	<?php } ?>
+	
+	<?php if($commonGoods){?>
+	<?php foreach($commonGoods as $key=>$value){?>
+	<?php if($value['list']){?>
+	<div class="block">
+		<div class="title">
+			<h1 class="omit"><?php echo $value['title'];?></h1>
+			  <?php $hreflUrl = urldecode($webroot. '/client/Mall/goodList/?categoryId=' . $value['categoryId'].'&puuid='.$parmes['puuid'].'&uname='.$parmes['uname'].'&sp='.$parmes['sp'].'&serverId='.$parmes['serverId']);?>
+			  <a href="<?php echo $hreflUrl;?>"><span class="many">更多</span></a>
+		</div>
+		<div class="content">
+			<ul>
+			   <?php foreach($value['list'] as $k=>$v){?>
+			   <?php
+		       list($listDetailUrl, $listDiscountPoint, $listDiscountArr) = Mall_Service_Goods::assembleGoodInfo($v, $parmes);
+		       $listConsumePoint = $v['consume_point'];
+		       $listDiscountCss = '';
+		       $listDivDiscountCss = '';
+		       $listIsDiscountCss = '';
+		       if($v['discountArr'] && $listDiscountArr['discount_start_time'] <= Common::getTime() && $listDiscountArr['discount_end_time'] > Common::getTime()){
+		           $listConsumePoint = $listDiscountPoint;
+		           $listDiscountCss = 'discount';
+		           $listDivDiscountCss = 'class="discount" name="discount"';
+		           $listIsDiscountCss = Mall_Service_Goods::getGoodDiscountCss($listConsumePoint);
+		       }
+		       ?>
+				<li>
+					 <a href="<?php echo $listDetailUrl;?>">
+						<img data-src="<?php echo $attachPath. $v['img'];?>" src="<?php echo $staticResPath; ?>/pic/blank.gif" />
+						<h1 class="omit">
+							<?php echo $v['title'];?>
+						</h1>
+						<div <?php echo $listDivDiscountCss;?> >
+							积分：<span class="font-orange <?php echo $listDiscountCss;?>" ><?php echo Mall_Service_Goods::convertPointVal($v['consume_point']); ?></span>
+						</div>
+						<?php if($listIsDiscountCss){?>
+						<div><?php echo $listIsDiscountCss;?></div>
+						<?php } ?>
+					 </a>
+				</li>
+				<?php } ?>
+			</ul>
+		</div>
+	</div>
+	<?php } ?>
+	<?php } ?>
+	<?php } ?>
+	 <script>
+	    $(function(){$("img[data-src]").scrollLoading();})
+     </script>
+</body>
+
+</html>

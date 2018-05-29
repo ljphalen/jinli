@@ -1,0 +1,38 @@
+<?php echo $this->render("../../Front/views/layout/header.phtml");?>
+<div id="page">
+	<!-- 主体内容 -->
+	<div id="content">
+		<div class="account">
+			<!-- 个人中心设置模块 -->
+			<div class="pindex">
+				<ul class="mod-text-list mod-ws-box">
+				    <li>账号：</li>
+					<li>
+						<a href="<?php echo $webroot,'/user/setting/index';?>" class="r-arrow">我的账号：<?php echo $user_info['username'];?></a>
+					</li>
+				</ul>
+
+				<ul class="mod-text-list mod-ws-box">
+				    <li>积分：</li>
+					<li><a href="<?php echo $webroot,'/user/account/silver';?>" class="r-arrow">银币：<span class="zt-orange"><?php echo !$user_info ? '0.00': $user_info['silver_coin'];?>元</span>（冻结<?php echo !$user_info ? '0.00': $user_info['freeze_silver_coin'];?>元）</a></li>
+					<li><a href="<?php echo $webroot,'/user/account/gold';?>" class="r-arrow">金币：<span class="zt-orange"><?php echo !$user_info ? '0.00': $user_info['gold_coin'];?>元</span>（冻结<?php echo !$user_info ? '0.00': $user_info['freeze_gold_coin'];?>元）</a></li>
+					<li><a href="<?php echo $webroot,'/user/account/coin_log';?>" class="r-arrow">积分流通记录</a></li>
+				</ul>
+
+				<ul class="mod-text-list mod-ws-box">
+				    <li>订单：</li>
+					<li><a href="<?php echo $webroot,'/user/account/order_list';?>" class="r-arrow">积分换购订单</a></li>
+				</ul>
+
+				<ul class="mod-text-list mod-ws-box">
+				    <li>心愿清单：</li>
+					<li><a href="<?php echo $webroot.$wantUrl;?>" class="r-arrow">我的心愿清单</a></li>
+				</ul>
+			</div>
+			<!-- /个人中心设置模块 -->
+		</div>
+	</div>
+	<!--  /主体内容 -->
+</div>
+</body>
+</html>

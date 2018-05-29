@@ -1,0 +1,130 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li><a href="<?php echo $listUrl;?>?channel_id=<?php echo $info['channel_id'];?>">店铺列表</a></li>
+        <li class="current"><a href="javascript:;">编辑店铺</a></li>
+    </ul>
+</div>
+<div class="h_a">编辑店铺</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+    <input name="token" value="<?php echo $token;?>" type="hidden" />
+    <input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+    <input name="channel_id" value="<?php echo $info['channel_id'];?>" type="hidden" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">排序</th>
+                <td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort'];?>"></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">店铺类型</th>
+                <td class="td">
+                    <select name="shop_type">
+                        <option <?php if($info['shop_type'] == 1) echo 'selected';?> value="1">淘宝</option>
+                        <option <?php if($info['shop_type'] == 2) echo 'selected';?> value="2">天猫</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">shop_id</th>
+                <td class="td"><input type="text" class="input wa" name="shop_id" value="<?php echo $info['shop_id'];?>">
+                    <a href="javascript:;" id="get_info_btn">获取商品信息</a>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">店铺名称</th>
+                <td class="td"><input type="text" class="input wc" name="shop_title" value="<?php echo $info['shop_title'];?>"></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">店铺标签</th>
+                <td class="td"><?php foreach($tags as $tag): ?>
+                        <input type="checkbox" name="tag_id[]" value="<?php echo $tag['id']; ?>"
+                        <?php if(in_array($tag['id'],$info['tag_id'])) echo 'checked="checked"'; ?> /><?php echo $tag['name']; ?>
+                    <?php endforeach; ?></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">店铺链接</th>
+                <td class="td"><textarea class="input wc" name="shop_url"><?php echo $info['shop_url'];?></textarea></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">店铺简介</th>
+                <td class="td"><textarea class="input wc" name="description"><?php echo $info['description'];?></textarea></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">商品图片</th>
+                <td class="td" id="img_box"><img src="" alt=""/>
+
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">商品图片</th>
+                <td class="td"><textarea class="input" name="goods_imgs" placeholder="输入多张图片地址，以逗号隔开" cols="100" rows="5"><?php echo $info['goods_img'];?></textarea></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">LOGO</th>
+                <td class="td">
+                    <ul class="uploadImg">
+                        <li id="ShopImg">
+                            <img src="<?php if(strpos($info['logo'], 'http://') === false) {echo $attachPath,$info['logo'];}else{echo $info['logo'];};?>"/>
+                            <input type="hidden" name="logo" value="<?php echo $info['logo'];?>">
+                        </li>
+                    </ul>
+                    <p style="clear:both;">
+                        <iframe name="upload" src="#" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                    </p></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">状态</th>
+                <td class="td">
+                    <select name="status">
+                        <option <?php if($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+                        <option <?php if($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="page_shop_flag" style="display: none;"></div>
+    <div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+    $(document).ready(function(){
+        ajaxForm('addForm',function(ret){
+            ajaxRedirect(ret, baseurl+'/Admin/Client_Shops/index?s=1&channel_id=<?php echo $info['channel_id'];?>');
+        });
+    })
+</script>
+<script>
+    $(function(){
+        $("#get_info_btn").click(function(){
+            var shop_id = $("input[name=shop_id]").val();
+            getinfo(shop_id);
+        });
+    });
+    var data = undefined;
+    var getshopimg = function(shop_info){
+        var url = 'http://s.taobao.com/search?app=shopsearch&q='+shop_info.shop_title+'&data-uid='+shop_info.user_id;
+        var win = window.open(url, '_blank');
+    }
+    //通过API接口 获取pic_url,seller_nick,shop_title,shop_url,user_id
+    var getinfo=function(shop_id){
+        $.ajax({
+            url:"/Admin/Client_Shops/info",
+            type:"get",
+            data:{shop_id:shop_id},
+            dataType:"json",
+            success: function (ret) {
+                if(ret.data.length!=undefined) {
+                    confirm('获取店铺信息失败，请手动填写！');
+                    return false;
+                }
+                $("input[name=shop_title]").val(ret.data.shop_title);
+                $("input[name=logo]").val(ret.data.pic_url);
+                $("#ShopImg>img").attr("src",ret.data.pic_url);
+                getshopimg(ret.data);
+            }
+        });
+    }
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

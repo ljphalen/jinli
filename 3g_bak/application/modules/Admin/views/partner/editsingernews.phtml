@@ -1,0 +1,44 @@
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="edit_form">
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="group" value="<?php echo $group; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr>
+			<th>歌手</th>
+			<td>
+				<input type="text" style="width:250px;" class="easyui-textbox" name="title" required="true" value="<?php echo $info['name']; ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>标题</th>
+			<td>
+				<input type="text" style="width:250px;" class="easyui-textbox" name="title" required="true" value="<?php echo $info['title']; ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>链接</th>
+			<td>
+				<input type="text" style="width:250px;" class="easyui-textbox" name="link" required="true" value="<?php echo $info['link']; ?>">
+			</td>
+		</tr>
+
+		<tr>
+			<th>描述</th>
+			<td>
+				<textarea name="desc"><?=$info['desc']?></textarea>
+			</td>
+		</tr>
+
+		<tr>
+			<th>状态</th>
+			<td>
+				<?php
+				foreach (Common::$status as $k => $name):
+					$checked = $info['status'] == $k ? 'checked="checked"' : '';
+					?>
+					<input type="radio" name="status" class="input" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+				<?php endforeach; ?>
+			</td>
+		</tr>
+	</table>
+</form>

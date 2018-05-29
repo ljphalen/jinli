@@ -1,0 +1,74 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">会员列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+			<th class="th">会员ID</th>
+			<td class="td"><input class="input wb" type="text" name="id" value="<?php echo $param['id'];?>"></td>
+			<th class="th">手机号</th>
+			<td class="td"><input class="input wb" type="text" name="phone" value="<?php echo $param['phone'];?>"></td>
+		</tr>
+		<tr class="tr">
+			
+		</tr>
+		<tr class="tr">
+			<th class="th" width="60">姓名</th>
+			<td class="td"><input class="input wb" type="text" name="truename" value="<?php echo $param['truename'];?>"></td>
+			<th class="th" width="60">临时用户名</th>
+			<td class="td"><input class="input wb" type="text" name="username" value="<?php echo $param['username'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">注册时间</th>
+			<td class="td">
+			<input class="input" type="text" maxlength="30" id="start_time" name="start_time" value="<?php echo $param['start_time'];?>">
+			<input class="input" type="text" maxlength="30" id="end_time" name="end_time" value="<?php echo $param['end_time'];?>">
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span><span style="float:left;">当前会员总数：<?php echo $total;?></span></div>
+
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">ID</td>
+			<td>用户名／手机号</td>
+			<td>姓名</td>
+			<td>临时用户名</td>
+			<td>注册时间</td>
+			<td>最近登录时间</td>
+		</tr>
+<?php foreach($users as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['phone'];?></td>
+			<td><?php echo $value['realname'];?></td>
+			<td><?php echo $value['username'];?></td>
+            <td><?php echo date('Y-m-d H:i:s', $value['register_time']);?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['last_login_time']);?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/admin/highcharts.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#start_time").datepicker({
+				dateFormat : 'yy-mm-dd'
+	});
+	$("#end_time").datepicker({
+		dateFormat : 'yy-mm-dd'
+});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

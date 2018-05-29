@@ -1,0 +1,83 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<form method="post" action="<?php echo $baseUrl; ?>" id="addFrom">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">时间范围</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $sdate; ?>"> 至
+						<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $edate; ?>">
+
+					</td>
+				</tr>
+
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+		<input type="hidden" id="hidden_export" name="export" value="0"/>
+	</form>
+
+	<div class="h_a">
+		&nbsp; <span id="total" style="color: red;font-size:14px"></span>
+		<span style="float:right;"><input type="button" value="导出" id="downLoad"></span>
+	</div>
+
+	<div class="table_list">
+		<table width="100%">
+			<tr class="ct">
+				<?php foreach ($header as $v){?>	
+					<td class="td2"><?php echo $v;?></td>
+				<?php }?>
+			</tr>
+			<?php
+			foreach ($ret as $k => $v) { ?>
+				<tr class="ct">
+					<td><?php echo $k; ?></td>
+					<td class="td2"><?php echo $v['quiz_pv_index']; ?></td>
+					<td class="td2"><?php echo $v['quiz_uv_index']; ?></td>
+					<td class="td2"><?php echo  $v['quiz_pv_done'];?></td>
+					<td class="td2"><?php echo $v['quiz_uv_done']; ?></td>
+					<td class="td2"><?php echo $v['quiz_pv_reward'];?></td>
+					<td class="td2"><?php echo $v['quiz_uv_reward'];?></td>
+					<td class="td2"><?php echo $v['quiz_pv_help'];?></td>
+					<td class="td2"><?php echo $v['quiz_uv_help'];?></td>
+					<td class="td2"><?php echo bcdiv($v['quiz_pv_help'],$v['quiz_uv_help'],2);?>
+					<td class="td2"><?php echo $v['quiz_pv_find'];?></td>
+					<td class="td2"><?php echo $v['quiz_uv_find'];?></td>
+					<td class="td2"><?php echo bcdiv($v['quiz_pv_find'],$v['quiz_uv_find'],2);?>
+					<td class="td2"><?php echo $v['quiz_answer_user'];?></td>
+					<td class="td2"><?php echo $v['quiz_answer_total'];?></td>
+					<td class="td2"><?php echo bcdiv($v['quiz_answer_total'],$v['quiz_answer_user'],2);?>
+					<td class="td2"><?php echo $v['quiz_answer_right'];?></td>
+					<td class="td2"><?php echo $v['quiz_answer_false'];?></td>
+					<td class="td2"><?php echo $v['quiz_answer_scores'];?></td>
+					<td class="td2"><?php echo $v['quiz_reward_user'];?></td>
+					<td class="td2"><?php echo $v['quiz_reward_scores'];?></td>
+					<td class="td2"><?php echo (bcdiv($v['quiz_uv_help'],$v['quiz_uv_index'],4)*100)."%";?>
+					<td class="td2"><?php echo (bcdiv($v['quiz_uv_find'],$v['quiz_uv_index'],4)*100)."%";?>
+					<td class="td2"><?php echo (bcdiv($v['quiz_answer_user'],$v['quiz_uv_index'],4)*100)."%";?>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#sdate").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#edate").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#total").text('<?php echo $sum;?>');
+			$("#downLoad").bind('click', function () {
+				$("#hidden_export").val(1);
+				$("#addFrom").submit();
+				$("#hidden_export").val(0);
+			});
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

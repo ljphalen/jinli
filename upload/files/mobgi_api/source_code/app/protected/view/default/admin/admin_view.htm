@@ -1,0 +1,75 @@
+{header}
+<script language="JavaScript" src="js/common.js"></script>
+
+<form action="admin.php" method="get" name="form" id="form">
+  <table width="100%"  border="0" cellpadding="3" cellspacing="1" class="tableOutborder">
+    <tr class="tableHeader">
+      <td colspan="9">用户查找</td>
+    </tr>
+    <tr class="bg_0">
+      <td width="4%" nowrap="nowrap">用户名</td>
+      <td width="4%" nowrap="nowrap"><input name="username" type="text" id="username" value="{username}" size="20" maxlength="30" /></td>
+      <td width="4%" nowrap="nowrap">姓名</td>
+      <td width="4%" nowrap="nowrap"><input name="realname" type="text" id="realname" value="{realname}" /></td>
+      <td width="8%" nowrap="nowrap">英文名</td>
+      <td width="8%" nowrap="nowrap"><input name="e_name" type="text" id="e_name" value="{e_name}" /></td>
+      <td width="8%" nowrap="nowrap">角色</td>
+      <td width="80%" nowrap="nowrap">
+	  <select name="role_id" id="role_id">
+	  	<option value="0">全部</option>
+		  {options:roles}
+	  </select>	  </td>
+      <td width="12%"><input name="action" type="hidden" id="action" value="view" />
+          <input type="submit" name="Submit" value=" 提交 " accesskey="s" /></td>
+    </tr>
+  </table>
+</form>
+<!-- IF results -->
+<table width="100%" border="0" cellspacing="1" cellpadding="3" class="pageNav">
+  <tr>
+    <td>共 <strong>{total}</strong>, 显示 <strong>{from} - {to}</strong></td>
+    <td align="right">{pagenav}</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="1" cellpadding="3" class="tableOutborder">
+  <tr class="tableHeader">
+    <td width="3%">id#</td>
+    <td>用户名</td>
+    <td>真实姓名</td>
+    <td>角色</td>
+    <td align="center">英文名</td>
+    <td width="10%" align="center">建立时间</td>
+    <td width="10%" align="center">最后更新</td>
+    <td width="10%" align="center">最后登陆</td>
+    <td width="10%" align="center">&nbsp;</td>
+  </tr>
+  <!-- BEGIN results -->
+  <tr class="bg_{ROWBIT}">
+    <td>{adminid}</td>
+    <td>{username}</td>
+    <td>{realname}</td>
+    <td><a href="admin.php?action=view&amp;role_id={role_id}">{role}</a></td>
+    <td align="center" nowrap>{e_name}</td>
+    <td align="center" nowrap width="15%">{date_create}</td>
+    <td align="center" nowrap width="15%">{date_update}</td>
+    <td align="center" nowrap width="15%">{date_login}</td>
+    <td align="center" nowrap><a href="admin.php?action=edit&adminid={adminid}">编辑</a> <a href="javascript:confirm_redirect('admin.php?action=remove&adminid={adminid}','确实要删除该用户？');">删除</a></td>
+  </tr>
+  <!-- END -->
+</table>
+<table width="100%" border="0" cellspacing="1" cellpadding="3" class="pageNav">
+  <tr>
+    <td>共 <strong>{total}</strong>, 显示 <strong>{from} - {to}</strong></td>
+    <td align="right">{pagenav}</td>
+  </tr>
+</table>
+<!-- ELSE -->
+<br />
+
+没找到任何相匹配的结果!
+<!-- ENDIF -->
+<script>
+
+initSelected(document.form.role_id,'{role_id}');
+</script>
+{footer}

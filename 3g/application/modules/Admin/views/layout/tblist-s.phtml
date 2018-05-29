@@ -1,0 +1,49 @@
+<div data-options="region:'center',split:true,border:false" style="overflow: hidden;">
+	<div id="datagrid_menu" class="easyui-menu" style="width:120px;display: none;">
+		<div onclick="add();" data-options="iconCls:'icon-add'">新增</div>
+		<div onclick="edit();" data-options="iconCls:'icon-edit'">编辑</div>
+		<div onclick="del()" data-options="iconCls:'icon-remove'">删除</div>
+		<block name="menu"></block>
+	</div>
+	<div id="datagrid_toolbar" style="padding:5px;">
+		<div style="float: left;">
+			<?php if (file_exists(dirname(__FILE__) . '/../' . Yaf_Registry::get('viewDir') . '/search.phtml')) {
+				echo $this->render(Yaf_Registry::get('viewDir') . '/search.phtml');
+			} ?>
+		</div>
+		<div align="right">
+			<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="add()">新增</a>
+			<span class="toolbar-btn-separator"></span>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
+			<span class="toolbar-btn-separator"></span>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a>
+			<block name="button"></block>
+			<a href="#"></a>
+		</div>
+	</div>
+	<table id="datagrid" toolbar="#datagrid_toolbar" border="false"></table>
+</div>
+
+<script>
+	var token = "<?php echo $token;?>";
+	var edit_W = 500;
+	var edit_H = 400;
+	var datagrid;
+	$(function () {
+		//数据列表
+		datagrid = $("#datagrid").datagrid({
+			url: 'index',
+			queryParams: {'token': token},
+			fit: true,
+			autoRowHeight: false, //自动行高
+			border: false,
+			pagination: true, //分页栏
+			pagePosition: 'bottom', //分页栏位置
+			rownumbers: true,//显示行数
+			striped: true,//显示条纹
+			showFooter: true, //显示统计行
+			pageSize: 20,//每页记录数
+			remoteSort: true,//是否通过远程服务器对数据排序
+			singleSelect: false,//只允许选择单行
+	// main content
+ 

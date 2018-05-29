@@ -1,0 +1,43 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <div id="pay_paydesigner_paycheckpersonalapply">
+        <div class="content">
+        	<div class="desginer">
+        	    <?php echo $this->render("paycheck/designerHeader.phtml"); ?>
+				<div class="desginer_list">
+					<table class="view_list_tb">
+						<thead>
+							<tr>
+								<th>头像</th>
+								<th>昵称</th>
+								<th>姓名</th>
+								<th>身份证号</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach($designers as $designer){ ?>
+							<tr>
+								<td><img src='<?php echo '/themeicon/data/userIcon/'.$designer['icon'] ?>'></td>
+								<td><?php echo $designer['nick_name']; ?></td>
+								<td><?php echo $designer['real_name']; ?></td>
+								<td><?php echo $designer['id_number']; ?></td>
+								<td><a class="btn_txt" href="/Admin/paycheck/personal?id=<?php echo $designer['uid']; ?>">详细</a></td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+					<?php echo $this->render("common/pageshow.phtml"); ?>
+				</div>
+        	</div>
+        </div><!-- content end -->
+    </div>
+</section>
+<script type="text/javascript">
+	$(function(){
+
+	});
+</script>
+</body>
+</html>

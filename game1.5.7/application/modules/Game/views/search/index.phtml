@@ -1,0 +1,55 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+</script>
+<body>
+	<div data-pagerole="body" id="page">
+	   <header class="hd search_bg ">
+			<h1>搜索</h1>
+			<div class="back-home"><a href="<?php echo $go ? $webroot :'javascript:history.go(-1)';?>">&lt;</a></div>
+			<div class="search-bar">
+				<form action="<?php echo $outUrl.'/?keyword='.$apikword['name'];?>" method="get" id="searchFrom">
+                    <input class='special'  name="keyword" type="text" rqd="true" data-error="" data-null="请输入关键字" placeholder="<?php echo $apikword['name'];?>"  value="<?php echo $keyword;?>"  
+					onfocus="if(this.value==''){this.placeholder='';} " onblur="if(this.value==''){this.placeholder='';}"
+						 oninput="if(this.value=='')this.placeholder='';if(this.value!=''){document.getElementById('intersrc').value='Isearch';}" maxlength="12"/>
+					<input id="intersrc" name="intersrc" value="Dsearch" type="hidden" />
+					<input  name="stype" value="<?php echo $stype; ?>" type="hidden" />
+					<input  name="t_bi" value="<?php echo $source; ?>" type="hidden" />					
+						 <button type="button" class="search"></button>
+				</form>
+			</div>
+		</header>
+		<?php if($apihot){ ?>
+		<article class="ac search_bg" >
+			<div class="tips-num">大家都在搜：</div>
+			<div class="result-list">
+				<ul>
+					<?php foreach($apihot as $key=>$value){?>
+					<li>	
+							<a class='search' href="<?php echo $webroot.'/search/out/?stype='.$stype.'&keyword='.$value.'&intersrc=Hsearch&t_bi='.$source;?>">
+								<div class="num<?php if($key +1 <= 3){echo ' yellow';}?>"><?php echo $key +1 ?></div>							
+								<span class="desc"><?php echo $value;?></span>
+						    </a>
+					</li>
+					<?php }?>
+				</ul>
+			</div>
+		</article>
+		<?php } ?>
+		
+		<?php if($hasnext){ ?>
+			<div class="load-more J_loadMore" data-ajaxUrl="<?php echo $webroot.'/search/more/?stype='.$stype.'&keyword='.$keyword.'&intersrc='.$intersrc.'&sp='.$sp.'&t_bi='.$source;?>" data-hasnext="<?php echo $hasnext;?>" data-curpage="<?php echo $page;?>">
+			<span>加载更多</span>
+            </div>
+	   <?php } ?>
+	</div>
+	<div class="J_tipBox tip-box invisible">
+		<p></p>
+		<div class="mask"></div>
+	</div>
+	<div class="goTop J_gotoTop">
+			<a ></a>
+    </div>
+   <?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

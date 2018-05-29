@@ -1,0 +1,40 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	<li ><a href="<?php echo $listUrl.'?type='.$type;?>">全部游戏</a></li>
+    <li class="current"><a>编辑游戏评级</a></li>
+	</ul>
+</div>
+
+<form action="<?php echo $step5postUrl.'?type='.$type;?>" method="post" id="editFrom">
+<input name="token" type="hidden" value="<?php echo $token;?>"/>
+<input name="id" type="hidden" value="<?php echo $id;?>"/>
+<input name="type" type="hidden" value="<?php echo !$params['type'] ? $type : $params['type'];?>"/>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">修改游戏评级</th>
+			<td class="td">
+			<select name="level" class="select wa">
+			    <option value="0">无</option>
+			    <?php foreach($levels as $key=>$value){?>
+				 <option <?php if($value['id'] == $game_label['level']) echo 'selected';?> value="<?php echo $value['id'];?>"><?php echo $value['title'];?></option>
+				<?php }?>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Resource_Games/index?type=<?php echo $type;?>');
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

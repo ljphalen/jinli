@@ -1,0 +1,72 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li class="current"><a href="<?php echo $indexUrl;?>">搜索关键词列表</a></li>
+    </ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="get">
+    <input name="token" type="hidden" value="<?php echo $token;?>" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">关键词</th>
+                <td class="td">
+                    <input class="input" type="text" name="skey" value="<?php echo $param['skey'];?>" >
+                </td>
+                <th class="th">时间</th>
+                <td class="td">
+                    <input class="input" type="text" maxlength="30" id="from_time" name="from_time" value="<?php echo $param['from_time'];?>">
+                    <input class="input" type="text" maxlength="30" id="to_time" name="to_time" value="<?php echo $param['to_time'];?>">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac">
+		<span class="btn">
+			<span>
+				<button type="submit">搜 索</button>
+			</span>
+		</span>
+    </div>
+</form>
+<div class="table_list">
+    <table width="100%">
+        <tr class="hd">
+            <td width="10%">ID</td>
+            <td width="30%">关键词</td>
+            <td width="10%">日期</td>
+            <td width="10%">无结果次数</td>
+            <td width="10%">有结果次数</td>
+            <td width="10%">搜索次数</td>
+        </tr>
+        <?php foreach($data as $key => $value) {?>
+            <tr class="ct">
+                <td><?php echo $value['id'];?></td>
+                <td><?php echo $value['skey'];?></td>
+                <td><?php echo $value['dateline'];?></td>
+                <td><?php echo $value['s_empty_count'];?></td>
+                <td><?php echo $value['s_has_count'];?></td>
+                <td><?php echo $value['count'];?></td>
+            </tr>
+        <?php } ?>
+    </table>
+</div>
+
+<div class="mr10 cc">
+    <?php echo $pager;?>
+</div>
+
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script>
+    $(document).ready(function() {
+        $("#to_time").datepicker({
+            dateFormat : 'yy-mm-dd'
+        });
+
+        $("#from_time").datepicker({
+            dateFormat : 'yy-mm-dd'
+        });
+    });
+</script>
+<?php echo $this->render("layout/footer.phtml");?>
+

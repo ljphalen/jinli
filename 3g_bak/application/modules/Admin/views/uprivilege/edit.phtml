@@ -1,0 +1,168 @@
+<?php echo $this->render("layout/header.phtml");
+?>
+<style>
+	.iform {
+		width: 200px;
+	}
+</style>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $indexUrl; ?>">权限商品列表</a></li>
+		<li class="current"><a href="<?php echo $addUrl; ?>">添加权限商品</a></li>
+	</ul>
+</div>
+<div class="h_a">添加信息</div>
+<form method="post" action="<?php echo $editPostUrl; ?>" id="addForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">物品分组</th>
+				<td class="td"><select id="group_id">
+						<option value='0'>请选择分组</option>
+						<?php foreach ($groupType as $k => $v) { ?>
+							<option value="<?php echo $k; ?>" <?php if ($k == $data['group_id']) echo 'selected'; ?>><?php echo $v['val'] ?></option>
+						<?php } ?>
+					</select><span style="color: blue">(注：类别不能修改）</span>
+				</td>
+				<?php if ($category){ ?>
+			<tr class="tr">
+				<th class="th">分类</th>
+				<td class="td"><?php echo $category['name']; ?></td>
+			</tr>
+			<?php } ?>
+			<tbody style="" id="goods_info">
+			<tr class="tr">
+				<th class="th">商品名称</th>
+				<td class="td"><?php echo $goods['name']; ?>
+				</td>
+			</tr>
+			</tbody>
+
+			<tr class="tr">
+				<th class="th">用户等级分组</th>
+				<td class="td"><select name='level_group' id="level_group">
+						<option value="0">请选择</option>
+						<?php foreach ($levelGroup as $k => $v) { ?>
+							<option value="<?php echo $k; ?>" <?php if ($data['level_group'] == $k) echo 'selected' ?>><?php echo $v; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tbody id="level_msg">
+			<tr class="tr">
+				<th class="th">用户等级</th>
+				<td class="td"><select name='user_level' id="user_level">
+						<option value="0">请选择</option>
+						<?php foreach ($rank as $k => $v) { ?>
+							<option value="<?php echo $v['level']; ?>" <?php if ($data['user_level'] == $v['level']) echo 'selected' ?>><?php echo $v['name'] . "(level "; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			</tbody>
+
+			<tbody id="price">
+			<tr class="tr">
+				<th class="th">产生／消费积分数</th>
+				<td class="td" style="color:  red"><?php echo $goods['scores']; ?>
+					<input type="hidden" name="defaultScore" id="defaultScore" value="<?php echo $goods['scores']; ?>">
+				</td>
+			</tr>
+			</tbody>
+
+
+			<tr class="tr">
+				<th class="th">单次获取/消费积分数</th>
+				<td class="td">
+					<input type="text" name="scores" id="scores" class="input" value="<?php echo $data['scores']; ?>"><span style="color: blue">(原则上：用户行为产生积分时，等级越高，获到越多且不低于普通用户，行为消费积分时，则是相反)</span>
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">连续天数</th>
+				<td class="td">
+					<input type="text" name="days" id="days" class="input" value="<?php echo $data['days']; ?>"><span style="color: blue">(如连续打卡7天送20积分，没有可不填)</span>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">奖励积分数</th>
+				<td class="td">
+					<input type="text" name="rewards" id="rewards" class="input" value="<?php echo $data['rewards']; ?>">
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">单天连续次数</th>
+				<td class="td">
+					<input type="text" name="times" id="times" class="input" value="<?php echo $data['times']; ?>"><span style="color: blue">(如当天看图10个送10积分，没有可不填)</span>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">获得积分数</th>
+				<td class="td">
+					<input type="text" name="rewards2" id="rewords2" class="input" value="<?php echo $data['rewards2']; ?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td"><select name="status" class="select">
+						<option value="1"  <?php if ($data['status'] == '1') echo 'selected'; ?>>开启</option>
+						<option value="0" <?php if ($data['status'] == '0') echo 'selected'; ?>>关闭</option>
+					</select></td>
+			</tr>
+		</table>
+		<input type="hidden" name="group_id" value="<?php echo $data['group_id']; ?>">
+		<input type="hidden" name="goods_id" value="<?php echo $goods['id']; ?>">
+		<input type="hidden" id="id" name='id' value="<?php echo $data['id']; ?>">
+		<input type="hidden" name="old_level" value="<?php echo $data['user_level']; ?>">
+		<input type="hidden" name="old_level_group" value="<?php echo $data['level_group']; ?>">
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script
+	src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+	//用户表单数据提交
+	$(document).ready(function () {
+		$('#start_time').datetimepicker();
+		$('#end_time').datetimepicker();
+		$("#group_id").attr('disabled', 'disabled');
+
+
+		ajaxForm('addForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/uprivilege/level');
+		});
+	});
+
+	$("#level_group").bind('change', function () {
+		var level_group = $("#level_group option:selected").val();
+		if (level_group != '0') {
+			$.ajax({
+				'type': 'post',
+				'dataType': 'json',
+				'url': '/Admin/Uprivilege/ajaxGetUserLevelGroup',
+				'data': {'token': '<?php echo $token;?>', 'group_id': level_group},
+				'success': function (e) {
+					if (e.key == '-1') {
+						alert(e.msg);
+						return false;
+					}
+					var params = '';
+					$.each(e.msg, function (i, n) {
+						params += "<option value='" + n.level + "'>" + n.name + "(level " + n.level + ")</option>";
+					})
+					$("#user_level").html(params);
+					$("#level_msg").show();
+				}
+			});
+		} else {
+			$("#level_msg").hide();
+		}
+
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,798 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">发放活动</a></li>
+		<li class="current"><a href="<?php echo $editUrl;?>?id=<?=$id?>">编辑活动</a></li>
+		<li><a href="<?php echo $ticketDetailUrl;?>">A券明细列表</a></li>
+		<li><a href="<?php echo $moneyDetailUrl;?>">A币交易明细</a></li>
+		<li><a href="<?php echo $detailUrl;?>">A券说明</a></li>
+		<li><a href="<?php echo $sendTicketUrl;?>">A券手动赠送</a></li>
+	</ul>
+</div>
+<style>
+.myList>li {
+	margin: 5px 0;
+}
+
+.sortInput {
+	width: 80px;
+}
+
+.item {
+	padding: 10px;
+	border-bottom: 1px solid #CCCCCC;
+}
+
+.label {
+	display: inline-block;
+	width: 50px;
+}
+
+.deleteItem {
+	float: right;
+	margin-right: 200px;
+}
+
+#addItem {
+	float: right;
+	margin-right: 100px;
+}
+</style>
+<div class="table_list">
+	<form action="<?=$editPostUrl?>?id=<?=$id?>" method="post"
+		id="add_form">
+		<input type="hidden" name="token" value="<?=$token ?>">
+		<table style="width: 100%">
+			<tr class="hd">
+				<td colspan="2">添加活动</td>
+			</tr>
+			<tr class="ct">
+				<td>活动名称</td>
+				<td><input type="text" name="title" value="<?=$info['title']?>"
+					class="input wc"></td>
+			</tr>
+			<tr class="ct">
+				<td>生效时间</td>
+				<td><input type="text" name="hd_start_time"
+					value="<?=date('Y-m-d H:i', $info['hd_start_time'])?>" class="time">
+					至 <input type="text" name="hd_end_time"
+					value="<?=date('Y-m-d H:i', $info['hd_end_time'])?>" class="time"></td>
+			</tr>
+			<tr class="ct">
+				<td>赠送场景</td>
+				<td><select name="htype" id="htype">
+						<?php foreach ($htype as $key => $value) { ?>
+							<option value="<?=$key?>" <?php if ($key == $info['htype']) { ?>
+							selected <?php } else { ?> disabled='disabled' <?php }?>><?=$value?></option>
+						<?php } ?>
+					</select></td>
+			</tr>
+			<tr class="ct">
+				<td>状态</td>
+				<td><select name="status" id="status">
+						<option value="1" <?php if (1 == $info['status']) { ?> selected
+							<?php } ?>>开启</option>
+						<option value="0" <?php if (0 == $info['status']) { ?> selected
+							<?php } ?>>关闭</option>
+				</select></td>
+			</tr>
+			<tr class="ct">
+				<td>参与用户</td>
+				<td><span><label><input type="radio" name="hd_object" value="1"
+							<?php echo ($info['hd_object'] == 1)?'checked':''?>>全部</label></span>
+
+					<span><label><input type="radio" name="hd_object" value="2"
+							<?php echo ($info['hd_object'] == 2)?'checked':''?>>定向</label></span>
+				</td>
+			</tr>
+			<tr class=" ct" id="hd_object_addition_info" style="<?php echo ($info['hd_object'] == 1)?'display:none':'' ?>">
+				<td>用户账户列表</td>
+				<td>格式：账号1;账号2;... <br />
+				    <?php 
+				        $additionInfo = json_decode($info['hd_object_addition_info'], true);
+				        $userList = $additionInfo['user_list'];
+				        $users = "";
+				        foreach ($userList as $item) {
+				            $users .= $item .";";
+				        }
+				        $info['hd_object_addition_info'] = $users; 
+				    ?>
+					<span><label><input type="text" name="hd_object_addition_info"
+							class="input wc"
+							value="<?php echo $info['hd_object_addition_info'];?>"></label></span>
+				</td>
+			</tr>
+			<?php if(in_array($info['htype'], array(2,3,4))){ ?>
+			<tr id="game_object" class="notLoginClient ct">
+				<td>参与游戏</td>
+				<td><span><label><input type="radio" name="game_object" value="1"
+							<?php echo ($info['game_object'] == 1)?'checked':''?>>全部</label></span>
+					<span><label><input type="radio" name="game_object" value="2"
+							<?php echo ($info['game_object'] == 2)?'checked':''?>>定向专题</label></span>
+					<span><label><input type="radio" name="game_object" value="3"
+							<?php echo ($info['game_object'] == 3)?'checked':''?>>定向游戏</label></span>
+				</td>
+			</tr>
+
+			<tr class=" ct" id="subject_id" style="<?php echo ($info['game_object'] == 2)?'':'display:none' ?>">
+				<td>专题ID</td>
+				<td><span><label><input type="text" name="subject_id"
+							class="input wc" value="<?php echo $info['subject_id'];?>"></label></span>
+				</td>
+			</tr>
+			<tr class=" ct" id=game_object_addition_info style="<?php echo ($info['game_object'] == 3)?'':'display:none' ?>">
+				<td>定向游戏列表</td>
+				<td>格式：游戏ID1;游戏ID2;... <br />
+				    <?php 
+				        $additionInfo = json_decode($info['game_object_addition_info'], true);
+				        $gameList = $additionInfo['game_list'];
+				        $games = "";
+				        foreach ($gameList as $item) {
+				            $games .= $item .";";
+				        }
+				        $info['game_object_addition_info'] = $games;
+				    ?>
+					<span><label><input type="text" name="game_object_addition_info"
+							class="input wc"
+							value="<?php echo $info['game_object_addition_info'];?>"></label></span>
+				</td>
+			</tr>
+			<?php }?>
+			<tr class="ct">
+				<td>赠送条件</td>
+				<td>
+				    <?php if(1 == $info['htype']):?>
+				    <div class="notCons">
+						<span><label><input type="radio" name="condition_type" value="1"
+								id="firstLogin" checked>首次登录</label></span>
+					</div>
+				    <?php endif;?>
+				    
+				    <?php if(2 == $info['htype']):?>
+				    <div class="notCons">
+						<span><label><input type="radio" name="condition_type" value="1"
+								<?php if (1 == $info['condition_type']) { ?> checked <?php } ?>>首次登录</label></span>
+						<span><label><input type="radio" name="condition_type" value="2"
+								<?php if (2 == $info['condition_type']) { ?> checked <?php } ?>>每日登录</label></span>
+					</div>
+				    <?php endif;?>
+				    
+				    <?php if(3 == $info['htype']):?>
+				    <div class="cons myList">
+						<!-- <span><label><input type="radio" name="condition_type3" value="1" checked>首次消费</label></span> -->
+						<span><label><input type="radio" name="condition_type3" value="2"
+								<?php if(2 == $info['condition_type']) { ?> checked
+								<?php } else{ ?> disabled="false" <?php }?>>单次消费-(单区间-百分比)</label>
+							<input style='display: none;' type="number"
+							name="condition_value2" value="100" min="0"></span> <span><label><input
+								type="radio" name="condition_type3" value="3"
+								<?php if(3 == $info['condition_type']) { ?> checked
+								<?php } else{ ?> disabled="false" <?php }?>>累计消费-(多区间-固定额)</label>
+							<input style='display: none;' type="number"
+							name="condition_value3" value="100" min="0"></span>
+						<!-- <span><label><input type="radio" name="condition_type3" value="4" id="topCons">前　</label><label><input type="number" name="condition_value4" value="1000" min="0">　名用户</label> </span> -->
+						<br /> <br /> <span><label><input type="radio"
+								name="condition_type3" value="5"
+								<?php if(5 == $info['condition_type']) { ?> checked
+								<?php } else{ ?> disabled="false" <?php }?>>单次消费-(多区间-百分比)</label>
+							<input style='display: none;' type="number"
+							name="condition_value5" value="" min="0"></span> <span><label><input
+								type="radio" name="condition_type3" value="6"
+								<?php if(6 == $info['condition_type']) { ?> checked
+								<?php } else{ ?> disabled="false" <?php }?>>每天首次消费-(多区间-百分比)</label>
+							<input style='display: none;' type="number"
+							name="condition_value6" value="" min="0"></span> <span><label><input
+								type="radio" name="condition_type3" value="7"
+								<?php if(7 == $info['condition_type']) { ?> checked
+								<?php } else{ ?> disabled="false" <?php }?>>累计消费-(多区间-百分比)</label>
+							<input style='display: none;' type="number"
+							name="condition_value7" value="" min="0"></span>
+					</div>
+				    <?php endif;?>
+				    
+				    <?php if(4 == $info['htype']):?>
+				    <div class="paymentType">
+						<span><label><input type="radio" name="condition_type2" value="1"
+								id="firstPayment" <?php if ( 1 == $info['condition_type']) { ?>
+								checked <?php }else{ ?> disabled="false" <?php }?>>每天首次充值</label>
+							<input style='display: none;' type="number"
+							name="payment_condition_value_1" value="100" min="0"></span> <span><label><input
+								type="radio" name="condition_type2" value="2" id="firstPayment"
+								<?php if ( 2 == $info['condition_type']) { ?> checked
+								<?php }else{ ?> disabled="false" <?php }?>>每天首次充值（多区间-百分比）</label>
+							<input style='display: none;' type="number"
+							name="payment_condition_value_2" value="100" min="0"></span> <span><label><input
+								type="radio" name="condition_type2" value="3" id="firstPayment"
+								<?php if ( 3 == $info['condition_type']) { ?> checked
+								<?php }else{ ?> disabled="false" <?php }?>>单次充值（多区间-百分比）</label>
+							<input style='display: none;' type="number"
+							name="payment_condition_value_3" value="100" min="0"></span> <span><label><input
+								type="radio" name="condition_type2" value="4" id="firstPayment"
+								<?php if ( 4 == $info['condition_type']) { ?> checked
+								<?php }else{ ?> disabled="false" <?php }?>>累计充值（多区间-百分比）</label>
+							<input style='display: none;' type="number"
+							name="payment_condition_value_4" value="100" min="0"></span>
+					</div>
+				    <?php endif;?>
+				</td>
+			</tr>
+			 <?php if(1 == $info['htype']):?>
+			 <tr class="loginClient ct">
+				<?php $game_version = json_decode($info['game_version'], true) ?>
+				<td>游戏大厅版本</td>
+				<td><span><label><input type="checkbox" name="game_version[1]"
+							value="1" <?php if ($game_version[1]) { ?> checked <?php } ?>
+							id="reverse">全部（1.5.4以上）</label></span> <!--  <span><label><input type="checkbox" name="game_version[2]" value="2" <?php if ($game_version[2]) { ?> checked<?php } ?>>1.5.4</label></span>-->
+					<span><label><input type="checkbox" name="game_version[3]"
+							value="1" <?php if ($game_version[3]) { ?> checked <?php } ?>>1.5.5</label></span>
+					<span><label><input type="checkbox" name="game_version[4]"
+							value="1" <?php if ($game_version[4]) { ?> checked <?php } ?>>1.5.6</label></span>
+					<span><label><input type="checkbox" name="game_version[5]"
+							value="1" <?php if ($game_version[5]) { ?> checked <?php } ?>>1.5.7</label></span>
+				</td>
+			</tr>
+			 <?php endif;?>
+			 
+			<tr class="ct">
+				<td>赠送额度规则</td>
+				<td>
+					<?php $ACoupon = json_decode($info['rule_content'], true) ?>
+					<?php if(1 == $info['htype']):?>
+					<ul class="notEveryCons myList" id="notEveryConsPrecent">
+						<li><label><span class="label">面额</span><input type="number"
+								name="denomination"
+								value="<?php echo $ACoupon['denomination']?>" min="1"></label></li>
+						<li><label><input type="radio" name="deadline" value="1"
+								<?php if (1 == $ACoupon['deadline']) { ?> checked <?php } ?>>1天</label>
+							<label><input type="radio" name="deadline" value="3"
+								<?php if (3 == $ACoupon['deadline']) { ?> checked <?php } ?>>3天</label>
+							<label><input type="radio" name="deadline" value="7"
+								<?php if (7 == $ACoupon['deadline']) { ?> checked <?php } ?>>7天</label>
+						</li>
+					</ul>
+					<?php endif;?>
+					
+					<?php if(2 == $info['htype']):?>
+					<ul class="notEveryCons myList" id="notEveryConsPrecent">
+						<li><label><span class="label">面额</span><input type="number"
+								name="denomination"
+								value="<?php echo $ACoupon['denomination']?>" min="1"></label></li>
+						<li><label><input type="radio" name="deadline" value="1"
+								<?php if (1 == $ACoupon['deadline']) { ?> checked <?php } ?>>1天</label>
+							<label><input type="radio" name="deadline" value="3"
+								<?php if (3 == $ACoupon['deadline']) { ?> checked <?php } ?>>3天</label>
+							<label><input type="radio" name="deadline" value="7"
+								<?php if (7 == $ACoupon['deadline']) { ?> checked <?php } ?>>7天</label>
+						</li>
+					</ul>
+					<?php endif;?>
+					
+					<?php if(3 == $info['htype']):?>
+					<div id="rule">
+					   <?php if(2 == $info['condition_type']):?>
+					       <ul class="myList" id="everyConsPrecent">
+							<li><label><span class="label">A币>=</span><input type="number"
+									name="denominationCons" value="<?=$ACoupon['denomination']?>"
+									min="1"></label></li>
+							<li><label><span class="label">返还比例</span> <input type="number"
+									name="restorationCons" value="<?=$ACoupon['restoration']?>"
+									min="1"></label>(1-500之间的数字)</li>
+							<li><span class="label">有效期</span> <label><input type="radio"
+									name="deadlineCons" value="1"
+									<?php if (1 == $ACoupon['deadline']) { ?> checked <?php } ?>>1天</label>
+								<label><input type="radio" name="deadlineCons" value="3"
+									<?php if (3 == $ACoupon['deadline']) { ?> checked <?php } ?>>3天</label>
+								<label><input type="radio" name="deadlineCons" value="7"
+									<?php if (7 == $ACoupon['deadline']) { ?> checked <?php } ?>>7天</label>
+							</li>
+						</ul>
+					   <?php endif;?>
+					   
+					   <?php if(3 == $info['condition_type']):?>
+					       <ul class="myList">
+							<li><label><input type="radio" name="rule_type" value="3" checked>满XX送YY
+									<span style="color: red">删除某一个区间时必须从最后一个区间向前开始，每个区间必须连续。</span></label></li>
+								<?php foreach ($ACoupon as $key => $value) { ?>
+									<li class="item" data-item="<?=$key?>">
+								<ul class="myList">
+									<li>消费 &gt;= <input type="number"
+										name="ACoupon[<?=$key?>][section_start]" min="1"
+										value="<?=$value['section_start']?>" class="sortInput"> &lt; <input
+										type="number" name="ACoupon[<?=$key?>][section_end]" min="1"
+										value="<?=$value['section_end']?>" class="sortInput"> A币，送 <input
+										type="number" name="ACoupon[<?=$key?>][backAmount]" min="1"
+										value="<?=$value['backAmount']?>" class="sortInput"> A券<span
+										class="btn deleteItem" onclick="deleteItem(this)"><span><button
+													type="button">删除</button></span></span></li>
+											<?php foreach ($value['denarr'] as $k => $val) { ?>
+												<li data-item="<?=$key?>" data-acoupon="<?=$k?>"><label><span
+											class="label">A券1</span><input type="text"
+											name="ACoupon[<?=$key?>][denarr][<?=$k?>][Step]"
+											value="<?=$val['Step']?>"></label><label><span> 有效期: A券生成后，第
+										</span><input type="number"
+											name="ACoupon[<?=$key?>][denarr][<?=$k?>][effect_start_time]"
+											min="1" value="<?=$val['effect_start_time']?>"></label><label>
+											天到 <input type="number"
+											name="ACoupon[<?=$key?>][denarr][<?=$k?>][effect_end_time]"
+											min="1" value="<?=$val['effect_end_time']?>">
+									</label><span class="btn" onclick="deleteACoupon(this)"><span><button
+													type="button">删除</button></span></span></li>
+									       	<?php } ?>
+										    <li><span class="btn" onclick="addACoupon(this)"><span><button
+													type="button">添加一张A券</button></span></span></li>
+								</ul>
+							</li>
+								<?php }?>   
+								<li id="addItem"><span class="btn" onclick="addItem(this)"><span><button
+											type="button">添加一个规则</button></span></span></li>
+						</ul>
+					   <?php endif;?>
+					   
+					   <?php if(5 == $info['condition_type']):?>
+					    <ul class="everyConsPrecentEveryDay1 myList"
+							id="everyConsPrecentEveryDay1">
+							<li>说明：消费某个区间段金额，返还指定百分比的A券。<font style="color: red">
+									配置区间到最后一个时，要设置个超大的数字，防止充值过大返还过多。 </font></li>
+					       <?php foreach ($ACoupon as $key => $value) { ?>
+					       <li class="item" data-item="<?php echo $key?>">
+								<ul class="myList">
+									<li>消费 &gt;= <input type="number"
+										name="ACoupon1[<?php echo $key?>][section_start]" min="1"
+										value="<?=$value['section_start']?>" class="sortInput"> &lt; <input
+										type="number" name="ACoupon1[<?php echo $key?>][section_end]"
+										min="1" value="<?=$value['section_end']?>" class="sortInput">
+										A币，送 <input type="number"
+										name="ACoupon1[<?php echo $key?>][backPercent]"
+										value="<?php echo $value['backPercent']?>" min="1"> % A券
+										填写(1-500之间的数字) <span class="btn deleteItem"
+										onclick="deleteItem1(this)"><span><button type="button">删除</button></span></span>
+									</li>
+									<li><span> A券生成后，第 </span> <input type="number"
+										name="ACoupon1[<?php echo $key?>][effect_start_time]"
+										value="<?php echo $value['effect_start_time']?>" min="1"> 天到 <input
+										type="number"
+										name="ACoupon1[<?php echo $key?>][effect_end_time]"
+										value="<?php echo $value['effect_end_time']?>" min="1"> 天</li>
+								</ul>
+							</li>
+						   <?php } ?>
+						   <li id="addItem"><span class="btn" onclick="addItem1(this)"><span><button
+											type="button">添加新的返还额度</button></span></span></li>
+						</ul>
+					   <?php endif;?>
+					 
+					   <?php if(6 == $info['condition_type']):?>
+					    <ul class="everyConsPrecentEveryDay1 myList"
+							id="everyConsPrecentEveryDay1">
+							<li>说明：消费某个区间段金额，返还指定百分比的A券。<font style="color: red">
+									配置区间到最后一个时，要设置个超大的数字，防止充值过大返还过多。 </font></li>
+					       <?php foreach ($ACoupon as $key => $value) { ?>
+					       <li class="item" data-item="<?php echo $key?>">
+								<ul class="myList">
+									<li>消费 &gt;= <input type="number"
+										name="ACoupon1[<?php echo $key?>][section_start]" min="1"
+										value="<?=$value['section_start']?>" class="sortInput"> &lt; <input
+										type="number" name="ACoupon1[<?php echo $key?>][section_end]"
+										min="1" value="<?=$value['section_end']?>" class="sortInput">
+										A币，送 <input type="number"
+										name="ACoupon1[<?php echo $key?>][backPercent]"
+										value="<?php echo $value['backPercent']?>" min="1"> % A券
+										填写(1-500之间的数字) <span class="btn deleteItem"
+										onclick="deleteItem1(this)"><span><button type="button">删除</button></span></span>
+									</li>
+									<li><span> A券生成后，第 </span> <input type="number"
+										name="ACoupon1[<?php echo $key?>][effect_start_time]"
+										value="<?php echo $value['effect_start_time']?>" min="1"> 天到 <input
+										type="number"
+										name="ACoupon1[<?php echo $key?>][effect_end_time]"
+										value="<?php echo $value['effect_end_time']?>" min="1"> 天</li>
+								</ul>
+							</li>
+						   <?php } ?>
+						   <li id="addItem"><span class="btn" onclick="addItem1(this)"><span><button
+											type="button">添加新的返还额度</button></span></span></li>
+						</ul>
+					   <?php endif;?>
+					   
+					   <?php if(7 == $info['condition_type']):?>
+					    <ul class="everyConsPrecentEveryDay1 myList"
+							id="everyConsPrecentEveryDay1">
+							<li>说明：消费某个区间段金额，返还指定百分比的A券。<font style="color: red">
+									配置区间到最后一个时，要设置个超大的数字，防止充值过大返还过多。 </font></li>
+					       <?php foreach ($ACoupon as $key => $value) { ?>
+					       <li class="item" data-item="<?php echo $key?>">
+								<ul class="myList">
+									<li>消费 &gt;= <input type="number"
+										name="ACoupon1[<?php echo $key?>][section_start]" min="1"
+										value="<?=$value['section_start']?>" class="sortInput"> &lt; <input
+										type="number" name="ACoupon1[<?php echo $key?>][section_end]"
+										min="1" value="<?=$value['section_end']?>" class="sortInput">
+										A币，送 <input type="number"
+										name="ACoupon1[<?php echo $key?>][backPercent]"
+										value="<?php echo $value['backPercent']?>" min="1"> % A券
+										填写(1-500之间的数字) <span class="btn deleteItem"
+										onclick="deleteItem1(this)"><span><button type="button">删除</button></span></span>
+									</li>
+									<li><span> A券生成后，第 </span> <input type="number"
+										name="ACoupon1[<?php echo $key?>][effect_start_time]"
+										value="<?php echo $value['effect_start_time']?>" min="1"> 天到 <input
+										type="number"
+										name="ACoupon1[<?php echo $key?>][effect_end_time]"
+										value="<?php echo $value['effect_end_time']?>" min="1"> 天</li>
+								</ul>
+							</li>
+						   <?php } ?>
+						   <li id="addItem"><span class="btn" onclick="addItem1(this)"><span><button
+											type="button">添加新的返还额度</button></span></span></li>
+						</ul>
+					   <?php endif;?>
+					</div>
+					<?php endif;?>	
+					
+					<?php if(4 == $info['htype'] && 1 == $info['condition_type']):?>
+					   <ul class="myList" id="everyConsPrecent">
+						<li><label><span class="label">A币 &gt;=</span><input type="number"
+								name="denominationCons" value="<?=$ACoupon['denomination']?>"
+								min="1"></label></li>
+						<li><label><span class="label">返还比例</span> <input type="number"
+								name="restorationCons" value="<?=$ACoupon['restoration']?>"
+								min="1"></label>(1-500之间的数字)</li>
+						<li><span class="label">有效期</span> <label><input type="radio"
+								name="deadlineCons" value="1"
+								<?php if (1 == $ACoupon['deadline']) { ?> checked <?php } ?>>1天</label>
+							<label><input type="radio" name="deadlineCons" value="3"
+								<?php if (3 == $ACoupon['deadline']) { ?> checked <?php } ?>>3天</label>
+							<label><input type="radio" name="deadlineCons" value="7"
+								<?php if (7 == $ACoupon['deadline']) { ?> checked <?php } ?>>7天</label>
+						</li>
+					</ul>
+					<?php endif;?>
+					<?php if (4 == $info['htype'] && 1 != $info['condition_type']) :?>
+					<ul class="everyConsPrecentEveryDay2 myList"
+						id="everyConsPrecentEveryDay2">
+						<li>说明：充值某个区间段金额，返还指定百分比的A券。<font style="color: red">
+								配置区间到最后一个时，要设置个超大的数字，防止充值过大返还过多。 </font></li>
+					    <?php foreach ($ACoupon as $key => $value) { ?>
+					       <li class="item" data-item="<?=$key?>">
+							<ul class="myList">
+								<li>充值 &gt;= <input type="number"
+									name="ACoupon2[<?=$key?>][section_start]"
+									value="<?=$value['section_start']?>" min="1" class="sortInput">
+									&lt; <input type="number"
+									name="ACoupon2[<?=$key?>][section_end]"
+									value="<?=$value['section_end']?>" min="1" class="sortInput">
+									A币，送 <input type="number"
+									name="ACoupon2[<?=$key?>][backPercent]"
+									value="<?=$value['backPercent']?>" min="1"> % A券 填写(1-500之间的数字)
+									<span class="btn deleteItem" onclick="deleteItem2(this)"><span><button
+												type="button">删除</button></span></span>
+								</li>
+								<li><span> A券生成后，第 </span> <input type="number"
+									name="ACoupon2[<?=$key?>][effect_start_time]"
+									value="<?=$value['effect_start_time']?>" min="1"> 天到 <input
+									type="number" name="ACoupon2[<?=$key?>][effect_end_time]"
+									value="<?=$value['effect_end_time']?>" min="1"> 天</li>
+							</ul>
+						</li>
+						   <?php } ?>
+						   <li id="addItem"><span class="btn" onclick="addItem2(this)"><span><button
+										type="button">添加新的返还额度</button></span></span></li>
+					</ul>
+					<?php endif;?>	
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><span class="btn2"><span><button type="submit">保存</button></span></span></td>
+			</tr>
+		</table>
+	</form>
+</div>
+<script
+	src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script>
+// JQuery.serializeObject;
+(function($){
+	$.fn.serializeObject = function(){
+		var self = this,
+			json = {},
+			push_counters = {},
+			patterns = {
+				"validate":	/^[a-zA-Z][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/,
+				"key":		/[a-zA-Z0-9_]+|(?=\[\])/g,
+				"push":		/^$/,
+				"fixed":	/^\d+$/,
+				"named":	/^[a-zA-Z0-9_]+$/
+			};
+
+		this.build = function(base, key, value){
+			base[key] = value;
+			return base;
+		};
+
+		this.push_counter = function(key){
+			if(push_counters[key] === undefined){
+				push_counters[key] = 0;
+			}
+			return push_counters[key]++;
+		};
+
+		$.each($(this).serializeArray(), function(){
+
+			// skip invalid keys
+			if(!patterns.validate.test(this.name)){
+				return;
+			}
+
+			var k,
+				keys = this.name.match(patterns.key),
+				merge = this.value,
+				reverse_key = this.name;
+
+			while((k = keys.pop()) !== undefined){
+
+				// adjust reverse_key
+				reverse_key = reverse_key.replace(new RegExp("\\[" + k + "\\]$"), '');
+
+				// push
+				if(k.match(patterns.push)){
+					merge = self.build([], self.push_counter(reverse_key), merge);
+				}
+
+				// fixed
+				else if(k.match(patterns.fixed)){
+					merge = self.build([], k, merge);
+				}
+
+				// named
+				else if(k.match(patterns.named)){
+					merge = self.build({}, k, merge);
+				}
+			}
+
+			json = $.extend(true, json, merge);
+		});
+
+		return json;
+	};
+})(jQuery);
+</script>
+<script>
+$('.time').datetimepicker();
+$("#reverse").click(function () {//反选
+	//console.log($(this).attr('checked'));
+	if($(this).attr('checked')){
+		$(".loginClient :checkbox:not(:first)").attr('checked',true);
+	} else {
+		$(".loginClient :checkbox:not(:first)").attr('checked',false);
+	}
+});  
+
+//参与游戏游戏对象
+$('[name="game_object"]').click(function(){
+	game_object = $(this).val();
+	$('#subject_id').hide();
+	$('#game_object_addition_info').hide();
+    if(game_object == 2){
+		$('#subject_id').show();
+    }else if(game_object == 3){
+    	$('#game_object_addition_info').show();
+    }
+});
+
+//参与游戏的用户
+$('[name="hd_object"]').click(function(){
+	hd_object = $(this).val();
+    if(hd_object == 2){
+		$('#hd_object_addition_info').show();
+    }else if(hd_object == 1){
+    	$('#hd_object_addition_info').hide();
+    }
+});
+
+
+$(".loginClient :checkbox:not(:first)").click(function(){
+	if(!$(this).attr('checked')){
+		$("#reverse").attr('checked',false);
+	}
+	if($(".loginClient :checkbox:not(:first)").size() == $(".loginClient :checkbox:not(:first):checked").size()){
+		$("#reverse").attr('checked',true);
+	}
+});
+
+$('#add_form').submit(function() {
+	var info = $(this).serializeObject(),
+	data = {
+		token: info.token,
+		title: info.title,
+		hd_start_time: info.hd_start_time,
+		hd_end_time: info.hd_end_time,
+		htype: info.htype,
+		status: info.status,
+		hd_object: info.hd_object,
+	}
+    data.hd_object = info.hd_object;
+    data.hd_object_addition_info = info.hd_object_addition_info;
+    if (data.htype == 1) {
+ 	    data.condition_type = info.condition_type;
+ 	    data.game_version = info.game_version;
+ 	    data.denomination = info.denomination;
+ 	    data.deadline = info.deadline;
+	} else if (data.htype == 2) {
+	    data.condition_type = info.condition_type;
+	    data.game_object = info.game_object;
+	    data.game_object_addition_info = info.game_object_addition_info;
+	    data.denomination = info.denomination;
+	    data.deadline = info.deadline;
+	    data.subject_id = info.subject_id;
+    } else if (data.htype == 3) {
+	    data.condition_type = info.condition_type3;
+	    data.game_object = info.game_object;
+	    data.game_object_addition_info = info.game_object_addition_info;
+	    data.subject_id = info.subject_id;
+	    if (data.condition_type == 1) {
+		    data.denomination = info.denomination;
+		    data.deadline = info.deadline;
+	    //单次消费		
+	    } else if (data.condition_type == 2) {
+		    data.restoration = info.restorationCons;
+		    data.denomination = info.denominationCons;
+		    data.deadline = info.deadlineCons;
+		    if(data.restoration == ''){
+              alert('返还比例不能为空');
+              return false;
+		    }
+	    } else if (data.condition_type == 3) {
+		    data.condition_value = info.condition_value3;
+		    data.rule_type = info.rule_type;
+		    data.ACoupon = info.ACoupon;
+		    for (var i in data.ACoupon) {
+			    var item = data.ACoupon[i], sum = 0;
+			    for (var d in item.denarr) {
+				    sum += Number(item.denarr[d].Step);
+			    }
+			    if (sum != item.backAmount) {
+				    alert('第 '+(1+Number(i))+' 个规则 A 券总数不符');
+				    return false;
+			    };
+		    }
+	    } else if (data.condition_type == 4) {
+		    data.condition_value = info.condition_value4;
+		    data.denomination = info.denomination;
+		    data.deadline = info.deadline;
+	    }else{
+		    if (data.condition_type == 5){
+			    data.condition_value = info.condition_value5;
+		    }else if (data.condition_type == 6){
+				data.condition_value = info.condition_value6;
+		    }else if (data.condition_type == 7){
+				data.condition_value = info.condition_value7;
+		    }
+		    data.ACoupon = info.ACoupon1;
+		    for (var i in data.ACoupon) {
+			    var item = data.ACoupon[i];
+			    if(item.backPercent == ''){
+				    alert('第 '+(1+Number(i))+' 个规则 A 券返还比例不能为空。');
+				    return false;
+			    }
+			    if (item.backPercent < 1 || item.backPercent > 500) {
+				    alert('第 '+(1+Number(i))+' 个规则 A 券返还比例输入不合法。');
+				    return false;
+			    }
+		    }
+	    }
+    }else if (data.htype == 4) {
+	    data.condition_type = info.condition_type2;
+	    data.game_object = info.game_object;
+	    data.game_object_addition_info = info.game_object_addition_info;
+	    data.subject_id = info.subject_id;
+	
+	    if (data.condition_type == 1){
+		    data.condition_value = info.payment_condition_value_1;
+		    data.restoration = info.restorationCons;
+		    data.denomination = info.denominationCons;
+		    data.deadline = info.deadlineCons;
+		    if(data.restoration == ''){
+                alert('返还比例不能为空');
+                return false;
+		    }
+	   } else	{
+		    if (data.condition_type == 2){
+			    data.condition_value = info.payment_condition_value_2;
+		    } else if (data.condition_type == 3){
+	            data.condition_value = info.payment_condition_value_3;
+	        } else if (data.condition_type == 4){
+	            data.condition_value = info.payment_condition_value_4;
+	        }
+		    data.ACoupon = info.ACoupon2;
+		    for (var i in data.ACoupon) {
+			    var item = data.ACoupon[i];
+			    if(item.backPercent == ''){
+				    alert('第 '+(1+Number(i))+' 个规则 A 券返还比例不能为空。');
+				    return false;
+			    }
+			    if (item.backPercent < 1 || item.backPercent > 500) {
+				    alert('第 '+(1+Number(i))+' 个规则 A 券返还比例输入不合法。');
+				    return false;
+			    }
+		    }
+	    }
+    }
+    
+	$.post(this.action, data, function(res) {
+		if (res.success) {
+			alert('操作成功');
+			location.href = '<?php echo $listUrl; ?>';
+		} else {
+			alert(res.msg);
+		}
+	});
+	return false;
+});
+
+function addACoupon(obj) {
+	var $lastACouponObj = $(obj).parent().prev(),
+		thisItem = $lastACouponObj.attr('data-item'),
+		thisACoupon = 1+Number($lastACouponObj.attr('data-acoupon')),
+		html = '<li data-item="'+thisItem+'" data-acoupon="'+thisACoupon+'"><label><span class="label">A券'+(thisACoupon+1)+'</span><input type="number" name="ACoupon['+thisItem+'][denarr]['+thisACoupon+'][Step]" min="1"></label><label><span>　有效期:  A券生成后，第　</span><input type="number" name="ACoupon['+thisItem+'][denarr]['+thisACoupon+'][effect_start_time]" min="1"></label><label>　天到　<input type="number" name="ACoupon['+thisItem+'][denarr]['+thisACoupon+'][effect_end_time]" min="1"></label><span class="btn" onclick="deleteACoupon(this)"><span><button type="button">删除</button></span></span></li>';
+	$lastACouponObj.after(html).next().find('.time').datetimepicker();
+}
+
+function addItem(obj) {
+	var $lastItemObj = $(obj).parent().prev(),
+		thisItem = 1+Number($lastItemObj.attr('data-item')),
+		html = '<li class="item" data-item="'+thisItem+'"><ul class="myList"><li>消费　&gt;=　<input type="number" name="ACoupon['+thisItem+'][section_start]" min="1" class="sortInput">　&lt;　<input type="number" name="ACoupon['+thisItem+'][section_end]" min="1" class="sortInput">　A币，送　<input type="number" name="ACoupon['+thisItem+'][backAmount]" min="1" class="sortInput">　A券<span class="btn deleteItem" onclick="deleteItem(this)"><span><button type="button">删除</button></span></span></li><li data-item="'+thisItem+'" data-acoupon="0"><label><span class="label">A券1</span><input type="number" name="ACoupon['+thisItem+'][denarr][0][Step]" min="1"></label><label><span>　有效期:  A券生成后，第　</span><input type="number" name="ACoupon['+thisItem+'][denarr][0][effect_start_time]" min="1"></label><label>　天到　<input type="number" name="ACoupon['+thisItem+'][denarr][0][effect_end_time]" min="1"></label></li><li><span class="btn" onclick="addACoupon(this)"><span><button type="button">添加一张A券</button></span></span></li></ul></li>';
+	$lastItemObj.after(html).next().find('.time').datetimepicker();
+}
+
+function addItem1(obj){
+	var $lastItemObj = $(obj).parent().prev(),
+	thisItem = 1+Number($lastItemObj.attr('data-item')),
+	html = '<li class="item" data-item="'+thisItem+'"><ul class="myList"><li>消费　&gt;=　<input type="number" name="ACoupon1['+thisItem+'][section_start]" min="1" class="sortInput">　&lt;　<input type="number" name="ACoupon1['+thisItem+'][section_end]" min="1" class="sortInput"> A币，送 <input type="number" name="ACoupon1['+thisItem+'][backPercent]" value="" min="1"> % A券 填写(1-500之间的数字) <span class="btn deleteItem" onclick="deleteItem1(this)"><span><button type="button">删除</button></span></span></li><li><span>　A券生成后，第　</span><input type="number" name="ACoupon1['+thisItem+'][effect_start_time]" min="1"> 天到 <input type="number" name="ACoupon1['+thisItem+'][effect_end_time]" min="1"> 天 </li></ul></li>';
+	$lastItemObj.after(html).next().find('.time').datetimepicker();
+}
+
+function addItem2(obj){
+	var $lastItemObj = $(obj).parent().prev(),
+	thisItem = 1+Number($lastItemObj.attr('data-item')),
+	html = '<li class="item" data-item="'+thisItem+'"><ul class="myList"><li>充值　&gt;=　<input type="number" name="ACoupon2['+thisItem+'][section_start]" min="1" class="sortInput">　&lt;　<input type="number" name="ACoupon2['+thisItem+'][section_end]" min="1" class="sortInput"> A币，送 <input type="number" name="ACoupon2['+thisItem+'][backPercent]" value="" min="1"> % A券 填写(1-500之间的数字) <span class="btn deleteItem" onclick="deleteItem2(this)"><span><button type="button">删除</button></span></span></li><li><span>　A券生成后，第　</span><input type="number" name="ACoupon2['+thisItem+'][effect_start_time]" min="1"> 天到 <input type="number" name="ACoupon2['+thisItem+'][effect_end_time]" min="1"> 天 </li></ul></li>';
+	$lastItemObj.after(html).next().find('.time').datetimepicker();
+}
+
+function deleteACoupon(obj) {
+	var $obj = $(obj).parent();
+	if ($obj.siblings().length == 2) {
+		alert('不能全部删除');
+		return;
+	}
+	$obj.remove();
+}
+
+function deleteItem(obj) {
+	var $obj = $(obj).parent().parent().parent();
+	if ($obj.siblings().length == 2) {
+		alert('不能全部删除');
+		return;
+	}
+	$obj.remove();
+}
+
+function deleteItem1(obj) {
+	var $obj = $(obj).parent().parent().parent();
+	if ($obj.siblings().length == 2) {
+		alert('不能全部删除');
+		return;
+	}
+	$obj.remove();
+}
+
+function deleteItem2(obj) {
+	var $obj = $(obj).parent().parent().parent();
+	if ($obj.siblings().length == 2) {
+		alert('不能全部删除');
+		return;
+	}
+	$obj.remove();
+}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

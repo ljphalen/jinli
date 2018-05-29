@@ -1,0 +1,60 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+	<div class="module">
+		<section id="iScroll">
+			<div class="J_proDetail" data-ajaxurl="<?php echo $webroot;?>/api/ios_cut/orderlist">
+				<div class="wrap"></div>
+			</div>
+		</section>
+		<script id="J_dtemplate" type="text/icat-template">
+			<%if (!data.list.length&&data.curpage==1) {%>
+				<div class="no-result">暂无订单</div>
+			<%}%>
+			<ul class="cut-list">
+				<%for(var i=0, len=data.list.length; i<len; i++){%>
+				<li>
+					<div class="date">下单日期：<%=data.list[i].create_time%>
+						<span class="status">
+							<% if (data.list[i]['status'] == '已下单/未支付'){ %>
+								<em><%=data.list[i]['status']%></em>
+							<%} else {%>
+								<%=data.list[i]['status']%>
+							<%}%>
+						</span>
+					</div>
+					<a class="figure" href="javascript:;">
+						<div class="pic">
+							<img src="<%= blankPic %>" data-src="<%= data.list[i].img %>">
+						</div>
+						<div class="title"><h3><%= data.list[i].title %></h3></div>
+						<div class="price">￥<%= data.list[i].price %></div>
+					</a>
+					<div class="buyer-info">
+						<p>
+							<span>收货人：<em><%= data.list[i].buyer_name %></em></span>
+							联系电话：<em><%= data.list[i].phone %></em>
+						</p>
+						<p>收货地址：<%= data.list[i].address %></p>
+					</div>
+					<div class="handle">
+						<%if(data.list[i]['express_url']) {%>
+						<a class="btn" href="<%=data.list[i]['express_url']%>">查看物流</a>
+						<%}%>
+						<%if(data.list[i]['cancel_url']) {%>
+						<span class="btn J_cancel" data-url="<%=data.list[i]['cancel_url']%>">取消订单</span>
+						<%}%>
+						<%if(data.list[i]['edit_url']) {%>
+						<a class="btn" href="<%=data.list[i]['edit_url']%>">修改订单信息</a>
+						<%}%>
+						<%if(data.list[i]['pay_url']) {%>
+						<span class="btn J_orderPay" data-url="<%=data.list[i]['pay_url']%>">立即支付</span>
+						<%}%>
+					</div>
+				</li>
+				<%}%>
+			</ul>
+		</script>
+	</div>
+
+	<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/newfooter.phtml");?>

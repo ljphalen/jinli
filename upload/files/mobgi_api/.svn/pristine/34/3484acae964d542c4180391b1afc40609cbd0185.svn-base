@@ -1,0 +1,102 @@
+<div class="colMain">
+            <div class="title"><p class="fl">客户信息录入</p></div>
+            <form action="/implantable/publishsave" method="post" name="form" id="publish">
+            <div class="main">
+                <div class="app-detail">
+                    <ul class="form">
+                        <li>
+                            <span class="label">公司名称：</span>
+                            <div class="fc">
+                                <input type="hidden" name="id" value="{{publish.id}}"/>
+                                <input type="text" id="compay" name="compay" value="{{publish.compay}}" class="iText required" />
+                                <span class="red">*</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">联系人：</span>
+                            <div class="fc">
+                                <input type="text" id="conact" name="conact[]" value="<?php echo $data['publish']['conact'][0] ?>" class="iText" />
+                                <span>联系方式：</span>
+                                <input type="text" id="tel" name="tel[]" value="<?php echo $data['publish']['tel'][0] ?>" class="iText tel" />
+                                <input type="button" id="addContact" name="addContact" value="新增" class="addContact submit" />
+                            </div>
+                        </li>
+                        <li id="addContact_li"  style="display: none" >
+                            <span class="label">联系人：</span>
+                            <div class="fc">
+                                <input type="text" id="conact" name="conact[]" value="<?php echo $data['publish']['conact'][1] ?>" class="iText" />
+                                <span>联系方式：</span>
+                                <input type="text" id="tel" name="tel[]" value="<?php echo $data['publish']['tel'][1] ?>" class="iText tel" />
+                                <input type="button" id="delContact" name="delContact" value="删除" class="delContact submit" />
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">公司地址：</span>
+                            <div class="fc">
+                                <input type="text" id="address" name="address" value="{{publish.address}}" class="iText" />
+                            </div>
+                        </li>
+                        <li>
+                            <div class="fc">
+                                <input type="button" onclick="javascript:$('form').submit();" value="确定" class="submit" />
+                                <input type="button" value="取消" onclick="javascript:location.href='publishlist'" class="cancel" />
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+        </div>
+<script language="javascript" >
+    $(function(){
+        var contact_num = "{{publish.contact_num}}"
+        if(contact_num == "2"){
+            $("#addContact_li").show()
+        }else{
+            $("#addContact_li").hide()
+        }
+        
+        $("#addContact").click(function(){
+            $("#addContact_li").show();
+        });
+        
+        $(".delContact").click(function(){
+            $("#addContact_li").hide();
+            $(this).siblings('input').attr('value', '');
+        });
+        
+        $("form").submit(function(){
+            var isTelOk = true
+            var errorTel = '';
+            $(".main li .tel").each(function(){
+                var telphone= $(this).val()
+                if(telphone!='' && !isMobile(telphone) && !isTel(telphone)){
+                    errorTel = telphone;
+                    isTelOk = false;
+                    return false;
+                }
+            });
+
+        if(!isTelOk){
+                jAlert("联系方式： "+errorTel+" 格式不正确");
+                return false;
+            }
+            
+        });
+        
+        //验证手机号
+        function isMobile(value) {
+            var validateReg = /^((\+?86)|(\(\+86\)))?1\d{10}$/;
+            return validateReg.test(value);
+        }
+        
+        //验证电话号码
+        function isTel (s) {
+            var patrn = /^((\+?86)|(\(\+86\)))?\d{3,4}-\d{7,8}(-\d{3,4})?$/
+            if (!patrn.exec(s)) return false
+            return true
+        }
+        
+    });
+</script>
+

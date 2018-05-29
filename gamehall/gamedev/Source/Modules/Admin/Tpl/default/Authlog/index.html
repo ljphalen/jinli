@@ -1,0 +1,127 @@
+<form id="pagerForm" action="__ACTION__" method="post">
+	<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+	<input type="hidden" name="numPerPage" value="{$_REQUEST.numPerPage}" />
+	<input type="hidden" name="orderField" value="{$_REQUEST.orderField}" />
+	<input type="hidden" name="orderDirection" value="{$_REQUEST.orderDirection}" />
+	<volist name="_REQUEST._search" key="name" id="field">
+		<input type="hidden" name="_search[{$key}]" value="{$field|safe}"/>
+	</volist>
+</form>
+
+<div class="page">
+	<div class="pageHeader">
+	<form onsubmit="return navTabSearch(this);" action="__URL__" method="post" name="myform" id='myform'>
+		<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+        <input type="hidden" name="type" value="{$_REQUEST.type}"/>
+		<div class="searchBar">
+			<ul class="searchContent" style=" overflow:inherit;">
+				<li>
+					<label>应用状态：</label>
+					<select class="combox" id="audited" name="_search[audited]">
+						<volist name="audited" id="name">
+                            <option value="{$key}"
+                                <eq name="_REQUEST.audited" value="$key">selected</eq>
+                                >{$name}
+                            </option>
+                            </volist>
+                             <option value=""
+                                <eq name="_REQUEST.audited" value="">selected</eq>
+                                >全部
+                            </option>
+					</select>
+					<script>$("#audited").val('{$_search[audited]}')</script>
+				</li>
+				<li>
+					<label>注册帐号：</label>
+					<input type="text" name="_search[author]" value="{$_REQUEST._search.author}"/>
+				</li>
+				<li>
+					<label>审核人：</label>
+					<input type="text" name="_search[account]" value="{$_REQUEST._search.account}"/>
+				</li>
+                <li>
+					<label>审核日期：</label>
+					<input type="text" name="_search[timeStart]" value="{$_REQUEST._search.timeStart}" class="date" yearstart="-10" yearend="0" pattern="yyyy-MM-dd" size="12" readonly/>
+					到<input type="text" name="_search[timeEnd]" value="{$_REQUEST._search.timeEnd}" class="date" yearstart="-10" yearend="0" pattern="yyyy-MM-dd" size="12" readonly/>
+				</li>
+                
+                <div class="buttonActive"><div class="buttonContent"><button type="submit">查询</button></div></div>
+			</ul>
+
+		</div>
+		</form>
+	</div>
+
+	<div class="pageContent">
+	
+	<div class="panelBar">
+		<ul class="toolBar">
+			<li class="line">line</li>
+			<li><a class="icon" href="{:U('Authlog/export')}" target="dwzExport" targetType="navTab" title="实要导出这些记录吗?"><span>导出EXCEL</span></a></li>
+		</ul>
+	</div>
+		<table class="list" width="100%" layoutH="138">
+			<thead>
+			<tr>
+				<th class="email">注册帐号</th>
+				<th>简称</th>
+				<th class="time">注册日期</th>
+				<th class="time">审核日期</th>
+				<th class="time">审核结果</th>
+				<th>审核备注</th>
+				<th width="100">审核人</th>
+				<th width="80">资料详情</th>
+			</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="list">
+			<php>
+				$accounts = D("Dev://Accounts")->getAccountById($vo['account_id']);
+				$admin_info = D("Admin")->find($vo['admin_id']);
+			</php>
+			
+			
+				<tr target="sid_user" rel="{$vo['id']}">
+					<td>{:AccountsModel::listTxt($accounts)}</td>
+					<td>{$accounts['nickname']}</td>
+					<td>{$accounts['created_at']}</td>
+					<td>{:date('Y-m-d H:i:s',$vo['dateline'])}</td>
+					<td>
+						{$audited[$vo['audited']]}
+					 </td>
+					<td>{$vo['remarks']}</td>
+					<td>{$admin_info['account']}</td>
+					<td><a height="450" width="600" target="dialog" href="__URL__/details/id/{$vo['id']}" mask="true">查看</a></td>
+				</tr>
+			</volist>
+			</tbody>
+		</table>
+
+		<div class="panelBar">
+			<div class="pages">
+				<span>显示</span>
+				<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+					<option value="10" <eq name="numPerPage" value="10">selected</eq>>10</option>
+					<option value="20" <eq name="numPerPage" value="20">selected</eq>>20</option>
+					<option value="50" <eq name="numPerPage" value="50">selected</eq>>50</option>
+					<option value="100" <eq name="numPerPage" value="100">selected</eq>>100</option>
+					<option value="200" <eq name="numPerPage" value="200">selected</eq>>200</option>
+				</select>
+				<span>共{$totalCount}条</span>
+				<span>
+				<?php 
+				if($_REQUEST['account_id'] > 0)
+				{
+					$account = D('Dev://accounts')->find($_REQUEST['account_id']);
+					echo '当前审核帐号:'.$account['email'];
+				}
+				?>
+				</span>
+			</div>
+			<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="10" currentPage="{$currentPage}"></div>
+		</div>
+
+	</div>
+	
+</div>
+

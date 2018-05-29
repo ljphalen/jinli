@@ -1,0 +1,447 @@
+<?php
+extract($pageData);
+$cssPath = "{$staticResPath}/nav/css/navigator.min.css?v={$version}";
+$jsLibPath = "{$staticResPath}/nav/js/navigator.min.js?v={$version}";
+$mainfast = $cache ? 'manifest="/cache?cn='.$cn.'"':'';
+$prevUrl = Common::getPrevShortUrl().'?t=';
+$typeData = str_replace(array(trim(json_encode($prevUrl), '"'), '&t_bi='), '',json_encode($data,JSON_UNESCAPED_UNICODE));
+?>
+<!DOCTYPE HTML>
+<html <?=$mainfast?>>
+<head>
+<title>手机网址导航</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<?php if (!empty($baidu_stat_no)):?>
+	<meta name="baidu-site-verification" content="<?=$baidu_stat_no?>"/>
+<?php endif;?>
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="stylesheet" href="<?php echo $cssPath;?>" />
+<!-- load script start -->
+ <script type="text/javascript" src="<?php echo $jsLibPath;?>"></script>
+<!-- load script done -->
+</head>
+<body>
+<script type="text/javascript">
+var t_bi = '<?php echo $t_bi;?>';
+var prevUrl = '<?php echo $prevUrl;?>';
+var typeData = <?php echo $typeData;?>;
+</script>
+<section id="h5navi">
+	<script type="text/javascript">
+		var now = new Date(),
+			cdate =  [now.getMonth()+1, now.getDate()],
+			adsFlag = window.localStorage.getItem('nav_ads_flag'),
+			pdate = !!adsFlag && adsFlag.split(',') || [0,0];
+		var other = cdate[0] > pdate[0] || (cdate[0] == pdate[0] && cdate[1] > pdate[1]) ? true : false;
+		var _cache_topBanner = window.localStorage.getItem('GNnav:topBanner');
+		var localData = _cache_topBanner ? JSON.parse(_cache_topBanner) : 0;
+
+		if (localData && localData.data['msg'] == '-1'){
+			window.localStorage.clearItem('GNnav:topBanner');
+			localData = 0;
+		}
+
+		function isArray(obj){
+			return Object.prototype.toString.call(obj) == "[object Array]" ? true : false;
+		}
+
+		if (!adsFlag || other){
+			if ( localData && isArray(localData.data['msg']) && localData.data['msg'].length > 0){
+				var shtml = '<div class="gn-ad" id="J_full_slider">';
+				var data = localData.data['msg'], lens = data.length;
+				var status = '';
+				for (var i = 0; i < lens; i++){
+					status = (i == 0) ? "curr" : 'none';
+					shtml = shtml + '<a class="'+status+'" onclick="report2baidu(1,\'导航Banner广告_'+(1+i)+'\')" href="'+data[i].link+'"><img src="'+data[i].img+'" /></a>';
+				}
+				document.write(shtml + '<span class="close"></span></div>');
+
+				if (lens > 1){
+					intervalShow();
+				}
+
+				function intervalShow(pos){
+					var pos = pos == undefined ? 1 : pos, oLink = $('#J_full_slider a');
+					var tid = setTimeout(function(){
+						if (oLink.size() > 1){
+							oLink.removeClass('curr').addClass('none');
+							oLink.eq(pos).removeClass('none').addClass('curr');
+							pos =  $('#J_full_slider a.curr').index();
+							pos = pos == lens-1 ? 0 : pos-1;
+							intervalShow(pos);
+						} else {
+							clearTimeout(tid);
+						}
+					},5000);
+				}
+			}
+		}
+	</script>
+	<!-- navigator search module start -->
+	<section class="search-wrap J_button_dropdown">
+		<div class="search-container">
+			<?php echo html_entity_decode($searchTpl);?>
+			<div class="hot-words-box">
+				<div class="baidu-hot-words">
+					<?php
+					foreach($baidu_hotword as $v):
+						$url = !empty($v['url'])?$v['url']:"http://m.baidu.com/s?from={$baidu_num}&word={$v['text']}";
+					?>
+						<span><a onclick="_hmt.push(['_trackEvent','GNnav数据','导航搜索-百度热词','导航百度热词搜索'])" href="<?php echo $url;?>"><?php echo $v['text'];?></a></span>
+					<?php
+					endforeach;
+					?>
+				</div>
+				<span onclick="_hmt.push(['_trackEvent','GNnav数据','导航搜索-切换','导航搜索-换一换'])" id="J_convert" class="btn-convert">换一换</span>
+			</div>
+			<div class="J_keywordWrap search-keyword-wrap none">
+				<div class="search-keyword-list">
+					<div class="request-list none">
+					</div>
+					<a class="search-close">关闭</a>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- navigator search module end -->
+	<!-- navigator hot website module start -->
+	<section class="nav-recommend-wrap kline">
+		<div class="nav-recommend-box">
+			<div class="nav-site-list">
+				<div class="nav-site-item">
+					<p>
+						<?php
+						$num = count($hot_nav_pic);
+						foreach($hot_nav_pic as $key => $value){
+							$id     = $value['id'];
+							$url    = $value['link'].$t_bi;
+							$img    = $attachPath . $value['img'];
+							$title  = $value['title'];
+							echo sprintf('<a onclick="report2baidu(\'热门推荐点击\',\'%s-hot\')" href="%s"><img src="%s" /><span style="color:%s">%s</span></a>', $title, $url, $img, $value['color'], $title);
+							if (($key+1)%4 == 0) {
+								echo "</p></div>";
+								if (($key+1) != $num){
+									echo "<div class=\"nav-site-item\"><p>";
+								}
+							}
+						}
+						?>
+					</p>
+				</div>
+			</div>
+			<?php if(!empty($hot_nav_nopic)):?>
+				<div class="nav-link-cp">
+					<p>
+						<?php
+						foreach ($hot_nav_nopic as $k=>$v) {
+							echo sprintf('<a class="rline" oncick="report2baidu(\'热门推荐点击\',\'%s-cp\')"  style="color:%s" href="%s">%s</a>', $v["title"], $v['color'], $v['link'] . $t_bi, $v['title']);
+							if (($k + 1) % 5 == 0) {
+								echo "</p>";
+								if (($k + 1) != count($hot_nav_pic)) {
+									echo "<p>";
+								}
+							}
+						}
+						?>
+				</div>
+			<?php endif; ?>
+		</div>
+	</section>
+	<!-- navigator hot website module end -->
+	<!-- navigator cloumns modules start -->
+	<section class="nav-drapdown-wrap kline">
+		<section class="nav-drapdown">
+			<?php
+			$i=1;
+			foreach($types as $key => $value):
+				$apiUrl = $webroot.'/api/ng/list?type_id='.$value['id'];
+				$iconUrl = $attachPath.$value['icon'];
+			?>
+			<div class="nav-drapdown-box">
+				<div class="nav-drapdown-title bline" data-ajax="<?php echo $apiUrl;?>" data-wrap="cinner<?php echo $i;?>">
+					<span class="span1" style="background-image:url(<?php echo $iconUrl;?>);"></span>
+					<span class="span2"><?php echo $value['name'];?></span>
+					<span class="span3" style="color:<?php echo $value['desc_color'];?>"><?php echo $value['description'];?></span>
+					<span class="span4"></span>
+				</div>
+				<div class="nav-drapdown-content bline">
+					<div id="cinner<?php echo $i;?>" class="inner"></div>
+				</div>
+			</div>
+			<?php
+			$i++;
+			endforeach;
+			?>
+		</section>
+	</section>
+	<!-- navigator cloumns modules end -->
+	<!-- bottom link ads start -->
+	<div id="J_nav_btm_link" class="gn-ad-link center"></div>
+	<!-- bottom link ads end -->
+	<footer id="footer">
+	<div class="copyright">
+		<p>
+			<a href="<?=Common::getPrevShortUrl()?>?t=m8izhb"><i></i>集砖箱</a>
+			<a href="<?=Common::getPrevShortUrl()?>?t=f80ce6"><i></i><?=Lang::_('USER_CENTER')?></a>
+
+			<?php
+			$url = $webroot.'/feedback/msg?type=4';
+			$uName = Gionee_Service_Feedbackuser::getName();
+			$tip = Gionee_Service_Feedbackuser::getNewTip($uName,4);
+			$tip_class = !empty($tip)?'class="feed-new-enter"':'';
+			?>
+			<a <?=$tip_class?> href="<?=$url;?>"><i></i>意见反馈</a>
+		</p>
+		<span style="font-family:Arial;">Copyright © 2012 -
+	<script>document.write(new Date().getFullYear());</script> 粤ICP备05087105号
+	<!-- <a target="_blank" href="http://www.miitbeian.gov.cn/"> 粤ICP备05087105号</a> --></span>
+	</div>
+	</footer>
+</section>
+<div class="J_mask mask none"></div>
+
+<script id="tmpl_img1" type="text/html">
+	<div class="drapdown-ads-img1">
+		<%for(var i = 0; i < list.length; i++) {%>
+			<%if(i == 0){%>
+				<a href="<%=prevUrl%><%=list[i]['link']%><%=t_bi%>">
+               <img class="util-lazyload" src="<%=list[i]['img']%>" alt="">
+            </a>
+			<%}%>
+		<%}%>
+	</div>
+</script>
+<script id="tmpl_img2" type="text/html">
+	<div class="drapdown-ads-img2">
+		<%for(var i = 0; i < list.length; i++) {%>
+			<%if(i < 2){%>
+				<a href="<%=prevUrl%><%=list[i]['link']%><%=t_bi%>">
+            <img class="util-lazyload" src="<%=list[i]['img']%>" alt="">
+            </a>
+			<%}%>
+		<%}%>
+	</div>
+</script>
+<script id="tmpl_img3" type="text/html">
+	<ul class="hot-movie">
+		<%for(var i = 0; i < list.length; i++) {%>
+			<%if (i < 3){%>
+				<li>
+					<a href="<%=prevUrl%><%=list[i]['link']%><%=t_bi%>">
+						<img class="util-lazyload" src="<%=list[i]['img']%>" width="86" height="118" />
+						<p><%=list[i]['title']%></p>
+					</a>
+				</li>
+			<%}%>
+		<%}%>
+	</ul>
+</script>
+<script id="tmpl_words3" type="text/html">
+	<div class="movie-link">
+		<p>
+		<%for(var i = 1; i <= list.length; i++) {%>
+			<a href="<%=prevUrl%><%=list[i-1]['link']%><%=t_bi%>"><span><%=list[i-1]['title']%></span></a>
+			<%if(i%3 == 0){%>
+				</p>
+				<%if( i != list.length){%><p><%}%>
+			<%}%>
+		<%}%>
+	</div>
+</script>
+<script id="tmpl_words5" type="text/html">
+	<div class="words5-link">
+		<p>
+		<%for(var i = 1; i <= list.length; i++) {%>
+			<a class="rline" style="color:<%=list[i-1]['color']%>" href="<%=prevUrl%><%=list[i-1]['link']%><%=t_bi%>"><span><%=list[i-1]['title']%></span></a>
+			<%if(i%5 == 0){%>
+				</p>
+				<%if( i != list.length){%><p><%}%>
+			<%}%>
+		<%}%>
+	</div>
+</script>
+
+<script id="tmpl_news_list" type="text/html">
+    <div class="tabs">
+      	<div class="tab-nav">
+			<nav>
+				<% for(var i = 1; i <= names.length; i++) {%>
+					<a <%if(i == 1){%>class="active"<%}%> data-id="<%=names[i-1]['id']%>" onclick="report2baidu('今日头条Tab切换','今日头条Tab-<%=names[i-1]["title"]%>')"><%=names[i-1]["title"]%></a>
+				<%}%>
+			</nav>
+      	</div>
+      	<%for(var i = 1; i <= list.length; i++) {%>
+			<div class="tab-con <%if(i != 1){%>none<%}%>">
+				<ul class="hot-news">
+				    <%for(var j = 1, res = list[i-1]; j <= res.length; j++) {%>
+				   <li><a href="<%=prevUrl%><%=list[i-1][j-1]['link']%><%=t_bi%>"><i class="num"><%=j%></i><span class="txt"><%=list[i-1][j-1]["title"]%><span></a></li>
+				    <%}%>
+				</ul>
+			</div>
+      	<%}%>
+		<div class="news_more" id="J_btn_news">换一换</div>
+    </div>
+</script>
+
+<script id="tmpl_like" type="text/html">
+    <div class="movie-link">
+        <p>
+            <%for(var i = 1; i <= list.length; i++) {%>
+                <a href="<%=prevUrl%><%=list[i-1]['link']%><%=t_bi%>" style="color:<%=list[i-1]['color']%>"><%=list[i-1]['title']%></a>
+            <%if(i%3 == 0){%>
+        </p>
+            <%if( i != list.length){%><p><%}%>
+            <%}%>
+        <%}%>
+    </div>
+</script>
+
+<script id="tmpl_cols4" type="text/html">
+	<div class="icon-link icon-4-txt">
+		<% for(var i = 1; i <= list.length; i++){%>
+			<div class="item">
+				<a href="<%=prevUrl%><%=list[i-1]['link']%><%=t_bi%>">
+					<span><img src="<%=list[i-1]['img']%>" /></span>
+					<span><%=list[i-1]['title']%></span>
+				</a>
+			</div>
+			<%if(i%4 == 0){%>
+        	</div>
+            <%if( i != list.length){%><div class="icon-link icon-4-txt"><%}%>
+            <%}%>
+		<%}%>
+    </div>
+</script>
+
+<script id="tmpl_cols5" type="text/html">
+	<div class="icon-link icon-5-txt">
+		<% for(var i = 1; i <= list.length; i++){%>
+			<div class="item">
+				<a href="<%=prevUrl%><%=list[i-1]['link']%><%=t_bi%>">
+					<span><img src="<%=list[i-1]['img']%>" /></span>
+					<span><%=list[i-1]['title']%></span>
+				</a>
+			</div>
+			<%if(i%5 == 0){%>
+        	</div>
+            <%if( i != list.length){%><div class="icon-link icon-5-txt"><%}%>
+            <%}%>
+		<%}%>
+	</div>
+</script>
+
+<script id="tmpl_cltab" type="text/html">
+    <div class="cltab-wrap">
+        <div class="cltab-nav">
+        	<div class="l">
+        		<span><%=name%></span>
+        	</div>
+        	<div class="r">
+        		<%for(var i = 0; i < list.length; i++) {%>
+	        	<span class="rline <% if(i == 0){%>active<%}%>"><%=list[i]['tname']%></span>
+	        	<%}%>
+        	</div>
+        </div>
+        <div class="cltab-con">
+				<%for(var i = 0; i < list.length; i++) {%>
+				<ul class="hot-movie <% if(i != 0){%>none<%}%>">
+					<% for(var n = 0, res = list[i]['list']; n < res.length; n++){%>
+						<li>
+							<a href="<%=prevUrl%><%=res[n]['link']%><%=t_bi%>">
+								<img src="<%=res[n]['img']%>" width="86" height="118" />
+								<p><%=res[n]['title']%></p>
+							</a>
+						</li>
+					<%}%>
+				</ul>
+				<%}%>
+        </div>
+    </div>
+</script>
+
+<script id="tmpl_lottery" type="text/html">
+	<div class="caipiao">
+	<%for(var i = 1; i <= list.length; i++) {%>
+		<div class="item">
+			<div class="title"><%=list[i-1]['cn']%> <span><%=list[i-1]['date']%> 第<%=list[i-1]['issue']%>期</span></div>
+			<div class="content">
+				<% if(list[i-1]['n'] == 'ChaoJiDaLeTou'){%>
+					<div class="bars daletou">
+				<%}%>
+				<% if(list[i-1]['n'] == 'ssq'){%>
+					<div class="bars ssq">
+				<%}%>
+					<% for(var n = 0, arr = list[i-1]['code'].split(','); n < arr.length; n++){%>
+					<span><%=arr[n]%></span>
+					<%}%>
+				</div>
+				<div class="link"><a href="<%=prevUrl%><%=list[i-1]['link']%><%=t_bi%>">立即投注</a></div>
+			</div>
+		</div>
+	<%}%>
+	</div>
+</script>
+
+<script id="tmpl_bread" type="text/html">
+    <div class="drapdown-mod">
+        <div class="title"><h3><span><%=list[0]['title']%></span></h3></div>
+    </div>
+</script>
+
+<script id="tmpl_ads_link" type="text/html">
+    <div class="drapdown-ads-link">
+        <a href="<%=prevUrl%><%=list[0]['link']%><%=t_bi%>">
+            <i class="icon-hot">HOT</i>
+            <span><%=list[0]['title']%></span>
+        </a>
+    </div>
+</script>
+
+<script id="tmpl_ticket" type="text/html">
+	<div class="ticket-wrap">
+		<div class="ticket">
+			<p><span>今日</span><%=list['now_date']%></p>
+			<p></p>
+			<p><span><%=list['solar_date']%></span><%=list['lunar_date']%></p>
+		</div>
+		<a class="link" href="<%=list['link']%>"><%=list['title']%></a>
+	</div>
+</script>
+
+<script id="tmpl_topic" type="text/html">
+	<ul class="nav-topic-list">
+		<%for(var i = 1; i <= list.length; i++) {%>
+		<li>
+			<a href="<%=list[i-1]['link']%>">
+				<div class="ui-topic-item">
+					<div class="pic">
+						<span><img src="<%=list[i-1]['img']%>" /></span>
+					</div>
+					<div class="txt">
+						<p><%=list[i-1]['title']%></p>
+						<p><%=list[i-1]['desc']%></p>
+					</div>
+				</div>
+			</a>
+		</li>
+		<% } %>
+	</ul>
+</script>
+
+<script type="text/javascript">
+	function report2baidu(id,label){
+		var _hmt = window._hmt || [], actions = ['','顶部Banner广告点击','导航搜索-百度热词','导航搜索-切换','热门推荐点击'];
+		var act = typeof id === 'number' ? actions[id] : id;
+
+		_hmt.push(['_trackEvent', 'GNnav数据', act, label]);
+	}
+</script>
+
+<script type="text/javascript">
+	var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+	document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9a55e0c040a4ea7e63ff3bbadf8db6c9' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</body>

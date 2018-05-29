@@ -1,0 +1,105 @@
+<link media="screen" href="{{rootUrl}}/css/chosen.css" rel="stylesheet" type="text/css">
+<div class="colMain">
+    <div class="title">
+        <p class="fl">网页素材审核</p>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="devInfo">
+                <form action="../resource/html_check_save" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" value="{{result.id}}" name="id" />
+                    <input type="hidden" value="{{result.product_name}}" name="product_name" id="product_name" />
+                    
+                    <ul class="form">
+                        <li>
+                            <span class="label">平台类型：</span>
+                            <div class="fc">
+                                <select name="platform" id="platform" <!-- if {{result.id}} -->disabled<!-- endif -->>
+                                    <option value="">所有(默认)</option>
+                                    <option value="1">Android</option>
+                                    <option value="2">IOS</option>
+                                </select>   
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">网页名称：</span>
+                            <div class="fc">
+                                <input type="text" class="iText required" required name="html_name" value="{{result.html_name}}" style="width:220px;float:left;" />
+                                <select style="float:left;margin:0 5px;" name="ad_type" id="ad_type" <!-- if {{result.id}} -->disabled<!-- endif -->>
+                                    <option value="0" >插屏</option>
+                                    <option value="1" >BANNER</option>
+                                </select>
+                                <select name="product_id[]" class="required" required id="product_id" <!-- if {{result.id}} -->disabled<!-- endif -->>
+                                    <!-- loop product -->
+                                        <option value="{{product' value.id}}" <!-- if {{result.ad_product_id}}=={{product' value.id}} -->selected<!-- endif --> >{{product' value.product_name}}</option>
+                                    <!-- endloop -->
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">素材上传：</span>
+                            <div class="fc">
+                                <input type="text" class="iText" name="html_url" id='html_url' value="{{result.html_url}}" style="width:450px;float:left;" />
+                                <input type="file"  value="" name="file_name" onchange="readURL(this, 'img_prev', 'file_pic_name');" accept=".shtm,.htm,.html,.shtml"  style="width:220px;"  />
+                                <span class="red">*</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">审核信息：</span>
+                            <div class="fc">
+                                <input type="text" class="iText" value="{{result.check_msg}}" name="check_msg" />
+                            </div>
+                        </li>
+                        <li class="line"></li>
+                        <li>
+                            <div class="fc">
+                                <input type="hidden" class="iText" value="{{result.ischeck}}" name="ischeck" />
+                                <input type="button" value="审核通过" class="submit" onclick="checkproduct(1)"/>
+                                <input type="button" value="审核驳回" class="cancel" onclick="checkproduct(2)" />
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+        function autoPlatform() {
+            if($("#platform").val() == '')
+            {
+                $("#product_id").attr("multiple", "multiple");
+                $("#product_id").css("height","100px");
+            }
+            else
+            {
+                $("#product_id").removeAttr("multiple");
+                $("#product_id").css("height","");
+            }
+            ajaxPOST("/reproduct/autoPlatform", {"platform": $("#platform").val()}, function(data) {
+                var length = data.length;
+                str = '';
+                for (i=0; i<length; i++)
+                {
+                    str += '<option value="'+data[i].id+'">'+data[i].platform_product_name+'</option>'
+                }
+                $("#product_id").html(str);
+                $("#product_id").change();
+                //重新绑定select的选择组件
+                $("#product_id").removeClass("chzn-done");
+                $("#product_id_chzn").remove();
+                $("#product_id").chosen({});
+            })
+        }
+        function checkproduct(type){
+            if(type==2 && $("input[name='check_msg']").val()==""){
+                alert("请输入审核意见");
+                $("input[name='check_msg']").focus();
+                return false;
+            }
+            $("input[name='ischeck']").val(type);
+            $('form').submit();
+        }
+        
+</script>
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>

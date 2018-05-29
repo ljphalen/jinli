@@ -1,0 +1,30 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+var isLoign = '<?php echo $isLogin;?>';
+</script>
+<body class="bg-white">
+	<div class="banner-container">
+	  <img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $attachPath. $good['img'];?>">
+	</div>
+	<div class="swap-integral-info points over">
+		<span class="events-status status-over"><i class="icon-end-clock"></i>已结束</span>
+	</div>
+	<div class="player-container">
+		<h1>本次共有<em><?php echo $total;?></em>位玩家成功兑换了奖励，感谢各位的参与！</h1>
+		<ul id="playerList" class="player-list" >
+			<?php foreach($logs as $key=>$value){?>
+				<li class="tline-eeeeee">
+					<?php echo ($key + 1) + ($page - 1) * $perpage ;?>.<?php echo $value['nickname'] ;?>
+				</li>
+			<?php }?>
+		</ul>
+		<hr class="tline-eeeeee" />
+	</div>
+	<?php if($hasnext){?>
+	<div class="load-more J_loadMore invisible" data-ajaxurl="<?php echo $webroot; ?>/client/Mall/exchangeOverMore?goodId=<?php echo $good['id'].'&puuid='.$userInfo['uuid'].'&uname='.$userInfo['uname'];?>" data-hasnext="<?php echo $logs[2] ? 'true' : 'false';?>" data-curpage="<?php echo $page;?>">
+		<span class="load"></span>
+	</div>
+   <?php } ?>
+</body>
+</html>

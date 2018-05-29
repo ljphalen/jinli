@@ -1,0 +1,201 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class=""><a href="<?php echo $indexUrl; ?>">分类列表</a></li>
+			<li><a href="<?php echo $catAddUrl; ?>">添加分类</a></li>
+			<li class=""><a href="<?php echo $contentUrl; ?>">内容列表</a></li>
+			<li class="current"><a href="<?php echo $addContentUrl; ?>">编辑内容</a></li>
+			<li><a href="<?php echo $importUrl; ?>">数据导入</a></li>
+			<li class=""><a href="<?php echo $tongjiUrl; ?>">统计信息</a></li>
+		</ul>
+	</div>
+	<div class="h_a">添加信息</div>
+	<form method="post" action="<?php echo $ceditPostUrl; ?>" id="addFrom">
+		<input name="token" id="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">上级目录</th>
+					<td class="td">
+						<select name="cat_id">
+							<option value="0"> 请选择</option>
+							<?php foreach ($category as $k => $v) { ?>
+								<option value="<?php echo $v['id']; ?>" <?php if ($data['cat_id'] == $v['id']) echo 'selected'; ?> ><?php echo $v['name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">合作商</th>
+					<td class="td"><select name="parter_id" id="parter_id">
+							<?php foreach ($parters as $k => $v) { ?>
+								<option value="<?php echo $v['id'] ?>"  <?php if ($v['id'] == $urlInfo['pid']) echo 'selected'; ?>><?php echo $v['name']; ?></option>
+							<?php } ?>
+						</select></td>
+				</tr>
+				<tr class="tr" id="tr_business" style="display: <?php echo empty($blist) ? 'none' : '' ?>">
+					<th class="th">业务列表</th>
+					<td class="td">
+						<select id="bid" name="bid">
+							<option value="0">请选择</option>
+							<?php foreach ($blist as $k => $v) { ?>
+								<option value="<?php echo $v['id']; ?>"  <?php if ($v['id'] == $urlInfo['bid']) echo 'selected'; ?>><?php echo $v['name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr" id="tr_url" style="display:<?php echo empty($urlList) ? 'none' : '' ?>">
+					<th class="th">合作商链接</th>
+					<td class="td">
+						<select name="cp_id" id="cp_id">
+							<option value="0">请选择</option>
+							<?php foreach ($urlList as $k => $v) { ?>
+								<option value="<?php echo $v['id']; ?>"  <?php if ($v['id'] == $urlInfo['id']) echo 'selected'; ?>><?php echo "{$v['url_name']}:{$v['url']}"; ?></option>
+							<?php } ?>
+						</select></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">名称</th>
+					<td class="td">
+						<input type="text" name="name" class="input" style="width: 160px;" value="<?php echo $data['name'] ?>">
+					</td>
+				</tr>
+
+				<tr class="tr" id="tr_link" style="display:<?php echo !empty($urlList) ? 'none' : '' ?>">
+					<th class="th">链接</th>
+					<td class="td">
+						<input type="text" name="link" class="input" style="width: 160px;" value="<?php echo $data['link']; ?>">
+					</td>
+				</tr>
+
+
+				<tr class="tr">
+					<th class="th">开始时间</th>
+					<td class="td">
+						<div>
+							<input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $data['start_time']); ?>"/>
+						</div>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">开始时间</th>
+					<td class="td">
+						<div>
+							<input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s', $data['end_time']); ?>"/>
+						</div>
+					</td>
+				</tr>
+
+				<tbody id="image" style="">
+				<tr class="tr">
+					<th class="th">图片</th>
+					<td class="td">
+						<ul class="uploadImg">
+							<li id="catImage">
+								<img src="<?php echo $attachPath . $data['image']; ?>"/>
+								<input type="hidden" name="image" value="<?php echo $data['image']; ?>">
+							</li>
+						</ul>
+						<p style="clear:both;">
+							<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=catImage'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tbody>
+				<tr class="tr">
+					<th class="th">排序</th>
+					<td class="td">
+						<input type="text" class="input" name="sort" value="<?php echo $data['sort']; ?>" style="width: 160px">
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">默认是否显示</th>
+					<td class="td"><select name="is_special" style="width: 160px">
+							<option value="1"  <?php if ($data['is_special'] == 1) echo 'selected'; ?>>是</option>
+							<option value="0" <?php if ($data['is_special'] == 0) echo 'selected'; ?>>否</option>
+						</select></td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">状态</th>
+					<td class="td"><select name="status" style="width: 160px">
+							<option value="1"  <?php if ($data['status'] == 1) echo 'selected'; ?>>开启</option>
+							<option value="0" <?php if ($data['status'] == 0) echo 'selected'; ?>>关闭</option>
+						</select></td>
+				</tr>
+			</table>
+		</div>
+		<input name="id" type="hidden" value="<?php echo $data['id']; ?>">
+
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+	<script type="text/javascript">
+		//广告表单数据提交
+		$(document).ready(function () {
+			$('#start_time').datetimepicker();
+			$('#end_time').datetimepicker();
+			ajaxForm('addFrom', function (ret) {
+					ajaxRedirect(ret, baseurl + '/Admin/sites/content');
+				}
+			);
+		})
+
+		$("#parter_id").bind('change', function () {
+			var pid = $("#parter_id option:selected").val();
+			if (pid > 0) {
+				$.ajax({
+					'type': 'post',
+					'dataType': 'json',
+					'data': {'token': '<?php echo $token;?>', 'pid': pid},
+					'url': '/Admin/Parter/ajaxGetBussinessList',
+					'success': function (e) {
+						var html = "<option value='0'>请选择</option>";
+						$.each(e.data, function (i, m) {
+							html += "<option value='" + m.id + "'>" + m.name + "</option>";
+						});
+						$("#bid").html(html);
+						$("#tr_business").show();
+					}
+				});
+			} else {
+				$("#tr_business").hide();
+				$("#tr_url").hide();
+			}
+		});
+
+		$("#bid").bind('change', function () {
+			var bid = $("#bid option:selected").val();
+			if (bid > 0) {
+				$.ajax({
+					'type': 'post',
+					'dataType': 'json',
+					'data': {'token': '<?php echo $token;?>', 'bid': bid},
+					'url': '/Admin/Parter/ajaxGetUrlByBid',
+					'success': function (e) {
+						var html = "<option value='0'>请选择</option>";
+						$.each(e.data, function (i, m) {
+							html += "<option value='" + m.id + "'>" + m.url_name + " : " + m.url + "</option>";
+						});
+						$("#cp_id").html(html);
+						$("#tr_url").show();
+					}
+				});
+			} else {
+				$("#tr_url").hide();
+			}
+		});
+
+		$("#cp_id").bind('change', function () {
+			var id = $("#cp_id option:selected").val();
+			if (id > 0) {
+				$("#tr_link").hide();
+			} else {
+				$("#tr_link").show();
+			}
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

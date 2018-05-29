@@ -1,0 +1,85 @@
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="edit_form" enctype="multipart/form-data">
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr>
+			<th>名称</th>
+			<td>
+				<input style="width:250px;" type="text" class="easyui-textbox" name="name" required="true" value="<?php echo $info['name']; ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>描述</th>
+			<td>
+				<input style="width:250px;" type="text" class="easyui-textbox" name="desc" value="<?php echo $info['desc']; ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>图片</th>
+			<td>
+				<?php
+				if (!empty($info['img'])) {
+					echo '<img style="width:100px;height:100px;" src="' . $attachPath . $info['img'] . '" /><br>';
+				}
+				?>
+				<input type="file" id="img_upload" name="img"/>
+			</td>
+		</tr>
+		<tr>
+			<th>类型</th>
+			<td>
+				<?php
+				$types = array(1 => 'A', 2 => 'B', 3 => 'C');
+				foreach ($types as $k => $name):
+					$checked = $info['type'] == $k ? 'checked="checked"' : '';
+					?>
+					<input type="radio" name="type" class="input" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+				<?php endforeach; ?>
+			</td>
+		</tr>
+		<tr>
+			<th>开始时间</th>
+			<td>
+				<input type="text" style="width: 150px" name="start_time" class="easyui-datetimebox" value="<?php echo date('Y-m-d H:i:s', $info['start_time']); ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>结束时间</th>
+			<td>
+				<input type="text" style="width: 150px" name="end_time" class="easyui-datetimebox" value="<?php echo date('Y-m-d H:i:s', $info['end_time']); ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>状态</th>
+			<td>
+				<?php
+				$arr = array(0 => '关闭', 1 => '开启');
+				foreach ($arr as $k => $name):
+					$checked = $info['status'] == $k ? 'checked="checked"' : '';
+					?>
+					<input type="radio" name="status" class="input" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+				<?php endforeach; ?>
+			</td>
+		</tr>
+		<tr>
+			<th>显示</th>
+			<td>
+				<?php
+				$arr = array(0 => '关闭', 1 => '开启');
+				foreach ($arr as $k => $name):
+					$checked = $info['is_show'] == $k ? 'checked="checked"' : '';
+					?>
+					<input type="radio" name="is_show" class="input" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+				<?php endforeach; ?>
+			</td>
+		</tr>
+		<tr>
+			<th>排序</th>
+			<td>
+				<input type="text" name="sort" class="easyui-numberspinner" style="width:80px" value="<?php echo $info['sort']; ?>">
+			</td>
+		</tr>
+
+
+	</table>
+</form>

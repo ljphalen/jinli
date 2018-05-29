@@ -1,0 +1,51 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">原因列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加原因</a></li>
+	</ul>
+</div>
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="30">排序</td>
+			<td width="40">ID</td>
+			<td>类型
+				<select onchange="MM_jumpMenu('window',this,0)">
+					<option value="<?php echo $listUrl;?>?type=0" <?php echo $type == null ? 'selected="selected"' : '';?>>所有</option>
+					<option value="<?php echo $listUrl;?>?type=1" <?php echo $type == 1 ? 'selected="selected"' : '';?>>退货</option>
+					<option value="<?php echo $listUrl;?>?type=2" <?php echo $type == 2 ? 'selected="selected"' : '';?>>换货</option>
+				</select>
+			</td>
+			<td>原因内容</td>
+            <td>状态</td>
+			<td>操作</td>
+		</tr>
+		<?php if(!empty($list)): foreach ($list as $val):?>
+		<tr class="ct">
+			<td width="30"><?php echo $val['sort'];?></td>
+			<td width="40"><?php echo $val['id'];?></td>
+			<td><?php if($val['type']==1) echo '退货'; elseif($val['type']==2) echo '换货';?>	</td>
+			<td><?php echo $val['reason'];?></td>
+            <td><?php echo $val['status'] == 1 ? '开启' : '关闭';?></td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $val['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $val['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+		<?php endforeach; endif;?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script type="text/javascript">
+<!-- 
+function MM_jumpMenu(targ,selObj,restore){ 
+eval(targ+".location='"+selObj.options[selObj.selectedIndex].value+"'"); 
+if (restore) selObj.selectedIndex=0; 
+} 
+--> 
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

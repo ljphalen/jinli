@@ -1,0 +1,32 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	<li><a href="<?php echo $listUrl;?>">运营消息</a></li>
+	<li><a href="<?php echo $listPushUrl;?>">通知栏消息</a></li>
+	<li class="current"><a href="<?php echo $sysMsgUrl;?>">系统消息</a></li>
+	<li><a href="<?php echo $settingUrl;?>?type=100">消息设置</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">消息类型</td>
+			<td width="100">今日数量</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+		<tr class="ct">
+			<td>奖励提示</td>
+			<td><?php echo $sendAcoupTotal;?></td>
+			<td><?php echo $config['msg_atickgive'] ? '开启' : '关闭' ;?></td>
+			<td><a href="<?php echo $msgDetailUrl.'?type=103';?>" class="mr10">明细</a></td>
+		</tr>
+		<tr class="ct">
+			<td>A券过期</td>
+			<td><?php echo $expireAcoupTotal;?></td>
+			<td><?php echo $config['msg_atickexpire'] ? '开启' : '关闭' ;?></td>
+			<td><a href="<?php echo $msgDetailUrl.'?type=102';?>" class="mr10">明细</a></td>
+		</tr>
+	</table>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<?php
+$ua = Util_Http::getServer('HTTP_USER_AGENT');
+$is_uc = (strpos($ua, 'UC AppleWebKit') || strpos($ua, 'UCWEB')) ? true : false;
+$source = strpos(Util_Http::getServer('REQUEST_URI'), 'debug') ? '.source' : '';
+?>
+<?php if ($cache) {?>
+<html <?php if($is_uc) echo 'class="uc-hack"'?> manifest="/api/cache/index?cn=<?php echo $cn;?>" >
+<?php } else {?>
+<html <?php if($is_uc) echo 'class="uc-hack"'?>>
+<?php }?>
+<head>
+	<meta charset="UTF-8">
+	<title><?php echo $title;?></title>
+	<meta name="description" content="千万手机用户的选择，汇聚淘宝、天猫、京东等电商、团购优惠活动信息，为您提供随时随地进行移动购物的完美体验。充话费、买彩票，一步到位，还支持货到付款哦~">
+	<meta name="Keywords" content="逛淘宝，淘宝，网上购物，购物网站，团购，热门推荐，手机购物，购物软件，购物应用，购物指南，导购，网上商城">
+	<script>var singlePage = true;</script>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="format-detection" content="email=no" />
+	<meta name="baidu-tc-cerfication" content="e907a7e3cf8e28494d30c67915af6dae" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+	<link type="text/css" rel="stylesheet" href="<?php echo $staticRoot;?>/sys/reset/phonecore<?php echo $source;?>.css?t=<?php echo $version;?>">
+	<link type="text/css" rel="stylesheet" href="<?php echo $staticRoot;?>/apps/gou/assets/css/gou<?php echo $source;?>.css?t=<?php echo $version;?>">
+	<link type="text/css" rel="stylesheet" href="<?php echo $staticRoot;?>/apps/gou/assets/css/web<?php echo $source;?>.css?t=<?php echo $version;?>">
+	
+	<script type="text/javascript" src="<?php echo $staticRoot;?>/sys/icat/1.1.6/icat.js?t=<?php echo $version;?>"
+	data-main="~apps/gou/assets/js/main" data-cssfile="../css/single<?php echo $source;?>.css"></script>
+	<script type="text/javascript">var token= '<?php echo $token;?>'; var t_bi = '<?php echo $t_bi;?>';</script>
+</head>

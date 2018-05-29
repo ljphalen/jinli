@@ -1,0 +1,405 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+    <ul class="cc">
+        <li><a href="<?php echo $listUrl; ?>">商品列表</a></li>
+        <li class="current"><a href="javascript:;">添加商品</a></li>
+    </ul>
+</div>
+<div class="h_a">添加商品</div>
+<form method="post" action="<?php echo $addPostUrl; ?>" id="addForm">
+    <input name="token" value="<?php echo $token; ?>" type="hidden"/>
+    <input name="mall_from" value="" type="hidden"/>
+
+    <div class="table_full" id="dhm_goods_table">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">搜索</th>
+                <td class="td">
+                    <input type="text" class="input wb" name="keyword" value="">
+                    <a href="javascript:;" data-name="jd" class="search_btn btn btn_success get_info_btn">京东搜索</a>
+                    <a href="javascript:;" data-name="tmall" class="search_btn btn btn_success get_info_btn">天猫搜索</a>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">标题</th>
+                <td class="td"><input type="text" class="input wc" name="title" value=""></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">H5地址</th>
+                <td class="td"><input type="text" class="input wc" name="url" value=""></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">排序</th>
+                <td class="td"><input type="text" class="input" name="sort" value=""></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">最低价</th>
+                <td class="td"><input type="text" class="input" name="min_price" value=""></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">最高价</th>
+                <td class="td"><input type="text" class="input" name="max_price" value=""></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">原产地</th>
+                <td class="td">
+                    <select name="country_id" id="country_combo">
+                        <?php foreach ($country as $area): ?>
+                            <option value="<?php echo $area['id']; ?>"><?php echo $area['name']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">品牌</th>
+                <td class="td">
+                    <select name="brand_id" id="brand_combo">
+                        <?php foreach ($brands as $brand): ?>
+                            <option value="<?php echo $brand['id']; ?>"><?php echo $brand['name']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">状态</th>
+                <td class="td">
+                    <select name="status" id="status">
+                        <?php foreach ($status as $k => $v): ?>
+                            <option value="<?php echo $k; ?>"><?php echo $v; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">品牌推荐</th>
+                <td class="td">
+                    <select name="is_recommend">
+                        <option value="0">否</option>
+                        <option value="1">是</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">分类</th>
+                <td class="td">
+                    <select name="root_id" id="root_id">
+                        <option value="">请选择</option>
+                        <?php foreach ($category["root"] as $root): ?>
+                            <option value="<?php echo $root['id']; ?>"><?php echo $root['name']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <select name="parent_id" id="parent_id" hidden="hidden">
+                    </select>
+                    <select name="child_id" id="child_id" hidden="hidden">
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">标签</th>
+                <td class="td" id="tag">
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">图片</th>
+                <td class="td" id="img_box">
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">图片（手动填写）</th>
+                <td class="td">
+                    <textarea name="images" cols="100" rows="5" placeholder="多张图片请以逗号隔开"></textarea>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">封面图</th>
+                <td class="td" id="img_cover_box">
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">封面图(手动上传)</th>
+                <td class="td">
+                    <ul class="uploadImg">
+                        <li id="AdImg">
+                            <img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+                            <input type="hidden" name="img" value="">
+                        </li>
+                    </ul>
+                    <p style="clear:both;">
+                        <iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=AdImg'; ?>"
+                                style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                    </p>
+                </td>
+            </tr>
+            <textarea name="pre_content" id="pre_content" hidden="hidden"></textarea>
+            <tr class="tr">
+                <th class="th">详细信息</th>
+                <td class="td">
+                    <script id="editor" type="text/plain" style="width:100%;height:500px;"></script>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+    </div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js?v=<?= $version ?>"></script>
+<script src="<?php echo $staticPath; ?>/js/common/gbk.js?v=<?= $version ?>"></script>
+<script>
+    $(function () {
+        $(".search_btn").click(function () {
+
+            var kwd = $("input[name=keyword]").val();
+            if (kwd == "") {
+                alert("请输入搜索关键词")
+                return;
+            }
+
+            var mall = $(this).data('name');
+            switch (mall) {
+                case "tmall":
+                default :
+                    var keyword = $URL.encode(kwd);
+                    var url = 'http://list.tmall.com/search_product.htm?q=' + keyword + '&type=p&spm=a220m.1000858.a2227oh.d100&xl=xiangna_3&from=gou_backend_search';
+                    window.open(url);
+                    return false;
+                case "jd":
+                    var url = 'http://search.jd.com/Search?keyword=' + kwd + '&enc=utf-8';
+                    window.open(url);
+                    return false;
+                case "jd":
+                    var url = 'http://search.jd.com/Search?keyword=' + kwd + '&enc=utf-8';
+                    window.open(url);
+                    return false;
+
+            }
+
+        });
+    });
+</script>
+
+<script>
+    var category = <?php echo json_encode($category);?>;
+
+    var root = category.root;
+    var parent = category.parent;
+    var child = category.child;
+
+    $(function () {
+        $("select#root_id").change(function () {
+            $("select#parent_id").val(0).hide();
+            $("select#child_id").val(0).hide();
+            $("#tag").html("");
+            var root_id = $("select#root_id").val();
+            getTags(root_id);
+            getParent(root_id);
+        });
+        $("select#parent_id").change(function () {
+            $("select#child_id").hide();
+            var root_id = $("select#root_id").val();
+            var parent_id = $("select#parent_id").val();
+            getTags(root_id,parent_id);
+            getChild(parent_id);
+        });
+    });
+
+    //获取二级分类
+    var getParent = function (root_id) {
+        var options = '<option value="0">请选择</option>';
+        if (parent[root_id] === undefined)return false;
+        $.each(parent[root_id], function (k, v) {
+            options += '<option value="' + v.id + '">' + v.name + '</option>';
+        });
+        if (options != '') {
+            $("select[name='parent_id']").html(options).show();
+            getChild(parent[root_id][0].id);
+        }
+    };
+
+    var getTags = function (root_id,cate_id) {
+        $.ajax({
+            url: "<?php echo $getCateTagUrl; ?>",
+            type: "get",
+            dataType: "json",
+            data: {"cate_id": cate_id,"root_id": root_id},
+            success: function (r) {
+                data = r.data;
+                if (data.length > 0) {
+                    var html = "";
+                    $.each(data, function (k, v) {
+                        html += '<input type="checkbox" name="tag_ids[]" value="' + v.id + '"/>' + v.name;
+                    });
+                    $("#tag").html(html);
+                }
+            }
+        });
+    };
+
+    //获取最底层分类
+    var getChild = function (parent_id) {
+        var options = '<option value="0">请选择</option>';
+        if (child[parent_id] === undefined)return false;
+        $.each(child[parent_id], function (k, v) {
+            options += '<option value="' + v.id + '">' + v.name + '</option>';
+        });
+        if (options != '') {
+            $("select[name='child_id']").html(options).show();
+        }
+    };
+
+
+    //初始化
+    if (root && root[0].id != undefined) {
+        getParent(root[0].id);
+        if (parent[root[0].id][0].id != undefined) {
+            getChild(parent[root[0].id][0].id);
+        }
+    }
+</script>
+
+
+<script type="text/javascript">
+    $(function () {
+        var ue = UE.getEditor('editor', {'textarea': 'content'});
+        var content = "";
+        var inter = setInterval(function () {
+            content = $("#pre_content").val();
+            if (content != "") {
+                ue.setContent(content);
+                clearInterval(inter);
+                $("#pre_content").remove();
+            }
+        }, 1000);
+        ajaxForm('addForm', function (ret) {
+            ajaxRedirect(ret, '<?php echo Util_Http::getServer("HTTP_REFERER"); ?>');
+        });
+    });
+</script>
+<style>
+    .ui-button {
+        margin-left: -1px;
+    }
+
+    .ui-button {
+        top: 1.2px;
+    }
+
+    .ui-button-icon-only .ui-button-text {
+        padding: 0.36em;
+    }
+
+    .ui-autocomplete-input {
+        margin: 0;
+        padding: 0.48em 0 0.47em 0.45em;
+        width: 275px;
+        left: 0px
+    }
+</style>
+<script>
+    (function ($) {
+        $.widget("ui.combobox", {
+            _create: function () {
+                var self = this,
+                    select = this.element.hide(),
+                    selected = select.children(":selected"),
+                    value = selected.val() ? selected.text() : "";
+                var input = this.input = $("<input>")
+                    .insertAfter(select)
+                    .val(value)
+                    .autocomplete({
+                        delay: 0,
+                        minLength: 0,
+                        source: function (request, response) {
+                            var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
+                            response(select.children("option").map(function () {
+                                var text = $(this).text();
+                                if (this.value && ( !request.term || matcher.test(text) ))
+                                    return {
+                                        label: text.replace(
+                                            new RegExp(
+                                                "(?![^&;]+;)(?!<[^<>]*)(" +
+                                                $.ui.autocomplete.escapeRegex(request.term) +
+                                                ")(?![^<>]*>)(?![^&;]+;)", "gi"
+                                            ), "<strong>$1</strong>"),
+                                        value: text,
+                                        option: this
+                                    };
+                            }));
+                        },
+                        select: function (event, ui) {
+                            ui.item.option.selected = true;
+                            self._trigger("selected", event, {
+                                item: ui.item.option
+                            });
+                        },
+                        change: function (event, ui) {
+                            if (!ui.item) {
+                                var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex($(this).val()) + "$", "i"),
+                                    valid = false;
+                                select.children("option").each(function () {
+                                    if ($(this).text().match(matcher)) {
+                                        this.selected = valid = true;
+                                        return false;
+                                    }
+                                });
+                                if (!valid) {
+                                    // remove invalid value, as it didn't match anything
+                                    $(this).val("");
+                                    select.val("");
+                                    input.data("autocomplete").term = "";
+                                    return false;
+                                }
+                            }
+                        }
+                    })
+                    .addClass("ui-widget ui-widget-content ui-corner-left");
+
+                input.data("autocomplete")._renderItem = function (ul, item) {
+                    return $("<li></li>")
+                        .data("item.autocomplete", item)
+                        .append("<a>" + item.label + "</a>")
+                        .appendTo(ul);
+                };
+
+                this.button = $("<button type='button'>&nbsp;</button>")
+                    .attr("tabIndex", -1)
+                    .attr("title", "Show All Items")
+                    .insertAfter(input)
+                    .button({
+                        icons: {
+                            primary: "ui-icon-triangle-1-s"
+                        },
+                        text: false
+                    })
+                    .removeClass("ui-corner-all")
+                    .addClass("ui-corner-right ui-button-icon")
+                    .click(function () {
+                        // close if already visible
+                        if (input.autocomplete("widget").is(":visible")) {
+                            input.autocomplete("close");
+                            return;
+                        }
+
+                        // work around a bug (likely same cause as #5265)
+                        $(this).blur();
+
+                        // pass empty string as value to search for, displaying all results
+                        input.autocomplete("search", "");
+                        input.focus();
+                    });
+            },
+
+            destroy: function () {
+                this.input.remove();
+                this.button.remove();
+                this.element.show();
+                $.Widget.prototype.destroy.call(this);
+            }
+        });
+    })(jQuery);
+</script>
+<script>
+    //auto complete
+    $('#country_combo').combobox();
+    $('#brand_combo').combobox();
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,70 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">锁屏列表</a></li>
+    <li class="current"><a href="<?php echo $step1Url;?>">添加锁屏</a></li>
+	</ul>
+</div>
+<div class="step mb10">
+		<ul class="cc">
+			<li><span class="fl"><em></em></span>第一步：选择锁屏类型</li>
+			<li class="line"></li>
+			<li class="current">第二步：完善锁屏</li>
+		</ul>
+</div>
+<div class="h_a">添加锁屏</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="channel_id" value="<?php echo $channel_id;?>" type="hidden" />
+<input name="file_id" value="<?php echo $info['id'];?>" type="hidden" />
+<input name="title" value="<?php echo $info['title'];?>" type="hidden" />
+<input name="icon" value="<?php echo $info['icon'];?>" type="hidden" />
+
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">锁屏名称</th>
+			<td class="td"><?php echo $info['title'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">icon</th>
+			<td class="td"><img src="<?php if(strpos($info['icon'], 'http://') === false) {echo $attachPath.$info['icon'];}else{echo $info['icon'];}?>" width="120"/></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input wa" name="sort" value="0"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">点击量</th>
+			<td class="td"><input type="text" class="input" name="hits" value=""></td>
+		</tr>
+		<tr class="tr" id="showpushmsg">
+			<th class="th">发送push消息</th>
+			<td class="td">
+				<input type="hidden" name="ispush" id="ispush" value="0"/>
+				<input type="checkbox" onclick="if(this.checked){$('#ispush').val(1);}else{$('#ispush').val(0);}">(选中表示发送push消息)
+			</td>
+		</tr>
+		<!-- <tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				<select name="status">
+                	<option value="1">&nbsp;&nbsp;上&nbsp;&nbsp;架&nbsp;&nbsp;</option>
+                	<option value="0">&nbsp;&nbsp;下&nbsp;&nbsp;架&nbsp;&nbsp;</option>
+           		</select>
+           	</td>
+		</tr> -->
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//商品表单数据提交
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Lock/index');
+	});
+})
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

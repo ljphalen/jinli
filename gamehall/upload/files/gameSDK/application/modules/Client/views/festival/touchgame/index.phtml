@@ -1,0 +1,189 @@
+<?php echo $this->render("festival/touchgame/header.phtml");?>
+<body>
+<?php $imgConfig = json_decode($info['img_config'], true);?>
+<div class="bg"  style="background: #ffdf47 url(<?php echo $attachPath . $imgConfig['background'];?>); background-size:130px 130px;">
+    <div class="load-bg">
+        <div name="load" class="load">
+            <div class="transparent-portrait">
+            </div>
+            <img class="portrait" src="<?php echo $account['avatar'] ? $account['avatar'] : "{$staticroot}/apps/game/smallGame/catsEatFish/assets/img/user.png"?>" />
+
+            <div class="user-info">
+                <?php if(!$account):?>
+                <div name="title" class="title">
+                    登录
+                </div>
+                <?php else: ?>
+                <div class="name">
+                    <?php echo $account['nickname']?>
+                </div>
+                <font>历史最高分：<span><?php echo $historyScore ?  $historyScore : 0?></span></font>
+                <?php endif;?>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="guide" id="guide">
+            <?php
+            $propsConfig  =Common::resetKey($propsConfig,'index');
+            ksort($propsConfig);
+            ?>
+            <?php foreach ($propsConfig as $item) :?>
+            <div class="state">
+                <div class="transparent-round">
+                </div>
+                <div class="round">
+                    <img  src="<?php echo $attachPath. $item['propImg'];?>" />
+                </div>
+                <img class="icon" src="<?php $img = ($item['index']) ? 'under.png' : 'upward.png';  echo "{$staticroot}/apps/game/smallGame/catsEatFish/assets/img/$img";?>"/>
+            </div>
+            <?php endforeach;?>
+        </div>
+
+        <div class="food">
+            <h2 id="time" value="end">
+                <span class="seconds"></span><span class="time">秒</span>
+            </h2>
+            <div class="state" id="state">
+                <div class="transparent-round">
+                </div>
+                <div class="round" id="plate">
+                    <?php $propsData =array(); ?>
+                    <?php foreach ($propsConfig as $item) :?>
+                        <?php if($item['index']){
+                            $propsData[$item['index']] = intval($item['score']);
+                        }
+                        ?>
+                        <img index="<?php echo $item['index'];?>" src="<?php echo $attachPath. $item['propImg'];?>" />
+                    <?php endforeach;?>
+                    <h1 id="open">开始游戏</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="cat">
+        <img id="cat" src="<?php echo $attachPath . $imgConfig['store'];?>" />
+    </div>
+    <div class="menu">
+        <ul>
+            <li>
+                <i class="icon-rankingList" id="ranking" data-url="<?php echo "{$webroot}/client/festival_touchgame/rank"?>" style="background: url(<?php echo $attachPath . $imgConfig['rank'];?> ) no-repeat center 0px; background-size: 36px 40px;"></i>
+                排行榜
+            </li>
+            <li>
+                <i class="icon-luckDraw" id="draw" data-url="<?php echo "{$webroot}/client/prize/index"?>" style="background: url(<?php echo $attachPath . $imgConfig['prize'];?>) no-repeat center 0px; background-size: 36px 40px;"></i>
+                积分抽奖
+            </li>
+            <li>
+                <i class="icon-mall" id="mall" data-url="<?php echo "{$webroot}/client/mall/index"?>" style="background: url(<?php echo $attachPath . $imgConfig['mall'];?>) no-repeat center 0px; background-size: 36px 40px;"></i>
+                积分商城
+            </li>
+            <li name="share">
+                <i class="icon-share" style="background: url(<?php echo $attachPath . $imgConfig['share'];?>) no-repeat center 0px; background-size: 36px 40px;"></i>
+                分享
+            </li>
+        </ul>
+    </div>
+
+    <div id="getIntegral" class="get-integral">
+        <h1>0</h1>
+        <ul>
+        </ul>
+    </div>
+    <div class="explain hide" id="explain">
+        <h1 name="title">活动说明 <span class="down-arrow"></span></h1>
+        <div class="group">
+            <div class="ui-editor"><?php echo html_entity_decode($info['descript']);?></div>
+            <p class="title">点击屏幕任意位置进入游戏</p>
+            <p class="explain">本活动最终解释权由金立游戏大厅所有<p>
+        </div>
+    </div>
+    <div name="window" class="window-bg"></div>
+    <div id="loadWindow" class="window">
+        <h1 name="name">挑战成功</h1>
+        <p name="msg" class="msg"><?php echo $info['login_desc'];?></p>
+        <input type="button" name="load" class="but" value="登录账号" />
+    </div>
+    <div id="window" class="window">
+        <h1 name="name">挑战成功</h1>
+        <p class="title">获得<span name="grant"></span>分，积分+<span name="integral"></span></p>
+        <input type="button" id="comeAgain" class="but" value="再来一次" />
+        <input type="button" id="shareBut" name="share" class="but share" value="分享" />
+        <p name="msg" class="msg">你今天的机会用完了，请明天继续接受挑战</p>
+    </div>
+    <div id="shareWindow" class="window share">
+        <p name="msg" class="msg">你今天的机会用完了，分享获得额外一次机会</p>
+    </div>
+    <div id="overWindow" class="window share">
+        <p name="msg" class="msg">你今天的机会用完了，请明天继续接受挑战</p>
+    </div>
+    <div id="wxShare" class="window wx-share">
+        <div class="wx-bg">
+            <i></i><i></i>
+        </div>
+        <div class="msg">
+            点击右上角 <br />可选择跟朋友分享哟~瞄
+        </div>
+        <img src="<?php echo "{$staticroot}/apps/game/smallGame/catsEatFish/assets/img/wx-share.png"; ?>" />
+    </div>
+    <div id="dow" class="window dow">
+        <div class="msg">
+            下载客户端即可参与更多活动，惊喜不断哟！瞄！
+        </div>
+        <input weixinHref="<?php echo $weiXinDownLoad; ?>" clientHref="<?php echo $clientDownLoad; ?>" type="button" class="but" value="下载客户端" />
+    </div>
+</div>
+</body>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+
+<script>
+    var gameData = {
+            login:<?php echo $account ? 'true' : 'false';?>
+            ,loginUrl:'<?php echo "{$webroot}/user/login?redirect_uri={$requestUrl}"?>'
+            ,share:{
+                gameName:'<?php echo $info['name']; ?>'
+                ,content:'<?php echo html_entity_decode($info['name']).','."{$webroot}/client/festival_touchgame/index/?source=weixin"; ?>'
+                ,gameScreeshotUrl:'<?php echo $attachPath. $propsConfig[1]['propImg'];?>'
+                ,gameIconUrl:'<?php echo $attachPath. $propsConfig[1]['propImg'];?>'
+                ,url:'<?php echo "{$webroot}/client/festival_touchgame/index/?source=weixin";?>'
+                ,source:'<?php echo 'touchgame_'.$info['id'];?>'
+                ,curSource:'<?php echo 'touchgame_'.$info['id'];?>'
+                ,status:<?php echo $userChance['share'] ? 'true' : 'false';?>
+                ,ajax:'<?php echo "{$webroot}/client/festival_touchgame/share"?>'
+            }
+            ,source:''
+            ,submitUrl:'<?php echo "{$webroot}/client/festival_touchgame/submit";?>'
+            ,fish:<?php echo json_encode($gamePool);?>
+            ,props:<?php echo json_encode($propsData);?>
+            ,remainTimes:<?php echo $remainTimes;?>
+            ,historyScore:<?php echo $userChance ?  $userChance['historyScore'] : 0?>
+        }
+        ;
+
+    wx.config({
+        debug: false,
+        appId: '<?php echo $weiXin["appId"];?>',
+        timestamp: <?php echo $weiXin["timestamp"];?>,
+        nonceStr: '<?php echo $weiXin["nonceStr"];?>',
+        signature: '<?php echo $weiXin["signature"];?>',
+        jsApiList: [
+            'onMenuShareTimeline',
+        ]
+    });
+    wx.ready(function() {
+        gameData.source = 'weixin';
+        // 在这里调用 API
+        wx.onMenuShareTimeline({
+            title: '<?php echo $info['name']; ?>', // 分享标题
+            link: '<?php echo "{$webroot}/client/festival_touchgame/index/?source=weixin"?>', // 分享链接
+            imgUrl: '<?php echo $attachPath. $propsConfig[1]['propImg'];?>', // 分享图标
+            success: function () {
+                shareM.send({});
+            },
+            cancel: function () {
+            }
+        });
+    });
+</script>
+<script src="<?php echo "{$staticroot}/apps/game/smallGame/catsEatFish/assets/js/index.min.js?v={$version}"?>"></script>
+</html>

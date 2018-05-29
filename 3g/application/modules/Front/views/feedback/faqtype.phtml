@@ -1,0 +1,31 @@
+<?php echo $this->render("feedback/header.phtml"); ?>
+
+<?php if ($type != 3):?>
+<div class="ui-top-bar">
+    <a class="ui-pos link-back" href="<?=$prev_url?>"></a>
+    <span class="ui-top-txt">常见问题</span>
+</div>
+
+<div class="ui-pg-wrap ui-hd-fixed">
+<?php else :?>
+ <div class="ui-pg-wrap">   
+<?php endif;?>
+    <div class="ui-pg-fqa">
+        <?php
+        $i=1;
+        foreach($list as $val):
+        ?>
+        <div class="block">
+            <div class="hd"><?=$i?>、<?=$val['title']?></div>
+            <div class="bd">
+                <?=$val['content']?>
+            </div>
+        </div>
+        <?php
+        $i++;
+        endforeach;
+        ?>
+    </div>
+</div>
+</body>
+</html>

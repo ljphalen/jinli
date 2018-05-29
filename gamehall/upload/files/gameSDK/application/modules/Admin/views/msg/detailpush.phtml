@@ -1,0 +1,57 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+   	<li><a href="<?php echo $listUrl;?>">运营通知</a></li>
+   	<li><a href="<?php echo $listPushUrl;?>">临时消息</a></li>
+	<li><a href="<?php echo $settingUrl;?>">消息设置</a></li>
+	<li class="current"><a href="javascript:;">消息明细</a></li>
+	</ul>
+</div>
+
+<div class="h_a">消息 <span style="font-weight:700;">"<?php echo $msgInfo['title'];?>"</span> 明细：</div>
+<div class="h_a">
+	<span>&nbsp;&nbsp;&nbsp;&nbsp;共 <?php echo $total;?> 条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="100">头像</td>
+			<td >昵称</td>
+			<td>账号</td>
+			<td>uuid</td>
+			<td>IMEI</td>
+			<td>接受时间</td>				
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+			<td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td>
+			<?php if(!empty($usersInfo[$value['uuid']]['avatar'])) {?>
+			<img src="<?php echo $attachPath.$usersInfo[$value['uuid']]['avatar'];?>" title="" width="100"/>
+			<?php } ?>
+			</td>
+			<td><?php echo $usersInfo[$value['uuid']]['nickname'];?></td>
+			<td><?php echo $usersInfo[$value['uuid']]['uname'];?></td>
+			<td><?php echo $value['uuid'];?></td>
+			<td><?php echo $value['imei'];?></td>
+			<td><?php echo $value['create_time'] ? date('Y-m-d H:i:s', $value['create_time']) : '';?></td>			
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+function _export_() {
+	window.location.href = "<?php echo $detailUrl.'?'.http_build_query($searchParam);?>&export=1";
+	return false;
+}
+//表单数据提交
+$(document).ready(function(){
+	
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,72 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">活动列表</a></li>
+    <li class="current"><a href="<?php echo $editLotteryPostUrl;?>">编辑奖项</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑奖项</div>
+<form method="post" action="<?php echo $editLotteryPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="activity_id" value="<?php echo $activity_id;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	    <?php $i=0; foreach($rules as $key=>$value){?>
+	    <input name="id[]" value="<?php echo $value['id'];?>" type="hidden" />
+	    <tr class="tr"><th class="th"><?php echo $awards[$key+1];?>配置</th></tr>
+		<tr class="tr">
+			<th class="th">奖品名称</th>
+			<td class="td"><input type="text" class="input wc" name="award_name[]" value="<?php echo $value['award_name'];?>"></td>
+		</tr>
+		<th class="th">图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg<?php echo $i;?>">
+						<img src="<?php echo $attachPath,$value['img'];?>"/>
+						<input type="hidden" name="img[]" value="<?php echo $value['img'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg'.$i;?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<th class="th">图标</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg<?php echo $i+1;?>">
+						<img src="<?php echo $attachPath,$value['icon'];?>"/>
+						<input type="hidden" name="icon[]" value="<?php echo $value['icon'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg'.($i+1);?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">中奖概率</th>
+			<td class="td"><input type="text" class="input" name="probability[]" value="<?php echo $value['probability'];?>"><span><font color="#FF0000">此处填写【0-<?php echo $maxRate; ?>】的整数。</font></span></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">发放最小间隔</th>
+			<td class="td"><input type="text" name="space_time[]" class="input" value="<?php echo $value['space_time'];?>"><span><font color="#FF0000">统一为整数秒，如填60即60秒</span></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">最大数量</th>
+			<td class="td"><input type="text" name="num[]" class="input" value="<?php echo $value['num'];?>"><span><font color="#FF0000">当前奖项每天发放的最大数量</span></td>
+		</tr>
+		<?php $i=$i+2; }?>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	 ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Activity/index');
+	 });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

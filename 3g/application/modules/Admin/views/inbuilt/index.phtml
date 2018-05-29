@@ -1,0 +1,78 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<?php if (empty($type)): ?>
+				<li class="current"><a href="<?php echo $indexUrl; ?>">中转链接列表</a></li>
+				<li><a href="<?php echo $editUrl; ?>">添加中转链接</a></li>
+			<?php endif; ?>
+		</ul>
+	</div>
+	<style type="text/css">
+		table {
+			empty-cells: show;
+			border-collapse: collapse;
+		}
+
+		table th {
+			white-space: nowrap;
+		}
+
+		table td {
+			white-space: nowrap;
+		}
+	</style>
+	<div>
+		<?php if (empty($type)): ?>
+			<select name="cate" onchange="to_list(this.value)">
+				<?php foreach ($cates as $v):
+					$name    = !empty($v['cate']) ? $v['cate'] : '全部';
+					$checked = ($v['cate'] == $cate) ? 'selected="selected"' : '';
+					?>
+					<option value="<?php echo $v['cate']; ?>" <?php echo $checked; ?>><?php echo $name; ?></option>
+				<?php endforeach; ?>
+			</select>
+		<?php endif; ?>
+
+	</div>
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+				<th class="th">名称</th>
+				<th class="th">分组</th>
+				<th class="th">Key</th>
+				<th class="th">中转链接</th>
+				<th class="th">真实链接</th>
+				<th class="th">机型</th>
+				<th class="th">版本</th>
+				<th class="th">运营商</th>
+				<th class="th">操作</th>
+			</tr>
+			<?php foreach ($dataList as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['id'];?></td>
+					<td class="td" align="left"><?=$v['name'];?></td>
+					<td class="td" align="left"><?=$v['cate'];?></td>
+					<td class="td" align="left"><?=$v['key'];?></td>
+					<td class="td" style="color:blue"><?php echo $v['cols'] ?></td>
+					<td class="td"><?php echo $v['url']; ?></td>
+					<td class="td"><?php echo $v['model']; ?></td>
+					<td class="td"><?php echo $v['version']; ?></td>
+					<td class="td"><?php echo $v['operator']; ?></td>
+					<td class="td"><a href="<?php echo $editUrl; ?>/?id=<?php echo $v['id']; ?>">编辑</a>&nbsp;
+						<a href="javascript:void(0);" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $v['id']; ?>', '', event);">删除</a>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<script>
+		function to_list(id) {
+			var url = "<?php echo $listUrl;?>?cate=" + id;
+			window.location.href = url; // 跳转
+		}
+	</script>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

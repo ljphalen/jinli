@@ -1,0 +1,61 @@
+{{pagerCss}}
+<link media="screen" href="{{rootUrl}}/css/table.css" rel="stylesheet" type="text/css">
+<link media="screen" href="{{rootUrl}}/css/gri.controls.css" rel="stylesheet" type="text/css">
+<div class="colMain">
+    <div class="title"><p class="fl">广告商列表</p></div>
+    <div class="main">
+        <div class="toolbar">
+            <div class="search fl">
+                <form action="/VideoAdsCom/index" method="GET">
+                <span>{{search}}</span>
+                <span>
+                    <input typt="text" class="iText" name='name' value='{{params.name}}' />
+                    <input type="submit" class="submit" value="" onclick="confirmSubmit();"/>
+                    <span class="sign">可输入广告商名称查询</span>
+                </span>
+                
+                </form>
+            </div>
+            <a href="../VideoAdsCom/edit" class="fr add">新增</a> &nbsp;
+        </div>
+        <div class="content">
+            <div class="grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>视频广告商编号</th>
+                            <th>视频广告商名称</th>
+                            <th>结算方式</th>
+                            <th>结算单价（元）</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- loop result -->
+                        <tr>
+                            <td><span class="blue">{{result' value.identifier}}</span></td>
+                            <td>{{result' value.name}}</td>
+                            <td>{{result' value.settlement_method}}</td>
+                            <td>{{result' value.settlement_price}}</td>
+                            <td>
+                                <a href="edit?id={{result' value.id}}" class="edit" title="编辑"></a>
+                                |
+                                <a href="../VideoAdsCom/delete?id={{result' value.id}}" class="del" title="删除"></a>
+                            </td>
+                        </tr> 
+                        <!-- endloop -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">{{pager.pages}}</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{{rootUrl}}/js/gri.dateRange.js"></script>
+<script type="text/javascript">
+$(function(){
+function confirmSubmit()
+{
+    return true;
+}
+</script>

@@ -1,0 +1,211 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	     <li class="current"><a href="<?php echo $indexUrl;?>">客户端配置项</a></li>
+     </ul>
+</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	
+	<div class="h_a">MISC</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">缓存开关(仅历史版本使用)</th>
+				<td class="td">
+					<label class="mr20"><input <?php if($configs['game_client_cache']) echo 'checked';?> name="game_client_cache" value="1" type="radio">打开</label>
+					<label class="mr20"><input <?php if(!$configs['game_client_cache']) echo 'checked';?> name="game_client_cache" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+		    <tr class="tr">
+				<th class="th">仅在WLAN网络显示图片</th>
+				<td class="td">
+				<label class="mr20"><input <?php if($configs['game_set_img']) echo 'checked';?> name="game_set_img" value="1" type="radio">打开</label>
+				<label class="mr20"><input <?php if(!$configs['game_set_img']) echo 'checked';?> name="game_set_img" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">仅在WLAN网络下载</th>
+				<td class="td">
+					<label class="mr20"><input <?php if($configs['game_set_download']) echo 'checked';?> name="game_set_download" value="1" type="radio">打开</label>
+					<label class="mr20"><input <?php if(!$configs['game_set_download']) echo 'checked';?> name="game_set_download" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">游戏安装成功删除安装包</th>
+				<td class="td">
+					<label class="mr20"><input <?php if($configs['game_set_del']) echo 'checked';?> name="game_set_del" value="1" type="radio">打开</label>
+					<label class="mr20"><input <?php if(!$configs['game_set_del']) echo 'checked';?> name="game_set_del" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">已安装游戏更新提醒</th>
+				<td class="td">
+				    <label class="mr20"><input <?php if($configs['game_set_tips'] == 7) echo 'checked';?> name="game_set_tips" value="7" type="radio">1周</label>
+					<label class="mr20"><input <?php if($configs['game_set_tips'] ==1 ) echo 'checked';?> name="game_set_tips" value="1" type="radio">1天</label>
+					<label class="mr20"><input <?php if(!$configs['game_set_tips']) echo 'checked';?> name="game_set_tips" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+			<tr class="tr" style="display:none;">
+				<th class="th">最后更新时间</th>
+				<td class="td">
+				   <input name="game_set_uptime" value="<?php echo $configs['game_set_uptime'];?>"/>
+				</td>
+			</tr>
+			<tr class="tr" >
+				<th class="th">无金立push引擎手机个推push开关</th>
+				<td class="td">
+				    <label class="mr20"><input checked name="thirdPartyPush" value="1" type="radio">打开</label>
+				    <?php if(false){?>
+					<label class="mr20" style="display:none;"><input <?php if(!$configs['thirdPartyPush']) echo 'checked';?> name="thirdPartyPush" value="0" type="radio">关闭</label>
+					<?php }?>
+				</td>
+			</tr>
+			<tr class="tr" style="display:none;">
+				<th class="th">金立手机个推push开关</th>
+				<td class="td">
+				    <label class="mr20"><input <?php if($configs['thirdPartyPushGn']) echo 'checked';?> name="thirdPartyPushGn" value="1" type="radio">打开</label>
+					<label class="mr20"><input <?php if(!$configs['thirdPartyPushGn']) echo 'checked';?> name="thirdPartyPushGn" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+			<tr class="tr" style="display:none;">
+				<th class="th">金立手机同一张SIM卡在本机使用时间超过设定时间打开个推push的时间设置</th>
+				<td class="td">
+				    <label class="mr20"><input <?php if($configs['pushIntervalDays'] == 30 ) echo 'checked';?> name="pushIntervalDays" value="30" type="radio">30天</label>
+				    <label class="mr20"><input <?php if($configs['pushIntervalDays'] != 30) echo 'checked';?> name="pushIntervalDays" value="tp" type="radio">
+				    &nbsp; <input name="game_third_push" value="<?php echo $configs['game_third_push'];?>"/> &nbsp;&nbsp;天<span><font color="#FF0000">(必须填写正整数，且不能等于30)</font></span>
+				    </label>
+				</td>
+			</tr>
+			<tr class="tr" >
+				<th class="th">一定时间内同一标题的push消息只允许显示一条的时间设置
+				</th>
+				<td class="td">
+				    <label class="mr20"><input <?php if($configs['pushInvalidDays'] == 3 ) echo 'checked';?> name="pushInvalidDays" value="3" type="radio">3天</label>
+				    <label class="mr20"><input <?php if($configs['pushInvalidDays'] != 3 ) echo 'checked';?> name="pushInvalidDays" value="ti" type="radio">
+				    &nbsp; <input name="game_third_Invalidpush" value="<?php echo $configs['game_third_Invalidpush'];?>"/> &nbsp;&nbsp;天<span><font color="#FF0000">(必须填写正整数，且不能等于3)</font></span>
+				    </label>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">客户端自身升级检测频率</th>
+				<td class="td">
+					 <input name="game_client_upfreq" class="input" value="<?php echo $configs['game_client_upfreq'];?>"> (天) <span><font color="#FF0000">可以不填写，填写输入大于0的整数。</font></span>
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">资讯内容</th>
+				<td class="td">
+				<select name="news_source" class="select wa">
+					<option <?php if ($configs['news_source'] == 1) echo 'selected';?> value="1">欢聚SDK</option>
+					<option <?php if ($configs['news_source'] == 2) echo 'selected';?> value="2">后台内容</option>
+				</select>
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">攻略内容</th>
+				<td class="td">
+				<select name="strategy_source" class="select wa">
+					<option <?php if ($configs['strategy_source'] == 1) echo 'selected';?> value="1">欢聚SDK</option>
+					<option <?php if ($configs['strategy_source'] == 2) echo 'selected';?> value="2">后台内容</option>
+				</select>
+				</td>
+			</tr>
+		</table>
+		</div>
+		<div class="h_a">客服信息</div>
+		<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">客服电话</th>
+				<td class="td">
+				   <input name="game_service_tel" class="input wc" value="<?php echo $configs['game_service_tel'];?>"/>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">客服工作时间</th>
+				<td class="td">
+				   <input name="game_service_worktime" class="input wc" value="<?php echo $configs['game_service_worktime'];?>"/>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">客服QQ</th>
+				<td class="td">
+				   <input name="game_service_qq" class="input wc" value="<?php echo $configs['game_service_qq'];?>"/>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="h_a">免流量</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">免流量日志上报大小</th>
+				<td class="td">
+				   <input name="flowReportSize" class="input" value="<?php echo $configs['flowReportSize'];?>"/>M
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">论坛默认网页过滤</th>
+				<td class="td">
+					 <input name="game_client_deffilter" class="input wc" style="width: 800px;" value="<?php echo $configs['game_client_deffilter'];?>"/>
+					 <br/>
+					 <span style="color:red">多个关键字用英文竖线 "|" 分割。</span>
+				</td>
+			</tr>
+			<tr class="tr">
+			   
+				<th class="th">论坛网页过滤</th>
+				<td class="td">
+					 <textarea name="game_client_gobackfilter" class="textarea wc" style="height:200px; width:800px"><?php echo $configs['game_client_gobackfilter'];?></textarea>
+					 <br/>
+					 <br/>
+					 <span style="color:red">多个关键字用英文竖线 "|" 分割。</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="h_a">意见反馈</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">反馈问题输入框提示</th>
+				<td class="td">
+				   <input name="game_feedback_input" class="input wc" value="<?php echo $configs['game_feedback_input'];?>"/>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">常见问题</th>			
+				<td class="td">
+					<label class="mr20"><input <?php if($configs['game_feedback_user_question']) echo 'checked';?> name="game_feedback_user_question" value="1" type="radio">打开</label>
+					<label class="mr20"><input <?php if(!$configs['game_feedback_user_question']) echo 'checked';?> name="game_feedback_user_question" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="h_a">webp优化</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">webp开关</th>			
+				<td class="td">
+					<label class="mr20"><input <?php if($configs['game_webp_switch']) echo 'checked';?> name="game_webp_switch" value="1" type="radio">打开</label>
+					<label class="mr20"><input <?php if(!$configs['game_webp_switch']) echo 'checked';?> name="game_webp_switch" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Set/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

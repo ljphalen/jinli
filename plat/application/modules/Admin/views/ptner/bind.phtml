@@ -1,0 +1,55 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">设备列表</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">ID</td>
+			<td>ht</td>
+			<td>mac</td>
+			<td>ssid</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($devices as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['ht'];?></td>
+			<td><?php echo $value['device_mac'];?></td>
+			<td><?php echo $value['wl_ssid'];?></td>
+			<td>
+			<form name="bind-form" action="<?php echo $sbindUrl;?>">
+				<input name="uid" type="hidden" value="<?php echo $uid?>">
+				<input name="id" type="hidden" value="<?php echo $value['id']?>">
+				<button type="submit" class="btn btn_success">绑定</a>
+			</form>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	 $('form[name="bind-form"]').submit(function() { 
+         // inside event callbacks 'this' is the DOM element so we first 
+         // wrap it in a jQuery object and then invoke ajaxSubmit 
+         var f = $(this);
+     	 $(this).ajaxSubmit({
+     		url:$(this).attr('action'), 
+             dataType: 'json',
+             success:function(ret) { 
+            	 ajaxRedirect(ret,'/admin/ptner/index');
+             }
+         	});
+  
+         return false; 
+     }); 
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

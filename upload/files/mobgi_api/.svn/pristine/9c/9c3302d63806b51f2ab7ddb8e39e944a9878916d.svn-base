@@ -1,0 +1,58 @@
+{{pagerCss}}
+<div class="colMain">
+    <div class="title"><p class="fl">帐号列表</p></div>
+    <div class="main">
+        <div class="toolbar">
+            <div class="search fl">
+                <form action="/admin/log" method="GET">
+                <span>操作人：{{select_user}}</span>
+                <span>功能：{{select_mod}}</span>
+                <span>
+                    时间：<input typt="text" class="iText datepicker" name='sdate' value='{{params.sdate}}' /> -
+                    <input typt="text" class="iText datepicker" name='edate' value='{{params.edate}}' /><input type="submit" class="submit" value="" />
+                </span>
+                </form>
+            </div>
+        </div>
+        <div class="content">
+            <div class="grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="120px;">操作人</th>
+                            <th width="150px;">功能</th>
+                            <th width="100px;">动作</th>
+                            <th width="180px;">时间</th>
+                            <th>操作地址</th>
+                            <th>更新快照</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- loop result -->
+                        <tr>
+                            <td><span class="blue">{{result' value.username}}</span></td>
+                            <td>{{result' value.title}}</td>
+                            <td>{{result' value.action}}</td>
+                            <td>{{result' value.date}}</td>
+                            <td>{{result' value.update_url}}</td>
+                            <td><a href="{{result' value.snapshot_url}}" target="blank">{{result' value.snapshot_url}}</a></td>
+                        </tr> 
+                        <!-- endloop -->
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin: 20px auto; text-align: center;width:290px;">{{pager.pages}}</div>
+        </div>
+    </div>
+</div>
+<script>
+	$(function(){
+	    $('.datepicker').datepicker({
+	        changeMonth:true,
+	        changeYear:true,
+	        minDate:new Date(),
+	        dateFormat : "yy-mm-dd",
+	        minDate: "2013-01-01"
+	    });
+	})
+</script>

@@ -1,0 +1,30 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">收藏列表</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">ID</td>
+			<td>用户id</td>
+			<td>手机号</td>
+			<td>职位</td>
+			<td>收藏时间</td>
+		</tr>
+<?php foreach($favorite as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['user_id'];?></td>
+			<td><?php echo $users[$value['user_id']]['phone'];?></td>
+			<td><?php echo $jobs[$value['job_id']]['title'];?></td>
+            <td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

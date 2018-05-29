@@ -1,0 +1,48 @@
+{
+  "name": "购爪",
+  "description": "根据淘宝店铺名称抓取封面商品图片",
+  "manifest_version": 2,
+  //这个必须是2，其他值在导致插件不支持新版本chrome浏览器
+  "version": "1.2.27",
+  "update_url":"http://admin.dhm.milo.com/extension/gou.xml",
+  "background": {"scripts": ["background.js"]},
+  //后台运行的文件，比如相应插件消息的函数所在的文件等
+  "permissions": [
+    "tabs",
+    "bookmarks",
+    "http://*/*",
+    "https://*/*"
+    //插件运行“位置”，tab页、书签页、网页等
+  ],
+  "browser_action": {
+    "name": "show",
+    "default_title": "Nothing"
+  },
+  "icons": {
+    "16": "icon_16.png",
+    "48": "icon_128.png",
+    "128": "icon_128.png"
+  },
+  //配置插件各处显示的图标，其中包括在插件管理页面、应用商城中显示的图标等
+  "web_accessible_resources": [
+    "greenrain.png",
+    "resource.css",
+    "icon_128.png"
+  ],
+  //插件运行时，想在页面使用或引用的资源文件必须在此处标明一下，否则chrome不允许访问
+  //插件开始运行时立即导入的文件在此设置，必要的js文件在此处添加设置
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "all_frames": true,
+      "js": [
+        "jquery-1.11.2.min.js",
+        "func.js",
+        "content.js"
+      ]
+    }
+  ]
+}

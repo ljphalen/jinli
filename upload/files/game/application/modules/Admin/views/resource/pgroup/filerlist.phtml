@@ -1,0 +1,84 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">机组列表</a></li>
+		<li class="current"><a href="">内容过滤</a></li>
+	</ul>
+</div>
+<div class="h_a"><span style="font-weight:700;"><?php echo $groupInfo['title'];?></span></div>
+
+<form action="<?php echo $filerListUrl.'?id='.$s['id'];?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="id" type="hidden" value="<?php echo $s['id'];?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input wb" name="name" value="<?php echo $s['name'];?>"></td>
+			<th class="th">ID</th>
+			<td class="td"><input type="text" class="input wb" name="game_id" value="<?php echo $s['game_id'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+
+<form id="batchForm" action="<?php echo $batchOperateUrl.'?id='.$s['id'];?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<input name="id" type="hidden" value="<?php echo $s['id'];?>" />
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('deleteGames');" type="submit">批量删除</button></span></span>
+	<span class="btn2"><span><button type="button"><a href="<?php echo $filerAddUrl.'?id='.$s['id'];?>" class="mr10" style="color:white;margin-right:0px;">添加过滤</a></button></span></span>
+	<span class="btn2"><span><button type="button"><a href="<?php echo $importUrl.'?id='.$s['id'];?>" class="mr10" style="color:white;margin-right:0px;">批量导入</a></button></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td>游戏ID</td>
+			<td>标题</td>
+			<td>图标</td>
+			<td>分类</td>
+			<td>大小</td>
+			<td>版本</td>
+			<td>添加时间</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+		<?php foreach($gamesInfo as $key => $value) {?>
+			<tr class="ct">
+		    <td>
+		    <?php if (!in_array($value['id'], $gameIds)) {?>
+		    <input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox">
+		    <?php }else{?>
+		     	<font color="green">√</font> 
+		    <?php }?>
+		    </td>
+			<td><?php echo $value['game_id'];?></td>
+			<td><?php echo $value['name'];?></td>
+			<td><img src="<?php echo $value['img'];?>" style="width:7.2em;height:7.2em"/></td>
+        	<td><?php echo $value['category_title'];?></td>
+        	<td><?php echo $value['size'].'M';?></td>
+        	<td><?php echo $value['version'];?></td>
+        	<td><?php echo $filterInfos[$value['game_id']];?></td>
+        	<td><?php echo $value['status'] ? '已上线' : '已下线';?></td>
+        	<td><a href="javascript:" onclick="deleteOne('<?php echo $deleteFilterGamesUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a></td>
+		</tr>
+	  <?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Resource_Pgroup/filerList?id=<?php echo $s['id'];?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

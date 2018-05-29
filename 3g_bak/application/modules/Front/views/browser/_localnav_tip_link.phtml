@@ -1,0 +1,12 @@
+<?php
+$str = '<ul class="ad-links">';
+$s   = array('ui-tag-radius', 'ui-tag-dot', 'ui-tag-arrow');
+foreach ($list as $val) {
+	$tip = '';
+	if (!empty($val['icon'])) {
+		$tip = sprintf('<span class="ui-tag %s" style="background:%s;"><i style="border-left-color:%s;"></i>%s</span>', $val['icon'], $val['color'], $val['color'], $val['text']);
+	}
+	$str .= sprintf('<li class=""><a href="%s">%s</a></li>', $val['link'], $tip . $val['name']);
+}
+$str .= '</ul>';
+echo $str;

@@ -1,0 +1,36 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<section class="ajax_wrap">
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">用户组列表</a></li>
+    <div class="clear-fix"></div>
+	</ul>
+
+</div>
+<div class="table_list">
+	<table width="100%" class="view_list_tb clear-fix">
+		<thead>
+			<tr class="hd">
+				<th width="100">用户组ID</td>
+				<th>用户组名称</td>
+				<th>描述</td>
+				<th>操作</td>
+			</tr>
+		</thead>
+		<tbody>
+		<?php foreach($groups as $key => $value) {?>
+				<tr class="ct">
+					<td><?php echo $value['groupid'];?></td>
+					<td><?php echo $value['name']?></td>
+					<td><?php echo $value['descrip']?></td>
+					<td><a href="<?php echo $editUrl;?>/?groupid=<?php echo $value['groupid'];?>" class="mr10">编辑</a><?php if($value['id'] > 3) {?><a onclick="deleteOne('<?php echo $delUrl;?>/?groupid=<?php echo $value['groupid'];?>', '是否要删除该用户组？', event);" href='javascript:'>删除</a><?php }?></td>
+				</tr>
+		<?php }?>
+	</tbody>
+	</table>
+</div>
+</section>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

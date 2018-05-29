@@ -1,0 +1,51 @@
+<?php echo $this->render("feedback/header.phtml"); ?>
+
+<body class="ui-app">
+<div class="ui-top-bar">
+    <?php
+    $arr = array(
+        4 => $webroot.'/nav',
+        2 => $webroot.'/user/index/index',
+        1 => $webroot.'/activity/cindex'
+    );
+
+    $prev_url = isset($arr[$type])?$arr[$type]:'javascript:history.go(-1);';
+    ?>
+    <a class="ui-pos link-back" href="<?=$prev_url?>"></a>
+    <span class="ui-top-txt">意见反馈</span>
+    <a class="ui-pos icon-fqa" href="<?=$webroot?>/feedback/faqtype?type=<?=$type?>"></a>
+</div>
+
+<div class="ui-page page1 js-active" style="bottom:0;">
+    <div id="feed-new-wrapper">
+        <div id="feed-new-scroll">
+            <div class="ui-page-content">
+                <div id="pullDown">
+                    <span class="pullDownIcon"></span><span class="pullDownLabel">下拉加载聊天记录...</span>
+                </div>
+                <div class="feed-new-wrap">
+                    <div id="feed-new-list">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="feed-contcat"><a href="<?=$webroot?>/feedback/contact?type=<?=$type?>">让我<br>联系你</a></div>
+
+<div class="ui-bottom-bar feed-btm-bar">
+    <form id="js-feed-frm" class="fee-btm-wrap">
+        <input type="hidden" name="token" value="<?php echo $token;?>" />
+        <input type="hidden" name="type" value="<?php echo $type;?>" />
+        <input id="js-feed-txt" class="inp-txt" type="text" name="msg" autocomplete="off" placeholder="您想说点什么..." />
+        <input id="js-feed-btn" class="inp-btn" type="submit" value="发送" />
+    </div>
+</div>
+
+<script type="text/javascript">var token = "<?php echo $token;?>";</script>
+<script src="<?=$staticResPath?>/call/js/zepto.min.js?v=<?=$version?>"></script>
+<script src="<?=$staticResPath?>/call/js/iscroll.js?v=<?=$version?>"></script>
+<script src="<?=$staticResPath?>/call/js/feednew.min.js?v=<?=$version?>"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+	</div>
+	<div class="table_full">
+		<form action="<?php echo $indexUrl; ?>" method="POST" id="form">
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<table width="100%" cellspacing="0" cellpadding="0">
+				<tr class="tr">
+					<th class="th">排序方式：</th>
+					<td class="td">
+						<select name="sortColumn" id="sortColumn">
+							<option value="-1">请选择</option>
+							<?php foreach ($columns as $k => $v) { ?>
+								<option <?php echo  ($k == $params['sortColumn']) ? 'selected="selected"' : ''; ?> value="<?php echo $k; ?>"><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+						
+						<select name="sortType" >
+							<option vlaue="0">选择</option>
+							<?php foreach ($sort as $k=>$v){?>
+								<option value="<?php echo $k;?>" <?php if($params['sortType'] == $k) echo 'selected';?>  ><?php echo $v;?></option>
+							<?php }?>
+						</select>
+					</td>
+		
+				</tr>
+				<tr class="tr">
+					<th class="th">用户手机号</th>
+					<td class="td">
+						<input type="text"  name="username"  class="input"   value="<?php echo $params['username'];?>"></td>
+				</tr>
+				
+				<tr class="tr">
+					<th class="th">用户ID</th>
+					<td class="td">
+						<input type="text"  name="uid"  class="input"   value="<?php echo $params['uid'];?>"></td>
+				</tr>
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+		</form>
+	</div>
+
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+				<th class="th">用户ID</th>
+				<th class="th">总充值金额</th>
+				<th class="th">可用金额</th>
+				<th class="th">变动金额</th>
+				<th class="th">被冻结金额</th>
+			</tr>
+			<?php foreach ($dataList as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['id'];?></td>
+					<td class="td" align="left"><?=$v['uid'];?></td>
+					<td class="td"><?php echo $v['total_money'] ?></td>
+					<td class="td"><?php echo $v['remained_money'] ?></td>
+					<td class="td"><?php echo $v['affected_money'] ?></td>
+					<td class="td"><?php echo $v['frozed_money']; ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

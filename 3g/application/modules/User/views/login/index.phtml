@@ -1,0 +1,41 @@
+<?php echo $this->render("../../Front/views/layout/header.phtml");?>
+	<div id="page">
+		<header class="hd">
+			<h1>登录</h1>
+			<div class="back">
+				<a href="<?php echo $webroot?>"><span class="left-arrow"><i></i></span></a>
+			</div>
+		</header>
+		
+		<article class="ac reg-login">
+			<div class="form-box">
+				<form class="form-box" method="post"  id="J_login" action="<?php echo $webroot.$loginUrl; ?>">
+				<input type="hidden" name="token" value="<?php echo $token?>"/>
+				<input type="hidden" name="refer" value="<?php echo $refer?>"/>
+					<ul>
+						<li>
+							<label for="">用户名：</label>
+							<input type="text" name="username" id="J_UserNameTxt" required="required" autocomplete="off" placeholder="您的手机号" pattern="((\+86)|86|0)?(13\d|15[012356789]|18[0236789]|14[57])\d{8}$" value=""/>
+						</li>
+						<li>
+							<label for="">密码：</label>
+							<input type="password" maxLength="16" name="password" id="J_PassWordTxt" required="required" />
+						</li>
+						<li class="tips">
+							<!-- <a href="">忘记密码&gt;&gt;</a> -->
+							<a data-brief="false" href="<?php echo $webroot;?>/user/register/index?refer=<?php echo $refer;?>">立即注册>></a>
+						</li>
+						<li><input type="submit" name="submit" value="登录" class="btn" /></li>
+					</ul>
+				</form>
+			</div>
+		</article>
+	</div>
+	
+	<div class="JS-dbMask"></div>
+    <div class="dialog-box J_dialogBox">
+    	<p></p>
+    	<div class="btn-wrap"><span class="btn">确定</span></div>
+	</div>
+<?php echo $this->render("../../Front/views/layout/tj.phtml");?>
+<?php echo $this->render("../../Front/views/layout/footer.phtml");?>

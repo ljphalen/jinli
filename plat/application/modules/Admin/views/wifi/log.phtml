@@ -1,0 +1,31 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	  <li><a href="<?php echo $listUrl;?>">设备列表</a></li>
+      <li class="current"><a href="#">日志列表</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">ID</td>
+			<td>ip</td>
+			<td>mac</td>
+			<td>访问地址</td>
+			<td>访问时间</td>
+		</tr>
+<?php foreach($logs as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['ip'];?></td>
+			<td><?php echo $value['mac'];?></td>
+			<td><?php echo $value['url'];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

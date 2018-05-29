@@ -1,0 +1,94 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	     <li class="current"><a href="<?php echo $indexUrl;?>">v1.5.2定值设置项</a></li>
+     </ul>
+</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	
+	<div class="h_a">v1.5.2定值设置项</div>
+	<div class="table_full">
+		<table width="100%">
+		    <tr class="tr">
+				<th class="th">仅在WLAN网络显示图片</th>
+				<td class="td">
+					<label class="mr20"><input <?php if($configs['game_set_img']) echo 'checked';?> name="game_set_img" value="1" type="radio">打开</label>
+					<label class="mr20"><input <?php if(!$configs['game_set_img']) echo 'checked';?> name="game_set_img" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">仅在WLAN网络下载</th>
+				<td class="td">
+					<label class="mr20"><input <?php if($configs['game_set_download']) echo 'checked';?> name="game_set_download" value="1" type="radio">打开</label>
+					<label class="mr20"><input <?php if(!$configs['game_set_download']) echo 'checked';?> name="game_set_download" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">游戏安装成功删除安装包</th>
+				<td class="td">
+					<label class="mr20"><input <?php if($configs['game_set_del']) echo 'checked';?> name="game_set_del" value="1" type="radio">打开</label>
+					<label class="mr20"><input <?php if(!$configs['game_set_del']) echo 'checked';?> name="game_set_del" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">已安装游戏更新提醒</th>
+				<td class="td">
+				    <label class="mr20"><input <?php if($configs['game_set_tips'] == 7) echo 'checked';?> name="game_set_tips" value="7" type="radio">1周</label>
+					<label class="mr20"><input <?php if($configs['game_set_tips'] ==1 ) echo 'checked';?> name="game_set_tips" value="1" type="radio">1天</label>
+					<label class="mr20"><input <?php if(!$configs['game_set_tips']) echo 'checked';?> name="game_set_tips" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+			<tr class="tr" style="display:none;">
+				<th class="th">最后更新时间</th>
+				<td class="td">
+				   <input name="game_set_uptime" value="<?php echo $configs['game_set_uptime'];?>"/>
+				</td>
+			</tr>
+			<tr class="tr" >
+				<th class="th">无金立push引擎手机个推push开关</th>
+				<td class="td">
+				    <label class="mr20"><input checked name="thirdPartyPush" value="1" type="radio">打开</label>
+					<label class="mr20" style="display:none;"><input <?php if(!$configs['thirdPartyPush']) echo 'checked';?> name="thirdPartyPush" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+			<tr class="tr" style="display:none;">
+				<th class="th">金立手机个推push开关</th>
+				<td class="td">
+				    <label class="mr20"><input <?php if($configs['thirdPartyPushGn']) echo 'checked';?> name="thirdPartyPushGn" value="1" type="radio">打开</label>
+					<label class="mr20"><input <?php if(!$configs['thirdPartyPushGn']) echo 'checked';?> name="thirdPartyPushGn" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+			<tr class="tr" style="display:none;">
+				<th class="th">金立手机同一张SIM卡在本机使用时间超过设定时间打开个推push的时间设置</th>
+				<td class="td">
+				    <label class="mr20"><input <?php if($configs['pushIntervalDays'] == 30 ) echo 'checked';?> name="pushIntervalDays" value="30" type="radio">30天</label>
+				    <label class="mr20"><input <?php if($configs['pushIntervalDays'] != 30) echo 'checked';?> name="pushIntervalDays" value="tp" type="radio">
+				    &nbsp; <input name="game_third_push" value="<?php echo $configs['game_third_push'];?>"/> &nbsp;&nbsp;天<span><font color="#FF0000">(必须填写正整数，且不能等于30)</font></span>
+				    </label>
+				</td>
+			</tr>
+			<tr class="tr" >
+				<th class="th">一定时间内同一标题的push消息只允许显示一条的时间设置
+				</th>
+				<td class="td">
+				    <label class="mr20"><input <?php if($configs['pushInvalidDays'] == 3 ) echo 'checked';?> name="pushInvalidDays" value="3" type="radio">3天</label>
+				    <label class="mr20"><input <?php if($configs['pushInvalidDays'] != 3 ) echo 'checked';?> name="pushInvalidDays" value="ti" type="radio">
+				    &nbsp; <input name="game_third_Invalidpush" value="<?php echo $configs['game_third_Invalidpush'];?>"/> &nbsp;&nbsp;天<span><font color="#FF0000">(必须填写正整数，且不能等于3)</font></span>
+				    </label>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Set/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,123 @@
+<script type="text/javascript" charset="utf-8" src="{{rootUrl}}/js/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{rootUrl}}/js/ueditor.all.min.js"> </script>
+<script type="text/javascript" charset="utf-8" src="{{rootUrl}}/js/zh-cn/zh-cn.js"> </script>
+<style>
+.muti .iText{ width:190px;}
+.muti select { width:199px; height: 180px;}
+</style>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">{{title}}-资讯</p>
+    </div>
+    <div class="main">
+        <div class="app-detail">
+            <form action="../article/save" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="id" value='{{result.id}}' />
+                <ul class="form">
+                    <li>
+                        <span class="label">标题：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" id="title" required name="title" style="width:220px;" value="{{result.title}}" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">发布时间：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required datepicker" id="datepicker" name="pubdate[date]" style="width:90px;" value="{{result.pubdate.date}}" />
+                            <input  class="iText" id="hourpicker" name="pubdate[hour]" style="width:30px;" value="{{result.pubdate.hour}}" /> 时
+                            <input  class="iText" id="minpicker" name="pubdate[min]" style="width:30px;" value="{{result.pubdate.min}}" /> 分
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">资讯来源：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" required   name="w_from" style="width:220px;" value="{{result.w_from}}" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">资讯内容：</span>
+                        <div class="fc">
+<!--                        <textarea id="myEditor"  name="content"  required style="width:660px; height:320px;">{{stripslashes(result.content)}}</textarea>  -->
+                            <script id="msg" type="text/plain" style="width:800px; height:400px;">{{stripslashes(result.content)}}</script>
+                            <span class="red">*</span>
+                        </div>
+                        <input type="hidden" name="id" class="muti_data" value="{{result.id}}" />
+                    </li>
+<!--                   <li>
+                        <span class="label cpic">上传图片：</span>
+                        <div class="fc">
+                            <input type="file"  if {{result.icon}} == 'nopic.jpg'  class="required" required  endif  name="icon" value="选择图片" onchange="previewImage(this)"/>
+                            <p><img id="_img" src="{{upload_path}}" width="150px" height="80px" /></p>
+                        </div>
+                        	 <input type="hidden" name="old_icon" value="{{result.icon}}" />
+                    </li>-->
+                    <li>
+                        <div class="fc">
+                            <input type="submit"  value="确定" class="submit" />
+                            <input type="button" value="取消" class="cancel" onclick="window.location.href='/article/index'" />
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+function previewImage(file)  
+{   
+    if (file.files && file.files[0])  
+    {  
+        var img = document.getElementById('_img');  
+        var reader = new FileReader();  
+        reader.onload = function(evt){img.src = evt.target.result;}  
+        reader.readAsDataURL(file.files[0]);  
+    }  
+    else  
+    {  
+        file.select();  
+        var src = document.selection.createRange().text;  
+        var img = document.getElementById('_img');  
+        img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;  
+    }  
+}
+$(document).ready(function(){
+	// var editor = UE.getEditor("myEditor");
+	 var monthname = ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+	$('.datepicker').datepicker({
+        changeMonth:true,
+        changeYear:true,
+        monthNamesShort: monthname,
+        nextText: '下一个月',
+        prevText: '上一个月',
+        dateFormat: "yy-mm-dd",
+        minDate: "2013-01-01"
+    });
+   $('#hourpicker').keyup(function(){    
+       $(this).val($(this).val().replace(/\D|^0/g,''));  
+   }).bind("paste",function(){  //CTR+V事件处理    
+       $(this).val($(this).val().replace(/\D|^0/g,''));     
+   }).css("ime-mode", "disabled");
+
+    $('#minpicker').keyup(function(){    
+       $(this).val($(this).val().replace(/\D|^0/g,''));  
+   }).bind("paste",function(){  //CTR+V事件处理    
+       $(this).val($(this).val().replace(/\D|^0/g,''));     
+   }).css("ime-mode", "disabled");
+    var editor = UE.getEditor('msg');
+     $(".submit").click(function(){
+        if (!$("#title").val()){
+            alert("请输入标题");
+			return false;
+        }
+        if (!editor.hasContents()){
+            alert("请输入内容");
+			return false;
+        }
+        $("form").submit();
+    });
+   
+    
+});
+</script>

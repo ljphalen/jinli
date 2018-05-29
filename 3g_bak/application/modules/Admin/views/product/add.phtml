@@ -1,0 +1,131 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">产品列表</a></li>
+		<li class="current"><a href="javascript:;">添加产品</a></li>
+	</ul>
+</div>
+<div class="h_a">添加产品</div>
+<form method="post" action="<?php echo $addPostUrl; ?>" id="addProductForm">
+	<input name="token" id="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input" name="sort" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">产品名称</th>
+				<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">购买地址</th>
+				<td class="td"><input type="text" class="input wc" name="buy_url" value=""> (没有可不填)</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">价格</th>
+				<td class="td"><input type="text" class="input" name="price" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">系列</th>
+				<td class="td"><select name="series_id" onchange="setmodels(this.value)">
+						<?php foreach ($series as $key => $value) { ?>
+							<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+						<?php } ?>
+					</select></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">机型</th>
+				<td class="td">
+					<select name="model_id"></select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">产品属性</th>
+				<td class="td">
+					<?php foreach ($attributes as $key => $value) { ?>
+						<input type="checkbox" name="attribute_id[]" value="<?php echo $value['id']; ?>"  /><?php echo $value["title"]; ?>
+					<?php } ?>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">产品主图片</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="ProductImg">
+							<img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+							<input type="hidden" name="img" value="">
+						</li>
+					</ul>
+					<p style="clear:both;">
+						<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=ProductImg'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">产品图片</th>
+				<td class="td">
+					<div id="imgs">
+					</div>
+					<div class="mb10">
+						<button onclick="addupload();" onfocus="blur();" type="button" 　class="btn">＋添加产品图片</button>
+					</div>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">描述</th>
+				<td class="td">
+					<textarea name="descrip" style="width: 800px; height: 400px;"></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+		var models = <?php echo json_encode($models);?>;
+		setmodels = function (series) {
+			var options = '';
+			$.each(models, function (index, data) {
+				var s = '';
+				if (data.series_id == series) {
+					if (data.id == series) s = 'selected';
+					options += '<option value="' + data.id + '" ' + s + '>' + data.name + '</option>';
+				}
+			});
+			$("select[name='model_id']").html(options);
+		}
+		setmodels(<?php echo $series[0]['id'];?>);
+
+
+		var editor;
+		KindEditor.ready(function (K) {
+			K.token = $('#token').val();
+			editor = K.create('textarea[name="descrip"]', {
+				resizeType: 1,
+				allowPreviewEmoticons: false,
+				allowImageUpload: true,
+				uploadJson: '<?php echo $uploadImgUrl;?>',
+				items: EDITOR_ITEMS
+			});
+		});
+
+		ajaxForm('addProductForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Product/index');
+		}, function () {
+			editor.sync();
+		});
+
+		var imgc = 1;
+		addupload = function () {
+			var al = $('<ul class="uploadImg"><li id="Img' + imgc + '"><img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/><input type="hidden" name="simg[' + imgc + ']" value=""></li></ul><p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>' + imgc + '" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>');
+			$('#imgs').append(al);
+			imgc++;
+		}
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,88 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="/Admin/Game_Webgame/index">网游推荐日程</a></li>
+        <li class="current"><a href="<?php echo $listUrl;?>">开服信息</a></li>
+        <li><a href="/Admin/Client_Web/index">旧版推荐</a></li>
+        <li><a href="/Admin/Client_Web/columnList">网游频道</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+		    <th class="th">分组</th>
+			<td class="td"><select name="group" class="wa">
+				<option value="">全部</option>
+				<option <?php if(strlen($search['group'])>0 && $search['group'] == '0~1') echo 'selected';?> value="0~1">今天</option>
+				<option <?php if(strlen($search['group'])>0 && $search['group'] == '1~2') echo 'selected';?> value="1~2">明天</option>
+				<option <?php if(strlen($search['group'])>0 && $search['group'] == '2~5') echo 'selected';?> value="2~5">未来三天</option>
+				<option <?php if(strlen($search['group'])>0 && $search['group'] == '-1~0') echo 'selected';?> value="-1~0">昨天</option>
+				<option <?php if(strlen($search['group'])>0 && $search['group'] == '-4~-1') echo 'selected';?> value="-4~-1">历史3天</option>
+				<option <?php if(strlen($search['group'])>0 && $search['group'] == '~-4') echo 'selected';?> value="~-4">更早</option>
+			</select></td>
+			<th class="th">开服时间</th>
+			<td class="td">
+			<input type="text" class="input" name="start_time" id="start_time" value="<?php echo $search['start_time'];?>"> - 
+			<input type="text" class="input" name="end_time" id="end_time" value="<?php echo $search['end_time'];?>">
+			</td>
+			<th class="th">游戏名称</th>
+			<td class="td"><input type="text" class="input" name="game_name" value="<?php echo $search['game_name'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+	<span>共<?php echo $total;?>条结果</span>
+	<span class="btn2"><span><button id='syncClientCache' type="button">刷新客户端缓存</button></span></span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+<!-- 
+		    <td width="10"><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+-->		    
+			<td width="20">游戏ID</td>
+			<td width="50">游戏名称</td>
+			<td width="50">开服名称</td>
+			<td width="50">开服类型</td>
+			<td width="50">开服时间</td>
+			<td width="50">状态</td>
+			<td width="50">同步时间</td>
+		</tr>
+		<?php foreach($list as $key => $value) {?>
+		<tr class="ct">
+<!-- 
+			<td><input class="checkbox" name="keys[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+-->
+			<td><?php echo $value['game_id'];?></td>
+			<td><?php echo $value['game_name'];?></td>
+			<td><?php echo $value['server_name'];?></td>
+			<td><?php echo $open_type[$value['open_type']];?></td>
+			<td><?php echo date('Y-m-d H:i', $value['open_time']);?></td>
+			<td><?php echo $value['game_status'] == 0 ? "下线" : $status[$value['status']];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['update_time']);?></td>
+		</tr>
+	 <?php } ?>
+	</table>
+</div>
+<div class="mr10 cc"><?php echo $pager;?></div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script>
+$(document).ready(function(){
+	 $('#start_time').datepicker();
+     $('#end_time').datepicker();
+
+     $("#syncClientCache").click(function(){
+    	 ajaxLoader.show();
+    	 $.get("/Admin/Game_GameOpen/updateClientCache", function(result){
+    		 ajaxLoader.hide();
+        	 showMsg("提示", result.msg);
+         });
+ 	 });
+     
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,482 @@
+<style>
+#gamelist{width:30%;background:#fff;border:1px solid #dedede;padding:5px;}
+#gamelist li{width:100%;height:25px;line-height:25px;text-indent:15px;
+             border-bottom:1px dashed #ccc;color:#666;cursor:pointer;}
+</style>
+<script src="{{rootUrl}}/js/games.js?ver={{staticVer}}" type="text/javascript"></script>
+<div class="colMain">
+            <div class="title"><p class="fl">产品信息</p><a href="del?productid={{products.id}}" class="del">删除</a></div>
+<!--            <form action="/product/upd" method="post" name="form" id="product">-->
+            <div class="main">
+                <div class="app-detail">
+                    <ul class="form">
+                        <li>
+                            <span class="label">产品编号：</span>
+                            <div class="fc">
+                                <input type="hidden" class="iText" id="pid" name="product_id" value="{{products.id}}" />{{products.id}}
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">平台类型：</span>
+                            <div class="fc">
+                                <select name="platform" id="platform">
+                                    <option value="1" <!-- if {{products.platform}}==1 -->selected<!-- endif -->>Android</option>
+                                    <option value="2" <!-- if {{products.platform}}==2 -->selected<!-- endif -->>IOS</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">产品名：</span>
+                            <div class="fc">
+                                <input type="text" id="pname" name="pname" value="{{products.product_name}}" class="iText required" />
+                                <span class="red">*</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">APPKEY：</span>
+                            <div class="fc">
+                                <input type="text" id="pappkey" onkeyup="getGameinfo('gametype','pappkey')" onfocus="getGameinfo('gametype','pappkey')" name="pappkey" value="{{products.appkey}}" class="iText required" />
+                                 <select id="gametype" onchange="getGameinfo('gametype','pappkey')">
+                                     <option value="1" selected>名称</option>
+                                     <option value="2">APPKEY</option>
+                                 </select>
+                                <input type="hidden" name="appkey_is_right" value="1">
+                                <span class="red">*</span>
+                                <ul id="gamelist" style="display:none;">
+
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">包名：</span>
+                            <div class="fc">
+                                <input type="text" name="ppackage" id="ppackage" value="{{products.product_package}}" class="iText" />
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">版本号：</span>
+                            <div class="fc">
+                                <input type="text" name="product_version" id="product_version" value="{{products.product_version}}" class="iText" />
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">星级：</span>
+                            <div class="fc">
+                                <input type="text" name="star" id="star" value="{{products.star}}" class="iText" />
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">玩家数：</span>
+                            <div class="fc">
+                                <input type="text" name="playering" id="playering" value="{{products.playering}}" class="iText" />
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">产品图标：</span>
+                            <div class="fc">
+                                <input type="text" name="picon" id="picon" value="{{products.product_icon}}" class="iText required"  style="width:500px;" />
+                                <input type="button" value="选择图片" class="submit pickimg" id="pickimg"/>
+                                <span class="red">*</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">产品介绍：</span>
+                            <div class="fc">
+                                <textarea id="pdesc" name="pdesc" class="required"  style="width:500px;">{{products.product_desc}}</textarea>
+                                <span class="red">*</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label"></span>
+                            <div class="fc">
+                                <input type="radio" name="account_way" value="by_month" checked="checked"/>按月结算
+                                <input type="radio" name="account_way" value="realtime_bidding" disabled='disabled' />实时竞价 
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label"></span>
+                            <div class="fc grid" style='width:28%'>
+                                <table class="account_by_month">
+                                    <thead>
+                                        <tr>
+                                            <th>月份</th>
+                                            <th>结算方式</th>
+                                            <th>结算单价</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- if {{ad_product_acounting}} -->     
+                                            <!-- loop ad_product_acounting -->
+                                            <tr>
+                                                <td>{{ad_product_acounting' value.show_month}}月</td>
+                                                <td>
+                                                    <select name="account_way_select_{{ad_product_acounting' value.show_month}}" id="account_way_select_{{ad_product_acounting' value.show_month}}">
+                                                        <option value="1" <!-- if {{ad_product_acounting' value.acounting_method}} == 1 -->selected<!-- endif --> >CPM</option>
+                                                        <option value="2" <!-- if {{ad_product_acounting' value.acounting_method}} == 2 -->selected<!-- endif --> >CPC</option>
+                                                        <option value="3" <!-- if {{ad_product_acounting' value.acounting_method}} == 3 -->selected<!-- endif --> >CPA</option>
+                                                        <option value="4" <!-- if {{ad_product_acounting' value.acounting_method}} == 4 -->selected<!-- endif --> >CPI</option>
+                                                        <option value="5" <!-- if {{ad_product_acounting' value.acounting_method}} == 5 -->selected<!-- endif --> >CPD</option>
+                                                        <option value="6" <!-- if {{ad_product_acounting' value.acounting_method}} == 6 -->selected<!-- endif --> >CPS</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type='text' name='account_price_{{ad_product_acounting' value.show_month}}' id='account_price_{{ad_product_acounting' value.show_month}}' class='iText' value="{{ad_product_acounting' value.denominated}}"/>
+                                                </td>
+                                            </tr>
+                                            <!-- endloop -->
+                                        <!-- endif -->
+                                    </tbody>
+                                </table>
+    <!--                            <table class="realtime_bidding" style='display:none;'>
+                                    <thead>
+                                        <tr>
+                                            <th>结算方式</th>
+                                            <th>结算单价</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <select name="account_way_select" id="account_way_select">
+                                                    <option value="CPM">CPM</option>
+                                                    <option value="CPC">CPC</option>
+                                                    <option value="CPD">CPD</option>
+                                                    <option value="CPI">CPI</option>
+                                                    <option value="CPA">CPA</option>
+                                                    <option value="CPS" selected>CPS</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type='text' name='account_price' id='account_price' class='iText'/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>-->
+                            </div>
+                        </li>
+                        <li class="line"></li>
+                        <li>
+                            <span class="label">产品目标：</span>
+                            <div class="fc">
+                                <input type="text" class="iText required" id="purl" name="purl" value="{{products.product_url}}" style="width:300px;" onchange="javascript:if($('#clickType_1').css('display')!='none'){
+                                    packageSize();
+                                }" />
+                                <span class="red">*</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">产品目标点击类型：</span>
+                            <div class="fc">
+                                <p>
+                                    <select name="" id="clickType">
+                                        <option value="1">内建下载安装</option>
+                                        <option value="2">启动应用</option>
+                                        <option value="3">使用浏览器打开URL</option>
+                                        <option value="4">使用内建浏览器打开URL</option>
+                                        <option value="5">打开列表广告</option>
+                                        <option value="6">自定义动作</option>
+                                        <option value="0" selected>无动作</option>
+                                    </select>
+                                    <input type="hidden" style="width:800px;" class="iText" name="clictypeobj" id="clictypeobj" value='{{products.click_type_object}}' />
+                                </p>
+                                <div class="box" id="clickTypeBox" style="display:none">
+                                    <div style="display:none" id="clickType_1">
+                                        <ul>
+                                            <li>
+                                                <span class="label">包名：</span>
+                                                <div class="fc">
+                                                    <input type="text" class="iText" id="package_name" name="product_package" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <span class="label">安装包大小：</span>
+                                                <div class="fc">
+                                                    <input type="text" name="package_size" id="package_size" class="iText number" />
+                                                    <input type="button" value="自动获取" onclick="javascript:packageSize()" class="submit" />
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <span class="label">文件泛MD5：</span>
+                                                <div class="fc">
+                                                    <input type="text" name="file_md5" id="file_md5" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="clickType_2">
+                                        <ul>
+                                            <li>
+                                                <span class="label">包名：</span>
+                                                <div class="fc">
+                                                    <input type="text" class="iText" name="package_name" id="package_name_start_app" style="width:200px;" />
+                                                    窗口：<input type="text" class="iText" name="activity" id="activity_start_app" style="width:211px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="clickType_3">
+                                        <ul>
+                                            <li>
+                                                <span class="label">使用浏览器打开URL：</span>
+                                                <div class="fc">
+                                                    <input type="hidden" name="direct_url_open" id="direct_url" value="1" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="clickType_4">
+                                        <ul>
+                                            <li>
+                                                <span class="label">使用内建浏览器打开URL：</span>
+                                                <div class="fc">
+                                                    <input type="hidden" name="inner_url_open" id="inner_url" value="1" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="clickType_5">
+                                        <ul>
+                                            <li>
+                                                <span class="label">打开列表广告：</span>
+                                                <div class="fc">
+                                                    <input type="hidden" name="ad_list_open" id="ad_list" value="1" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="clickType_6">
+                                        <ul>
+                                            <li>
+                                                <span class="label">自定义动作：</span>
+                                                <div class="fc">
+                                                    <input type="text" name="user_action_value" id="user_action_value" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <span class="label">导量限制：</span>
+                            <div class="fc">
+                                <div class="grid">
+                                    <div class="gridToolbar"><input type="hidden" name="stat_limit" value='{{products.limitjson}}' /><a href="javascript:void(0)" id="addDL" class="btn fr">新增</a></div>
+                                    <table id="DLGrid">
+                                        <thead>
+                                            <tr>
+                                                <th>规则名</th>
+                                                <th>内容</th>
+                                                <th>数值</th>
+                                                <th>内容</th>
+                                                <th>数值</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- if {{products.limit}} -->     
+                                            <!-- loop products.limit -->
+                                                <tr>
+                                                    <td id="{{products.limit' key}}">{{products.limit' key}}</td>
+                                                    <td>每天</td>
+                                                    <td>{{products.limit' value.day_limit}}</td>
+                                                    <td>总数</td>
+                                                    <td>{{products.limit' value.total_limit}}</td>
+                                                    <td>
+                                                        <a href="javascript:void(0)" class="edit" title="编辑"></a>
+                                                        |
+                                                        <a href="javascript:void(0)" class="del" title="删除"></a>
+                                                    </td>
+                                                </tr>
+                                            <!-- endloop -->
+                                        <!-- endif -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label">导量计划：</span>
+                            <div class="fc">
+                                <div class="grid">
+                                    <div class="gridToolbar"><input type="hidden" name="stat_plan" value='{{products.planjson}}' /><a href="javascript:void(0)" id="addDLJH" class="btn fr">新增</a></div>
+                                    <table id="DLJHGrid">
+                                        <thead>
+                                            <tr>
+                                                <th>序号</th>
+                                                <th>开始时间</th>
+                                                <th>结束时间</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                           <!-- if {{products.plan}} -->
+                                        <!-- loop products.plan -->
+                                                <!-- if {{products.plan' key}} == "default_pan" --> 
+                                                    <!-- loop products.plan.default_pan' key -->
+                                                        <tr>
+                                                            <td>{{products.plan.default_pan' key}}</td>
+                                                            <td><code><?php echo $v2["start_time"];?></code></td>
+                                                            <td><code><?php echo $v2["end_time"];?></td>
+                                                            <td>
+                                                                <a href="javascript:void(0)" class="edit" title="更新"></a>
+                                                                |
+                                                                <a href="javascript:void(0)" class="del" title="删除"></a>
+                                                            </td>
+                                                        </tr>
+                                                    <!-- endloop -->
+                                                <!-- else -->
+                                                    <!-- loop products.plan.default_pan' key -->
+                                                        <tr>
+                                                            <td>{{products.plan.default_pan' key}}</td>
+                                                            <td><code><?php echo $v2["start_time"];?></code></td>
+                                                            <td><code><?php echo $v2["end_time"];?></td>
+                                                            <td>
+                                                                <a href="javascript:void(0)" class="edit" title="更新"></a>
+                                                                |
+                                                                <a href="javascript:void(0)" class="del" title="删除"></a>
+                                                            </td>
+                                                        </tr>
+                                                    <!-- endloop -->
+                                                <!-- endif -->
+                                        <!-- endloop -->
+                                    <!-- endif -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">广告内容：</span>
+                            <span style="display:none" class="label">分配比率：</span>
+                            <div class="fc">
+                                <div class="grid" id="adList">
+                                    <div class="gridToolbar">
+<!--                                        <a href="javascript:void(0)"  id="addNewAD" class="btn fr">新增</a>-->
+                                    </div>
+                                <!-- loop products.ad -->
+                                            <!-- loop products.ad' value  -->
+                                                <div class="tablebox">
+                                                    <div class="gridTtitle"><span class="fl" id="title{{products.ad' key}}{{products.ad' key' key}}"></span><a href="javascript:void(0)"  class="btn fr averaged">全部平均</a></div>
+                                                    <table id="_sort_{{products.ad' key}}{{products.ad' key' key}}">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>广告ID</th>
+                                                                <th>标题</th>   
+                                                                <th>广告状态   <a style="cursor: pointer" onclick="hidde_off_ad('_sort_{{products.ad' key}}{{products.ad' key' key}}',this)">所有</a></th>
+                                                                <th>分配比例</th>
+                                                                <th>操作</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        
+                                                            <!-- loop products.ad' value ' value  -->
+                                                            <script>
+                                                                var ad_type={{products.ad' key}};
+                                                                var ad_subtype={{products.ad' value ' value' value.type}};
+                                                                var ad_type_name;
+                                                                $(function(){
+                                                                    $("#tr{{products.ad' key}}{{products.ad' value ' value' value.id}}").parent().parent().parent().attr("id","ad_title{{products.ad' key}}{{products.ad' key' key}}");
+                                                                })
+                                                                
+                                                                if( ad_type=="0"){
+                                                                    ad_type_name="抢占式";
+                                                                    if(ad_subtype==0){
+                                                                        ad_type_name+="-半屏广告"
+                                                                    }
+                                                                    if(ad_subtype==1){
+                                                                        ad_type_name+="-全屏广告"
+                                                                    }
+                                                                }
+                                                                if( ad_type=="1"){
+                                                                    ad_type_name="嵌入式";
+                                                                    
+                                                                     //0.Banner横幅图片广告1 Banner横幅文字	广告,2插页广告,3浮窗广告',
+                                                                    if(ad_subtype==0){
+                                                                        ad_type_name+="-Banner横幅图片广告"
+                                                                    }
+                                                                    if(ad_subtype==1){
+                                                                        ad_type_name+="-Banner横幅文字广告"
+                                                                    }
+                                                                    if(ad_subtype==2){
+                                                                        ad_type_name+="-插页广告"
+                                                                    }
+                                                                    if(ad_subtype==3){
+                                                                        ad_type_name+="-浮窗广告"
+                                                                    }
+                                                                }
+                                                                if( ad_type=="2"){
+                                                                    ad_type_name="PUSH";
+                                                                    if(ad_subtype==0){
+                                                                        ad_type_name+="-消息"
+                                                                    }
+                                                                    if(ad_subtype==1){
+                                                                        ad_type_name+="-APP"
+                                                                    }
+                                                                    if(ad_subtype==2){
+                                                                        ad_type_name+="-快捷方式"
+                                                                    }
+                                                                }
+                                                                if( ad_type=="3"){
+                                                                    ad_type_name="自定义";
+                                                                    if(ad_subtype==0){
+                                                                        ad_type_name+="-信息流"
+                                                                    }
+                                                                }
+                                                                
+                                                                $("#title{{products.ad' key}}{{products.ad' key' key}}").html(ad_type_name);  //广告类型名称
+                                                            </script>
+                                                                <tr name="1" id='tr{{products.ad' key}}{{products.ad' value ' value' value.id}}' style="display:<!-- if {{products.ad' value ' value' value.state}}==0 -->none<!-- else -->""<!-- endif -->">
+                                                                    <td><input type="hidden" class="iText" name="ad_id[]" value="{{products.ad' value ' value' value.id}}"/>
+                                                                    <input type="hidden" class="iText" name="ad_info_id[]" value="{{products.ad' value ' value' value.ad_info_id}}"/>
+                                                                        <input type="hidden" class="iText" name="ad_type[]" value="{{products.ad' key}}"/>
+                                                                        <input type="hidden" class="iText" name="ad_subtype[]" value="{{products.ad' value ' value' value.type}}"/>
+                                                                        <!-- if {{products.ad' key}} == 0 -->
+                                                                            <input type="hidden" class="iText" name="screen_type[]" value="{{products.ad' value ' value' value.screen_type}}"/>
+                                                                        <!-- endif -->
+                                                                        
+                                                                        {{products.ad' value ' value' value.id}}
+                                                                    </td>
+                                                                    <td>{{products.ad' value ' value' value.ad_title}}<span class='showInfo' onclick="javascript:window.open('{{products.ad' value ' value' value.ad_pic_url}}')" style="cursor:pointer;background:url('{{rootUrl}}/css/img/core.png') -180px -118px;display:inline-block;height:12px;vertical-align:middle;width:12px;"></span></td>
+                                                                    <td>
+                                                                        <input type="hidden" name="state[]" id="istate{{products.ad' key}}_{{products.ad' value ' value' value.id}}" value="{{products.ad' value ' value' value.state}}">
+                                                                         <span><input type="radio" onclick="javascript:$('#istate{{products.ad' key}}_{{products.ad' value ' value' value.id}}').val(this.value)" value="1" class="radio" name="state{{products.ad' key}}_{{products.ad' value ' value' value.id}}" <!-- if {{products.ad' value ' value' value.state}} == 1 -->checked<!-- else --><!-- endif --> /><lable>on</lable></span>
+                                                                         <span><input type="radio" onclick="javascript:$('#istate{{products.ad' key}}_{{products.ad' value ' value' value.id}}').val(this.value)" value="0" class="radio" name="state{{products.ad' key}}_{{products.ad' value ' value' value.id}}" <!-- if {{products.ad' value ' value' value.state}} == 0 -->checked<!-- else --><!-- endif --> /><lable>off</lable></span>
+                                                                     </td>
+                                                                     <td><input type="text" class="iText required" name="rate[]" value="{{products.ad' value ' value' value.rate}}" /></td>
+                                                                    <td>
+<!--                                                                        <a  href="javascript:void(0)" class="edit" title="更新"></a>
+                                                                        |
+                                                                        <a  href="javascript:void(0)" class="del" title="删除"></a>-->
+                                                                    </td>
+                                                                </tr>
+                                                           <!-- endloop -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            <script>
+                                                    // 排序
+                                                    $(function(){
+                                                        $("#_sort_{{products.ad' key}}{{products.ad' key' key}}").tablesorter();
+                                                    })
+                                            </script>
+                                            <!-- endloop -->
+                                <!-- endloop -->
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="fc">
+<!--                                <input type="button" onclick="javascript:if($('input[name=appkey_is_right]').val()!=1){alert('请填写正确的APPKEY');return false;}$('form').submit();" value="确定" class="submit" />-->
+                                <input type="button" onclick="javascript:location.href='/product/lists'" value="取消" class="cancel" />
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+<!--        </form>-->
+        </div>
+<!-- include "inc" -->
+

@@ -1,0 +1,41 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li><a href="<?php echo $indexUrl;?>">分类列表</a></li>
+		<li class="current"><a href="<?php echo $addUrl;?>">添加分类</a></li>
+	</ul>
+</div>
+<div class="h_a">添加分类</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">名称</th>
+				<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input wb" name="sort" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td">
+					<select class="wa" name="status">
+						<option value="1">开启</option>
+						<option value="0">关闭</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $addUrl;?>');
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

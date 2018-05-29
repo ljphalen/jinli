@@ -1,0 +1,55 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $indexUrl;?>">假期任务</a></li>
+        <li><a href="<?php echo $grantUrl."/?id=".$id;?>">中奖记录</a></li>
+        <li class="current"><a href="javascript:;">查看记录</a></li>
+	</ul>
+</div>
+<div class="h_a">
+	<span>奖品：<?php echo $name;?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+	<?php if (Activity_Service_SummerHoliday::PRIZE_ENTITY != $type) { ?>
+		<tr class="hd">
+			<td width="100">UUID</td>
+			<td width="100">金额</td>
+			<td width="80">兑奖时间</td>
+		</tr>
+		<?php foreach ($data as $item):?>
+			<tr class = "ct">
+		    	<td><?php echo $item[Activity_Service_RewardLog::UUID];?></td>
+				<td><?php echo $item[Activity_Service_RewardLog::CUSTOM_COUNT];?></td>
+				<td><?php echo date('Y-m-d H:i:s',$item[Activity_Service_RewardLog::CREAYTE_TIME]);?></td>
+			</tr>
+		<?php endforeach;?>
+	<?php } else {?>
+		<tr class="hd">
+			<td width="100">UUID</td>
+			<td width="100">兑奖人</td>
+			<td width="100">电话号码</td>
+			<td width="120">收货地址</td>
+			<td width="80">兑奖时间</td>
+		</tr>
+		<?php foreach ($data as $item):?>
+			<tr class = "ct">
+				<?php
+				$reward = json_decode($item['reward'], true); 
+				$entity = $reward['entity'];
+				?>
+		    	<td><?php echo $item[Activity_Service_RewardLog::UUID];?></td>
+		    	<td><?php echo $entity['contact'];?></td>
+				<td><?php echo $entity['phone'];?></td>
+				<td><?php echo $entity['address'];?></td>
+				<td><?php echo date('Y-m-d H:i:s',$item[Activity_Service_RewardLog::CREAYTE_TIME]);?></td>
+			</tr>
+		<?php endforeach;?>
+	<?php }?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,72 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="javascript:;">添加每日一荐</a></li>
+	</ul>
+</div>
+<div class="h_a">添加每日一荐</div>
+<form method="post" action="<?php echo $dailyAddPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="day_id" value="<?php echo $day_id;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">标题(<span style="color: red">*</span>)</th>
+			<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏ID(<span style="color: red">*</span>)</th>
+			<td class="td">
+			<div>
+			<input type="text" class="input wc" id="game_id" name="game_id" value="" style="width:143px;">
+            <span><button id="gameNameBtn" type="button">获取游戏名称</button></span>
+			<br>
+			游戏名称<input type="text" class="input" id="game_name" name="game_name" readonly="readonly"  value="" style="width:143px;">
+			</div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">描述(<span style="color: red">*</span>)</th>
+			<td class="td">
+			<textarea rows="3" cols="30" class="input" name="content"></textarea>
+            </td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status">
+                	<option value="1">开启</option>
+                	<option value="0">关闭</option>
+            </select></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac">
+    <span class="btn"><span><a href="<?php echo $editUrl.'?dayId='.$day_id;?>"><button type="button">返回</button></a></span></span>
+    <span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $editUrl.'?dayId='.$day_id;?>');
+	});
+
+	$("#gameNameBtn").click(function(){
+		$.post("/Admin/Common/queryGameName",
+			{
+		       token:"<?php echo $token;?>",
+		       id: $("#game_id").val()
+			},
+		    function(data, status){
+			       if(data.success) {
+			    	    $("#game_name").val(data.msg);
+			    	}else{
+			    		$("#game_name").val("");
+			    		showError("提示", data.msg);
+			    	}
+			});
+	});
+	
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

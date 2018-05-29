@@ -1,0 +1,49 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">教程规则列表</a></li>
+		<li class="current"><a href="javascript:;">编辑教程规则</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑教程规则</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">规则</th>
+				<td class="td"><input type="text" class="input wc" name="preg"	value="<?php echo $info['preg'];?>"></td>
+			</tr>
+            <tr class="tr">
+                <th class="th">教程页面</th>
+                <td class="td"><select name="help_id" class="select">
+                        <option value="">请选择</option>
+                        <?php foreach($hlps as $h): ?>
+                            <option value="<?php echo  $h['id']; ?>" <?php if($h['id']==$info['help_id'])echo 'selected="selected"';?>><?php echo $h['title']; ?></option>
+                        <?php endforeach; ?>
+                    </select></td>
+            </tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td"><select name="status" class="select">
+					<option <?php if($info['status'] == 1) echo 'selected="selected"';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 0) echo 'selected="selected"';?> value="0">关闭</option>
+				</select></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $listUrl ?>');
+	});
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

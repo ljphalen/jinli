@@ -1,0 +1,114 @@
+<style>
+a.softdown {
+    background: none repeat scroll 0 0 #61B509;
+    border: 1px solid #007900;
+    border-radius: 5px;
+    box-shadow: 0 0 1px #EEEEEE inset;
+    color: #FFFFFF;
+    font-size: 14px;
+    height: 32px;
+    line-height: 32px;
+    overflow: hidden;
+    padding: 0 36px;
+    text-decoration: none;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
+}
+</style>
+<div class="page">
+	<div class="pageContent">
+		<form method="post" action="__URL__/update/navTabId/__MODULE__/callbackType/closeCurrent" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone)">
+		<input type="hidden" name="id" value="{$vo.id}" />
+		
+		<div class="pageFormContent" layoutH="58">
+			
+			<div class="unit">
+				<label>礼包名称：</label>
+				{$vo.name}
+			</div>
+			
+			<div class="unit">
+				<label>APPID：</label>
+				{$vo.app_id}
+			</div>
+			
+			<div class="unit">
+				<label>应用名称：</label>
+				{:D("Apps")->where(array("id"=>$vo['app_id']))->getField('app_name')}
+			</div>
+			
+			<div class="unit">
+				<label>创建时间：</label>
+				{$vo.ctime|date="Y-m-d",###}
+			</div>
+			
+			<div class="unit">
+				<label>礼包内容：</label>
+				{$vo.content}
+			</div>
+			
+			<div class="unit">
+				<label>使用方法：</label>
+				{$vo.method}
+			</div>
+			
+			<div class="unit">
+				<label>有效期：</label>
+				{$vo.vtime_from|date="Y-m-d",###} / {$vo.vtime_to|date="Y-m-d",###}
+			</div>
+			
+			<div class="unit">
+				<label>礼包文件：</label>
+				<a href="{:Helper ( "Apk" )->get_url ( "user" )}{$vo.filepath}" target="_blank">{$vo.filename}</a>
+			</div>
+			
+			<div class="unit">
+				<label>状态：</label>
+				{$vo.status|GiftModel::getStatus}
+				
+				<if condition="!empty($vo[anote])">
+					<font color="red">{$vo["anote"]}</font>
+				</if>
+			</div>
+			
+			<gt name="vo.admin_id" value="0">
+				<div class="unit">
+					<label>审核人：</label>
+					{:D("Admin")->where(array("id"=>$vo['admin_id']))->getField('nickname')}
+				</div>
+			</gt>
+			
+			<gt name="_GET.auth" value="0">
+				<div class="unit Vhide">
+					<label>未通过原因：</label>
+					<select name="status" id="status" onchange="$('#anote').attr('class', (this.value - 2) == 0 ? '' : 'required')">
+						<option value="2">通过</option>
+						<option value="-1">不通过</option>
+					</select>
+				</div>
+				
+				<div class="unit Vhide">
+					<label>备注：</label>
+					<input name="anote" id="anote" size="50">
+				</div>
+				<div class="unit">
+					<label><font color="red">注意：</font></label>
+					<p><font color="red">
+					已通过审核无需填写备注信息。<br />
+					未通过审核备注信息会展示给开发者，请简洁清楚描述未通过原因。
+					</font></p>
+				</div>
+			</gt>
+			
+		</div>
+		<div class="formBar">
+			<ul>
+				<gt name="_GET.auth" value="0">
+					<li><div class="buttonActive"><div class="buttonContent"><button type="submit">提交</button></div></div></li>
+				</gt>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+	
+	</div>
+</div>

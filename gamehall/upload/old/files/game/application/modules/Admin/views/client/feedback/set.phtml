@@ -1,0 +1,48 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">    
+        <li class="current"><a href="<?php echo $listUrl;?>">意见反馈</a></li>
+        <li ><a href="<?php echo $gameFeedbackUrl;?>">游戏反馈</a></li>
+        <li ><a href="<?php echo $rlistUrl;?>">H5反馈</a></li>
+	</ul>
+</div>
+<form action="<?php echo $setPostUrl;?>" method="post" id="addFrom">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<div class="h_a">常见问题</div>
+	<div class="table_full">
+		<table width="100%">
+		    
+			<tr class="tr">
+				<th class="th">常见问题</th>
+				<td class="td">
+					 <textarea name="game_feedback_faq" class="textarea" style="height:500px; width:800px"><?php echo $configs['game_feedback_faq'];?></textarea>
+				</td>
+			</tr>		
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//游戏表单数据提交
+var editor;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor = K.create('textarea[name="game_feedback_faq"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Feedback/set');
+	});
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

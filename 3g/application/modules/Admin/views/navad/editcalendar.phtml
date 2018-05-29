@@ -1,0 +1,165 @@
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="edit_form" enctype="multipart/form-data">
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr>
+			<th>标题</th>
+			<td>
+				<input style="width:250px;" type="text" class="easyui-textbox" name="title" required="true" value="<?php echo $info['title']; ?>">
+			</td>
+		</tr>
+		<tr>
+		<tr class="tr">
+			<th class="th">合作商</th>
+			<td class="td">
+				<select name="parter_id" id="parter_id">
+					<?php foreach ($cooperators as $k => $v) { ?>
+						<option value="<?php echo $v['id'] ?>"  <?php if ($v['id'] == $urlInfo['pid']) echo 'selected'; ?>><?php echo $v['name']; ?></option>
+					<?php } ?>
+				</select></td>
+		</tr>
+		<tr class="tr" id="tr_business" style="display: <?php echo empty($blist) ? 'none' : '' ?>">
+			<th class="th">业务列表</th>
+			<td class="td">
+				<select id="bid" name="bid">
+					<option value="0">请选择</option>
+					<?php foreach ($blist as $k => $v) { ?>
+						<option value="<?php echo $v['id']; ?>"  <?php if ($v['id'] == $urlInfo['bid']) echo 'selected'; ?>><?php echo $v['name']; ?></option>
+					<?php } ?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr" id="tr_url" style="display:<?php echo empty($urlList) ? 'none' : '' ?>">
+			<th class="th">合作商链接</th>
+			<td class="td">
+				<select name="cp_id" id="cp_id">
+					<option value="0">请选择</option>
+					<?php foreach ($urlList as $k => $v) { ?>
+						<option value="<?php echo $v['id']; ?>"  <?php if ($v['id'] == $urlInfo['id']) echo 'selected'; ?>><?php echo "{$v['url_name']}:{$v['url']}"; ?></option>
+					<?php } ?>
+				</select></td>
+		</tr>
+
+		<tr class="tr" id="tr_link" style="display: <?php echo empty($info['cp_id']) ? '' : 'none' ?>">
+			<th class="th">链接地址</th>
+			<td class="td">
+				<input style="width:250px;" name="link" class="easyui-validatebox textbox" value="<?php echo $info['link']; ?>" data-options="prompt:'(请以http://开头填写。)',required:true,validType:'url'">
+			</td>
+		</tr>
+
+		<tr class="tr">
+			<th class="th">位置</th>
+			<td class="td">
+				<select name="pos">
+					<?php foreach ($posArr as $key => $value) { ?>
+						<option value="<?php echo $key; ?>" <?php if ($info['pos'] == $key) echo 'selected="selected"'; ?>><?php echo $value; ?></option>
+					<?php } ?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr" id="pic">
+			<th class="th">图片</th>
+			<td class="td">
+				<?php
+				if (!empty($info['img'])) {
+					$img = $attachPath . $info['img'];
+					if (stristr($info['img'], 'http')) {
+						$img = $info['img'];
+					}
+					echo sprintf('<img style="height:100px;" src="%s" /><br>', $img);
+				}
+				?>
+				<input type="file" id="img_upload" name="img"/>
+			</td>
+		</tr>
+
+		<tr>
+			<th>开始时间</th>
+			<td>
+				<input type="text" style="width: 150px" name="start_time" class="easyui-datetimebox" value="<?php echo date('Y-m-d H:i:s', !empty($info['start_time']) ? $info['start_time'] : time()); ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>结束时间</th>
+			<td>
+				<input type="text" style="width: 150px" name="end_time" class="easyui-datetimebox" value="<?php echo date('Y-m-d H:i:s', !empty($info['end_time']) ? $info['end_time'] : strtotime('+1 year')); ?>">
+			</td>
+		</tr>
+
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td">
+				<input type="text" name="sort" class="easyui-numberspinner" style="width:80px" value="<?php echo $info['sort']; ?>">
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				<?php
+				foreach (Common::$status as $k => $name):
+					$checked = $info['status'] == $k ? 'checked="checked"' : '';
+					?>
+					<input type="radio" name="status" class="input" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+				<?php endforeach; ?>
+			</td>
+		</tr>
+
+	</table>
+</form>
+
+<script type="text/javascript">
+	$("#parter_id").bind('change', function () {
+		var pid = $("#parter_id option:selected").val();
+		if (pid > 0) {
+			$.ajax({
+				'type': 'post',
+				'dataType': 'json',
+				'data': {'token': '<?php echo $token;?>', 'pid': pid},
+				'url': '/Admin/Parter/ajaxGetBussinessList',
+				'success': function (e) {
+					var html = "<option value='0'>请选择</option>";
+					$.each(e.data, function (i, m) {
+						html += "<option value='" + m.id + "'>" + m.name + "</option>";
+					});
+					$("#bid").html(html);
+					$("#tr_business").show();
+				}
+			});
+		} else {
+			$("#tr_business").hide();
+			$("#tr_url").hide();
+		}
+	});
+
+	$("#bid").bind('change', function () {
+		var bid = $("#bid option:selected").val();
+		if (bid > 0) {
+			$.ajax({
+				'type': 'post',
+				'dataType': 'json',
+				'data': {'token': '<?php echo $token;?>', 'bid': bid},
+				'url': '/Admin/Parter/ajaxGetUrlByBid',
+				'success': function (e) {
+					var html = "<option value='0'>请选择</option>";
+					$.each(e.data, function (i, m) {
+						html += "<option value='" + m.id + "'>" + m.url_name + " : " + m.url + "</option>";
+					});
+					//alert(html);
+					$("#cp_id").html(html);
+					$("#tr_url").show();
+				}
+			});
+		} else {
+			$("#tr_url").hide();
+		}
+	});
+
+	$("#cp_id").bind('change', function () {
+		var id = $("#cp_id option:selected").val();
+		if (id > 0) {
+			$("#tr_link").hide();
+		} else {
+			$("#tr_link").show();
+		}
+	})
+</script>

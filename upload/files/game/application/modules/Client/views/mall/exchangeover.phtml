@@ -1,0 +1,22 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+var isLoign = '<?php echo $isLogin;?>';
+</script>
+<body>
+	<div class="banner-container border-1px">
+	    <img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $attachPath. $good['img'];?>">
+		<span class="events-status status-over"><i class="icon-clock"></i>已结束</span>
+	</div>
+	<div class="player-container border-1px">
+		<h1>本次共有<em><?php echo $total;?></em>位玩家成功兑换了奖励，感谢各位的参与！</h1>
+		<ul class="player-list">
+			<?php foreach($logs as $key=>$value){?>
+				<li class="tline">
+					<?php echo ($key + 1) * $page ;?>.<?php echo $value['nickname'] ;?>
+				</li>
+			<?php }?>
+		</ul>
+	</div>
+</body>
+</html>

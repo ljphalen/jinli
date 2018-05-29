@@ -1,0 +1,113 @@
+#!/bin/bash
+
+PROJECT=
+SRC_APP_REPO=
+APP_SRC_PATH=
+PASSWORD=
+EXCLUDE_FILES=
+ASSETS_SYS_MODULE=sys
+ASSETS_APPS_MODULE=apps
+SRC_SYS_REPO=
+SRC_APP_REPO=
+SRC_ADMIN_REPO=
+ASSETS_SRC_PATH=
+APP_SRC_PATH=
+ADMIN_SRC_PATH=
+
+
+initialize() {
+    PROJECT=$1
+    if [ -n "$2" ]; then
+        ASSETS_SRC_REPOS=$2
+    else
+        #develop branche for default
+        ASSETS_SRC_REPOS=http://19.9.0.130/svn/motion/branches/UED20140505/repos
+    fi
+
+    SRC_SYS_REPO=$ASSETS_SRC_REPOS/$ASSETS_SYS_MODULE
+    SRC_APP_REPO=$ASSETS_SRC_REPOS/$ASSETS_APPS_MODULE/$PROJECT
+    SRC_ADMIN_REPO=$ASSETS_SRC_REPOS/$ASSETS_APPS_MODULE/admin
+
+    ASSETS_SRC_PATH=$PWD/files/UED
+    SYS_SRC_PATH=$ASSETS_SRC_PATH/repos/$ASSETS_SYS_MODULE
+    APP_SRC_PATH=$ASSETS_SRC_PATH/repos/$ASSETS_APPS_MODULE/$PROJECT
+	ADMIN_SRC_PATH=$ASSETS_SRC_PATH/repos/$ASSETS_APPS_MODULE/admin
+    
+    PASSWORD=$PWD/rsync.pw
+    EXCLUDE_FILES=$PWD/rsync.exclude
+
+    chmod 600 $PWD/rsync.pw
+}
+
+checkEnv() {
+    svn info $SRC_APP_REPO
+    error=$?
+
+    if [ $error -ne 0 ]; then
+        echo "Could not find svn path : "$SRC_APP_REPO"";
+        exit 1
+    fi
+
+    svn info $SRC_SYS_REPO
+    error=$?
+
+    if [ $error -ne 0 ]; then
+        echo "Could not find svn path : "$SRC_SYS_REPO"";
+        exit 1
+    fi
+
+
+    svn info $SRC_ADMIN_REPO
+    error=$?
+
+    if [ $error -ne 0 ]; then
+        echo "Could not find svn path : "$SRC_ADMIN_REPO"";
+        exit 1
+    fi
+
+    if [ -d "$ASSETS_SRC_PATH" ]; then
+        rm -rf $ASSETS_SRC_PATH
+    fi
+    mkdir -p $SYS_SRC_PATH
+    mkdir -p $APP_SRC_PATH
+}
+
+checkoutSrc() {
+    echo "start checkout sys files...."
+    sleep 1 
+    svn co $SRC_SYS_REPO $SYS_SRC_PATH --force
+
+    echo "start checkout apps files...."
+    sleep 1 
+    svn co $SRC_APP_REPO $APP_SRC_PATH --force
+
+    echo "start checkout admin files...."
+    sleep 1 
+    svn co $SRC_ADMIN_REPO $ADMIN_SRC_PATH --force
+}
+
+rsyncFiles() {
+    echo "start rsync files...."
+    sleep 1
+    rsync -avz --password-file=$PASSWORD --exclude-from=$EXCLUDE_FILES $ASSETS_SRC_PATH tgame@218.244.145.199::www
+    exit 1
+}
+
+#------------------------------------------------------------
+#------------------------- Main Entry ------------------------
+#------------------------------------------------------------
+if [ -n "$1" ]; then
+    initialize $1 $2
+    checkEnv
+    checkoutSrc
+    rsyncFiles
+else
+    echo "Usage: ./rsync <project_name> [<svn_repo_url>]"
+    echo "<project_name>:    项目名称, 如 game, gameweixin, 对应测试站的项目目录名"
+    echo "[<svn_repo_url>]:  可选参数, 指定前端资源svn根路径, 即sys和apps的上级目录"
+    echo "例如:"
+    echo "./rsyncAssets game"
+    echo "./rsyncAssets game http://19.9.0.130/svn/motion/trunk/UED/repos/"
+    exit 1
+fi
+

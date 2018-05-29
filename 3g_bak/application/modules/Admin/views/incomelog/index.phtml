@@ -1,0 +1,47 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $listUrl; ?>">上线日志列表</a></li>
+		<li><a href="<?php echo $editUrl; ?>">添加收入记录</a></li>
+	</ul>
+</div>
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">ID</td>
+			<td>日期</td>
+			<td>总收入</td>
+			<td>CPS</td>
+			<td>CPC</td>
+			<td>CPT</td>
+			<td>CPA</td>
+			<td>PUSH</td>
+			<td>字体</td>
+			<td>添加时间</td>
+			<td>添加人</td>
+			<td width="120">操作</td>
+		</tr>
+		<?php foreach ($list as $key => $value) { ?>
+			<tr class="ct">
+				<td><?php echo $value['id']; ?></td>
+				<td><?php echo date('Y-m-d H:i:s', $value['get_time']); ?></td>
+				<td><?php echo $value['income']; ?></td>
+				<td><?php echo $value['cps']; ?></td>
+				<td><?php echo $value['cpc']; ?></td>
+				<td><?php echo $value['cpt']; ?></td>
+				<td><?php echo $value['cpa'] ?></td>
+				<td><?php echo $value['push']; ?></td>
+				<td><?php echo $value['font']; ?></td>
+				<td><?php echo date('Y-m-d H:i:s', $value['add_time']); ?></td>
+				<td><?php echo $value['add_user']; ?></td>
+				<td>
+					<a href="<?php echo $editUrl; ?>?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+					<a href="javascript:" onclick="deleteOne('<?php echo $delUrl; ?>?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+				</td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?></div>

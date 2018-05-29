@@ -1,0 +1,92 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li class="current"><a href="<?php echo $listUrl;?>">退换货订单列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post" id="searchForm" >
+	<input name="token" type="hidden" value="<?php echo $token;?>"/>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">姓名</th>
+				<td class="td"><input class="input wb" type="text" name="truename" value="<?php echo $params['truename'];?>"></td>
+				<th class="th">电话</th>
+				<td class="td"><input class="input wb" type="text" name="phone" value="<?php echo $params['phone'];?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">订单号</th>
+				<td class="td"><input class="input wb" type="text" name="order_return_id" value="<?php echo $params['order_return_id'];?>"></td>
+				<th class="th">订单类型</th>
+				<td class="td">
+					<select name="type_id" class="select wb">
+						<option <?php if($params['type_id'] == 0) echo 'selected';?> value="0">全部</option>
+						<option <?php if($params['type_id'] == 1) echo 'selected';?> value="1">退货单</option>
+						<option <?php if($params['type_id'] == 2) echo 'selected';?> value="2">换货单</option>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">时间范围</th>
+				<td class="td">
+					<div>
+						<input class="input" type="text" style="width:143px;" id="start_time" name="start_time" value="<?php echo $params['start_time'];?>" /> 至 
+						<input class="input" type="text" style="width:143px;" id="end_time" name="end_time" value="<?php echo $params['end_time'];?>" />
+					</div>
+				</td>
+				<th class="th">订单状态</th>
+				<td class="td">
+					<select name='status' id='select wb'>
+						<option value="0">全部</option>
+						<?php foreach ($status as $key=>$val):?>
+						<option value="<?php echo $key?>" <?php echo $key==$params['status'] ? 'selected="selected"' : '';?> ><?php echo $val;?></option>
+						<?php endforeach;?>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="40">ID</td>
+			<td>退换货单号</td>
+			<td>订单类型</td>
+			<td>姓名</td>
+			<td>电话</td>
+			<td>创建时间</td>
+            <td>状态</td>
+			<td>操作</td>
+		</tr>
+		<?php if (!empty($list)): foreach ($list as $val):?>
+		<tr class="ct">
+			<td><?php echo $val['id'];?></td>
+			<td><?php echo $val['order_return_id'];?></td>
+			<td><?php echo $val['type_id'] == 1 ? '退货' : '换货';?></td>
+			<td><?php echo $val['truename'];?></td>
+			<td><?php echo $val['phone'];?></td>
+			<td><?php echo $val['create_time'] ? date('Y-m-d H:i:s',$val['create_time']) : '';?></td>
+			<td><?php echo $status[$val['status']];?></td>
+			<td>
+				<a href="<?php echo $detailUrl;?>/?id=<?php echo $val['id'];?>" class="mr10">查看明细</a>
+			</td>
+		</tr>
+		<?php endforeach; endif;?>
+	</table>
+</div>
+
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//导购表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+     submitForm = function() {
+  		$("#searchForm").submit();
+  	};
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

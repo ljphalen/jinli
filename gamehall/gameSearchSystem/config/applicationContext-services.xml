@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+        "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <!-- 搜索相关bean -->
+	<!--import resource="applicationContext.xml" /-->
+	
+	<bean id="springContextUtil" class="com.gionee.game.search.server.util.SpringContextUtil" singleton="true" />
+
+
+	<!-- 游戏-资源搜索 -->
+	<bean id="gameCache" class="com.gionee.game.search.server.cache.JCSSearchCacheImpl">
+		<constructor-arg type="java.lang.String" value="gameCache" />
+	</bean>
+	<bean id="gameSearchService" class="com.gionee.game.search.server.service.GameSearchService">
+		<property name="searchCache">
+			<ref bean="gameCache" />
+		</property>
+	</bean>
+	<bean id="gameSearchServiceImpl" class="com.gionee.game.search.server.service.impl.GameSearchServiceImpl">
+		<property name="indexJob">
+			<ref bean="gameIndexJob"/>
+		</property>
+	</bean>
+	
+	<!-- 游戏-建议词搜索 -->
+	<bean id="gameSuggestionCache" class="com.gionee.game.search.server.cache.JCSSearchCacheImpl">
+		<constructor-arg type="java.lang.String" value="gameSuggestionCache" />
+	</bean>
+	<bean id="gameSuggestionSearchService" class="com.gionee.game.search.server.service.GameSuggestionSearchService">
+		<property name="searchCache">
+			<ref bean="gameSuggestionCache" />
+		</property>
+	</bean>
+	<bean id="gameSuggestionSearchServiceImpl" class="com.gionee.game.search.server.service.impl.GameSuggestionSearchServiceImpl">
+		<property name="indexJob">
+			<ref bean="gameIndexJob"/>
+		</property>
+	</bean>	
+</beans>

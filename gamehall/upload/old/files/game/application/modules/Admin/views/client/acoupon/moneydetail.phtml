@@ -1,0 +1,87 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li ><a href="<?php echo $listUrl;?>">发放活动</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加活动</a></li>
+		<li ><a href="<?php echo $ticketDetailUrl;?>">A券明细列表</a></li>
+		<li class="current"><a href="<?php echo $moneyDetailUrl;?>">A币交易明细</a></li>
+		<li><a href="<?php echo $detailUrl;?>">A券说明</a></li>
+		<li><a href="<?php echo $sendTicketUrl;?>">A券手动赠送</a></li>
+	</ul>
+</div>
+<form action="<?php echo $moneyDetailUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="task_id" type="hidden" value="<?php echo $s['task_id'];?>" />
+<div class="table_full">
+      <table width="100%">
+	   <tr class="tr">
+			<th class="th">金立UUID</th>
+			<td class="td"><input type="text" class="input wc" name="uuid" value="<?php echo $s['uuid'];?>"></td>
+			<th class="th">账号</th>
+			<td class="td"><input type="text" class="input" name="uname" value="<?php echo $s['uname'];?>"></td>
+	 </tr>
+	 <tr class="tr">
+	  <th class="th">交易时间</th>
+ 	  <td class="td">
+	 	<div>
+	 	    <input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo $s['start_time'];?>" /> 至
+ 	    	<input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo $s['end_time'];?>" />
+ 	    </div>
+	  </td>
+	  
+	  <th class="th">交易方式</th>
+	  <td class="td">
+		<select name="event" id="event">
+		    <option value="0" <?php echo 0 == $s['event'] ? 'SELECTED':''?> >全部</option>
+			<option value="2" <?php echo 2 == $s['event'] ? 'SELECTED':''?> >充值</option>
+			<option value="1" <?php echo 1 == $s['event'] ? 'SELECTED':''?> >消费</option>
+		</select>
+	  </td>
+	 </tr>	 
+	 
+		
+	 </table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>金立UUID</td>
+			<td>账号</td>
+			<td>交易方式</td>
+			<td>金额</td>
+			<td>交易时间</td>
+			<td>支付流水号</td>
+			<td>支付游戏api_key</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['uuid'];?></td>
+			<td><?php echo $userInfo[$value['uuid']]['uname'];?></td>
+			<td><?php echo ($value['event'] == 1)?'消费':'充值';?></td>
+			<td><?php echo $value['money'];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['trade_time']);?></td>
+			<td><?php echo $value['trade_no'];?></td>
+			<td><?php echo $value['api_key'];?></td>
+			
+			
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+	 $('#end_time').datetimepicker();      
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

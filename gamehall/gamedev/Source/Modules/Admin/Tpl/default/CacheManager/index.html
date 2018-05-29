@@ -1,0 +1,25 @@
+<div class="page">
+	<div class="pageContent">
+		<table class="list" width="100%" layoutH="138">
+			<thead>
+			<tr>
+				<th>模型</th>
+				<th>缓存数量</th>
+				<th>列表</th>
+				<th>操作</th>
+			</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="list">
+			<php>$count = sizeof($vo);</php>
+				<tr target="select_id" rel="{$vo['id']}">
+					<td>{$key}</td>
+					<td>{$count}</td>
+					<td><empty name="count">没有记录<else/><a href="__URL__/lists/model/{$key}/navTabId/__MODULE__" target="navTab">查看列表</a></empty></td>
+					<td><empty name="count">没有记录<else/><a href="__URL__/flush/model/{$key}/navTabId/__MODULE__" target="ajaxTodo" title="您确定么，亲">清空列表</a></empty></td>
+				</tr>
+			</volist>
+			</tbody>
+		</table>
+	</div>
+</div>

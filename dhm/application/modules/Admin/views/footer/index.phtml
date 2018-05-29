@@ -1,0 +1,43 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">底部列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加底部</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="get">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<td class="td">名称</td>
+			<td class="td">
+				<input type="text" name="name" value="<?php echo $search['name']; ?>"/>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="200">名称</td>
+			<td>内容</td>
+			<td width="120">操作</td>
+		</tr>
+		<?php foreach($data as $key => $value) : ?>
+			<tr class="ct">
+
+				<td><?php echo $value['name'];?></td>
+				<td><?php echo html_entity_decode($value['footer']);?></td>
+				<td>
+					<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+					<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+				</td>
+			</tr>
+
+		<?php endforeach; ?>
+	</table>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

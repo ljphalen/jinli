@@ -1,0 +1,117 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li class="current"><a href="<?php echo $listUrl;?>">活动记录</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">	
+		 <tr>
+		   <th class="th">活动名称</th>
+			<td class="td">
+			<select name="activity_id" class="wa">
+			    <option  value="0">全部</option>
+	            <?php foreach ($activity_id as $key=>$val){ ?>
+	            <option <?php if($page_params['activity_id'] == $key) echo 'selected';?> value="<?php echo $key;?>"><?php echo $val;?></option>
+	            <?php }?>
+			</select>
+			</td>
+		</tr>
+		 <tr>
+		  <th class="th">发送状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			    <option  value="0">全部</option>
+				<option <?php if($page_params['status'] == 1) echo 'selected';?> value="1">未发放</option>
+				<option <?php if($page_params['status'] == 2) echo 'selected';?> value="2">已发放</option>
+			</select>
+			</td>
+		</tr>
+		 <tr>
+		  <th class="th">中奖状态</th>
+			<td class="td">
+			<select name="prize" class="wa">
+			    <option  value="0">全部</option>
+			    <option <?php if($page_params['prize'] == 1) echo 'selected';?> value="1">无</option>
+				<option <?php if($page_params['prize'] == 2) echo 'selected';?> value="2">一等奖</option>
+				<option <?php if($page_params['prize'] == 3) echo 'selected';?> value="3">二等奖</option>
+				<option <?php if($page_params['prize'] == 4) echo 'selected';?> value="4">三等奖</option>
+			</select>
+			</td>
+		</tr>
+		 <tr>
+			<th class="th">抽奖时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo $page_params['start_time'];?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo $page_params['end_time'];?>" /></div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="mb10">
+  <form action="<?php echo $exportUrl;?>" method="post" id="exportForm">
+        <input name="token" type="hidden" value="<?php echo $token;?>" />
+		<input type="hidden" name="status" value="<?php echo $page_params['status'];?>" />
+		<input type="hidden" name="start_time" value="<?php echo $page_params['start_time'];?>">
+		<input type="hidden" name="end_time"  value="<?php echo $page_params['end_time'];?>" />
+		<input type="hidden" name="prize"  value="<?php echo $page_params['prize'];?>" />
+	    <span class="btn"><span><button type="button" id="extportBtn">导出记录</button></span>	
+  </form>
+ 
+</div>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">未发放</button></span></span>
+    <span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">已发放</button></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="60" style="display: none;">排序</td>
+			<td>用户id</td>
+			<td>奖项</td>
+			<td>用户名称</td>
+			<td>用户联系方式</td>
+			<td>抽奖时间</td>
+			<td>状态</td>
+		</tr>
+<?php foreach($activityies as $key => $value) {?>
+		<tr class="ct">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td style="display: none;"><input type="text" class="input" style="width:30px" name="sort[<?php echo $value['id'];?>]" value="<?php echo $value['sort'];?>"></td>
+			<td><?php echo $value['user_id']?$value['user_id']:'——————';?></td>
+			<td><?php echo $value['prize']?$awards[$value['prize']]:'无';?></td>
+			<td><?php echo $value['name']?$value['name']:'——————';?></td>
+			<td><?php echo $value['tel']?$value['tel']:'——————';?></td>
+		    <td><?php echo $value['create_time'];?></td>	
+			<td><?php echo $value['status'] == 1 ? '<font color="red">已发放</font>' : '未发放';?></td>
+		
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Festival_Autumn/index');
+	});
+	 $("#extportBtn").click(function(){
+			$("#exportForm").submit();
+     });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

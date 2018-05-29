@@ -1,0 +1,39 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div id="page">
+		<article class="ac">
+			<div class="home-list item-list J_itemList clearfix">
+				<ul>
+<?php 
+$i = 1;
+foreach($list as $key=>$value){
+$pre = $next = 1;
+if ($i == 1) $pre = 0;
+if ($file_total == $i) $next = 0;
+if ($i%$perpage == 0 && ($file_total - ($page * $perpage) == 0) ) $next = 0;
+if($value['channel_id'] == 1) {
+	$out_id = $file_data[$value['channel_id']][$value['file_id']]['out_id'];
+	$icon = $file_data[$value['channel_id']][$value['file_id']]['icon'];
+	$link = sprintf("%s/detail?id=%d&out_id=%d&channel=%d&pre=%d&next=%d&update_time=%d&sid=%d&refer=%s&version=%d",$webroot, $value['id'], $out_id, $value['channel_id'], $pre, $next, $file_data[$value['channel_id']][$value['file_id']]['update_time'], $sid, 'subject', $kernel_list[$out_id]['res_version']);
+} else {
+	$icon = $attachPath.$file_data[$value['channel_id']][$value['file_id']]['icon'];
+	$link = sprintf("%s/detail?id=%d&channel=%d&pre=%d&next=%d&update_time=%d&sid=%d&refer=%s",$webroot,$value['lock_id'], $value['id'], $pre, $next, $file_data[$value['channel_id']][$value['file_id']]['update_time'], $sid, 'subject');
+}
+?>
+					<li>
+						<a data-inftheme="<?php echo $file_data[$value['channel_id']][$value['file_id']]['title'];?>,<?php echo $link;?>,<?php echo $webroot.$downloadUrl.'?id='.$value['lock_id'];?>">
+							<div class="pic"><img class="lazy" src="<?php echo $staticResPath;?>/pic/pic_nopreview.jpg?v=<?php echo $version;?>" data-lazyload="true" data-src="<?php echo $icon;?>" /></div>
+							<div class="desc">
+								<h3><?php echo $file_data[$value['channel_id']][$value['file_id']]['title'];?></h3>
+							</div>
+						</a>
+					</li>
+<?php 
+$i++;
+}
+?>
+				</ul>
+				<div class="ui-refresh-down"></div>
+			</div>
+		</article>
+	</div>
+<?php echo $this->render("layout/footer.phtml");?>

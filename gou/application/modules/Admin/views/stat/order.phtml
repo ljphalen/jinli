@@ -1,0 +1,187 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li class="current"><a href="<?php echo $orderUrl;?>">订单统计</a></li>
+    </ul>
+</div>
+<form action="<?php echo $orderUrl;?>" method="post" id="searchForm" >
+    <input name="token" type="hidden" value="<?php echo $token;?>"/>
+    <input name="type_id" type="hidden" value="<?php echo $search['type_id'];?>"/>
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <td class="td">开始</td>
+                <td class="td">
+                    <input class="input wa" type="text" id="start_time" name="start_time" value="<?php echo $search['start_time'];?>" />
+                </td>
+                <td class="td">结束</td>
+                <td class="td">
+                    <input class="input wa" type="text" id="end_time" name="end_time" value="<?php echo $search['end_time'];?>" />
+                </td>
+                <td class="td">生成csv</td>
+                <td class="td">
+                    <input type="checkbox" name="export">
+                </td>
+            </tr>
+            <tr class="tr">
+                <td class="td">版本选择</td>
+                <td class="td">
+                    <select name="version_id" class="select wa">
+                        <?php echo ${'version_'.$search['version_id']} = 'selected="selected"';?>
+                        <option <?php echo $version_0;?> value="0">全部</option>
+                        <option <?php echo $version_1;?> value="1">H5版</option>
+                        <option <?php echo $version_2;?> value="2">预装版</option>
+                        <option <?php echo $version_3;?> value="3">渠道版</option>
+                        <option <?php echo $version_4;?> value="4">穷购物</option>
+                        <option <?php echo $version_5;?> value="5">APP版</option>
+                        <option <?php echo $version_6;?> value="6">IOS版</option>
+                    </select>
+                </td>
+                <td class="td">模块选择</td>
+                <td class="td">
+                    <select name="module_id" class="select wa">
+                        <?php echo ${'module_'.$search['module_id']} = 'selected="selected"';?>
+                        <option <?php echo $module_0;?> value="0">全部</option>
+                        <?php foreach($modules as $key=>$value) {?>
+                        <option <?php echo ${'module_'.$value['id']};?> value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
+                        <?php }?>
+                    </select>
+                </td>
+                <td class="td">渠道选择</td>
+                <td class="td">
+                    <select name="channel_id" class="select wa">
+                        <?php echo ${'channel_'.$search['channel_id']} = 'selected="selected"';?>
+                        <option <?php echo $channel_0;?> value="0">全部</option>
+                        <?php foreach($channels as $key=>$value) {?>
+                            <option <?php echo ${'channel_'.$value['id']};?> value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
+                        <?php }?>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac">
+        <span class="btn">
+            <span>
+                <button id="search_btn" type="submit">搜 索</button>
+            </span>
+        </span>
+        <span class="btn">
+            <span>
+                <button id="sync_btn" type="button">同步订单</button>
+            </span>
+        </span>
+    </div>
+    <input name="token" type="hidden" value="<?php echo $token;?>" />
+    <div class="table_list">
+        <table width="100%">
+            <tr class="hd">
+                <td>时间</td>
+                <td>版本</td>
+                <td>模块</td>
+                <td>渠道</td>
+                <td>标题</td>
+                <td>内容PV</td>
+                <td>内容UV</td>
+                <td>IMEI</td>
+                <td>下单量</td>
+                <td>下单金额</td>
+                <td>确认订单量</td>
+                <td>确认金额</td>
+                <td>佣金</td>
+            </tr>
+            <?php
+            $pv_total = $imei_total = $uv_total = $order_total = $price_total = $price_slit = $sure_order_total =0;
+            foreach($result as $key=>$value) {
+                $pv_total +=$value['pv'];
+                $imei_total +=$value['imei'];
+                $uv_total +=$value['uv'];
+
+                $order_total +=$value['order_total'];
+                $price_total +=$value['price_total'];
+                $price_slit +=$value['price_slit'];
+                $sure_order_total +=$value['sure_order_total'];
+                $sure_price_total +=$value['sure_price_total'];
+
+                if ($value['dateline']) {
+            ?>
+            <tr class="ct">
+                <td><?php echo $value['dateline'];?></td>
+                <td><?php echo $versions[$value['version_id']];?></td>
+                <td><?php echo $value['module_id'] ? $modules[$value['module_id']]['name'] : "-";?></td>
+                <td><?php echo $value['channel_id'] ? $channels[$value['channel_id']]['name'] : "-";?></td>
+                <td><?php echo $value['item_id'] ? $value['item_id'].'-'.$value['name'] : "-";?></td>
+                <td><?php echo $value['pv'];?></td>
+                <td><?php echo $value['uv'];?></td>
+                <td><?php echo $value['imei'];?></td>
+                <td><?php echo $value['order_total'] ? $value['order_total'] : 0;?></td>
+                <td><?php echo $value['price_total'] ? $value['price_total'] : 0;?></td>
+                <td><?php echo $value['sure_order_total'] ? $value['sure_order_total']: 0;?></td>
+                <td><?php echo $value['sure_price_total'] ? $value['sure_price_total']: 0;?></td>
+                <td><?php echo $value['price_slit'] ? $value['price_slit']: 0;?></td>
+            </tr>
+
+            <?php }}?>
+            <tr class="hd">
+                <td>总计(<a href="<?php echo $exportUrl;?>">下载</a>)</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td><?php echo $pv_total;?></td>
+                <td><?php echo $uv_total;?></td>
+                <td><?php echo $imei_total;?></td>
+                <td><?php echo $order_total;?></td>
+                <td><?php echo $price_total;?></td>
+                <td><?php echo $sure_order_total;?></td>
+                <td><?php echo $sure_price_total;?></td>
+                <td><?php echo $price_slit;?></td>
+            </tr>
+        </table>
+    </div>
+</form>
+<div class="mr10 cc">
+    <?php echo $pager;?>
+</div>
+
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+    //导购表单数据提交
+    $(document).ready(function(){
+        $("#start_time").datepicker({
+            dateFormat : 'yy-mm-dd'
+        });
+        $("#end_time").datepicker({
+            dateFormat : 'yy-mm-dd'
+        });
+
+        $("#sync_btn").click(function(){
+            ajaxLoader.show();
+            $.ajax({
+                type: "get",
+                url: "<?php echo $syncOrderUrl;?>",
+                dataType: "json",
+                success: function (ret) {
+                    ajaxRedirect(ret, "<?php echo $orderUrl;?>");
+                }
+            });
+            return false;
+        });
+
+        $("#search_btn").click(function(){
+            var start_time = $("#start_time").val();
+            var end_time = $("#end_time").val();
+            var sd = new Date(start_time);
+            var ed = new Date(end_time);
+            if (sd.getMonth() !== ed.getMonth()) {
+                showError('提示', '开始,结束时间请选择同一个月份.');
+                return false;
+            }
+            if (ed < sd) {
+                showError('提示', '结束时间不能小于开始时间.');
+                return false;
+            }
+        });
+    })
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

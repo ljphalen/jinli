@@ -1,0 +1,48 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $qualificationUrl; ?>">资质管理</a></li>
+			<li><a href="<?php echo $editQualificationUrl; ?>">添加资质信息</a></li>
+		</ul>
+	</div>
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<td class="td">ID</td>
+				<td class="td">合作商名</td>
+				<td class="td">公司名称</td>
+				<td class="td">开户银行</td>
+				<td class="td">银行账号</td>
+				<td class="td">公司电话</td>
+				<td class="td">公司地址</td>
+				<td class="td">发票类型</td>
+				<td class="td">收件人姓名</td>
+				<td class="td">收件人电话</td>
+				<td class="td">收件人地址</td>
+				<td>操作</td>
+			</tr>
+			<?php foreach ($data as $v) { ?>
+				<tr class="ct">
+					<td class="td"><?=$v['id'];?></td>
+					<td class="td"><?=$v['parter_name'];?></td>
+					<td class="td"><?php echo $v['company_name']; ?></td>
+					<td class="td"><?php echo $v['bank_name']; ?></td>
+					<td class="td"><?php echo $v['bank_number']; ?></td>
+					<td class="td"><?php echo $v['company_tel']; ?></td>
+					<td class="td"><?php echo $v['company_address']; ?></td>
+					<td class="td"><?php echo $v['bill_type']; ?></td>
+					<td class="td"><?php echo $v['receiver_name']; ?></td>
+					<td class="td"><?php echo $v['receiver_tel']; ?></td>
+					<td class="td"><?php echo $v['receiver_address']; ?></td>
+					<td class="td"><a href="/Admin/Parter/editQualification?id=<?php echo $v['id']; ?>">编辑</a>|
+						<a href="javascript:void(0);" onclick="deleteOne('<?php echo $delQualifitionUrl; ?>/?id=<?php echo $v['id']; ?>', '', event);">删除</a>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,49 @@
+<?php echo $this->render("layout/header.phtml");?>
+<?php foreach ($list as $key=>$value) {?>
+<div class="h_a"><?php echo $value['name'] .'  '.$key;?></div>
+<div class="table_full">
+		<table width="100%">
+			<?php foreach ($value['item'] as $k=>$v) {?>
+			<tr class="tr">
+				<th class="th" style="width: 30%"><?php echo $key.'_'.$k.' '. $v;?></th>
+				<td class="td">
+					<input type="text" id="<?php echo sprintf('%s_%s_kwd',$key,$k);?>" class="input" size="70" value="<?php echo $allInfo[sprintf('%s_%s_kwd',$key,$k)];?>" />
+					<input type="text" id="<?php echo sprintf('%s_%s_iid',$key,$k);?>" class="input" size="70" value="<?php echo $allInfo[sprintf('%s_%s_iid',$key,$k)];?>" placeholder="填写pid" />
+					<input type="button" value="更新" class="update" data-id="<?php echo sprintf('%s_%s',$key,$k);?>"/>
+				</td>
+			</tr>
+			<?php }?>
+		</table>
+	</div>
+<?php }?>
+	
+<?php echo $this->render("layout/footer.phtml");?>
+<script type="text/javascript">
+    $(function () {
+       $('input.update').click(function(e){
+           var id = $(this).data('id');
+           var keywords = $('#' + id+'_kwd').val();
+           var num_iids = $('#' + id+'_iid').val();
+           $.ajax({
+               type:'post',
+               url : baseurl + '<?php echo $editPostUrl;?>',
+               data:'ids=' + id + '&keywords=' + keywords +'&num_iid=' + num_iids + '&token=<?php echo $token;?>',
+               success : function(msg){
+            	   msg = ('object' == typeof(msg)) ? msg : eval('(' + msg + ')');
+            	   $("#msg_content").html(msg.msg);
+            	   $("#msg_box_box").dialog({
+           				title : '',
+           				draggable : false,
+           				modal : false,
+           				resizable : false,
+           				open: function() {
+               				setTimeout(function(event, ui){
+               					$("#msg_box_box").dialog('close');
+                   			}, 2000)
+           				}
+       			  });
+               }           
+           });
+       });
+    });
+</script>

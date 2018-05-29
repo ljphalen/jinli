@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>应用下载-<?php echo $info['name']; ?></title>
+<link rel="stylesheet" href="<?php echo $staticSysPath;?>/reset/phonecore.css" />
+<link id="linkMain" rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/assets/css/fanfan.source.css?v=<?php echo $assetVer;?>" />
+<style type="text/css">
+
+
+</style>
+<script src="<?php echo $staticSysPath;?>/lib/zepto/zepto.js"></script>
+<script src="<?php echo $staticSysPath;?>/icat/1.1.6/icat.js" data-main="<?php echo $staticResPath;?>/assets/js/fanfan.source.js"></script>
+</head>
+
+<body>
+<div id="page">
+	<!-- <header id="header">
+		<div class="nav">
+			<span class="back"><a href="http://www.baidu.com/">&lt;</a></span>
+			<span>资源详情</span>
+			<span></span>
+		</div>
+	</header> -->
+
+	<section class="download">
+		<div class="inform">
+			<div class="pic"><img src="<?php echo $attachPath . $info['icon'];?>" alt="" /></div>
+			<div class="desc">
+				<p class="note-title">温馨提示：<p>
+				<p class="note-info"><?php echo $info['tip'];?></p>
+			</div>
+			<?php
+			$param = array('app_ver'=>$ver, 'model'=>$model);
+			$downUrl = Widget_Service_Cp::buildDownUrl($info['cp_id'], $param);
+			?>
+			<div class="extra"><a href="<?php echo $downUrl;?>" class="btn">立即下载</a></div>
+		</div>
+		<div class="app-info">
+			<p><span>名称：</span><?php echo $info['name'];?></p>
+			<p><span>公司：</span><?php echo $info['company'];?></p>
+			<p><span>大小：</span><?php echo $info['size'];?></p>
+		</div>
+
+		<div class="intro">
+			<h3>应用简介：</h3>
+			<div class="desc">
+				<div id="J_box_collapse">
+					<?php echo !empty($info['desc_s'])?$info['desc_s']:mb_substr($info['desc'],0,60, 'utf-8').(mb_strlen($info['desc']) > 60 ? '……' : '');?>
+				</div>
+				<div id="J_box_expand">
+					<?php echo $info['desc'];?>
+				</div>
+				<div id="J_load_more" class="open-more"><span>展开<i>&gt;&gt;</i></span></div>
+			</div>
+		</div>
+
+		<div class="pic-show">
+			<div class="wrap clearfix border1px-t">
+				<ul class="list">
+					<?php
+					foreach($info['pic'] as $picUrl):
+					?>
+					<li><img src="<?php echo $attachPath.$picUrl;?>" alt="" /></li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+		</div>
+	</section>
+</div>
+</body>
+</html>

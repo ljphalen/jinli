@@ -1,0 +1,156 @@
+<?php echo $this->render("layout/header.phtml");?>
+<style>
+	.ct_01 td{
+		padding: 7px 0px 9px;
+		color: #666;
+	}
+	.text{
+		border:1px solid gray ;
+		background: #fff;
+		min-height:40px; 
+		margin-bottom: 4px;
+	}
+	.icon_user{
+		background-position: -144px -96px;
+		width: 16px;height: 16px;
+	}
+	
+</style>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $listUrl;?>">免流量活动</a></li>
+		<li><a href="<?php echo $ulistUrl;?>">用户统计</a></li>
+        <li><a href="<?php echo $flistUrl;?>">流量统计</a></li>
+        <li class="current"><a href="<?php echo $blistUrl;?>">黑名单</a></li>
+	</ul>
+</div>
+<form action="<?php echo $blistUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	    <tr>
+			<th class="th">类型</th>
+			<td class="td">
+			<select name="utype" class="select wa">
+			      <option  value="0">全部</option>
+				  <?php foreach($btype as $key=>$value) {?>
+    			  <option value="<?php echo $key;?>" <?php if($s['utype'] == $key) echo 'selected="selected"';?>><?php echo $value;?></option>
+    			<?php }?>
+			</select>
+			</td>
+		    <th class="th">黑名单状态</th>
+			<td class="td">
+			<select name="status" class="select wa">
+			    <option  value="0">全部</option>
+				<option <?php if($s['status'] == 2) echo 'selected';?> value="2">已添加</option>
+				<option <?php if($s['status'] == 1) echo 'selected';?> value="1">未添加</option>
+			</select>
+			</td>
+			<th class="th">详细</th>
+			<td class="td"><input type="text" class="input" name="name" value="<?php echo $s['name'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">添加时间</th>
+			<td class="td" colspan="2"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo $s['start_time'];?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo $s['end_time'];?>" /></div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+    <span class="btn2"><span><button onclick="$('#action').val('cancel');" type="submit">移除黑名单</button></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="btn2"><span><button onclick="$('#action').val('addbk');" type="submit">加入黑名单</button></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="btn2"><span><button><a href="<?php echo $baddUrl;?>" class="mr10" style="color:white;">添加新用户</a></button></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;共<?php echo $total;?>条结果</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="20"><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="50">类型</td>
+			<td width="180">详细</td>
+			<td width="90">活动ID</td>
+			<td width="90">累计次数</td>
+			<td width="150">添加原因</td>
+			<td width="50">黑名单状态</td>
+			<td width="90">操作</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct_01">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox" style="margin-left:0px;"></td>
+			<td><?php echo $btype[$value['utype']];?></td>
+			<?php if($value['utype'] == 1) {?>
+			<td><?php echo  $value['imsi'];?></td>
+			<?php } else if($value['utype'] == 2){?>
+			<td><?php echo  $value['uname'];?></td>
+			<?php } else {?>
+			<td><?php echo  $value['imei'];?></td>
+			<?php } ?>
+			<td><?php echo  $value['activity_id'];?></td>
+			<td><?php echo $value['num'];?></td>
+			<td><?php echo $value['content'];?></td>
+			<td><?php echo $value['status'] ? '已添加' : '未添加';?></td>		
+			<td>
+			<a href="javascript:" onclick="check(<?php echo $value['status'];?>,<?php echo $value['id'];?>)" class="mr10"><?php echo $value['status'] ? '移除黑名单' : '加入黑名单';?></a>
+			</td>
+		</tr>
+		<tr class="ct">
+			<td colspan="6">
+			<span class="ui-icon ui-icon-person" style="display:inline-block;margin-bottom:-4px"></span>
+				<?php 
+				   if($s['utype'] == 1) {
+				   	  $uname = $value['imsi'];
+				   } else {
+				   	  $uname = "IMEI:".$value['imei'];
+				   }
+				?>
+				<?php if($value['name'] == '系统'){?>
+				<?php echo $value['nickname'];?>/<?php echo $uname;?>/<?php echo $value['model'];?>/<?php echo $value['client_pkg'] == "gn.com.android.gamehall" ? "游戏大厅" : "艾米游戏";?>/<?php echo $value['version'];?>/<?php echo $value['sys_version'];?>
+				<?php } else {?>
+				<?php echo "管理员 ".$value['name']." 添加";?>
+				<?php }?>
+				</td>
+			<td colspan="2" align="center"><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+			</tr>
+		</tr>
+		<tr></tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+function check(status,id){
+	$.ajax({
+		url : baseurl + "/Admin/Freedl_Hd/bcheck",
+		type : 'POST',
+		dataType : 'json',
+		data : 'token='+'<?php echo $token;?>'+'&id='+id+'&status='+status,
+		success : function(ret) {
+			 if (ret.success) {
+				showMsg('', ret.msg);
+			} else {
+				showError('', ret.msg);
+			}
+			setTimeout(function() {
+					location.href = baseurl + "/Admin/Freedl_Hd/bindex";
+			}, 500);
+		}
+	});
+}
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+    $('#end_time').datetimepicker();
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Freedl_Hd/bindex');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

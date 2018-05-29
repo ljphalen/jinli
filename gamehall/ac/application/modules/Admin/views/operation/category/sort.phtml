@@ -1,0 +1,70 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">分类列表</a></li>
+    <li><a href="<?php echo $editUrl;?>?id=<?php echo $category_id;?>&title=<?php echo $title;?>">应用管理</a></li>
+    <li class="current"><a href="javascript:;">应用排序</a></li>
+	</ul>
+</div>
+<form id="sortForm" action="<?php echo $sortPostUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="id"  type="hidden" value="<?php echo $category_id;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">分类名称</th>
+			<td class="td"><?php echo $title;?></td>
+		</tr>
+	</table>
+</div>
+<div class="h_a">
+	<span>选择应用</span>
+</div>
+<?php if($idx_data) {?>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+		    <td>排序</td>
+		    <td>ID</td>
+		    <td>图标</td>
+			<td>名称</td>
+			<td>应用归属</td>
+			<td>包名</td>
+			<td>版本</td>
+			<td>大小</td>
+			<td>状态</td>
+		</tr>
+        <?php foreach($idx_data as $key => $value) {?>
+		 <tr class="ct">
+		    <td>
+		     <input class="checkbox"  name="ids[]" value="<?php echo $value['id'];?>" type="checkbox">
+		    </td>
+		    <td>
+		     <input type="text" class="input" style="width:30px" name="sort[<?php echo $value['id']; ?>]" value="<?php echo isset($value['sort']) ? $value['sort'] : 0 ;?>">
+		    </td>
+		    <td><?php echo $apps[$value['app_id']]['id']; ?></td>
+			<td><img src="<?php echo $attachPath,$apps[$value['app_id']]['icon'];?>" style="width:7.2em;height:7.2em"/></td>
+			<td><?php echo $apps[$value['app_id']]['name']; ?></td>
+			<td><?php echo $belong[$apps[$value['app_id']]['belong']]; ?></td>
+			<td><?php echo $apps[$value['app_id']]['package'];?></td>
+			<td><?php echo $apps[$value['app_id']]['version'];?></td>
+			<td><?php echo $apps[$value['app_id']]['size'];?>M</td>
+			<td><?php echo $apps[$value['app_id']]['status'] ? '已上线' : '未上线';?></td>
+		</tr>
+     <?php } ?>
+	</table>
+</div>
+   <div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">保存</button></span></span></div>
+<?php }else{?>
+      <div class="mb10 tac"><span>请先添加分类中的数据</span></div>
+<?php }?>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('sortForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Operation_Category/sort/?id=<?php echo $category_id;?>&title=<?php echo $title;?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

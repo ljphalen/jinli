@@ -1,0 +1,47 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $blacklistUrl; ?>">名单列表</a></li>
+			<li class="current"><a href="<?php echo $blackeditUrl; ?>">添加数据</a></li>
+		</ul>
+	</div>
+	<div class="table_list">
+		<form method="post" action="<?php echo $blackPostUrl; ?>" id="addForm">
+			<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+			<div class="table_full">
+				<table style="width: 100%">
+					<tr class="tr">
+						<th class="th">号码</th>
+						<td class="td">
+							<input name="account" id="account" class="input" value="<?php echo $data['account']; ?>">
+						</td>
+					</tr>
+					<tr class="tr">
+						<th class="th">账号类型</th>
+						<td class="td">
+							<select name="account_type">
+								<?php foreach ($accountTypes as $k => $v) { ?>
+									<option value="<?php echo $k; ?>" <?php if ($k == $data['account_type']) echo 'selected'; ?>><?php echo $v; ?></option>
+								<?php } ?>
+							</select>
+						</td>
+					</tr>
+				</table>
+				<div class="mb10 tac">
+					<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+				</div>
+				<input type="hidden" value="<?php echo $data['id']; ?>" name="id">
+			</div>
+		</form>
+	</div>
+
+	<script type="text/javascript">
+		//用户表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Uaccount/blacklist');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

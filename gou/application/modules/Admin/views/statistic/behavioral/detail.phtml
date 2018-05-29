@@ -1,0 +1,57 @@
+<?php echo $this->render("layout/header.phtml");?>
+    <div class="nav">
+        <ul class="cc">
+            <li><a href="<?php echo $indexUrl;?>">行为列表</a></li>
+            <li class="current"><a href="javascript:;">行为详情</a></li>
+        </ul>
+    </div>
+    <div class="h_a">详细</div>
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">用户ID</th>
+                <td class="td"><?php echo $log['uid']; ?></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">用户名</th>
+                <td class="td"><?php echo $log['username']; ?></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">用户组</th>
+                <td class="td"><?php echo isset($groups[$log['groupid']]) ? $groups[$log['groupid']]['name']: '-'; ?></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">URL</th>
+                <td class="td"><?php echo $log['url']; ?></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">Action</th>
+                <td class="td"><?php echo $log['type']; ?></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">操作时间</th>
+                <td class="td"><?php echo date('Y-m-d H:i:s', $log['time']); ?></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">数据更新</th>
+                <td class="td">
+                    <table width="100%">
+                        <tr class="tr">
+                            <th class="th"><strong style="color: #266aae;">字段</strong></th>
+                            <td class="td"><strong style="color: #266aae;">值</strong></td>
+                        </tr>
+                    <?php
+                        foreach($log['data'] as $key => $val){
+                            if(is_array($val)) $val = json_encode($val);
+                            printf('<tr class="tr"><th class="th">%s</th><td class="td">%s</td></tr>', $key, $val);
+                        }
+                    ?>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac">
+        <span class="btn"><span><button onclick="history.go(-1);" type="button">返回</button></span></span>
+    </div>
+<?php echo $this->render("layout/footer.phtml");?>

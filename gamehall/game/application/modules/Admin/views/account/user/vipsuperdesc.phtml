@@ -1,0 +1,47 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $listUrl;?>">会员列表</a></li>
+        <li><a href="<?php echo $giftUrl;?>">生日礼物</a></li>
+        <li class="current"><a href="<?php echo $vipSuperDescUrl;?>">尊贵身份说明</a></li>
+        <li><a href="<?php echo $vipActivityDescUrl;?>">活动返利说明</a></li>
+        <li><a href="<?php echo $vipDescUrl;?>">会员说明</a></li>
+	</ul>
+</div>
+<form method="post" action="<?php echo $vipSuperDescUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<td class="td">
+			     <textarea style="width: 60%; height: 400px" class="textarea" name="info"><?php echo $info;?></textarea>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var editor;
+	KindEditor.ready(function(K) {
+		K.token = '<?php echo $token;?>';
+	    editor = K.create('textarea[name="info"]', {
+	        resizeType : 1,
+	        allowPreviewEmoticons : false,
+	        allowImageUpload : true,
+	        uploadJson : '<?php echo $uploadImgUrl;?>',
+	        items : EDITOR_ITEMS
+	    });
+	});
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $vipSuperDescUrl;?>');
+	},function(){
+		editor.sync();
+	});
+	
+})
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

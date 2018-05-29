@@ -1,0 +1,265 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">商家列表</a></li>
+	</ul>
+</div>
+<div class="h_a">添加商家</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+    <input name="token" value="<?php echo $token;?>" type="hidden" />
+    <input name="goods_id" value="<?php echo $row['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	 	<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input wa" name="sort" value="0"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">商家</th>
+			<td class="td">
+				<select name="mall_id" class="wa" id="mall_combo">
+				<?php foreach ($malls as $k=>$v) {?>
+					<option value="<?php echo $v['id'];?>" data-search_url="<?php echo $v['search_url']; ?>" data-lang_code="<?php echo $country[$v['country_id']]['lang_code']; ?>"><?php echo $v['name'];?></option>
+				<?php }?>
+				</select>
+			</td>
+		</tr>
+        <tr class="tr">
+			<th class="th">关键词</th>
+			<td class="td">
+                <input class="input wc" type="text" name="keyword" value="<?php echo $row['title']; ?>"/>
+                <a href="javascript:;" data-name="jd" class="btn btn_success get_info_btn" id="kwd_trans_btn">翻译</a>
+			</td>
+		</tr>
+        <tr class="tr">
+			<th class="th">翻译</th>
+			<td class="td">
+                <input class="input wc" type="text" name="trans_keyword" value=""/>
+                <a href="javascript:;" data-name="jd" class="btn btn_success get_info_btn" id="search_dhm_mall_btn">搜索</a>
+			</td>
+		</tr>
+        <tr class="tr">
+            <th class="th">最低价</th>
+            <td class="td"><input type="text" class="input" name="min_price" value=""></td>
+        </tr>
+        <tr class="tr">
+            <th class="th">最高价</th>
+            <td class="td"><input type="text" class="input" name="max_price" value=""></td>
+        </tr>
+		 <tr class="tr">
+			<th class="th">链接</th>
+			<td class="td"><input type="text" class="input wc" name="url" value=""></td>
+        </tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/common/gbk.js?v=<?= $version ?>"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+        ajaxRedirect(ret, '<?php echo Util_Http::getServer("HTTP_REFERER"); ?>');
+	});
+})
+</script>
+
+
+<script>
+    $(function () {
+        $("#kwd_trans_btn").click(function(){
+            translate();
+        });
+        var translate = function(){
+            var lang_code = getLangCode();
+            var keyword = $("input[name=keyword]").val();
+            if (keyword === '') {
+                alert("关键词不能为空，请到商家列表进行编辑");
+                return false;
+            }
+            trans(keyword,lang_code);
+        };
+
+        var trans = function (keyword, lang_code) {
+            $.ajax({
+                url: "<?php echo $transUrl; ?>",
+                type: "post",
+                data: {"kwd": keyword, "lang_code": lang_code, token: "<?php echo $token; ?>"},
+                dataType: "JSON",
+                success: function (ret) {
+                    var trans_keyword = ret.data
+                    if (trans_keyword != "") {
+                        $("input[name=trans_keyword]").val(trans_keyword);
+                    }
+                }
+            });
+        };
+
+        var getLangCode = function () {
+            lang_code = $("select[name=mall_id]").find("option:selected").data('lang_code');
+            return lang_code;
+        };
+
+        $("select[name=mall_id]").change(function(){
+            translate();
+        });
+        $('#mall_combo').combobox();
+
+        $("#search_dhm_mall_btn").click(function () {
+            var dom = $("select[name='mall_id']").find("option:selected");
+            var name = $(dom).text();
+            var url = $(dom).data('search_url');
+
+            var keyword = $("input[name=trans_keyword]").val();
+            if (keyword === '') {
+                var keyword = $("input[name=keyword]").val();
+            }
+            if (keyword === '') {
+                alert("关键词不能为空，请到商家列表进行编辑");
+                return false;
+            }
+            if(name.indexOf('天猫')>-1){
+                keyword = $URL.encode(keyword);
+            }
+            console.log(keyword);
+            if (url == "") {
+                alert("搜索链接不能为空，请到商家列表进行编辑");
+                return false;
+            }
+            url = url.replace("%s", keyword);
+            window.open(url)
+        });
+    });
+</script>
+<style>
+    .ui-button {
+        margin-left: -1px;
+    }
+
+    .ui-button {
+        top: 1.2px;
+    }
+
+    .ui-button-icon-only .ui-button-text {
+        padding: 0.36em;
+    }
+
+    .ui-autocomplete-input {
+        margin: 0;
+        padding: 0.48em 0 0.47em 0.45em;
+        width: 275px;
+        left: 0px
+    }
+</style>
+<script>
+    (function ($) {
+        $.widget("ui.combobox", {
+            _create: function () {
+                var self = this,
+                    select = this.element.hide(),
+                    selected = select.children(":selected"),
+                    value = selected.val() ? selected.text() : "";
+                var input = this.input = $("<input>")
+                    .insertAfter(select)
+                    .val(value)
+                    .autocomplete({
+                        delay: 0,
+                        minLength: 0,
+                        source: function (request, response) {
+                            var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
+                            response(select.children("option").map(function () {
+                                var text = $(this).text();
+                                if (this.value && ( !request.term || matcher.test(text) ))
+                                    return {
+                                        label: text.replace(
+                                            new RegExp(
+                                                "(?![^&;]+;)(?!<[^<>]*)(" +
+                                                $.ui.autocomplete.escapeRegex(request.term) +
+                                                ")(?![^<>]*>)(?![^&;]+;)", "gi"
+                                            ), "<strong>$1</strong>"),
+                                        value: text,
+                                        option: this
+                                    };
+                            }));
+                        },
+//                        select: function (event, ui) {
+//                            ui.item.option.selected = true;
+//                            self._trigger("selected", event, {
+//                                item: ui.item.option
+//                            });
+//                        },
+                        select: function( event, ui ) {
+                            ui.item.option.selected = true;
+                            self._trigger( "selected", event, {
+                                item: ui.item.option
+                            });
+                            select.trigger("change");
+                        },
+                        change: function (event, ui) {
+                            if (!ui.item) {
+                                var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex($(this).val()) + "$", "i"),
+                                    valid = false;
+                                select.children("option").each(function () {
+                                    if ($(this).text().match(matcher)) {
+                                        this.selected = valid = true;
+                                        return false;
+                                    }
+                                });
+                                if (!valid) {
+                                    // remove invalid value, as it didn't match anything
+                                    $(this).val("");
+                                    select.val("");
+                                    input.data("autocomplete").term = "";
+                                    return false;
+                                }
+                            }
+                        }
+                    })
+                    .addClass("ui-widget ui-widget-content ui-corner-left");
+
+                input.data("autocomplete")._renderItem = function (ul, item) {
+                    return $("<li></li>")
+                        .data("item.autocomplete", item)
+                        .append("<a>" + item.label + "</a>")
+                        .appendTo(ul);
+                };
+
+                this.button = $("<button type='button'>&nbsp;</button>")
+                    .attr("tabIndex", -1)
+                    .attr("title", "Show All Items")
+                    .insertAfter(input)
+                    .button({
+                        icons: {
+                            primary: "ui-icon-triangle-1-s"
+                        },
+                        text: false
+                    })
+                    .removeClass("ui-corner-all")
+                    .addClass("ui-corner-right ui-button-icon")
+                    .click(function () {
+                        // close if already visible
+                        if (input.autocomplete("widget").is(":visible")) {
+                            input.autocomplete("close");
+                            return;
+                        }
+
+                        // work around a bug (likely same cause as #5265)
+                        $(this).blur();
+
+                        // pass empty string as value to search for, displaying all results
+                        input.autocomplete("search", "");
+                        input.focus();
+                    });
+            },
+
+            destroy: function () {
+                this.input.remove();
+                this.button.remove();
+                this.element.show();
+                $.Widget.prototype.destroy.call(this);
+            }
+        });
+    })(jQuery);
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

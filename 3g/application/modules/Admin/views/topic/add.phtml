@@ -1,0 +1,531 @@
+<?php echo $this->render("layout/header2.phtml"); ?>
+	<section class="main-content">
+		<form method="post" action="<?php echo $editPostUrl; ?>" id="addFrom" enctype="multipart/form-data">
+			<input name="token" id="token" value="<?php echo $token; ?>" type="hidden"/>
+			<header class="header navbar bg-default">
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="<?php echo $listUrl; ?>">专题列表</a>
+					</li>
+					<li class="active">
+						<a href="<?php echo $addUrl; ?>">添加专题</a>
+					</li>
+				</ul>
+				<div class="btn-group pull-right mg-r-sm">
+					<input type="hidden" name="update" value="1">
+					<button type="submit" name="sub" class="btn btn-sm btn-primary navbar-btn">
+						提交
+					</button>
+				</div>
+			</header>
+			<div class="content-wrap">
+				<div class="row">
+					<div class="col-lg-12">
+						<!-- table content start -->
+						<section>
+							<ul id="myTab2" class="nav navbar-tabs">
+								<li class="pull-right">
+									<a href="#module" data-toggle="tab">动态模板</a>
+								</li>
+								<li class="pull-right active">
+									<a href="#base" data-toggle="tab">基本信息</a>
+								</li>
+							</ul>
+							<section class="panel">
+								<div class="panel-body">
+									<div id="myTabContent2" class="tab-content">
+										<div class="tab-pane active" id="base">
+											<!-- base info -->
+											<table class="table table-bordered table-striped no-margin">
+												<tr>
+													<td>专题期号名称</td>
+													<td>
+														<input type="text" class="form-control" name="issuename" value="">
+													</td>
+												</tr>
+												<tr>
+													<td>专题标题</td>
+													<td>
+														<input type="text" class="form-control" name="title" value="">
+													</td>
+												</tr>
+										
+												<tr>
+													<td>专题类别</td>
+													<td>
+														<select name="type">
+															<?php foreach ($types as $k => $v) { ?>
+																<option <?php if ($info['type'] == $k) echo 'selected="selected"'; ?> value="<?php echo $k; ?>"><?php echo $v; ?></option>
+															<?php } ?>
+														</select>
+													</td>
+												</tr>
+												<tr class="tr" id="typeimg">
+													<th class="th">类别图标</th>
+													<td class="td">
+
+														<input type="file" id="img_upload" name="typeimg"/>
+													</td>
+												</tr>
+												<tr>
+													<td>专题描述</td>
+													<td>
+														<textarea name="desc" style="height:150px;"><?php echo $info['desc']; ?></textarea>
+													</td>
+												</tr>
+												<tr>
+													<td>专题色调</td>
+													<td>
+														<select name="color">
+															<?php foreach ($colors as $k => $v) { ?>
+																<option value="<?php echo $k; ?>" style="padding:10px 5px;background-color:<?php echo $v; ?>;"><?php echo $v; ?></option>
+															<?php } ?>
+														</select>
+													</td>
+												</tr>
+												<tr class="tr" id="pic">
+													<th class="th">图片</th>
+													<td class="td">
+														<input type="file" id="img_upload" name="img"/>
+													</td>
+												</tr>
+												<tr>
+													<td>投票限制次数(对投花点赞类有效)</td>
+													<td>
+														<input type="text" class="form-control" name="vote_limit" value="">
+													</td>
+												</tr>
+												<tr>
+													<td>投票标题</td>
+													<td><input type="text" class="input" name="feedback_title" value="">
+													</td>
+												</tr>
+												<tr>
+													<td>投票选项</td>
+													<td>
+														<textarea data-editor="default" class="form-control" name="option" style="height:150px;"></textarea>（一行一个反馈选项）
+													</td>
+												</tr>
+												<tr>
+													<td>开始结束时间</td>
+													<td>
+														<div>
+															<input class="datepicker" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value=""/> 至
+															<input class="datepicker" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value=""/>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>排序</td>
+													<td><input type="text" class="input" name="sort" value="0">（填写一个数字，代表专题第几期。）
+													</td>
+												</tr>
+												<tr>
+													<td>点赞初始值：</td>
+													<td><input type="text" class="input" name="init_like"></td>
+												</tr>
+
+
+												<tr>
+													<td>状态</td>
+													<td>
+														<select name="status">
+															<option value="1">开启</option>
+															<option value="0">关闭</option>
+														</select>
+													</td>
+												</tr>
+												<!--
+																				<tr>
+																					<td>是否热点</td>
+																					<td>
+																						<select name="status">
+																							<option value="1">开启</option>
+																							<option value="0">关闭</option>
+																						</select>
+																					</td>
+																				</tr>
+																				-->
+											</table>
+										</div>
+										<div class="tab-pane" id="module">
+											<section>
+												<table class="table table-bordered table-striped no-margin">
+													<tr>
+														<td>模块名称</td>
+														<td>
+															<select name="modsel">
+																<option value="txt1">一栏文字模块</option>
+																<option value="txt2">两栏文字模块</option>
+																<option value="txt3">三栏文字模块</option>
+																<option value="img1">一栏图片模块</option>
+																<option value="img2">两栏图片模块</option>
+																<option value="img3">三栏图片模块</option>
+																<option value="lirt">左图右文模块</option>
+																<option value="ltri">左文右图模块</option>
+																<option value="vote">投票模块</option>
+																<option value="uptxtdownimg">投花点赞图片</option>
+															</select>
+														</td>
+														<td>
+															<button id="add-module" type="button" class="btn btn-success">添加模块</button>
+														</td>
+													</tr>
+												</table>
+												<div class="mrt15 sortable" style="margin-top:15px;">
+
+												</div>
+											</section>
+										</div>
+									</div>
+								</div>
+							</section>
+						</section>
+					</div>
+				</div>
+			</div>
+		</form>
+	</section>
+
+	<script id="modlue_txt1" type="tex/html">
+	<div class="panel panel-default" id="mt1">
+		<div class="panel-heading">
+			一栏文字模块
+			<small class="pull-right text-white">
+	            <a class="fa fa-times panel-remove" href="#"></a>
+	        </small>
+		</div>
+		<div class="panel-body">
+			<div>
+				<textarea class="mcindex" name="content[][txt1][]" style="width: 100%; height: 100%;"></textarea>
+			</div>
+		</div>
+	</div>
+
+	</script>
+	<script id="modlue_txt2" type="tex/html">
+	<div class="panel panel-default" id="mt2">
+		<div class="panel-heading">
+			两栏文字模块
+			<small class="pull-right text-white">
+	            <a class="fa fa-times panel-remove" href="#"></a>
+	        </small>
+		</div>
+		<div class="panel-body">
+			<textarea class="mcindex" name="content[][txt2][]" style="width: 100%; height: 100%;"></textarea>
+			<textarea class="mcindex" name="content[][txt2][]" style="width: 100%; height: 100%;"></textarea>
+		</div>
+	</div>
+
+	</script>
+	<script id="modlue_txt3" type="tex/html">
+	<div class="panel panel-default" id="mt3">
+		<div class="panel-heading">
+			三栏文字模块
+			<small class="pull-right text-white">
+	            <a class="fa fa-times panel-remove" href="#"></a>
+	        </small>
+		</div>
+		<div class="panel-body">
+			<textarea class="mcindex" name="content[][txt3][]" style="width: 100%; height: 100%;"></textarea>
+			<textarea class="mcindex" name="content[][txt3][]" style="width: 100%; height: 100%;"></textarea>
+			<textarea class="mcindex" name="content[][txt3][]" style="width: 100%; height: 100%;"></textarea>
+		</div>
+	</div>
+
+	</script>
+	<script id="modlue_img1" type="tex/html">
+	<div class="panel panel-default" id="mi1">
+		<div class="panel-heading">
+			一栏图片模块
+			<small class="pull-right text-white">
+	            <a class="fa fa-times panel-remove" href="#"></a>
+	        </small>
+		</div>
+		<div class="panel-body">
+			<div>
+				<ul class="uploadImg">
+					<li>
+						<img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+						<input class="mcindex" type="hidden" name="content[][img1][]" value="">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+					<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=_uploadImgId_'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	</script>
+	<script id="modlue_img2" type="tex/html">
+	<div class="panel panel-default" id="mi2">
+		<div class="panel-heading">
+			两栏图片模块
+			<small class="pull-right text-white">
+	            <a class="fa fa-times panel-remove" href="#"></a>
+	        </small>
+		</div>
+		<div class="panel-body">
+			<div>
+				<ul class="uploadImg">
+					<li>
+						<img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+						<input class="mcindex" type="hidden" name="content[][img2][]" value="">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+					<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=_uploadImgId_'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</div>
+			<div>
+				<ul class="uploadImg">
+					<li>
+						<img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+						<input class="mcindex" type="hidden" name="content[][img2][]" value="">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+					<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=_uploadImgId_'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	</script>
+	<script id="modlue_img3" type="tex/html">
+	<div class="panel panel-default" id="mi3">
+		<div class="panel-heading">
+			三栏图片模块
+			<small class="pull-right text-white">
+	            <a class="fa fa-times panel-remove" href="#"></a>
+	        </small>
+		</div>
+		<div class="panel-body">
+			<div>
+				<ul class="uploadImg">
+					<li>
+						<img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+						<input class="mcindex" type="hidden" name="content[][img3][]" value="">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+					<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=_uploadImgId_'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</div>
+			<div>
+				<ul class="uploadImg">
+					<li>
+						<img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+						<input class="mcindex" type="hidden" name="content[][img3][]" value="">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+					<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=_uploadImgId_'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</div>
+			<div>
+				<ul class="uploadImg">
+					<li>
+						<img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+						<input class="mcindex" type="hidden" name="content[][img3][]" value="">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+					<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=_uploadImgId_'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	</script>
+	<script id="modlue_lirt" type="tex/html">
+	<div class="panel panel-default" id="ml1">
+		<div class="panel-heading">
+			左图右文模块
+			<small class="pull-right text-white">
+	            <a class="fa fa-times panel-remove" href="#"></a>
+	        </small>
+		</div>
+		<div class="panel-body">
+			<div>
+				<ul class="uploadImg">
+					<li>
+						<img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+						<input class="mcindex" type="hidden" name="content[][lirt][]" value="">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+					<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=_uploadImgId_'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</div>
+			<textarea class="mcindex" name="content[][lirt][]" style="width: 100%; height: 100%;"></textarea>
+		</div>
+	</div>
+
+	</script>
+	<script id="modlue_ltri" type="tex/html">
+	<div class="panel panel-default" id="ml2">
+		<div class="panel-heading">
+			左文右图模块
+			<small class="pull-right text-white">
+	            <a class="fa fa-times panel-remove" href="#"></a>
+	        </small>
+		</div>
+		<div class="panel-body">
+			<textarea class="mcindex" name="content[][ltri][]" style="width: 100%; height: 100%;"></textarea>
+			<div>
+				<ul class="uploadImg">
+					<li>
+						<img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+						<input class="mcindex" type="hidden" name="content[][ltri][]" value="">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+					<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=_uploadImgId_'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	</script>
+	
+	<script id="modlue_uptxtdownimg" type="tex/html">
+	<div class="panel panel-default" id="ml3">
+		<div class="panel-heading">
+			投花点赞模块
+			<small class="pull-right text-white">
+	            <a class="fa fa-times panel-remove" href="#"></a>
+	        </small>
+		</div>
+		<div class="panel-body">
+			<textarea class="mcindex" name="content[][uptxtdownimg][]" style="width: 100%; height: 100%;"></textarea>
+			<div>
+				<ul class="uploadImg">
+					<li>
+						<img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+						<input class="mcindex" type="hidden" name="content[][uptxtdownimg][]" value="">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+					<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=_uploadImgId_'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	</script>
+
+	<script id="modlue_vote" type="tex/html">
+	<div class="panel panel-default" id="vote1">
+		<div class="panel-heading">
+			投票模块
+			<small class="pull-right text-white">
+	            <a class="fa fa-times panel-remove" href="#"></a>
+	        </small>
+		</div>
+		<div class="panel-body">
+			<div>
+				<input class="mcindex" name="content[][vote][]" style="width: 100%; height: 50px;">
+			</div>
+		</div>
+	</div>
+
+	</script>
+
+	<script type="text/javascript">
+		var _shortcut_ = {
+			'contentType': <?php echo $contentType;?>,
+			'channelType': <?php echo $channels;?>,
+			'parnterType': <?php echo $parnters;?>,
+			'ajaxUrl': "<?php echo '/Admin/Topic/ajaxCreateShortUrl'; ?>",
+			'topicId': <?php echo $topicId;?>
+		};
+	</script>
+
+	<!-- load scripts start -->
+	<!--<script src="<?php echo $staticPath; ?>/../adminlab/new/vendor/jquery.sortable.js"></script>-->
+	<script src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js"></script>
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+	<!-- load scripts end -->
+
+	<script>
+
+		$(function () {
+			var editor_arr = [];
+
+			$('#add-module').bind('click', function () {
+				var moduleName = $('select[name=modsel]').val();
+				var count = $(".sortable").sortable('toArray').length;
+				var html = $('#modlue_' + moduleName).html().replace(/content\[\]/gi, 'content[' + count + ']');
+				$('.sortable').append(html);
+				$(".sortable").sortable();
+				renderEditor();
+				updateFileIndex();
+			});
+
+			renderEditor();
+
+			function renderEditor() {
+				var linkIndex = EDITOR_ITEMS.indexOf('link');
+				console.log(linkIndex);
+				EDITOR_ITEMS[linkIndex] = 'shortcut';
+
+				$('textarea.mcindex').each(function (index, val) {
+					if (!$(val).hasClass('done')) {
+						$(val).addClass('done');
+						KindEditor.token = $('#token').val();
+						var editor = KindEditor.create(val, {
+							width: "100%",
+							height: 100,
+							resizeType: 1,
+							allowPreviewEmoticons: false,
+							allowImageUpload: true,
+							uploadJson: '<?php echo $uploadImgUrl;?>',
+							items: EDITOR_ITEMS
+						});
+
+						editor_arr.push(editor);
+					}
+				});
+			}
+
+			function updateModuleIndex() {
+				$(".sortable .panel").each(function (index) {
+					var mcindex = $(this).find('.mcindex');
+					// 更新模块ID
+					if (mcindex) {
+						mcindex.attr('name', mcindex.attr('name').replace(/content\[[\d]\]/gi, 'content[' + index + ']'));
+					}
+				});
+			}
+
+			updateFileIndex();
+
+			function updateFileIndex() {
+				$(".sortable iframe").each(function (index) {
+					// 更新上传控件的ID
+					var that = $(this);
+					if (that.attr('src')) {
+						var src = that.attr('src').replace(/_uploadImgId_/gi, 'file_img_' + index);
+						that.attr('src', src);
+						that.parent('p').prev('ul').find('li').attr('id', 'file_img_' + index);
+					}
+				});
+			}
+
+			$('.datepicker').datetimepicker();
+
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Topic/index');
+			}, function () {
+				updateModuleIndex();
+				if (editor_arr.length > 0) {
+					for (var i = 0; i < editor_arr.length; i++) {
+						editor_arr[i].sync();
+					}
+				}
+			});
+		});
+	</script>
+<?php echo $this->render("layout/footer2.phtml"); ?>

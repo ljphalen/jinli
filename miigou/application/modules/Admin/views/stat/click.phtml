@@ -1,0 +1,56 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">统计列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post" id="searchForm" >
+<input name="token" type="hidden" value="<?php echo $token;?>"/>
+<input name="type_id" type="hidden" value="<?php echo $search['type_id'];?>"/>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<td class="td">开始结束时间</td>
+			<td class="td"><div><input class="input" type="text" style="width:143px;" id="start_time" name="start_time" value="<?php echo $search['start_time'];?>" /> 至 <input class="input" type="text" style="width:143px;" id="end_time" name="end_time" value="<?php echo $search['end_time'];?>" /></div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+
+<div class="h_a">
+	<span>总点击量：<?php echo $sum;?></span>
+</div>
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>时间</td>
+			<td>点击量</td>
+		</tr>
+<?php foreach($list as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['dateline'];?></td>
+			<td><?php echo $value['number'];?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//导购表单数据提交
+$(document).ready(function(){
+     $("#start_time").datepicker({
+			dateFormat : 'yy-mm-dd'
+		});
+	 $("#end_time").datepicker({
+			dateFormat : 'yy-mm-dd'
+		});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

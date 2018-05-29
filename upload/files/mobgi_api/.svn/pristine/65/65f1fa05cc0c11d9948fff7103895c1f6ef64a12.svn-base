@@ -1,0 +1,112 @@
+<script type="text/javascript">
+//接收数据
+var data = JSON.parse('{{result}}');
+var url = "{{siteUrl}}AppReport/appVersion";
+</script>
+<!-- include 'inc' -->
+<div class="colMain">
+    <div class="title"><p class="fl">应用版本</p></div>
+    <div class="filter">
+        <div class="plugin">
+            <div class="ta_date" id="div_date">
+                 <span class="date_title" id="date"></span>
+                 <a class="opt_sel" id="input_trigger" href="#"><i class="i_orderd"></i></a>
+            </div>
+        </div>
+        <div class="plugin"><select name='appkey' class='choose-select'></select></div>
+        <div class="plugin"><a class="btn muti-select" href="javascript:void(0)">筛选</a></div>
+    </div>
+    <div class="main">
+        <div class="chart-title">
+            <span>版本分布</span>
+            <a class="index" href="javascript:void(0);" id="index-active">活跃用户数</a>
+            <a class="index" href="javascript:void(0);"  id="index-effective">有效用户数</a>
+            <a class="index" href="javascript:void(0);"  id="index-ad_arrived">广告到达用户数</a>
+            <a class="fr btn" id="desc" style="cursor:pointer;">说明</a>
+        </div>
+        <div id="hightchart" class="hightchart"></div>
+    </div>
+    <div class="main grid">
+        <table class="stat_tbl tablesorter">
+            <thead class="thead_fill">
+            </thead>
+            <tbody class="tbody_fill">
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="desc-content">
+    <table>
+        <tr><td><b>活跃用户数</b></td><td>按广告宿主启动数去重eventtype=start_vector_app</td></tr>
+        <tr><td><b>有效用户数</b></td><td>按广告请求用户数去重eventtype=requests</td></tr>
+        <tr><td><b>广告达到用户数</b></td><td>按广告展示用户数去重eventtype=impressions</td></tr>
+    </table>
+</div>
+<script type="text/javascript">
+$(function(){
+    var theadHtml = "";
+    $.each(data.thead, function(i, val){
+        theadHtml += "<th>"+val+"</th>";
+    });
+    var tbodyHtml = "";
+    if (typeof(data.tbody) != 'undefined'){
+        $.each(data.tbody, function(time, value){
+            tbodyHtml += "<tr><td>"+time+"</td>";
+            var total = 0;
+            $.each(value, function(j, item){
+                total = parseFloat(total) + parseFloat(item);
+            });
+            tbodyHtml += "<td>"+total+"</td>";
+            var versionHtml = "";
+            $.each(data.thead, function(k, v){
+                if (v != "日期" && v != "总数"){
+                    tbodyHtml += "<td>"+value[v]+"</td>";
+                }
+            });
+            tbodyHtml += "</tr>";
+        });
+    }
+    $(".thead_fill").html("<tr>"+theadHtml+"</tr>");
+    $(".tbody_fill").html(tbodyHtml);
+    $(".stat_tbl").tablesorter();
+    // 日期
+    var dateRange = new pickerDateRange('date', {
+        theme : 'ta', // 日期选择器TA主题
+        isTodayValid : 1,
+        startDate : data.url.startDate,
+        endDate : data.url.endDate,
+        monthRangeMax : 3,
+        minValidDate : 1379174400,
+        success : function (dateObj){
+            var date = {
+                    startDate : dateObj.startDate, 
+                    endDate : dateObj.endDate
+            };
+            request(date, data.url, url); // 请求服务器
+        }
+    });
+    // 分类
+    $(".index").removeClass('index-sel').live('click', function(){
+        var type = {type : $(this).attr('id')};
+        request(type, data.url, url);
+    });
+    $("#"+data.url.type).addClass('index-sel');
+    
+    choosenPanel('choose-select', 'panel-channel', null, null);
+    
+    $(".muti-select").click(function(){
+        var offset = $(this).offset();
+        var left = offset.left, top = offset.top + 32;
+        var panel = $('.filter-panel');
+        panel.css({ "left": left+"px", "top": top+"px"}).show();
+    });
+    // 图表
+    var config = {
+            container : 'hightchart',
+            title : '版本分布',
+            name : 'app_version',
+            field : data.field
+    }
+    makeChartMutli(data.chart, config);
+});
+</script>

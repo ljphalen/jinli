@@ -1,0 +1,87 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">会员列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">用户id</th>
+			<td class="td"><input class="input wb" type="text" name="id" value="<?php echo $param['id'];?>"></td>
+			
+		</tr>
+		<tr class="tr">
+			<th class="th">姓名</th>
+			<td class="td"><input class="input wb" type="text" name="realname" value="<?php echo $param['realname'];?>"></td>
+			<th class="th">手机号</th>
+			<td class="td"><input class="input wb" type="text" name="phone" value="<?php echo $param['phone'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			<option value="">所有状态</option>
+<?php foreach($status as $key=>$value){?>
+				<option <?php echo ($param['status'] == $key) ? 'selected="selected"' :''; ?> value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php }?>
+			</select>
+			</td>
+			<th class="th">用户类型</th>
+			<td class="td">
+			<select name="user_type" class="wa">
+			<option value="">所有类型</option>
+				<option <?php if($param['user_type'] == 1) echo 'selected="selected"';?> value="1">内部用户</option>
+			    <option <?php if($param['user_type'] == 2) echo 'selected="selected"';?> value="2">真实用户</option>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span><span style="float:left;">当前会员总数：<?php echo $total;?></span></div>
+
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">ID</td>
+			<td>手机号</td>
+			<td>姓名</td>
+			<td>微信openid</td>
+			<td>注册时间</td>
+			<td>最近登录时间</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($users as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['phone'];?></td>
+			<td><?php echo $value['realname'];?></td>
+			<td><?php echo $value['weixin_open_id'];?></td>
+            <td><?php echo date('Y-m-d H:i:s', $value['register_time']);?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['last_login_time']);?></td>
+			<td><?php echo $status[$value['status']];?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/admin/highcharts.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#start_time").datepicker({
+				dateFormat : 'yy-mm-dd'
+	});
+	$("#end_time").datepicker({
+		dateFormat : 'yy-mm-dd'
+});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

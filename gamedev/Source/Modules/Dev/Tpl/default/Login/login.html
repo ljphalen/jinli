@@ -1,0 +1,194 @@
+<include file="Public:header_min" />
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/common/css/newlogin.css?{:C('JS_VERSION')}" type="text/css" rel="stylesheet" />
+	<div class="topLogin">
+		<div class="w">
+			<gt name="uid" value="0">
+				<a href="{:U('user/info')}">{$userinfo.company}</a><i></i><a href="{:U('message/index')}">站内信</a><i></i><a href="{:U('Login/logout')}">退出</a>
+			<else/>
+				<a href="{:U('login/login')}">登录</a><i>|</i><a href="{:U('login/reg')}">注册</a>
+			</gt>
+		</div>
+	</div>
+	<div class="loginNav">
+		<div class="w">
+			<a href="{:U('/')}" class="nlogo" title="{:C('SMTP.SMTP_NAME')}"><img src="{:cdn('PUBLIC')}/common/images/logo.png" alt="login"></a>
+			<ul>
+				<li><a href="{:U('help/index')}">文档中心</a></li>
+				<li><a href="{:U('chart/index')}">数据统计</a></li>
+				<li><a href="{:U('union/index')}">游戏联运</a></li>
+				<li><a href="{:U('apps/index')}">应用管理</a></li>
+				<li class="this"><a href="{:U('/')}">首页</a></li>
+			</ul>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<div class="banner">
+        <div id="lbanner">
+            <ul>
+            	<volist name="imglist" id="vo">
+                	<li><a href="{$vo.url|default='javascript:void(0)'}" target="_blank" class="bhref" style="background-image: url({$vo.image});"></a></li>
+				</volist>
+            </ul>
+        </div>
+
+		<div class="loginw">
+			<gt name="uid" value="0">
+	            <div class="alogin">
+	            	<a href="{:U('user/edit')}" class="btn_edit">编辑</a>
+	            	<h2>欢迎您，{$userinfo.contact|default="请填写资料"}</h2>
+	                <p>联系人：<span>{$userinfo.contact|default="请填写资料"}</span></p>
+	                <p>联系人电话：<span>{$userinfo.phone}</span></p>
+	                <p>联系人邮箱：<span>{$userinfo.contact_email}</span></p>
+	                <a href="{:U('login/logout')}" class="btn_quit">退出</a>
+	            </div>
+			<else/>
+				<div class="login" >
+	                <div class="loginc">
+	                <form class="form-horizontal" method="post" id="loginForm" autocomplete="off" onsubmit="if(event.keyCode==13||event.which==13){return false;}">
+	                    <p><label class="lbt">用户名:</label><input type="text" value="{$email}" placeholder="请输入账号" class="int inton" id="email" name="email"></p>
+	                    <p><label class="lbt">密&nbsp;&nbsp;&nbsp;码:</label><input type="password" value="" id="password" name="password" placeholder="请输入密码" class="int pass" ></p>
+	                    <p><label class="lbt">验证码:</label><input type="text" value="" id="authcode" name="authcode" placeholder="验证码" maxlength="4" class="int yzm"><img id="verifyImg" src="{:U("Auth/verify")}" onClick="gioneeLogin.fleshVerify();$('#authcode').val('');"
+		            		border="0" alt="点击刷新验证码" style="cursor: pointer" align="absmiddle" alt="" class="checkimg fl" /></p>
+	                    <p class="checks">
+	                        <span class="fl"><label><input type="checkbox" name="saveAccount" id="saveAccount" value="Y"  tabindex="1"
+							<notempty name="saveAccount">checked</notempty>/>记住账号</label></span>
+	                        <span class="fl"><label><input type="checkbox" name="autoLogin" id="autoLogin" value="Y"  tabindex="1"
+							<notempty name="autoLogin">checked</notempty>/>下次自动登录</label></span>
+	                        <a href="{:U('Auth/index')}" class="forget">忘记密码？</a>
+	                    </p>
+	                    <p><input type="submit" value="登录" class="loginbtn" id="Sub" tabindex="1"></p>
+	                    <div class="formb"><a href="{:U('login/reg')}" class="fr">立即注册</a>还不是我们的用户?</div>
+
+	                    <div class="wrong" style="display:hidden;" id="errorMsg"></div>
+		        		<script>$("#errorMsg").hide();</script>
+
+	                </form>
+	                </div>
+	            </div>
+			</gt>
+        </div>
+	</div>
+    <load href="{:cdn('PUBLIC')}/app/validate/formValidator-4.1.1.js?{:C('JS_VERSION')}" />
+    <load href="{:cdn('PUBLIC')}/app/validate/themes/Default/js/theme.js?{:C('JS_VERSION')}" />
+    <load href="{:cdn('PUBLIC')}/app/validate/themes/Default/style/style.css?{:C('JS_VERSION')}" />
+    <load href="{:cdn('PUBLIC')}/app/validate/formValidatorRegex.js?{:C('JS_VERSION')}" />
+    <load href="{:cdn('PUBLIC')}/common/js/form/login.js?{:C('JS_VERSION')}" />
+    <div class="w imain">
+    	<div class="newsw">
+        	<div class="ssubl fl">
+            	<div class="ssub funca fl">
+					<h2>上传游戏</h2>
+					<div class="sc">
+						<ul>
+							<li class="nth1"><a href="{:U('login/reg')}"><i></i>注册</a></li><li class="nth2"></li>
+							<li class="nth3"><a href="{:U('apps/index')}"><i></i>上传应用</a></li><li class="nth2"></li>
+							<li class="nth5"><a href="{:U('apps/index')}"><i></i>应用上线</a></li><li class="nth2"></li>
+							<li class="nth7"><a href="{:U('chart/index')}"><i></i>数据统计</a></li>
+						</ul>
+					</div>
+                </div>
+                <div class="ssub funcb fr">
+                	<h2>游戏联运</h2>
+                    <div class="sc">
+                        <ul>
+                            <li class="nth1"><a href="{:U('help/sdk')}"><i></i>申请SDK</a></li><li class="nth2"></li>
+                            <li class="nth3"><a href="{:U('union/index')}"><i></i>上传应用</a></li><li class="nth2"></li>
+                            <li class="nth5"><a href="{:U('union/index')}"><i></i>应用上线</a></li><li class="nth2"></li>
+                            <li class="nth7"><a href="{:U('chart/union')}"><i></i>数据统计</a></li>
+                        </ul>
+                     </div>
+                </div>
+                <div class="ssub funcc fl">
+                	<h2>平台概况</h2>
+                    <div class="sc">
+                    	<span><em class="ico1"></em><a>丰富的分发资源</a></span>
+                        <span><em class="ico2"></em><a>日分发量超100万</a></span>
+                        <span><em class="ico3"></em><a>总用户量达1000万</a></span>
+                    </div>
+                </div>
+            </div>
+            <div class="ssubr fr">
+                <div class="ssub">
+                    <h2><a href="{:u('help/page', array("id"=>$article[0]['id']))}" class="more fr">更多&gt;</a>新闻公告</h2>
+                    <div class="sc">
+                    	<ul class="news">
+                    		<volist name="article" id="arc">
+                    			<li><a href="{:u('help/page', array("id"=>$arc['id']))}"><ins></ins>{$arc['title']}</a></li>
+                    		</volist>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    	<div class="ssub fz">
+        	<h2>平台发展</h2>
+            <div class="sc">
+            	<div class="scli sclia">
+                	<span>2013/6</span>
+               		<p>游戏大厅V1.0正式发布</p></div>
+                <div class="scli sclib">
+                	<span>2013/7</span>
+                    <p>140万用户</p>
+                    <p>100家合作伙伴</p>
+                    <p>600款游戏</p>
+                </div>
+                <div class="scli sclic">
+                	<span>2014/7</span>
+                    <p>1000万用户</p>
+                    <p>400家以上优秀合作伙伴</p>
+                    <p>1400款游戏</p>
+                </div>
+            </div>
+        </div>
+    	<div class="ssub hz">
+        	<h2>商务合作</h2>
+            <div class="sc">
+            	<div class="scli">
+                	<p class="pt">单机游戏商务&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;白勇</p>
+                    <p>QQ ：41941862</p>
+                    <p>电话：18600805726</p>
+                    <p>邮箱：baiyong@gionee.com</p>
+                </div>
+                <div class="scli">
+                	<p class="pt">网游(华北区)商务&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;康博宇</p>
+                    <p>QQ ：1900856469</p>
+                    <p>电话：15810086508</p>
+                    <p>邮箱：kangby@gionee.com</p>
+				</div>
+                <div class="scli">
+                	<p class="pt">网游(华南区)商务&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;裘捷</p>
+                    <p>QQ ：155207860</p>
+                    <p>电话：18676720261</p>
+                    <p>邮箱：qiujie@gionee.com</p>
+                   </div>
+                <div class="scli dbt">
+                	<p class="pt">网游(华东&西南区)商务&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;陈宇</p>
+                    <p>QQ ：307129663</p>
+                    <p>电话：18575536463</p>
+                    <p>邮箱：chen_yu@gionee.com</p>
+                   </div>
+            </div>
+        </div>
+    </div>
+    <include file="Public:footer_min" />
+    <script>
+        jQuery(document).ready(function($) {
+            var int=self.setInterval("clock()",10000);
+        });
+        var clockt = 0,
+            clockn = $("#lbanner li").length,
+            wwidth = document.body.clientWidth
+        $("#lbanner ul").css('width', wwidth);
+        $("#lbanner ul li").css('width', wwidth);
+        $("#lbanner ul li").eq(0).fadeIn('slow');
+        function clock(){
+            $("#lbanner ul li").eq(clockt).fadeIn("slow", function() {
+                    clockt++
+                    if (clockt == clockn){
+                        clockt = 0
+                    }
+            }).siblings().hide();
+        }
+    </script>
+</body>
+</html>

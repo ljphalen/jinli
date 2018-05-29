@@ -1,0 +1,195 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title><?=$pageData['title']?></title>
+	<meta charset="utf-8">
+	<meta name="viewport"
+	      content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
+	<meta name="apple-touch-fullscreen" content="yes"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<meta name="format-detection" content="telephone=no"/>
+	<link rel="stylesheet"
+	      href="http://assets.3gtest.gionee.com/apps/3g/events/weixin0501/css/main.min.css?v=<?=$version?>"/>
+	<?php
+	$str = 0;
+	if ($pageData['uid']) {
+		$heat =  $pageData['relCount'] * 5;
+		$arr = array(
+			'now'            => date('Y-m-d H:i:s'),
+			"startTime"      => $pageData['start_time'],
+			"endTime"        => $pageData['end_time'],
+			"endTime_format" => date('Y-m-d H:i', $pageData['end_time']),
+			"nowTime"        => time(),
+			"recordList"     => $pageData['recordList'],//参与用户列表
+			"uid"            => $pageData['uid'],
+			"vid"            => $pageData['fuid'],
+			"mileages"       => array(
+				'finish' => $pageData['totalAmount']+$heat, // 已完成里程数
+				'contri' => $pageData['curAmount'], // 贡献给朋友的里程数
+				'heat'   => $heat,
+				'vcount'  => intval($pageData['vhelpu']),
+				'ucount'  => intval($pageData['uhelpv']),
+			),
+			'cur_url'        => $_SERVER['REQUEST_URI'],
+		);
+		$str = Common::jsonEncode($arr);
+	}
+	?>
+
+	<script type="text/javascript">
+		var global_data = <?=$str?>;
+	</script>
+
+</head>
+<body>
+
+<header class="ui_rel" id="header">
+	<!-- 此处根据页面不同，显示Banner图片不一样 -->
+	<div id="J_act_banner" style="display:none;">
+		<img src="<?php echo $staticResPath; ?>/events/weixin0501/pic/head-main.jpg" width="100%" alt="">
+		<img src="<?php echo $staticResPath; ?>/events/weixin0501/pic/main.jpg" alt="攒里程，赢大奖" width="100%"/>
+	</div>
+	<?php
+	$url = Common::clickUrl(1359918,'NAV','http://item.m.jd.com/product/1359918.html');
+	?>
+	<a href="<?=$url?>" class="btn_s7"></a>
+	<a href="javascript:;" id="J_btn_rule" class="btn_rule"></a>
+</header>
+
+<section class="middle-section">
+
+	<div id="txtResult" class="tips2 ui_mb10 none">已帮好友累计了xx里程</div>
+
+	<div class="ui_tac ui_mb10">
+		<a href="javascript:;" id="btnCheckResult" class="btn none"><span>查看获奖结果</span></a>
+	</div>
+
+	<div id="btnResult" class="tips1 ui_mb10 none">果然是真爱，么么哒<br/>已帮好友累积了xx里程</div>
+
+	<div class="ui_tac ui_mb10">
+		<a href="javascript:;" id="btnAssist" class="btn none"><span>帮好友赚里程</span></a>
+	</div>
+	<div class="ui_tac ui_mb10">
+		<a href="javascript:;" id="btnAsk" class="btn none"><span>叫好友帮忙赚里程</span></a>
+	</div>
+	<div class="ui_tac ui_mb10">
+		<a href="javascript:;" id="btnGive" class="btn none"><span>我要参加</span></a>
+	</div>
+	<div class="ui_tac ui_mb10">
+		<a href="javascript:;" id="btnGiveT" class="btn none"><span>我也要参加</span></a>
+	</div>
+	<div class="ui_tac">
+		<a href="javascript:;" id="btnCheck" class="btn none"><span>查看我的里程</span></a>
+	</div>
+</section>
+
+<footer>
+
+	<div><img src="<?php echo $staticResPath; ?>/events/weixin0501/pic/WXmiddle.jpg" width="100%" alt=""></div>
+
+	<?php if (plat() == 'android'): ?>
+	<div class="QRcode-text">点击指纹，成功关注<strong style="color:#fff;">“集砖箱”</strong>，发送<strong style="color:#fff;">“我要去旅行”</strong>，有机会领取话费或Q币哦！</div>
+	<div class="QRcode-img"><a href="weixin://profile/gh_bc9a0bd2489f"><img src="<?php echo $staticResPath; ?>/events/weixin0501/pic/QRcode.jpg" height="87" width="170" alt=""></a></div>
+	<?php else:?>
+		<div class="QRcode-text">长按二维码或在微信公众账号中搜索<strong style="color:#fff;">“集砖箱”</strong>，关注后发送<strong style="color:#fff;">“我要去旅行”</strong>，有机会领取话费或Q币哦！</div>
+		<div class="QRcode-img"><img src="<?php echo $staticResPath; ?>/events/weixin0501/pic/QRcode.jpg" height="87" width="170" alt=""></div>
+	<?php endif;?>
+	<ul class="record-list" id="conList" style="display:none"></ul>
+	<div class="copyright">本活动最终解释权归“集砖箱”所有</div>
+	<div><img src="<?php echo $staticResPath; ?>/events/weixin0501/pic/WXbottom.jpg" width="100%" alt=""></div>
+
+		<?php
+		//unset($arr['cur_url']);
+		//unset($arr['recordList']);
+		//formatArr($arr);
+		//echo 'visit:'.json_encode($pageData['visit'])."<br>";
+		?>
+
+</footer>
+
+<?php
+function formatArr($arr) {
+	foreach($arr as $k => $v) {
+		if (is_array($v)) {
+			formatArr($v);
+		} else {
+			echo "{$k}:{$v}<br>";
+		}
+	}
+}
+?>
+
+
+<!-- 规则信息弹窗 -->
+<div id="J_pop_rule" class="bg_mask u_c" style="display: none;">
+	<div class="rule-wrap">
+		<h2>活动规则</h2>
+
+		<div class="rule">
+			<ul>
+				<li>1、微信好友可帮助增加/减少里程，看人品，拼运气；</li>
+				<li>2、微信好友首次点击分享页面帮忙增加 <strong>5</strong> 里程；</li>
+				<li>3、关注“集砖箱”公众号，发送“我要去旅行”有机会领取话费和Q币；</li>
+				<li>4、活动起止日期为：<strong>2015年4月17日~2015年4月24日</strong>；</li>
+				<li>5、活动结束后按积攒里程由高至低选取中奖用户，中奖结果公布于“集砖箱”公众号和活动页面。</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<!-- /则信息弹窗 -->
+
+<!-- 分享到朋友圈弹窗 -->
+<div class="bg_mask" id="conShare" style="display:none;">
+	<span class="ui_abs share"></span>
+
+	<div class="ui_abs share_txt">
+		<p>点击右上角</p>
+
+		<p>“分享到朋友圈”或</p>
+
+		<p>“发送给朋友”</p>
+	</div>
+</div>
+<!-- /分享到朋友圈弹窗 -->
+
+<?php
+$nonceStr  = Common::randStr(10);
+$timestamp = time();
+$ticket    = Gionee_Service_WxHelp::getJSApiTicket($pageData['wx_appid'], $pageData['wx_appkey']);
+$url       = Gionee_Service_WxHelp::getJSCurUrl();
+$signstr   = sprintf('jsapi_ticket=%s&noncestr=%s&timestamp=%s&url=%s', $ticket, $nonceStr, $timestamp, $url);
+$signature = sha1($signstr);
+?>
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript"
+        src="<?php echo $staticResPath; ?>/events/weixin0501/js/main.min.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+	wx.config({
+		debug: false,
+		appId: "<?=$pageData['wx_appid']?>",
+		timestamp: <?=$timestamp?>,
+		nonceStr: '<?=$nonceStr?>',
+		signature: '<?=$signature?>',
+		jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
+	});
+</script>
+</body>
+</html>
+<?php
+function plat() {
+	$useragent  = strtolower($_SERVER["HTTP_USER_AGENT"]);
+	// iphone
+	$is_iphone  = strripos($useragent,'iphone');
+	if($is_iphone){
+		return 'iphone';
+	}
+	// android
+	$is_android    = strripos($useragent,'android');
+	if($is_android){
+		return 'android';
+	}
+
+	return '';
+}
+?>

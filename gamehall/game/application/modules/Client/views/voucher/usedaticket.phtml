@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <title>我的A卷</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="email=no" />
+    <link rel="stylesheet" href="<?php echo "$staticroot/apps/game/apkv1/assets/css/volume.css?v=$version" ?>" />
+</head>
+<body>
+<div>
+    <div class="name">
+        我的A卷: <?php echo $data['balance']; ?>
+    </div>
+    <div id="coinList" class="coinList-container disable">
+        <?php foreach($data['list'] as $item): ?>
+            <li >
+                <div class="toLeft">
+                    <span class="origion"><?php echo $item['origin']?></span>
+                    <span class="riqi"><?php echo $item['startDate']?>至<?php echo $item['endDate']?></span>
+                </div>
+                <div class="toRright">
+                    <span class="mount"><?php echo $item['chargeMount']?></span>
+                </div>
+                <div class="type">
+                    <span><?php echo ($item['status'] == 2) ? '已使用' : '已过期' ?></span>
+                </div>
+            </li>
+        <?php endforeach;?>
+    </div>
+</div>
+<div class="J_loading loading-container volume">
+    <i class="icon-loading"></i>
+</div>
+</body>
+
+<script>
+    var token = '<?php echo $token;?>';
+    var volumeData = {
+        ajaxurl : "<?php echo "{$webroot}/client/voucher/usedaticketmore?puuid={$uuid}&page=1&sp={$sp}"?>"
+        ,hasnext : <?php echo $data['hasnext']?>
+        ,curpage : <?php echo $data['curpage']?>
+    }
+</script>
+<?php echo $this->render("layout/includejs.phtml");?>
+<script src="<?php echo "$$staticroot/apps/game/apkv1/assets/js/ac/init.js?v=$version";?>"></script>
+<script src="<?php echo "$staticroot/apps/game/apkv1/assets/js/ac/newMain.js?v=$version";?>"></script>
+</html>

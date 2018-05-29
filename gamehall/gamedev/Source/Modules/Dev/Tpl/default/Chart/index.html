@@ -1,0 +1,66 @@
+<include file="Public:header" />
+<script src="{:cdn('PUBLIC')}/common/js/select2.js?{:C('JS_VERSION')}"></script>
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/common/css/select2.css?{:C('JS_VERSION')}" type="text/css" rel="stylesheet" />
+<script>
+    $(document).ready(function() { $("#app_id").select2(); });
+</script>
+<div class="mainw clearfix">
+	<div class="lnav fl">
+    	<include file="Chart:nav_left" />
+    </div>
+    <div class="rmain fl">
+   	  <h2 class="yyname">普通数据</h2>
+        <div class="datac">
+        	<div class="formdiv">
+                <form action="{:U("chart/index")}" method="post">
+	                <p>
+		                <input class="btn-green fr" type="submit" value="查询" />
+						
+		                时间：<input name="start_time" class="Wdate" type="text" value="{:date('Y-m-d',$start_time)}">
+		                到 <input name="end_time" class="Wdate" type="text" value="{:date('Y-m-d',$end_time)}">
+		                &nbsp;&nbsp;
+		                应用名称：
+		                <select name="app_id" class="chartselect  controlib" id="app_id" >
+		                <option value="" >     --选择--    </option>
+		                <volist name="applist" id="data">
+							<option value="{$data.id}" <if condition="$data['id'] eq $_POST['app_id']" >selected</if>    >
+							{$data.app_name}
+							</option>
+		                </volist>
+		                </select>
+		            </p>
+					<p><input name="export" class="btn-green fr" type="submit" value="导出" /></p>
+                </form>
+        	</div>
+        	
+			<table class="tab">
+			<tr>
+        	    <th width="15%">时间</th>
+                <th width="30%">应用ID</th>
+        	    <th width="25%">应用名称</th>
+        	    <th width="30%">下载量</th>
+      	    </tr>
+      	    
+      	    <volist name="comminfo" id="data">
+	            <tr>
+	        	    <td>{$data.day}</td>
+	        	    <td>{$data.APPID}</td>
+	        	    <td>{$data.gameName}</td>
+	        	    <td>{$data.DLTimes|default=0}</td>
+	      	    </tr>
+      	     </volist>
+      	     
+      	     <empty name="comminfo">
+      	     	<div class="nodata">
+      	     		<tr>
+      	     			<td colspan="4">没有找到数据<notempty name="errorInfo">({$errorInfo})</notempty></td>
+      	     		</tr>
+      	     	</div>
+      	     </empty>
+      	     
+      	  </table>
+        </div>
+    </div>
+</div>
+
+<include file="Public:footer" />

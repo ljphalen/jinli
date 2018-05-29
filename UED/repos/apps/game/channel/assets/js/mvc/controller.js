@@ -1,0 +1,1 @@
+(function(a){var d="",b="div#container";var c=a.Controller.extend({config:{baseBed:".module"},routes:{home:"homeInit",},homeInit:function(){var e=this;e.init({view:GameApk.view,model:GameApk.model,adjustLayout:b,modules:d+"slidePic,recItem,recommend"});},});new c("mainPage");})(ICAT);

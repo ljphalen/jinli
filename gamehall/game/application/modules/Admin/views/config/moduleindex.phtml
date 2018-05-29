@@ -1,0 +1,56 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $indexUrl;?>">通用配置</a></li>
+		<li class="current"><a href="<?php echo $moduleIndexUrl;?>">模块配置</a></li>
+	</ul>
+</div>
+<form method="post" action="<?php echo $modulePostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="h_a">免流量模块配置管理</div>
+	<div class="table_full">
+		<table width="100%">
+		    <tr class="tr">
+				<th class="th">模块开关</th>
+				<td class="td">
+					<label class="mr20"><input <?php if($configs['module_freedl_status'] == '1') echo 'checked';?> name="module_freedl_status" value="1" type="radio">开启</label>
+					<label class="mr20"><input <?php if($configs['module_freedl_status'] == '0') echo 'checked';?> name="module_freedl_status" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">关闭状态下测试的imsi</th>
+				<td class="td">
+					 <textarea name="module_freedl_allow_imsi" class="textarea" style="height:200px; width:800px"><?php echo $configs['module_freedl_allow_imsi'];?></textarea>
+				     <br/>
+					 <br/>
+					 <span style="color:red">填写在模块处于关闭状态的下用于测试的IMSI,多个IMSI使用“|”符号分割。</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var editor;
+	KindEditor.ready(function(K) {
+		K.token = '<?php echo $token;?>';
+	    editor = K.create('textarea[name="module_freedl_allow_imsi"]', {
+	        resizeType : 1,
+	        allowPreviewEmoticons : false,
+	        allowImageUpload : true,
+	        uploadJson : '<?php echo $uploadImgUrl;?>',
+	        items : EDITOR_ITEMS
+	    });
+	});
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Config/moduleindex');
+	},function(){
+		editor.sync();
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

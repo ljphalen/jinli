@@ -1,0 +1,36 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $listUrl; ?>">页面列表</a></li>
+			<li><a href="<?php echo $addUrl; ?>">添加页面</a></li>
+		</ul>
+	</div>
+	<form action="<?php echo $listUrl; ?>" method="post" id="searchForm">
+		<input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+		<div class="table_list">
+			<table width="100%">
+				<tr class="hd">
+					<td width="50">排序</td>
+					<td width="100">页面名称</td>
+					<td width="200">页面地址</td>
+					<td width="100">页面类型</td>
+					<td width="100">是否默认页</td>
+					<td width="100">操作</td>
+				</tr>
+				<?php foreach ($pages as $key => $value) { ?>
+					<tr class="ct">
+						<td><?php echo $value['sort']; ?></td>
+						<td><?php echo $value['name']; ?></td>
+						<td><?php echo $value['url']; ?></td>
+						<td><?php echo $types[$value['page_type']]; ?></td>
+						<td><?php echo $value['is_default'] ? '<font color="green">是</font>' : '否'; ?></td>
+						<td>
+							<a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+							<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+						</td>
+					</tr>
+				<?php } ?>
+			</table>
+	</form>
+<?php echo $this->render("layout/footer.phtml"); ?>

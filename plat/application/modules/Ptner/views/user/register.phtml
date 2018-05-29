@@ -1,0 +1,224 @@
+<?php echo $this->render("user/header.phtml");?>
+<body>
+	<div class="header">
+		<div class="container">
+			<div class="hd-name"></div>
+            <div class="hd-content"><span><a href="<?php echo $logoutUrl;?>">修改密码</a></span><em>|</em><a href="<?php echo $logoutUrl;?>">退出</a></div>
+		</div>
+	</div>
+	<div class="reg-container">
+		<div class="container">
+			<ul class="status J_status">
+				<li class="active">1.基本信息</li>
+				<li>2.资料完善</li>
+			</ul>
+			<div class="group1">
+				<form id="register_form_step1" action="<?php echo $registerPost1Url;?>" method="post">
+					<input type="hidden" name="step" value="1">
+					<input type="hidden" name="token" value="<?php echo $token;?>">
+					<div class="control-container">
+						<div class="group">
+							<label for="username">用户名</label><input class="form-control"  id="username" type="text" name="username" data-null="用户名不能为空.">
+						</div>
+						<div class="group">
+							<label for="password">密码</label><input class="form-control" id="password" type="password" name="passwd" data-null="密码不能为空.">
+						</div>
+						<div class="group">
+							<label for="repassword">确认密码</label><input class="form-control" id="repassword" type="password" name="repasswd" data-null="确认密码不能为空.">
+						</div>
+						<div class="group">
+							<label for="telephone">手机号码</label><input class="form-control" id="telephone" type="text" name="phone" data-null="手机号码不能为空."><!--<button class="btn-sms btn btn-default" >获取验证码</button>-->
+						</div>
+						<!--<div class="group">
+							<label for="code">验证码</label><input class="form-control" id="code" type="text" name="code" data-null="验证码不能为空.">
+						</div>-->
+					</div>
+					<div class="divder">
+						<span class="J_alert alert"></span>
+						<button type="submit" name="step1_submit" class="btn btn-primary J_step1">下一步</button>
+					</div>
+				</form>
+			</div>
+			<div class="group2">
+				<form id="register_form_step2" action="<?php echo $registerPost2Url;?>" method="post">
+				<input type="hidden" name="token" value="<?php echo $token;?>">
+				<input type="hidden" name="province_id">
+				<input type="hidden" name="city_id">
+				<input type="hidden" name="area_id">
+				<input type="hidden" name="s_type">
+				<input type="hidden" name="sign">
+					<div class="control-container">
+						<div class="group">
+							<label for="shopname">店铺名称</label><input class="form-control"  id="shopname" type="text" name="s_name">
+						</div>
+						<div class="group">
+							<label for="type">商户类型</label> 
+							<div class="dropdown">
+								<button id="type" data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+									请选择...<span class="caret"></span>
+								</button>
+								<ul role="menu" value-target="s_type" class="dropdown-menu" aria-labelledby="type">
+								<?php foreach($stype as $key=>$value) {?>
+									<li data-target="stype" data-value="<?php echo $key;?>"><?php echo $value;?></li>
+								<?php }?>
+								</ul>
+							</div>
+						</div>
+						<div class="group ">
+							<label for="repassowrd">所属商圈</label>
+							<div class="dropdown area">
+								<button id="province" data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+									请选择<span class="caret"></span>
+								</button>
+								<ul id="province_list" value-target="province_id" ajax-target="city_list" role="menu" class="dropdown-menu" aria-labelledby="province">
+									<?php foreach($province as $key=>$value) {?>
+									<li data-value="<?php echo $value['region_id'];?>"><?php echo $value['region_name'];?></li>
+									<?php }?>
+								</ul>
+							</div>
+							<span class="name">-</span>
+							<div class="dropdown area">
+								<button id="city" data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+									请选择<span class="caret"></span>
+								</button>
+								<ul id="city_list" value-target="city_id" ajax-target="area_list"  role="menu" class="dropdown-menu" aria-labelledby="city">
+								</ul>
+							</div>
+							<span class="name">-</span>
+							<div class="dropdown area">
+								<button id="area" data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+									请选择<span class="caret"></span>
+								</button>
+								<ul id="area_list" value-target="area_id" role="menu" class="dropdown-menu" aria-labelledby="area">
+								</ul>
+							</div>
+						   <span class="name"></span>
+						</div>
+						<div class="group">
+							<label for="address">详细地址</label><input class="form-control" id="address"type="text" name="s_detail">
+						</div>
+					</div>
+					<div class="divder">
+						<span class="J_alert alert ti"></span>
+						<button type="submit" name="step2_submit" class="btn btn-primary J_step2">注册</button>
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+	<?php echo $this->render("user/footer.phtml");?>
+	
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.form.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$("button[name=step1_submit]").click(function(event) {
+			event.preventDefault();
+			$('#register_form_step1').ajaxSubmit(function(ret){
+				if (ret.success == false) {
+					$(".group1 .J_alert").addClass("alert-danger").html(ret.msg).css('display','block');
+				} else {
+					$('input[name=sign]').val(ret.data.sign);
+					$(".group1").hide();
+					$(".group2").show();
+					$(".J_status li:first-child").removeClass('active');
+					$(".J_status li:last-child").addClass('active');
+				}
+			});
+			return false;
+		});
+		$("button[name=step2_submit]").click(function(event) {
+			event.preventDefault();
+			$('#register_form_step2').ajaxSubmit(function(ret){
+                console.log($(".group2 .J_alert"));
+				if (ret.success == false) {
+					$(".group2 .J_alert").addClass("alert-danger").html(ret.msg).show();
+				} else {
+					$(".group2 .J_alert").addCloass("alert-success").html(ret.msg).show();
+					setTimeout(function(){
+						location.href="<?php echo $loginUrl;?>";
+					}, 1000);
+					
+				}
+			});
+			return false;
+		});
+
+		var it = null;
+		$(".btn-sms").click(function(event){
+			event.preventDefault();
+			var i = 120;
+			var s = $(this);
+			if (it) return false;
+
+			var phone = $("input[name=phone]");
+			if (!phone.val()) {
+				$(".group1 .J_alert").addClass("alert-danger").html("手机号码不能为空.").css('display','block');
+				return false;
+			}
+
+			$.ajax({
+				url: "<?php echo $webroot,$smsUrl;?>",
+				data:"phone="+phone.val(),
+				success:function(ret) {
+					if (ret.success == true) {
+						$(".group1 .J_alert").addClass("alert-success").html(ret.msg).show();
+					} else {
+						$(".group1 .J_alert").addClass("alert-danger").html(ret.msg).show();
+						return false;
+					}
+				}
+			})
+
+			it = window.setInterval(function timeout() {
+				if (i>0) {
+					s.html(--i+"秒后重新发送");
+				} else {
+					window.clearInterval(it);
+					it = null;
+					s.html("获取验证码");					
+				}
+			}, 1000);
+
+			
+		});
+	})
+	
+</script>
+<script type="text/javascript">
+		$(function(){
+			//dropdown
+			$("ul[role=menu]").delegate('li', 'click',function(){
+				var hname = $(this).parent().attr('value-target');
+				var val = $(this).attr('data-value');
+				var atarget = $(this).parent().attr('ajax-target');
+				
+				if (atarget) {
+					$.ajax({
+						  url: "<?php echo $regionUrl;?>",
+						  data: 'id='+val,
+						  dataType:'json',
+						  success: function(ret) {
+							  if (ret.data.length > 0) {
+								  var html = "";
+								  for(i=0; i<ret.data.length; i++) {
+									  var v = ret.data[i];
+									  html+='<li data-target="'+atarget+'_id" data-value="'+v.region_id+'">'+v.region_name+'</li>';
+								  }
+								  $("#"+atarget).html(html);
+							  }
+						  }
+					});
+				}
+				$("input[name='"+hname+"']").val(val);
+				$(this).siblings('li').removeClass('selected').end().addClass('selected');
+				var btnId=$(this).parent('ul').attr('aria-labelledby');
+				var text=$(this).text();
+				$("#"+btnId).html(text+'<span class="caret"></span>');
+			})
+		})
+	</script>
+</body>
+</html>

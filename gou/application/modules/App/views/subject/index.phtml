@@ -1,0 +1,57 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<div id="page" data-ajaxUrl="<?php echo $webroot,'/subject/moreSj/'?>" data-curPage="1" data-hasNext="<?php echo $hasnext;?>" >
+		<div id="iscrollWrap">
+			<div class="mainWrap">
+				<?php if ($hasheader) {?>
+				<header id="iHeader" class="hd">
+					<div class="top-wrap">
+						<div class="title">
+							<a href="<?php echo $webroot;?>" class="back"></a>
+							<h1>赚取积分</h1>
+						</div>
+					</div>
+				</header>
+				<?php }?>
+				<!-- 内容区域 START-->
+				<section class="subject">
+					<ul class="mod-tw-list">
+					
+						<?php foreach($subjects as $key=>$value){?>
+							<li data-year="<?php echo $value['year'];?>">
+								<div class="pic">
+									<a href="<?php echo $value['link'];?>"><img src="<?php echo $value['img'];?>" /></a>
+								</div>
+								<div class="date-time"><?php echo $value['start_time'];?></div>
+								<div class="txt"><?php echo $value['title'];?></div>
+							</li>
+							
+							<?php if($subjects[$key+1] && ($subjects[$key]['year'] != $subjects[$key+1]['year'])){?>
+							<li class="mr0 hline">
+								<div><div class="w450"><?php echo $subjects[$key]['year'];?>年</div></div>
+								<div></div>
+								<div><div class="w450"><?php echo $subjects[$key+1]['year'];?>年</div></div>
+							</li>
+							<?php }?>
+							
+						<?php }?>
+					</ul>
+					<?php if($hasnext){?>
+					<div class="JS-loadMore"><span>数据加载中...</span></div>
+					<?php }?>
+				</section>
+				<!-- 内容区域 END-->
+			</div>
+		</div>
+	</div>
+	<script id="J_itemView" type="template">
+		<li data-year="{list.year}">
+			<div class="pic">
+				<a href="{list.link}"><img src="{list.img}" /></a>
+			</div>
+			<div class="date-time">{list.start_time}</div>
+			<div class="txt">{list.title}</div>
+		</li>
+	</script>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

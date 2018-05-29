@@ -1,0 +1,1 @@
+(function(a){var c="",b="div#container";GameApk.controller=a.Controller.extend({config:{View:GameApk.view,Model:GameApk.model},routes:{home:"homeInit",},homeInit:function(){var d=this;d.init({baseBed:".module",adjustLayout:b,modules:"slidePic,recItem,recommend"});}});})(ICAT);

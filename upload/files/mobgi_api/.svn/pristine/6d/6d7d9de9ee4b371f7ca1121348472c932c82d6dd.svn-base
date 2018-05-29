@@ -1,0 +1,299 @@
+<link media="screen" href="{{rootUrl}}/css/chosen.css" rel="stylesheet" type="text/css">
+<div class="colMain">
+    <div class="title">
+        <p class="fl">图片素材管理</p>
+    </div>
+    <div class="main" data-tabs-name="view">
+        <div class="content">
+            <!-- include 'menu' -->
+            <div class="devInfo" data-tabs-name="pic">
+                <!-- include 'meterial_menu' -->
+                <form action="../resource/material_pic" method="GET" enctype="multipart/form-data" style="margin-top:20px;">
+                    <input type="hidden" value="{{result.dev_id}}" name="dev_id" />
+                    <ul class="form">
+                        <li>
+                            <span class="label">平台类型：</span>
+                            <div class="fc">
+                                <select name="platform" id="platform"   onchange="autoPlatform()">
+                                    <option value="">所有(默认)</option>
+                                    <option value="1">Android</option>
+                                    <option value="2">IOS</option>
+                                </select>   
+                                <span style="margin-left:100px;">图片色调：</span>
+                                <select name="color" id="color">
+                                	<option value="" selected>全部</option>
+                                    <option value="其它">其它</option>
+                                    <option value="冷色调">冷色调</option>
+                                    <option value="暖色调">暖色调</option>
+                                </select>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label">所属产品：</span>
+                            <div class="fc">
+                                <select name="product_name" id="product_name">
+                                 <option value="">全部产品</option>
+                                    <!-- loop product -->
+                                    <option value="{{product' value.product_name}}">{{product' value.product_name}}</option>
+                                    <!-- endloop -->
+                                </select>
+                                <span style="margin-left:100px;">图片焦点：</span>
+                                <select name="focus" id="focus">
+                                	<option value="" selected>全部</option>
+                                    <option value="其它">其它</option>
+                                    <option value="图像">图像</option>
+                                    <option value="文字">文字</option>
+                                </select>
+                            </div>
+                            
+                        </li>
+                        
+                         <li>
+                            <span class="label">屏幕方向：</span>
+                            <div class="fc">
+                                <select name="ad_subtype" id="ad_subtype">
+                                	<option value="">全部产品</option>
+                                 	<option value="0">横屏</option>
+                                    <option value="1">竖屏</option>
+                                    <option value="10">icon</option>
+                                </select>
+                                <span style="margin-left:100px;">图片噱头：</span>
+                                <select name="xuetou" id="xuetou">
+                                	<option value="" selected>全部</option>
+                                    <option value="其它">其它</option>
+                                    <option value="游戏介绍">游戏介绍</option>
+                                    <option value="美女">美女</option>
+                                    <option value="热血">热血</option>
+                                    <option value="中奖">中奖</option>
+                                    <option value="玩法创新">玩法创新</option>
+                                    <option value="时事热点">时事热点</option>
+                                </select>
+                            </div>
+                            
+                        </li>
+                        
+                        <li>
+                            <span class="label">图片尺寸：</span>
+                            <div class="fc">
+                                <select name="resolution" id="resolution">
+                                	<option value="">全部产品</option>
+                                 	<option value="800*480">800*480</option>
+                                    <option value="480*800">480*800</option>
+                                    <option value="480*290">480*290</option>
+                                    <option value="480*75">480*75</option>
+                                    <option value="72*72">72*72</option>
+                                </select>
+                            </div>
+                        </li>
+                        
+                         <li>
+                            <span class="label">上传时间：</span>
+                            <div class="fc">
+                                <input typt="text" class="iText datepicker" name='sdate' id='sdate' value='{{date('Y-m-d',sdate)}}' /> -
+                    			<input typt="text" class="iText datepicker" name='edate' id='edate' value='{{date('Y-m-d',edate)}}' />
+                               
+								<span style="margin-left:100px;">
+								</span><input type="submit" value="查询" class="submit"/>
+                            </div>
+                            
+                        </li>
+                        
+                        <li>
+                            <span class="label">广告形式：</span>
+                            <div class="fc">
+                                <select name="adtype"  id="adtype">
+                                	<option value="">全部</option>
+                                 	<option value="('800*480')">插页广告-横屏</option>
+                                    <option value="('480*800')">插页广告-竖屏</option>
+                                    <option value="('480*290')">竖屏横图</option>
+                                    <option value="('480*75')">BANNER</option>
+                                    <option value="('960*150')">自定义</option>
+                                    <option value="('72*72')">ICON</option>
+                                </select>
+                            </div>
+                            
+                        </li>
+                        </ul>
+                </form>
+                <div class="grid">
+                    <table>
+                        <!-- loop pic -->
+                        <!-- if {{i}}%4 == 0 -->
+                        <tr>
+                            <!-- endif -->
+                            <td style="padding-top:20px;cursor: pointer" <!-- if {{pic' value.ad_type}}==10 -->ondblclick="selectIcon('{{pic' value.pic_url}}')"<!-- else -->ondblclick="selectPic({{pic' value.id}})"<!-- endif -->>
+                                <div align="center">
+                                    <img src = "{{pic' value.pic_url}}" style="width:100px;height:100px;" class="showOriginal" />
+                                </div>
+                                <p/>
+                                <div style="display:flex;">
+                                    <div align="left" style="margin-left:50px;">
+                                        <p><span>平台类型:<!-- if {{pic' value.platform}}==1 -->Android<!-- elseif {{pic' value.platform}}==2 -->IOS<!-- else -->通用<!-- endif --></span></p>
+                                        <p><span>图片尺寸:{{pic' value.resolution}}</span></p>
+                                        <p><span>图片色调:{{pic' value.color}}</span></p>
+                                        <p><span>图片焦点:{{pic' value.focus}}</span></p>
+                                        <p><span>图片噱头:{{pic' value.xuetou}}</span></p>
+                                    </div>
+                                    <div align="right" style="margin-left:80px;margin-top:10px;font-size: 25px;">
+                                        <p><span>综合点击率:</span></p>
+                                        <p>50%</p>
+                                    </div>
+                                </div>
+                                <p/>
+                                <div align="center">
+                                    <p><span>{{pic' value.pic_name}}-{{date('Y-m-d H:i:s',pic' value.updatetime)}}</span></p>
+                                </div>
+                                <p/>
+                                <div align="center" style="margin-bottom:10px;">
+                                    <!-- if {{pic' value.ischeck}}!=1 -->
+                                    <a class="btnstyle" href="/resource?id={{pic' value.id}}" title="编辑素材">编辑素材</a>
+                                    <!-- endif -->
+                                    <span style="margin-left:80px;"></span>
+                                    <a class="btnstyle btndel" href="/resource/delete?op=pic&id={{pic' value.id}}" title="删除素材">删除素材</a>                	
+                                </div>
+                            </td>
+                            <!-- if ({{i}}++)%4 == 3 -->      	
+                        </tr>     
+                        <!-- endif -->
+                        <!-- endloop -->
+                        <!-- if ({{i}})%4 != 3 -->
+                        </tr>
+                        <!-- endif -->
+                    </table>
+                    <div class="pagination">{{pager.pages}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="imgFrame" style="position:absolute; top:40%; left:40%; z-index:1000; display:none;">
+        <div style="float:right"><a id="imgFrameHide">关闭</a></div>
+        <div id="imgbox"></div>
+    </div>
+</div>
+<script>
+var now= new Date();
+
+var year=now.getFullYear();
+
+var month=now.getMonth()+1;
+
+var date=now.getDate();
+	$(function(){
+	    $('.datepicker').datepicker({
+	        changeMonth:true,
+	        changeYear:true,
+	        minDate:new Date(),
+	        dateFormat : "yy-mm-dd",
+	        minDate: "2014-01-01",
+	        maxDate:year+"-"+month+"-"+date
+	    });
+	    $('#sdate').change(function(){
+		    	var time = $(this).val();
+				var date1 = new Date($('#sdate').val()).getTime();
+				var date2 = new Date($('#edate').val()).getTime();
+				if(date2 < date1)
+				{
+					alert("错误，结束日期不能比开始日期早");
+				}
+		    });
+	    $('#edate').change(function(){
+			var date1 = new Date($('#sdate').val()).getTime();
+			var date2 = new Date($('#edate').val()).getTime();
+			if(date2 < date1)
+			{
+				alert("错误，结束日期不能比开始日期早");
+				return false;
+			}
+	    });
+        
+        //要先触发自动平台
+        $("#platform").val("{{result.platform}}");
+        autoPlatform("{{result.product_name}}");
+        
+	    $("#product_name").val("{{result.product_name}}");
+//        $("#product_id").val("{{result.product_id}}");
+	    $("#color").val("{{result.color}}");
+	    $("#ad_subtype").val("{{result.ad_subtype}}");
+	    $("#focus").val("{{result.focus}}");
+	    $("#resolution").val("{{result.resolution}}");
+	    $("#xuetou").val("{{result.xuetou}}");
+	    $("#adtype").val("{{result.adtype}}");
+        //点击图片显示原图
+	    $(".showOriginal").click(function(){
+            $("#imgFrame").show();
+            $("#imgbox").html("<img src='" + $(this).attr("src") + "' />");
+            var screenWidth = $(window).width(), screenHeight = $(window).height();  ///当前浏览器窗口的 宽高
+            var scrolltop = $(document).scrollTop();///获取当前窗口距离页面顶部高度
+            var objLeft = (screenWidth - $("#imgFrame").width())/2 ;
+            var objTop = (screenHeight - $("#imgFrame").height())/2 + scrolltop;
+            $("#imgFrame").css("left", objLeft).css("top", objTop);
+            return false;
+        });
+        //窗口变形时图片重置位置
+        $(window).resize(function() {
+            screenWidth = $(window).width();
+            screenHeight = $(window).height();
+            scrolltop = $(document).scrollTop();
+            objLeft = (screenWidth - $("#imgFrame").width())/2 ;
+            objTop = (screenHeight - $("#imgFrame").height())/2 + scrolltop;
+            $("#imgFrame").css({left: objLeft + 'px', top: objTop + 'px'});
+        });
+        //浏览器有滚动条时的操作图片重置位置
+        $(window).scroll(function() {
+            screenWidth = $(window).width();
+            screenHeight = $(window).height();
+            scrolltop = $(document).scrollTop();
+            objLeft = (screenWidth - $("#imgFrame").width())/2 ;
+            objTop = (screenHeight - $("#imgFrame").height())/2 + scrolltop;
+            $("#imgFrame").css({left: objLeft + 'px', top: objTop + 'px'});
+        });
+        
+        $("#imgFrameHide").click(function(){
+            $("#imgFrame").hide();
+        });
+		 
+	})
+        function selectPic(id){
+            if(window.opener != null)
+            {
+                window.opener.select_resource(id,1)
+                window.close();
+            }
+        }
+        function selectIcon(icon_url){
+            if(window.opener != null)
+            {
+                window.opener.select_icon(icon_url)
+                window.close();
+            }
+        }
+
+function autoPlatform(productname) {
+    ajaxPOST("/reproduct/autoPlatform", {"platform": $("#platform").val()}, function(data) {
+        var length = data.length;
+        str = '';
+        if(productname == '')
+        {
+             str ='<option value="" selected="selected">所有产品</option>';
+        }else{
+            str ='<option value="">所有产品</option>';
+        }
+        for (i=0; i<length; i++)
+        {
+            if_selecte = ""
+            if(productname == data[i].product_name)
+            {
+                if_selecte =  'selected="selected"';
+            }   
+            str += '<option value="'+data[i].product_name+'" '+if_selecte+'>'+data[i].platform_product_name+'</option>'
+        }
+        $("#product_name").html(str);
+        //重新绑定select的选择组件
+        $("#product_name").removeClass("chzn-done");
+        $("#product_name_chzn").remove();
+        $("#product_name").chosen({});
+    })
+}
+</script>
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>

@@ -1,0 +1,66 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+	</div>
+	<div class="table_full">
+		<form action="<?php echo $indexUrl; ?>" method="POST" id="form">
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<table width="100%" cellspacing="0" cellpadding="0">
+					<tr class="tr">
+					<th class="th">时间范围</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $params['sdate']; ?>"> 至
+						<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $params['edate']; ?>">
+					</td>
+				</tr>
+					<tr class="tr">
+					<th class="th">用户手机号</th>
+					<td class="td">
+						<input type="text"  name="username"  class="input"   value="<?php echo $params['username'];?>"></td>
+				</tr>
+				
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+		</form>
+	</div>
+
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+				<th class="th">用户ID</th>
+				<th class="th">变动前金额</th>
+				<th class="th">变动后金额</th>
+				<th class="th">受影响金额</th>
+				<th class="th">类型</th>
+				<th class="th">时间</th>
+			</tr>
+			<?php foreach ($dataList as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['id'];?></td>
+					<td class="td" align="left"><?=$v['uid'];?></td>
+					<td class="td"><?php echo $v['before_money'];?></td>
+					<td class="td"><?php echo $v['after_money'] ;?></td>
+					<td class="td"><?php echo $v['affected_money'];?></td>
+					<td class="td"><?php echo  $v['type']==2?'畅聊VIP充值':'普通充值'?></td>
+					<td class="td"><?php echo date('Y-m-d H:i:s',$v['add_time']); ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+	
+		<script type="text/javascript">
+		$(document).ready(function () {
+			$("#sdate").datepicker({
+				dateFormat: 'yy-mm-dd'
+			});
+			$("#edate").datepicker({
+				dateFormat: 'yy-mm-dd'
+			});
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

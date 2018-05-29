@@ -1,0 +1,46 @@
+<include file="Public:header" />
+
+<div class="mainw clearfix">
+	<include file="Union:nav_left" />
+    <div class="rmain fl">
+    	<h2 class="yyname ">我的游戏</h2>
+
+        <div class="farea farea-key">
+            <div class="numsub">
+            
+            <div class="fl">您当前共有<em class="fblue"> {:count($apps)} </em> 款联运游戏</div>
+            
+        	<a href="{:U("Help/page", array("id"=>6))}" target="_help" class="btn-green fr">联运流程</a>
+        	<a href="{:U("Union/add")}" class="btn-green fr">申请Key</a>
+            </div>
+        </div>
+        <notempty name="apps">
+    	<div class="insub gamelist">
+        	<h3>游戏列表</h3>
+            <div class="yylist mt30">
+        	<ul>
+        	<volist name="apps" id="app">
+        		<php>$apkId=D("Apks")->where(array('app_id'=>$app['id']))->order('id desc')->getField('id');</php>
+            	<li>
+					<a href="{:U("apps/manage", array("id"=>$apkId))}" title="{$app.app_name}" class="imga fl">
+					<img src="<empty name="app.icon">{:CDN("PUBLIC")}/common/images/no_photo.png<else/>{:Helper("Apk")->get_url("icon")}{$app.icon.file_path}</empty>" width="54" height="54"></a>
+					<div class="picr">
+                    	<h6><a href="{:U("apps/manage", array("id"=>$apkId))}">{$app.app_name}<em></em></a></h6>
+                    	<p>{$app.status}</p>
+                    	<p class="fgray">上传日期 {$app["created_at"]|date="Y-m-d", ###}</p>
+                    </div>
+                    <div class="picb">
+                    	<a href="{:U("apps/manage", array("id"=>$apkId))}" class="btn-xq2">查看详情</a>
+                    </div>
+                </li>
+            </volist>
+            </ul>
+          </div>
+        </div>
+        </notempty>
+        <div class="page">
+			{$page}
+		</div>
+    </div>
+</div>
+<include file="Public:footer" />

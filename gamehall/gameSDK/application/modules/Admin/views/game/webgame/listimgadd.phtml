@@ -1,0 +1,78 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li class="current"><a href="javascript:;">添加推荐图片</a></li>
+	</ul>
+</div>
+<div class="h_a">添加推荐图片</div>
+<form method="post" action="<?php echo $listImgAddPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="day_id" value="<?php echo $day_id;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">标题(<span style="color: red">*</span>)</th>
+			<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">链接类型(<span style="color: red">*</span>)</th>
+			<td class="td">
+				<?php foreach($linkType as $key=>$value) {?>
+                <label class="mr20"><input <?php if(2 == $key) echo 'checked';?> name="link_type" value="<?php echo $key;?>" type="radio" onclick ="showContent(<?php echo $key;?>)"><?php echo $value;?></label>
+			    <?php }?>
+				<span style="color: red">(选择分类时，链接ID输入框填写游戏主分类的ID)</span>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th" id="th_link">链接参数</th>
+			<td class="td"><input type="text" class="input" name="link" id="link"/></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图片(<span style="color: red">*</span>)</th>
+			<td class="td">
+                <ul class="uploadImg">
+					<li id="img">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="img" />
+					</li>
+				</ul>
+                <p style="clear:both;">
+	                <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=img';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态(<span style="color: red">*</span>)</th>
+			<td class="td">
+			   <select name="status" class="wa">
+					<?php foreach($status_list as $key=>$value) {?>
+    			    <option value="<?php echo $key;?>" <?php if($key == 1) echo 'selected';?>><?php echo $value;?></option>
+    			    <?php }?>
+                </select>
+            </td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac">
+	<span class="btn"><span><a href="<?php echo $editUrl.'?dayId='.$day_id;?>"><button type="button">返回</button></a></span></span>
+    <span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+</div>
+</form>
+<script type="text/javascript">
+showContent = function(flag) {
+	if (flag != 4) {
+    	 $("#th_link").html('链接ID');
+    	 $("#link").removeClass('wc');
+	} else {
+    	 $("#th_link").html('外链接');
+    	 $("#link").addClass('wc');
+	}
+}
+$(document).ready(function(){
+    showContent(2);
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $editUrl.'?dayId='.$day_id;?>');
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

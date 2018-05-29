@@ -1,0 +1,106 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $gameListUrl;?>">游戏列表</a></li>
+		<li ><a href="<?php echo $hotUrl;?>">热门礼包</a></li>
+    <li class="current"><a href="javascript:;">添加礼包</a></li>
+	</ul>
+</div>
+
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="ctype" value="2" type="hidden" />
+<input name="status" value="1" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	   <tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input wc" name="sort" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">礼包名称</th>
+			<td class="td"><input type="text" class="input wc" name="name" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏ID</th>
+			<td class="td"><input type="text" class="input wc" name="game_id" value="<?php echo !$info['game_id'] ? '':$info['game_id']; ?>" id="game_id"><button type="button" id="test" style="margin-left:20px;">获取游戏名称</button><br>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="" id="title"></td>
+		</tr>
+		<tr class="tr">
+				<th class="th">礼包内容</th>
+				<td class="td"><textarea style="width: 600px; height: 300px" class="textarea"
+						name="content"></textarea>
+				</td>
+		</tr> 
+		<tr class="tr">
+			<th class="th">使用时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="use_start_time" name="use_start_time" value="" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="use_end_time" name="use_end_time" value="" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+				<th class="th">使用方法</th>
+				<td class="td"><textarea style="width: 600px; height: 300px" class="textarea"
+						name="method"></textarea>
+				</td>
+		</tr>
+		<tr class="tr"  style="display:none;">
+				<th class="th">兑奖码</th>
+				<td class="td"><textarea style="width: 600px; height: 300px" class="textarea"
+						name="activation_code"></textarea>
+				</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">生效时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="effect_start_time" name="effect_start_time" value="" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="effect_end_time" name="effect_end_time" value="" /></div>
+			</td>
+		</tr>
+		<tr class="tr" >
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="select wa" disabled="disabled">
+				<option  "selected" value="0">关闭</option>
+				<option  value="1">开启</option>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#use_start_time').datetimepicker();
+    $('#use_end_time').datetimepicker();
+    $('#effect_start_time').datepicker();
+    $('#effect_end_time').datepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Gift/gamelist');
+	});
+})
+$('#test').click(function(){
+		    $('#game_id,#title').html("");
+			$.ajax({
+				url : baseurl + "/Admin/Client_Gift/get_name",
+				type : 'POST',
+				dataType : 'json',
+				data : 'token='+'<?php echo $token;?>'+'&game_id='+$("#game_id").val(),
+				success : function(ret) {
+					 if (ret.success) {
+						var list = ret.data.list;
+						$('#title').val(list.name) ;
+					} else {
+						showError('', ret.msg);
+					}
+				}
+			});
+			return false;
+	})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

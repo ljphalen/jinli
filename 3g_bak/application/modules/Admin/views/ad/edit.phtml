@@ -1,0 +1,115 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">广告列表</a></li>
+		<li class="current"><a href="javascript:;">编辑广告</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑广告</div>
+<form method="post" action="<?php echo $editPostUrl; ?>" id="addFrom">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">分类</th>
+				<td class="td">
+					<select name="ad_type" onchange="show(this.value)">
+						<?php foreach ($ad_types as $key => $value) {
+							if ($key != 0) {
+								?>
+								<option value="<?php echo $key; ?>" <?php if ($info['ad_type'] == $key) echo 'selected="selected"'; ?>><?php echo $value; ?></option>
+							<?php }
+						} ?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">标题</th>
+				<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title']; ?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort']; ?>"></td>
+			</tr>
+			<tr class="tr" id="link">
+				<th class="th">链接</th>
+				<td class="td"><input type="text" name="link" class="input wc" value="<?php echo $info['link']; ?>">
+				</td>
+			</tr>
+			<tr class="tr" id="img">
+				<th class="th">图片</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="AdImg">
+							<?php if ($info['img']) {
+								echo '<img src="' . $attachPath . $info['img'] . '" />';
+							} else {
+								echo '<img src="' . $staticPath . '/img/content/nopic.jpg" />';
+							}
+							?>
+							<input type="hidden" name="img" value="<?php echo $info['img']; ?>">
+						</li>
+					</ul>
+					<p style="clear:both;">
+						<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=AdImg'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">开始结束时间</th>
+				<td class="td">
+					<div>
+						<input class="input" type="text" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $info['start_time']); ?>"/> 至
+						<input class="input" type="text" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s', $info['end_time']); ?>"/>
+					</div>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td"><select name="status" min-width="100px">
+						<option <?php if ($info['status'] == 1) echo 'selected="selected"'; ?> value="1">开启</option>
+						<option <?php if ($info['status'] == 0) echo 'selected="selected"'; ?>value="0">关闭</option>
+					</select></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+	//广告表单数据提交
+	$(document).ready(function () {
+		$('#start_time').datetimepicker();
+		$('#end_time').datetimepicker();
+		if (<?php echo $info['ad_type']?> == 10 || <?php echo $info['ad_type']?> == 11
+		)
+		{
+			$('#img').hide();
+			$('#link').hide();
+		}
+		else
+		{
+			$('#img').show();
+			$('#link').show();
+		}
+		show = function (p) {
+			if (p == 10 || p == 11) {
+				$('#img').hide();
+				$('#link').hide();
+			} else {
+				$('#img').show();
+				$('#link').show();
+			}
+		}
+		ajaxForm('addFrom', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Ad/index');
+		});
+	})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml"); ?>

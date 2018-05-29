@@ -1,0 +1,53 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<script>
+    var token = '<?php echo $token; ?>';
+</script>
+<div id="page">
+    <article class="ac">
+        <?php
+        $pre_parm = $next_parm = 0;
+        if ($pre_file) $pre_parm = sprintf('%d,%s,%s,%s,%d', $pre_file['id'], $pre_file['title'], $preUrl, $downPath . $pre_file['file'], $pre_file['since']);
+
+        if ($next_file) $next_parm = sprintf('%d,%s,%s,%s,%d', $next_file['id'], $next_file['title'], $nextUrl, $downPath . $next_file['file'], $next_file['since']);
+        ?>
+        <div class="scroll-pic J_scrollPic" data-prevtheme="<?php echo $pre_parm; ?>" data-nexttheme="<?php echo $next_parm; ?>">
+            <div class="slideWrap">
+                <ul class="pic-wrap">
+                    <li class="intro">
+                        <div class="intro-box">
+                            <div class="intro-top">主题详情</div>
+                            <div class="intro-btm">
+                                <div id="intro-wrap">
+                                    <div id="intro-scroller">
+                                        <div class="intro-div">
+                                            <dl>
+                                                <dd class="title"><label>主题名称：</label><span><?php echo $info['title']; ?></span></dd>
+                                                <dd><label>作者：</label><span><?php echo $info['designer']; ?></span></dd>
+                                                <dd><label>大小：</label><span><?php echo Util_File::size($info['file_size']); ?></span></dd>
+                                                <dd><label>下载量：</label><span><?php echo $info['down']; ?></span></dd>
+                                                <?php if ($info['open_time']) { ?><dd><label>更新时间：</label><span><?php echo date('Y-m-d', $info['open_time']); ?></span></dd><?php } ?>
+                                                <?php if ($info['descript']) { ?><dd class="desc"><label>主题介绍：</label><span><?php echo html_entity_decode($info['descript']); ?></span></dd><?php } ?>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <?php for ($i = 0; $i <= (count($imgs) - 1); $i ++) { ?>
+                        <li data-imgurl="<?php echo $imagesUrl; ?>" data-themeid="<?php echo $themeid; ?>" data-imageid="<?php echo $i; ?>"><span class="span-pic">
+                                <img data-original="<?php echo $attachPath . $imgs[$i]['img']; ?>" class="lazy" src="<?php echo $staticResPath; ?>/pic/pic_nopreview.png?v=<?php echo $version; ?>" onerror="this.src='<?php echo $staticResPath; ?>/pic/pic_nopreview.png';">
+                            </span></li>
+                    <?php } ?>
+                </ul>
+            </div>
+            <div class="handle">
+                <span></span>
+                <?php for ($i = 1; $i <= count($imgs); $i ++) { ?>
+                    <span></span>
+                <?php } ?>
+            </div>
+        </div>
+    </article>
+</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

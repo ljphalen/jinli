@@ -1,0 +1,108 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="h_a"><a href="/Admin/Register/index">返回</a></div>
+	<form method="post" action="<?php echo $editPostUrl; ?>" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+		<input name="id" value="<?=$v['id'];?>" type="hidden">
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">用户ID:</th>
+					<td class="td2"><?php echo $data['id']; ?></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">用户名:</th>
+					<td class="td2"><?php echo $data['username']; ?></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">用户手机号:</th>
+					<td class="td2"><?php echo $data['mobile']; ?></td>
+				</tr>
+                <tr class="tr">
+                    <th class="th">呢称:</th>
+                    <td class="td2"><?php echo $data['nickname']; ?></td>
+                </tr>
+				<tr class="tr">
+					<th class="th">Email:</th>
+					<td class="td2" 　style="padding-left:20px"><?php echo $data['email']; ?></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">QQ:</th>
+					<td class="td2" 　style="padding-left:20px"><?php echo $data['qq']; ?></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">地址:</th>
+					<td class="td2" 　style="padding-left:20px"><?php echo $data['address']; ?></td>
+				</tr>
+				<tr class="tr">
+					<th class="th" 　>注册时间:</th>
+					<td class="td2" 　style="padding-left:20px"><?php echo date('Y-m-d H:i:s', $data['register_time']); ?></td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">是否加入黑名单:</th>
+					<td style="padding-left:20px">
+						<select name="is_black_user">
+							<?php foreach ($types as $k => $v) { ?>
+								<option value="<?php echo $k; ?>" <?php if ($k == $data['is_black_user']) echo 'selected' ?>><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">是否加入积分冻结:</th>
+					<td style="padding-left:20px">
+						<select name="is_frozed">
+							<?php foreach ($types as $k => $v) { ?>
+								<option value="<?php echo $k; ?>" <?php if ($k == $data['is_frozed']) echo 'selected' ?>><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">积分清零</th>
+					<td class="td2" style="padding-left:20px"><input type="button" id="reset" value="确定" class='btn'>
+					</td>
+				</tr>
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+		</div>
+		<input type="hidden" value="<?php echo $data['id']; ?>" name="id">
+	</form>
+
+    <?php
+foreach($visitList as $val)  {
+echo "{$val['imei']}、{$val['model']}、{$val['app_ver']}、{$val['sys_ver']}、{$val['ip_addr']}<br>";
+}
+    ?>
+
+
+	<script type="text/javascript">
+		//表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Register/index');
+			});
+
+			$("#reset").bind('click', function () {
+				if (confirm('确定要把该用户金币清零吗?')) {
+					$.ajax({
+						'type': 'post',
+						'dataType': 'json',
+						'data': {'token': '<?php echo $token;?>', 'id': '<?php echo $data['id'];?>'},
+						'url': '/Admin/Register/ajaxResetScore',
+						'success': function (e) {
+							if (e.success) {
+								alert('操作成功');
+							} else {
+								alert('操作失败!');
+							}
+						}
+					})
+				}
+			})
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

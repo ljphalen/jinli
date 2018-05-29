@@ -1,0 +1,228 @@
+<div id="illustration">
+     <ul class="form">
+     	 <!-- include "illustration_product_target" -->
+     	<li>
+            <span class="label">产品目标：</span>
+            <div class="fc">
+                <input type="text" class="iText " id="purl" name="purl" value="{{product.product_url}}" style="width:500px;" />     
+            </div>
+        </li>		
+         <li class="line"></li>	                
+        <li>
+             <span class="label">广告内容：</span>
+             <span style="display:none" class="label">分配比率：</span>
+             <div class="fc">
+                 <div class="grid" id="adList">
+                     <div class="gridToolbar"><a href="javascript:void(0)"  id="addNewAD" class=""></a></div>
+                     <div id="ad_title" class="tablebox"><div class="gridTtitle"><span class="fl">广告素材</span><a class="btn fr" id="select_material" href="javascript:open_resource('/resource/material_pic?product_name={{product.product_name}}&platform={{product.platform}}')">选择素材</a> <a class="btn fr addPUSH" href="javascript:void(0)">配置PUSH广告文案</a> <a class="btn fr averaged" href="javascript:void(0)">全部平均</a></div>
+                         <table><thead><tr><th>素材ID</th><th>素材类型</th><th>广告类型</th><th>素材名称</th><th>广告状态</th><th>分配比例</th><th>屏幕显示比率</th><th>显示时长(秒)</th><th>延迟展示(秒)</th><th>操作</th></tr></thead>
+                             <tbody>
+                                 <!-- loop product.ads -->
+                                 <!-- if {{product.ads' value.pic}} || {{product.ads' value.text}} || {{product.ads' value.html}} || {{product.ads' value.video}}  -->
+                                 <tr <!-- if {{product.ads' value.state}}==0 -->style="color:#ccc"<!-- endif -->>
+                                     <td>
+                                         <input type="hidden" class="iText" name="adid[]" value="<?php echo $v1['id']; ?>"><?php echo $v1['id']; ?>
+                                         <!-- if {{product.ads' value.r_type}}==1 -->
+                                         <input type="hidden" class="iText" name="picid[]" value="<?php echo $v1['r_id']; ?>">
+                                         <!-- elseif {{product.ads' value.r_type}}==4 -->
+                                         <input type="hidden" class="iText" name="htmlid[]" value="<?php echo $v1['r_id']; ?>">
+                                         <!-- elseif {{product.ads' value.r_type}}==5 -->
+                                         <input type="hidden" class="iText" name="videoid[]" value="<?php echo $v1['r_id']; ?>">
+                                         <!-- else -->
+                                             <!-- if {{product.ads' value.type}}==2 -->
+                                                 <input type="hidden" class="iText" name="pushaid[]" value="<?php echo $v1['id']; ?>">
+                                                 <input type="hidden" class="iText" name="pushid[]" value="<?php echo $v1['r_id']; ?>">
+                                                 <input type="hidden" class="iText" name="push_title[]" value="{{product.ads' value.text.ad_name}}">
+                                                 <input type="hidden" class="iText" name="content[]" value="{{product.ads' value.text.content}}">
+                                             <!-- else -->
+                                                 <input type="hidden" class="iText" name="textid[]" value="<?php echo $v1['r_id']; ?>">
+                                             <!-- endif -->
+                                         <!-- endif -->
+
+                                         <input type="hidden" class="iText" name="rid[]" value="<?php echo $v1['r_id']; ?>">
+                                         <input type="hidden" class="iText" name="rtype[]" value="<?php echo $v1['r_type']; ?>">
+                                         <input type="hidden" class="iText" name="ad_type[]" value="{{product.ads' value.type}}">
+                                     </td>
+                                     <td><!-- if {{product.ads' value.r_type}}==1 --> <span>图片</span><!-- elseif {{product.ads' value.r_type}}==4 --> <span>网页</span><!-- elseif {{product.ads' value.r_type}}==5 --> <span>视频</span><!-- else -->文案<!-- endif --></td>
+                             <td>
+                                 <!-- if {{product.ads' value.r_type}}==1 -->
+                                     <!-- if {{product.ads' value.type}}==0 -->
+                                     插页广告
+                                         <!-- if {{product.ads' value.pic.ad_subtype}}==0 -->
+                                         -横屏
+                                         <!-- elseif {{product.ads' value.pic.ad_subtype}}==1 -->
+                                         -竖屏
+                                         <!-- else -->
+                                         -未知类型
+                                         <!-- endif -->
+                                     <!-- elseif {{product.ads' value.type}}==1 -->
+                                     BANNER
+                                     <!-- elseif {{product.ads' value.type}}==3 -->
+                                     自定义
+                                     <!-- else -->
+                                     未知类型
+                                     <!-- endif -->
+                                 <!-- elseif {{product.ads' value.r_type}}==2 -->
+                                     <!-- if {{product.ads' value.text.subtype}}==1 -->
+                                         BANNER
+                                     <!-- elseif {{product.ads' value.text.subtype}}==2 -->    
+                                         PUSH
+                                     <!-- elseif {{product.ads' value.text.subtype}}==3 -->    
+                                         自定义
+                                     <!-- else -->
+                                         未知类型
+                                     <!-- endif -->
+                                 <!-- elseif {{product.ads' value.r_type}}==3 -->
+                                     <!-- if {{product.ads' value.text.subtype}}==2 -->
+                                         PUSH
+                                     <!-- else -->
+                                         未知类型
+                                     <!-- endif -->
+                                 <!-- elseif {{product.ads' value.r_type}}==4 -->
+                                     <!-- if {{product.ads' value.type}}==0 -->
+                                         插页广告-网页
+                                     <!-- elseif {{product.ads' value.type}}==1 -->
+                                         BANNER
+                                     <!-- else -->
+                                         -未知类型
+                                     <!-- endif -->
+                                 <!-- elseif {{product.ads' value.r_type}}==5 -->
+                                     插页广告
+                                     <!-- if {{product.ads' value.type}}==0 -->
+                                         -视频
+                                     <!-- else -->
+                                         -未知类型
+                                     <!-- endif -->
+                                 <!-- endif -->
+                             </td>
+                             <td>
+                                 <!-- if {{product.ads' value.r_type}}==1 -->
+                                 <span src='{{product.ads' value.pic.pic_url}}' style="cursor:pointer;color:blue;" class="pic_url"  onclick="showOriginal(this)" >{{product.ads' value.pic.pic_name}}</span>
+                                 <!-- elseif {{product.ads' value.r_type}}==4 -->
+                                 <span style="cursor:pointer;color:blue;" class="html_url"  onclick="javascript:window.open('{{product.ads' value.html.html_url}}')" >{{product.ads' value.html.html_name}}</span>
+                                 <!-- elseif {{product.ads' value.r_type}}==5 -->
+                                 <span style="cursor:pointer;color:blue;" class="video_url"  onclick="javascript:window.open('{{product.ads' value.video.video_url}}')" >{{product.ads' value.video.video_name}}</span>
+                                 <!-- else -->
+                                     <span style="cursor:pointer;color:blue;" class="pic_url"  onclick="showTextContent('{{product.ads' value.text.content}}')"  content="{{product.ads' value.text.content}}" title="{{product.ads' value.text.content}}">{{product.ads' value.text.ad_name}}</span>
+                                 <!-- endif -->
+                             </td>
+                             <td><input type="hidden" class="iText" name="<!-- if {{product.ads' value.r_type}}==1 -->pic_state<!-- elseif {{product.ads' value.r_type}}==4 -->html_state<!-- elseif {{product.ads' value.r_type}}==5 -->video_state<!-- else --><!-- if {{product.ads' value.type}}==2 -->push_state<!-- else -->text_state<!-- endif --><!-- endif -->[]" id="istate_pic_<?php echo $v1['id'];?>" value="<?php echo $v1['state']; ?>" style="width:40px"> 
+                                 <span>
+                                     <!-- if {{product.ads' value.r_type}}==1 -->
+                                         <input type="radio" checked="" onclick="javascript:$('#istate_pic_<?php echo $v1['id'];?>').val(this.value)" name="state_pic_<?php echo $v1['id'];?>" value="1" <!-- if {{product.ads' value.state}}==1 -->checked<!-- endif --> class="radio">
+                                     <!-- elseif {{product.ads' value.r_type}}==4 -->
+                                         <input type="radio" checked="" onclick="javascript:$('#istate_pic_<?php echo $v1['id'];?>').val(this.value)" name="state_html_<?php echo $v1['id'];?>" value="1" <!-- if {{product.ads' value.state}}==1 -->checked<!-- endif --> class="radio">
+                                     <!-- elseif {{product.ads' value.r_type}}==5 -->
+                                         <input type="radio" checked="" onclick="javascript:$('#istate_pic_<?php echo $v1['id'];?>').val(this.value)" name="state_video_<?php echo $v1['id'];?>" value="1" <!-- if {{product.ads' value.state}}==1 -->checked<!-- endif --> class="radio">
+                                     <!-- else -->        
+                                          <!-- if {{product.ads' value.type}}==2 -->
+                                               <input type="radio" checked="" onclick="javascript:$('#istate_pic_<?php echo $v1['id'];?>').val(this.value)" name="state_text_<?php echo $v1['id'];?>" value="1" <!-- if {{product.ads' value.state}}==1 -->checked<!-- endif --> class="radio">
+                                           <!-- else -->
+                                              <input type="radio" checked="" onclick="javascript:$('#istate_pic_<?php echo $v1['id'];?>').val(this.value)" name="state_push_<?php echo $v1['id'];?>" value="1" <!-- if {{product.ads' value.state}}==1 -->checked<!-- endif --> class="radio">
+                                           <!-- endif -->
+                                     <!-- endif -->       
+                                     <lable>on</lable>
+                                 </span>
+                                 <span>
+                                     <!-- if {{product.ads' value.r_type}}==1 -->
+                                          <input type="radio" onclick="javascript:$('#istate_pic_<?php echo $v1['id'];?>').val(this.value)" name="state_pic_<?php echo $v1['id'];?>" value="0" <!-- if {{product.ads' value.state}}==0 -->checked<!-- endif --> class="radio">
+                                     <!-- elseif {{product.ads' value.r_type}}==4 -->
+                                          <input type="radio" onclick="javascript:$('#istate_pic_<?php echo $v1['id'];?>').val(this.value)" name="state_html_<?php echo $v1['id'];?>" value="0" <!-- if {{product.ads' value.state}}==0 -->checked<!-- endif --> class="radio">
+                                     <!-- elseif {{product.ads' value.r_type}}==5 -->
+                                          <input type="radio" onclick="javascript:$('#istate_pic_<?php echo $v1['id'];?>').val(this.value)" name="state_video_<?php echo $v1['id'];?>" value="0" <!-- if {{product.ads' value.state}}==0 -->checked<!-- endif --> class="radio">
+                                     <!-- else -->
+                                          <!-- if {{product.ads' value.type}}==2 -->
+                                              <input type="radio" onclick="javascript:$('#istate_pic_<?php echo $v1['id'];?>').val(this.value)" name="state_text_<?php echo $v1['id'];?>" value="0" <!-- if {{product.ads' value.state}}==0 -->checked<!-- endif --> class="radio">
+                                           <!-- else -->
+                                              <input type="radio" onclick="javascript:$('#istate_pic_<?php echo $v1['id'];?>').val(this.value)" name="state_push_<?php echo $v1['id'];?>" value="0" <!-- if {{product.ads' value.state}}==0 -->checked<!-- endif --> class="radio">
+                                           <!-- endif -->
+                                     <!-- endif -->              
+                                            <lable>off</lable>
+                                 </span>
+                             </td>
+                             <td>
+                                 <!-- if {{product.ads' value.r_type}}==1 -->
+                                     <input type="text" class="iText required" name="pic_rate[]" value="<?php echo $v1['rate']; ?>" style="width:40px">
+                                 <!-- elseif {{product.ads' value.r_type}}==4 -->
+                                     <input type="text" class="iText required" name="html_rate[]" value="<?php echo $v1['rate']; ?>" style="width:40px">
+                                 <!-- elseif {{product.ads' value.r_type}}==5 -->
+                                     <input type="text" class="iText required" name="video_rate[]" value="<?php echo $v1['rate']; ?>" style="width:40px">
+                                 <!-- else -->
+                                     <!-- if {{product.ads' value.type}}==2 -->
+                                         <input type="text" class="iText required" name="push_rate[]" value="<?php echo $v1['rate']; ?>" style="width:40px">
+                                     <!-- else -->
+                                         <input type="text" class="iText required" name="text_rate[]" value="<?php echo $v1['rate']; ?>" style="width:40px">
+                                     <!-- endif -->
+                                 <!-- endif -->
+                                 
+                             </td>
+                             <td>
+                                 <!-- if {{product.ads' value.r_type}}==1 -->
+                                 <input type="text" class="iText required" name="screen_ratio[]" value="{{product.ads' value.pic.screen_ratio}}" style="width:40px">
+                                 <!-- elseif {{product.ads' value.r_type}}==4 -->
+                                     <!-- if {{product.ads' value.type}}==0 -->
+                                         <input type="text" class="iText required" name="screen_ratio[]" value="{{product.ads' value.html.screen_ratio}}" style="width:40px">
+                                     <!-- endif -->
+                                 <!-- elseif {{product.ads' value.r_type}}==5 -->
+                                 <input type="text" class="iText required" name="screen_ratio[]" value="{{product.ads' value.video.screen_ratio}}" style="width:40px">
+                                 <!-- endif -->
+                             </td>
+                             <td>
+                                 <!-- if {{product.ads' value.r_type}}==1 -->
+                                 <input type="text" class="iText required" name="pic_show_time[]" value="<?php echo $v1['show_time']; ?>" style="width:40px">
+                                 <!-- elseif {{product.ads' value.r_type}}==4 -->
+                                     <!-- if {{product.ads' value.type}}==0 -->
+                                         <input type="text" class="iText required" name="html_show_time[]" value="<?php echo $v1['show_time']; ?>" style="width:40px">
+                                     <!-- endif -->
+                                 <!-- elseif {{product.ads' value.r_type}}==5 -->
+                                 <input type="text" class="iText required" name="video_show_time[]" value="<?php echo $v1['show_time']; ?>" style="width:40px">
+                                 <!-- endif -->
+                             </td>
+                             <td>
+                                 <!-- if {{product.ads' value.r_type}}==1 -->
+                                 <input type="text" class="iText required" name="pic_close_wait[]" value="<?php echo $v1['close_wait']; ?>" style="width:40px">
+                                 <!-- elseif {{product.ads' value.r_type}}==4 -->
+                                     <!-- if {{product.ads' value.type}}==0 -->
+                                         <input type="text" class="iText required" name="html_close_wait[]" value="<?php echo $v1['close_wait']; ?>" style="width:40px">
+                                     <!-- endif -->
+                                 <!-- elseif {{product.ads' value.r_type}}==5 -->
+                                 <input type="text" class="iText required" name="video_close_wait[]" value="<?php echo $v1['close_wait']; ?>" style="width:40px">
+                                 <!-- endif -->
+                             </td>
+                             <td>
+                                 <!-- if {{product.ads' value.r_type}}==1 -->
+                                     <input type="hidden" class="iText" name="pic_ad_target[]" value='{{product.ads' value.ad_target}}'/>
+                                     <input type="hidden" class="iText" name="pic_ad_click_type_object[]" value='{{product.ads' value.ad_click_type_object}}'/>
+                                 <!-- elseif {{product.ads' value.r_type}}==4 -->
+                                     <input type="hidden" class="iText" name="html_ad_target[]" value='{{product.ads' value.ad_target}}'/>
+                                     <input type="hidden" class="iText" name="html_ad_click_type_object[]" value='{{product.ads' value.ad_click_type_object}}'/>
+                                 <!-- elseif {{product.ads' value.r_type}}==5 -->
+                                     <input type="hidden" class="iText" name="video_ad_target[]" value='{{product.ads' value.ad_target}}'/>
+                                     <input type="hidden" class="iText" name="video_ad_click_type_object[]" value='{{product.ads' value.ad_click_type_object}}'/>
+                                 <!-- else -->
+                                     <!-- if {{product.ads' value.type}}==2 -->
+                                         <input type="hidden" class="iText" name="push_ad_target[]" value='{{product.ads' value.ad_target}}'/>
+                                         <input type="hidden" class="iText" name="push_ad_click_type_object[]" value='{{product.ads' value.ad_click_type_object}}'/>
+                                     <!-- else -->
+                                         <input type="hidden" class="iText" name="text_ad_target[]" value="{{product.ads' value.ad_target}}"/>
+                                         <input type="hidden" class="iText" name="text_ad_click_type_object[]" value='{{product.ads' value.ad_click_type_object}}'/>
+                                     <!-- endif -->
+                                 <!-- endif -->
+                                 <a title="更新" class="edit clickTypeEdit" href="javascript:void(0)"></a> | <a title="删除" class="del" href="javascript:void(0)"></a></td>
+                             </tr>
+                             <!-- endif -->
+                             <!-- endloop -->
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
+             </div>
+         </li>
+                 
+            <li>
+                <div class="fc">
+                    <input type="button" onclick="javascript:autoProduct()" value="更新素材" class="cancel" />       
+                </div>
+            </li>
+     </ul>
+ </div>

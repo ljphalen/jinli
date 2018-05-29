@@ -1,0 +1,399 @@
+<link media="screen" href="{{rootUrl}}/css/chosen.css" rel="stylesheet" type="text/css">
+<div class="colMain">
+    <div class="title">
+        <p class="fl">图片素材管理</p>
+    </div>
+    <div class="main" data-tabs-name="pic">
+        <div class="content">
+            <!-- include 'menu' -->
+            <div class="devInfo">
+                <form action="../resource/pic_save" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" value="{{result.id}}" name="id" />
+                    <input type="hidden" value="{{result.product_name}}" name="product_name" id="product_name" />
+                    <input type="hidden" value="{{result.pic_name}}" name="pic_name" />
+                    <ul class="form">
+                        <li>
+                            <span class="label">平台类型：</span>
+                            <div class="fc">
+                                <select name="platform" id="platform" onchange="autoPlatform()">
+                                    <option value="">所有(默认)</option>
+                                    <option value="1">Android</option>
+                                    <option value="2">IOS</option>
+                                </select>   
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">图片上传：</span>
+                            <div class="fc">
+                                <input type="file" <!-- if {{result.id}}=='' -->class="required" required<!-- endif --> value="" name="file_pic_name" onchange="readURL(this, 'img_prev', 'file_pic_name');"  style="width:220px;"  />
+                                <span class="red">*</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">图片名称：</span>
+                            <div class="fc">
+                                <input type="text" class="iText required" required name="beizhu" value="{{result.beizhu}}" style="width:220px;float:left;" />
+                                <select style="float:left;margin:0 5px;" name="ad_subtype" id="ad_subtype" <!-- if {{result.id}} -->disabled<!-- endif -->>
+                                    <option value="">自动从图片名称匹配</option>
+                                    <option value="0" >横屏</option>
+                                    <option value="1" >竖屏</option>
+                                    <option value="2" >自定义</option>
+                                    <option value="20" >BANNER</option>
+                                    <option value="10" >icon</option>
+                                </select>
+                                <input type="hidden" value="{{result.ad_subtype}}" id="true_ad_subtype" name="true_ad_subtype" />
+                                <select name="product_id[]" class="required" required id="product_id" <!-- if {{result.id}} -->disabled<!-- endif -->>
+                                    <option value="">自动从图片名称匹配</option>
+                                    <!-- loop product -->
+                                        <option value="{{product' value.id}}" >{{product' value.product_name}}</option>
+                                    <!-- endloop -->
+                                </select>
+                                <span class="red">图片命名规则为：图片备注-横/竖屏-产品名</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">广告类型：</span>
+                            <div class="fc">
+                                <input type="hidden" name="adtype" class="required" value="{{result.ad_type}}"/>
+                                <input type="hidden" name="resolution" value="{{result.resolution}}" />
+                                <span id="adtype_txt"></span>
+                                <span id="ad_subtype_txt"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">图片色调：</span>
+                            <div class="fc">
+                                <select name="color" id="color">
+                                    <option value="其它">其它(默认)</option>
+                                    <option value="冷色调">冷色调</option>
+                                    <option value="暖色调">暖色调</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">图片焦点：</span>
+                            <div class="fc">
+                                <select name="focus" id="focus">
+                                    <option value="其它">其它(默认)</option>
+                                    <option value="图像">图像</option>
+                                    <option value="文字">文字</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">图片噱头：</span>
+                            <div class="fc">
+                                <select name="xuetou" id="xuetou">
+                                    <option value="其它">其它(默认)</option>
+                                    <option value="游戏介绍">游戏介绍</option>
+                                    <option value="美女">美女</option>
+                                    <option value="热血">热血</option>
+                                    <option value="中奖">中奖</option>
+                                    <option value="玩法创新">玩法创新</option>
+                                    <option value="时事热点">时事热点</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">图片预览：</span>
+                            <div class="fc">
+                                <img src="{{result.pic_url}}" id="img_prev" width="150px" height="80px" />
+                            </div>
+                        </li>
+                        <li class="line"></li>
+                        <li>
+                            <div class="fc">
+                                <input type="button" value="保存" onclick="checksubmit()" class="submit" />
+                                <input type="button" value="取消" class="cancel" onclick="window.location.href = '/resource'" />
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+        function readURL(input, imgid, fileid) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                	$('#' + imgid).attr('src', e.target.result).width(256).height(153);
+                    if(!autoReadimg(input, fileid))
+                    {
+                   	 $("#ad_subtype").val("");
+                     $("#product_id").val("");
+                     $("#product_name").val("");
+                     $("input[name='adtype']").val(0);
+                     $("#adtype_txt").text("");
+                     $("#ad_subtype_txt").text("");
+                     $("input[name='beizhu']").val("");
+                     $('#' + imgid).attr('src',"");
+                    }
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                //IE下，使用滤镜
+                var docObj = document.getElementByIdx_x(fileid);
+                docObj.select();
+                //解决IE9下document.selection拒绝访问的错误
+                docObj.blur();
+                var imgSrc = document.selection.createRange().text;
+                var localImagId = document.getElementByIdx_x("localImag");
+                //$('#preview').width(150).height(200); //必须设置初始大小
+                //图片异常的捕捉，防止用户修改后缀来伪造图片
+                try {
+                    localImagId.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+                    localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
+                } catch (e) {
+                    jAlert("您上传的图片格式不正确，请重新选择!");
+                    return false;
+                }
+                $('#img_prev').hide();
+                document.selection.empty();
+            }
+        }
+        function autoReadimg(input, fileid) {
+            $("#ad_subtype").val("");
+            $("#product_id").val("");
+            $("#product_name").val("");
+            $("input[name='adtype']").val(0);
+            $("#adtype_txt").text("未识别图片");
+            $("#ad_subtype_txt").text("");
+            
+            var file = $("input[name='" + fileid + "']").val()
+            var file_name = input.files[0].name;
+            if (file == "") {
+            	$("input[name='beizhu']").val("");
+            	 $("#ad_subtype").val("");
+                 $("#product_id").val("");
+                 $("#product_name").val("");
+                 $("input[name='adtype']").val(0);
+                 $("#adtype_txt").text("");
+                 $("#ad_subtype_txt").text(""); 
+                alert("读取图片信息失败!");
+                return false;
+            }
+            filearr = file_name.split("-");
+            //console.log(filearr);
+            if(filearr.length < 3)
+            {
+                jAlert("请正确命名图片");
+                return false;
+            }
+            $("input[name='beizhu']").val(filearr[0]);
+            switch (filearr[1]) {
+                case "横屏":
+                    $("#ad_subtype").val(0);
+                    break;
+                case "泡泡":
+                    $("#ad_subtype").val(0);
+                    break;
+                case "竖屏":
+                    $("#ad_subtype").val(1);
+                    break;
+                case "横图":
+                    $("#ad_subtype").val(1);
+                    break;
+                case "自定义":
+                    $("#ad_subtype").val(2);
+                    break;
+                case "ICON":
+                case "icon":
+                    $("#ad_subtype").val(10);
+                    break;
+                case "BANNER":
+                case "banner":
+                    $("#ad_subtype").val(20);
+                    break;
+                default:
+                    jAlert("未知的广告分辨率"+wh+"<BR>横屏,泡泡:600*360,800*480;<BR>竖屏:480*800,360*600;<BR>横图:480*290;<BR>ICON:72*72;<BR>BANNER:480*75,728*90");
+                	return false;
+            }
+            
+            //$("#screen").val(filearr[1])
+            prodcutname = filearr[2];
+            prodcutname = prodcutname.split(".");
+            prodcutname = prodcutname[0]
+
+
+        if(!setgameid(prodcutname))
+            {
+                jAlert("你没有此产品的权限");
+                return false;
+            }
+            $("#product_name").val(prodcutname);
+            
+            var img=new Image();
+            img.src=$("#img_prev").attr("src");
+            var width=0;
+            var height=0;
+            width=img.width;
+            height=img.height;
+            wh=width+"*"+height
+            $("input[name='resolution']").val(wh);
+            //            插页广告	横屏	800*480	
+            //	竖屏	480*800	
+            //	横屏	600*360	这两个尺寸有可能将弃用
+            //	竖屏	360*600	
+            //	横图	480*290	
+            //BANNER		480*75	
+            //		文字	
+            //ICON		72*72	用于文字BANNER、列表广告和PUSH
+//            console.log(width)
+//            console.log(height)
+//            console.log(wh)
+        console.log(wh);
+        switch (wh) {
+                case "600*360":
+                case "800*480":
+                    $("#true_ad_subtype").val(0);
+                    $("#ad_subtype_txt").text("横屏");
+                    break;
+                case "470*390":
+                    $("#true_ad_subtype").val(0);
+                    $("#ad_subtype_txt").text("泡泡");
+                    break;
+                case "480*800":
+                case "360*600":
+                    $("#true_ad_subtype").val(1);
+                    $("#ad_subtype_txt").text("竖屏");
+                    break;
+                case "480*290":
+                    $("#true_ad_subtype").val(1);
+                    $("#ad_subtype_txt").text("横图");
+                case "960*150":
+                case "1000*560":
+                case "1136*640":
+                    $("#true_ad_subtype").val(2);
+                    $("#ad_subtype_txt").text("自定义");
+                    break;
+                case "72*72":
+                    $("#true_ad_subtype").val(10);
+                    $("#ad_subtype_txt").text("ICON");
+                    break;
+                case "480*75":
+                case "728*90":
+                    $("#true_ad_subtype").val(20);
+                    $("#ad_subtype_txt").text("BANNER");
+                    break;
+                default:
+                    jAlert("未知的广告分辨率"+wh+"<BR>横屏,泡泡:600*360,800*480;<BR>竖屏:480*800,360*600;<BR>横图:480*290;<BR>ICON:72*72;<BR>BANNER:480*75,728*90");
+                	return false;
+            }
+
+            var halfwh=["480*800","800*480","600*360","360*600","480*290","470*390"]	
+            var bannerwh=["480*75","728*90"]
+            var customwh=["960*150","1000*560","1136*640"]
+            var iconwh=["72*72"]
+            if(in_array(wh,halfwh)){
+                $("input[name='adtype']").val(0);
+                $("#adtype_txt").text("插页广告");
+                return true;
+            }else if(in_array(wh,bannerwh)){
+                $("input[name='adtype']").val(1);
+                $("#adtype_txt").text("BANNER广告");
+                return true;
+            }else if(in_array(wh,iconwh)){
+                $("input[name='adtype']").val(10);
+                $("#adtype_txt").text("ICON");
+                return true;
+            }else if(in_array(wh,customwh)){
+                $("input[name='adtype']").val(3);
+                $("#adtype_txt").text("自定义");
+                return true;
+            }else{
+                $("#adtype_txt").text("不支持的图片宽高比");
+                jAlert("错误的图片宽高比\r\n可使用的图片尺寸包括：800*480、480*800、600*360、360*600、480*290、480*75、728*90、470*390、72*72");
+                return false;
+            }
+        }
+        $(function(){
+            $("#product_id").val("{{result.ad_product_id}}");
+            $("#product_name").val("{{result.product_name}}");
+            $("#ad_subtype").val("{{result.ad_subtype}}");
+            $("#xuetou").val("{{result.xuetou}}");
+            $("#color").val("{{result.color}}");
+            $("#focus").val("{{result.focus}}");
+            var adtype="{{result.ad_type}}"
+            if(adtype=="0"){
+                $("#adtype_txt").text("插页广告");
+            }else if(adtype=="1"){
+                $("#adtype_txt").text("BANNER广告");
+            }else if(adtype=="3"){
+                $("#adtype_txt").text("自定义");
+            }else if(adtype=="10"){
+                $("#adtype_txt").text("ICON");
+            }
+            $("#ad_subtype_txt").text($("#ad_subtype").find("option:selected").text());
+
+            $("#ad_subtype").change(function(a,b,c){
+            	var adtype=$(this).val();
+                    if(adtype=="0" || adtype=="1"){
+                        $("#ad_type").val("0");
+                        $("#adtype_txt").text("插页广告");
+                    }else if(adtype=="20"){
+                    	$("#ad_type").val("1");
+                        $("#adtype_txt").text("BANNER广告");
+                    }else if(adtype=="3"){
+                    	$("#ad_type").val("3");
+                        $("#adtype_txt").text("自定义");
+                    }else if(adtype=="10"){
+                    	$("#ad_type").val("10");
+                        $("#adtype_txt").text("ICON");
+                    }else{
+                    	$("#ad_type").val("");
+                        $("#adtype_txt").text("");
+                        }
+                    $("#ad_subtype_txt").text($("#ad_subtype").find("option:selected").text());
+                 
+                });
+            $("#product_id").change(function(){
+                var product_name = '';
+                if($("#product_id").children("option[selected]").length == 0){
+                    product_name = $("#product_id").children("option").eq(0).text().replace("(T)", "").replace("(A)", "").replace("(I)", "");
+                }else{
+                    product_name =$("#product_id").children("option[selected]").eq(0).text().replace("(T)", "").replace("(A)", "").replace("(I)", "");
+                }
+				$("#product_name").val(product_name);
+            });
+            autoPlatform();
+        })
+        function checksubmit(){
+            if($("#true_ad_subtype").val()!=$("#ad_subtype").val()){
+                if(!confirm("图片实际为'"+$("#ad_subtype_txt").text()+"',你的图片命名为:'"+$("#ad_subtype").find("option:selected").text()+"',你确定当'"+$("#ad_subtype").find("option:selected").text()+"'使用吗?")){
+                    return false;
+                }
+            }
+            $("form").submit();
+        }
+        
+        function autoPlatform() {
+            if($("#platform").val() == '')
+            {
+                $("#product_id").attr("multiple", "multiple");
+                $("#product_id").css("height","100px");
+            }
+            else
+            {
+                $("#product_id").removeAttr("multiple");
+                $("#product_id").css("height","");
+            }
+            ajaxPOST("/reproduct/autoPlatform", {"platform": $("#platform").val()}, function(data) {
+                var length = data.length;
+                str = '';
+                for (i=0; i<length; i++)
+                {
+                    str += '<option value="'+data[i].id+'">'+data[i].platform_product_name+'</option>'
+                }
+                $("#product_id").html(str);
+                $("#product_id").change();
+                //重新绑定select的选择组件
+                $("#product_id").removeClass("chzn-done");
+                $("#product_id_chzn").remove();
+                $("#product_id").chosen({});
+            })
+        }
+        
+</script>
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>

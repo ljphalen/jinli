@@ -1,0 +1,362 @@
+<include file="Public:header"/>
+<include file="Public:bootcss"/>
+<style>
+    .col-sm-10 label {
+        font-weight: normal;
+    }
+
+    .panel-body {
+        *width: 92%
+    }
+
+    .panelws select.form-control {
+        *height: auto !important;
+        *padding: 4px 0;
+        *margin-top: 0px;
+    }
+
+    .thumbnail {
+        *width: auto;
+    }
+
+    .mainw .form-horizontal .form-control-static {
+        padding-top: 0px;
+    }
+
+    .panelws .form-group input {
+        *padding-top: 8px;
+        *height: 22px !important;
+        margin-bottom: 0px \9;
+    }
+
+    .panelws .form-group textarea {
+        *padding-top: 8px;
+    }
+</style>
+<div class="mainw mainw2 clearfix">
+<div class="rmain col-md-12 rmain-inf">
+<div class="panel panelws">
+
+<h2 class="yyname">签署合同</h2>
+
+<div class="flow-w flow-w1">
+    <div class="flow"><span class="on">第一步：签署合同</span><span>第二步：申请联运</span></div>
+</div>
+
+<div class="panel-body">
+<form class="form-horizontal" role="form" onsubmit="return checkSub();" method="post" id="add-contract"
+      action="{:U('add_contract')}">
+<div class="row">
+    <div class="col-sm-12">
+        <h4>请填写游戏合同信息：</h4>
+    </div>
+</div>
+<div id="game_section">
+    <div class="form-group">
+        <label class="col-sm-2 control-label"><em>* </em>游戏名称：</label>
+
+        <div class="col-sm-4">
+            <php>
+                $apps =
+                M('apps')->where(array('author_id'=>intval($uid)))->field('id,app_name')->select();
+            </php>
+            <select name="app_id" class="form-control">
+                <option value="0">请选择</option>
+                <foreach name="apps" item="v">
+                    <option value="{$v.id}">{$v.app_name}</option>
+                </foreach>
+            </select>
+        </div>
+        <div class="col-sm-4"></div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label"><em>* </em>发票类型：</label>
+
+        <div class="col-sm-10 pl0">
+            <php>
+                $receipts =
+                M('contract_receipt')->field('id,name')->where(array('status'=>1))->select();
+            </php>
+            <foreach name="receipts" item="v">
+                <label class="col-sm-8">
+                    <input type="radio" name="receipt_id" value="{$v.id}" checked>{$v.id} 、{$v.name}
+                </label><br/>
+            </foreach>
+            <span class="help-block union_checker"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="share_type" class="col-sm-2 control-label"><em>* </em>分成比例：</label>
+
+        <div class="col-sm-3">
+            <select name="share_type" id="share_type" class="form-control share_type">
+                <option value="固定分成比例">固定分成比例</option>
+                <option value="阶梯分成比例">阶梯分成比例</option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <php>
+                $m = M('contract_share');
+                $fixedShare = $m->where(array('name'=>'固定分成比例','status' =>
+                1))->field('id,name,ratio1,ratio2')->select();
+                foreach($fixedShare as $k => $v){
+                $id = $v['id'];
+                $fixedShareJson[$id] = $v['ratio1'].':'.$v['ratio2'];
+                }
+                $unfixedShare = $m->where(array('name'=>'阶梯分成比例','status' =>
+                1))->field('id,name,ratio1,ratio2,condition')->select();
+                foreach($unfixedShare as $k => $v){
+                $id = $v['id'];
+                $unfixedShareJson[$id] =
+                '月流水高于'.$v['condition'].'万元时，甲：乙='.$v['ratio1'].':'.$v['ratio2'];
+                }
+            </php>
+            <script> fixedShareJson = {$fixedShareJson | json_encode
+            }
+            ;
+            unfixedShareJson = {$unfixedShareJson | json_encode
+            }
+            ; </script>
+            <select name="share_id" class="form-control share_id">
+                <option value="-1">请选择分成比例</option>
+            </select>
+        </div>
+    </div>
+
+
+</div>
+
+
+<div class="form-group">
+    <label for="account_name" class="col-sm-2 control-label"><em>* </em>开户名称：</label>
+
+    <div class="col-sm-6">
+        <input type="text" class="form-control" maxlength="30" name="account_name"
+               id="account_name">
+    </div>
+    <div class="col-sm-4"></div>
+</div>
+
+<div class="form-group">
+    <label for="account_key" class="col-sm-2 control-label"><em>* </em>银行账号：</label>
+
+    <div class="col-sm-6">
+        <input type="text" class="form-control" maxlength="50" name="account_key" id="account_key">
+    </div>
+    <div class="col-sm-4"></div>
+</div>
+<div class="form-group">
+    <label for="account_bank" class="col-sm-2 control-label"><em>* </em>开户银行：</label>
+
+    <div class="col-sm-6">
+        <input type="text" class="form-control" id="account_bank" name="account_bank">
+    </div>
+    <div class="col-sm-4"></div>
+</div>
+
+<php>
+    $accountInfo = M('account_infos')->where(array('account_id'=>$uid))->field('company,address,contact')->find();
+</php>
+<div class="form-group">
+    <label for="company_name" class="col-sm-2 control-label"><em>* </em>公司名称：</label>
+
+    <div class="col-sm-6">
+        <input type="text" class="form-control" id="company_name" name="company_name"
+               value="{$accountInfo.company}">
+    </div>
+    <div class="col-sm-4"></div>
+</div>
+
+
+<div class="form-group">
+    <label for="address" class="col-sm-2 control-label"><em>* </em>联系地址：</label>
+
+    <div class="col-sm-6">
+        <input type="text" class="form-control" id="address" name="address" value="{$accountInfo.address}">
+    </div>
+    <div class="col-sm-4"></div>
+</div>
+<div class="form-group">
+    <label for="contact" class="col-sm-2 control-label"><em>* </em>联系人：</label>
+
+    <div class="col-sm-6">
+        <input type="text" class="form-control" id="contact" name="contact" value="{$accountInfo.contact}">
+    </div>
+    <div class="col-sm-4"></div>
+</div>
+
+
+<hr>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <h4>请选择金立商务对接人：</h4>
+    </div>
+</div>
+
+
+<hr>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label"><em>* </em>对接人：</label>
+
+    <div class="col-sm-4">
+        <php>
+            $contacts = M('contract_contact')->where(array('status'=>1))->field('adder,ctime,status',true)->select();
+            foreach($contacts as $k => $v){
+            $id = $v['id'];
+            $contactInfo[$id]['phone'] = $v['phone'];
+            $contactInfo[$id]['email'] = $v['email'];
+            }
+        </php>
+        <script>
+            contacts_json = {$contactInfo | json_encode
+            }
+            ;
+        </script>
+        <select name="join_id" class="form-control join_id">
+            <option value="-1">请选择</option>
+            <foreach name="contacts" item="v">
+                <option value="{$v.id}">{$v.name}</option>
+            </foreach>
+        </select>
+    </div>
+    <div class="col-sm-4"></div>
+</div>
+
+<div class="form-group contact-info" style="display: none">
+    <label for="contact_pnone" class="col-sm-2 control-label"><em>* </em>联系电话：</label>
+
+    <div class="col-sm-4">
+        <input type="text" class="form-control" id="contact_pnone" placeholder="" disabled>
+    </div>
+    <div class="col-sm-4"></div>
+</div>
+
+<div class="form-group contact-info" style="display: none">
+    <label for="contact_email" class="col-sm-2 control-label"><em>* </em>邮件：</label>
+
+    <div class="col-sm-4">
+        <input type="text" class="form-control" id="contact_email" placeholder="" disabled>
+    </div>
+    <div class="col-sm-4"></div>
+</div>
+
+
+<div class="form-group">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <button type="submit" class="btn btn-success bo128" id="saveSubBtn">保存并继续</button>
+        <a class="btn btn-success bo128" href="{:U('index')}">取消</a>
+    </div>
+</div>
+</form>
+
+</div>
+</div>
+</div>
+</div>
+<include file="Public:footer"/>
+<include file="./Source/Tpl/Common/alertDialog.html"/>
+<script type=text/javascript src="{:cdn('PUBLIC')}/common/js/jquery.form.js?{:C('JS_VERSION')}"></script>
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/app/jui/css/smoothness/jquery-ui-1.9.1.custom.min.css">
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-1.9.1.custom.min.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript"
+        src="{:cdn('PUBLIC')}/app/jui/development-bundle/ui/i18n/jquery.ui.datepicker-zh-CN.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        initShareData();
+
+        // 分成比例字段筛选能
+        $("select.share_type").change(function () {
+            var type = $(this).val();
+            var html = "<option>请选择分成比例</option>";
+            var shareData;
+            if (type == '固定分成比例') shareData = fixedShareJson;
+            else if (type == '阶梯分成比例') shareData = unfixedShareJson;
+            $.each(shareData, function (id, name) {
+                html += "<option value=" + id + ">" + name + "</option>";
+            });
+            $("select.share_id").html(html);
+        });
+
+        // 对接人切换
+        $("select.join_id").change(function () {
+            var id = $(this).val();
+            if (id == -1) $(".contact-info").hide();
+            else $(".contact-info").show();
+            $("#contact_pnone").attr('placeholder', contacts_json[id].phone);
+            $("#contact_email").attr('placeholder', contacts_json[id].email);
+        });
+
+    });
+
+    // 提交过滤
+    function checkSub() {
+        var app_id = $("[name=app_id]").val();
+        var share_id = $("[name=share_id]").val();
+        var account_name = $("#account_name").val();
+        var account_key = $("#account_key").val();
+        var account_bank = $("#account_bank").val();
+        var company_name = $("#company_name").val();
+        var address = $("#address").val();
+        var contact = $("#contact").val();
+        var join_id = $("[name=join_id]").val();
+
+        if (parseInt(app_id) <= 0) {
+            alertDialog("请选择游戏");
+            return false;
+        }
+        if (parseInt(share_id) <= 0) {
+            alertDialog("请选择分成比例");
+            return false;
+        }
+        if ($.trim(account_name) == "") {
+            alertDialog("请填写开户名称");
+            return false;
+        }
+        if ($.trim(account_key) == "") {
+            alertDialog("请填写银行账号");
+            return false;
+        }
+        if ($.trim(account_bank) == "") {
+            alertDialog("请填写开户银行");
+            return false;
+        }
+        if ($.trim(company_name) == "") {
+            alertDialog("请填写公司名称");
+            return false;
+        }
+        if ($.trim(address) == "") {
+            alertDialog("请填写联系地址");
+            return false;
+        }
+        if ($.trim(contact) == "") {
+            alertDialog("请填写联系人");
+            return false;
+        }
+        if (parseInt(join_id) <= 0) {
+            alertDialog("请选择金立商务对接人");
+            return false;
+        }
+
+        return true;
+    }
+
+    // 初始化分成比例显示数据
+    function initShareData() {
+        var html = "<option value='-1'>请选择分成比例</option>";
+        $.each(fixedShareJson, function (id, name) {
+            html += "<option value=" + id + ">" + name + "</option>";
+        });
+        $("select.share_id").html(html);
+    }
+
+</script>

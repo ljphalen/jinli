@@ -1,0 +1,37 @@
+<?php echo $this->render("layout/newheader.phtml");?>
+<body class="person" data-pagerole="body">
+	<?php echo $this->render("layout/top.phtml");?>
+	<div id="iScroll">
+		<article class="ac">
+		<?php echo $this->render("layout/face.phtml");?>
+			<section class="tab-wrap">
+			<?php echo $this->render("layout/nav.phtml");?>
+				<div class="main J_unfoldWrap">
+					<h2 class="arrow-rect down">积分使用说明</h2>
+					<div class="desc jf-rule <?php if(!$show_coin_desc) {?>hidden<?php }?>">
+						<h3>如何使用银币?</h3>
+						<p>1. 1银币=1人民币<br/>
+							2. 银币在积分换购专区中可以根据商品使用限额抵现使用。</p>
+						<h3>如何获取银币?</h3>
+在购物大厅中非积分换购专区购物，可获得一定的积分奖励，在您确认收货后，奖励的积分将进入您的账号中。</p>
+					</div>
+
+					<h2 class="arrow-rect up">积分流通记录</h2>
+					<div class="desc <?php if($show_coin_desc) {?>hidden<?php }?>">
+<?php foreach($logs as $key=>$value){?>
+						<p><?php 
+								if (!$value['msg'] || (strlen($value['msg']) == 20)) {
+									$value['msg'] = '购买积分换购商品，使用了'.abs($value['coin']).'银币。';
+								}
+								echo $value['msg'];
+							?>
+<time><?php echo date('Y-m-d H:i:s',$value['create_time']);?></time>
+						</p>
+<?php } ?>
+					</div>
+				</div>
+			</section>
+		</article>
+	</div>
+</body>
+</html>

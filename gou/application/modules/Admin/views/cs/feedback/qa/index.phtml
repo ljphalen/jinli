@@ -1,0 +1,167 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $indexUrl;?>">反馈用户列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="get" id="searchForm">
+    <input name="token" type="hidden" value="<?php echo $token;?>" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">内容</th>
+                <td class="td">
+                    <input class="input" type="text"   name="content"  value="<?php echo $search['content'];?>" >
+                </td>
+                <th class="th">一级归类</th>
+                <td class="td">
+                    <select name="parent_id">
+                        <option value="0">不限</option>
+                        <?php foreach ($parent as $p): ?>
+                            <option value="<?php echo $p['id']; ?>" <?php if ($search['parent_id'] == $p['id']) echo 'selected="selected"'; ?>><?php echo $p['name']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+                <th class="th">二级归类</th>
+                <td class="td">
+                    <select name="cat_id">
+                        <option value="0">不限</option>
+                        <?php foreach ($child as $c): ?>
+                            <option value="<?php echo $c['id']; ?>" <?php if ($search['cat_id'] == $c['id']) echo 'selected="selected"'; ?>><?php echo $c['name']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+
+            </tr>
+            <tr class="tr">
+            <th class="th">机型</th>
+            <td class="td">
+                <input class="input" type="text"   name="model"    value="<?php echo $search['model'];?>" >
+            </td>
+            <th class="th">版本</th>
+            <td class="td">
+                <input class="input" type="text"   name="version"  value="<?php echo $search['version'];?>" >
+            </td>
+
+                <th class="th">
+                    <select name="time_type">
+                        <option value="">不限</option>
+                        <option value="create_time" <?php if ($search['time_type']  == 'create_time') echo 'selected="selected"';?>>反馈</option>
+                        <option value="reply_time"  <?php if ($search['time_type']  == 'reply_time')  echo 'selected="selected"';?>>回复</option>
+                    </select>时间</th>
+                <td class="td">
+                    <input class="input" type="text" maxlength="30" id="from_time" name="from_time" value="<?php echo $search['from_time'];?>">
+                    <input class="input" type="text" maxlength="30" id="to_time" name="to_time" value="<?php echo $search['to_time'];?>">
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">UID</th>
+                <td class="td">
+                    <input class="input" type="text"   name="uid"  value="<?php echo $search['uid'];?>" >
+                </td>
+                <th class="th">是否有新反馈</th>
+                <td class="td">
+                    <select name="has_new">
+                        <option value="-1" <?php if ($search['has_new'] == -1) echo 'selected="selected"'; ?>>不限</option>
+                        <option value="1"  <?php if ($search['has_new'] == 1)  echo 'selected="selected"'; ?>>是</option>
+                        <option value="0"  <?php if ($search['has_new'] == 0)  echo 'selected="selected"'; ?>>否</option>
+                    </select>
+                </td>
+                <th class="th"></th>
+                <td class="td">
+                    客服自动回复处于<span style="color: #E53333;font-size:18px; font-weight: bolder"><?php echo $is_auto?'开启':'关闭'; ?></span>状态
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac">
+
+		<span class="btn">
+			<span>
+				<button type="submit">搜 索</button>
+			</span>
+		</span>
+        <span class="btn">
+			<span>
+				<button type="button" class="search_btn btn btn_success export_btn">导 出</button>
+			</span>
+		</span>
+        <span style="float:left;">
+            当前总数：<?php echo $total_count; ?>
+                    <?php foreach ($count as $value) {
+                        echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {$value['name']}: {$value['num']}";
+                    }; ?>
+        </span>
+    </div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>UID</td>
+			<td>反馈次数</td>
+            <td>最后反馈</td>
+            <td>最后回复</td>
+            <td>是否有新反馈</td>
+			<td>操作</td>
+		</tr>
+        <?php foreach($data as $key => $value) {?>
+                <tr class="ct">
+                    <td><a href="<?php echo $viewUrl.'?uid='.$value['uid'];?>" target="_blank"><?php echo $value['uid'];?></a></td>
+                    <td><?php echo $value['time'];?></td>
+                    <td><?php echo date('Y-m-d H:i:s',$value['last_time'])?></td>
+                    <td><?php echo ($value['reply_time'])?date('Y-m-d H:i:s',$value['reply_time']):'';?></td>
+                    <td><?php echo $value['has_new']?'是':'否';?></td>
+                    <td>
+                        <?php if ($value['has_new']): ?>
+                            <a href="<?php echo $replyUrl; ?>/?uid=<?php echo $value['uid']; ?>" class="mr10">回复反馈</a>
+                        <?php else: ?>
+                            <a href="<?php echo $appendUrl; ?>/?uid=<?php echo $value['uid']; ?>" class="mr10">追加回复</a>
+                        <?php endif; ?>
+                        <a href="<?php echo $viewUrl.'?uid='.$value['uid'];?>" class="mr10">历史反馈</a>
+                    </td>
+                </tr>
+        <?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+
+<script>
+    $('select[name=parent_id]').change(function(){
+            var cat_id = $(this).val();
+            $.ajax({
+                url:'<?php echo $catUrl; ?>',
+                type:'get',
+                dataType:'json',
+                data:{cat_id:cat_id},
+                success:function(ret){
+                    var data = ret.data;
+                    var opt = '<option value="0">请选择</option>';
+                    $.each(ret.data, function (k,v) {
+                        opt +='<option value="'+ v.id+'">'+ v.name+'</option>';
+                    });
+                    $("select[name=cat_id]").html(opt);
+                }
+            });
+        }
+    );
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#to_time").datetimepicker();
+
+        $("#from_time").datetimepicker();
+    });
+    $(function(){
+        $('button.export_btn').click(function(){
+            $("form#searchForm").attr('action',"<?php echo $exportUrl; ?>");
+            $("form#searchForm").submit();
+            $("form#searchForm").attr('action',"<?php echo $indexUrl; ?>");
+        });
+    });
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

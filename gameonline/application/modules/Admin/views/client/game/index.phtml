@@ -1,0 +1,78 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">游戏列表</a></li>
+		<li><a href="<?php echo $step1Url;?>">添加游戏</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+		    <th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			    <option  value="0">全部</option>
+				<option <?php if($search['status'] == 2) echo 'selected';?> value="2">上线</option>
+				<option <?php if($search['status'] == 1) echo 'selected';?> value="1">下线</option>
+			</select>
+			</td>
+			<th class="th">标题</th>
+			<td class="td">
+			<input type="text" class="input" name="name" value="<?php echo empty($search['name'])?'':$search['name'];?>">
+		    </td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+
+<form id="batchForm" action="<?php echo $batchUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">上线</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">下线</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('sort');" type="submit">重新排序</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('delete');" type="submit">删除</button></span></span>
+	<span> 共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="60">排序</td>
+			<td width="60">ID</td>
+			<td>标题</td>
+			<td>图标</td>
+			<td>版本</td>
+			<td>大小</td>
+			<td>状态</td>
+		</tr>
+<?php foreach($resource_games as $key => $value) {?>
+		<tr class="ct">
+			<td><input class="checkbox" name="ids[]" value="<?php echo $client_games[$value['id']]['id'],'|',$value['id'];?>" type="checkbox"></td>
+			<td><input type="text" class="input" style="width:30px" name="sort[<?php echo $client_games[$value['id']]['id'];?>]" value="<?php echo $client_games[$value['id']]['sort'];?>"></td>
+			<td><?php echo $value['id'];?></td>
+			<td><a target="blank" href="<?php echo '/client/index/detail/?id=',$value['id'];?>"><?php echo $value['name'];?></a><br/><a href="<?php echo $value['link'];?>">下载</a></td>
+			<td><img src="<?php echo $attachPath.$value['img'];?>" style="width:7.2em;height:7.2em"/></td>
+			<td><?php echo $value['version'];?></td>
+			<td><?php echo $value['size'];?>M</td>
+			<td><?php echo $client_games[$value['id']]['status'] ? '上线':'下线';?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script>
+$(document).ready(function(){
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Client_Game/index?s=1');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

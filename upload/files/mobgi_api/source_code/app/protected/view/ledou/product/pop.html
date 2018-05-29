@@ -1,0 +1,93 @@
+<div class="addAD">
+    <div class="grid">
+        <div class="gridToolbar">
+            <p class="fl">
+                <input type="text" class="iText" id="search_value" value="{{keyword}}" /><a href="javascript:void(0)" id="search" class="btn">搜索</a>
+            </p>
+            <p class="fr">
+                <a href="javascript:void(0)"  class="cancel" id="checkAll">全选</a>
+                <a href="javascript:void(0)"  class="cancel" id="invertSelect">全不选</a>
+            </p>
+        </div>
+        <div style="height:490px;overflow-y:auto" id="adListPopUp">
+            <table>
+                <thead>
+                    <tr>
+                        <th>产品编号</th>
+                        <th>产品名</th>
+                        <th>导量规则</th>
+                        <th>广告内容</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="pztbody">
+                    <!-- loop products -->
+                    <tr>
+                        <td>{{products' value.id}}</td>
+                        <td>{{products' value.simple_platform}}{{products' value.product_name}}</td>
+                        <td>
+                            <!-- if {{products' value.limit}} -->
+                            <!-- loop products' value.limit -->
+                            <!-- if {{products' value' value}} -->
+                            <!-- if {{products' value.limit' key}}=="ad_stat_limit" -->
+                            <p>导量控制：</p>
+                            <!-- loop products' value.limit value' value -->
+                            <p>{{products' value.limit value' value' key}}:每天:<?php echo $v3["day_limit"]?>  总数:<?php echo $v3["total_limit"]?></p>
+                            <!-- endloop -->
+                            <!-- endif -->
+                            <!-- if {{products' value.limit' key}}=="ad_stat_plan" -->
+                            <p>导量计划：</p>
+                            <!-- loop products' value.limit.ad_stat_plan.stat_plan -->
+                            <p><?php echo $v2["start_time"]?>～<?php echo $v2["end_time"]?></p>
+                            <!-- endloop -->
+                            <!-- endif -->
+                            <!-- endif -->    
+                            <!-- endloop -->
+                            <!-- endif -->
+                        </td>
+                        <td>
+                         	   <!-- if {{products' value.adcontent}} -->
+                                             <p>插屏：{{products' value.adcontent.nembed}} 则</p>
+                                             <p>Banner：{{products' value.adcontent.embed}} 则</p>
+                                             <p>PUSH：{{products' value.adcontent.push}} 则</p>
+                                             <p>自定义：{{products' value.adcontent.custom}} 则</p>
+                                             <p>列表：0 则</p>
+                                              <p>视频：{{products' value.adcontent.video}} 则</p>
+                         <!-- endif -->
+                        </td>
+                        <td>
+                            <input type="checkbox" name="product_id" value="{{products' value.id}}" />
+                        </td>
+                    </tr>
+                    <!-- endloop -->
+
+                </tbody>
+            </table>
+        </div>
+        <div style="text-align:center;padding:10px 0;">
+            <a href="javascript:void(0)" class="btn" id="ok">确定</a>
+            <a href="javascript:void(0)" class="cancel" id="cancel">取消</a>
+        </div>
+    </div>
+</div>
+<script>
+    $(function() {
+        //全选反选操作
+        var _checkbox = $("#adListPopUp").find("input:checkbox");
+        $("#checkAll").click(function() {
+            _checkbox.attr("checked", true);
+        });
+        $("#invertSelect").click(function() {
+            _checkbox.attr("checked", false);
+        });
+        $("#search").click(function(){
+            var val = $("#search_value").val();
+            $("#pztbody").find("tr").each(function(){
+                var firstTd = $(this).find('td').eq(1);
+                if (firstTd.html().indexOf(val) >= 0){
+                    $("#pztbody").prepend($(this));
+                }
+            })
+        });
+    });
+</script>

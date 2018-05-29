@@ -1,0 +1,173 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+<style>
+.col-sm-10 label {
+	font-weight: normal;
+}
+
+.panel-body{*width: 92%}
+.panelws select.form-control{*height: auto!important;*padding: 4px 0;*margin-top: 0px;}
+.thumbnail{*width: auto;}
+.mainw .form-horizontal .form-control-static{padding-top: 0px;}
+.panelws .form-group input{*padding-top: 8px;*height: 22px!important;margin-bottom: 0px\9;}
+.panelws .form-group textarea{*padding-top: 8px;margin-left: 15px;width: 95%;}
+</style>
+
+<div class="mainw mainw2 clearfix">
+	<div class="rmain col-md-12 rmain-inf">
+		<div class="panel panelws">
+			<h2 class="yyname">我的应用 » {$app.app_name} » 发布礼包</h2>
+			<div class="panel-body">
+				<form class="form-horizontal app-edit" role="form" onsubmit="return checkSub();" action="{:U('gift/save')}" enctype="multipart/form-data" method="post">
+					<div class="form-group">
+						<label for="name" class="col-sm-2 control-label"><em>* </em>礼包名称：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" id="name" name="name" maxlength="50"
+								value="{$apkinfo['brief']}" placeholder="">
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+					<div class="form-group rizhiplace">
+						<label for="content" class="col-sm-2 control-label"><em>* </em>礼包内容：</label>
+						<div class="col-sm-10">
+							<textarea rows="6" class="form-control appinfotext"  id="content" name="content" placeholder="不超过300字"></textarea>
+						</div>
+					</div>
+					<div class="form-group rizhiplace">
+						<label for="method" class="col-sm-2 control-label"><em>* </em>使用方法：</label>
+						<div class="col-sm-10">
+							<textarea rows="6" class="form-control appinfotext"  id="method" name="method" placeholder="不超过300字">{$apkinfo['changelog']}</textarea>
+						</div>
+					</div>
+					<hr />
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><em>* </em>兑换有效期：</label>
+                        <div class="col-sm-10 pl0">
+                            <div class="controls input-append date form_date col-sm-3" data-date="" data-date-format="yyyy-mm-dd" data-link-field="vtime_from" data-link-format="yyyy-mm-dd">
+                                <input size="16" type="text" value=""
+                                       name="vtime_from" id="vtime_from" class="form-control" placeholder="{:date('Y-m-d H:i')}">
+                            </div>
+                            <div class="controls input-append date form_date col-sm-3" data-date="" data-date-format="yyyy-mm-dd" data-link-field="vtime_to" data-link-format="yyyy-mm-dd">
+                                <input size="16" type="text" value=""
+                                       name="vtime_to" id="vtime_to" class="form-control" placeholder="{:date('Y-m-d H:i',time()+7*24*3600)}">
+                            </div>
+                        </div>
+                    </div>
+					
+					<div class="form-group iconup">
+						<label for="giftFile" class="col-sm-2 control-label"><em>* </em>兑换码：</label>
+						<div class="col-sm-10">
+							<div class="row icons">
+	                            <div class="col-md-1">
+	                                <input value="" id="giftFile" name="giftFile" type="file" style="display:none;" onchange="$('#uplfile').html(this.value)"/>
+	                                <div id="uploadGift" class="btn btn-info btn-small" onclick="$('#giftFile').click();">上传礼包</div>
+	                            </div>
+								<div class="col-md-1"></div>
+								<div class="col-md-10">
+									<span id="uplfile"></span>
+	                            </div>
+                            </div>
+                            <h5 class="mt0">格式：txt，每行1个激活码，不需要任何分隔符号</h5>
+                        </div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-md-8">
+				  			<input id="saveSub" name="saveSub" type="hidden" value="0">
+				  			<input id="app_id" name="app_id" type="hidden" value="{$app.app_id}">
+							<input id="apk_id" name="apk_id" type="hidden" value="{$app.id}">
+							<button type="submit" class="btn btn-success bo128" id="saveSubBtn" onclick="$('#saveSub').val(1);return true;">提交审核</button>
+                            <button type="submit" class="btn btn-success bo128" id="saveBtn"  onclick="$('#saveSub').val(0);return true;">仅保存</button>
+                        </div>
+					</div>
+				</form>
+				
+			</div>
+		</div>
+	</div>
+</div>
+<include file="Public:footer" />
+<include file="./Source/Tpl/Common/alertDialog.html" />
+
+<script type=text/javascript src="{:cdn('PUBLIC')}/common/js/jquery.form.js?{:C('JS_VERSION')}"></script>
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/app/jui/css/smoothness/jquery-ui-1.9.1.custom.min.css">
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-1.9.1.custom.min.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/development-bundle/ui/i18n/jquery.ui.datepicker-zh-CN.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+    // 兑换有效期
+    $(function(){
+        $("#vtime_from").datetimepicker({
+            dateFormat:"yy-mm-dd",
+            timeFormat:"hh:mm",
+            regional: 'zh-CN',
+            minDate: new Date({:date('Y')}, {:date('m')} - 1, {:date('d')}, 0, 0),
+            maxDate: new Date(2015, 11, 31, 17, 30)
+        });
+
+        $("#vtime_to").datetimepicker({
+            dateFormat:"yy-mm-dd",
+            timeFormat:"hh:mm",
+            regional: 'zh-CN',
+            minDate: new Date({:date('Y')}, {:date('m')} - 1, {:date('d')}, 0, 0),
+            maxDate: new Date(2015, 11, 31, 17, 30)
+        });
+    });
+
+
+});
+
+// 非空检验
+function checkSub() {
+    var name = $("#name").val();
+    var content = $("#content").val();
+    var method = $("#method").val();
+
+    if($.trim(name) == ""){
+        alertDialog("请填写礼包名称");
+        return false;
+    }
+    if($.trim(developer) == ""){
+        alertDialog("请填写开发者");
+        return false;
+    }
+
+    if($.trim(method) == ""){
+        alertDialog("请填写礼包内容");
+        return false;
+    }
+
+    return true;
+}
+
+// 兑换时间检验
+function validate_time() {
+    var vtime_from = $("#vtime_from").val();
+    var vtime_to = $("#vtime_to").val();
+    $.ajax({
+        type: "POST",
+        url: "<php>echo U('gift/validate_time_check')</php>",
+        data: {"vtime_from":vtime_from,"vtime_to":vtime_to},
+        success:function(data){
+            if(data.status == 1){
+                return true;
+            }else{
+                var msg = "您设置的兑换有效期不正确，请重新设置兑换有效期";
+                alertDialog(msg);
+                return false;
+            }
+        },
+        dataType:"json"
+    });
+    return true;
+}
+$("#saveSubBtn").on('mouseover', function(){
+    validate_time();
+});
+
+
+</script>

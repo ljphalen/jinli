@@ -1,0 +1,115 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body id="index">
+	<div class="gotop">
+		<span>返回顶部</span>
+	</div>
+	<div class="module webapp">
+		<header class="header" id="J_header">
+			<div class="wrap box">
+				<h1 class="logo">大红帽海淘资讯</h1>
+				<form class="search" action="<?php echo $webroot;?>/goods/index/">
+					<div class="fieldset">
+						<input class="small" type="text" name="keyword" placeholder="搜品牌、商品名称" onclick="baiduStatic('大红帽首页', '大红帽首页-搜索', '大红帽首页-搜索-搜索框点击次数')">
+						<button class="btn-search" onclick="baiduStatic('大红帽首页', '大红帽首页-搜索', '大红帽首页-搜索-搜索按钮点击次数')"></button>
+					</div>
+				</form>
+			</div>
+		</header>
+		<div class="iScroll" id="J_scrollWrap">
+			<section class="layout-center">
+				<div id="J_carouselWrap" class="carousel-wrap">
+					<ul class="carousel">
+					<?php foreach ($ads as $key=>$value){?>
+						<li>
+							<a class="pic" href="<?php echo html_entity_decode($value['link']);?>" title="<?php echo html_entity_decode($value['title']);?>" onclick="baiduStatic('大红帽首页', '大红帽首页-banner', '大红帽首页-banner-<?php echo html_entity_decode($value['title']);?>点击次数')">
+								<img src="<?php echo $staticRoot;?>/apps/dhm/asset/img/blank.gif" data-src="<?php echo Common::getAttachPath().$value['img'];?>" alt="<?php echo html_entity_decode($value['title']);?>">
+							</a>
+						</li>
+					<?php }?>
+					</ul>
+					<ol class="carousel-indicators">
+					<?php foreach ($ads as $key=>$value){?>
+						<li></li>
+					<?php }?>
+					</ol>
+				</div>
+			</section>
+			<section class="layout-center">
+				<ul class="brand-nav">
+				<?php foreach ($adl as $key=>$value){?>
+					<li class="main-brand">
+						<a class="pic" href="<?php echo html_entity_decode($value['link']);?>" title="<?php echo html_entity_decode($value['title']);?>" onclick="baiduStatic('大红帽首页', '大红帽首页-营销位', '大红帽首页-营销位-<?php echo html_entity_decode($value['title']);?>点击次数')">
+							<img src="<?php echo $staticRoot;?>/apps/dhm/asset/img/blank.gif" data-src="<?php echo Common::getAttachPath().$value['img'];?>" alt="<?php echo html_entity_decode($value['title']);?>">
+						</a>
+					</li>
+				<?php }?>
+					<li>
+					<?php foreach ($adr as $key=>$value){?>
+						<div class="sub-brand">
+							<a class="pic" href="<?php echo html_entity_decode($value['link']);?>" title="<?php echo html_entity_decode($value['title']);?>" onclick="baiduStatic('大红帽首页', '大红帽首页-营销位', '大红帽首页-营销位-<?php echo html_entity_decode($value['title']);?>点击次数')">
+								<img src="<?php echo $staticRoot;?>/apps/dhm/asset/img/blank.gif" data-src="<?php echo Common::getAttachPath().$value['img'];?>" alt="<?php echo html_entity_decode($value['title']);?>">
+							</a>
+						</div>
+					<?php }?>
+					</li>
+				</ul>
+			</section>
+			<section class="hot-type layout-center">
+				<div class="column-title gray">
+					<h2>热门分类</h2>
+				</div>
+				<ul class="hot-type-list">
+				<?php foreach ($category as $key=>$value) {?>
+					<li>
+						<a class="list-wrap" href="<?php echo $webroot;?>/goods?category_id=<?php echo $value['id'];?>"  title="<?php echo html_entity_decode($value['name']);?>" onclick="baiduStatic('大红帽首页', '大红帽首页-热门分类', '大红帽首页-热门分类-<?php echo html_entity_decode($value['name']);?>点击次数')">
+							<div class="pic">
+								<img src="<?php echo $staticRoot;?>/apps/dhm/asset/img/blank.gif" data-src="<?php echo Common::getAttachPath().$value['image'];?>"  title="<?php echo html_entity_decode($value['name']);?>">
+							</div>
+							<strong><?php echo html_entity_decode($value['name']);?></strong>
+						</a>
+					</li>
+			   <?php }?>
+				</ul>
+			</section>
+			<section class="layout-center">
+				<div class="column-title gray">
+					<h2>海淘知物</h2>
+					<a href="<?php echo $webroot;?>/info" class="more" onclick="baiduStatic('大红帽首页', '大红帽首页-海淘知物', '大红帽首页-海淘知物-更多点击次数')">更多<i class="icon-more"></i></a>
+				</div>
+			</section>
+			<section class="seagou-story layout-center">
+	        <?php foreach ($info as $key=>$value){?>
+				<div class="story-list">
+					<a href="<?php echo $webroot;?>/info/detail?id=<?php echo $value['id'];?>&refer=<?php echo urlencode($webroot)?>" title="<?php echo html_entity_decode($value['title']);?>" onclick="baiduStatic('大红帽首页', '大红帽首页-海淘知物', '大红帽首页-海淘知物-资讯<?php echo $value['id'];?>点击次数')">
+						<h3<?php if($value['is_recommend'] == 1) echo ' class="hot"';?>><?php echo html_entity_decode(Util_String::substr($value['title'], 0, 20, '', true));?></h3>
+						<h4><?php echo html_entity_decode(Util_String::substr($value['summary'], 0, 24, '', true));?></h4>
+					
+						<ul>
+						<?php 
+						if($value['images']) {
+						$images = explode(",", $value['images']);
+						foreach ($images as $v=>$k) {
+						?>
+							<li>
+								<div class="pic">
+									<img src="<?php echo $staticRoot;?>/apps/dhm/asset/img/blank.gif" data-src="<?php echo Common::getAttachPath().$k;?>"  alt="<?php echo html_entity_decode($value['title']);?>">
+								</div>
+							</li>
+						<?php }}?>
+						</ul>
+						<div class="publish-date"><?php echo date('m-d',$value['start_time']);?></div>
+					</a>
+				</div>
+	        <?php }?>
+	        </section>
+	        <footer class="layout-center">
+	        	<div class="contact-info">
+	        		<p>官方QQ群：252478334</p>
+	        		<p>微信服务号：大红帽</p>
+	        		<p>微信订阅号：大红帽海淘快报</p>
+	        	</div>
+	        </footer>
+	    </div>
+	</div>
+
+<?php echo $this->render("layout/footer.phtml");?>

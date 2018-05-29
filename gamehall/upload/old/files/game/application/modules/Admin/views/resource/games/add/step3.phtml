@@ -1,0 +1,86 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl.'?type='.$type;?>">游戏列表</a></li>
+		<li class="current"><a>版本管理</a></li>
+	</ul>
+</div>
+<div class="h_a">
+    <a href="<?php echo $step4editUrl;?>/?id=<?php echo $id;?>&game_id=<?php echo $game_id;?>&type=<?php echo $type;?>">
+    <input type="button" value="游戏差分包列表"/>
+    </a> 
+    <div style=" position:absolute;right:20px;top:68px"><a href="<?php echo $step3Url.'?id='.$id.'&game_id='.$game_id.'&type='.$type;?>">
+   <input type="button" value=" 添加游戏差分包" />
+    </a></div>
+</div>
+<div class="table_full">
+<dl style="display:-webkit-box">
+	<dt style="width:64px;height:64px; " >
+	<img style="height: 100%;width:auto;" src="<?php echo $attachPath.$game_info['img'];?>" alt="" >
+	</dt>
+	<dd style="padding-left: 64px">
+		<p><span class="name">游戏名称:<?php echo $game_info['name'];?></span></p>
+		<p><span class="id">游戏ID:<?php echo $game_id;?></span></p>
+		<p><span class="type">类型:<?php echo $category_titles;?></span></p>
+		<p><span class="name">游戏包名:<?php echo $game_info['package'];?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当前版本：V<?php echo $info['version'];?></span></p>
+	</dd>
+</dl>
+</div>
+<form method="post" action="<?php echo $step3PostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $id;?>" type="hidden" />
+<input name="game_id" value="<?php echo $game_id;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr">
+			<th class="th">下载地址</th>
+			<td class="td">
+			   <input type="text" name="link" class="input wc" value="">
+			</td>
+	    </tr>
+	    <tr class="tr">
+			<th class="th">差分包对象版本ID</th>
+			<td class="td"><input type="text" name="object_id" class="input" value=""></td>
+		</tr>
+		 <tr class="tr">
+			<th class="th">名称</th>
+			<td class="td"><input type="text" name="diff_name" class="input wc" value=""></td>
+		</tr>
+		<tr class="tr" style="display:none;">
+			<th class="th">新版本</th>
+			<td class="td"><input type="text" class="input" name="new_version" value="">请填写新版本的VersionCode</td>
+		</tr>
+		<tr class="tr" style="display:none;">
+			<th class="th">旧版本</th>
+			<td class="td"><input type="text" class="input" name="old_version" value="">请填写旧版本的VersionCode</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">文件大小</th>
+			<td class="td"><input type="text" class="input" name="size" value="">M</td>
+			</td>
+		</tr>              
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">完成</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//游戏表单数据提交
+var editor;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor = K.create('textarea[name="tgcontent"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Resource_Games/edit_step4?id=<?php echo $id;?>&game_id=<?php echo $game_id;?>&type=<?php echo $type;?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

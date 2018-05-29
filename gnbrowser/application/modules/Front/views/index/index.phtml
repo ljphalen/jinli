@@ -1,0 +1,45 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div id="page">
+		<?php echo $this->render("layout/nav.phtml");?>		
+		<article class="ac">
+			<div class="slide-pic banner">
+					<div class="pic">
+<?php 
+$i = 1;
+foreach($ads as $key=>$value) {
+?>
+						<a href="<?php echo strpos($value['link'], '&#63;') === false ? $value['link'].'?' : $value['link'].'&';?>chl_id=1&index_id=<?php echo $i;?>"><img src="<?php echo $attachPath . $value['img'];?>" alt="<?php echo $value['title']?>" /></a>
+<?php 
+$i++;
+}
+?>
+					</div>
+				<div class="handle">
+<?php 
+$total = count($ads);
+for($i=1; $i<=$total; $i++) {
+?>	
+					<span <?php if($i==1) echo 'class=on';?>></span>
+<?php }?>
+				</div>
+			</div>
+			
+			<div class="series">
+				<div class="item-list">
+					<ul>
+<?php foreach ($series as $key=>$value){?>
+						<li>
+							<a href="<?php echo $webroot; ?>/product/?sid=<?php echo $value['id'] ;?>">
+								<dl>
+									<dt class="r-line"><?php echo $value['name'];?></dt>
+									<dd><p><?php echo Util_String::substr($value['description'], 0, 28);?></p></dd>
+								</dl>
+							</a>
+						</li>
+<?php }?>
+					</ul>
+				</div>
+			</div>
+		</article>
+	</div>
+<?php echo $this->render("layout/footer.phtml");?>

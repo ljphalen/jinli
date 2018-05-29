@@ -1,0 +1,30 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">阅读币列表</a></li>
+    <li class="current"><a href="javascript:;">编辑阅读币</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑阅读币</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">卡号</th>
+			<td class="td"><input type="text" class="input wa" name="card_number" value="<?php echo $info['card_number'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Readcoin/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

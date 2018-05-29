@@ -1,0 +1,91 @@
+<form id="pagerForm" action="__URL__" method="post">
+	<input type="hidden" name="pid" value="{$_REQUEST.pid}"/>
+	<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+	<input type="hidden" name="numPerPage" value="{$_REQUEST.numPerPage}" />
+	<input type="hidden" name="orderField" value="{$_REQUEST.orderField}" />
+	<input type="hidden" name="orderDirection" value="{$_REQUEST.orderDirection}" />
+	<input type="hidden" name="_search[status]" value="{$_REQUEST[status]}"/>
+	<volist name="_search" key="name" id="field">
+		<input type="hidden" name="_search[{$key}]" value="{$field|safe}"/>
+	</volist>
+</form>
+
+<div class="page">
+	<div class="pageHeader">
+		<form onsubmit="return navTabSearch(this);" action="__URL__" method="post" id='syserrorform'>
+		<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+		<div class="searchBar">
+			<ul class="searchContent" style="overflow: inherit; height: auto;">
+				<li>
+					<label>状态：</label>
+					<select class="combox" name="_search[status]">
+					<option value="">所有</option>
+					<option value="0">未处理</option>
+					<option value="1">已处理</option>
+					</select>
+					<script>$("select[name='_search[status]']").val('{:$_search[status]}');</script>
+				</li>
+				<li>
+					<label>标题：</label>
+					<input type="text" name="_search[title]" value="{$_search[title]}" class="medium" >
+				</li>
+				<li>
+					<label>Appid：</label>
+					<input type="text" name="_search[app_id]" value="{$_search[app_id]}" class="medium" >
+				</li>
+				
+				<div class="buttonActive"><div class="buttonContent"><button type="submit">查询</button></div></div>
+			</ul>
+		</div>
+		</form>
+	</div>
+	
+	<div class="pageContent">
+		<div class="panelBar">
+			<ul class="toolBar">
+				<li><a class="delete" href="__URL__/sovled/status/1/id/{sid_node}/navTabId/__MODULE__" target="ajaxTodo" warn="请选择记录"><span>解决</span></a></li>
+			</ul>
+		</div>
+		<table class="list listW" width="100%" layoutH="138">
+			<thead>
+				<tr>
+					<th width="50" orderField="id" class="{:orderField('id','desc')}">编号</th>
+	                <th>时间</th>
+	                <th>标题</th>
+	                <th>内容</th>
+					<th>修复方法</th>
+					<th>涉及应用</th>
+					<th>状态</th>
+				</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="list">
+				<tr target="sid_node" rel="{$vo['id']}">
+					<td>{$vo['id']}</td>
+					<td>{$vo['created_at']|date="Y-m-d H:i:s",###}</td>
+					<td>{$vo['title']}</td>
+					<td>{$vo['body']|nl2br}</td>
+					<td>{$vo['fix']|nl2br}</td>
+					<td class="app"><gt name="vo.app_id">{:D("Apps")->where(array("id"=>$vo["app_id"]))->getField('app_name')}</td>
+					<td>{$vo[status]==1 ? '已处理' : '未处理'}</td>
+				</tr>
+			</volist>
+			</tbody>
+		</table>
+
+		<div class="panelBar">
+			<div class="pages">
+				<span>显示</span>
+				<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+					<option value="10" <eq name="numPerPage" value="10">selected</eq>>10</option>
+					<option value="20" <eq name="numPerPage" value="20">selected</eq>>20</option>
+					<option value="50" <eq name="numPerPage" value="50">selected</eq>>50</option>
+					<option value="100" <eq name="numPerPage" value="100">selected</eq>>100</option>
+					<option value="200" <eq name="numPerPage" value="200">selected</eq>>200</option>
+				</select>
+				<span>共{$totalCount}条</span>
+			</div>
+			<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="10" currentPage="{$currentPage}"></div>
+		</div>
+	</div>
+</div>

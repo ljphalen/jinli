@@ -1,0 +1,161 @@
+@charset "utf-8";
+.list-container{
+	margin:0 10px;
+}
+.title-container{
+	position: relative;
+	height: 50px;
+	line-height:50px;
+	font-size: 15px;
+	color: #525252;
+	.skip{
+		color:#cdcdcd;
+		right:0;
+	}
+	.icon-skip{
+		margin-left:5px;
+	}
+}
+
+.hotSubject-list{
+	overflow: hidden;
+	margin-bottom:10px;
+	li{
+		width: 49%;
+		float: left;
+		+li{
+			float: right;
+			margin-left: 2%;
+		}
+		img{
+			height: 88px;
+			width: 100%;
+		}
+		.name{
+			color:#aaa;
+			font-size: 13px;
+			margin-top: 10px;
+		}
+	}
+}
+
+.categorys-list{
+	width: 100%;
+	.category{
+		padding:3px 0;
+		display: table;
+		margin-bottom: 5px;
+		width: 100%;
+		.wrapper-link{
+			display: table;
+			margin-right: 10px;
+			width: 95px;
+		}
+		img{
+			width: 95px;
+			height: 95px;
+		}
+	}
+	.items-list{
+		border-bottom:1px solid #eee;
+		height: 95px;
+		display: table-cell;
+		vertical-align: middle;
+		margin-bottom:5px;
+		box-sizing:border-box;
+		width:100%;
+		max-width: 230px;
+		li{
+			display: inline-block;
+			width: 32%;
+			margin-bottom: 20px;
+			padding-right:2%;
+		}
+		li:nth-child(3n){
+			padding-right:0px;
+		}
+		li:nth-child(4),li:nth-child(5),li:nth-child(6){
+			margin-bottom: 0px;
+		}
+		.omit{
+			width:100%;
+			font-size: 14px;
+			color: #979797;
+			display: inline-block;
+
+		}
+	}
+	@media screen and(max-width:359px){
+		.category{
+			.wrapper-link{
+				width: 85px;
+				img{
+					width: 85px;
+					height: 85px;
+				}
+			}
+		}
+		.items-list{
+			height: 85px;
+			width: 100%;
+			max-width: 190px;
+		}
+	}
+	@media screen and(max-width:320px){
+		.category{
+			.wrapper-link{
+				width: 80px;
+				img{
+					width: 80px;
+					height: 80px;
+				}
+			}
+		}
+		.items-list{
+			height: 80px;
+			width: 200px;
+			max-width: 200px;
+		}
+	}
+	@media screen and(min-width:800px){
+		.items-list{
+			width: 100%;
+		}
+	}
+	.category:last-child{
+		.items-list{
+			border-bottom:0px;
+		}
+	}
+}
+
+//分类详情 分类名称列表
+.categoryName-list{
+	
+	font-size:15px;
+	margin:10px 4px;
+	overflow:hidden;
+	li{
+		width: 25%;
+		float: left;
+		text-align: center;
+		padding:4px 0;
+		.omit{
+			color:#a9a9a9;
+		}
+		&.active{
+			.omit{
+				color:#fff;
+			}
+			background: #85be3b;
+			@include border-radius(3px);
+		}
+	}
+	.omit{
+		width:85%;
+		display: inline-block;
+	}
+}
+.icon-skip{
+	@include chevron('right',10px,2px,#cdcdcd);
+}

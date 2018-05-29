@@ -1,0 +1,70 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li class="current"><a href="<?php echo $listUrl;?>">虚拟用户列表</a></li>
+        <li><a href="<?php echo $addUrl;?>">添加虚拟用户</a></li>
+    </ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+    <input name="token" type="hidden" value="<?php echo $token;?>" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">UID</th>
+                <td class="td"><input class="input wb" type="text" name="uid" value="<?php echo $param['uid'];?>" placeholder="使用UID搜索, 可以不用选择分表"></td>
+                <th class="th">昵称</th>
+                <td class="td"><input class="input wb" type="text" name="nickname" value="<?php echo $param['nickname'];?>" placeholder="须选择分表"></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">用户表(1-10分表)</th>
+                <td class="td">
+                    <select name="table">
+                        <option value="">请选择可能所在的表</option>
+                        <option value="1" <?php echo $param['table'] == 1 ? 'selected="selected"':''; ?> >01</option>
+                        <option value="2" <?php echo $param['table'] == 2 ? 'selected="selected"':''; ?> >02</option>
+                        <option value="3" <?php echo $param['table'] == 3 ? 'selected="selected"':''; ?> >03</option>
+                        <option value="4" <?php echo $param['table'] == 4 ? 'selected="selected"':''; ?> >04</option>
+                        <option value="5" <?php echo $param['table'] == 5 ? 'selected="selected"':''; ?> >05</option>
+                        <option value="6" <?php echo $param['table'] == 6 ? 'selected="selected"':''; ?> >06</option>
+                        <option value="7" <?php echo $param['table'] == 7 ? 'selected="selected"':''; ?> >07</option>
+                        <option value="8" <?php echo $param['table'] == 8 ? 'selected="selected"':''; ?> >08</option>
+                        <option value="9" <?php echo $param['table'] == 9 ? 'selected="selected"':''; ?> >09</option>
+                        <option value="10" <?php echo $param['table'] == 10 ? 'selected="selected"':''; ?> >10</option>
+                    </select>
+                </td>
+                <th class="th"><span style="float:left;">当前虚拟用户总数：<?php echo $total;?></span></th>
+                <td class="td"><span class="btn"><span><button type="submit">搜 索</button></span></span></td>
+            </tr>
+        </table>
+    </div>
+
+</form>
+<div class="table_list">
+    <table width="100%">
+        <tr class="hd">
+            <td width="5%">ID</td>
+            <td width="12%">UID</td>
+            <td width="5%">昵称</td>
+            <td width="10%">头像</td>
+            <td width="9%">移动电话</td>
+            <td width="10%">操作</td>
+        </tr>
+        <?php foreach($users as $key => $value) {?>
+            <tr class="ct">
+                <td><?php echo $value['id'];?></td>
+                <td><?php echo $value['uid'];?></td>
+                <td><?php echo $value['nickname'];?></td>
+                <td><img src="<?php echo $attachPath . $value['avatar'];?>" /></td>
+                <td><?php echo $value['mobile'];?></td>
+                <td>
+                    <a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+                    <a style="" href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+                </td>
+            </tr>
+        <?php } ?>
+    </table>
+</div>
+<div class="mr10 cc">
+    <?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>消息中心</title>
+<link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/call/css/style.min.css?ver=<?php echo $version;?>" />
+</head>
+
+<body id="page-msg" class="ui-app">
+
+<div class="ui-top-bar">
+	<a class="ui-pos icon-back" href="<?php  echo $webroot.'/user/index/index';?>"></a>
+	<span class="ui-top-txt">消息中心</span>
+	<!-- <a class="ui-pos icon-menu" href="#"></a> -->
+</div>
+<div class="ui-page page1 js-active">
+	<div class="ui-page-content">
+		<!-- 消息列表 START-->
+		<div class="ui-box">
+			<div class="ui-box-msg">
+				<ul id="js-msg-list" class="ui-list" data-url="<?php echo $webroot;?>/user/center/msg">
+				
+				<?php 
+				if(!empty($list)){
+				foreach($list as $k=>$v){?>
+					<li class="ui-item">
+						<p class="<?php echo $v['status'] == -1?'tips-warning':'tips-success'?>"><?php echo $v['content'];?></p>
+						<span><?php echo $v['add_time'];?></span>
+					</li>
+				<?php } }else{?>
+				<li class="ui-item">
+					<p style="text-align:center"> 暂无信息!</p>
+				</li>
+				<?php }?>
+				</ul>
+				<?php if($more){?>
+					<div class="ui-loading">上拉加载</div>
+				<?php }?>
+			</div>
+		</div>
+		<!-- 消息列表 END-->
+	</div>
+</div>
+
+<script type="text/javascript">
+	var token = "<?php echo $token;?>";
+</script>
+<script data-main="js/main.source.js" src="<?php echo $staticResPath;?>/call/vendor/requirejs/require.js?ver=<?php echo $version;?>"></script>
+<?=$this->render("layout/jspath.phtml");?>
+
+</body>
+</html>

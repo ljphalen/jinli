@@ -1,0 +1,90 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+    <div class="module credit-achieve">
+        <div class="header-userinfo">
+            <div class="user"><?php echo $name; ?></div>
+            <div class="credit">累计分数：<em><?php echo $sum_score; ?>分</em></div>
+        </div>
+        <div class="credit-list">
+            <div class="list">
+                <ul>
+                    <li class="pic"><i class="icon-face"></i></li>
+                    <li class="flex">
+                        <p class="title">累计签到<em><?php echo $my_sums['sum_sign']['sum']; ?></em>天</p>
+                        <p class="desc"><?php echo $my_sums['sum_sign']['tip']; ?></p>
+                    </li>
+                    <li class="percent"><i class="percentage red"><?php echo $my_sums['sum_sign']['per']; ?></i></li>
+                </ul>
+            </div>
+            <div class="list">
+                <ul>
+                    <li class="pic"><i class="icon-help"></i></li>
+                    <li class="flex">
+                        <p class="title">累计砍价<em><?php echo $my_sums['sum_cut']['sum']; ?></em>次</p>
+                        <p class="desc"><?php echo $my_sums['sum_cut']['tip']; ?></p>
+                    </li>
+                    <li class="percent"><i class="percentage pink"><?php echo $my_sums['sum_cut']['per']; ?></i></li>
+                </ul>
+            </div>
+            <div class="list">
+                <ul>
+                    <li class="pic"><i class="icon-cut"></i></li>
+                    <li class="flex">
+                        <p class="title">累计邀请好友砍价<em><?php echo $my_sums['sum_fcut']['sum']; ?></em>次</p>
+                        <p class="desc"><?php echo $my_sums['sum_fcut']['tip']; ?></p>
+                    </li>
+                    <li class="percent"><i class="percentage cyan"><?php echo $my_sums['sum_fcut']['per']; ?></i></li>
+                </ul>
+            </div>
+            <div class="list">
+                <ul>
+                    <li class="pic"><i class="icon-share"></i></li>
+                    <li class="flex">
+                        <p class="title">累计分享砍价信息<em><?php echo $my_sums['sum_scut']['sum']; ?></em>次</p>
+                        <p class="desc"><?php echo $my_sums['sum_scut']['tip']; ?></p>
+                    </li>
+                    <li class="percent"><i class="percentage dark-cyan"><?php echo $my_sums['sum_scut']['per']; ?></i></li>
+                </ul>
+            </div>
+        </div>
+        <?php if(!$is_from_share):?>
+        <section class="share-widget">
+            <header>晒晒我的成就</header>
+            <ul class="share-list"
+                data-title=""
+                data-pic=""
+                data-url="<?php echo $webroot.'/apk/score/summary?euid='. $euid;?>"
+                data-desc=""
+                >
+                <li class="J_shareToSns" data-type="weixin"
+                    onclick="GOU.baiduStatic('android我的成就','android我的成就-微信好友')">
+                    <i class="share-spirit-weixin"></i>
+                    <p>微信好友</p>
+                </li>
+                <li class="J_shareToSns" data-type="weixinp"
+                    onclick="GOU.baiduStatic('android我的成就','android我的成就-微信朋友圈')">
+                    <i class="share-spirit-weixinp"></i>
+                    <p>微信朋友圈</p>
+                </li>
+                <li class="J_shareToSns" data-type="weibo"
+                    onclick="GOU.baiduStatic('android我的成就','android我的成就-新浪微博')">
+                    <i class="share-spirit-weibo"></i>
+                    <p>新浪微博</p>
+                </li>
+                <li class="J_shareToSns" data-type="qq"
+                    onclick="GOU.baiduStatic('android我的成就','android我的成就-QQ好友')">
+                    <i class="share-spirit-qq"></i>
+                    <p>QQ好友</p>
+                </li>
+                <li class="J_shareToSns" data-type="qzone"
+                    onclick="GOU.baiduStatic('android我的成就','android我的成就-qq空间')">
+                    <i class="share-spirit-qzone"></i>
+                    <p>qq空间</p>
+                </li>
+            </ul>
+        </section>
+        <?php endif;?>
+    </div>
+
+<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/newfooter.phtml");?>

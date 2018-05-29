@@ -1,0 +1,45 @@
+<?php echo $this->render("layout/header.phtml");?>
+
+<body id="lazyload">
+	<div class="gotop">
+		<span>返回顶部</span>
+	</div>
+	<div class="module gray-bg webapp">
+		<header class="header" id="J_header">
+			<div class="wrap">
+				<div class="title">
+					<a href="<?php echo $webroot;?>" class="back"></a>
+					<h1>品牌汇</h1>
+				</div>
+			</div>
+		</header>
+		<div class="iScroll" id="J_scrollWrap">
+			<?php foreach ($list as $key=>$value) {?>
+			<section class="layout-center brand-set">
+				<div class="column-title">
+					<h2><?php echo html_entity_decode($value['name']);?></h2>
+				</div>
+				<?php 
+					$i = 0;
+					foreach ($value['brand'] as $k=>$v) {
+	                   if($i == 0 || $i % 3 == 0) echo '<ul>';
+	                ?>
+						<li>
+							<a title="<?php echo html_entity_decode($v['name']);?>" href="<?php echo $webroot;?>/goods?brand_id=<?php echo $v['id'];?>">
+								<div class="pic">
+									<img src="<?php echo $staticRoot;?>/apps/dhm/asset/img/blank.gif" alt="<?php echo html_entity_decode($v['name']);?>" data-src="<?php echo Common::getAttachPath().$v['logo'];?>">
+								</div>
+								<p class="title"><?php echo html_entity_decode($v['name']);?></p>
+							</a>
+						</li>
+					<?php
+					$i++;
+					if($i % 3 == 0 || $i == count($value['brand'])) echo '</ul>';
+	                 }
+	                 ?>
+			</section>
+			<?php }?>
+		</div>
+	</div>
+
+<?php echo $this->render("layout/footer.phtml");?>

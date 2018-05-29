@@ -1,0 +1,47 @@
+<div class="colMain">
+    <div class="title">
+        <p class="fl">应用-开发者信息</p>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="toolbar tabs">
+                <ul class="fl">
+                    <li><a href="../developer/edit?dev_id={{dev_id}}">基本信息</a></li>
+                    <li><a href="../financials/edit?dev_id={{dev_id}}">财务信息</a></li>
+                    <li class="cur"><a href="../developer/dev_app?dev_id={{dev_id}}">应用信息</a></li>
+                </ul>
+            </div>
+            <div class="grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>应用名</th>
+                            <th>APPKEY</th>
+                            <th>开发者邮箱</th>
+                            <th>平台</th>
+                            <th>广告位信息</th>
+                            <th>创建时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- loop result -->
+                        <tr>
+                            <td><span class="blue">{{result' value.app_name}}</span></td>
+                            <td>{{result' value.appkey}}</td>
+                            <td>{{result' value.devloper.email}}</td>
+                            <td><!-- if {{result' value.platform}} ==1  -->Android<!-- else -->IOS<!-- endif --></td>
+                            <td>{{result' value.pos}}</td>
+                            <td><?php echo format_time($v1['createdate']); ?></td>
+                            <td>
+                                <a href="/apps/edit?app_id={{result' value.app_id}}" class="edit" title="编辑"></a>
+                            </td>
+                        </tr> 
+                        <!-- endloop -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">{{pager.pages}}</div>
+        </div>
+    </div>
+</div>

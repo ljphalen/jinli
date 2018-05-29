@@ -1,0 +1,59 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $indexUrl; ?>">等级商品列表</a></li>
+			<li><a href="<?php echo $addUrl; ?>">添加权限商品</a></li>
+		</ul>
+	</div>
+	<div class="table_full">
+		<form action="<?php echo $indexUrl; ?>" method="POST" id="form">
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<table width="100%" cellspacing="0" cellpadding="0">
+				<tr class="tr">
+					<th class="th">选择状态：</th>
+					<td class="td">
+						<select name="status" id="status">
+							<option value="-1">请选择</option>
+							<?php foreach ($statusList as $k => $v) { ?>
+								<option <?php echo isset($status) && ($k == $status) ? 'selected="selected"' : ''; ?> value="<?php echo $k; ?>"><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+		</form>
+	</div>
+
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">编号</th>
+				<th class="th">组别</th>
+				<th class="th">分类</th>
+				<th class="th">商品名称</th>
+				<th class="th">产生／消耗积分(默认)</th>
+				<!-- <th class="th">状态</th> -->
+				<th class="th">操作</th>
+			</tr>
+			<?php foreach ($list as $k => $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$k + 1;?></td>
+					<td class="td"><?php echo $groupType[$v['group_id']]['val']; ?></td>
+					<td class="td" align="left"><?=$v['cat_name'];?></td>
+					<td class="td" align="left" style="color: blue"><?=$v['name'];?></td>
+					<td class="td"><?php echo $v['scores']; ?></td>
+					<!-- <td class="td"><?php echo $v['status'] == '1' ? '开启' : '关闭'; ?></td> -->
+					<td class="td">
+						<a href="<?php echo $detailUrl; ?>/?goods_id=<?php echo $v['goods_id']; ?>&cat_id=<?php echo $v['cat_id']; ?>&group_id=<?php echo $v['group_id']; ?>">查看</a>&nbsp;
+						<a href="javascript:void(0);" onclick="deleteOne('<?php echo $deleteByUrl; ?>/?goods_id=<?php echo $v['goods_id']; ?>&cat_id=<?php echo $v['cat_id']; ?>&group_id=<?php echo $v['group_id']; ?>', '', event);">删除</a>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

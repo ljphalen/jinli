@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>答题赢好礼 天天送不停——金立游戏大厅</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="format-detection" content="email=no" />
+	<link rel="stylesheet" href="<?php echo $staticroot; ?>/apps/game/events/nationalDay/assets/css/main.css?v=<?php echo $version;?>" />
+	<link rel="shortcut icon" href="<?php echo $staticResPath; ?>/pic/game.ico" type="image/ico" mce_href="<?php echo $staticResPath; ?>/apps/game/3g/pic/game.ico" />
+</head>
+<script >
+		var token = '<?php echo $token;?>';
+</script>
+
+<body data-ajaxUrl="<?php echo $webroot; ?>/guoqing/answer" data-href="<?php echo $webroot; ?>/user/login?redirect_uri=<?php echo $webroot; ?>/guoqing/index" data-sign="">
+<div class="header">
+		<div class="head_1"></div>
+		<div class="head_2"></div>
+	</div>
+	<div class="main">
+		<!-- 答题区域 -->
+		<div class="quizContainer">
+			<!-- 活动还未开始 -->
+		<?php if($flag == 2){?>
+			<div class="acNotStart ">
+				<h1>敬请期待</h1>
+				答题活动还未开始哦
+			</div>
+		<?php } else if($flag == 1) { ?>		
+			<!-- 活动进行中 -->
+			<!-- 开始答题 -->
+			<?php if(!$online['uuid']){?>
+				<div class="J_begin startQuiz ">
+					<a class="btn-orange" href="<?php echo $webroot; ?>/user/login?redirect_uri=<?php echo $webroot; ?>/guoqing/index" >开始答题</a>
+				</div>
+			<?php }else{ ?>
+				<?php 
+                  if($is_finish){ // 是否已完成答题 ?>
+                  	<div class="J_questionBank questionBank ">
+						<div class="userInfo">
+							<span class="nickname" data-uid="<?php echo $online['uuid'];?>">欢迎您：<?php echo $online['uname'];?></span>
+							<span class="points">您目前积分:<em id="points"><?php echo $score;?></em></span>
+						</div>
+						<div class="J_finishContainter finsishYet"></div>
+					</div>
+                 <?php }else{ ?>
+                  	<!-- 显示题目 -->
+					<div class="J_questionBank questionBank ">
+						<div class="userInfo">
+							<span class="nickname" data-uid="<?php echo $online['uuid'];?>">欢迎您：<?php echo $online['uname'];?></span>
+							<span class="points">您目前积分:<em id="points"><?php echo $score;?></em></span>
+						</div>
+						<div class="bankArea">
+							<div class="J_subject subject" data-id="<?php echo $id;?>" data-number="<?php echo $number;?>">
+								<div class="J_title title">问题<?php echo $number; ?>：<?php echo $quetion['title']; ?></div>
+								<?php foreach ($quetion['wenti'] as $key => $val){?>
+									<span data-answer="<?php echo $key;?>" class="J_answer<?php echo $key;?> answer<?php echo $key;?> "><?php echo $key.':'.$val ;?></span>
+								<?php }?>
+								
+							</div>
+							<div class="help">
+								<a class="J_next btn-green hidden">下一题</a>
+								<a id="J_help"  class="btn-yellow" onclick="tjUrl()">求助</a>
+							</div>
+					    </div>
+					    <div class="J_finishContainter finsishYet hidden"></div>
+				    </div><!-- end 显示题目-->
+					<div class="J_help helpContainer hidden">
+						<div class="luntan">
+							<a class="J_close close">X</a>
+							<a href="<?php echo Common::monTjurl($webroot.'/guoqing/tj','http://bbs.amigo.cn/thread-9258-1-1.html', 'GUOQING_DISCUIZE_HELP');?>&t_bi=<?php echo $source;?>" class="luntan" target="_blank">查看论坛答案贴，点击进入论坛</a>
+						</div>
+						<div class="game-list">
+							<h1>提示：</h1>
+							<?php 
+							    $ua = strtolower($_SERVER['HTTP_USER_AGENT']);						
+							    foreach($curr_tips as $key=>$value){
+									$url  = $value['url'];
+									if($ua  &&  stristr($ua,'micromessenger')){
+									   $url = 'http://a.app.qq.com/o/simple.jsp?pkgname=gn.com.android.gamehall';
+									}
+							?>
+							<div class="game">
+								<span class="icon"><img src="<?php echo $value['icon'];?>"></span>
+								<div class="info">
+									<span class="title"><?php echo $value['title'];?></span>
+									<div class="rank-<?php echo $value['star'];?>"><span ></span><span ></span><span ></span><span ></span><span ></span></div>
+									<span class="number"><?php echo $value['downloads'];?>人已下载</span>
+									<a href="<?php 
+									   
+									     echo Common::monTjurl($webroot.'/guoqing/tj',$url, 'GUOQING_GID'.$value['id']);
+									?>&t_bi=<?php echo $source;?>" class="download"></a>
+								</div>
+							</div><!-- end game-->
+							<?php }?>
+						</div><!-- end game-list-->
+					  </div><!-- end helpContainer-->
+      			 <?php } // end is_finish?>		
+	  		<?php } //end online['uid'] ?>
+		<?php } else if($flag == 3) {?>
+		<!-- 活动意结束 -->
+			<div class="acFinish ">
+				<h1>活动已结束</h1>
+				本次活动已结束  谢谢您的参与
+			</div>
+		<?php }?>
+		</div><!-- end  答题区域-->
+		
+		<!-- 积分排行榜 -->
+		<div class="J_rank boardContainer" data-ajaxUrl="<?php echo $webroot.'/guoqing/getScore'; ?>">
+			<div class="boardhd">积分排行榜</div>
+			<div class="boardContent">
+				<ul class="list">
+					<li class="first">
+						<span class="rank">排名</span>
+						<span class="telephone">&nbsp;&nbsp;&nbsp;手机号码</span>
+						<span class="points">积分</span>
+					</li>
+					<?php if(count($rank)){ ?>
+					   <?php foreach ($rank as $key=> $val){
+					   	?>
+						<li>
+							<span class="rank">TOP<?php echo ($key+1);?></span>
+							<span class="telephone"><?php echo  substr($val['uname'], 0,3).'****'.substr($val['uname'], 7,4);?></span>
+							<span class="points"><?php echo $val['score'];?></span>
+						</li>
+						<?php } ?>	
+					<?php }else{?>
+						<?php $num = array('3','5','7','8');?>
+						<?php for($i=1;$i<11;$i++){?>
+						<li>
+							<span class="rank">TOP<?php echo $i;?></span>
+							<span class="telephone"><?php echo '1'. $num[rand(0, 3)].rand(2, 9)?>****<?php echo rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9);?></span>
+							<span class="points"><?php echo (20-$i)?></span>
+						</li>
+						<?php } ?>
+					<?php }?>
+					
+				</ul>
+			</div>
+			<div class="boardFt"></div>
+		</div>
+		
+		<!-- 活动奖品 -->
+		<div class="awardContainer">
+			<div class="crown">活动奖品</div>
+			<div class="awardContent">
+				<h1 class="top1">一.活动累计排行榜TOP10</h1>
+				<div class="prize1"></div>
+				<h1 class="top2">二.日排行榜TOP20</h1>
+				<div class="prize2"></div>
+				<div class="rule">
+					<h2>活动规则:</h2>
+					<p>1.登陆账号，每日仅有一次答题机会；</p>
+					<p>2.每日可回答20道题，答对一题积一分；</p>
+					<p>3.积分可累计，对总排行top10，日排行top20的玩家</p>
+					<p>&nbsp;&nbsp;进行发奖；</p>
+					<p>4.积分相同时，按答题先后时间进行排名；</p>
+				</div>
+			</div>
+		</div>
+	<?php if($online['uuid']):?>
+		<!-- 论坛活动 -->
+		<div class="forum-activity">
+			<div class="crown">论坛答题活动</div>
+			<div class="forum-content">
+				<a target="_blank" href="<?php echo Common::monTjurl($webroot.'/guoqing/tj','http://bbs.amigo.cn/thread-9258-1-1.html', 'GUOQING_DISCUIZE_PARTAKE');?>&t_bi=<?php echo $source;?>" class="btn-red">立即参与<em>&gt;&gt;&gt;</em></a>
+			</div>
+		</div>
+	<?php endif;?>
+	</div><!-- end main -->
+	<?php if($online['uuid']):?>
+	<div class="footer">
+		<span class="qrcode"></span>
+		<div class="container">
+			<div class="info">
+			<p>客服电话：0755-83211672</p>
+			<p>客服QQ：1732001808</p>
+			<p>玩家交流群：189360286</p>
+			</div>
+		</div>
+		<span class="copyright">本次活动最终解释权归金立游戏大厅所有</span>
+	</div>
+	<?php endif;?>
+	<div class="J_tipBox tip-box hidden">
+		<p></p>
+		<div class="boxBg"></div>
+	</div>
+	<script src="<?php echo $staticroot; ?>/apps/game/events/nationalDay/assets/js/jquery.js" > </script>
+	<script data-main src="<?php echo $staticroot; ?>/apps/game/events/nationalDay/assets/js/main.source.js"></script>
+	<script>
+	//统计的js，拼接url
+	function tjUrl(){ 
+		tourl = '<?php echo $webroot.'/tjj/index?intersrc=GUOQING_TIPS&t_bi='.$source;?>';
+		$.ajax({url:tourl,
+			    async:false,
+		});
+	}
+	</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<{config_load file="site.conf"}> <{include file="public/pageHead.html"}>
+<link rel="stylesheet" href="template/default/css/page.css" />
+<script type="text/javascript" src="/template/default/js/common.js"></script>
+<script type="text/javascript" src="/template/default/js/page.js"></script>
+<script type="text/javascript">
+function delPrompt_com(clientid,clientids,obj){
+	$.post("/index.php/companys/chksubs",{clientid:clientid},function(result){
+			if(result.counts > 0 && clientids == 0){
+				if(!confirm("该渠道商有 "+result.counts+" 个子渠道商，您真的要一并删除吗？不可恢复")){
+					return false;
+				}
+				document.location.href=obj.href;
+			}else{
+				if(!confirm("您真的要删除吗？不可恢复")){
+					return false;
+				}
+				document.location.href=obj.href;
+			}
+			
+	},'json');	 	
+	return false;
+}
+
+function renew_com(){
+	$.get("/task.php?ac=update&forcecom=1&t="+new Date().getTime(),function(result){
+			if(result!=""){
+				alert('更新成功！');	
+			}
+	},'text');	 	
+	return false;
+}
+
+</script>
+<h1><!--<span class="action-span"><a href="/index.php/company/add">添加公司</a>--></span>
+<span class="action-span1">渠道商管理</span><span id="search_id"
+	class="action-span1"> - 
+    <{if $channeltype eq 1}>
+    自主渠道商列表
+    <{elseif $channeltype eq 2}>
+    移动渠道商列表
+    <{else}>
+    渠道商列表
+    <{/if}>
+    </span>
+<div style="clear: both"></div>
+</h1>
+
+<div class="form-div">
+  <form action="/index.php" name="searchForm" id="searchForm" method="get">
+    <img src="/template/default/img/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" />
+    渠道号/公司名称：
+    <input type="text" name="condition" id="condition" value="<{$smarty.get.condition}>" />
+    <input type="hidden"value="company_list"  name="ac" />
+    <input type="hidden" value="<{$channeltype}>"  name="channeltype" />
+    <input type="submit" value="搜索" class="button" name="search" />
+    
+    <{if $channeltype eq 2}>
+    <!--<input type="button" value="移动渠道商导入" class="button" name="import" onclick="document.location.href='/index.php/companyimport'" />-->
+    <{/if}>
+    
+    <{if $admin['level']>=200}>
+    <input type="button" value="更新统计报表渠道商缓存" class="button" name="import" onclick="renew_com();" />
+    <{/if}>
+  </form>
+</div>
+<div class="list-div" id="listDiv">
+<table width="100%" cellspacing="1" cellpadding="2" id="list-table">
+	<tr align="center">
+		<th>公司名称</th>
+		<th>渠道号</th>
+		<th>子渠道号</th>
+		<th>角色类型</th>
+		<th>联系人</th>
+        <th>手机/电话</th>
+		<th>分成比例</th>
+		<th>备注</th>
+		<th>创建时间</th>
+		<th width="100">操作</th>
+	</tr>
+	<{foreach item=one from=$list}>
+	<tr align="center">
+		<td><{$one.name|default:'未知'}></td>
+		<td><{$one.clientid|default:'无'}></td>
+		<td><{$one.clientids}></td>
+		<td>
+        <{if $one.clientid eq 0}>
+        管理员
+        <{elseif $one.clientid > 0 && $one.clientids eq 0}>
+        <{$channeltypeArr[30]}>
+        <{else}>
+        <{$channeltypeArr[10]}>
+        <{/if}>
+        </td>
+		<td><{$one.linkman}></td>
+		<td><{$one.mobile|default:$one.phone|default:''}></td>
+        <td><{$one.intoratio}></td>
+        <td><{$one.describe}></td>
+        <td><{$one.dateline|date_format:"%Y-%m-%d %H:%M"}></td>
+		<td align="center"><a href="/index.php?ac=company_edit&method=edit&cid=<{$one.id}>&channel=<{$channeltype}>"
+			title="编辑"><img src="/template/default/img/icon_edit.gif" border="0" />编辑</a>
+        <{if $one.clientid neq 0 && $admin.agentid|default:0 neq $one.id}>    
+            &nbsp;&nbsp; 
+		<a href="/index.php?ac=company_edit&method=del&cid=<{$one.id}>&channel=<{$channeltype}>" title="删除"
+			onclick="return delPrompt(<{$one.clientid}>,<{$one.clientids}>,this)"><img
+			src="/template/default/img/icon_drop.gif" border="0" />删除</a>
+        <{/if}>    
+            </td>
+	</tr>
+	<{/foreach}>
+</table>
+<div style="text-align:center"></div>
+
+
+</div>
+<div class="wrapper inb ml">
+    <div class="page mb20" id="page-js-2"></div>
+    <script type="text/javascript">
+        var curpage = <{$curpage}>;
+        var pages = <{$pages}>;
+        var channeltype = "<{$channeltype}>";
+        var condition = "<{$condition}>";
+        PPage("page-js-2",curpage,pages,"hoho2.go",true);
+        function hoho2(){};
+        hoho2.go=function(pageNum){
+            window.location.href = encodeURI("/index.php?ac=company_list&channeltype="+channeltype+"&condition="+condition+"&page=" + pageNum);
+            PPage("page-js-2",pageNum,pages,"hoho2.go",true);
+        }
+    </script>
+</div>
+<{include file="public/pageFoot.html"}>
+<script>
+	$(function(){
+		$(".page-txt").keyup(function(event){
+			if(event.keyCode ==13){
+				$(".page-btn").trigger("click");
+			}
+		 });
+	});
+</script>

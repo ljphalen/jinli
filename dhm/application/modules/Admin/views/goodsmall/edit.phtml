@@ -1,0 +1,81 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">商家列表</a></li>
+    <li class="current"><a href="javascript:;">编辑商家</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑商家</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+    <input name="token"    value="<?php echo $token; ?>" type="hidden"/>
+    <input name="id"       value="<?php echo $info['id']; ?>" type="hidden"/>
+    <input name="mall_id"  value="<?php echo $info['mall_id']; ?>" type="hidden"/>
+    <input name="goods_id" value="<?php echo $row['id']; ?>" type="hidden"/>
+<div class="table_full">
+	<table width="100%">
+
+        <tr class="tr">
+            <th class="th">商品名称</th>
+            <td class="td"><?php echo $row['title']; ?></td>
+        </tr>
+        <tr class="tr">
+            <th class="th">商家名称</th>
+            <td class="td"><?php echo $mall['name']; ?></td>
+        </tr>
+        <tr class="tr">
+            <th class="th">搜索</th>
+            <td class="td">
+                <input class="input wb" type="text" name="keyword" value="<?php echo $row['title']; ?>"/>
+                <span class="btn"><span><button type="button" id="search_dhm_mall_btn">搜索</button></span></span>
+            </td>
+        </tr>
+        <tr class="tr">
+            <th class="th">最低价</th>
+            <td class="td"><input type="text" class="input" name="min_price" value="<?php echo $info['min_price'];?>"></td>
+        </tr>
+        <tr class="tr">
+            <th class="th">最高价</th>
+            <td class="td"><input type="text" class="input" name="max_price" value="<?php echo $info['max_price'];?>"></td>
+        </tr>
+        <tr class="tr">
+            <th class="th">链接</th>
+            <td class="td"><input type="text" class="input wc" name="url" value="<?php echo $info['url'];?>"></td>
+        </tr>
+	</table>
+</div>
+<div class="mb10 tac"><span <?php ; ?> class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/common/gbk.js?v=<?= $version ?>"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+        ajaxRedirect(ret, '<?php echo Util_Http::getServer("HTTP_REFERER"); ?>');
+	});
+})
+</script>
+<script>
+    $(function () {
+        $("#search_dhm_mall_btn").click(function () {
+            var keyword = $("input[name=keyword]").val();
+            if (keyword === '') {
+                alert("关键词不能为空，请到商家列表进行编辑");
+                return false;
+            }
+            var url = "<?php echo html_entity_decode($mall['search_url']); ?>";
+            if (url == "") {
+                alert("搜索链接不能为空，请到商家列表进行编辑");
+                return false;
+            }
+            var name = "<?php echo html_entity_decode($mall['name']); ?>";
+            if(name.indexOf('天猫')>-1){
+                keyword = $URL.encode(keyword);
+            }
+            url = url.replace("%s", keyword);
+            console.log(url);
+            window.open(url)
+        });
+    });
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

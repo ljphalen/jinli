@@ -1,0 +1,80 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+	<div class="module" style="background: #f4f4f4;">
+    	<header id="iHeader" class="hd">
+    			<div class="top-wrap">
+    				<div class="title">
+    					<a href="<?php echo $webroot;?>" class="back"></a>
+    					<h1><?php echo html_entity_decode($topic['title']);?></h1>
+    				</div>
+    			</div>
+    		</header>
+    	
+		<section id="iScroll">
+		    <div class="gotop gotop-custom" style="display:none;">
+    			<span>返回顶部</span>
+    		</div>
+    		<div class="vote J_vote <?php if(Fanfan_Service_Topic::checkParise($topic['id'])) echo 'on'; ?>" data-ajax="<?php echo $webroot;?>/api/praise/index?module=zdm&item_id=<?php echo $topic['id'];?>">
+    			<span>赞(<?php echo Common::parise($topic['praise']);?>)</span>
+    		</div>
+			<div class="zdm-banner">
+				<div class="pic">
+				<?php if($topic['banner_url']) { ?><a class="pic" href="<?php echo $topic['banner_url'];?>"><?php  }?>
+					<img src="<?php echo $attachPath.$topic['img'];?>" alt="">
+				<?php if($topic['banner_url']) { ?></a><?php  }?>
+				</div>
+				<div class="desc">
+					<?php echo html_entity_decode($topic['topic_desc']);?>
+				</div>
+			</div>
+			
+			<div class="zdm-list J_proDetail" data-ajaxurl="<?php echo $webroot;?>/api/app_zdm/index?id=<?php echo $topic['id'];?>">
+				<div class="wrap"></div>
+			</div>
+			<script id="J_dtemplate" type="text/icat-template">
+				<ul>
+					<%for(var i=0, len=data.list.length; i<len; i++){%>
+					<li>
+						<a href="<%= data.list[i].link %>">
+							<div class="pic">
+								<span>
+									<img src="<%= blankPic %>" data-src="<%= data.list[i].img %>" alt="<%= data.list[i].title %>">
+								</span>
+							</div>
+							<div class="desc">
+								<div class="price">
+									<% if(parseFloat(data.list[i].pro_price)>0){ %>
+										<em>￥<%= data.list[i].pro_price %></em>
+									<% } %>
+									<% if(parseFloat(data.list[i].price)>0){ %>
+										<u>￥<%= data.list[i].price %></u>
+									<% } %>
+								</div>
+								<% if(parseFloat(data.list[i].discount)>0){ %>
+								<div class="discount"><%= data.list[i].discount %>折</div>
+								<% } %>
+								<h3><%= data.list[i].title %></h3>
+							</div>
+						</a>
+					</li>
+					<%}%>
+				</ul>
+			</script>
+			<div class="ff-foot">
+				<div class="web-btn">
+				<a href="<?php echo $webroot.'/zdm/keyword_redirect?keyword='.urlencode(html_entity_decode($topic['search_btn'])).'&t_bi='.$this->t_bi;?>"><?php echo html_entity_decode($topic['search_btn']);?> &gt;&gt;</a>
+				</div>
+				<div class="more-links">
+					<h3>更多精彩内容</h3>
+					<div>
+					<?php foreach ($keywords as $key=>$value) {?>
+						<a href="<?php echo $webroot.'/zdm/keyword_redirect?keyword='.urlencode($value);?>"><?php echo $value?></a>
+					<?php }?>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

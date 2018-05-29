@@ -1,0 +1,68 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+		<li class="current"><a href="<?php echo $configUrl?>">预约活动配置</a>
+	</ul>
+</div>
+<div class="h_a">基本配置：</div>
+<form method="post" action="/Admin/Seckill/config" id="addFrom">
+<input name="token" id="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">	
+		<tr class="tr">
+			<th class="th">开始时间</th>
+			<td class="td"><input type="text" class="input" id="start_time" name="seckill_remind_start_time" width="80px;" value="<?php echo $data['seckill_remind_start_time']; ?>"></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">结束时间</th>
+			<td class="td"><input type="text" class="input" id="end_time" name="seckill_remind_end_time" width="80px;" value="<?php echo $data['seckill_remind_end_time']; ?>"></td>
+		</tr>
+			<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="seckill_remind_status" >
+			<option value="1"   <?php if($data['seckill_remind_status'] == 1) echo 'selected';?>>开启</option>
+			<option value="0"    <?php if($data['seckill_remind_status'] == 0) echo 'selected';?>>关闭</option>
+			</select>
+			</td>
+		</tr>
+        <tr class="tr">
+            <th class="th">新用户奖励金币</th>
+            <td class="td"><input type="text" class="input" id="seckill_remind_jb" name="seckill_remind_jb" width="80px;" value="<?php echo $data['seckill_remind_jb']; ?>"></td>
+        </tr>
+		<tr class="tr">
+			<th class="th">规则说明</th>
+			<td class="td"><textarea rows="6" cols="10" name="seckill_remind_rule"  style="width: 600px; height:400px;"><?php echo $data['seckill_remind_rule'];?></textarea></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+	<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+	$('#end_time').datetimepicker();
+	
+	 var editor;
+	 	KindEditor.ready(function(K) {
+	 		K.token = $('#token').val();
+	 	    editor = K.create('textarea[name="seckill_remind_rule"]', {
+	 	        resizeType : 1,
+	 	        allowPreviewEmoticons : false,
+	 	        allowImageUpload : true,
+	 	        uploadJson : '<?php echo $uploadImgUrl;?>',
+	 	        items : EDITOR_ITEMS
+	 	    });
+	 	});
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Seckill/config');
+	},function(){
+  		editor.sync();
+  	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

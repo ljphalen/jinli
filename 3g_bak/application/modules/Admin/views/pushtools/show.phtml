@@ -1,0 +1,34 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">PUSH列表</a></li>
+		<li class="current"><a href="javascript:;">查看PUSH配置</a></li>
+	</ul>
+</div>
+<div class="h_a">查看PUSH配置</div>
+<form method="post" action="<?php echo $listUrl; ?>" id="editForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="pid" value="<?php echo $info['pid']; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">JSON</th>
+				<td class="td"><textarea name="json" rows="10" cols="80"><?php echo $info_json; ?></textarea></td>
+			</tr>
+
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">返回</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	//用户表单数据提交
+/*	$(document).ready(function () {
+		ajaxForm('editForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Pushtools/index');
+		});
+	})
+*/
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

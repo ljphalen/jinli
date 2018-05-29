@@ -1,0 +1,27 @@
+<div class="mod_box rank_box">
+	<div class="hd"><i class="hd_ico"></i><h2 class="title">下载排行</h2></div>
+	<div class="bd">
+		<ol class="rank_list">
+		<?php foreach($downgames as $key=>$val) {
+			$tj_intersrc_down = (($tj_intersrc == 'category')?($tj_intersrc.$val['id']):$tj_intersrc);
+			if ($key == 0){
+	                     ?>     
+			     	<li class="first">
+						<em class="number">1.</em>
+						<a class="thumb" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $val['package'], $tj_intersrc_down.'_dlrank', $webroot.'/Front/Game/detail/?id='.$val['id']);?>" title="<?php echo $val['name'];?>"  title="<?php echo $val['name'];?>"><img class="lazy" data-original="<?php echo $val['img'];?>" src="<?php echo $staticResPath; ?>/images/default_icon.png?v=<?php echo $version;?>" alt="<?php echo $val['name'];?>" /></a>
+						<h4><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $val['package'], $tj_intersrc_down.'_dlrank', $webroot.'/Front/Game/detail/?id='.$val['id']);?>" title="<?php echo $val['name'];?>"><?php echo $val['name'];?></a></h4>
+						<p class="type"><?php echo $val['category_title'];?></p>
+						<a class="download_btn" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'startdl', $val['package'], $tj_intersrc_down.'_dlrank', $val['link']);?>" >下载</a>
+					</li>
+			<?php }else{   ?>				 
+				     	<li><em class="number"><?php echo $key+1?>.</em>
+							<a class="thumb" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $val['package'], $tj_intersrc_down.'_dlrank', $webroot.'/Front/Game/detail/?id='.$val['id']);?>"><img class="lazy" data-original="<?php echo $val['img'];?>" src="<?php echo $staticResPath; ?>/images/default_icon.png?v=<?php echo $version;?>" alt="<?php echo $val['name'];?>" /></a>
+							<h4><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $val['package'], $tj_intersrc_down.'_dlrank', $webroot.'/Front/Game/detail/?id='.$val['id']);?>" title="<?php echo $val['name'];?>" title="<?php echo $val['name'];?>"><?php echo $val['name'];?></a></h4>
+							<p class="type"><?php echo $val['category_title'];?></p>
+							<a class="download_btn" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'startdl', $val['package'], $tj_intersrc_down.'_dlrank', $val['link']);?>" >下载</a>
+						</li>
+			<?php }?>
+		    <?php }?>  
+		</ol>
+	</div>
+</div>

@@ -1,0 +1,32 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">抽奖用户列表</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">编号</td>
+			<td>手机号</td>
+			<td>参入次数</td>
+			<td>中奖次数</td>
+			<td>首次参与时间</td>
+			<td>最近参与时间</td>
+		</tr>
+<?php foreach($rules as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['mobile'];?></td>
+			<td><?php echo $value['total_times'];?></td>
+			<td><?php echo $value['fate_times'];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['last_time']);?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

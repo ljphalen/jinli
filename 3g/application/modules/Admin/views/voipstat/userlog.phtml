@@ -1,0 +1,39 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $visitUrl; ?>">PV/UV统计</a></li>
+			<li class="current"><a href="<?php echo $userLogUrl ?>">新增激活用户</a></li>
+			<li><a href="<?php echo $newRegisterUrl; ?>">新增注册用户</a></li>
+			<li><a href="<?php echo $connectedUrl; ?>">接通统计</a></li>
+			<li><a href="<?php echo $periodUrl ?>">通话时段统计</a></li>
+		</ul>
+	</div>
+	<div class="table_list">
+		<div style="padding-bottom :10px; padding-top:10px;">总用户数 :
+			<span style="color: red ;font-size:14px;" id="amount"><?php echo $total; ?></span></div>
+		<table width="100%">
+
+			<tr class="tr">
+				<td class="td">序号</td>
+				<td class="td">日期</td>
+				<td class="td">新增激活用户数</td>
+				<td class="td">操作</td>
+			</tr>
+			<?php
+			$amount = 0;
+			foreach ($dataList as $k => $v) {
+				$amount += $v['total'];
+				?>
+				<tr class="ct">
+					<td class="td"><?php echo $k + 1;?></td>
+					<td class="td"><?php echo date('Y-m-d', strtotime($v['date']));?></td>
+					<td class="td"><?php echo $v['total'];?></td>
+					<td class="td"><a href="/Admin/Voipstat/usermsg?date=<?php echo $v['date'];?>">查看详情</a>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

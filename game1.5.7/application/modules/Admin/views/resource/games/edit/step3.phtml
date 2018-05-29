@@ -1,0 +1,454 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl.'?type='.$type;?>">游戏列表</a></li>
+		<li class="current"><a>版本管理</a></li>
+	</ul>
+</div>
+<div class="h_a">
+    <a href="<?php echo $step2editUrl.'?id='.$gameId.'&type='.$type;?>">
+    <input type="button" value="游戏版本信息"/>
+    </a>
+</div>
+<style type="text/css">
+	.container{
+		position: relative;
+	}
+	.show span,.hidden span{
+		max-width: 90px;
+		overflow: hidden;
+		display: inline-block;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.show{
+		display: inline-block;
+	}
+	.hidden{
+		display: none;
+	}
+	.controller{
+		position: absolute;
+		right: 0;
+		color: blue;
+	}
+	
+</style>
+<div class="h_a">
+    应用信息
+</div>
+<div class="table_full">
+<table width="100%">
+	    <tr class="tr">
+			<th class="th">游戏名称:</th>
+			<td class="td">
+			   <?php echo $gameInfo['name'];?>
+			</td>
+			<th class="th">游戏包名:</th>
+			<td class="td"><?php echo $gameInfo['package'];?></td>
+	    </tr>
+		<tr class="tr">
+			<th class="th">APPID:</th>
+			<td class="td"><?php echo $gameInfo['appid'];?></td>
+			<th class="th">API-Key:</th>
+			<td class="td"><?php echo $gameInfo['api_key'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">合作方式:</th>
+			<td class="td"><?php echo $cooperates[$gameInfo['cooperate']];?></td>
+			<th class="th">Secret Key:</th>
+			<td class="td"><?php echo $gameInfo['secret_key'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">开发者:</th>
+			<td class="td"><?php echo $gameInfo['developer'];?></td>
+			<th class="th">代理商:</th>
+			<td class="td"><?php echo $gameInfo['agent'];?></td>
+		</tr>
+</table>
+</div>
+<div class="h_a">
+    版本信息
+</div>
+<div class="table_full">
+<dl style="display:-webkit-box">
+	<dt style="width:64px;height:64px; " >
+	<img style="height: 100%;width:auto;" src="<?php echo $gameInfo['img'];?>" alt="" >
+	</dt>
+	<dd style="padding-left: 64px">
+		<p><span class="name">游戏版本:<?php echo $versionInfo['version'];?></span></p>
+		<p><span class="id">游戏ID:<?php echo $gameId;?></span></p>
+		<p><span class="type">主分类:<?php echo $mainCategory['parent']['title'];?> - <?php echo $mainCategory['sub']['title'];?></span></p>
+		<?php if($lessCategory):?>
+		<p><span class="type">次分类:<?php echo $lessCategory['parent']['title'];?> - <?php echo $lessCategory['sub']['title'];?></span></p>
+		<?php endif;?>
+		<p><span class="min_sys_version">最低系统版本要求:<?php echo 'Android'.$apk_info['version'][0]['min_sys_version'];?></span></p>
+		<p><span class="certificate">安全认证信息:<?php echo $gameInfo['certificate'];?></span></p>
+	</dd>
+</dl>
+</div>
+
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr">
+			<th class="th">下载地址</th>
+			<td class="td">
+			  <?php echo $versionInfo['link'];?>
+			</td>
+	    </tr>
+		 <tr class="tr">
+			<th class="th">Version Code</th>
+			<td class="td"><?php echo $versionInfo['version_code'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">版本号</th>
+			<td class="td"><?php echo $versionInfo['version'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">MD5校验值</th>
+			<td class="td"><?php echo $versionInfo['md5_code'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">大小</th>
+			<td class="td"><?php echo $versionInfo['size'];?>M</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">系统最低版本要求</th>
+			<td class="td">
+				<?php echo 'Android'.$apk_info['version'][0]['min_sys_version'];?>
+			</td>
+		</tr> 
+		 <tr class="tr">
+			<th class="th">分辨率</th>
+			<td class="td">
+			   <?php foreach($res_title as $key=>$value) {?>
+			   <?php echo $value;?>&nbsp;&nbsp;&nbsp;&nbsp;
+			   <?php } ?>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			 <?php echo $versionInfo['status'] ? '已上线' : '未上线';?>
+			</td>
+		</tr>  
+	</table>
+</div>
+<?php if($versionInfo['status']){?>
+<div class="h_a">
+   可编辑信息
+</div>
+<form method="post" action="<?php echo $step3postUrl;?>" id="editFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $gameInfo['id'];?>" type="hidden" />
+<input name="version_id" value="<?php echo $versionInfo['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	  <tr class="tr">
+			<th class="th">游戏名称</th>
+			<td class="td"><input type="text" name="name" class="input" value="<?php echo $gameInfo['name'];?>"></td>
+	  </tr>
+	  <tr class="tr">
+			<th class="th">计费模式</th>
+			<td class="td">
+			   <select name="price">
+				<?php foreach($price as $key=>$value) { ?>
+				<option value="<?php echo $value['id'];?>"<?php if($gameInfo['price'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['title'];?></option>
+				<?php }?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">语言</th>
+			<td class="td"><input type="text" name="language" class="input" value="<?php echo $gameInfo['language'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">来源</th>
+			<td class="td"><input type="text" name="developer" class="input wc" value="<?php echo $gameInfo['developer'];?>"></td>
+		</tr>
+	    <tr class="tr">
+			<th class="th">游戏主分类</th>
+			<td class="td">
+				<select name="mainParent" id="mainCategory">
+				<option value=0>请选择</option>
+				<?php foreach($parentCategory as $key=>$value) { ?>
+				<option value="<?php echo $value['id'];?>"<?php if($mainCategory['parent']['id'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['title'];?></option>
+				<?php }?>
+				</select>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				子分类:
+				<select name="mainSub" id="mainSub">
+				<option value=0>请选择</option>
+				<?php foreach($mainSubCategory as $key=>$value) { ?>
+				<option value="<?php echo $value['id'];?>"<?php if($mainCategory['sub']['id'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['title'];?></option>
+				<?php }?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏次分类</th>
+			<td class="td">
+				<select name="lessParent" id="lessCategory" >
+				<option value="0">请选择</option>
+				<?php foreach($parentCategory as $key=>$value) { ?>
+				<option value="<?php echo $value['id'];?>"<?php if($lessCategory['parent']['id'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['title'];?></option>
+				<?php }?>
+				</select>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				子分类:
+				<select name="lessSub" id="lessSub">
+				<option value="0" >请选择</option>
+				<?php foreach($lessSubCategory as $key=>$value) { ?>
+				<option value="<?php echo $value['id'];?>"<?php if($lessCategory['sub']['id'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['title'];?></option>
+				<?php }?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">简述</th>
+			<td class="td"><input type="text" class="input wc" name="resume" value="<?php echo html_entity_decode($gameInfo['resume']);?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">热词</th>
+			<td class="td"><input type="text" class="input wc" name="label" value="<?php echo html_entity_decode($gameInfo['label']);?>"></td>
+		</tr>
+		<tr class="tr">
+				<th class="th">小编八卦</th>
+				<td class="td"><textarea style="width: 800px; height: 200px" class="textarea" name="tgcontent"><?php echo html_entity_decode($gameInfo['tgcontent']);?></textarea>
+				</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏属性</th>
+			<td class="td">
+			<?php foreach($hots as $key=>$value) {?>
+			<label class="mr20"><input type="radio" <?php if ($value['id'] == $gameInfo['hot']) echo 'checked';?> name="hot" value="<?php echo $value['id'];?>"><?php echo $value['title'];?></label>
+			<?php }?>	
+			<label class="mr20"><input type="radio"<?php if (!$gameInfo['hot']) echo 'checked';?>  name="hot" value="0">无</label>		
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">支持设备</th>
+			<td class="td">
+			<?php foreach($devices as $key=>$value) {?>
+			<label class="mr20"><input type="checkbox" <?php if (in_array($value['id'], $device_ids)) echo 'checked';?> name="device[]" value="<?php echo $value['id'];?>"><?php echo $value['title'];?></label>
+			<?php }?>		
+			</td>
+		</tr>
+		
+		<?php if($lab_categorys){?>
+		<?php foreach($lab_categorys as $key=>$value){?>
+		  <tr class="tr">
+			<th class="th"><?php echo $value['title'];?></th>
+			<td class="td">
+			   <?php foreach($btype as $k=>$v){?>
+			   <?php if($value['id'] == $k) {?>
+			   
+			   <div class="container">
+			     <?php if(count($btype[$value['id']]) <= 10) {?>
+			     <div class="show">
+			        <?php foreach($v as $k1=>$v1){?>
+	                 <span class=" "><input type="checkbox" <?php if(in_array($v1['id'], $game_labels)) echo 'checked';?> name="labels[]" value="<?php echo $value['id']."|".$v1['id'];?>"><?php echo $v1['title'];?></span>
+					<?php } ?>
+				 </div>
+				 <!-- <span class="controller">展开</span> -->
+			    <?php } else {?>
+			    
+			     <?php foreach($v as $k1=>$v1){?>
+			     <?php if($k1 == 0) {?>
+			     <div class="show">
+			     <?php } ?>
+			     
+			        <?php if(($k1 + 1) <= 10) {?>
+	                 <span class=" "><input type="checkbox" <?php if(in_array($v1['id'], $game_labels)) echo 'checked';?> name="labels[]" value="<?php echo $value['id']."|".$v1['id'];?>"><?php echo $v1['title'];?></span>
+	                <?php } ?>
+	               
+				
+				 <?php } ?>
+				 
+				 <?php if((count($v)) > 10) {?>
+				 <div class="hidden">
+				     <?php foreach($v as $k2=>$v2){?>
+				     <?php  if(($k2+1) > 10) {?>
+					  <span class=" "><input type="checkbox" <?php if(in_array($v2['id'], $game_labels)) echo 'checked';?> name="labels[]" value="<?php echo $value['id']."|".$v2['id'];?>"><?php echo $v2['title'];?></span>
+					  <?php  if(($k2+1) % 10 == 0) {?>
+					  <br/>
+					  <?php } ?>
+					  <?php } ?>
+			         <?php } ?>
+			     </div>
+			     
+			     <?php if(count($v) == count($btype[$value['id']]) ) {?>
+				 </div>
+				 <?php } ?>
+				 
+				 <span class="controller">展开</span>
+			     <?php } ?>
+			     
+			     <?php } ?>
+			   </div>
+			   
+			   <?php }?>
+			   <?php }?>
+			</td>
+		 </tr>
+		<?php }?>
+		<?php }?>
+
+
+		<tr class="tr">
+				<th class="th">应用介绍</th>
+				<td class="td"><textarea style="width: 800px; height: 500px" class="textarea" name="descrip"><?php echo html_entity_decode($gameInfo['descrip']);?></textarea>
+				</td>
+			</tr>  
+		<tr class="tr">
+				<th class="th">版本更新日志</th>
+				<td class="td"><textarea style="width: 800px; height: 300px" class="textarea" name="changes"><?php echo str_replace("<br />","\n",  html_entity_decode($versionInfo['changes']));?></textarea>
+				</td>
+		</tr>  
+			           
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">完成</button></span></span></div>
+</form>
+
+<div class="h_a">
+    不可编辑信息
+</div>
+
+<div class="table_full">
+	<table width="100%">
+       <tr class="tr">
+			<th class="th">应用图标</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="Img">
+						<img src="<?php echo $gameInfo['img'];?>"/>
+						<input type="hidden" name="img" value="<?php echo $gameInfo['img'];?>">
+					</li>
+					<?php if($gameInfo['mid_img']){?>
+					<li id="Img">
+						<img src="<?php echo $gameInfo['mid_img'];?>"/>
+						<input type="hidden" name="mid_img" value="<?php echo $gameInfo['mid_img'];?>">
+					</li>
+					<?php }?>
+					<?php if($gameInfo['big_img']){?>
+					<li id="Img">
+						<img src="<?php echo $gameInfo['big_img'];?>"/>
+						<input type="hidden" name="big_img" value="<?php echo $gameInfo['big_img'];?>">
+					</li>
+					<?php }?>
+				</ul>			
+		</tr>
+		<tr class="tr">
+			<th class="th">应用截图</th>
+			<td class="td">
+			            <div id="upimg<?php echo $value['id'];?>">
+						<ul class="uploadImg">
+						<?php foreach($gimgs as $key=>$value) {
+							$file = explode(".", basename($value['img']));
+							$img = $value['img'] . '_240x400.' . $file[1];
+						?>
+						
+								<li id="upImg<?php echo $value['id'];?>">
+									<img src="<?php echo $img;?>"/>
+									<input type="hidden" name="upImg[<?php echo $value['id'];?>]" value="<?php echo $value['img'];?>">
+								</li>
+							
+					<?php }?>
+					</ul>
+				    </div>
+			</td>
+		</tr>
+		
+	</table>
+</div>
+<?php }?>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+$(function(){
+	$(".controller").click(function(){
+		if($(this).text().trim()=='收起'){
+			$(this).text('展开');
+			//$(this).siblings('div.show').css('display','inline-block');
+			$(this).siblings('div.show').children('.hidden').css('display','none');
+			
+		}
+		else{
+			$(this).text('收起');
+			//$(this).siblings('div.show').css('display','none');
+			$(this).siblings('div.show').children('.hidden').css('display','block');
+			
+			
+		}
+	});
+})
+</script>
+<script>
+function getSubCategory(parentId, level){
+	var element = "#"+level+"Sub";
+	var str = '<option value="0" >请选择</option>';
+	$.ajax({
+			url : baseurl + '/Admin/Resource_Games/getSubCategory?id=' + parentId,
+			type : 'GET',
+			dataType : 'json',
+			success : function(ret) {
+				if (ret.success) {
+					 $.each(ret.data, function (n, value) {  
+			              var label = '';  
+			              label += '<option value="' + value.id + '">' + value.title + '</option>';
+			              str += label;  
+			          });
+					 $(element).html(str);
+				} else {
+					showError('', ret.msg);
+				}
+			}
+	});
+  }
+
+$(document).ready(function(){
+	$("#mainCategory").change(function(){
+		getSubCategory($(this).val(), 'main');
+	});
+	$("#lessCategory").change(function(){
+		getSubCategory($(this).val(), 'less');
+	});
+});
+</script>
+
+<script type="text/javascript">
+//游戏表单数据提交
+var editor;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor = K.create('textarea[name="tgcontent"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+
+var editor1;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor1 = K.create('textarea[name="descrip"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+
+$(document).ready(function(){
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Resource_Games/edit_step2?id=<?php echo $gameInfo['id'];?>&type=<?php echo $type;?>');
+	},function(){
+		editor.sync();
+		editor1.sync();
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,106 @@
+<div class="h_a">数据报表</div>
+<input type="hidden" id="lineData" value="<?php echo $lineData; ?>"/>
+<input type="hidden" id="listUrl" value="<?php echo $listUrl; ?>"/>
+<table width="100%" cellspacing="0" cellpadding="0">
+	<tr class="tr1">
+		<td class="td2">
+			<div id="container" style="height: 400px; margin: 0 auto"></div>
+		</td>
+	</tr>
+</table>
+
+<div class="h_a">总访问量</div>
+<div class="table_list">
+	<table cellspacing="0" cellpadding="0" width="100%">
+		<tbody>
+		<tr class="ct">
+			<td class="td2">时间</td>
+			<?php foreach ($lineData as $k => $v): ?>
+				<td class="td2"><?php echo $k; ?></td>
+			<?php endforeach; ?>
+			<td class="td2">总和</td>
+		</tr>
+		<?php
+		foreach ($date as $d) {
+			?>
+			<tr class="ct">
+				<td class="td2"><?php echo $d; ?></td>
+				<?php
+				$total = 0;
+				foreach ($lineData as $k => $v):
+					?>
+					<td class="td2"><?php echo $v[$d]; ?></td>
+					<?php
+					$total += $v[$d];
+				endforeach;
+				?>
+				<td class="td2"><?php echo $total; ?></td>
+			</tr>
+		<?php } ?>
+		</tbody>
+	</table>
+</div>
+
+
+<script src="<?php echo $staticPath; ?>/js/admin/highcharts.js"></script>
+<script src="<?php echo $staticPath; ?>/js/admin/exporting.js"></script>
+<script src="<?php echo $staticPath; ?>/js/admin/stat.js"></script>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		chart1 = new Highcharts.Chart({
+			chart: {
+				renderTo: 'container',
+				type: 'line'
+			},
+			title: {
+				text: '数量',
+			},
+			xAxis: {
+				categories: <?php echo json_encode($date);?>
+			},
+			yAxis: {
+				title: {
+					text: '数量'
+				},
+			},
+			plotOptions: {
+				line: {
+					dataLabels: {
+						enabled: true
+					},
+					enableMouseTracking: false
+				}
+			},
+			series: [
+				<?php
+				foreach ($lineData as $name => $v){
+					$tmp[] = "{name: '{$name}', data: ". json_encode(array_values($v)) ."}";
+				}
+				echo implode(',',$tmp);
+				?>
+			]
+		});
+
+	})
+
+
+</script>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		$("#sdate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+		$("#edate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+		$('#app').bind('change', function () {
+			var app = $(this).val();
+			window.location.href = $('#listUrl').val() + 'app=' + app;
+		});
+
+
+	})
+</script>

@@ -1,0 +1,280 @@
+ <!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>每日/每月统计报表</title>
+<link rel="stylesheet" type="text/css" href="/template/default/css/general.css" />
+<link rel="stylesheet" type="text/css" href="/template/default/css/main.css" />
+<link rel="stylesheet" type="text/css" href="/template/default/css/page.css" />
+
+<script type="text/javascript" src="/template/default/js/common.js"></script>
+<script type="text/javascript" src="/template/default/js/jquery-1.4.2-min.js"></script>
+<script type="text/javascript" src="/template/default/js/page.js"></script>
+<script type="text/javascript" src="/template/default/js/DatePicker/WdatePicker.js"></script>
+</head>
+
+<body>
+<script type="text/javascript">
+$(function(){
+	$("#form1").submit(function(){
+		$("#selectDate").val('');
+	});
+	
+	$("#s").click(function(){
+		document.location.href= '<{$pageurl}>&toexcel=1';
+	});
+
+});
+
+function formatdate(t)
+{	
+	if(isNaN(t)){t=0;}
+	t=parseInt(t);
+	var d=parseInt(t/(60*60*24));
+	var h=parseInt((t-d*60*60*24)/(60*60));
+	var M=parseInt((t-d*(60*60*24)-h*60*60)/60);
+	var s=parseInt(t-d*(60*60*24)-h*60*60-M*60);
+	var str="";
+	if(d>0){str=str+d+"天";}
+	if(h>0){str=str+h+"小时";}
+	if(M>0){str=str+M+"分";}
+	if(s>0){str=str+s+"秒";}
+	document.write(str);
+}
+function selectAll(obj){
+	var $checkboxs=$("#list-table input:checkbox");
+	
+	if(obj.checked===true){
+		
+		$checkboxs.attr("checked",true);
+	}else{
+		
+		$checkboxs.attr("checked",false);
+	}
+}
+function btnDisabled(){
+	var t=false;
+	$("#list-table input:checkbox").each(function(){
+		if(this.checked){
+			$("#s").val("正在导出Excel，请稍等...").attr("disabled",true);
+	        t=true;		
+			return false;
+		}
+	});
+	
+	if(t){setTimeout('$("#s").val("导出Excel").attr("disabled",false);',5000);}else {alert("请选择您要导出的数据行");}
+	return t;	
+}
+
+
+function change_rptype(val){
+	$("#reporttype").val(val);
+	var act_url='/index.php?ac=<{$ac}>&reporttype='+val+'&clientid=<{$clientid}>&subclientid=<{$clientids}>';	
+	document.form1.action = act_url;
+	document.form1.submit();	
+}
+</script>
+<link rel="stylesheet" type="text/css" href="/template/default/css/calendar.css" />
+
+<style>
+#list-table td,#list-table2 td{
+	text-align:center;
+}
+
+#period_count{
+	font-weight:bold;
+	line-height:150%;
+	padding-left:5px;
+}
+
+#tab-list {
+	position:relative;
+	z-index:10;
+}
+#tab-list ul { position:relative; overflow:hidden; position:relative; list-style:none; padding:0px; margin:0px; margin-bottom:-1px; height:30px;}
+#tab-list ul li { float:left; zoom:1; border:1px solid #BBDDE5; margin-right:1px;}
+#tab-list ul li.cur { float:left; border-bottom:1px solid #F4FAFB; background:#F4FAFB;}
+#tab-list ul li a { display:inline-block; zoom:1; _display:inline; height:28px; padding:0 20px; text-decoration:none; color:#335B64; font-weight:bold; line-height:28px;}
+
+.tab-content { background:#F4FAFB; padding-top:10px; border:1px solid #BBDDE5; padding:5px; }
+</style>
+
+<h1>
+<span class="action-span1">查询统计报表</span>
+	<!--<span id="search_id" class="action-span1"> - 查询统计报表</span>-->
+  <label><input name="reporttypes" id="reporttype_day" type="radio" value="day" onClick="change_rptype(this.value);" <{if $reporttype eq 'day'}>checked<{/if}>>日报表</label>
+  <label><input name="reporttypes" id="reporttype_month" type="radio" value="month" onClick="change_rptype(this.value);" <{if $reporttype eq 'month'}>checked<{/if}>>月报表</label>
+<div style="clear: both"></div>
+</h1>
+<div id="tab-list">
+	<ul>
+	    <li <{if $gameid eq 0}>class="cur"<{/if}> ><a href="/index.php?ac=<{$ac}>&reporttype=<{$reporttype}>&clientid=<{$clientid}>&subclientid=<{$clientids}>&dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>&gameid=0" hidefocus="true">综合统计</a></li>
+        <{foreach item=item key=key from=$games}>
+	    <li <{if $gameid eq $key}>class="cur"<{/if}> ><a href="/index.php?ac=<{$ac}>&reporttype=<{$reporttype}>&clientid=<{$clientid}>&subclientid=<{$clientids}>&dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>&gameid=<{$key}>" hidefocus="true"><{$item}>统计</a></li>
+        <{/foreach}>
+	</ul>
+</div> 
+
+<div class="tab-content">
+<form name="form1" id="form1" method="get" action=""><div class="form-div">
+    <input name="reporttype" type="hidden" id="reporttype" value="<{$reporttype}>">
+    <input type="hidden" name="gameid" value="<{$gameid}>">	
+    <input type="hidden" name="ac" value="<{$ac}>">	
+    <input type="hidden" name="clientid" value="<{$clientid}>">	
+    <input type="hidden" name="subclientid" value="<{$clientids}>">	
+<{if $levels >= 30}>
+  <{if $levels eq 200}>渠道号<{else}>子渠道号<{/if}>/公司
+  <input name="keyword" type="text" id="keyword" value="<{$keyword}>">
+<{else}>  
+  <input name="keyword" type="hidden" id="keyword" value="">
+<{/if}>  
+  日期:从
+  <!--<input name="dateStart" type="text" id="dateStart" value="<{$dateStart}>" size="16" maxlength="19" onClick="return showCalendar('dateStart', '%Y-%m-%d', '24', false,'dateStart');" readonly />-->
+  <input name="dateStart" id="dateStart" value="<{$dateStart}>" class="Wdate" type="text" onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'dateEnd\')||\'2020-10-01\'}'})"/> 
+  到
+  <input name="dateEnd" id="dateEnd" value="<{$dateEnd}>" class="Wdate" type="text" onFocus="WdatePicker({minDate:'#F{$dp.$D(\'dateEnd\')}',maxDate:'2020-10-01'})"/>
+  <!--<input type="text" name="dateEnd" id="dateEnd" value="<{$dateEnd}>" size="16" maxlength="19" onClick="return showCalendar('dateEnd', '%Y-%m-%d', '24', false,'dateEnd');" readonly />
+  <input type="hidden"  name="selectDate" value="<{$smarty.request.selectDate|default:''}>" id="selectDate" />-->
+  <input type="submit" name="button" id="button" class="btn" value="查询">
+  <{if $levels >= 30}>
+  <input type="button" name="button4" id="button4" class="btn" value="查看图表" onclick="location.href='/index.php?reporttype=<{$reporttype}>&clientid=<{$clientid}>&subclientid=<{$clientids}>&sac=<{$ac}>&shape=1&ac=graph_show&channeltype=<{$channeltype}>&gameid=<{$gameid}>&dateStart='+this.form.dateStart.value+'&dateEnd='+this.form.dateEnd.value+'&selectDate=<{$smarty.request.selectDate|default:''}>&keyword='+this.form.keyword.value" >
+
+  <{/if}>
+</div>
+
+<div id="period_count">
+    注册人数总计：<span class="red"><{$period_count['registerusers']|default:0|number_format}></span><br>
+  登录人数总计：<span class="red"><{$period_count['loginusers']|default:0|number_format}></span><br>   
+    付费人数总计：<span class="red"><{$period_count['consumeusers']|default:0|number_format}></span><br>
+    消费金额总计：<span class="red"><{$period_count['consumemoney']|default:0|number_format}></span><br>
+</div>
+<div>
+  <table width="100%" border="0">
+    <tr style="background:none;">
+      <td><{$dataPrompt}> </td>
+      <td width="120">
+      
+      <{if !empty($list)}>
+      <select name="pagesize" id="pagesize" onChange="this.form.submit();">
+          <option value="10">每页显示10条</option>
+          <option value="15">每页显示15条</option>
+          <option value="20">每页显示20条</option>
+          <option value="50">每页显示50条</option>
+        </select>
+        <script>document.getElementById("pagesize").value='<{$pagesize}>'</script>
+        <{/if}>
+      </td>
+    </tr>
+  </table>
+  </div>
+</form>
+
+<{if $totalrow eq 0}>
+没有数据
+<{else}>
+<form id="form2" name="form2" method="post" action=""  onSubmit="return btnDisabled()">
+<input type="hidden"  name="act" value="export" />
+  <div class="list-div" id="listDiv">
+<table width="100%" cellspacing="1" cellpadding="2" id="list-table">
+    <tr>
+      <th><{if $reporttype eq 'day'}>日期<{else}>月份<{/if}></th>
+      <{if $levels >= 30}>
+      <th>渠道号</th>
+      <{/if}>
+      <{if $clientids>=0}>
+      <th>子渠道号</th>
+      <{/if}>
+      <th>公司名称</th>
+      <th>新注册用户数</th>
+      <th>登录用户数</th>
+      <th>消费订单数</th>
+      <th>消费用户数</th>
+      <th>消费金额</th>
+      <{if $channeltype neq 2}>
+      <th>爱贝的消费金额</th>
+      <th>移动的消费金额</th>
+      <{/if}>
+      <th>人均充值次数</th>
+      <th>付费率</th>
+      <th>ARPPU值</th>
+      <th>用户价值</th>
+      <!--<th bgcolor="#0099CC">分成收益总金额</th>
+      <{if $levels eq 200 && $reporttype eq 'month'}>
+      <th>月活跃登录用户数</th>
+      <th>月用户平均游戏时长</th>
+      <{/if}>-->
+      <{if $levels eq 200}>
+      <th>所属类型</th>
+      <{/if}>    </tr>
+    <{foreach item=i from=$list}>
+    <tr>
+      <td><{if $reporttype eq 'day'}><{$i['today']}><{else}><{$i['today']|date_format:"%Y-%m"}><{/if}></td>
+      <{if $levels >= 30}>
+      <td><{$i['clientid']}></td>
+      <{/if}>
+      <{if $clientids>=0}>
+      <td><{$i['clientids']}></td>
+      <{/if}>
+      <td style="text-align:center"><{$i['name']}></td>
+      <td><{$i['registerusers']}></td>
+      <td><{$i['loginusers']}></td>
+      <td><{$i['consumeorders']}></td>
+      <td><{$i['consumeusers']}></td>
+      <td><{$i['consumemoney']}></td>
+      <{if $channeltype neq 2}>
+      <td><{$i['consumemoneyipay']}></td>
+      <td><{$i['consumemoneyyd']}></td>
+      <{/if}>  
+      <td><{$i['avgpaymenttime']}></td>
+      <td><{$i['paymentrate']}></td>
+      <td><{$i['ARPPU']}></td>
+      <td><{$i['registerusersvalue']}></td>
+      <!--<td><{$i['consumemoney']*$i['intoratio']/10}></td>
+      <{if $levels eq 200 && $reporttype eq 'month'}>
+      <td><{$i['activeusermonth']}></td>
+      <td><{$i['avgplaygamemonth']}></td>
+      <{/if}>-->
+      <{if $levels eq 200}>
+      <td><{$channel_types[$i['channeltype']]}></td></td>
+      <{/if}>    </tr>
+    <{/foreach}>
+  </table>
+</div>
+
+<div class="wrapper inb ml">
+    <div class="page mb20" id="page-js-2"></div>
+    <script type="text/javascript">
+        var curpage = <{$page}>;
+        var pages = <{$pages}>;
+        PPage("page-js-2",curpage,pages,"hoho2.go",true);
+        function hoho2(){};
+        hoho2.go=function(pageNum){
+            window.location.href = "<{$pageurl}>&page=" + pageNum;
+            PPage("page-js-2",pageNum,pages,"hoho2.go",true);
+        }
+    </script>
+</div>
+
+  <table width="100%" border="0">
+    <tr style="background:none;">
+      <td width="300"><input type="button" name="button5" id="s" class="btn" value="导出Excel" /></td>
+      <td><{$pagination}></td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+</form>
+<{/if}>
+<br><br>
+</div>
+<style type="text/css">
+tr.over td {
+	background: #bcd4ec; /*这个将是鼠标高亮行的背景色*/
+	cursor: pointer;
+}
+</style>
+<script type="text/javascript">
+//$(document).ready(function(){
+	 $("#list-table tr").mouseover(function(){$(this).addClass("over");}).mouseout(function(){$(this).removeClass("over");});
+	 $("#list-table2 tr").mouseover(function(){$(this).addClass("over");}).mouseout(function(){$(this).removeClass("over");})
+//});
+</script>

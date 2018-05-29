@@ -1,0 +1,101 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl ;?>">商品列表</a></li>
+    <li class="current"><a href="javascript:;">编辑商品</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑商品</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input wa" name="sort" value="<?php echo $info['sort'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">香港价</th>
+			<td class="td"><input type="text" class="input wb" name="hk_price" value="<?php echo $info['hk_price'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">售价</th>
+			<td class="td"><input type="text" class="input wb" name="price" value="<?php echo $info['price'];?>"></td>
+		</tr>
+		<tr class="tr" id="stock_num">
+			<th class="th">可销售的库存</th>
+			<td class="td"><input type="text" name="stock_num" class="input wb" value="<?php echo $info['stock_num'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">每人限购数</th>
+			<td class="td"><input type="text" class="input wb" name="limit_num" value="<?php echo $info['limit_num'];?>"></td>
+		</tr>
+		<tr class="tr" id="sale_num">
+			<th class="th">已购买数量</th>
+			<td class="td"><input type="text" class="input wb" name="comment_num" value="<?php echo $info['sale_num'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">评论数</th>
+			<td class="td"><input type="text" class="input wb" name="comment_num" value="<?php echo $info['comment_num'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">商品名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg">
+						<img src="<?php echo $attachPath.$info['img'];?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status" class="wb">
+                	<option <?php if($info['status'] == 1) echo 'selected="selected"';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 0) echo 'selected="selected"';?> value="0">关闭</option>
+            </select></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">HOT</th>
+			<td class="td">
+			<label><input  name="ishot" <?php if($info['ishot'] == 1) echo 'checked="checked"';?> type="checkbox" value="1" />热门</label>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">开始结束时间</th>
+			<td class="td"><div><input class="input" type="text" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $info['start_time']);?>" /> 至 <input class="input" type="text" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s', $info['end_time']);?>" /></div>
+			</td>
+		</tr>
+		<tr class="tr" id="descrip">
+				<th class="th">内容</th>
+				<td class="td">
+                    <script id="editor" type="text/plain" style="width:100%;height:500px;"><?php echo $info['descrip'];?></script>
+				</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+    var ue = UE.getEditor('editor', {'textarea':'descrip'});
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Goods/index');
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

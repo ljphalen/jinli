@@ -1,0 +1,87 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">返利日志</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+			<th class="th">用户ID</th>
+			<td class="td"><input class="input wb" type="text" name="user_id" value="<?php echo $param['user_id'];?>"></td>
+			<th class="th">交易编号</th>
+			<td class="td"><input class="input wb" type="text" name="trade_id" value="<?php echo $param['trade_id'];?>"></td>
+		</tr>
+		<tr class="tr">
+			
+		</tr>
+		<tr class="tr">
+			<th class="th">下单时间</th>
+			<td class="td">
+			<input class="input" type="text" maxlength="30" id="order_start_time" name="order_start_time" value="<?php echo $param['order_start_time'];?>">
+			<input class="input" type="text" maxlength="30" id="order_end_time" name="order_end_time" value="<?php echo $param['order_end_time'];?>">
+			</td>
+			<th class="th">支付时间</th>
+			<td class="td">
+			<input class="input" type="text" maxlength="30" id="create_start_time" name="create_start_time" value="<?php echo $param['create_start_time'];?>">
+			<input class="input" type="text" maxlength="30" id="create_end_time" name="create_end_time" value="<?php echo $param['create_end_time'];?>">
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th" width="60">产品id</th>
+			<td class="td"><input class="input wb" type="text" name="product_id" value="<?php echo $param['product_id'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span><span style="float:left;">当前日志总数：<?php echo $total;?></span></div>
+
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">用户名ID</td>
+			<td>交易编号</td>
+			<td>产品id</td>
+			<td>佣金</td>
+			<td>支付时间</td>
+			<td>下单时间</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($orders as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['user_id'];?></td>
+			<td><?php echo $value['trade_id'];?></td>
+			<td><?php echo $value['number_iid'];?></td>
+			<td><?php echo $value['commission'];?></td>
+            <td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['pay_time']);?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/admin/highcharts.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#order_start_time").datepicker({
+				dateFormat : 'yy-mm-dd'
+	});
+	$("#order_end_time").datepicker({
+		dateFormat : 'yy-mm-dd'
+});
+	$("#create_start_time").datepicker({
+		dateFormat : 'yy-mm-dd'
+});
+$("#create_end_time").datepicker({
+dateFormat : 'yy-mm-dd'
+});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

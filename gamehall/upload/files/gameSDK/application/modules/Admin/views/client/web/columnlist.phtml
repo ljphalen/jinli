@@ -1,0 +1,82 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="/Admin/Game_Webgame/index">网游推荐日程</a></li>
+        <li><a href="/Admin/Game_Gameopen/index">开服信息</a></li>
+        <li><a href="<?php echo $listUrl;?>">旧版推荐</a></li>
+		<li class="current"><a href="<?php echo $columnListUrl;?>">网游频道</a></li>
+	</ul>
+</div>
+<form action="<?php echo $columnListUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr">
+	        <th class="th">状态</th>
+			<td class="td">
+				<select name="status">
+				    <option value="" >全部</option>
+				    <option value="2" <?php echo ($search['status'] == 2) ? 'selected="selected"' : '';?>>开启</option>
+					<option value="1" <?php echo ($search['status'] == 1) ? 'selected="selected"' : '';?>>关闭</option>
+			    </select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">关键字</th>
+			<td class="td"><input type="text" class="input" name="name" value="<?php echo empty($search['name']) ? '' :$search['name'];?>"></td>
+		</tr>	
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button  type="submit">搜 索</button></span></span></div>
+</form>
+
+<form id="batchColumnForm" action="<?php echo $batchUpdateColumnUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="h_a">
+	<span class="btn2"><span><button type="submit">重新排序</button></span></span>
+	<span class="btn2"><span><a href="<?php echo $addColumnUrl;?>"><button type="button">添加网游</button></a></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="10"><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="50">排序</td>
+			<td width="150">名称</td>
+			<td>链接地址</td>
+			<td width="150">生效时间</td>
+			<td width="50">状态</td>
+			<td width="100">操作</td>
+		</tr>
+<?php foreach($columns as $key => $value) {?>
+		<tr class="ct">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><input type="text" class="input" style="width:30px" name="sort[<?php echo $value['id'];?>]" value="<?php echo $value['sort'];?>"></td>
+			<td><?php echo $value['name'];?></td>
+			<td><?php echo $value['link']?></td>
+	        <td><?php echo date('Y-m-d H:i:s', $value['start_time']);?></td>
+	        <td><?php echo ($value['status']) ? '开启' : '关闭';?></td>
+			<td>
+			<a href="<?php echo $editColumnUrl;?>/?id=<?php echo $value['id'];?>">编辑</a>
+			<!-- 
+				<a href="javascript:" onclick="deleteOne('<?php echo $delColumnUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			-->
+			</td>
+		</tr>
+<?php }?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('batchColumnForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Web/columnList');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

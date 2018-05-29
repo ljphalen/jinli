@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="format-detection" content="email=no" />
+	<title>我的A券</title>
+	<link rel="stylesheet" href="<?php echo $staticroot;?>/apps/game/apkv1/assets/css/activity.css?v=<?php echo $version;?>">
+	<script>
+	var token='<?php echo $token;?>';
+	var uuid='<?php  echo  $uuid;?>';
+	var isLogin='<?php  echo  $online?'true':'false';?>';
+	</script>
+</head>
+<body class ="<?php echo strnatcmp($clientVersion,'1.5.5') >= 0?'noShadow':''; ?>" id="myAcoin">
+		<div class="coinInfo-container">
+		    <div class="toLeft">
+				<div class="total"><span class="mount"><?php echo $result['ATick']?$result['ATick']:0;?></span>A券(可用)</div>
+			</div>
+			<div class="toRright">
+				<!-- 分任务做完和未做完两种情况 -->
+				<!-- 福利任务完成时打开活动 -->
+				<a id="more" data-action="gamehall.welfare" class="btn-orange">更多奖励</a> 
+				<a class="btn-link" data-source="acertificate" data-type="0" data-viewType="WebView"  data-infpage="A币、A券介绍,<?php echo $webroot.'/client/task/aintro'; ?>">什么是A币、A券？</a>
+			</div>
+		</div>
+		<div id="coinList" class="coinList-container">
+		<?php foreach ($result['list'] as $val ){?>
+			<li class="<?php echo ($val['status'] == 'outdate') ?'disable':(($val['leftMount'] == 0)?'disable':''); ?>">
+				<div class="toLeft">
+					<span class="mount"><?php  echo $val['chargeMount']; ?></span>
+					<span class="status"><?php echo($val['status'] == 'no')?'即将生效':( ($val['status'] == 'outdate') ?'已过期':(($val['leftMount'] == 0)?'已使用':'可用'.$val['leftMount']) ); ?></span>
+				</div>
+				<div class="toRright">
+					<span class="origion"><?php echo $val['origin']; ?></span>
+					<span class="riqi"><?php echo $val['startDate']; ?>至<?php echo $val['endDate']; ?></span>
+				</div>
+			</li>
+		<?php }?>	
+		</div>
+		<?php if($result['hasNext']){?>
+		<div class="<?php echo $loadingStyle;?> J_loadMore invisible" data-ajaxurl="<?php echo $webroot.'/client/task/getTicketList';?>" data-hasnext="<?php echo $result['hasNext']?'true':'false'; ?>" data-curpage="<?php echo $result['curPage']; ?>">
+			<span class="load"></span>
+		</div>
+		<?php }?>
+<script  src="<?php echo $staticroot; ?>??/apps/game/apkv1/assets/js/sys/zepto.js,/apps/game/apkv1/assets/js/sys/fastclick.js,/apps/game/apkv1/assets/js/ac/main.source.js?v=<?php echo $version;?>"></script>
+<script type="text/javascript">
+	window.onload=function(){
+		if(window.gamehall){
+			window.gamehall.onEvent('gamehall.money.change',JSON.stringify({}));
+		}
+	}
+</script>
+</body>
+</html>
+
+

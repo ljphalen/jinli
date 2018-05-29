@@ -1,0 +1,134 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li class="current"><a href="<?php echo $indexUrl;?>">订单列表</a></li>
+	</ul>
+</div>
+
+<form action="<?php echo $indexUrl;?>?cate_id=<?php echo $cate_id;?>" method="post" id="searchForm" >
+	<input name="token" type="hidden" value="<?php echo $token;?>"/>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">电话号码</th>
+				<td class="td">
+					<input class="input wb" type="text" id="phone" name="phone" value="<?php echo $params['phone'];?>" />
+				</td>
+				<th class="th">订单号</th>
+				<td class="td">
+					<input class="input wb" type="text" id="trade_no" name="trade_no" value="<?php echo $params['trade_no'];?>" />
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">订单状态</th>
+				<td class="td">
+					<select name="status" class="select wb">
+					<option value="0">所有状态</option>
+					<?php foreach ($orderStatus as $key=>$value) {?>
+						<option <?php if($params['status'] == $key) echo 'selected';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+					<?php }?>
+					</select>
+				</td>
+				<th class="th">充值状态</th>
+				<td class="td">
+					<select name="rec_status">
+						<option value="0" <?php if ($params['rec_status'] == 0) echo 'selected="selected"';?>>所有</option>
+						<option value="1" <?php if ($params['rec_status'] == 1) echo 'selected="selected"';?>>成功</option>
+						<option value="4" <?php if ($params['rec_status'] == 4) echo 'selected="selected"';?>>未充值</option>
+						<option value="3" <?php if ($params['rec_status'] == 3) echo 'selected="selected"';?>>充值中</option>
+						<option value="2" <?php if ($params['rec_status'] == 2) echo 'selected="selected"';?>>失败</option>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">创建时间</th>
+				<td class="td">
+					<div>
+						<input class="input" type="text" style="width:143px;" id="start_time" name="start_time" value="<?php echo $params['start_time'];?>" /> 至 
+						<input class="input" type="text" style="width:143px;" id="end_time" name="end_time" value="<?php echo $params['end_time'];?>" />
+					</div>
+				</td>
+				<th class="th">支付订单号</th>
+				<td class="td"><input class="input wb" type="text" id="out_trade_no" name="out_trade_no" value="<?php echo $params['out_trade_no'];?>" /></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">金立订单号</th>
+				<td class="td"><input class="input wb" type="text" id="gionee_order_no" name="gionee_order_no" value="<?php echo $params['gionee_order_no'];?>" /></td>
+				<th class="th">支付流水号</th>
+				<td class="td"><input class="input wb" type="text" id="pay_channel_billno" name="pay_channel_billno" value="<?php echo $params['pay_channel_billno'];?>" /></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn">
+			<span>
+				<button type="submit">搜 索</button>
+			</span>
+		</span>
+	</div>
+	
+</form>
+
+<div class="mb10"><span class="btn"><span><button type="button" id="extportBtn">导出订单</button></span></div>
+<form action="<?php echo $exportUrl;?>" method="post" id="exportForm">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<input type="hidden" name="phone" value="<?php echo $params['phone'];?>">
+	<input type="hidden" name="trade_no" value="<?php echo $params['trade_no'];?>">
+	<input type="hidden" name="status" value="<?php echo $params['status'];?>">
+	<input type="hidden" name="start_time" value="<?php echo $params['start_time'];?>" />
+	<input type="hidden" name="end_time" value="<?php echo $params['end_time'];?>" />
+	<input type="hidden" name="rec_status" value="<?php echo $params['rec_status'];?>">
+	<input type="hidden" name="gionee_order_no" value="<?php echo $params['gionee_order_no'];?>">
+</form>
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>订单号</td>
+			<td>金立订单号</td>
+			<td>欧飞订单号</td>
+			<td>手机号</td>
+			<td>充值面额</td>
+			<td>成本金额</td>
+			<td>下单时间</td>
+			<td>充值状态</td>
+			<td>订单状态</td>
+			<td>操作</td>
+		</tr>
+		<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['trade_no'];?></td>
+			<td><?php echo $value['gionee_order_no'];?></td>
+			<td><?php echo $value['rec_order_id'];?></td>
+			<td><?php echo $value['phone'];?></td>
+			<td><?php echo $value['rec_cardnum'];?></td>
+			<td><?php echo $value['rec_price'];?></td>
+			<td><?php echo $value['create_time']?date('Y-m-d H:i:s',$value['create_time']) : '';?></td>
+			<td><?php echo $rec_status[$value['rec_status']];?></td>
+			<td><?php echo Gou_Service_Order::orderStatus($value['status']);?></td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">查看</a>
+			</td>
+		</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc"><?php echo $pager;?></div>
+
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//导购表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+     submitForm = function() {
+  		$("#searchForm").submit();
+  	 };
+  	 
+  	 $("#extportBtn").click(function(){
+		$("#exportForm").submit();
+     });
+});
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,125 @@
+<link rel="stylesheet" href="{{rootUrl}}/css/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/Categorywidget_sdk.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/float.js"></script>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">RTB报价配置</p>
+    </div>
+    <div class="main">
+        <div class="toolbar tabs" style="padding-left:20px;padding-top: 20px;padding-right: 20px;padding-bottom: 3px;overflow: auto ">
+            <ul class="fl">
+                    <li><a href="/othercf/index?type=install">安装提醒</a></li>
+                    <li><a href="/othercf/index?type=downloader">下载器管理</a></li>
+                    <li><a href="/othercf/index?type=pushcdnset">PUSH CDN 间隔</a></li>
+                    <li><a href="/othercf/index?type=quit">应用退出提示配置</a></li>
+                    <li><a href="/othercf/index?type=channellink">渠道下载地址配置</a></li>
+                    <li><a href="/othercf/index?type=channelimit">渠道限制配置</a></li>
+                    <li><a href="/othercf/index?type=carousel">BANNER轮播配置</a></li>
+                    <li><a href="/othercf/index?type=showdetails">是否显示详情</a></li>
+                    <li class="cur"><a href="/othercf/rtb">RTB报价配置</a></li>
+                    <li><a href="/othercf/index?type=tcaggr">腾讯聚合广告配置</a></li>
+                    <li><a href="/othercf/index?type=directpush">定向推送</a></li>
+            </ul>
+        </div>
+        <div class="app-detail">
+        <form action="/othercf/rtbsave" method="POST" >
+            <!--<input type="hidden" name="id" value='{{result.id}}' />-->
+            <!--<h3>基础配置</h3>-->
+            <ul class="form">
+                <li>
+                    <span class="label" style="width: 200px;">ADX平台：</span>
+                    <div class="fc">
+                        <select name="ader" id="ader" >
+                            <option value="AMAX" <!-- if {{rtbinfo.ader}} == 'AMAX' --> selected="selected" <!-- endif -->>AMAX</option>
+                            <option value="ADVIEW" <!-- if {{rtbinfo.ader}} == 'ADVIEW' --> selected="selected" <!-- endif -->>ADVIEW</option>
+                        </select>
+                    </div>
+                </li>
+                <li>
+                    <span class="label" style="width: 200px;">类型：</span>
+                    <div class="fc">
+                        <select name="ad_type" id="ad_type" >
+                            <option value="0"  <!-- if {{rtbinfo.ad_type}} == 0 --> selected="selected" <!-- endif --> >BANNER</option>
+                            <option value="1"  <!-- if {{rtbinfo.ad_type}} == 1 --> selected="selected" <!-- endif -->>插屏</option>
+                        </select>
+                    </div>
+                </li>
+                <li>
+                    <span class="label" style="width: 200px;">结算方式：</span>
+                    <div class="fc">
+                        <select name="acounting_method" id="acounting_method" >
+                            <option value="CPM"  <!-- if {{rtbinfo.acounting_method}} == 'CPM' --> selected="selected" <!-- endif --> >CPM</option>
+                            <option value="CPC"  <!-- if {{rtbinfo.acounting_method}} == 'CPC' --> selected="selected" <!-- endif -->>CPC</option>
+                        </select>
+                    </div>
+                </li>
+                <li>
+                    <span class="label" style="width: 200px;">报价(元)：</span>
+                    <div class="fc">
+                        <input type="text" name="price" id="price" class="iText" value='{{rtbinfo.price}}'/>
+                    </div>
+                </li>
+                <li>
+                    <span class="label" style="width: 200px;">单日最大消耗金额(元)：</span>
+                    <div class="fc">
+                        <input type="text" name="day_sale" id="day_sale"  class="iText" value='{{rtbinfo.day_sale}}'/>
+                        <span>目前已消耗金额(元): <span id='current_sale'>{{rtbinfo.current_sale}}<span> </span>
+                    </div>
+                </li>
+                <li class="line"></li>
+                <li>
+                    <div class="fc">
+                        
+                        <input type="submit" value="保存" class="submit" />
+                        <input type="reset" value="取消" class="btn" />
+                    </div>
+                </li>
+            </ul>
+        </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#ader, #ad_type, #acounting_method").change(function(){
+        ajaxGET("/othercf/getRtbMoney","ader="+$("#ader").val()+"&ad_type="+$("#ad_type").val()+"&acounting_method="+$("#acounting_method").val(),function(data){
+            if(data.retCode==0){
+                $("#price").val(data['data']['price']);
+                $("#day_sale").val(data['data']['day_sale']);
+                $("#current_sale").html(data['data']['current_sale']);
+            }else{
+                $("#price").val("");
+                $("#day_sale").val("");
+                $("#current_sale").html(data['data']['current_sale']);
+            }
+        });
+    });
+    $(function(){
+        $("form").submit(function(){
+            if ($("#price").val()==""){
+                alert("请输入报价");
+                $("#price").focus();
+                return false;
+            }else{
+                if(!isNumbers($("#price").val())){
+                    alert('CPM报价请输入数字');
+                    return false;
+                }
+            }
+            if ($("#day_sale").val()==""){
+                alert("请输入单日最大消耗金额");
+                $("#channel_id").focus();
+                return false;
+            }else{
+                if(!isNumbers($("#day_sale").val())){
+                    alert('单日最大消耗金额请输入数字');
+                    return false;
+                }
+            }
+        });
+    });
+    function isNumbers(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+</script>

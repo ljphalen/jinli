@@ -1,0 +1,68 @@
+<div class="page">
+	<div class="pageContent">
+	<form id="article_form" method="post" action="__URL__/addSave" class="pageForm required-validate" enctype="multipart/form-data" role="form" onsubmit="return iframeCallback(this, dialogAjaxDone);">
+		<input type="hidden" name="id" value="{$info.id}" />
+		<input type="hidden" name="status" value="{$info.status}" />
+		<div class="pageFormContent" layoutH="58">
+			<div class="unit">
+				<label>频道：</label>
+					<select name="category" id="category">
+                            <volist name="category_list" id="name">
+                            <option value="{$key}"
+                            		<if condition="$info.category eq $key" >selected</if>
+                                >{$name}
+                            </option>
+                            </volist>
+                    </select>
+			</div>
+			<div class="unit">
+				<label>标题：</label>
+				<input type="text" name="title" id="title" size="30" maxlength="100" value="{$info.title}" class="required"/>
+			</div>
+			<div class="unit">
+				<label>内容：</label>
+				<textarea class="editor" name="content" style="width:80%;min-height:300px;"
+					upImgUrl="{:U('Upload/save','type=image')}"
+					upImgExt="jpg,jpeg,gif,png"
+					tools="simple">{$info.content|safe}</textarea>
+			</div>
+			<div class="unit">
+				<label>发布者：</label>
+				<input type="text" name="author" id="author" size="30" maxlength="100" value="{$info.author}" class="required"/>
+			</div>
+			<div class="unit">
+				<label>发布时间：</label>
+				<input type="text" readonly="true" value="{$info.pubdate}" datefmt="yyyy-MM-dd HH:mm:ss" class="date textInput readonly valid" name="pubdate">
+			</div>
+			<div class="unit">
+				<label>附件：</label>
+				 <input type="file" class="form-control" id="file_path" tabindex="1" name="file_path">
+				 <if condition="$info['file_path']">
+					 <a href="{:Helper("Apk")->get_url('doc')}{$info['file_path']}" target="_blank">
+					{:Helper("Apk")->get_url('doc')}{$info['file_path']}
+					</a>
+   				 </if>
+			</div>
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="button" class="sub_act" onclick="return sub_act({:ArticleModel::STATUS_SUC});" tstatus="{:ArticleModel::STATUS_SUC}" >保存并上线</button></div></div></li>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="button" class="sub_act" onclick="return sub_act({:ArticleModel::STATUS_SAVE});" status="{:ArticleModel::STATUS_SAVE}" >保存不上线</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+	
+	</div>
+</div>
+
+<script type="text/javascript">
+function sub_act(status)
+{
+	$("input[name='status']").val(status);
+	$("#article_form").submit();
+}
+if ($ != jQuery) {
+    $ = jQuery.noConflict();
+}
+</script>

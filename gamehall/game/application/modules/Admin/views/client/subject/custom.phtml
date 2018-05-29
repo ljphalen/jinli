@@ -1,0 +1,161 @@
+<?php echo $this->render("layout/header.phtml");?>
+<style type="text/css">
+	.cases{
+		padding:10px;
+		display:inline-block;
+	}
+	.cases .block{
+		width:35px;
+		height:35px;
+		border-radius:5px;
+		display:inline-block;
+		vertical-align:middle;
+	}
+	.cases .row{
+		display:inline-block;
+		vertical-align:middle;
+	}
+	.cases .row h4{
+		margin:0px;
+		color:#5E5E5E;
+		font-size:12px;
+		font-weight:100;
+	}
+	.cases .row input {
+		width:230px;
+	}
+</style>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">专题列表</a></li>
+    <li class="current"><a href="javascript:;">编辑专题</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑自定义专题</div>
+<form method="post" action="<?php echo $customPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $id;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+        
+        <tr class="tr">
+			<th class="th">视觉模板(<span style="color: red">*</span>)</th>
+			<td class="td">
+			   <select name="view_tpl" class="wa" onclick ="showContent(this.value)">
+					<?php foreach($viewTpl as $key=>$value) {?>
+    			    <option value="<?php echo $key;?>" <?php if($info['view_tpl'] == $key) echo 'selected';?>><?php echo $value;?></option>
+    			    <?php }?>
+               </select>&nbsp;&nbsp;&nbsp;<button id='btn_view' type="button">预览</button>
+               <span id='span_view' style="color: red"></span>
+            </td>
+		</tr>
+        <tr class="tr">
+			<th class="th">状态(<span style="color: red">*</span>)</th>
+			<td class="td">
+			   <select name="status" class="wa">
+                	<option <?php if($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+                </select>
+            </td>
+		</tr>
+		
+<?php foreach($items as $index=>$item) {?>
+        <tr class="tr">
+			<th class="th">内容<?php echo $index+1;?>
+			</th>
+			<td class="td">
+	           <table width="50%">
+                    <tr class="tr">
+                        <td class="td">标题(<span style="color: red">*</span>)</td>
+                        <td class="td"><input type="text" class="input wc" name="title[<?php echo $index+1;?>]" value="<?php echo $item['title'];?>"></td>
+            		</tr>
+                    <tr class="tr">
+                        <td class="td">描述(<span style="color: red">*</span>)</td>
+                        <td class="td">
+                        <textarea style="width: 450px; height: 50px" class="textarea" name="resume[<?php echo $index+1;?>]"><?php echo $item['resume'];?></textarea>
+                        </td>
+            		</tr>
+                    <tr class="tr">
+                        <td class="td">
+	                       <select name="item_view_tpl[<?php echo $index+1;?>]" class="wa">
+            					<?php foreach($costomTpl as $key=>$value) {?>
+                			    <option value="<?php echo $key;?>" <?php if($item['view_tpl'] == $key) echo 'selected';?>><?php echo $value;?></option>
+                			    <?php }?>
+                            </select>
+                        </td>
+                        <td class="td"><button name="btn_edit" value="<?php echo $index+1;?>" type="button">编辑游戏</button></td>
+            		</tr>
+                    <tr class="tr">
+                        <td class="td" colspan="2">
+    					<?php foreach($itemGames[$index] as $game) {?>
+                           <div class="cases">
+                    			<span class="block">
+                    			<img src="<?php echo $game['gameIcon']?>" style="width:35px;height:35px;"/>
+                    			</span>
+                    			<div class="row">
+                    				<h4><?php echo $game['gameName'];?></h4>
+                    				<?php if($item['view_tpl'] != 1) {?>
+                    				<input type="text" name="game_resume[<?php echo ($index+1).'_'.$game['game_id'];?>]" value="<?php echo $game['resume'];?>"/>
+        			                <?php }?>
+                    			</div>
+                    		</div>
+        			    <?php }?>
+                        </td>
+            		</tr>
+	           </table>
+            </td>
+		</tr>
+<?php }?>
+	</table>
+</div>
+<div class="mb10 tac">
+    <span class="btn"><span><a href="<?php echo $editUrl.'?id='.$id;?>"><button type="button">返回</button></a></span></span>
+    <span class="btn"><span><button onfocus="blur();" type="submit">完成</button></span></span>
+</div>
+</form>
+<script type="text/javascript">
+showContent = function(flag) {
+	if (flag == 1) {
+		$("#span_view").html('内容1-内容2-内容3-内容4：浅红-浅蓝-浅黄-浅绿');
+	} else {
+		$("#span_view").html('内容1-内容2-内容3-内容4：浅红(6)/白(1)-浅蓝(6)/白(1)-浅紫(6)/白(1)-浅绿(6)/白(1)');
+	}
+}
+
+//专题表单数据提交
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret) {
+		ajaxRedirect(ret, baseurl+'<?php echo $listUrl;?>');
+	});
+    $("button[name='btn_edit']").bind("click",function() {
+        var item_key = $(this).val();
+        var view_tpl = $("select[name='item_view_tpl["+item_key+"]']").val();
+        var title = encodeURIComponent($("input[name='title["+item_key+"]']").val());
+        var resume = encodeURIComponent($("textarea[name='resume["+item_key+"]']").val());
+        location.href = "<?php echo $costomGamesAddUrl . '?id=' . $id . '&item_id='; ?>" + item_key + "&view_tpl=" + view_tpl + "&title=" + title + "&resume=" + resume;
+    });
+
+	$( "#notConing" ).dialog({
+		autoOpen: false,
+        modal: true,
+		width: 330
+	});
+    $("#btn_view").bind("click",function(e) {
+    	var view_tpl = $("select[name='view_tpl']").val();
+    	view_tpl = parseInt(view_tpl) + 1;
+    	if(view_tpl<10) view_tpl = "0"+ view_tpl;
+        url = "<?php echo $staticPath;?>/game/pic/custom-"+view_tpl+".jpg";
+    	$("#notConing img").attr('src', url);
+        $( "#notConing" ).dialog( "open" );
+
+        e.stopPropagation();
+		$('body').click(function(){
+			$( "#notConing" ).dialog('close');
+			$('body').unbind('click');
+		});
+    });
+    showContent(<?php echo $info['view_tpl'];?>);
+});
+</script>
+<div id="notConing" ><div><img src=""/></div></div>
+<?php echo $this->render("layout/footer.phtml");?>

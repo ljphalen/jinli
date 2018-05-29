@@ -1,0 +1,137 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">栏目列表</a></li>
+		<li class="current"><a href="javascript:;"><?php $info['id']?'编辑':'添加' ?>栏目</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑栏目</div>
+<form method="post" action="<?php echo $editPostUrl; ?>" id="addFrom">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">机型</th>
+				<td class="td">
+					<select name="spec_id" id="spec_id">
+						<?php foreach ($specs as $key => $value) { ?>
+							<option value="<?php echo $key; ?>" <?php if ($info['spec_id'] == $key) echo 'selected="selected"'; ?>><?php echo $value; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">栏目名称</th>
+				<td class="td"><input type="text" class="input" name="title" value="<?php echo $info['title']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">分类</th>
+				<td class="td">
+					<select id="type" name="type">
+						<?php foreach ($types as $key => $value) { ?>
+							<option value="<?php echo $key; ?>" <?php if ($info['type'] == $key) echo 'selected="selected"'; ?>><?php echo $value; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">内容源</th>
+				<td class="td">
+					<?php
+					$tmp = array();
+					foreach ($cpUrls as $k => $v) {
+						if ($k == 1) {
+							continue;
+						}
+						$tmp[$v['type']][$v['id']] = $v['title'];
+					}
+
+					foreach ($types as $tK => $tV) {
+						echo '<select class="url_id">';
+						$vList = isset($tmp[$tK]) ? $tmp[$tK] : array();
+						foreach($vList as $vId => $vTitle) {
+							$select = '';
+							if ($info['url_id'] == $vId) {
+								$select = 'selected="selected"';
+							}
+							echo "<option {$select} value=\"{$vId}\" >{$vTitle}</option>";
+						}
+						echo '</select>';
+					}
+					?>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">图标</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="NavImg">
+							<img
+								src="<?php echo $info['icon'] ? $attachPath . $info['icon'] : $staticPath . '/img/content/nopic.jpg' ?>"/>
+							<input type="hidden" name="icon" value="<?php echo $info['icon']; ?>">
+						</li>
+					</ul>
+					<p style="clear:both;">
+						<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=NavImg'; ?>"
+						        style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">概要</th>
+				<td class="td"><textarea name="summary" cols="50" rows="5"><?php echo $info['summary']; ?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort']; ?>">（填写一个数字，数字越大越靠前）
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td"><select name="status" min-width="100px">
+						<option <?php if ($info['status'] == 1) echo 'selected="selected"'; ?> value="1">开启</option>
+						<option <?php if ($info['status'] == 0) echo 'selected="selected"'; ?>value="0">关闭</option>
+					</select></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">是否推荐</th>
+				<td class="td"><select name="is_recommend" min-width="100px">
+						<option <?php if ($info['is_recommend'] == 0) echo 'selected="selected"'; ?> value="0">否
+						</option>
+						<option <?php if ($info['is_recommend'] == 1) echo 'selected="selected"'; ?> value="1">是
+						</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	//广告表单数据提交
+	$(document).ready(function () {
+		ajaxForm('addFrom', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Widget_Column/spec?spec_id='+$('#spec_id').val());
+		});
+	})
+
+	$("#type").change(function(){
+		$("#type option").each(function(i,o){
+			if($(this).attr("selected")) {
+				$(".url_id").hide();
+				$(".url_id").eq(i).show();
+				$(".url_id").eq(i).attr("name","url_id");
+			}
+		});
+	});
+	$("#type").change();
+
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml"); ?>

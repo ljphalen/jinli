@@ -1,0 +1,64 @@
+<?php echo $this->render("layout/webheader.phtml"); ?>
+    <body>
+    <div class="module">
+        <section class="layout-center">
+            <div class="cut-rank-top">
+                <div class="inner">
+                    <span class="period">第 <?php echo $goods['no']; ?> 期：</span>
+
+                    <h2><?php echo $goods['title']; ?></h2>
+
+                    <div class="date">
+                        <div class="timer"></div>
+						<span><?php echo $goods['time_string']; ?><span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="layout-center cut-rank">
+            <?php if(empty($data)): ?>
+            <div class="connect-error">
+                <a href="javascript:window.share.gotoHuodongProductList();" class="wrap">
+                    <div class="pic"></div>
+                    <div class="desc">无记录，轻触去活动列表</div>
+                </a>
+            </div>
+             <?php else: ?>
+            <ul class="cut-rank-list">
+                <?php foreach ($data as $k => $row) : ?>
+                    <?php if ($row['ellipsis-text']): ?>
+                        <li class="item ellipsis-text">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </li>
+                    <?php else: ?>
+                        <li class="item <?php echo $row['win'] ? "win" : "" ?> <?php echo $row['current'] ? "current" : "" ?>">
+                            <?php echo $row['current']&&!$row['win']?'<div class="circle-text">
+                                您在此
+                            </div>':'' ?>
+                            <ul>
+                                <li>
+                                    <?php echo $row['win'] ? '<span class="icon-first-cup"></span>' : $k+1; ?>
+                                </li>
+                                <li><?php echo $uid[$row['uid']]['nickname']; ?></li>
+                        <?php if($row['win']): ?>
+                                <li class="align-left">
+                                    <span class="strong"><?php echo $row['shortest_time']; ?>“</span>
+                                </li>
+                                <?php else: ?>
+                            <li>
+                              <?php echo $row['shortest_time']; ?>“
+                            </li>
+                        <?php endif; ?>
+                            </ul>
+                        </li>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </ul>
+            <?php endif; ?>
+        </section>
+    </div>
+
+<?php echo $this->render("layout/tj.phtml"); ?>
+<?php echo $this->render("layout/newfooter.phtml"); ?>

@@ -1,0 +1,82 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">职位列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="get">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		</tr>
+		<tr class="tr">
+			<th class="th">用户id</th>
+			<td class="td"><input class="input wb" type="text" name="user_id" value="<?php echo $param['user_id'];?>"></td>			
+		</tr>
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input class="input wb" type="text" name="title" value="<?php echo $param['title'];?>"></td>
+			<th class="th">手机号</th>
+			<td class="td"><input class="input wb" type="text" name="phone" value="<?php echo $param['phone'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			<option value="">所有状态</option>
+<?php foreach($status as $key=>$value){?>
+				<option <?php echo ($param['status'] == $key) ? 'selected="selected"' :''; ?> value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php }?>
+			</select>
+			</td>
+			<th class="th">分类</th>
+			<td class="td">
+			<select name="category_id" class="wa">
+			<option value="">所有分类</option>
+<?php foreach($categorys as $key=>$value){?>
+				<option <?php echo ($param['category_id'] == $value['id']) ? 'selected="selected"' :''; ?> value="<?php echo $value['id'];?>"><?php echo $value['title'];?></option>
+<?php }?>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span><span style="float:left;">当前职位总数：<?php echo $total;?></span></div>
+
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">排序</td>
+			<td>标题</td>
+			<td>会员id</td>
+			<td>职位分类</td>
+			<td>发布时间</td>
+			<td>状态</td>
+			<td>报名数</td>			
+			<td>举报数</td>
+			<td>收藏数</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($jobs as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $value['user_id'];?></td>
+			<td><?php echo $categorys[$value['category_id']]['title'];?></td>
+            <td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+			<td><?php echo $status[$value['status']];?></td>
+			<td><a href="<?php echo $signupUrl;?>/?job_id=<?php echo $value['id'];?>" target="_blank"><?php echo $value['signup_count'];?></a></td>
+			<td><a href="<?php echo $reportUrl;?>/?job_id=<?php echo $value['id'];?>" target="_blank"><?php echo $value['report_count'];?></a></td>
+			<td><?php echo $value['favorite_count'];?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

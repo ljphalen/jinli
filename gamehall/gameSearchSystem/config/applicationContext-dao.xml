@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="dbPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+		   <list>
+		       <value>classpath:db_config.properties</value>
+		   </list>
+		</property>
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+	</bean>
+	
+	
+	<bean id="dataSourceGame" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="url">
+			<value>${db.game.url}</value>
+		</property>
+		<property name="driverClassName">
+			<value>${db.game.driver}</value>
+		</property>
+		<property name="username">
+			<value>${db.game.username}</value>
+		</property>
+		<property name="password">
+			<value>${db.game.password}</value>
+		</property>
+        <property name="validationQuery">
+            <value>SELECT 1</value>
+        </property>
+        <property name="testWhileIdle">
+            <value>true</value>
+        </property>
+        <property name="timeBetweenEvictionRunsMillis">
+            <value>3600000</value>
+        </property>
+        <property name="minEvictableIdleTimeMillis">
+            <value>1800000</value>
+        </property>
+        <property name="testOnBorrow">
+            <value>true</value>
+        </property>		
+	</bean>
+	
+	
+	<bean id="gameDao" class="com.gionee.game.search.index.dao.GameDao">
+		<constructor-arg ref="dataSourceGame" />
+	</bean>
+</beans>

@@ -1,0 +1,244 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>积分抽奖</title> 
+<meta charset="UTF-8">
+<meta name="keyword" content="金立, 金立游戏, 游戏大厅" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="format-detection" content="email=no" />
+<link rel="stylesheet" href="<?php echo $staticroot; ?>/apps/game/apkv1/assets/css/prize.css?v=<?php echo $version;?>" />
+</head>
+<body class ="<?php echo ($prize) ? (($prize['type']==1) ? 'sudoku-lottery-container' : 'dial-lottery-container') :'';?>">
+<?php if($prize):?>
+	<script type="text/javascript">
+		var token = '<?php echo $token;?>';
+		var isLogin = <?php echo $isLogin ? 'true' : 'false';?>;
+ 		var prizeId = <?php echo $prize['id'];?>;
+	</script>
+	<!-- 抽奖宣传图 -->
+	<div class="banner-container">
+		<img src="<?php echo $attachPath.$prize['img'];?>" alt="">
+		<div id="rolling" class="btn-rolling invisible" data-ajaxUrl="<?php echo  $webroot.'/api/point/prizeWin'?>"> <!-- 前10条中奖信息 -->
+		</div>
+	</div>
+    <?php
+    $prizeTitles = array();
+    foreach($config as $item){
+        $prizeTitles[] = $item['title'];
+    }
+    ?>
+    <?php if($prize['type']==2):?>
+    <!-- 转盘抽奖 -->
+    <div class="dial-container">
+        <div class = "imgs">
+            <?php foreach($config as $item):?>
+            <img src="<?php echo $attachPath . $item['small_img'];?>" id="<?php echo "img{$item['pos']}";?>" />
+            <?php endforeach;?>
+        </div>
+        <div class="turnplate" >
+            <canvas class="item" id="wheelcanvas" width="422px" height="422px" ></canvas>
+            <input type="button" class="J_pointer pointer" data-ajaxUrl="<?php echo $webroot.'/api/point/prizeStart'?>"/>
+        </div>
+    </div>
+    <?php endif;?>
+    <?php if($prize['type']==1):?>
+	<!-- 抽奖区域 -->
+	<div class="prize-container">
+		<div id="prize_wrap" class="prize-wrap" >
+			<div class="box-wrap">
+				<li id="prize-grid0" class="box prize-unit" data-id="1">
+					<div class="content ">
+						<img src="<?php echo $attachPath.$config[1]['small_img'];?>" alt=""/>
+					</div>
+				</li>
+				<li id="prize-grid1" class="box prize-unit" data-id="2">
+						<div class="content">
+							<img src="<?php echo $attachPath.$config[2]['small_img'];?>" alt=""/>
+						</div>
+				</li>
+				<li id="prize-grid2" class="box prize-unit" data-id="3">
+					<div class="content">
+						<img src="<?php echo $attachPath.$config[3]['small_img'];?>" alt=""/>
+					</div>
+				</li>
+			</div>
+			<div class="box-wrap">
+				<li id="prize-grid7" class="box prize-unit" data-id="8">
+					<div class="content">
+						<img src="<?php echo $attachPath.$config[8]['small_img'];?>" alt=""/>
+					</div>
+				</li>
+				<li id="prize-btn"  class="box" data-ajaxUrl="<?php echo $webroot.'/api/point/prizeStart'?>">
+					<div class="content1">
+					</div>
+				</li>
+				<li id="prize-grid3" class="box prize-unit" data-id="4">
+					<div class="content">
+						<img src="<?php echo $attachPath.$config[4]['small_img'];?>" alt=""/>
+					</div>
+				</li>
+			</div>
+			<div class="box-wrap lastLine">
+				<li id="prize-grid6" data-id="7" class="box prize-unit">
+						<div class="content">
+							<img src="<?php echo $attachPath.$config[7]['small_img'];?>" alt=""/>
+						</div>
+				</li>
+				<li id="prize-grid5" data-id="6" class="box prize-unit">
+					<div class="content">
+						<img src="<?php echo $attachPath.$config[6]['small_img'];?>" alt=""/>
+					</div>
+				</li>
+				<li id="prize-grid4" data-id="5" class="box prize-unit">
+					<div class="content">
+						<img src="<?php echo $attachPath.$config[5]['small_img'];?>" alt=""/>
+					</div>
+				</li>
+			</div>
+		</div>
+	</div>
+    <?php endif;?>
+    <!-- 积分使用情况 -->
+    <div class="points-container">
+            <div class="pointLeft">
+                <span>剩余 <em id="prize-totalPoints"><?php echo $userInfo['points'] ? intval($userInfo['points']) : 0 ?></em> 个积分</span>
+                <span>每次抽奖消耗 <em id="prize-consumePoints"><?php echo $prize['point']?></em> 个积分</span>
+            </div>
+            <a  data-action="gamehall.daily.task"  class="btn-points">领积分</a>
+    </div>
+
+    <!-- 规则说明 -->
+    <div class="rule-container">
+        <h1 class="rule-state">规则说明
+            <span class="title-arrowLeft"></span>
+            <span class="title-arrowRight"></span>
+        </h1>
+        <div class="rule-time-container">
+            <h1 class="rule-title">活动时间：</h1>
+            <span class="time">
+                <?php echo date('Y-m-d H:i:s', $prize['start_time']);?>
+                到
+                <?php echo date('Y-m-d H:i:s', $prize['end_time']);?>
+            </span>
+        </div>
+        <hr class="line"/>
+        <div class="rule-info-container">
+            <h1 class="rule-title">活动说明：</h1>
+            <div class="ui-editor">
+                <?php echo html_entity_decode($prize['descript']);?>
+            </div>
+        </div>
+        <hr class="line"/>
+        <div class="rule-desc-container">
+            <h1 class="rule-title">奖品介绍：</h1>
+            <ul>
+                <?php foreach ($config as $item):?>
+                    <?php if($item['type'] == 0){ continue; }?>
+                    <li>
+                        <div class="box">
+                            <div class="content">
+                                <img src="<?php echo $attachPath . $item['small_img'];?>" alt=""/>
+                            </div>
+                        </div>
+                        <span class="name"><?php echo $item['title']?></span>
+                    </li>
+                <?php endforeach;?>
+            </ul>
+        </div>
+        <hr class="line"/>
+        <div class="rule-phone-container">
+            <h1 class="rule-title">联系客服：</h1>
+            <span class="phone">客服电话：<?php echo $servicePhone; ?></span>
+            <span class="qq">客服QQ&nbsp;：<?php echo $serviceQq; ?></span>
+        </div>
+    </div>
+
+    <div class="J_dialog dialog invisible"></div>
+	<!-- 未中奖 -->
+	<div class="J_noPrize no-prize-container invisible">
+		<div class="img-container">
+            <div class="img-wrapper">
+                <img src="" alt=""/>
+			</div>
+			<span class="tips">呃，就差一点点了...</span>
+		</div>
+		<div class="btn-container tline">
+			<a id="close">不抽了</a>
+			<a id="continue" class="lline">继续抽奖</a>
+		</div>
+	</div>
+	<!-- 实物奖励 -->
+	<div class="J_entity entity-prize-container invisible">
+		<div class="img-container">
+            <div class="img-wrapper">
+                <img src="" alt=""/>
+            </div>
+			<span class="tips">恭喜，人品爆发，抽中<em id="prizeName"></em></span>
+		</div>
+		<div class="addressinfo-container tline">
+			<span class="address-tips">请填写信息领取奖品</span>
+			<div class="ad-info">
+				<em>收货人:</em><input id="name" class="btn-input" type="text" placeholder="姓名" />
+			</div>
+			<div class="ad-info">
+				<em>联系电话:</em><input id="phone" class="btn-input" type="text" placeholder="手机或固话" />
+			</div>
+			<div class="ad-info">
+				<em>收货地址:</em><textarea id="address" class="btn-input btn-textarea" rows="3"  placeholder="所在省市详细街道信息"></textarea>
+			</div>
+		</div>
+		<div class="btn-container tline">
+			<a id="submit" data-ajaxUrl="<?php echo $webroot.'/api/point/prizeSubmit'?>">提交信息</a>
+			<a class="loading-btn hidden"><i class="icon-loading"></i>正在提交，请稍等...</a>
+		</div>
+	</div>
+	<!-- a券奖励 -->
+	<div class="J_acoin acoin-prize-container invisible">
+		<div class="img-container">
+            <div class="img-wrapper">
+                <img src="" alt=""/>
+            </div>
+			<span class="tips">恭喜，抽中<em id="prizeName"></em>A券</span>
+		</div>
+		<div class="tips-container tline">
+			<span>A券仅<em id="indate"></em>有效，请尽快使用！</span>
+			<span>可在"我的A券"中查看A券详情</span>
+		</div>
+		<div class="btn-container tline">
+			<a data-type="0" data-viewType="WebView" data-source="acertificate"  data-infpage="我的A券,<?php echo $webroot . '/client/task/myticket'; ?>" id="acoin">查看A券</a>
+			<a id="continue" class="lline">继续抽奖</a>
+		</div>
+	</div>
+	<!-- 积分奖励 -->
+	<div class="J_points points-prize-container invisible">
+		<div class="img-container">
+            <div class="img-wrapper">
+                <img src="" alt=""/>
+            </div>
+			<span class="tips">恭喜，抽中<em id="prizeName"></em>积分</span>
+		</div>
+		<div class="tips-container tline">
+			<span>积分可用来抽奖！</span>
+			<span>积分可在积分商城中兑换奖品！</span>
+		</div>
+		<div class="btn-container tline">
+			<a id="close">不抽了</a>
+			<a id="continue" class="lline">继续抽奖</a>
+		</div>
+	</div>
+    <script type="text/javascript">
+        <?php if($prizeTitles):?>
+        var prize = <?php echo json_encode($prizeTitles, JSON_UNESCAPED_UNICODE)?>;
+        <?php endif;?>
+    </script>
+	<script src="<?php echo $staticroot; ?>/??/apps/game/apkv1/assets/js/sys/jquery.js,/apps/game/apkv1/assets/js/sys/hidpi-canvas.js,/apps/game/apkv1/assets/js/prize/awardRotate.source.js,/apps/game/apkv1/assets/js/sys/fastclick.js,/apps/game/apkv1/assets/js/prize/prize.source.js?v=<?php echo $version;?>"></script>
+	 <?php else:?>	
+ 	<div id="prizeEventClose" style="height:100%;width:100%;">
+		<img src="<?php echo $attachPath.$defaultImg;?>" alt=""/>
+	</div>
+ <?php endif;?>
+</body>
+</html>

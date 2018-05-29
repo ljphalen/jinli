@@ -1,0 +1,59 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $visitUrl; ?>">PV/UV统计</a></li>
+		<li><a href="<?php echo $userLogUrl ?>">新增激活用户</a></li>
+		<li><a href="<?php echo $newRegisterUrl; ?>">新增注册用户</a></li>
+		<li><a href="<?php echo $connectedUrl; ?>">接通统计</a></li>
+		<li><a href="<?php echo $periodUrl ?>">通话时段统计</a></li>
+	</ul>
+</div>
+<div class="table_full">
+	<form action="<?php echo $baseUrl; ?>" method="POST">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+		<table width="100%" cellspacing="0" cellpadding="0">
+			<tr class="tr1">
+				<td class="td1"> 月份(201410)：
+					<input class="input" type="text" maxlength="6" id="ym" name="ym" value="<?php echo $ym; ?>">
+
+					<input type="submit" value="查询"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="tr">
+			<td class="td">日期</td>
+			<td class="td">规则页PV值</td>
+			<td class="td">规则页UV值</td>
+			<td class="td">拨打页PV值</td>
+			<td class="td">拨打页UV值</td>
+			<td class="td">拨号按钮PV值(总)</td>
+			<td class="td">拨号按钮UV值(总)</td>
+			<td class="td">拨号按钮PV值</td>
+			<td class="td">拨号按钮UV值</td>
+		</tr>
+		<?php foreach ($dataList as $k => $v) { ?>
+			<tr class="ct">
+				<td class="td"><?php echo date('Y-m-d', strtotime($k)); ?></td>
+				<td class="td"><?php echo $v['voip_pv'] ? $v['voip_pv'] : 0; ?></td>
+				<td class="td"><?php echo $v['voip_uv'] ? $v['voip_uv'] : 0; ?></td>
+				<td class="td"><?php echo $v['voip_pv_list'] ? $v['voip_pv_list'] : 0; ?></td>
+				<td class="td"><?php echo $v['voip_uv_list'] ? $v['voip_uv_list'] : 0; ?></td>
+				<td class="td"><?php echo $v['voip_pv_call1'] ? $v['voip_pv_call1'] : 0; ?></td>
+				<td class="td"><?php echo $v['voip_uv_call1'] ? $v['voip_uv_call1'] : 0; ?></td>
+				<td class="td"><?php echo $v['voip_pv_call'] ? $v['voip_pv_call'] : 0; ?></td>
+				<td class="td"><?php echo $v['voip_uv_call'] ? $v['voip_uv_call'] : 0; ?></td>
+
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+<?php echo $this->render("layout/footer.phtml"); ?>
+	
+	

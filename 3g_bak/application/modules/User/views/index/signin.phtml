@@ -1,0 +1,92 @@
+<?php echo $this->render("../../Front/views/layout/header.phtml");?>
+	<div id="page">
+		<header class="hd">
+			<h1>签到</h1>
+			<div class="back">
+				<a href="<?php echo $back?>"><span class="left-arrow"><i></i></span></a>
+			</div>
+		</header>
+<?php 
+	$total = $signin_img['row'] * $signin_img['col'];
+	//圆角部分
+	$radius = array(1,$signin_img['row'],$signin_img['row']*($signin_img['row']-1)+1,$total);
+	
+	$width = $signin_img['row'] * ($signin_img['row'] == 5 ? 4.12 : 5.15);
+	$height = $signin_img['row'] * ($signin_img['row'] == 5 ? 4.12 : 5.15);
+	
+?>		
+		<article class="ac sign-in">
+			<div class="puzzle-box" style="width:<?php echo $width;?>rem; height:<?php echo $height;?>rem;">
+				<div class="pic"><img src="<?php echo $attachPath.$signin_img['img'];?>" alt="" /></div>
+				<div class="cell" style="width:<?php echo $width;?>rem; height:<?php echo $height;?>rem;">
+					<ul <?php if($signin_img['row'] == 2) echo 'style="border-right:none;"';?>>
+<?php
+$class = '';
+ for($i = 1; $i <= $total; $i++) { 
+	switch($i){
+		case $radius[0]: $cla='class="lt"'; break;
+		case $radius[1]: $cla='class="rt"'; break;
+		case $radius[2]: $cla='class="lb"'; break;
+		case $radius[3]: $cla='class="rb"'; break;
+		default: $cla='';
+	}
+	$class[$i] = '';
+	if ($sign) {
+		if ($i <= $sign['number']) $class[$i] = ' done ';
+	}
+?>
+						<li <?php echo $cla;?>><span class="<?php echo $class[$i];  if($signin_img['row'] == 5) echo 'cols-five' ;?>"></span></li>
+<?php }?>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="btn-wrap">
+				<a <?php if($is_full) echo 'href='.$webroot.$winprizeUrl;?> class="btn <?php if(!$is_full) echo 'disabled';?>" data-url="<?php echo $webroot.$winprizeUrl?>"  id="J_reward_btn" >兑奖</a>
+				<span data-ajaxUrl= <?php echo $webroot.$signinPostUrl;?> data-picId="<?php echo $signin_img['id'];?>" class="J_checkInDialog btn <?php if($is_full || $is_signin) echo 'disabled';?>"><?php if($is_full){echo '已签满';} elseif($is_signin){echo '已签到';}else{echo '签到';} ?></span>
+			</div>
+			<div class="sign-rule">
+				<dl>
+					<dt>签到规则：</dt>
+					<dd> 1、登录账户，点击签到，每日可签到一次。<br />
+						2、累积签到完成拼图，即可抽奖。<br />
+						3、如有疑问请加<?=Lang::_('PRODUCT_TEAM_NAME')?>qq群：274289481，暗号：签到。</dd>
+				</dl>
+			</div>
+			
+			<div class="prize-his">
+			<?php if($user_info) { ?>
+				<div class="prize-his-head">
+					<h2>我的拼图库</h2>
+				</div>
+				<div class="prize-his-main">
+					<div class="prize-his-list">					
+						<ul>
+						<?php foreach($user_signin as $key=>$value) { ?>
+							<li><a href="<?php echo $value['prize_id'] ? $webroot.'/user/index/showprize?prize_id='.$value['prize_id'] : $webroot.'/user/index/winprize' ;?>"><img src="<?php echo $attachPath.$imgs[$value['img_id']]['img'];?>" alt="" /><?php echo $value['prize_id'] ? '<span>已兑奖</span>' : '<span class="unprize">未兑奖</span>';?></a></li>
+						<?php } ?>
+						</ul>
+					</div>
+				</div>
+			<?php } ?>
+				<div class="btn-wrap">
+				<?php if(!$user_info) { ?>
+					<a href="<?php echo $webroot?>/user/login/index" class="btn">登录</a>
+				<?php } else {?>
+					<a href="<?php echo $webroot?>/user/userinfo/index" class="btn w300">我的帐号：<?php echo $user_info['username'];?></a>
+				<?php }?>
+				</div>			
+			</div>			
+		</article>
+	</div>
+	<!-- 弹出层信息显示窗口 -->
+	<div class="JS-dbMask"></div>
+	<div class="dialog-box J_dialogBox">
+		<p></p>
+		<div class="btn-wrap">
+			<span class="btn">确定</span>
+		</div>
+	</div>
+	<!-- /弹出层信息显示窗口 -->
+<?php echo $this->render("../../Front/views/layout/tj.phtml");?>
+<?php echo $this->render("../../Front/views/layout/footer.phtml");?>

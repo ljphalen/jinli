@@ -1,0 +1,71 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $orderFreeUrl;?>">免单抽奖</a></li>
+	</ul>
+</div>
+<form action="<?php echo $orderFreeUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">商品ID</th>
+			<td class="td"><input class="input" type="text" name="goods_id" value="<?php echo $search['goods_id'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">用户ID</td>
+			<td>帐号/手机号码</td>
+			<td>想要商品数</td>
+			<td>注册时间</td>
+			<td>最后登录时间</td>
+			<td>想要时间</td>
+		</tr>
+<?php foreach($logs as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['uid'];?></td>
+			<td><?php echo $value['username'];?></td>
+			<td><?php echo $users[$value['uid']]['want_num'];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $users[$value['uid']]['register_time']);?></td>
+			<td><?php echo date('Y-m-d H:i:s', $users[$value['uid']]['last_login_time']);?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php if ($logs) {?>
+<form action="<?php echo $orderFreePostUrl;?>" method="post" id="orderFreeFrom">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="goods_id" type="hidden" value="<?php echo $goods_id;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">设置中奖人数</th>
+			<td class="td"><input class="input" type="text" name="number" value=""></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">抽 奖</button></span></span></div>
+</form>
+<?php }?>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+})
+$(document).ready(function(){
+	ajaxForm('orderFreeFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/OrderFreeLog/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

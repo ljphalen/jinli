@@ -1,0 +1,34 @@
+<?php echo $this->render("layout/header.phtml");?>
+<?php if($code != 0 && !empty($msg)){ ?>
+<font color=red><?php echo $msg;?></font> <a href="<?echo $uploadUrl,'?fileId=',$fileId;;?>">[返回]</a>
+<?php }elseif($code == 0 && !empty($data)){ ?>
+<b>上传成功！</b> <a href="<?php echo $uploadUrl?>">[上传]</a>
+<?php }else{ ?>
+<form id="form1" name="form1" method="post" action="<?php echo $uploadPostUrl;?>" onsubmit="return checkFrom()" enctype="multipart/form-data">
+<input type="hidden" name="token" value="<?php echo $token;?>" /> 
+<input type="file" id="file" name="file" class="mr20" style="margin-left:-18px;"/>  
+<input type="submit" name="sub" value="上传"  class="uploadbtn"> 允许上传的文件格式为：.zip 且文件大小不能超过28M
+<div id="File"></div>
+</form>
+<?php } ?>
+<script> var par = /^.*?\.(zip)$/i;
+
+function checkFrom() {
+	if($("#file").val()==''){
+		window.parent.showError('出错','请选择要上传的文件');
+		return false;
+	}else if (!par.test($("#file").val())){
+		window.parent.showError('出错','仅支持zip文件，且文件小于28M');
+		return false;
+	}else{
+		return true;
+	}
+}
+
+<?php if($code == 0 && !empty($data)){?>
+window.parent.showFile(<?php echo $data;?>, '<?php echo $attachPath;?>');
+<?php }?>
+</script>
+<?php echo $this->render("layout/footer.phtml");?>
+
+

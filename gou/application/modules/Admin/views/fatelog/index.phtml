@@ -1,0 +1,64 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">抽奖日志列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">手机号码</th>
+			<td class="td"><input class="input" type="text" name="mobile" value="<?php echo $param['mobile'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status">
+<?php foreach($fate_status as $key=>$value) {?>
+				<option <?php echo ($param['status'] == $key) ? 'selected="selected"' :'';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php }?>
+			</select>
+			
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">编号</td>
+			<td>手机号</td>
+			<td>抽奖时间</td>
+			<td>中奖额度</td>
+			<td>通关密语</td>
+			<td>状态</td>
+			<td>中奖确认时间</td>
+			<td>订单号</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($rules as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['mobile'];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+			<td><?php echo $value['price'];?></td>
+			<td><?php echo $value['question'].'/'.$value['answer'];?></td>
+			<td><?php echo $fate_status[$value['status']];?></td>
+			<td><?php echo $value['confirm_time'] ? date('Y-m-d H:i:s', $value['confirm_time']) : '';?></td>
+			<td><?php echo $value['order_id'];?></td>
+			<td>
+<?php if($value['status'] == 2) {?>			
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">发奖</a>
+<?php }?>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,89 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $indexUrl; ?>">用户积分信息</a></li>
+		<li class=""><a href="<?php echo $scoreUrl; ?>">积分统计列表</a></li>
+		<li class=""><a href="<?php echo $tasksUrl; ?>">任务统计</a></li>
+	</ul>
+</div>
+<form id="addForm" method="post" action="/Admin/Usummary/index">
+	<div>查询条件：</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<td class="th">手机号：</td>
+				<td class="td">
+					<input id="mobile" name="mobile" type="text" class="input" width="100px;" value="<?php echo $params['mobile']; ?>">
+				</td>
+				<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+				<td>
+			</tr>
+			<tr class="tr">
+				<td class="th">剩余金币范围</td>
+				<td class="td">
+					<input id="min_scores" name="min_scores" type="text" class="input" value="<?php echo $params['min_scores'];; ?>">-
+					<input id="max_scores" name="max_scores" type="text" class="input" value="<?php echo $params['max_scores'];; ?>">
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<td class="th">用户经验值范围:</td>
+				<td class="td">
+					<input id="min_scores" name="min_experience_points" type="text" class="input" value="<?php echo $params['min_experience_points'];; ?>">-
+					<input id="max_scores" name="max_experience_points" type="text" class="input" value="<?php echo $params['max_experience_points'];; ?>">
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+	<input type="hidden" id="hidden_export" name="export" value="0"/>
+</form>
+<div class="h_a">
+	&nbsp;总金币:<span id="total" style="color: red;font-size:13px"><?php echo $totalScore['total_scores']; ?></span> 总流通金币:<span style="color: red;font-size:13px"><?php echo $totalScore['total_remained_scores']; ?></span>
+	<span style="float:right;"><input type="button" value="导出" id="downLoad"></span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="">
+			<td>ID</td>
+			<td width="">用户ID</td>
+			<td width="">手机号</td>
+			<td>总积分</td>
+			<td>可用积分</td>
+			<td>冻结积分</td>
+			<td>总经验值</td>
+			<td>连续签到次数</td>
+			<td>操作</td>
+		</tr>
+		<?php foreach ($data as $key => $value) {
+			?>
+			<tr class="ct">
+				<td><?php echo $value['id']; ?></td>
+				<td><?php echo $value['uid']; ?></td>
+				<td><?php echo $value['username']; ?></td>
+				<td><?php echo $value['total_score'] ? $value['total_score'] : 0; ?></td>
+				<td><?php echo $value['remained_score'] ? $value['remained_score'] : 0; ?></td>
+				<td><?php echo $value['frozed_score'] ? $value['frozed_score'] : 0; ?></td>
+				<td><?php echo $value['experience_points']; ?></td>
+				<td><?php echo $value['continus_days'] ? $value['continus_days'] : 0; ?></td>
+				<td><a href="/Admin/Register/edit?id=<?php echo $value['id']; ?>">查看详细</a>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?></div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#downLoad").bind('click', function () {
+			$("#hidden_export").val(1);
+			$("#addForm").submit();
+			$("#hidden_export").val(0);
+		});
+
+	});
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>
+

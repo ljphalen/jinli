@@ -1,0 +1,55 @@
+<?php echo $this->render("festival/activity/header.phtml");?>
+<body>
+	<header class="pic-container-ac">
+		<img data-src="<?php echo $attachPath.$prizeInfo['img']; ?>" src="<?php echo $staticroot; ?>/apps/game/events/medalEvent/pic/blank.gif" alt=""/>
+	</header>
+	<acrticle class="ac">
+		<div class="prize-tips-container">
+			<h1 class="sub-title"><?php echo $prizeInfo['name'] ?></h1>
+			<?php $propsArr = explode(',', $prizeInfo['condition']);?>
+			<span class="prize-tips">兑换此奖品需要集齐<?php echo $prizeInfo['condition'] ? count($propsArr) : 0; ?>个<?php echo $festivalInfo['prop_name']?></span>
+		</div>
+		<div class="address-info-container">
+			<h1 class="address-tips">请填写收货信息</h1>
+			<div class="address-info form">
+				<div class="ui-form-item ">
+					<label >收货人：</label>
+					<input id="contact" class="input" type="text">
+				</div>
+				<div class="ui-form-item">
+					<label>联系电话：</label>
+					<input id="phone" class="input" type="text">
+				</div>
+				<div class="ui-form-item">
+					<label>收货地址：</label>
+					<textarea id="address" class="textarea" rows="3" ></textarea>
+				</div>
+			</div>
+			<div class="btn-container">
+				<span class="J_error_tips error-tips invisible">联系电话格式不正确</span>
+				<button class="J_entity_exchange btn" 
+				      data-ajaxUrl="<?php echo $webRoot.'/client/Festival_Activity/exchangePrizePost/' ?>" 
+				      data-prizeType="<?php echo $prizeInfo['prize_type'];?>" 
+				      data-prizeId="<?php echo $prizeInfo['id'];?>" 
+				      data-redirectUrl="<?php echo $webRoot.'/client/Festival_Activity/index/';?>">立即兑换</button>
+			</div>
+		</div>
+	</acrticle>
+	<div class="J_dialog mask hidden">
+		<div class="J_award dialog-container hidden">
+			<img  src="<?php echo $attachPath.$prizeInfo['icon']; ?>" alt=""/>
+			<div class="J_ex_success status-container hidden">
+				<span class="success-tips">兑换成功</span>
+				<span class="back-tips">3秒后返回...</span>
+			</div>
+			<div class="J_ex_fail status-container hidden">
+				<span class="fail-tips">兑换失败，请重试...</span>
+				<div class="multile-btn-container">
+					<button class="J_cancel_entity_retry btn btn-disable">取消</button>
+					<button class="J_entity_retry btn " data-ajaxUrl="<?php echo $webRoot.'/client/Festival_Activity/exchangePrizePost/' ?>" >重试</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

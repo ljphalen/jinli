@@ -1,0 +1,60 @@
+<div class="page">
+	<div class="pageContent">
+	
+		<form method="post" action="__URL__/offget/navTabId/__MODULE__/callbackType/closeCurrent" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone)">
+		<div class="pageFormContent" layoutH="58">
+			<div class="unit">
+				<label>包名称： </label>
+				<span>{$vo.package}</span>
+			</div>
+			<div class="unit">
+				<label>应用名称： </label>
+				<span>{$vo.app_name}</span>
+			</div>
+			<div class="unit">
+				<label>版本： </label>
+				<span>{$vo.version_name}</span>
+			</div>
+			
+			<br>
+			<hr>
+			<div class="unit">
+				<label>隶属帐号： </label>
+				<span><input type="text" id="email" name="email" placeholder="如:dev@gionee.com" maxlength="50" /></span>
+			</div>
+			<div class="unit">
+				<label>原因：</label>
+				<textarea rows=5 cols=50 name="reason" id="reason"></textarea>
+			</div>
+			
+			<div class="unit">
+				<input type=hidden value="1" id="admin_id" name="admin_id" />
+				<input type=hidden value="1" id="old_status" name="old_status" />
+				<input type=hidden value="0" id="new_status" name="new_status" />
+				<input type=hidden value="{$vo.app_name}" id="app_name" name="app_name" />
+				<input type=hidden value="{$vo.package}" id="package" name="package" />
+				<input type=hidden value="{$vo.version_name}" id="version_name" name="version_name" />
+				<input type=hidden value="{$vo.version_code}" id="version_code" name="version_code" />
+				<input type=hidden value="{$vo.id}" id="apk_id" name="apk_id" />
+				<input type=hidden value="{$vo.app_id}" id="app_id" name="app_id" />
+				<input type="hidden" id="created_at" name="created_at" value="<php>echo time();</php>" />
+			</div>
+			
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" onclick="return checkDate();">确认认领此应用</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+	
+	</div>
+</div>
+<script type="text/javascript">
+<!--
+function checkDate(){
+	return true;
+}
+//-->
+</script>

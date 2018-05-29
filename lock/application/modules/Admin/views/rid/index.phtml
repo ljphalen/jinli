@@ -1,0 +1,48 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">Rid列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<td class="td">Rid</td>
+			<td class="td">
+				<input type="text" class="input wa" name="rid" value="<?php echo $search['rid'];?>">
+			</td>
+		</tr>
+		<tr class="tr">
+			<td class="td">IMEI</td>
+			<td class="td">
+				<input type="text" class="input wa" name="at" value="<?php echo $search['at'];?>">
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>Rid</td>
+			<td>IMEI</td>
+			<td>分辨率</td>
+			<td width="200">状态</td>
+		</tr>
+<?php foreach($rids as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['rid'];?></td>
+			<td><?php echo $value['at'];?></td>
+			<td><?php echo $value['sr'];?></td>
+			<td><?php echo $value['status'] == 1 ? '开启' : '注销';?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

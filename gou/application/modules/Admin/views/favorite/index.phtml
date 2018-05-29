@@ -1,0 +1,88 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">知物收藏列表</a></li>
+    <li><a href="<?php echo $listGDUrl;?>">商品收藏列表</a></li>
+    <li><a href="<?php echo $listSTUrl;?>">店铺收藏列表</a></li>
+    <li><a href="<?php echo $listWBUrl;?>">网页收藏列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="get" id="searchForm" >
+<input name="token" type="hidden" value="<?php echo $token;?>"/>
+<div class="table_full">
+	<table width="100%">
+        <tr class="tr">
+            <th class="th">标题</th>
+            <td class="td"><input type="text" class="input wc" name="title" value="<?php echo $params['title'];?>"></td>
+            <th class="th">产品ID</th>
+            <td class="td"><input type="text" class="input wc" name="item_id"	value="<?php echo $params['item_id'];?>"></td>
+        </tr>
+        <tr class="tr">
+            <th class="th">ID</th>
+            <td class="td"><input type="text" class="input wc" name="id"	value="<?php echo $params['id'];?>"></td>
+            <th class="th">UID</th>
+            <td class="td"><input type="text" class="input wc" name="uid"	value="<?php echo $params['uid'];?>"></td>
+        </tr>
+        <tr class="tr">
+            <th class="th">分类</th>
+            <td class="td"><select name="type" id="select">
+                    <option value="">请选择</option>
+                    <?php foreach ($types as $key=>$value) { ?>
+                        <option value="<?php echo $key;?>" <?php if($params['type'] == $key) echo 'selected="selected"';?>><?php echo $value;?></option>
+                    <?php } ?>
+                </select></td>
+            <th class="th">平台</th>
+            <td class="td"><input type="text" class="input wc" name="src" value="<?php echo $params['src'];?>"></td>
+        </tr>
+        <tr>
+            <th class="th">设备</th>
+            <td class="td"><select name="channel_id" id="select">
+                    <option value="">请选择</option>
+                        <option value="android" <?php if($params['channel_id']== 'android') echo 'selected="selected"';?>>android</option>
+                        <option value="ios" <?php if($params['channel_id']== 'ios') echo 'selected="selected"';?>>ios</option>
+                </select></td>
+        </tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span><span style="float:left;">当前总条数：<?php echo $total;?></span></div>
+
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="4%">ID</td>
+		    <td width="8%">产品ID</td>
+            <td width="10%">标题</td>
+            <td width="4%">类型</td>
+            <td width="4%">平台</td>
+            <td width="6%">设备</td>
+            <td width="4%">LOGO</td>
+            <td width="14%">UID</td>
+            <td width="32%">URL</td>
+            <td width="10%">操作</td>
+		</tr>
+<?php foreach($list as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['item_id'];?></td>
+            <td><?php echo $value['title']; ?></td>
+            <td><?php echo $types[$value['type']];?></td>
+            <td><?php echo $value['src'];?></td>
+            <td><?php echo $value['channel_id']?'iOS':'Android';?></td>
+            <td><?php if($value['image']):?><img src="<?php if(strpos($value['image'], 'http://') === false) {echo $attachPath.$value['image'];}else{echo $value['image'];};?>" width="25" height="25"/><?php endif; ?></td>
+            <td><?php echo $value['uid'];?></td>
+            <td><?php echo $value['url'];?></td>
+            <td>
+                <a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+                <a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+            </td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+
+<?php echo $this->render("layout/footer.phtml");?>

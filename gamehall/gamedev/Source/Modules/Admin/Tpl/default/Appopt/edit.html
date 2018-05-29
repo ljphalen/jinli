@@ -1,0 +1,71 @@
+
+<div class="page">
+	<div class="pageContent">
+	
+		<form method="post" action="__URL__/online/navTabId/__MODULE__/callbackType/closeCurrent" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone)">
+		<div class="pageFormContent" layoutH="58">
+			
+			<!-- include file="Public:apkinfo" -->
+
+			<div class="unit">
+				<label>上线时间： </label>
+				<table>
+					<tr>
+						<td>
+							<input type="text" name="online_time" class="date textInput readonly valid" 
+								value="{:empty($vo['online_time'])?'':$vo['online_time']}" 
+								datefmt="yyyy-MM-dd HH:mm" readonly="true">
+							<a class="inputDateButton" href="javascript:;">选择</a>
+							<span class="info">yyyy-MM-dd HH:mm</span>
+						</td>
+					</tr>
+				</table>
+			</div>
+			
+			<div class="unit">
+				<label>应用归属： </label>
+				<table>
+					<tr><td>
+						<select name="app_belong" class="form-control">
+							 <option value="1">游戏大厅</option>
+							 <option value="2">其他业务</option>
+						</select>
+					</td></tr>
+				</table>
+			</div>
+			
+			<div class="unit">
+				<input type=hidden value="1" id="admin_id" name="admin_id" />
+				<input type=hidden value="{$vo.app_name}" id="app_name" name="app_name" />
+				<input type=hidden value="{$vo.package}" id="package" name="package" />
+				<input type=hidden value="{$vo.version_name}" id="version_name" name="version_name" />
+				<input type=hidden value="{$vo.version_code}" id="version_code" name="version_code" />
+				<input type=hidden value="{$vo.id}" id="apk_id" name="apk_id" />
+				<input type="hidden" id="created_at" name="created_at" value="<php>echo time();</php>" />
+				<input type=hidden value="save" id="save_type" name="save_type" />
+			</div>
+			
+			
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" class="saveBtn" sub_type="save">保存</button></div></div></li>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" class="saveBtn" sub_type="online">立即上线</button></div></div></li>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" class="saveBtn" sub_type="autoOnline">保存并自动上线</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+	
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".formBar .saveBtn").click(function(){
+		var _type = $(this).attr("sub_type");
+		$("#save_type").val(_type);
+	});
+	
+});
+</script>
+<include file="Public:bootcss" />

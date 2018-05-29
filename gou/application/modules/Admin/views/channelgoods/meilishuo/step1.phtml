@@ -1,0 +1,60 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $indexUrl;?>">商品列表</a></li>
+		<li class="current"><a href="<?php echo $meilishuoStep1Url;?>">添加商品</a></li>
+	</ul>
+</div>
+<div class="step mb10">
+		<ul class="cc">
+			<li class="current">第一步：选择商品</li>
+			<li class="line"></li>
+			<li><span class="fl"><em></em></span>第二步：完善商品</li>
+		</ul>
+</div>
+<form action="<?php echo $step1Url;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">关键字</th>
+			<td class="td"><input type="text" class="input wc" name="keyword" value="<?php echo $keyword;?>"></td>
+			<td class="td"><span class="btn"><span><button type="submit">搜 索</button></span></span></td>
+		</tr>
+	</table>
+</div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="120">商品ID</td>
+			<td width="250">商品名称</td>
+			<td>商品图片</td>
+			<td>价格</td>
+			<td>折扣价</td>
+			<td>销量</td>
+			<td>库存</td>
+			<td>佣金比例</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($goods as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['item_id'];?></td>
+			<td><a href="<?php echo $value['wap_url'];?>" target="_blank"><?php echo $value['title'];?></a></td>
+			<td><img src="<?php echo $value['wap_pic_url'];?>" width="50" /></td>
+			<td><?php echo $value['oriprice'];?></td>
+	        <td><?php echo $value['discountprice'];?></td>
+	        <td><?php echo $value['volume'];?></td>
+	        <td><?php echo $value['repertory'];?></td>
+	        <td><?php echo $value['commission_rate'];?></td>
+			<td>
+			<a href="<?php echo $meilishuoStep2Url;?>/?item_id=<?php echo $value['item_id']?>" class="btn btn_success">添加</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

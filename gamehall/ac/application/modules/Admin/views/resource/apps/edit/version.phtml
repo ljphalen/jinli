@@ -1,0 +1,153 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">应用列表</a></li>
+		<li><a href="<?php echo $versionUrl.'?id='.$appData['id'];?>">版本列表</a></li>
+		<li class="current"><a href="javascript:;">编辑版本</a></li>
+	</ul>
+</div>
+<div class="table_full">
+<dl style="display:-webkit-box">
+	<dt style="width:64px;height:64px; " >
+	<img style="height: 100%;width:auto;" src="<?php echo $attachPath . $appData['icon'];?>" alt="" >
+	</dt>
+	<dd style="padding-left: 64px">
+		<p><span class="name">应用名称:<?php echo $appData['name'];?></span></p>
+		<br/>
+		<p><span class="id">应用ID:<?php echo $appData['id'];?></span></p>
+	</dd>
+</dl>
+</div>
+<div class="h_a"> <span>版本信息</span></div>
+<form method="post" action="<?php echo $editVersionPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $versionData['id'];?>" type="hidden" />
+<input name="app_id" value="<?php echo $appData['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	 <tr class="tr">
+				<th class="th">上传方式</th>
+				<td class="td">
+					<label class="mr20"><input  name="ptype" checked  value="1" type="radio" id="radio1" onclick="switchUpload(1)">普通方式</label>
+					<label class="mr20"><input  name="ptype"  value="ftp" type="radio" id="2" onclick="switchUpload(2)" >FTP方式</label>
+				</td>
+			</tr>
+	   <tr class="tr" id="up_file">
+			<th class="th">应用包地址</th>
+			<td class="td" >
+			    <iframe name="upload" src="<?php echo $uploadApkUrl.'/?apkId=Apk';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+			</td>
+	    </tr>
+	    <tr class="tr" id="up_ftp">
+			<th class="th">FTP文件名</th>
+			<td class="td" >
+			     <span><input id="ftpfile" type="text" class="input wc" name="ftpfile" value=""> <button type="button" id="addApp" style="margin-left:20px;">添加app</button> </span>
+			</td>
+	    </tr>
+	    <tr class="tr">
+			<th class="th">应用地址：</th>
+			<td class="td">
+			  <span id="Apk" ><input id="apkId" type="text" class="input wc" name="link" value="<?php echo $versionData['link'];?>" readonly> <button type="button" id="getApp" style="margin-left:20px;">获取</button> </span>
+			</td>
+	    </tr>
+	    <tr class="tr">
+			<th class="th">应用包名</th>
+			<td class="td"><input type="text" class="input wc" name="package" value="<?php echo $versionData['package'];?>" id = "package" readonly></td>
+		</tr>
+		 <tr class="tr">
+			<th class="th">Version Code</th>
+			<td class="td"><input type="text" name="version_code" class="input wc" value="<?php echo $versionData['version_code'];?>" id = "version_code" readonly></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">版本号</th>
+			<td class="td"><input type="text" class="input wc" name="version" value="<?php echo $versionData['version'];?>" id="version" readonly></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">大小</th>
+			<td class="td"><input type="text" name="size" class="input" value="<?php echo $versionData['size'];?>" id="size" readonly>M</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="select wa">
+				<option <?php if ($versionData['status'] == 0) echo 'selected';?> value="0">下线</option>
+				<option <?php if ($versionData['status'] == 1) echo 'selected';?> value="1">上线</option>
+			</select>
+			</td>
+	    </tr> 
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">完成</button></span></span></div>
+</form>
+<script type="text/javascript">
+//游戏表单数据提交
+$(document).ready(function(){
+	//上传方式初始化
+	$("#up_file").show();
+	$("#up_ftp").hide();
+	
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Resource_Apps/version?id=<?php echo $appData['id'];?>');
+	});
+})
+
+function switchUpload(flag){
+	if (flag == 1) {
+		$("#up_file").show();
+		$("#up_ftp").hide();
+	} else {
+		$("#up_file").hide();
+		$("#up_ftp").show();
+	}
+}
+
+function emptyPack(){
+	$('#package').val('');
+	$('#version').val('');
+	$('#version_code').val('');
+	$('#size').val('');
+}
+
+//添加ftp上传文件到附件目录
+$('#addApp').click(function(){
+	$.ajax({
+		url : baseurl + "/Admin/Resource_Apps/add_ftp_app",
+		type : 'POST',
+		dataType : 'json',
+		data : 'token='+'<?php echo $token;?>'+'&filename='+$("#ftpfile").val(),
+		success : function(ret) {
+			 if (ret.success) {
+				var file = ret.data.file;
+				$('#apkId').val(file);
+				emptyPack();
+			    } else {
+				showError('', ret.msg);
+			}
+		}
+	});
+	return false;
+})
+
+//获取包信息
+$('#getApp').click(function(){
+	$.ajax({
+		url : baseurl + "/Admin/Resource_Apps/get_app",
+		type : 'POST',
+		dataType : 'json',
+		data : 'token='+'<?php echo $token;?>'+'&link='+$("#apkId").val(),
+		success : function(ret) {
+			 if (ret.success) {
+				var list = ret.data.list;
+				$('#package').val(list.package);
+				$('#version_code').val(list.version_code);
+				$('#version').val(list.version);
+				$('#size').val(list.size);
+			} else {
+				showError('', ret.msg);
+			}
+		}
+	});
+	return false;
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,155 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+<div class="mainw mainw2 clearfix">
+	<div class="rmain regm fl">
+        <div class="content_wrap">
+            <div class="wrap_top">
+                <h2 class="yyname">找回密码</h2>
+                <div class="clear"></div>
+            </div>
+            <div class="wrap_center">
+                <div class="online_help" style="width: 850px; margin-left: 1px;">
+                	<div class="formd formd3 mt30">
+                    <form method='post' action="__URL__/uppwdSub/" id="regform"
+                        class="regform">
+                        <table cellpadding=2 cellspacing=2 width="592px">
+                            <tr>
+                                <td class="zuotd"><span class="tlab"><em>*</em>&nbsp;新密码：</span></td>
+                                <td width="260"><input type="password" id="pwd" name="newpwd"
+                                    class="widinput intn" tabindex="1"></td>
+                                <td><div id="pwdTip" class="onCorrect"></div></td>
+                            </tr>
+                            <tr class="lid">
+                                <td class="zuotd">&nbsp;</td>
+                                <td colspan="2" valign="top"><div id="pwdFixTip" class="help-block">6~16个字符，包括字母、数字、特殊符号，区分大小写</div></td>
+                            </tr>
+                            <tr>
+                                <td class="zuotd"><span class="tlab"><em>*</em>&nbsp;确认密码：</span></td>
+                                <td><input type="password" id="repwd" name="repwd"
+                                    class="widinput intn" tabindex="1"></td>
+                                <td><div id="repwdTip" class="onCorrect"></div></td>
+                            </tr>
+                            <tr class="lid">
+                                <td class="zuotd">&nbsp;</td>
+                                <td colspan="2" valign="top"><div id="repwdFixTip" class="help-block">请再次输入密码</div></td>
+                            </tr>
+                            <tr>
+                                <td class="zuotd"><span class="tlab"><em>*</em>&nbsp;验证码：</span></td>
+                                <td  colspan="2" valign="top"><input type="text" class="widinput intn yzm" id="authcode" maxlength="4"
+                                    style="width: 100px;" name="authcode" tabindex="1"> <img 
+                                    id="verifyImg" SRC="__URL__/verify/"
+                                    onClick="gionee_repwd.fleshVerify()" BORDER="0" ALT="点击刷新验证码"
+                                    style="cursor: pointer" align="absmiddle"  class="checkimg fl" >&nbsp;&nbsp;看不清？
+                                    <a class="flk13 nosee" onclick="gionee_repwd.fleshVerify();$('#authcode').val('');" 
+                                    href="javascript:void(0)">换一张</a></td>
+                                <td><div id="authcodeTip" class="onCorrect"></div></td>
+                            </tr>
+                            <tr>
+                            	<td colspan="3"><div class="btnwn" ></div></td>
+                            </tr>
+                            <tr>
+                                <td><input type="hidden" name="code" value="{$code}" /></td>
+                                <td colspan="2"><input type="submit" class="button btn-bred" value="重置密码"></td>
+                            </tr>
+                        </table>
+                    </form>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+	</div>
+</div>    
+<load href="{:cdn('PUBLIC')}/app/validate/formValidator-4.1.1.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/themes/126/js/theme.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/themes/126/style/style.css?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/formValidatorRegex.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/common/js/validate.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/common/js/resizeImg.js?{:C('JS_VERSION')}" />
+<script type="text/javascript">
+<!--
+	var gionee_repwd = {
+		verifyForm : function() {
+			$.formValidator.initConfig({
+				theme : "126",
+				errorFocus : false,
+				formID : "regform"
+			});
+			$("#pwd").formValidator({
+				onShowFixText : "6~16个字符，包括字母、数字、特殊符号，区分大小写",
+				onShow : "请输入密码",
+				onFocus : "至少6个长度",
+				onCorrect : " "
+			}).inputValidator({
+				min : 6,
+				max : 16,
+				empty : {
+					leftEmpty : false,
+					rightEmpty : false,
+					emptyError : "密码两边不能有空符号"
+				},
+				onError : "密码长度错误,请确认"
+			});
+			$("#repwd").formValidator({
+				onShowFixText : "请再次输入密码",
+				onShow : "输再次输入密码",
+				onFocus : "至少6个长度",
+				onCorrect : " "
+			}).inputValidator({
+				min : 1,
+				empty : {
+					leftEmpty : false,
+					rightEmpty : false,
+					emptyError : "重复密码两边不能有空符号"
+				},
+				onError : "重复密码不能为空,请确认"
+			}).compareValidator({
+				desID : "pwd",
+				operateor : "=",
+				onError : "2次密码不一致,请确认"
+			});
+			$("#authcode").formValidator({
+				onShow : "输入验证码",
+				onFocus : "输入验证码",
+				onCorrect : " "
+			}).inputValidator({
+				min : 1,
+				empty : {
+					leftEmpty : false,
+					rightEmpty : false,
+					emptyError : "请输入正确的验证码"
+				},
+				onError : "验证码不能为空"
+			}).ajaxValidator({
+				dataType : "json",
+				async : true,
+				url : "/Auth/authcode/ajax/1",
+				success : function(data) {
+					if (data.status == "0"){
+						gionee_repwd.fleshVerify();
+						return false;
+					}else{
+						return true;
+					}
+				},
+				buttons : $("#submit"),
+//				error : function(jqXHR, textStatus, errorThrown) {
+//					alert("服务器没有返回数据，可能服务器忙，请重试" + errorThrown);
+//				},
+				onError : "验证码不正确",
+				onWait : " "
+			});
+		},
+		fleshVerify : function(type) {
+			//重载验证码
+			var timenow = new Date().getTime();
+			var url = "__URL__/verify/" + (type ? "adv/1/" : "") + timenow;
+			$('#verifyImg').attr("src", url);
+		}
+	};
+	jQuery(function($) {
+		gionee_repwd.verifyForm();
+	});
+//-->
+</script>
+<include file="Public:footer" />

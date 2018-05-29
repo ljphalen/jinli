@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<?php if($cache) {?>
+<html manifest="/cache?cn=<?php echo $cn;?>">
+<?php } else {?>
+<html>
+<?php }?>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="stylesheet" href="<?php echo $staticResPath;?>/news/assets/css/3g.news.css?v=<?php echo $version;?>" />
+
+<title>新闻列表页</title>
+</head>
+
+<body>
+<section class="wrapper">
+	<header>
+		<div class="ui-toolbar">
+			<div class="ui-toolbar-wrap">
+				<div class="ui-toolbar-left"></div>
+				<h2 class="ui-toolbar-title"><?php echo $name;?></h2>
+				<div class="ui-toolbar-right J_news_more">
+					<span class="icon-label">更多</span>
+					<span class="icon-arrow">
+						<i class="up">▲</i>
+						<i class="down">▼</i>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="news-menu-wrap news-menu-cate-wrap ishide">
+			<nav class="news-menu">
+				<ul class="news-menu-ul">
+					<?php foreach($types as $key=>$value){?>
+					<li class="item"><a href="<?php echo $webroot.'/news/list?id='.$value['id'].'&tj_listtype='.$value['id'];?>"><?php echo $value['name'];?></a></li>
+					<?php }?>
+				</ul>
+			</nav>
+		</div>
+	</header>
+	<section id="content">
+		<!-- your code in here -->
+		<?php 
+			$i=0; 
+			foreach($column as $key=>$value){
+		?>
+		<div class="news-list-box">
+			<h3 class="news-list-head"><?php echo $value['name'];?></h3>
+			<ul class="ui-list">
+				
+				<?php 
+				$j=0;
+				foreach($news[$value['id']] as $k=>$v){ 
+					if($i==0 && $j==0 && $v['img'] != null){
+				?>
+				<li class="ui-list-img">
+					<a href="<?php echo $webroot.'/news/detail?id='.$v['id'].'&column='.$value['name'].'&tj_listtype='.$value['id'];?>">
+						<img src="<?php echo $v['img'];?>" />
+						<span><?php echo $v['title'];?></span>
+					</a>
+				</li>
+				<?php }$j++;?>
+				<li class="ui-list-item" <?php if($j==1 && $i==0 && $v['img'] != null) echo 'style="display:none;"';?> ><a href="<?php echo $webroot.'/news/detail?id='.$v['id'].'&column='.$value['name'].'&tj_listtype='.$value['id'];?>"><?php echo $v['title'];?></a></li>
+				<?php }
+				if($value['ad']){
+				?>
+				<li class="ui-list-item"><a href="<?php echo Common::clickUrl($value['id'], 'NEWSAD', $value['link'], $t_bi);?>"><?php echo $value['ad'];?></a></li>
+				<?php }?>
+			</ul>
+		</div>
+		<?php $i++;}?>
+	</section>
+	<a href="javascript:window.scrollTo(0,1);" class="ui-gotop"></a>
+</section>
+<script src="<?php echo $staticPath;?>/??/sys/icat/1.1.5/icat.js,/apps/3g/news/assets/js/news.js?v=<?php echo $version;?>"></script>
+<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

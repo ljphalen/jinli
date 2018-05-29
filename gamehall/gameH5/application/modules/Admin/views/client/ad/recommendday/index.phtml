@@ -1,0 +1,88 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $recommendUrl;?>">游戏推荐列表</a></li>
+        <li class="current"><a href="<?php echo $listUrl;?>">每日一荐</a></li>
+        
+        <!--  
+        <li><a href="<?php echo $closeUrl;?>">推荐开关</a></li>
+        -->
+        
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input" name="title" value="<?php echo $search['title'];?>"></td>
+			<th class="th">状态</th>
+			<td class="td"><select name="status">
+                	<option value="0"></option>
+                	<option <?php if($search['status'] == 2) echo 'selected';?> value="2">开启</option>
+                	<option <?php if($search['status'] == 1) echo 'selected';?> value="1">关闭</option>
+            </select></td>
+			<th class="th">生效时间</th>
+			<td class="td">
+			<div><input type="text" class="input" name="start_time" id="start_time" value="<?php echo $search['start_time'];?>"> 至 
+			<input type="text" class="input" name="end_time" id="end_time" value="<?php echo $search['end_time'];?>"></div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+    <span class="btn2"><span><button onclick="$('#action').val('delete');" type="submit">删除</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('sort');" type="submit">重新排序</button></span></span>
+	<span class="btn2"><span><a href="<?php echo $addUrl;?>" style="text-decoration:none;color:#ffffff;">添加推荐</a></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="20"><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="20">排序</td>
+			<td width="50">游戏ID</td>
+			<td width="50">标题</td>
+			<td width="100">描述</td>
+			<td width="50">生效时间</td>
+			<td width="30">状态</td>
+			<td width="100">操作</td>
+		</tr>
+		<?php foreach($list as $key => $value) {?>
+		  <tr class="ct">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><input type="text" class="input" style="width:30px" name="sort[<?php echo $value['id'];?>]" value="<?php echo $value['sort'];?>"></td>
+			<td><img src="<?php echo $value['gameIcon'];?>" style="width:70px;height:70px;"/></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $value['content'];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['start_time']);?><br><?php echo date('Y-m-d H:i:s', $value['end_time']);?></td>
+			<td><?php echo $value['status'] == 1 ? '开启' : '关闭';?></td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+	 <?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $listUrl;?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

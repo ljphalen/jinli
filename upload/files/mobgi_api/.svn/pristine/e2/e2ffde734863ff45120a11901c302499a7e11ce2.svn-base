@@ -1,0 +1,66 @@
+<link rel="stylesheet" href="{{rootUrl}}/css/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/Categorywidget_sdk.js"></script>
+
+<div class="colMain">
+    <div class="title">
+        <p class="fl">渠道限制配置</p>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="app-detail" style="">
+                <form method="POST" action="/implantable/blacklistSave" style="">
+                    <ul class="form" style="">
+                        <li>
+                            <span class="label">渠道黑名单：</span>
+                            <div class="fc addChannel">
+                                <div class="clearfix config" id="channels_box"></div>
+                                <script>
+                                    function channel_id(){
+                                        <!-- if {{channel}} -->
+                                            <!-- loop channel -->
+                                                $("#channel_id").append("<option selected value='{{channel_id' key}}'>{{channel_id' value}}</option>")
+                                            <!-- endloop -->
+                                        <!-- endif -->
+                                    }
+                                </script>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="fc">
+                                <input type="button" class="submit" value="保存" onclick="checksubmit()">
+                                <input type="button" onclick="window.location.href = '/implantable/blacklist'" class="cancel" value="取消">
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function checksubmit(){
+    $('form').submit();
+}
+
+
+//渠道
+    var Cs = new Categorywidget_sdk({
+        interfaceName: 'Cs',
+        boxId: 'channels_box',
+        ComboId: 'channels_list',
+        ComboName: 'n1',
+        ComboSaveId: 'channel_id',
+        ComboSaveName: 'channel_id[]',
+        DataConfig: {text: 'realname', value: 'identifier'},
+        DataSourceConfig: {
+            CategoryListCombo: '{{channelUrl}}sys_groups/getCategoryListCombo',
+            CategoryDataUrl: '{{channelUrl}}channels_in_groups/GetLinkChannels',
+            DataType: 'channels'
+        }
+    });
+    channel_id();
+
+</script>

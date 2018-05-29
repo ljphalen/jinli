@@ -1,0 +1,51 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body>
+    <div class="module dhm-orders">
+        <ul class="orders-status layout-center">
+            <li><span>订单号：<i><?php echo $order['trade_no']; ?></i></span></li>
+            <li><span>提货码：<i><?php echo $order['get_token']; ?></i></span></li>
+            <li><span>订单状态：<em><?php echo $order['statusMsg']; ?></em></span></li>
+            <li>
+                <span>提货时间：</span>                
+                <p><?php echo $order['get_time']; ?></p>
+            </li>
+            <li>
+                <span>提货地址：</span>
+                <p><?php echo $address['detail_address']; ?></p>
+            </li>
+        </ul>
+        <dl class="dl-orders layout-center">
+            <dt>购物清单</dt>
+            <dd class="cat-list">
+                <ul class="goods-list">
+                    <?php foreach($goods as $item): ?>
+                        <li>
+                            <ul class="goods-item">
+                                <li>
+                                    <img src="<?php echo $staticPath;?>/assets/img/blank.gif" data-src="<?php echo $attachroot . $item['img']; ?>">
+                                </li>
+                                <li>
+                                    <p class="title"><?php echo $item['title']; ?></p>
+                                </li>
+                                <li>
+                                    <p class="price">￥<?php echo $item['deal_price']; ?></p>
+                                    <p>X<?php echo $item['goods_num']; ?></p>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </dd>
+        </dl>
+        <div class="total-bar layout-center">
+            <span>共<em><?php echo $order['total_goods_num']; ?></em>件商品</span>
+            <span>合计：<em>￥<?php echo $order['real_price']; ?></em></span>
+        </div>
+    </div>
+
+<?php echo $this->render("layout/footer.phtml");?>
+<script>
+    require(['lazyload']);
+</script>
+</body>
+</html>

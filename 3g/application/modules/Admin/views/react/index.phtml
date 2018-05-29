@@ -1,0 +1,57 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $listUrl; ?>">反馈列表</a></li>
+		<li><a href="<?php echo $optionsUrl; ?>">问题选项列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl; ?>" method="post">
+	<input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">联系方式</th>
+				<td class="td">
+					<input class="input" type="text" name="contact" value="<?php echo $search['contact']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td">
+					<select name="status">
+						<?php foreach ($status as $k => $v) { ?>
+							<option value="<?php echo $k ?>" <?php if ($search['status'] == $k) echo 'selected'; ?>><?php echo $v; ?></option>
+						<?php } ?>
+					</select>
+
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="5%">编号</td>
+			<td width="8%">反馈类型</td>
+			<td width="30%">选择项</td>
+			<td width="30%">反馈内容</td>
+			<td width="15%">联系方式</td>
+			<td width="12%">添加时间</td>
+		</tr>
+		<?php foreach ($reacts as $key => $row) { ?>
+			<tr class="ct">
+				<td><?php echo $row['id']; ?></td>
+				<td><?php echo $menu[$row['menu_id']]; ?></td>
+				<td><?php echo $row['checked_list']; ?></td>
+				<td><?php echo $row['react']; ?></td>
+				<td><?php echo $row['contact']; ?></td>
+				<td><?php echo date('Y-m-d H:i:s', $row['create_time']); ?></td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

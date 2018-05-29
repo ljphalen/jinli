@@ -1,0 +1,93 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">商品列表</a></li>
+    <li class="current"><a href="javascript:;">编辑商品</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑商品</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="store_id" value="<?php echo $item['id'];?>" type="hidden" />
+<input name="status" value=1 type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">商品名称</th>
+			<td class="td"><?php echo $item['title'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">商品价格</th>
+			<td class="td"><?php echo $item['price'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">期数</th>
+			<td class="td"><input type="text" class="input" name="no">(第几期，请填写一个数字)</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">起始价</th>
+			<td class="td">
+                <input type="text" class="input" name="price" value="<?php echo $item['price'];?>">
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">最低价</th>
+			<td class="td">
+                <input type="text" class="input" name="min_price" placeholder="0.00">
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">最高价</th>
+			<td class="td">
+                <input type="text" class="input" name="range"  placeholder="0.00">
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">N次增幅</th>
+			<td class="td">
+                <input type="text" class="input" name="increase"  placeholder="0.00">
+			</td>
+		</tr>
+        
+		<tr class="tr">
+			<th class="th">开始结束时间</th>
+			<td class="td">
+				<div>
+					<input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo sprintf('%s 10:00', date('Y-m-d', time()+3600*24));?>" /> 至
+					<input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo sprintf('%s 23:00', date('Y-m-d', time()+3600*24));?>" />
+				</div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				<select name="status">
+					<?php foreach ($status as $k=>$state) : ?>
+						<option <?php if($k == 1) echo 'selected';?> value="<?php echo $k; ?>"><?php echo $state; ?></option>
+					<?php endforeach; ?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input wa" name="sort" value="0"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+
+//商品表单数据提交
+$(document).ready(function(){
+    $('#start_time').datetimepicker();
+    $('#end_time').datetimepicker();
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, '<?php echo Util_Http::getServer('HTTP_REFERER'); ?>');
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

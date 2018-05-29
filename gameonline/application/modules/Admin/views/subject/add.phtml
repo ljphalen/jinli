@@ -1,0 +1,89 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">专题列表</a></li>
+    <li class="current"><a href="javascript:;">添加专题</a></li>
+	</ul>
+</div>
+<div class="h_a">添加专题</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="0"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">专题名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+		</tr>
+		<tr class="tr" style="display:none">
+			<th class="th">是否推荐专题</th>
+			<td class="td">
+				<label class="mr20"><input name="hot"  value="1" type="radio">是</label>
+				<label class="mr20"><input name="hot"  checked value="0" type="radio">否</label>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">专题图标</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="sicon">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="icon" value="">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=sicon';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">专题图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="simg">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="img" value="">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=simg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">开始结束时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status">
+                	<option value="1">开启</option>
+                	<option value="0">关闭</option>
+            </select></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+     showContent = function(flag) {
+ 		if (flag == 2) {
+ 			$("#link").hide();
+ 		} else {
+ 			$("#link").show();
+ 		}
+ 	}
+ 	showContent(1);
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Subject/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

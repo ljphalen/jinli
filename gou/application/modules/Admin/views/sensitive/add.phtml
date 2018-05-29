@@ -1,0 +1,42 @@
+<?php echo $this->render("layout/header.phtml");?>
+    <div class="nav">
+        <ul class="cc">
+            <li><a href="<?php echo $indexUrl;?>">敏感词列表</a></li>
+            <li class="current"><a href="javascript:;">添加敏感词</a></li>
+        </ul>
+    </div>
+    <div class="h_a">编辑敏感词</div>
+    <form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+        <input name="token" value="<?php echo $token;?>" type="hidden" />
+
+        <div class="table_full">
+            <table width="100%">
+                <tr class="tr">
+                    <th class="th">关键词</th>
+                    <td class="td"><textarea name="kwd" cols="87" rows="3" placeholder="多个敏感词以‘|’隔开"></textarea></td>
+                </tr>
+            </table>
+        </div>
+        <div class="mb10 tac">
+            <span class="btn"><span><button onfocus="changeAction(1);" type="submit">添加</button></span></span>
+            <span class="btn"><span><button onfocus="changeAction(0);" data-type="delete" type="submit">删除</button></span></span>
+        </div>
+    </form>
+    <script type="text/javascript">
+
+        function changeAction(e){
+            if(e==1){
+                $("#addForm").attr('action','<?php echo $addPostUrl;?>')
+            }else{
+                $("#addForm").attr('action','<?php echo $deleteUrl;?>')
+            }
+        }
+        //用户表单数据提交
+
+        $(document).ready(function(e){
+            ajaxForm('addForm',function(ret){
+                ajaxRedirect(ret, baseurl+'/Admin/Sensitive/index?s=1');
+            });
+        });
+    </script>
+<?php echo $this->render("layout/footer.phtml");?>

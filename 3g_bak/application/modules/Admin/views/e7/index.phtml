@@ -1,0 +1,68 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $listUrl; ?>">报名用户列表</a></li>
+		</ul>
+	</div>
+	<form action="<?php echo $listUrl; ?>" method="post">
+		<input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">用户名</th>
+					<td class="td"><input class="input " type="text" name="name" value="<?php echo $param['name']; ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">手机号</th>
+					<td class="td">
+						<input class="input " type="text" name="mobile" maxlength="11" value="<?php echo $param['mobile']; ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">时间区间</th>
+					<td class="td">
+						<div>
+							<input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value=""/> 至
+							<input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value=""/>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+
+	</form>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="60">编号</td>
+				<td width="200">用户名</td>
+				<td width="200">手机号</td>
+				<td width="200">报名时间</td>
+			</tr>
+			<?php foreach ($list as $key => $value) { ?>
+				<tr class="ct">
+					<td><?php echo $value['id']; ?></td>
+					<td><?php echo $value['name']; ?></td>
+					<td><?php echo $value['mobile']; ?></td>
+					<td><?php echo date('Y-m-d H:i:s', $value['create_time']); ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#start_time').datetimepicker();
+			$('#end_time').datetimepicker();
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/E7/index');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

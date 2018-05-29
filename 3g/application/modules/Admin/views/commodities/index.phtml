@@ -1,0 +1,83 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $indexUrl; ?>">商品列表</a></li>
+			<li><a href="<?php echo $editUrl; ?>">添加商品</a></li>
+			<li><a href="<?php echo $importUrl; ?>">批量导入虚拟商品</a></li>
+		</ul>
+	</div>
+	<div class="table_full">
+		<form action="<?php echo $indexUrl; ?>" method="POST" id="form">
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<table width="100%" cellspacing="0" cellpadding="0">
+				<tr class="tr">
+					<th class="th">选择状态：</th>
+					<td class="td">
+						<select name="cat_id" id="cat_id">
+							<option value="0">请选择</option>
+							<?php foreach ($cateList as $k => $v) { ?>
+								<option <?php echo ($v['id'] == $cat_id) ? 'selected="selected"' : ''; ?>  value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">选择状态：</th>
+					<td class="td">
+						<select name="status" id="status">
+							<option value="-1">请选择</option>
+							<?php foreach ($statusList as $k => $v) { ?>
+								<option <?php echo isset($status) && ($k == $status) ? 'selected="selected"' : ''; ?> value="<?php echo $k; ?>"><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+		</form>
+	</div>
+
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+				<th class="th">名称</th>
+				<th class="th">分类</th>
+				<th class="th">单价</th>
+				<th class="th">消费金币数</th>
+				<th class="th">总库存</th>
+				<th class="th">前台显示数</th>
+				<th class="th">显存兑换比</th>
+				<th class="th">开始时间</th>
+				<th class="th">结束时间</th>
+				<th class="th">排序</th>
+				<th class="th">状态</th>
+				<th class="th">操作</th>
+			</tr>
+			<?php foreach ($data as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['id'];?></td>
+					<td class="td" align="left"><?=$v['name'];?></td>
+					<td class="td"><?php echo $v['cat_name'] ?></td>
+					<td class="td" style="color: blue"><?php echo $v['price']; ?></td>
+					<td class="td" style="color: blue"><?php echo $v['scores']; ?></td>
+					<td class="td" style="color: blue"><?php echo $v['number']; ?></td>
+					<td class="td"  style="color: blue"><?php echo $v['show_number']; ?></td>
+					<td class="td" style="color: blue"><?php echo $v['num_ratio']; ?></td>
+					<td class="td"><?php echo date('Y-m-d H:i:s', $v['start_time']) ?></td>
+					<td class="td"><?php echo date('Y-m-d H:i:s', $v['end_time']) ?></td>
+					<td class="td"><?php echo $v['sort']; ?></td>
+					<td class="td" style='color:blue'><?php echo $v['status'] ? '开启' : '结束'; ?></td>
+					<td class="td"><a href="<?php echo $editUrl; ?>/?id=<?php echo $v['id']; ?>">编辑</a>&nbsp;
+						<a href="javascript:void(0);" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $v['id']; ?>', '', event);">删除</a>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

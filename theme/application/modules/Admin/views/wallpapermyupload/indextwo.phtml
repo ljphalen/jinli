@@ -1,0 +1,90 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+
+<script type="text/javascript"
+src="<?php echo $staticPath . '/appjs/wallpapermyupload/indextwo.js' ?>"></script>
+<!-- 导航栏Ajax加载 指向navagator.html  menuOn表示分别需要高亮的菜单栏id 用下划线_隔开 eg:bz_taotu_taotuPack-->
+<section class="navigator" menuOn="bz_bzUpload">
+
+</section>
+
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- 页面唯一id标识符  一般情况下id=文件名  eg:bz_admin_taotu02-->
+    <div id="bz_usr_upload02">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <table class="view_list_tb">
+                <thead>
+                    <tr><th>壁纸</th><th>名称</th><th>标签</th><th>分辨率</th><th>操作</th><!--<th>来源</th>--></tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($wallpaperup as $v) { ?>
+                        <tr>
+                            <td><img src="<?php echo $v['url'] ?>"  /></td>
+                            <td>
+                                <input type="text" class="rd_1" value="<?php echo $v['wallpaper_name'] ?>">
+                                <input type="hidden" class ="wp_name" name="wallpaperId" value="<?php echo $v["wallpaper_id"] ?>">
+
+                            </td>
+                            <td>
+                                <div class="select_box">
+                                    <label class="select_val">全部</label>
+                                    <ul class="select_option">
+                                        <?php foreach ($targs as $targ) { ?>
+                                            <li value="<?php echo $targ['w_type_id'] ?>"><?php echo $targ["w_type_name"] ?></li>
+                                        <?php } ?>
+                                    </ul>
+                                </div><!-- select_box -->
+                            </td>
+                            <td><?php echo ($v["wallpaper_width"] . "X" . $v['wallpaper_height']) ?></td>
+                            <td><a class="btn_txt pop_btn row_del" openPopId="fixTipViewdel" id="del" valueKey="<?php echo $v['wallpaper_id']; ?>">删除</a></td>
+                            <!--<td><input type="text" class="rd_1" value="<?php echo $v['wallpaper_user'] ?>"></td>-->
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+
+            <div class="bnts_wrap"><button class="btn_s2 pop_btn" openPopId="fixTipView" id="bzUsrUploadDone">完成</button></div>
+
+        </div><!-- content end -->
+
+    </div>
+</section>
+
+
+
+<!--del 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipViewdel">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">确定删除？</p>
+                    <div class="tip_btns"><button class="btn_s2" id="uploadConfirm">确定</button>
+                        <button class="btn_s2 btnCancel">取消</button></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">您已成功上传<?php echo count($wallpaperup) ?>张壁纸至壁纸列表</p>
+                    <div class="tip_btns"><button class="btn_s2 " id="upload02ViewList">查看壁纸列表</button><button class="btn_s2" id="upload02UploadMore">上传更多壁纸</button></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+</body>
+</html>

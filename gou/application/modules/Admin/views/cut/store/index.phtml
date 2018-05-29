@@ -1,0 +1,87 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">商品列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加商品</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+            <th class="th">商品名称</th>
+            <td class="td">
+                <input type="text" name="title" class="input wc" value="<?php echo $search['title']; ?>"/>
+            </td>
+			<th class="th">商品分类</th>
+			<td class="td">
+			<select name="type_id" class="wa">
+                <option value="0">所有</option>
+                <?php foreach ($type as $key => $value) { ?>
+                    <option <?php if ($value['id'] == $search['type_id']) echo 'selected'; ?>
+                      value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                <?php } ?>
+			</select>
+			</td>			
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('sort');" type="submit">重新排序</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">关闭</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">开启</button></span></span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		<td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+		<td width="30">排序</td>
+			<td width="30">ID</td>
+			<td>商品名称</td>
+			<td>图片</td>
+            <td>原价</td>
+            <td>商品类型</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+        <?php foreach($goods as $key => $value) {?>
+		<tr class="ct">
+		<td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><input type="text" class="input" style="width:30px" name="sort[<?php echo $value['id'];?>]" value="<?php echo $value['sort'];?>"></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><img src="<?php if(strpos($value['img'], 'http://') === false) {echo $attachPath,$value['img'];}else{echo $value['img'],'_24x24.jpg';};?>" width="20" height="20"/></td>
+	        <td><?php echo $value['price'];?></td>
+	        <td><?php echo $type[$value['type_id']]['name'];?></td>
+			<td><?php echo $value['status'] == 1 ? '开启' : '关闭';?></td>
+			<td>
+				<a href="<?php echo $upUrl;?>/?store_id=<?php echo $value['id'];?>" class="mr10" >上架</a>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+
+     ajaxForm('batchForm',function(ret){
+ 		ajaxRedirect(ret, baseurl+'/Admin/Cut_Store/index');
+ 	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

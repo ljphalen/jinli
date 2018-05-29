@@ -1,0 +1,210 @@
+<script language="javascript">
+function checksubmit(){
+    if($("#config_name").val() == ''){
+        alert('导量配置名称不能为空');
+        $("#config_name").focus();
+        return false;
+    }
+    if($("#product_id").val()=="")
+    {
+        alert("请选择导量产品");
+        return false;
+    }
+    //多选项必须选至少一个。
+    if($("#platform").find("option:selected").text() + '-' + $("#mober").find("option:selected").text()== "Android-AMAX" && $("input[name='app_cat[]']:checked").length == 0){
+        alert("请选择应用类型");
+        return false;
+    }
+    if($("input[name='mobile_type[]']:checked").length == 0){
+        alert("请选择手机品牌");
+        return false;
+    }
+    if($("input[name='carrieroperator[]']:checked").length == 0){
+        alert("请选择运营商");
+        return false;
+    }
+    if($("input[name='network_environment[]']:checked").length == 0){
+        alert("请选择网络环境");
+        return false;
+    }
+    if($("input[name='screen_orientation[]']:checked").length == 0){
+        alert("请选择屏幕方向");
+        return false;
+    }
+    if($("input[name='geographical_position[]']:checked").length == 0){
+        alert("请选择地理位置");
+        return false;
+    }
+    $("#channel").removeAttr("readonly");
+    $('form').submit();
+}
+
+function autoPlatform(productid) {
+    ajaxPOST("/reproduct/autoPlatform", {"platform": $("#platform").val()}, function(data) {
+        var length = data.length;
+        str = '<option value=""></option>';
+        for (i=0; i<length; i++)
+        {
+            if_selecte='';
+            if(productid == data[i].id)
+            {
+                if_selecte =  'selected="selected"';
+            }   
+            str += '<option value="'+data[i].id+'" '+if_selecte+'>'+data[i].platform_product_name+'</option>'
+        }
+        $("#product_id").html(str);
+        //重新绑定select的选择组件
+        $("#product_id").removeClass("chzn-done");
+        $("#product_id_chzn").remove();
+        $("#product_id").chosen({});
+    })
+    update_platform_mober();
+}
+
+function update_platform_mober(){
+    var platform_mober = $("#platform").find("option:selected").text() + '-' + $("#mober").find("option:selected").text();
+    $("#platform_mober_title").html(platform_mober);
+    var channelarr = new Array();
+    <!-- loop rtbchannel -->
+        channelarr['{{rtbchannel' key}}']="{{rtbchannel.ANDROID' value}}";
+    <!-- endloop -->
+    var platform_mober_ = $("#platform").find("option:selected").text() + '_' + $("#mober").find("option:selected").text();
+    $("#channel").val(channelarr[platform_mober_]);
+    change_standard();
+}
+
+
+function change_standard(standard){
+    var standarr = new Array();
+    <!-- loop standard -->
+        <?php foreach($v1 as $k2=>$v2): ?>
+            standarr["<?php echo $k2; ?>_<?php echo $k1; ?>"]="<?php echo $v2; ?>";
+        <?php endforeach; ?>
+    <!-- endloop -->
+    var standard = standarr[$("#platform").find("option:selected").text()+"_"+$("#mober").val()];
+    var config_id = "{{configInfo.id}}"
+    ajaxPOST("/rtb/changeRtbStandard", {"standard": standard, "config_id":config_id}, function(data) {
+        $("#app_cat_div").html(data.cat_app_options);
+        $("#carrieroperator_div").html(data.carrieroperator_options);
+        $("#network_environment_div").html(data.net_environment_options);
+        $("#screen_orientation_div").html(data.screen_orientation_options);
+        if($("#platform").find("option:selected").text()=="Android"){
+            $("#mobile_type_div").html(data.android_mobile_type_options);
+        }else if($("#platform").find("option:selected").text()=="IOS"){
+            $("#mobile_type_div").html(data.ios_mobile_type_options);
+        }
+        //绑定事件
+        $(".cat_checkbox").click(function(){
+            var cat_level = $(this).attr('cat_level');
+            if($(this).attr("checked")){
+                $("input.cat_checkbox[cat_level*='"+cat_level+"']").attr("checked", "true");
+                //钩选二级目录展示三级选项
+                if($(this).hasClass("app_cat_2_input")){
+                    $(".app_cat_3 span[cat_level='"+cat_level+"']").show();
+                }
+                //钩选一级目录展示三级选项
+                if($(this).hasClass("app_cat_1_input")){
+                    $(".app_cat_3 span[cat_level*='"+cat_level+"']").show();
+                }
+            }else{
+                $("input.cat_checkbox[cat_level*='"+cat_level+"']").removeAttr("checked");
+                //取消钩选二级目录隐藏三级选项
+                if($(this).hasClass("app_cat_2_input")){
+                    $(".app_cat_3 span[cat_level='"+cat_level+"']").hide();
+                }
+                //取消钩选一级目录隐藏三级选项
+                if($(this).hasClass("app_cat_1_input")){
+                    $(".app_cat_3 span[cat_level*='"+cat_level+"']").hide();
+                }
+            }
+            syncCheckbox()
+        });
+        syncCheckbox();
+    })
+}
+
+function syncCheckbox(){
+    //如果存在三级目录，则判断二级目录下的子项全部选中，则二级的checkbox设置选中状态
+    if($(".app_cat_3").length != 0){
+        $("input.app_cat_2_input").each(function(){
+            var cat_level = $(this).attr('cat_level');
+            if($("input.cat_checkbox[cat_level*='"+cat_level+"'][type='checkbox']:not(.app_cat_2_input)").length == $("input.cat_checkbox[cat_level*='"+cat_level+"'][type='checkbox']:not(.app_cat_2_input)[checked]").length){
+                $(this).attr("checked", "true");
+            }else{
+                $(this).removeAttr("checked");
+            }
+        });
+    }
+    
+    //如果一级目录下的二级子项全部选中，则一级的checkbox设置选中状态
+    $("input.app_cat_1_input").each(function(){
+        var cat_level = $(this).attr('cat_level');
+        if($("input.cat_checkbox[cat_level*='"+cat_level+"'][type='checkbox'].app_cat_2_input").length == $("input.cat_checkbox[cat_level*='"+cat_level+"'][type='checkbox'].app_cat_2_input[checked]").length){
+            $(this).attr("checked", "true");
+        }else{
+            $(this).removeAttr("checked");
+        }
+    });
+}
+
+//应用类型是否全选
+function app_cat_check_all(){
+    if($("#app_cat_all").is(":checked")){
+        $("#app_cat_div input.cat_checkbox.app_cat_1_input").prop("checked", "checked");
+        $("#app_cat_div input.cat_checkbox.app_cat_2_input").prop("checked", "checked");
+        $(".app_cat_3 span").show();
+        $("input[name='app_cat[]']").prop("checked", "checked");
+    }else{
+        $("#app_cat_div input.cat_checkbox.app_cat_1_input").removeAttr("checked");
+        $("#app_cat_div input.cat_checkbox.app_cat_2_input").removeAttr("checked");
+        $(".app_cat_3 span").hide();
+        $("input[name='app_cat[]']").removeAttr("checked");
+    }
+}
+
+//手机类型是否全选
+function mobile_type_check_all(){
+    if($("#mobile_type_all").attr("checked")){
+        $("input[name='mobile_type[]']:not(:last)").attr("checked", "true");
+    }else{
+        $("input[name='mobile_type[]']").removeAttr("checked");
+    }
+}
+
+//运营商
+function carrieroperator_check_all()
+{
+    if($("#carrieroperator_all").attr("checked")){
+        $("input[name='carrieroperator[]']:not(:last)").attr("checked", "true");
+    }else{
+        $("input[name='carrieroperator[]']").removeAttr("checked");
+    }
+}
+
+//网络环境
+function network_environment_check_all(){
+    if($("#network_environment_all").attr("checked")){
+        $("input[name='network_environment[]']:not(:last)").attr("checked", "true");
+    }else{
+        $("input[name='network_environment[]']").removeAttr("checked");
+    }
+}
+
+//屏幕方向
+function screen_orientation_check_all(){
+    if($("#screen_orientation_all").attr("checked")){
+        $("input[name='screen_orientation[]']").attr("checked", "true");
+    }else{
+        $("input[name='screen_orientation[]']").removeAttr("checked");
+    }
+}
+
+//地理位置
+function geographical_position_check_all(){
+    if($("#geographical_position_all").attr("checked")){
+        $("input[name='geographical_position[]']:not(:last)").attr("checked", "true");
+    }else{
+        $("input[name='geographical_position[]']").removeAttr("checked");
+    }
+}
+</script>

@@ -1,0 +1,33 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+	<div class="module">
+	<?php if($hasheader){?>
+		<header id="iHeader" class="hd">
+			<div class="top-wrap">
+				<div class="title">
+					<a href="<?php echo $webroot;?>/amigo/service/index" class="back"></a>
+					<h1>订单查询</h1>
+					<span class="voice"></span>
+				</div>
+			</div>
+		</header>
+		<?php }?>
+
+		<section id="iScroll">
+			<div class="input-form">
+				<form action="<?php echo $webroot;?>/amigo/order/searchlist" method="post">
+				<input type="hidden" name="token" value="<?php echo $token;?>"> 
+					<fieldset>
+						<ul>
+							<li><input type="text" name="buyer_name" placeholder="请输入收货人姓名" data-error="请输入收货人姓名"></li>
+							<li><input type="text" name="mobile" placeholder="请输入手机号码"  data-error="请输入手机号码"></li>
+						</ul>
+					</fieldset>
+					<div class="web-btn"><button  class="J_formVerify">立即查询</button></div>
+				</form>
+			</div>
+		</section>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div id="page">
+	<div id="paccount">
+		<div class="mainWrap">
+			<!-- 公共头部 -->
+			<header class="hdWrap">
+				<div class="hd-l"><a href="<?php echo $webroot;?>/user/userinfo/index" class="l-arrow">back</a></div>
+				<div class="hd-r"><h1>详细资料</h1></div>	
+			</header>
+			<!-- 内容区域 START-->
+			<div class="module">
+				<div class="form">
+					<form name="account-form" id="J_saveForm" action="<?php echo $webroot.$editstep2PostUrl;?>">
+						<div class="form-field">
+							<div class="form-input form-text">
+								<div><label>QQ：</label></div>
+								<div><input type="text" name="qq" autocomplete="off" maxlength="20" value="<?php echo $user_info['qq'];?>" /></div>
+							</div>
+						</div>
+						<div class="form-field">
+							<div class="form-input form-text">
+								<div><label for="">Email：</label></div>
+								<div><input type="text" autocomplete="off" name="email" value="<?php echo $user_info['email'];?>" /></div>
+							</div>
+						</div>
+						
+						<div class="form-field">
+							<div class="form-select">
+								<div><label for="">生日：</label></div>
+								<div>
+									<select name="year">
+										<option>请选择年</option>
+										<?php foreach($year_list as $key=>$value) {?>
+										<option value="<?php echo $value;?>" <?php echo $year == $value ? 'selected': '' ;?>><?php echo $value;?></option>
+									<?php }?>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="form-field">
+							<div class="form-select">
+								<div><label for=""></label></div>
+								<div>
+									<select name="month">
+										<option>请选择月</option>
+										<?php foreach($month_list as $key=>$value) {?>
+										<option value="<?php echo $value;?>" <?php echo $month == $value ? 'selected': '' ;?>><?php echo $value;?></option>
+										<?php }?>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="form-field">
+							<div class="form-select">
+								<div><label for=""></label></div>
+								<div>
+									<select name="day">
+									<option>请选择日</option>
+										<?php foreach($day_list as $key=>$value) {?>
+										<option value="<?php echo $value;?>" <?php echo $day == $value ? 'selected': '' ;?>><?php echo $value;?></option>
+										<?php }?>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="form-field">
+							<div class="form-input form-radio">
+								<div><label for="">性别：</label></div>
+								<div>
+									<span>
+										<input type="radio" name="sex" value="2" <?php if($user_info['sex'] == 2 || $user_info['sec'] == 0) echo 'checked=checked' ;?> id="manLabel" />
+										<label for="manLabel">男</label>
+									</span>
+									<span>
+										<input type="radio" name="sex" value="1" <?php echo $user_info['sex'] == 1 ? 'checked=checked':'' ;?> id="womanLabel" /> <label for="womanLabel">女</label>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="form-field">
+							<div class="button">
+								<input type="submit" name="submit" value="保存" class="btn gray" />
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

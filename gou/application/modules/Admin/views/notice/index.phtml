@@ -1,0 +1,40 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">消息列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加消息</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="30">排序</td>
+			<td>标题</td>
+			<td>频道</td>
+			<td>开始时间</td>
+			<td>结束时间</td>
+			<td>点击量</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($notices as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $channels[$value['channel_id']];?></td>
+	        <td><?php echo date('Y-m-d H:i:s', $value['start_time']);?></td>
+	        <td><?php echo date('Y-m-d H:i:s', $value['end_time']);?></td>
+			<td><a href="/admin/stat/click?type_id=6&item_id=<?php echo $value['id'];?>" target="_blank"><?php echo $value['hits'];?></a></td>
+			<td><?php echo $value['status'] == 1 ? '开启' : '关闭';?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

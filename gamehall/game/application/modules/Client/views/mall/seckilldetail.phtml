@@ -1,0 +1,248 @@
+<!DOCTYPE HTML>
+<html >
+<head>
+	<meta charset="UTF-8">
+	<title><?php echo $title ? $title: '金立游戏大厅';?></title> 
+	<meta name="keyword" content="金立, 金立游戏, 游戏大厅" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="email=no" />
+    <link rel="stylesheet" href="<?php echo $staticroot; ?>/apps/game/apkv1/assets/css/points.css?v=<?php echo $version;?>"/>
+    <script>
+    var token = '<?php echo $token;?>';
+    var isLogin = '<?php echo $isLogin ? 'true': 'false';?>';
+    var preheatData = {
+			timeStart:<?php echo Common::getTime();?>,
+			timeEnd:<?php echo $seckillGoods['end_time'];?>
+		}
+    </script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/jquery.js";?>"></script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/touchSwipe.min.js"></script>
+	<script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/Form.js";?>"></script>
+	<script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/Model.js";?>"></script>
+	<script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/Common.js";?>"></script>
+	<script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/fastclick.js";?>"></script>
+	<script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/lazyload-jquery.js";?>"></script>
+	<script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/points/init.js";?>"></script>
+	<script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/points/seckill.js";?>"></script>
+    <meta charset="UTF-8">
+</head>
+<body>
+	<div id="seckill" class="seckill">
+		<div> 
+			<div id="pointerMenu" class="pointer-menu">
+			</div>
+			<ul id="menu" class="menu">
+			   <?php if($pastGoods){?>
+			   <?php foreach($pastGoods as $key=>$value){?>
+				<li>
+					<h1>已结束</h1>
+					<div class="date omit"><?php echo date("m月d日 H:i",$value['end_time']);?>结束</div>
+					<div class="msg omit"><?php echo $value['title'];?></div>
+				</li>
+				<?php } ?>
+				<?php } ?>
+				<?php if($seckillGoods){?>
+				<li class="on">
+					<h1>进行中</h1>
+					<div class="date omit"><?php echo date("m月d日 H:i",$seckillGoods['end_time']);?>结束</div>
+					<div class="msg omit"><?php echo $seckillGoods['title'];?></div>
+				</li>
+				<?php } ?>
+				 <?php if($futureGoods){?>
+			   <?php foreach($futureGoods as $k=>$v){?>
+				<li>
+					<h1>即将开始</h1>
+					<div class="date omit"><?php echo date("m月d日 H:i",$v['end_time']);?>结束</div>
+					<div class="msg omit"><?php echo $v['title'];?></div>
+				</li>
+				<?php } ?>
+				<?php } ?>
+			</ul>
+		</div>
+		<?php if($pastGoods){?>
+		<?php foreach($pastGoods as $k1=>$v1){?>
+		<?php 
+            list($isDiscount, $consumePoint, $discountArr) = Mall_Service_ExchangeGoods::getConsumePoint($v1);
+            list($goodCountDownTitle,$discountTitle) = Mall_Service_ExchangeGoods::getCountDownTitle($v1);
+        ?>
+		<div name="menuContent" class="menu-content end-content">
+			<div class="tm-detail-meta">
+				<div class="title">
+					<h1>火爆进行中</h1>
+					<div class="end-time">结束时间：<span><?php echo date("Y-m-d",$v1['end_time']);?></span></div>
+				</div>
+				<div class="info">
+					<img class="poster"  data-src="<?php echo $attachPath. $v1['img'];?>" src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="">
+					<h1><?php echo $v1['title'];?></h1>
+					
+					<div class="branch">
+						积分：<span class="font-orange discount"><?php echo $v1['consume_point'];?></span>
+						<?php if($isDiscount){?>
+        				&nbsp;&nbsp;&nbsp;&nbsp;<span class="font-orange"><?php echo Mall_Service_Goods::convertPointVal($consumePoint); ?></span>
+        				<?php } ?>
+					</div>
+					
+					<div class="number">剩余：<span class="font-orange"><?php echo $v1['remaind_num']; ?></span>个</div>
+					<input type="button" class="but" disabled="disabled" value="限时秒杀"></span>
+				</div>
+			</div>
+			<div class="prize-info">
+				<h1>奖品内容</h1>
+				<div class="ui-editor"><?php echo html_entity_decode($v1['descrip']);?></div>
+			</div>
+			<div class="rules-info">
+				<h1>兑换规则</h1>
+				<div class="ui-editor"><?php echo html_entity_decode($v1['descrip']);?></div>
+			</div>
+			<div class="article-date">
+				<h1>截止时间</h1>
+				<p><?php echo  date('Y-m-d H:i:s',$v1['end_time']); ?></p>
+			</div>
+		</div>
+		<?php } ?>
+		<?php } ?>
+		
+		<?php if($seckillGoods){?>
+		<?php 
+		  list($detailUrl, $discountPoint, $discountArr) = Mall_Service_Goods::assembleGoodInfo($value, $parmes);
+		  $goodType = ($seckillGoods['type'] == Mall_Service_Goods::ACOUPON ||  $seckillGoods['type'] == Mall_Service_Goods::GIFT ? 'virtual' : 'entity');
+		?>
+		<div name="menuContent" class="menu-content on">
+			<div class="tm-detail-meta">
+				<div class="title">
+					<h1>火爆进行中</h1>
+					<div class="end-time">仅剩：<i id="endTime"><?php echo date("Y-m-d",$seckillGoods['end_time']);?></i></div>
+				</div>
+				<div class="info">
+					<img class="poster"  data-src="<?php echo $attachPath. $seckillGoods['img'];?>" src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="">
+					<h1><?php echo $seckillGoods['title'];?></h1>
+					<div class="branch">
+						积分：<span class="font-orange <?php if($value['discountArr'] && $discountArr['discount_start_time'] <= Common::getTime() && $discountArr['discount_end_time'] > Common::getTime()){?>discount<?php }?>"><?php echo ($exchangeInfo['haveExchangeNum'] || !$exchangeInfo['canExchangeNums']) ? $seckillGoods['consume_point'] : $exchangeInfo['consumeOriginalPoints'];?></span>
+						<?php if($seckillGoods['discountArr'] && $discountArr['discount_start_time'] <= Common::getTime() && $discountArr['discount_end_time'] > Common::getTime()){?>
+						&nbsp;&nbsp;&nbsp;&nbsp;<span class="font-orange"><?php echo ($exchangeInfo['haveExchangeNum']|| !$exchangeInfo['canExchangeNums']) ? $discountPoint : $exchangeInfo['consumePoints'];?></span>
+						<?php } ?>
+					</div>
+					<div class="number">剩余：<span class="font-orange"><?php echo $seckillGoods['remaind_num'];?></span>个</div>
+					
+					<div id="successMsg" class="success-msg" <?php if(is_array($exchangeInfo) && $exchangeInfo['haveExchangeNum']) {?>style="display:block;"<?php }?> >
+					<i class="icon icon-right"></i><h1 class="font-orange">兑换成功</h1>
+					<p class="font-orange omit">在我的奖品中，可查看兑换礼包</p>
+				    </div>
+					<?php if(is_array($exchangeInfo) && $exchangeInfo['canExchangeNums']) {?>
+					<?php $entityType = ($seckillGoods['type'] == Mall_Service_Goods::PHONE_RECHARGE_CARD ? 'true' : 'false');?>
+				    <input class="but" name="buy" type="button" value="限时秒杀" data-type="<?php echo $goodType;?>" entity-type=<?php echo $entityType;?> value="限时秒杀"></input>
+			        <?php }?>
+				</div>
+			</div>
+			<div class="prize-info">
+				<h1>奖品内容</h1>
+				<div class="ui-editor"><?php echo html_entity_decode($seckillGoods['descrip']);?></div>
+			</div>
+			<div class="rules-info">
+				<h1>兑换规则</h1>
+				<div class="ui-editor"><?php echo html_entity_decode($seckillGoods['descrip']);?></div>
+			</div>
+			<div class="article-date">
+				<h1>截止时间</h1>
+				<p><?php echo  date('Y-m-d H:i:s',$seckillGoods['end_time']); ?></p>
+			</div>
+		</div>
+		<?php } ?>
+		
+		<?php if($futureGoods){?>
+		<?php foreach($futureGoods as $k2=>$v2){?>
+		<?php 
+            list($isDiscount2, $consumePoint2, $discountArr2) = Mall_Service_ExchangeGoods::getConsumePoint($v2);
+        ?>
+		<div name="menuContent" class="menu-content <?php if((!$seckillGoods || !$pastGoods && !$seckillGoods) && $k2 ==0){?>on<?php }?> not-beginning">
+			<div class="tm-detail-meta">
+				<div class="title">
+					<h1>火爆进行中</h1>
+					<div class="end-time">开始时间：<span><?php echo date("Y-m-d",$v2['status_time']);?></span></div>
+				</div>
+				<div class="info">
+					<img class="poster"  data-src="<?php echo $attachPath. $v2['img'];?>" src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="">
+					<h1>部落纷争超值游戏礼包</h1>
+					<div class="branch">
+						积分：<span class="font-orange discount"><?php echo Mall_Service_Goods::convertPointVal($v2['consume_point']);?></span>
+						<?php if($isDiscount){?>
+        				&nbsp;&nbsp;&nbsp;&nbsp;<span class="font-orange"><?php echo Mall_Service_Goods::convertPointVal($consumePoint2); ?></span>
+        				<?php } ?>
+					</div>
+					<div class="number">剩余：<span id="restNumber" class="font-orange"><?php echo $v2['remaind_num'];?></span>个</div>
+					<input type="button" class="but" disabled="disabled" value="限时秒杀"></span>
+				</div>
+			</div>
+			<div class="prize-info">
+				<h1>奖品内容</h1>
+				<div class="ui-editor"><?php echo html_entity_decode($v2['descrip']);?></div>
+			</div>
+			<div class="rules-info">
+				<h1>兑换规则</h1>
+				<div class="ui-editor"><?php echo html_entity_decode($v2['descrip']);?></div>
+			</div>
+			<div class="article-date">
+				<h1>截止时间</h1>
+				<p><?php echo  date('Y-m-d H:i:s',$v2['end_time']); ?></p>
+			</div>
+		</div>
+		<?php } ?>
+		<?php } ?>
+		
+		<div class="operation-container" id="virtual">
+			<div class="addressinfo-container">
+				<span class="address-tips">收货信息</span>
+				<p class="code-msg">激活码已保存到我的奖品</p>
+				<div class="ad-info">
+					<em>激活码:</em>
+					<p class="code">1234567asjiagtyfoikjhyuiopftgy65584989</p>
+				</div>
+				<div class="ad-info">
+					<em>温馨提示:</em>
+					<p class="msg">请亲及时兑换哦~~</p>
+				</div>
+			</div>
+			<div id="cobyBtn" class="btn-container" data-ajaxUrl="<?php echo $webroot; ?>/client/Mall/exchangeAcouponPost/?goodId=<?php echo $seckillGoods['id'].'&puuid='.$userInfo['uuid'].'&uname='.$userInfo['uname'].'&imei='.$exchangeData['imei'].'&serverId='.$exchangeData['serverId'].'&sp='.$exchangeData['sp'];?>">
+				<a class="btn-orange">关闭</a>
+			</div>
+		</div>
+		
+		
+		<div class="J_dialog dialog">	
+		</div>
+		<div class="J_loading loading-container">
+			<i class="icon-loading"></i>
+		</div>
+		
+		<div class="operation-container" id="entity">
+			<div class="addressinfo-container">
+				<span class="address-tips">收货信息</span>
+				<div class="ad-info">
+					<em>收货人:</em>
+					<input name="receiver" class="btn-input" type="text" placeholder="姓名" value='<?php echo $userInfo['receiver'];?>'/>
+				</div>
+				<div class="ad-info">
+					<em>联系电话:</em><input name="receiverphone" class="btn-input" type="text" placeholder="手机或固话" value='<?php echo $userInfo['receiverphone'];?>'/>
+				</div>
+				<div class="ad-info">
+					<em>QQ:</em><input name="qq" class="btn-input" type="text" placeholder="qq" value='<?php echo $userInfo['qq'];?>' />
+				</div>
+				<div class="ad-info">
+					<em>收货地址:</em><textarea name="address" class="btn-input btn-textarea" rows="3"  placeholder="所在省市详细街道信息"><?php echo $userInfo['address'];?></textarea>
+				</div>
+				<div class="ad-info">
+					<em>温馨提示:</em>
+					<p class="msg">&nbsp;&nbsp;&nbsp;&nbsp;请亲认真填写收货信息，工作MM将根据收货信息 进行派送，若信息不完整，物品将会被老板没收</p>
+				</div>
+			</div>
+			<div id="exEntityBtn" class="btn-container" data-ajaxUrl="<?php echo $webroot; ?>/client/Mall/exchangeEntityPost/?goodId=<?php echo $seckillGoods['id'].'&puuid='.$userInfo['uuid'].'&uname='.$userInfo['uname'].'&imei='.$exchangeData['imei'].'&serverId='.$exchangeData['serverId'].'&sp='.$exchangeData['sp'];?>">
+				<a class="btn-orange">确定</a>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

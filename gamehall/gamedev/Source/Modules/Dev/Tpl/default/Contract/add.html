@@ -1,0 +1,313 @@
+<include file="Public:header"/>
+<include file="Public:bootcss"/>
+
+<style>
+    .col-sm-10 label {
+        font-weight: normal;
+    }
+
+    .panel-body {
+        *width: 92%
+    }
+
+    .panelws select.form-control {
+        *height: auto !important;
+        *padding: 4px 0;
+        *margin-top: 0px;
+    }
+
+    .thumbnail {
+        *width: auto;
+    }
+
+    .mainw .form-horizontal .form-control-static {
+        padding-top: 0px;
+    }
+
+    .panelws .form-group input {
+        *padding-top: 8px;
+        *height: 22px !important;
+        margin-bottom: 0px \9;
+    }
+
+    .panelws .form-group textarea {
+        *padding-top: 8px;
+    }
+
+    em{
+        color: red;
+    }
+</style>
+<script src="{:cdn('PUBLIC')}/common/js/city.js?{:C('JS_VERSION')}"></script>
+<div class="mainw mainw2 clearfix">
+	<div class="rmain col-md-12 rmain-inf">
+		<div class="panel panelws">
+		
+			<h2 class="yyname">签署合同</h2>
+			
+			<div class="flow-w flow-w1">
+			    <div class="flow"><span class="on">第一步：签署合同</span><span>第二步：申请联运</span></div>
+			</div>
+		
+			<div class="panel-body">
+				<form class="form-horizontal" role="form" onsubmit="return checkSub();" method="post" id="add-contract"  action="{:U('contract/save')}">
+				<div class="row">
+				    <div class="col-sm-12">
+				        <h4>请填写游戏合同信息：</h4>
+				    </div>
+				</div>
+				<div id="game_section">
+					
+					<div class="form-group">
+				        <label for="app_type" class="col-sm-2 control-label"><em>* </em>游戏类型：</label>
+				        <div class="col-sm-6">
+				        	<label for="app_type" class="col-sm-6">
+				        		<input type="radio" name="app_type" value="1"> 单机
+				        	</label>
+							<label for="app_type" class="col-sm-6">
+				        		<input type="radio" name="app_type" value="0" checked> 网游
+				        	</label>
+				        </div>
+				        <div class="col-sm-4">
+				        </div>
+				    </div>
+					
+				    <div class="form-group">
+				        <label for="app_name" class="col-sm-2 control-label"><em>* </em>游戏名称：</label>
+				        <div class="col-sm-6">
+				            <input type="text" class="form-control" maxlength="50" name="app_name" id="app_name">
+				        </div>
+				        <div class="col-sm-4">
+				
+				        </div>
+				    </div>
+				    <div class="form-group">
+				        <label for="package" class="col-sm-2 control-label"><em>* </em>游戏包名：</label>
+				        <div class="col-sm-6">
+				            <input type="text" class="form-control" maxlength="100" name="package" id="package" placeholder="youxi.game.ami2.am">
+							
+							<span class="app_type1 help-block">
+								审核通过后不能修改，<span style="color: red;">上传的游戏包名必须和此包名一致</span>
+							</span>
+							<span class="app_type0 help-block">
+								必须<span style="color: red;">以.am结尾</span>，审核通过后不能修改，<span style="color: red;">上传的游戏包名必须和此包名一致</span>
+							</span>
+							
+							<script>
+								$(function(){
+									$(".app_type1").hide();
+									$("input[name=app_type]").change(function(){
+										$(".app_type1").hide();
+										$(".app_type0").hide();
+										$("span.app_type" + $("input[name=app_type]:checked").val()).show();
+									});
+								})
+							</script>
+				        </div>
+				        <div class="col-sm-4"></div>
+				    </div>
+				    <div class="form-group">
+				        <label class="col-sm-2 control-label"><em>* </em>发票类型：</label>
+				
+				        <div class="col-sm-10 pl0">
+				            <php>
+				                $receipts = M('contract_receipt')->field('id,name')->select();
+				            </php>
+				            <foreach name="receipts" item="v">
+				                <label class="col-sm-12">
+				                    <input type="radio" name="receipt_id" value="{$v.id}" checked>{$v.name}
+				                </label><br/>
+				            </foreach>
+				            <span class="help-block union_checker"></span>
+				        </div>
+				    </div>
+				
+				
+				    <div class="form-group">
+				        <label for="share" class="col-sm-2 control-label"><em>* </em>分成比例：</label>
+				        <div class="col-sm-6">
+				            <input type="text" class="form-control" maxlength="30" name="share" id="share" value="5:5" disabled>
+				            <span class="help-block" >分成比例默认5:5,如需修改，请发送邮件至yxdtsw@gionee.com</span>
+				        </div>
+				        <div class="col-sm-4"></div>
+				    </div>
+				</div>
+			
+				
+				<div class="form-group">
+				    <label for="account_name" class="col-sm-2 control-label"><em>* </em>开户名称：</label>
+				
+				    <div class="col-sm-6">
+				        <input type="text" class="form-control" maxlength="30" name="account_name"
+				               id="account_name">
+				    </div>
+				    <div class="col-sm-4"></div>
+				</div>
+				
+				<div class="form-group">
+				    <label for="account_key" class="col-sm-2 control-label"><em>* </em>银行账号：</label>
+				
+				    <div class="col-sm-6">
+				        <input type="text" class="form-control" maxlength="50" name="account_key" id="account_key">
+				    </div>
+				    <div class="col-sm-4"></div>
+				</div>
+				<div class="form-group">
+				    <label for="account_bank" class="col-sm-2 control-label"><em>* </em>开户银行：</label>
+				
+				    <div class="col-sm-6">
+				        <input type="text" class="form-control" id="account_bank" name="account_bank">
+				        <span class="help-block">请填写公司开户行名称，精确到分行</span>
+				
+				    </div>
+				    <div class="col-sm-4"></div>
+				</div>
+				
+				<php>
+				    $accountInfo = M('account_infos')->where(array('account_id'=>$uid))->field('company,address,contact,contact_email')->find();
+				</php>
+				<div class="form-group">
+				    <label for="company_name" class="col-sm-2 control-label"><em>* </em>公司名称：</label>
+				
+				    <div class="col-sm-6">
+				        <input type="text" class="form-control" id="company_name" name="company_name"
+				               value="{$accountInfo.company}">
+				    </div>
+				    <div class="col-sm-4"></div>
+				</div>
+				
+				<div class="form-group">
+				    <label class="col-sm-2 control-label"><em>* </em>联系地址：</label>
+				    <div class="col-sm-6">
+				    	<style>
+				    		.area_box select.area {width:136px; float:left;}
+				    	</style>
+				        {:A("Misc")->area_show();}
+				    </div>
+				    <div class="col-sm-4"></div>
+				</div>
+				    <div class="form-group">
+				        <label class="col-sm-2 control-label"></label>
+				        <div class="col-sm-6"><br/>
+				            <input type="text" class="form-control" id="address_detail" name="address_detail" value="">
+				            <span class="help-block">请填写详细地址</span>
+				        </div>
+				        <div class="col-sm-4"></div>
+				    </div>
+				<div class="form-group">
+				    <label for="contact" class="col-sm-2 control-label"><em>* </em>联系人姓名：</label>
+				
+				    <div class="col-sm-6">
+				        <input type="text" class="form-control" id="contact" name="contact" value="{$accountInfo.contact}">
+				    </div>
+				    <div class="col-sm-4"></div>
+				</div>
+				    <div class="form-group">
+				        <label for="contact_email" class="col-sm-2 control-label"><em>* </em>联系人邮箱：</label>
+				
+				        <div class="col-sm-6">
+				            <input type="text" class="form-control" id="contact_email" name="contact_email" value="{$accountInfo.contact_email}">
+				        </div>
+				        <div class="col-sm-4"></div>
+				    </div>
+				
+				<hr>
+				
+				<div class="form-group">
+				    <div class="col-md-2"></div>
+				    <div class="col-md-8">
+				        <button type="submit" class="btn btn-success bo128" id="saveSubBtn">保存并继续</button>
+				        <a class="btn btn-success bo128" href="{:U('index')}">取消</a>
+				    </div>
+				</div>
+				</form>
+			
+			</div>
+		</div>
+	</div>
+</div>
+<include file="Public:footer"/>
+<include file="./Source/Tpl/Common/alertDialog.html"/>
+<script type=text/javascript src="{:cdn('PUBLIC')}/common/js/jquery.form.js?{:C('JS_VERSION')}"></script>
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/app/jui/css/smoothness/jquery-ui-1.9.1.custom.min.css">
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-1.9.1.custom.min.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/development-bundle/ui/i18n/jquery.ui.datepicker-zh-CN.js"></script>
+
+<script type="text/javascript">
+    // 提交过滤
+    function checkSub() {
+        var app_name = $("[name=app_name]").val();
+        var pack =$("#package").val();
+        var share = $("[name=share]").val();
+        var account_name = $("#account_name").val();
+        var account_key = $("#account_key").val();
+        var account_bank = $("#account_bank").val();
+        var company_name = $("#company_name").val();
+        var address_detail = $("#address_detail").val();
+        var contact = $("#contact").val();
+        var contact_email = $("#contact_email").val();
+        var area = $("select[name=area]").val();
+        var province = $("select[name=province]").val();
+        var city = $("select[name=city]").val();
+
+        if ($.trim(app_name) == "") {
+            alertDialog("请填写游戏名称");
+            return false;
+        }
+        if ($.trim(pack) == "") {
+            alertDialog("请填写游戏包名");
+            return false;
+        }
+        if ($.trim(share) == "") {
+            alertDialog("请填写分成比例");
+            return false;
+        }
+        if ($.trim(account_name) == "") {
+            alertDialog("请填写开户名称");
+            return false;
+        }
+        if ($.trim(account_key) == "") {
+            alertDialog("请填写银行账号");
+            return false;
+        }
+        if ($.trim(account_bank) == "") {
+            alertDialog("请填写开户银行");
+            return false;
+        }
+        if ($.trim(company_name) == "") {
+            alertDialog("请填写公司名称");
+            return false;
+        }
+        if(area == ""){
+            alertDialog("请选择所在地区");
+            return false;
+        }
+        if(province == ""){
+            alertDialog("请选择所在省份");
+            return false;
+        }
+        if(city == ""){
+            alertDialog("请选择所在城市");
+            return false;
+        }
+
+        if ($.trim(address_detail) == "") {
+            alertDialog("请填写详细地址");
+            return false;
+        }
+        if ($.trim(contact) == "") {
+            alertDialog("请填写联系人");
+            return false;
+        }
+        if ($.trim(contact_email) == "") {
+            alertDialog("请填写联系邮箱");
+            return false;
+        }
+        if ($.trim(address_detail) == "") {
+            alertDialog("请填写详细地址");
+            return false;
+        }
+        return true;
+    }
+</script>

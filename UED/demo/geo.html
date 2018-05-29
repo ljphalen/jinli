@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>地理位置</title>
+<style type="text/css">
+	*{margin:0; padding:0;}
+	ul,ol{list-style:none;}
+	a{display:block;}
+	a:link,a:visited{color:#2b2b2b; text-decoration:none;}
+	html{width:100%; height:100%; overflow:hidden;}
+	body{background:#efefef; width:100%; height:100%;  display:-webkit-box; -webkit-box-align:center; -webkit-box-pack:center;}
+	#page{max-width:360px; min-width:320px; margin:0 auto;}
+	.project{padding:0 10px; overflow:hidden;}
+	.project-list li{background:#fff; text-align:center; margin-bottom:10px; -webkit-border-radius:5px;}
+	.project-list a{padding:10px; text-shadow: 0px 0px 1px rgba(0,0,0,.2);}
+	.project-list a:active,a:hover{background:#666; color:#fff;}
+</style>
+</head>
+<body>
+	<div id="map" style="width:200px; height:200px; margin:0 auto;"></div>
+	<!--<script type="text/javascript" src="http://ext.weather.com.cn/23624.js"></script>-->
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v1.5&ak=65ba6a3ea7c51fe4204c020ec6c8b404"></script>
+	<script type="text/javascript">
+		function getUserLocation(){
+			if(navigator.geolocation){
+				navigator.geolocation.getCurrentPosition(locationSuccess,displayError);
+			} else {
+				document.getElementById("locationData").innerHTML="Sorry-yourbrowserdoesn'tsupportgeolocation!";
+			}
+		}
+
+		function locationSuccess(position){
+			var lat = position.coords.latitude, lng = position.coords.longitude;
+			var map = new BMap.Map("map");
+			var point = new BMap.Point(lng, lat);
+			map.centerAndZoom(point, 15);
+			var marker = new BMap.Marker(new BMap.Point(lng, lat)); // 创建标注
+			map.addOverlay(marker); // 将标注添加到地图中
+		}
+
+		function displayError(error) {
+		//get a reference to the HTML element forwriting result
+
+		var locationElement =document.getElementById("locationData");
+
+		//find out which error we have, outputmessage accordingly
+
+		switch(error.code) {
+
+		case error.PERMISSION_DENIED:
+
+		locationElement.innerHTML= "Permission was denied";
+
+		break;
+
+		case error.POSITION_UNAVAILABLE:
+
+		locationElement.innerHTML= "Location data not available";
+
+		break;
+
+		case error.TIMEOUT:
+
+		locationElement.innerHTML= "Location request timeout";
+
+		break;
+
+		case error.UNKNOWN_ERROR:
+
+		locationElement.innerHTML= "An unspecified error occurred";
+
+		break;
+
+		default:
+
+		locationElement.innerHTML= "Who knows what happened...";
+
+		break;
+
+		}}
+
+		window.onload = function(){
+			getUserLocation();
+		}
+	</script>
+</body>
+</html>

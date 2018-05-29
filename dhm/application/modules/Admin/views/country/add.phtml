@@ -1,0 +1,62 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li><a href="<?php echo $listUrl;?>">国家列表</a></li>
+    	<li class="current"><a href="javascript:;">添加国家</a></li>
+	</ul>
+</div>
+<div class="h_a">添加国家</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">名称</th>
+				<td class="td">
+					<input type="text" class="input wc" name="name" value="">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">币种代码</th>
+				<td class="td">
+					<input type="text" class="input wc" name="currency" value="" placeholder="输入币种代码，如USD，CNY等">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">语言代码</th>
+				<td class="td">
+					<input type="text" class="input wc" name="lang_code" value="" placeholder="输入币种代码，如USD，CNY等">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">国旗</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="AdImg">
+							<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+							<input type="hidden" name="logo" value="">
+						</li>
+					</ul>
+					<p style="clear:both;">
+						  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+
+//国家表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Country/index');
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

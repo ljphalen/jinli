@@ -1,0 +1,47 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">装机必备列表</a></li>
+    <li class="current"><a href="javascript:;">编辑装机必备</a></li>
+	</ul>
+</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $id;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		
+		<tr>
+		   <th class="th">机组</th>
+			<td class="td">
+			 <select name="gtype">
+					<?php foreach($groups as $key=>$value) {?>
+    			    <option value="<?php echo $value['id'];?>" <?php if ($info['gtype'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['title'];?></option>
+    			    <?php }?>
+			  </select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				<select name="status">
+                	<option <?php if($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+            	</select>
+            </td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Installe/index?s=1');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

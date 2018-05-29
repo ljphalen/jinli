@@ -1,0 +1,39 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+	<div id="page" data-ajaxUrl="/subject/more/?id=<?php echo $id;?>" data-curPage="1"  data-hasNext="<?php echo $hasnext;?>">
+		<div id="iscrollWrap">
+			<div class="mainWrap">
+			<article class="ac">
+	<?php if($subject['img']) {?>		
+				<div class="banner">
+					<a href="javascript:;"><img src="<?php echo $attachPath,$subject['img'];?>" alt="" /></a>
+				</div>
+	<?php }?>			
+				<div class="item-grid">
+					<ul class="oz">
+					<?php if(count($goods)){?>
+	<?php foreach($goods as $key=>$good){?>
+						<li>
+							<div class="pic"><a href="<?php echo $good['link'];?>"><img src="<?php echo $good['img'];?>" alt="" /></a></div>
+							<div class="desc"><a href="<?php echo $good['link'];?>"><?php echo $good['title'];?></a></div>
+						</li>
+	<?php }}?>
+					</ul>
+				</div>
+				<?php if($hasnext){?>
+				<div class="JS-loadMore"><a href="">数据加载中...</a></div>
+				<?php }?>
+			</article>
+	</div>
+</div>
+</div>
+	<script id="J_itemView" type="template">
+	 {each data.list}
+		<li>
+				<div class="pic"><a href="{$value.href}"><img src="{$value.img}" alt="" /></a></div>
+				<div class="desc"><a href="{$value.href}">{$value.title}</a></div>
+		</li>
+	{/each}
+    </script>
+    <?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

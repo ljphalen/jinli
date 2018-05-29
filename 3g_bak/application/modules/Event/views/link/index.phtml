@@ -1,0 +1,228 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>七夕活动</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/events/css/linklink.min.css"/>
+    <script type="text/javascript">
+        var initConfig = {
+            pz_tt: "<?php  echo $data['prize_name'];?>", // 中奖的奖品名称
+            pz_ur: "<?php echo $data['prize_url'];?>", // 领取奖品的连接地址
+            pz_rm: <?php echo $data['prize_times']; ?>, // 可抽奖的次数
+            pz_st: <?php echo $data['prize_get']; ?>, // 0 未领取，1已领取
+            pz_rk: <?php echo $data['prize_level']?$data['prize_level']:0;?>, // 中奖的等级
+            pz_ep: <?php echo $data['prize_expired']; ?> ,// 活动是否过期
+            pz_sc:<?php echo $data['prize_per_score'];?>, // 单次消除可获得金币数
+            pz_tip:<?php echo $tip ;?>,
+        };
+        var token='<?php echo $token;?>';
+    </script>
+</head>
+<body>
+<bgsound id='sound' src="" loop="1" />
+<!-- <audio id="audio1" src="../assets/sounds/spread.wav" controls="controls"></audio> -->
+<div class="link-app-wrap">
+    <div class="link-game-wrap">
+        <div class="link-pos-date">活动时间 ：8.18-8.20</div>
+        <div class="link-pos-r0"></div>
+        <div class="link-pos-r1"></div>
+        <a href="javascript:;" class="link-pos-btn0"><span>我的奖品</span></a>
+        <a href="javascript:;" class="link-pos-btn1"><span><b>活动规则</b></span></a>
+        <div id="linkMarkPanel" class="link-mark-wrap">
+            <span id="currentLevel" class="hidden">第<b>1</b>关</span>
+            <span id="noLinker" class="hidden">剩于<b>10</b>对</span>
+            <!-- <span id="currentScores" class="hidden">当前分数：<b>0</b></span> -->
+            <div id="process" class="link-process-wrap">
+                <span id="processLink" class="process"><span></span></span>
+                <span id="time"><b>20</b>S</span>
+            </div>
+            <div class="link-mark-linker">
+                <span id="linker">已消：<b>0</b></span>/
+                <span class="noLinker"><b>10</b>对</span>
+                <span id="currentScores">可获得：<b>0</b></span>
+                <span id="currentIcon"><i class="icon-gold"></i></span>
+                <span id="times" style="display:none;">本局已用<b>0</b>S</span>
+            </div>
+        </div>
+        <!--end of linMarkPanel -->
+        <div id="linkCanvasPanelHead"></div>
+        <div id="linkCanvasPanel" class="link-panel-main">
+            <div id="J_LinkGameMask" class="link-panel-mask hidden"></div>
+            <!-- 开始游戏 -->
+            <div id="J_LinkGameStart" class="link-btn-wrap link-btn-start hidden">
+                <div class="inner">
+                    <span class="icon-play"></span>
+                    <span>开始游戏</span>
+                </div>
+            </div>
+            <!-- 游戏结束 -->
+            <div id="J_LinkGameEnd" class="link-btn-wrap hidden">
+                <div class="inner">
+                    <span>游戏结束<br/>再玩一次</span>
+                </div>
+            </div>
+            <!-- 活动已结束 -->
+            <div id="J_EventEnd" class="link-btn-wrap hidden">
+                <div class="inner">
+                    <span>本次活动<br/>已结束</span>
+                </div>
+            </div>
+            <!-- 游戏洗牌 -->
+            <div class="link-game-refresh">
+                <input id="J_gameRefresh" class="hidden" type="button" value="洗牌" />
+            </div>
+        </div>
+    </div>
+
+    <!-- 我的奖品记录 -->
+    <div id="J_popRecordBox" class="link-record-wrap" style="display:none;">
+   
+    <?php
+		if(!empty($userInfo)){    
+   				 if(!empty($prizeList)){?>
+				            <div class="title">我的奖品</div>
+                            <div class="content">
+                                <div class="inner">
+        				            <?php foreach($prizeList as $k=>$v){?>
+        				            <div class="record-caption"><?php echo $prizeStatus[$k];?></div>
+        				            <div class="record-item">
+        				            	<?php foreach ( $v as $m=>$n){?>
+        				               	 	<p><?php echo $m+1;?>、<?php echo $n['date'];?>获得：<?php echo $n['prize_name'].$n['reason'];?></p>
+        				                <?php }?>
+        				            </div>
+        				           <?php }?>
+                                </div>
+                            </div>
+				            <div class="btn-wrap">
+				                <span id="J_btnRecordOk" class="btn btn-red">我知道了</span>
+				            </div>
+       				<?php }else{?>
+       				   <div class="title">我的奖品</div>
+				        <div class="content">
+				            <div class="inner">
+				                <p><img src="<?php echo $staticResPath;?>/events/img/llk_icon_weep.png" /></p>
+				                <p>你暂时没有任何奖品哦！</p>
+				            </div>
+				        </div>
+				        <div class="btn-wrap">
+				            <span id="J_btnRecordWin" class="btn btn-red">我要赢奖品</span>
+				        </div> 
+        			<?php } }else{?>
+        <!-- 没有登录情况下显示 -->
+		        <div class="title">我的奖品</div>
+		        <div class="content">
+		            <div class="inner">
+		                <p><img src="<?php  echo $staticResPath;?>/events/img/llk_icon_weep.png" /></p>
+		                <p>需要登录才能看到奖品记录哦！</p>
+		            </div>
+		        </div>
+		        <div class="btn-wrap">
+		            <a class="btn btn-red"  href="<?php echo $webroot;?>/event/link/login">登录</a>
+		        </div> 
+        <!-- 没有奖品记录情况下 -->
+       <?php }?>
+    </div>
+
+    <!-- 活动规则弹窗 -->
+    <div id="J_dailogMask" class="link-dailog-mask" style="display: none;"></div>
+    <div id="J_popRuleBox" class="link-rule-wrap" style="display: none;">
+        <div class="wrap">
+            <h2>活动规则</h2>
+            <div class="txt">
+                <p>
+                    <span><b>1</b></span>
+                    <span>消除可连线的相同图案，限时20秒；</span>
+                </p>
+
+                <p>
+                    <span><b>2</b></span>
+                    <span>没有可消除图案时，可点击“洗牌”重组，每次游戏仅可洗牌3次；</span>
+                </p>
+
+                <p>
+                    <span><b>3</b></span>
+                    <span>在规定时间内全部消除，则有机会获得大奖；未全部完成，可获2金币/对的奖励；</span>
+                </p>
+
+                <p>
+                    <span><b>4</b></span>
+                    <span>用户可通过放弃当前奖品去赢取（可能的）更高奖励；</span>
+                </p>
+
+                <p>
+                    <span><b>5</b></span>
+                    <span>每个用户每天限领奖1次，若中奖后1个小时内未领取，视为放弃奖励；</span>
+                </p>
+                <p>
+                    <span><b>6</b></span>
+                    <span>金立浏览器拥有对违规用户的奖品处理权。</span>
+                </p>
+            </div>
+            <div class="btn-wrap">
+                <span id="J_btnRuleOk" class="btn btn-red">我知道了</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹窗基本样式 -->
+    <div id="J_popDailogBox" class="link-dailog-wrap" style="display:none;">
+        <div class="wrap">
+            <p class="pziti"></p>
+            <p class="pimg"></p>
+            <p class="ptitle"></p>
+            <p class="ptext"></p>
+            <p class="ptips"></p>
+            <div class="btn-wrap"></div>
+        </div>
+    </div>
+
+    <div class="link-footer-wrap">
+        <div class="link-prize-wrap">
+            <div class="title">奖品</div>
+            <ul>
+                <li>
+                    <img src="<?php echo $staticResPath;?>/events/pic/jp_01.png" alt="">
+                    <p>价值2299元M5手机（1名）<br/><a href="http://click.3g.gionee.com/index/tj?t=8seuui">查看</a></p>
+                </li>
+                <li>
+                    <img src="<?php echo $staticResPath;?>/events/pic/jp_06.png" alt="">
+                    <p>京东300元购物<br/>券（2名）</p>
+                </li>
+                <li>
+                    <img src="<?php echo $staticResPath;?>/events/pic/jp_02.png" alt="">
+                    <p>蓝牙音箱（4名）</p>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <img src="<?php echo $staticResPath;?>/events/pic/jp_07.png" alt="">
+                    <p>移动电源（10名）</p>
+                </li>
+                <li>
+                    <img src="<?php echo $staticResPath;?>/events/pic/jp_04.png" alt="">
+                    <p>自拍杆（15名）</p>
+                </li>
+                <li>
+                    <img src="<?php echo $staticResPath;?>/events/pic/jp_05.png" alt="">
+                    <p>20金币（不限量）</p>
+                </li>
+            </ul>
+        </div>
+        <div class="copyright">
+            本活动最终解释权归金立浏览器所有<br/>如有问题请联系微信公众号：jizhuanxiang
+        </div>
+    </div>
+</div>
+<!-- <script type="text/javascript" src="../assets/js/loadXml.js"></script> -->
+<script src="<?php echo $staticResPath;?>/events/js/zepto.min.js?v=<?php echo $version;?>"></script>
+<script type="text/javascript" src="<?php echo $staticResPath;?>/events/js/link.min.js"></script>
+<script type="text/javascript" src="<?php echo $staticResPath;?>/events/js/link.images.js"></script>
+<script type="text/javascript" src="<?php echo $staticResPath;?>/events/js/link.canvas.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="/Admin/Game_Webgame/index">网游推荐日程</a></li>
+        <li><a href="/Admin/Game_Gameopen/index">开服信息</a></li>
+        <li><a href="<?php echo $listUrl;?>">旧版推荐</a></li>
+		<li><a href="<?php echo $columnListUrl;?>">网游频道</a></li>
+		<li class="current"><a href="javascript:void(0);">添加网游</a></li>
+	</ul>
+</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th"><?php echo $info['title'];?></th>
+		</tr>	
+	</table>
+</div>
+<form action="<?php echo $addCtUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	   <tr class="tr">
+	        <th class="th">游戏库分类</th>
+			<td class="td">
+				<select name="category_id">
+					<option value="0">所有分类</option>
+					<?php foreach($categorys as $key=>$value) {?>
+    			    	<option value="<?php echo $value['id'];?>" <?php if ($search['category_id'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['title'];?></option>
+    			    <?php }?>
+			    </select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">关键字</th>
+			<td class="td"><input type="text" class="input" name="name" value="<?php echo $search['name'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+    <span class="btn2"><span><button onclick="$('#action').val('add');" type="submit">添加</button></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="40">游戏ID</td>
+			<td width="100">标题</td>
+			<td width="250">分类</td>
+			<td>图标</td>
+			<td>大小</td>
+			<td>版本号</td>
+			<td>游戏状态</td>
+		</tr>
+	   <?php foreach($games as $key => $value) {?>
+		<tr class="ct">
+		    <td>
+		    <?php if (!in_array($value['id'], $webGameIds)) {?>
+		    	<input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox">
+		    <?php }else{?>
+		    	<font color="green">√</font>
+		    <?php }?>
+		    </td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['name'];?></td>
+			<td><?php echo $value['category_title'];?></td>
+			<td><img src="<?php echo $value['img'];?>" style="width:7.2em;height:7.2em"/></td>
+        	<td><?php echo $value['size'].M;?></td>
+        	<td><?php echo $value['version'];?></td>
+        	<td><?php echo $value['status'] ? '已上线' : '已下线';?></td>
+		</tr>
+	   <?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script>
+$(document).ready(function(){
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Client_Web/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

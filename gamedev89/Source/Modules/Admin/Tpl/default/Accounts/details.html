@@ -1,0 +1,66 @@
+<div class="page">
+	<div class="pageContent">
+	<form method="post" action="__URL__/updateDetails/navTabId/__MODULE__/callbackType/closeCurrent" enctype="multipart/form-data" class="pageForm required-validate" onsubmit="return iframeCallback(this, dialogAjaxDone);">
+		<input type="hidden" name="id" value="{$accounts.id}" >
+		
+		<div class="pageFormContent" layoutH="58">
+			<div class="unit">
+				<label>当前修改帐号：</label>
+				{$accounts.email}
+			</div>
+			<div class="unit">
+				<label style="color:red; width:400px;">开发者注册信息修改为敏感操作，请谨慎修改！</label>
+			</div>
+			<div class="unit">
+				<label>注册帐号（邮箱）：</label>
+				{$accounts.email}
+			</div>
+			<div class="unit">
+				<label>公司注册名称：</label>
+				<if condition="$do eq 'edit' ">
+					<input name="company" class="require" type="text" value="{$account_infos.company}" size="50" />
+				<else />
+       			 	{$account_infos.company}
+				</if>
+			</div>
+			<div class="unit">
+				<label>营业执照注册号：</label>
+				    <if condition="$do eq 'edit' "><input name="passport_num" class="require" type="text" value="{$account_infos.passport_num}" size="50" />
+				<else />
+					{$account_infos.passport_num}
+				</if>
+			</div>
+			<div class="unit">
+				<label>营业执照扫描件：</label>
+				<if condition="$do eq 'edit' ">
+					<input type="file" class="form-control" id="company_passport" tabindex="1" name="company_passport">
+				<else />
+					<a href="{:Helper("Apk")->get_url('user')}{$account_infos['company_passport']}" target="_blank">
+					<img src='{:Helper("Apk")->get_url('user')}{$account_infos.company_passport}' width="160" height="90" />
+					</a>
+				</if>
+			</div>
+			
+		
+		
+		<if condition="$do eq 'edit' ">
+			<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">提交</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+			</div>
+		 <else />
+			<div class="unit">
+				<label>&nbsp;</label>
+				<a  class="button"  height="450" width="600" target="dialog" href="__URL__/details/id/{$account_infos['account_id']}/do/edit"><span>修改</span></a>
+			</div>
+		</if>
+			
+		</div>
+
+		
+	</form>
+	
+	</div>
+</div>

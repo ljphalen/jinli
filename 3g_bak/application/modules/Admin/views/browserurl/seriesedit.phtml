@@ -1,0 +1,50 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $seriesListUrl; ?>">数据列表</a></li>
+			<li class="current"><a href="javascript:;">编辑数据</a></li>
+		</ul>
+	</div>
+	<div class="h_a">编辑搜索</div>
+	<form method="post" action="<?php echo $seriesEditUrl; ?>" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+		<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">产品系列</th>
+					<td class="td"><input type="text" class="input" name="name" value="<?php echo $info['name']; ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">参数</th>
+					<td class="td"><input type="text" class="input" name="value" value="<?php echo $info['value']; ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">品牌</th>
+					<td class="td">
+						<select name="brand_id">
+							<?php foreach ($brandList as $key => $value) { ?>
+								<option <?php echo $info['brand_id'] == $key ? 'selected="selected"' : ''; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script type="text/javascript">
+		//表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Browserurl/serieslist');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,90 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">设备列表</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>名称</td>
+			<td>ht</td>
+			<td>ip</td>
+			<td>上传速度</td>
+			<td>下载速度</td>
+			<td>在线人数</td>
+			<td>内存(总/剩余)</td>
+			<td>wan状态</td>
+			<td>状态</td>
+			<td></td>
+			<td>操作</td>
+		</tr>
+<?php 
+$status = array(0=>'', 1=>'Renewing', 2=>'Connected', 3=>'Connecting',	4=>'Disconnected');
+function mg($v) {
+	$p = ' B';
+	if ($v > 1024) {
+		$v = $v/1024;
+		$p=' KB';
+	}
+	if ($v > 1024) {
+		$v = $v/1024;
+		$p=' MB';
+	}
+	if ($v > 1024) {
+		$v = $v/1024;
+		$p=' GB';
+	}
+	return sprintf("%.2f", $v).$p;
+}
+foreach($devices as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['wl_ssid'];?></td>
+			<td><?php echo $value['ht'];?></td>
+			<td><a target="_blank" href="http://<?php echo $value['ip'];?>:8090"><?php echo $value['ip'];?></a></td>
+			<td><?php echo mg($value['upload_speed']);?></td>
+			<td><?php echo mg($value['download_speed']);?></td>
+			<td><?php echo $value['online_num'];?></td>
+			<td><?php echo sprintf("%.2f", $value['totalram']/1024/1024);?>M/<?php echo sprintf("%.2f", $value['totalfreeram']/1024/1024);?>M</td>
+			<td><?php echo $status[$value['wanstatus']];?></td>
+            <td>
+            <?php echo ((Common::getTime() - $value['hb_time'] ) > 60) ? '<font color="red">offline</font>' : '<font color="green">online</font>';?>
+            </td>
+			<td>
+			<a href="<?php echo $detailUrl;?>/?ht=<?php echo $value['ht'];?>" class="mr10">详细</a>|
+			<a href="<?php echo $configUrl;?>" onclick="config('reboot','确认重启路由器后，路由器将在10s后重启?',<?php echo $value['ht'];?>,event);" class="mr10">重启</a>|
+			<a href="<?php echo $configUrl;?>" onclick="config('reconnect','确认路由器释放后重新连接,路由器将在10s后重新连接网络?',<?php echo $value['ht'];?>,event);" class="mr10">reconnect</a>|
+			<a href="<?php echo $configUrl;?>" onclick="config('upgrade','确定升级路由器,路由后将在10s自动升级到最新版本并重启?',<?php echo $value['ht'];?>,event);" class="mr10">升级</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<script type="text/javascript">
+function config(action, msg, ht, e) {
+	e.preventDefault();
+	showConfirm(msg, function() {
+				$.ajax({
+					url : "<?php echo $configUrl?>",
+					type : 'POST',
+					dataType : 'json',
+					data : 'action='+action+'&token='+token+"&ht="+ht,
+					success : function(ret) {
+						if (ret.success) {
+							showMsg('', ret.msg);								
+						} else {
+							showError('', ret.msg);
+						}
+						setTimeout(function() {
+							location.reload();
+						}, 500);
+					}
+				});
+			}, e);
+	return false;
+}
+</script>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

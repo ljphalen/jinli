@@ -1,0 +1,435 @@
+/*
+ * Created with Sublime Text 2.
+ * User: Hankewins
+ * Date: 2014-07-03
+ * Time: 14:40:27
+ * Contact: hankewins@gmail.com
+ */
+@charset "utf-8";
+@import "compass/css3";
+//@import "lookitui";
+
+/** reset **/
+*{-webkit-tap-highlight-color:rgba(0,0,0,0);}
+
+html{font-size:20px; -webkit-text-size-adjust:none;}
+@media all and (min-width:359px){.uc-hack{font-size:22.5px;}}
+@media all and (min-width:359px) and (-webkit-min-device-pixel-ratio:1.5){html{font-size:22.5px;}}
+
+body,div,p,form,input,h1,h2,h3,h4,h5,ul,ol,li,dl,dt,dd,table,tbody,tr,td,textarea,img,iframe,figure{
+	margin:0; padding:0; list-style:none; vertical-align:middle;
+}
+
+body{
+	font:14px/1.5 "\5FAE\8F6F\96C5\9ED1",Helvetica,Arial; color:#333;
+	//-webkit-user-select:none;
+	-webkit-text-size-adjust:none;
+}
+
+img{border:0; -webkit-touch-callout:none;}
+
+a,*[onclick]{
+	-webkit-tap-highlight-color:rgba(0,0,0,0); text-decoration:none; color:#333;
+}
+
+// bug 7305 带按键的系统在触摸点击链接后，按键键盘向下不能正常获取焦点
+//a:active,a:hover{outline:none; color:#000;}
+
+/* 来自yahoo, 让标题都自定义, 适应多个系统应用 */
+h1,h2,h3,h4,h5,h6 {font-size:100%; font-weight:500;}
+/**
+ * 超出的文字自动隐藏
+ */
+@mixin fn-text-overflow{
+	overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+}
+
+// 设置根元素的字体大小为设备的默认字体大小
+html{font-size:100%;}
+
+// 设置字体相对设备的一个参考
+$px: 1rem/16;
+
+body{font:14px/1.5 \5FAE\8F6F\96C5\9ED1,Helvetica; background:#f5f5f5; color:#333; -webkit-user-select:none;}
+body{
+	font-family: "Helvetica Neue", Helvetica, STHeiTi, sans-serif;
+}
+
+a, *[onclick]{color:#333;}
+
+.ishide,.none{display:none !important;}
+.center{text-align: center;}
+.fr{float:right;}
+.fl{float:left;}
+
+// navigator cloumns stylesheet
+.nav-drapdown-wrap{
+	background:#fff; margin:0; overflow: hidden;
+}
+.nav-drapdown{
+	position: relative; z-index: 2;
+	
+	.nav-drapdown-title{
+		position:relative; display:-webkit-box; -webkit-box-align: center;
+		height:44px; padding:0 10px;
+		&:active{
+			background-color: #f5f5f5;
+			color: #000;
+		}
+		img{
+			width:20px; height:20px;
+		}
+		span{
+			display: block;
+		}
+		.span1{
+			width:20px; height:20px; overflow: hidden; margin:0 10px 0 0;
+			background-repeat: no-repeat;
+			background-position: 0 0;
+			@include background-size(20px auto);
+		}
+
+		.span2{
+			color:#333;
+		}
+		.span3{
+			position:absolute; right:44px; top:0; line-height:44px; display:block; color:#999; font-size: 12px;
+		}
+
+		.span4{
+			content: ""; display: block; width:14px; height: 14px; position: absolute; right: 20px; top:50%; 
+			margin: -7px 0 0 -7px;
+			background: inline-image("../img/icon-arrow.png") no-repeat 0 0;
+			@include background-size(14px auto);
+		}
+	}
+
+	.nav-drapdown-box .nav-drapdown-arrow-up h2,
+	.nav-drapdown-box .nav-drapdown-arrow-up span{
+		color:#fff;
+	}
+
+	.nav-drapdown-arrow-up[data-wrap="cinner1"]{
+		background-color: #006fba;
+	}
+	.nav-drapdown-arrow-up[data-wrap="cinner2"]{
+		background-color: #008751;
+	}
+	.nav-drapdown-arrow-up[data-wrap="cinner3"]{
+		background-color: #8c0265;
+	}
+	.nav-drapdown-arrow-up[data-wrap="cinner4"]{
+		background-color: #01596d;
+	}
+	.nav-drapdown-arrow-up[data-wrap="cinner5"]{
+		background-color: #f56600;
+	}
+
+	.nav-drapdown-box .nav-drapdown-arrow-up{
+		.span4{
+			//-webkit-transform: rotate(-180deg);
+			background: inline-image("../img/icon-arrow-active.png") no-repeat 0 0;
+			@include background-size(14px 14px);
+		}
+
+		.span1{
+			width:20px; height:20px; overflow: hidden; margin:0 10px 0 0;
+			background-repeat: no-repeat;
+			background-position: left bottom;
+			@include background-size(20px auto);
+		}
+	}
+
+	.nav-drapdown-content{
+		display: none;
+		.inner{overflow: hidden; padding:0 0 20px;}
+	}
+
+	.nav-drapdown-fixed{
+		position: fixed; left: 10px; right: 10px; top: 0; background: #fff; z-index: 2000;
+	}
+}
+
+.wp_ads_action{
+	position: relative; overflow: hidden; background: #fcd80e; height: 240px;
+	border-radius: 4px; margin-top: 10px;
+	.wp_ads_bg img{
+		border-radius: 4px 4px 0 0;
+	}
+}
+.wp_ads_tab{
+	display: -webkit-box; height: 30px; line-height: 30px;
+	position: absolute; left: 10px; right: 10px; top:60px; z-index: 100;
+	span{
+		display:block; -webkit-box-flex:1; color:#fff; text-align: center; background: #ff5500;
+		-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.3);
+	}
+	span:nth-child(1){
+		margin-right: 8px;
+	}
+	span:nth-child(2){
+		margin: 0 4px;
+	}
+	span:nth-child(3){
+		margin-left: 8px;
+	}
+	span.active{
+		background: #d02700;
+	}
+}
+.wp_ads_main{
+	padding:10px; background: #d02700;
+	position: absolute; left: 10px; right: 10px; top:100px; z-index: 100;
+	.wp_ads_form form{
+		display: -webkit-box; overflow: hidden; height: 28px;
+		.input{
+			outline: 0;
+			display:block; -webkit-box-flex:1; border: 0; height: 28px; background: #fff; padding:0 10px;
+			border-radius: 2px 0 0 2px;
+		}
+		.btn-ci{
+			outline: 0;
+			border:0; display:block; width:60px; background: #fcd510; color:#ff5500;
+			text-shadow:1px 1px #fff;
+			border-radius: 0 2px 2px 0;
+		}
+	}
+	.wp_ads_tips{
+		color:#fff; padding: 5px 0 0 0;
+	}
+	.wp_ads_notes{
+		font-size: 10px; padding-top: 5px;
+		p{color:#ccc;}
+		h4{color:#fff;}
+	}
+}
+
+//.mcate{padding:0 10px;}
+
+.m,.nav-drapdown-content{
+	.hot-movie{
+		display:-webkit-box; overflow: hidden; margin-top:14px;
+		li{-webkit-box-flex:1; text-align: center; }
+		li:nth-child(2) a{margin:0 auto;}
+		li:last-child a{margin-left:auto;}
+		li a{display: block; font-size: 12px; color:#666; width: 86px; text-align:center;@include fn-text-overflow();}
+		li a:active{
+			color:#000;
+			background: #f5f5f5;
+		}
+		li p{height:22px; line-height:22px; @include fn-text-overflow();}
+	}
+
+	.drapdown-mod{
+		.title{
+			position: relative; padding:0 10px; color:#666;
+			h3{
+				position:relative; display:inline-block; padding-left: 13px; height:30px; line-height:30px; font-size:14px; color:#999;
+				&::before{
+					content:""; position: absolute; left:0; top:50%;  margin-top: -3px; width:5px; height:5px;
+					background:#29c8d2; @include border-radius(5px);
+				}
+			}
+		}
+	}
+
+	.movie-link{
+		p{display: -webkit-box; -webkit-box-pack:center; -webkit-box-align:center; margin-bottom: 10px;}
+		p:last-child{margin-bottom: 0;}
+		p a{display:block; width:33%; height:30px; line-height: 30px; -webkit-box-flex:1; @include fn-text-overflow(); text-align: center;}
+		p a:nth-child(1),p a:nth-child(2){margin-right: 4px;}
+		p a:active{
+			background: #f5f5f5;
+		}
+	}
+
+	.icon-link{
+		display: -webkit-box;
+		.item{
+			display: -webkit-box; -webkit-box-pack: center; -webkit-box-align: center;
+			width:20%; height: 74px; font-size: 12px; color: #999;
+			span{display: block; text-align: center; }
+			span:last-child{margin-top: 6px;}
+			img{width:30px; height: 30px;}
+			&:active{
+				color: #000;
+				background: #f5f5f5;
+			}
+		}
+	}
+
+	.icon-4-txt{
+		.item{
+			width:25%; height: 88px;
+			img{width: 44px; height: 44px; @include border-radius(3px);}
+		}
+	}
+
+	.words4-link,.words5-link{
+		p{display: -webkit-box; -webkit-box-pack:center; -webkit-box-align:center; margin-bottom: 12px;}
+		p a{position: relative; display:block; height:30px; line-height: 30px; width:20%;}
+		p a:active{background:#f5f5f5; color:#000;}
+		p a.rline:before{display:none;}
+		p a span{
+			display: block;/*  margin-right: 8px;  */text-align: center;
+			@include fn-text-overflow();
+		}
+		p a:last-child span{margin-right: 0;}
+		p:last-child{margin-bottom:0;}
+	}
+
+	.words5-link p a:first-child[style="color:#00a1e9"]:before{
+		display: block;
+		height: 10px;
+		margin-top: -5px;
+		top: 50%;
+	}
+
+	.words4-link{
+		p a{width:25%;}
+	}
+
+	.drapdown-ads-img1{
+		margin: 14px 14px 0;
+		display: -webkit-box; -webkit-box-pack:center; -webkit-box-align:center;
+		a{display:block; -webkit-box-flex:1;}
+		a:nth-child(2){ margin-left:10px;}
+		img{width:100%; height: 60px;}
+	}
+
+	.drapdown-ads-img2{
+		margin-top:10px;
+		display: -webkit-box; -webkit-box-pack:center; -webkit-box-align:center;
+		a{display:block; width:50%; -webkit-box-flex:1; overflow: hidden;}
+		a:nth-child(1){
+			margin-right: 5px; 
+		}
+		a:nth-child(2){
+			margin-left: 5px; 
+		}
+		img{width:100%; height: 60px;}
+	}
+
+	.drapdown-ads-link{
+		a{
+			background: #fafafa; height: 30px; padding-left: 10px; display: -webkit-box; -webkit-box-align: center; -webkit-box-pack: start;
+			&:active{
+				background: #f5f5f5; color:#000;
+			}
+			.icon-hot{font-size:10px; background:#ff0000; padding:0 3px; text-align:center; height:14px; line-height: 14px; color:#fff; border-radius: 2px; margin-right: 10px;}
+			i,span{display:block; font-style: normal;}
+		}
+	}
+}
+
+// BOX 之间的距离 20px
+// .cltab-wrap,.drapdown-ads-link,.drapdown-link,.drapdown-ads-img2,.hot-movie,.drapdown-mod,.movie-link,.words4-link{
+// 	padding-left: 10px; padding-right: 10px;
+// }
+
+.tabs .tab-nav,.drapdown-mod,.cltab-wrap, .icon-5-txt{
+	padding-top: 10px;
+}
+
+.cltab-wrap .hot-movie{
+	padding: 0;
+}
+
+.caipiao,.movie-link,.drapdown-ads-link,.words4-link,.words5-link,.icon-link,.caipiao{
+	padding-top: 10px;
+}
+
+
+@media all and (min-width:359px) and (-webkit-min-device-pixel-ratio: 1.5){
+	.nav-drapdown-content .ticket-wrap .ticket p:nth-child(2){
+		@include background-size(80px auto);
+	}
+}
+
+/* 1px hack */
+.ui-border-t {
+	border-top: 1px solid #ebebeb; 
+}
+
+.ui-border-b {
+	border-bottom: 1px solid #ebebeb; 
+}
+
+.ui-border-tb {
+	border-top: 1px solid #ebebeb;
+	border-bottom: 1px solid #ebebeb;
+	background-image: none;
+}
+
+.ui-border-l {
+	border-left: 1px solid #ebebeb;
+}
+
+.ui-border-r {
+	border-right: 1px solid #ebebeb;
+}
+
+.ui-border {
+	border: 1px solid #ebebeb;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 2) {
+	.ui-border {
+		position: relative;
+		border: 0;
+	}
+
+	.ui-border-t, .ui-border-b, .ui-border-l, .ui-border-r, .ui-border-tb {
+		border: 0;
+	}
+
+	.ui-border:before {
+		content: "";
+		width: 200%;
+		height: 200%;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		border: 1px solid #ebebeb;
+		-webkit-transform: scale(0.5);
+		-webkit-transform-origin: -50% -50%;
+	}
+
+	.ui-border-t {
+		background-position: left top;
+		background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.5, transparent), color-stop(0.5, #ebebeb), to(#ebebeb)); }
+
+	.ui-border-b {
+		background-position: left bottom;
+		background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.5, transparent), color-stop(0.5, #ebebeb), to(#ebebeb)); }
+
+	.ui-border-t,
+	.ui-border-b {
+    	background-repeat: repeat-x;
+    	-webkit-background-size: 100% 1px;
+	}
+
+	.ui-border-tb {
+		background: -webkit-gradient(linear, left bottom, left top, color-stop(0.5, transparent), color-stop(0.5, #ebebeb), to(#ebebeb)) left top repeat-x, -webkit-gradient(linear, left top, left bottom, color-stop(0.5, transparent), color-stop(0.5, #ebebeb), to(#ebebeb)) left bottom repeat-x;
+	}
+
+	.ui-border-tb {
+    	-webkit-background-size: 100% 1px;
+	}
+
+	.ui-border-l {
+		background-position: left top;
+		background-image: -webkit-gradient(linear, left top, right top, color-stop(0.5, transparent), color-stop(0.5, #ebebeb), to(#ebebeb));
+	}
+
+	.ui-border-r {
+    	background-position: right top;
+    	background-image: -webkit-gradient(linear, right top, left top, color-stop(0.5, transparent), color-stop(0.5, #ebebeb), to(#ebebeb));
+	}
+
+	.ui-border-l,
+	.ui-border-r {
+		background-repeat: repeat-y;
+		-webkit-background-size: 1px 100%; 
+	}
+}

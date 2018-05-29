@@ -1,0 +1,35 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $indexUrl?>">道具兑换</a></li>
+        <li class="current"><a href="javascript:;">道具发放记录</a></li>
+	</ul>
+</div>
+<div class="h_a">
+	<span>共<?php echo count($data);?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="80">ID</td>
+			<td width="150">道具名称</td>
+			<td width="150">道具系列</td>
+			<td width="80">发放数量</td>
+			<td width="150">操作</td>
+		</tr>
+		<?php foreach ($data as $item):?>
+			<tr class = "ct">
+		    	<td><?php echo $item['propId'];?></td>
+				<td><?php echo $item['propName'];?></td>
+				<td><?php echo $item['groupName'];?></td>
+				<td><?php echo $item['grantTotal'];?></td>
+				<td>
+					<a href="<?php echo $grantExportUrl;?>/?festivalId=<?php echo $festivalId;?>&groupId=<?php echo $item['groupId'];?>&propId=<?php echo $item['propId'];?>" class="mr10">导出</a>
+				</td>
+			</tr>
+		<?php endforeach;?>
+	</table>
+</div>
+<div class="mr10 cc">
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

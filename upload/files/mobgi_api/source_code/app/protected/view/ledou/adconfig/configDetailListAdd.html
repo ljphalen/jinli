@@ -1,0 +1,92 @@
+<div class="colMain">
+    <div class="title"><p class="fl">列表配置项新增</p></div>
+    <form action="/adconfig/upd" method="post" name="form" id="adconfig">
+        <div class="main">
+            <div class="app-detail">
+                <ul class="form">
+                    <li>
+                        <span class="label">名称：</span>
+                        <div class="fc">
+                            <input type="hidden" class="iText" id="config_type" name="config_type" value="list" />
+                            <input type="text" class="iText required" id="config_name" name="config_name" value="" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">描述：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" id="config_desc" name="config_desc" value=""/>
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">平台类型：</span>
+                        <div class="fc">
+                                <select name="platform" id="platform">
+                                    <option value="1">Android</option>
+                                    <option value="2">IOS</option>
+                                </select>
+                        </div>
+                    </li>
+                    
+                    <li class="line"></li>
+                    <li>
+                        <span class="label">应用：</span>
+                        <div class="fc">
+                            <div class="clearfix config" id="games_box"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">渠道：</span> 
+                        <div class="fc">
+                            <div class="clearfix config" id="channels_box"></div>
+                        </div>
+                    </li>
+                    <li class="line"></li>
+
+
+                    <li>
+                        <span class="label">广告产品：</span>
+                        <span class="label" style="display: none">广告概率：</span>
+                        <div class="fc">
+                            <div class="grid">
+                                <div class="gridToolbar">
+                                    <p class="fl">
+                                        <a href="javascript:void(0)" class="cancel dzad" type="dz">从其他配置导入</a>
+                                        <a href="javascript:void(0)" class="cancel dzad" type="gx">更新到其他配置</a>
+                                        <input type="hidden" name="products" value='' />
+                                    </p>
+                                    <p class="fr">
+                                        <a href="javascript:void(0)" id="addAD" class="btn">新增</a>
+                                    </p>
+                                </div>
+                                <table id="adList">
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="line">
+                        <input type="hidden" class="radio" name="config_lelvel" value="-1" />
+                    </li>
+                    <li>
+                        <div class="fc">
+                            <input type="submit" value="确定" class="submit" />
+                            <input type="button" onclick="javascript:location.href='/adconfig/lists'" value="取消" class="cancel" />
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- include "inc" -->
+<script>
+    $(function(){
+        $("#appkey").addClass("required");
+        $("#channel_id").addClass("required");
+    })
+</script>
+

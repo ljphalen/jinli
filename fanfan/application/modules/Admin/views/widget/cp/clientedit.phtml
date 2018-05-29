@@ -1,0 +1,81 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $clientListUrl; ?>">CP_CLIENT管理</a></li>
+		<li class="current"><a href="<?php echo $clientEditUrl; ?>">CP_CLIENT添加</a></li>
+
+	</ul>
+</div>
+<div class="h_a">添加接口</div>
+<form method="post" action="<?php echo $clientPostUrl; ?>" id="addFrom">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">source_name</th>
+				<td class="td">
+					<select id="cp_id" name="cp_id" class="select">
+						<?php foreach ($cp as $key => $value) { ?>
+							<option value="<?php echo $key; ?>" <?php if ($info['cp_id'] == $key) echo 'selected'; ?>><?php echo "{$value[0]}({$value[1]})"; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<!--
+			<tr class="tr">
+				<th class="th">APK资源地址</th>
+				<td class="td"><input type="text" class="input wc" name="down_url" value="<?php echo $info['down_url'];?>">
+				<br>针对金立定制版本和非定制版本 使用不同的apk资源文件
+				</td>
+			</tr>
+			-->
+			<tr class="tr">
+				<th class="th">channel_name</th>
+				<td class="td"><input type="text" class="input wc" name="channel_name" value="<?php echo $info['channel_name'];?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">detail_id</th>
+				<td class="td"><input type="text" class="input wc" name="detail_id" value="<?php echo $info['detail_id'];?>"></td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">data</th>
+				<td class="td">
+					<table width="100%">
+						<?php
+						for($i=0;$i<6;$i++):
+							$v = $info['data'][$i];
+
+							if (stristr($v['type'], 'array')) {
+								$v['value'] = implode(',', $v['value']);
+							}
+						?>
+						<tr class="tr">
+							<td class="td">
+							key:<input type="text" class="input" name="data[<?php echo $i;?>][key]" value="<?php echo $v['key']; ?>">
+							value:<input type="text" class="input" name="data[<?php echo $i;?>][value]" value="<?php echo $v['value']; ?>">
+							type:<input type="text" class="input" name="data[<?php echo $i;?>][type]"  value="<?php echo $v['type']; ?>">
+							</td>
+						</tr>
+						<?php
+						endfor;
+						?>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	//表单数据提交
+	$(document).ready(function () {
+		ajaxForm('addFrom', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Widget_Cp/clientList?cp_id='+$('#cp_id').val());
+		});
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,59 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">同步日志列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+		    <th class="th">appid</th>
+			<td class="td"><input type="text" class="input" name="appid" value="<?php echo $search['appid'];?>"></td>
+		    <th class="th">同步状态</th>
+			<td class="td">
+			<select name="status" class="select wa">
+			    <option value="0">全部</option>
+				<option <?php if($search['status'] == 2) echo 'selected';?> value="2">成功</option>
+				<option <?php if($search['status'] == 1) echo 'selected';?> value="1">失败</option>
+			</select>
+			</td>
+	    </tr>		
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="30">ID</td>
+			<td>游戏id</td>
+			<td>appid</td>
+			<td>动作</td>
+			<td>信息</td>
+			<td>状态</td>
+			<td>同步时间</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($logs as $key => $value) {?>
+
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo ($value['game_id']) ? $value['game_id'] : '新增';?></td>
+			<td><?php echo $value['app_id'];?></td>
+			<td><?php echo ($value['act']=='1') ? '上线' : '下线';?></td>
+			<td><?php echo $value['message'];?></td>
+			<td><?php echo ($value['status']=='1') ? '成功' : '失败';?></td>
+        	<td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+			<td>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,58 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+	<div class="module">
+		<?php if($activity) {?>
+		<section class="theme-banner">			
+			<a class="pic J_lazyload_img" href="<?php echo Store_Service_Info::getShortUrl(Stat_Service_Log::V_CHANNEL, $activity);?>">
+				<img src="<?php echo $staticResPath;?>/pic/blank.gif" data-src="<?php echo $attachPath.$activity['img'];?>" alt="">
+			</a>
+		</section>
+		<?php }?>
+		<?php if(!empty($plats)):?>
+		<section class="theme-recom">
+			<h3>推荐</h3>
+			<ul class="pic J_lazyload_img">
+			<?php foreach ($plats as $kye=>$value){?>
+				<li>
+					<a href="<?php echo Store_Service_Info::getShortUrl(Stat_Service_Log::V_CHANNEL, $value);?>">
+					<i class="J_mask"></i>
+						<span>
+							<img src="<?php echo $staticResPath;?>/pic/blank.gif" data-src="<?php echo $attachPath.$value['img'];?>" alt="">
+						</span>
+						<em class="title"><?php echo html_entity_decode($value['title']);?></em>
+					</a>
+				</li>
+			<?php }?>
+			</ul>
+		</section>
+		<?php endif;?>
+
+		<section id="iScroll">
+			<div class="theme-sel J_proDetail" data-ajaxurl="<?php echo $webroot;?>/api/channel_theme/category?id=<?php echo $category['id'];?>">
+				<div class="wrap"></div>
+				<script id="J_dtemplate" type="text/icat-template">
+					<% if(data.list.length && data.curpage==1){ %>
+					<h3>精选</h3>
+					<% } %>
+					<ul>
+						<%for(var i=0, len=data.list.length; i<len; i++){%>
+						<li>
+							<a href="<%=data.list[i].link%>">
+							<i class="J_mask"></i>
+								<div class="pic">
+									<img src="<%=data.list[i].img%>">
+								</div>
+								<p class="desc">
+									<%=data.list[i].name%>
+								</p>
+							</a>
+						</li>
+						<%}%>
+					</ul>
+				</script>
+			</div>
+		</section>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

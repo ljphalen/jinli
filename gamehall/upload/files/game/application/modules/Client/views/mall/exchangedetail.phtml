@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html >
+<head>
+	<meta charset="UTF-8">
+	<title><?php echo $title ? $title: '金立游戏大厅';?></title> 
+	<meta name="keyword" content="金立, 金立游戏, 游戏大厅" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="email=no" />
+    <link rel="stylesheet" href="<?php echo $staticroot; ?>/apps/game/apkv1/assets/css/points.css?v=<?php echo $version;?>"/>
+    <script>
+    var token = '<?php echo $token;?>';
+    var isLogin = '<?php echo $isLogin ? 'true': 'false';?>';		    
+    </script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/jquery.js"></script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/Common.js"></script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/Form.js"></script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/Model.js"></script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/points/init.js"></script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/fastclick.js"></script>
+    <meta charset="UTF-8">
+</head>
+<body>
+	<div class="pointsEvent-intr">
+		<div class="article">
+			<img src="<?php echo $attachPath. $good['img'];?>" alt="">
+			<div class="info">
+				<h1 class="omit"><?php echo html_entity_decode($good['title']);?></h1>
+				<?php 
+            	    list($isDiscount, $consumePoint, $discountArr) = Mall_Service_ExchangeGoods::getConsumePoint($good);
+            	    $goodType = ($good['type'] == Mall_Service_Goods::ACOUPON ||  $good['type'] == Mall_Service_Goods::GIFT ||  $good['type'] == Mall_Service_Goods::DISCOUNT_COUPON ? 'virtual' : 'entity');
+            	    $entityType = ($good['type'] == Mall_Service_Goods::PHONE_RECHARGE_CARD ? 'true' : 'false');
+            	?>
+				<p>剩余：<span id="remaindNum" class="font-orange"><?php echo $good['remaind_num'];?></span>个</p>
+        		<p>积分：<span class="font-orange <?php if($isDiscount && $discountArr['discount_start_time'] <= Common::getTime() && $discountArr['discount_end_time'] > Common::getTime()){?>discount<?php }?>"><?php echo ($exchangeInfo['haveExchangeNum'] || !$exchangeInfo['canExchangeNums']) ? Mall_Service_Goods::convertPointVal($good['consume_point']) : Mall_Service_Goods::convertPointVal($exchangeInfo['consumeOriginalPoints']);?></span></p>
+        		<?php if($isDiscount && $discountArr['discount_start_time'] <= Common::getTime() && $discountArr['discount_end_time'] > Common::getTime()){?>
+				<p>特价：<span class="font-orange"><?php echo ($exchangeInfo['haveExchangeNum']|| !$exchangeInfo['canExchangeNums']) ? Mall_Service_Goods::convertPointVal($consumePoint) : Mall_Service_Goods::convertPointVal($exchangeInfo['consumePoints']);?></span></p>
+				<?php } ?>
+				<div id="successMsg" class="success-msg" <?php if(is_array($exchangeInfo) && $exchangeInfo['haveExchangeNum']) {?>style="display:block;"<?php }?> >
+					<i class="icon icon-right"></i><h1 class="font-orange">兑换成功</h1>
+					<p class="font-orange omit">在我的奖品中，可查看兑换礼包</p>
+				</div>
+				<?php if((is_array($exchangeInfo) && $exchangeInfo['canExchangeNums']) && $good['remaind_num']) {?>
+				<input class="exchange" id="buy" type="button" value="兑 换" data-type="<?php echo $goodType;?>" entity-type=<?php echo $entityType;?> ></input>
+			    <?php } else if(is_array($exchangeInfo) && !$exchangeInfo['haveExchangeNum'] && !$exchangeInfo['canExchangeNums'] && $good['remaind_num']){?>
+			    <input class="exchange no" id="buy" type="button" value="兑 换" data-type="<?php echo $goodType;?>" entity-type=<?php echo $entityType;?> data-msg='积分不足' ></input>
+			    <?php } else if(is_array($exchangeInfo) && $exchangeInfo['haveExchangeNum']){?>
+			    <input class="exchange no" id="buy" type="button" value="已兑换" data-type="<?php echo $goodType;?>" entity-type=<?php echo $entityType;?>></input>
+			    <?php } else if(!$good['remaind_num']){?>
+			    <input class="exchange no" id="buy" type="button" value="已抢光" data-type="<?php echo $goodType;?>" entity-type=<?php echo $entityType;?>></input>
+			    <?php } else {?>
+			    <input class="exchange no" id="buy" type="button" value="兑 换" data-type="<?php echo $goodType;?>" entity-type=<?php echo $entityType;?> ></input>
+			    <?php } ?>
+			</div>
+		</div>
+		
+		<div class="prize-info">
+			<h1>奖品内容</h1>
+			<div class="ui-editor"><?php echo html_entity_decode($good['descrip']);?></div>
+		</div>
+		<div class="rules-info">
+			<h1>兑换规则</h1>
+			<div class="ui-editor"><?php echo html_entity_decode($good['exchange_rule']);?></div>
+		</div>
+		<?php if($isDiscount && $discountArr['discount_start_time'] <= Common::getTime() && $discountArr['discount_end_time'] > Common::getTime()){?>
+	    <div class="article-date">
+			<h1>折扣时间</h1>
+			<p><?php echo  date('Y-m-d H:i:s',$discountArr['discount_start_time']); ?> 至　<?php echo  date('Y-m-d H:i:s',$discountArr['discount_end_time']); ?></p>
+		</div>
+	    <?php } ?>
+		<div class="article-date">
+			<h1>截止时间</h1>
+			<p><?php echo  date('Y-m-d H:i:s',$good['end_time']); ?></p>
+		</div>
+		
+		<div class="operation-container" id="entity">
+			<div class="addressinfo-container">
+				<span class="address-tips">收货信息</span>
+				<table>
+					<tr class="ad-info">
+						<td>
+							<em>收货人:</em>
+						</td>
+						<td>
+							<input name="receiver" class="btn-input" type="text" placeholder="姓名" value='<?php echo $userInfo['receiver'];?>'/>
+						</td>
+					</tr>
+					<tr class="ad-info">
+						<td>
+							<em>联系电话:</em>
+						</td>
+						<td>
+							<input name="receiverphone" class="btn-input" type="text" placeholder="手机或固话" value='<?php echo $userInfo['receiverphone'];?>'/>
+						</td>
+					</tr>
+					<tr class="ad-info">
+						<td>
+							<em>收货地址:</em>
+						</td>
+						<td>
+							<textarea name="address" class="btn-input btn-textarea" rows="3"  placeholder="所在省市详细街道信息"><?php echo $userInfo['address'];?></textarea>
+						</td>
+					</tr>
+					<tr class="ad-info">
+						<td>
+							<em>QQ:</em>
+						</td>
+						<td>
+							<input name="qq" class="btn-input" type="text" placeholder="请输入QQ" value='<?php echo $userInfo['qq'];?>'/>
+						</td>
+					</tr>
+				</table>
+				<div class="ad-info">
+					<em class="title">温馨提示:</em>
+					<p class="msg">请亲认真填写收货信息，工作MM将根据收货信息 进行派送，若信息不完整，物品将会被老板没收</p>
+				</div>
+			</div>
+			<?php 
+			 $adressUrl = $webroot.'/client/Mall/exchangeAdressPost/?goodId='.$good['id'].'&puuid='.$userInfo['uuid'].'&uname='.$userInfo['uname'].'&imei='.$exchangeData['imei'].'&serverId='.$exchangeData['serverId'];
+			 $ajaxUrl = $webroot.'/client/Mall/exchangeEntityPost/?goodId='.$good['id'].'&puuid='.$userInfo['uuid'].'&uname='.$userInfo['uname'].'&imei='.$exchangeData['imei'].'&serverId='.$exchangeData['serverId'];
+			 ?>
+			<div id="exEntityBtn" class="btn-container" data-adressUrl="<?php echo $adressUrl;?>" data-ajaxUrl="<?php echo $ajaxUrl;?>">
+				<a class="btn-orange font-orange">确定</a>
+			</div>
+		</div>
+		
+		<div class="operation-container" id="virtual">
+			<div class="addressinfo-container">
+				<span class="address-tips">收货信息</span>
+				<p class="code-msg">激码已保存到我的奖品</p>
+				<div class="ad-info">
+					<em>激活码:</em>
+					<p class="code">1234567asjiagtyfoikjhyuiopftgy65584989</p>
+				</div>
+				<div class="ad-info">
+					<em>温馨提示:</em>
+					<p class="msg">请亲及时兑换哦~~</p>
+				</div>
+			</div>
+			<div id="cobyBtn" class="btn-container" data-ajaxUrl="<?php echo $webroot; ?>/client/Mall/exchangeAcouponPost/?goodId=<?php echo $good['id'].'&puuid='.$userInfo['uuid'].'&uname='.$userInfo['uname'].'&imei='.$exchangeData['imei'].'&serverId='.$exchangeData['serverId'];?>">
+				<a class="btn-orange">关闭</a>
+			</div>
+		</div>
+		
+		<div class="J_dialog dialog">	
+		</div>
+		<div class="J_loading loading-container">
+			<i class="icon-loading"></i>
+		</div>
+	</div>
+</body>
+<script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/points/intr.js"></script>
+</html>

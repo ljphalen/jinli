@@ -1,0 +1,82 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">频道内容列表</a></li>
+    <li class="current"><a href="javascript:;">添加频道内容</a></li>
+	</ul>
+</div>
+<div class="h_a">添加频道内容</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><textarea class="textarea wc" name="title"></textarea></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">链接地址</th>
+			<td class="td"><input type="text" class="input wc" name="link" value=""></td>
+		</tr>		
+		<tr class="tr">
+			<th class="th">所属频道</th>
+			<td class="td"><select name="channel_id">
+<?php 
+foreach($channels as $key => $value) {
+?>
+                <option value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
+<?php 
+}
+?>
+            </select></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">统计到</th>
+			<td class="td"><select name="click_type">
+<?php 
+foreach($typelist as $key => $value) {
+?>
+                <option value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
+                <?php
+			     $i = 0;
+	             foreach($value['items'] as $k=>$item)
+				{?>
+                 <option value="<?php echo $item['id'];?>"><?php echo '&nbsp;&nbsp;&nbsp;&nbsp;'.$item['name'];?></option>
+                <?php }?>
+<?php 
+}
+?>
+            </select></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="0">（填写一个数字，数字越大越靠前）</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">开始结束时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status">
+                	<option value="1">开启</option>
+                	<option value="0">关闭</option>
+            </select></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+    $('#end_time').datetimepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Channelcontent/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

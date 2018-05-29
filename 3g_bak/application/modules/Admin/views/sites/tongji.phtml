@@ -1,0 +1,121 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class=""><a href="<?php echo $indexUrl; ?>">分类列表</a></li>
+			<li class=""><a href="<?php echo $catAddUrl; ?>">添加分类</a></li>
+			<li><a href="<?php echo $contentsUrl; ?>">内容列表</a></li>
+			<li class=""><a href="<?php echo $addContentUrl; ?>">添加内容</a></li>
+			<li><a href="<?php echo $importUrl; ?>">数据导入</a></li>
+			<li class="current"><a href="<?php echo $tongjiUrl; ?>">统计信息</a></li>
+		</ul>
+	</div>
+
+	<form action="<?php echo $tongjiUrl; ?>" method="post">
+		<input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">一级分类</th>
+					<td class="td">
+						<select name="first_level" id="first_level">
+							<option value="0">请选择分类</option>
+							<?php foreach ($topData as $k => $v) { ?>
+								<option value="<?php echo $v['id']; ?>" <?php if ($v['id'] == $postData['first_level']) echo 'selected'; ?>><?php echo $v['name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tbody id="cate_data" style="display: <?php echo $postData['second_level'] ? '' : 'none' ?>">
+				<tr class="tr">
+					<th class="th">二级分类</th>
+					<td class="td">
+						<select name="second_level" id="second_level">
+							<option value="0">请选择</option>
+							<?php foreach ($secondData as $k => $v) { ?>
+								<option value="<?php echo $v['id']; ?>" <?php if ($v['id'] == $postData['second_level']) echo 'selected'; ?>><?php echo $v['name'] ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				</tbody>
+				<tr class="tr">
+					<th class="th">开始日期</th>
+					<td class="td">
+						<input type="text" name="start_time" id="start_time" value="<?php echo $postData['start_time']; ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">结束日期</th>
+					<td class="td">
+						<input type="text" name="end_time" id="end_time" value="<?php echo $postData['end_time']; ?>">
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac">
+			<span class="btn"><span><button type="submit">搜 索</button></span></span>
+		</div>
+	</form>
+
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td>名称</td>
+				<?php foreach ($date as $v) { ?>
+					<td><?php echo date('Y-m-d', strtotime($v)); ?></td>
+				<?php } ?>
+				<td>总和:<span id="sum" style="color:red"></span></td>
+			</tr>
+			<?php
+			$sum = 0;
+			foreach ($data as $key => $value) { ?>
+				<tr class="ct">
+					<td><?php echo $value['name']; ?></td>
+					<?php
+					$total = 0;
+					foreach ($date as $d) {
+						?>
+						<td class="td2"><?php echo $value[$d] ? $value[$d] : 0;?></td>
+						<?php
+						$total += $value[$d];
+						$sum += $value[$d];
+					} ?>
+					<td class="td"><?php echo $total; ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?></div>
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#start_time').datetimepicker();
+			$('#end_time').datetimepicker();
+		});
+		var t = '<?php echo $sum;?>';
+		$("#sum").text(t);
+		$("#first_level").bind('change', function () {
+			var fristLevel = $("#first_level option:selected").val();
+			if (fristLevel > 0) {
+				$.ajax({
+					'type': 'post',
+					'dataType': 'json',
+					'data': {'token': '<?php echo $token;?>', 'parent_id': fristLevel},
+					'url': '/Admin/sites/ajaxGetSecondLevelData',
+					'success': function (e) {
+						var msg = '<option value="0">请选择</option>';
+						$.each(e.data, function (i, m) {
+							msg += '<option value="' + m.id + '">' + m.name + "</option>";
+						});
+						$("#second_level").html(msg);
+						$("#cate_data").show();
+					}
+				});
+			} else {
+				$("#cate_data").hide();
+			}
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

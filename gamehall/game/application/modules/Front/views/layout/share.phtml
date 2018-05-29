@@ -1,0 +1,46 @@
+<div class="mod_box share_box">
+	<div class="hd"><i class="hd_ico"></i><h2 class="title">分享至好友</h2></div>
+            <?php 
+                $share_object = (substr($tj_object,0,10) == 'newsdetail')?$tj_object:$game['package'];
+          		$share_intersrc =(substr($tj_object,0,10) == 'newsdetail')?'_'.($news_info['ntype']==1?'zx':'hd').$news_info['id']:'_gid'.$game['id'];               
+                if($from == 'baidu'){
+                	$game_url= $webroot.'/Front/Search/detail/?from=baidu&keyword='.$keyword.'&id='.$game['id']."&action=JIA";
+                }else{
+                	$game_url= $webroot.'/Front/Game/detail/?id='.$game['id']."&action=JIA";
+                }
+                if(substr($tj_object,0,10) == 'newsdetail'){
+                	$share_url = $webroot.'/Front/News/detail/?id='.$news_info['id']."&action=JIA";
+                	$share_text = $news_info['title'].'-'.$ntype[$news_info['ntype']].'-'.$ami_web_new_share_text;
+                    $share_img  = $news_info['thumb_img']?($attachPath.$news_info['thumb_img']):($staticResPath.'/css/imgs/logo_3.png');
+                }else{
+                	$share_url = $game_url;
+                	$share_text = $game['name'].'-'.(($from == 'baidu')?$game['category']:$game['category_title']).'-'.$ami_web_game_share_text;
+                	$share_img  = $game['img']?$game['img']:($staticResPath.'/css/imgs/logo_3.png');
+                }
+               
+                ?>
+		<div class="bd">
+					<ul class="share_list clearfix" data-tag="share" data-pic="<?php echo $share_img; ?>" data-text="<?php echo $share_text; ?>"  data-url="<?php echo trim($share_url);?>">
+						<li>
+							<a href="javascript:void(0)" class="jiathis_button_tsina" onclick="javascript:tjUrl('<?php echo $tj_channel; ?>','<?php echo $tj_cku; ?>','share','<?php echo $share_object; ?>','<?php echo ((substr($tj_object,0,10) == 'newsdetail')?'newsdetail':'gamedetail').'_sinaweibo'.$share_intersrc; ?>');">
+							</a>
+							<span><i class="ico weibo_ico">新浪微博</i></span>
+						</li>
+						<li>
+							<a href="javascript:void(0)" class="jiathis_button_weixin" onclick="javascript:tjUrl('<?php echo $tj_channel; ?>','<?php echo $tj_cku; ?>','share','<?php echo $share_object; ?>','<?php echo ((substr($tj_object,0,10) == 'newsdetail')?'newsdetail':'gamedetail').'weixin'.$share_intersrc; ?>');">
+							</a>
+							<span><i class="ico weixin_ico">微信</i></span>
+						</li>
+						<li>
+							<a href="javascript:void(0)" class="jiathis_button_tqq" onclick="javascript:tjUrl('<?php echo $tj_channel; ?>','<?php echo $tj_cku; ?>','share','<?php echo $share_object; ?>','<?php echo ((substr($tj_object,0,10) == 'newsdetail')?'newsdetail':'gamedetail').'tencentweibo'.$share_intersrc; ?>');">
+							</a>
+							<span><i class="ico tx_ico">腾讯微博</i></span>
+						</li>
+						<li>
+							<a href="javascript:void(0)" class="jiathis_button_cqq" onclick="javascript:tjUrl('<?php echo $tj_channel; ?>','<?php echo $tj_cku; ?>','share','<?php echo $share_object; ?>','<?php echo ((substr($tj_object,0,10) == 'newsdetail')?'newsdetail':'gamedetail').'qq'.$share_intersrc; ?>');">
+							</a>
+							<span><i class="ico qq_ico">腾讯QQ</i></span>
+						</li>
+					</ul>
+				</div>
+</div>

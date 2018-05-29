@@ -1,0 +1,82 @@
+<div class="page">
+	<div class="pageContent">
+	
+		<!-- 列表开始 -->
+		<table class="list" width="100%" layoutH="138">
+			<thead>
+			<tr>
+				<th>ApkID</th>
+				<th>名称</th>
+				<th>版本</th>
+				<th>状态</th>
+				<th>发布日期</th>
+				<th>期望上线</th>
+				<th>上线日期</th>
+				<th>下线日期</th>
+				<th>详情</th>
+				<th>大小</th>
+				<th>差分包生成</th>
+				<th>差分包列表</th>
+				<th>历史记录</th>
+			</tr>
+			</thead>
+			<tbody>
+			<volist id="apk" name="apks">
+				<php>
+					$apkModel = D("Apks");
+					$opt_time = D("Optlog")->where(array("apk_id"=>$apk['id']))->order("id desc")->getField("created_at");
+				</php>
+			
+				<tr target="sid_user" rel="{$vo['id']}">
+					<td>{$apk['id']}</td>
+					<td>{$apk['app_name']}</td>
+					<td>{$apk['version_name']}({$apk['version_code']})</td>
+					<td>{:$apkModel->getApkStatusByStatus($apk['status']);}</td>
+					<td>{$apk['created_at']|date="Y-m-d H:i:s",###}</td>
+					<td>{$apk['online_time']}</td>
+					<td>
+						<php>
+							if($apk['status'] == $apkModel::APK_ONLINE)
+							echo date("Y-m-d H:i", $opt_time);
+						</php>
+					</td>
+					<td>
+						<php>
+							if($apk['status'] == $apkModel::APK_OFFLINE)
+							echo date("Y-m-d H:i", $opt_time);
+						</php>
+					</td>
+					<td>
+						<a href="{:U('AppManage/detail', array('apk_id'=>$apk['id']))}" rel="app_detail_{$apk['id']}"target="navTab" mask="true" title="详情">查看详情</a>
+					</td>
+					<td>{:$apk['bsdiff'] ? '已申请' : '未申请'}</td>
+					<td>{$apk['file_size']|showsize|implode="",###}</td>
+					<td><a href="{:U("bspackage", array("apk_id"=>$apk['id']))}" rel="app_bs_{$apk['id']}"target="navTab" mask="true" title="差分包管理">查看</a></td>
+					<td><a href="{:U("@admin")}testlog/index/apk_id/{$apk['id']}" rel="app_log_{$apk['id']}" target="navTab" mask="true">查看</a></td>
+				</tr>
+				
+			</volist>
+			</tbody>
+		</table>
+		<!-- 列表结束 -->
+		
+		<!-- 分页开始 -->
+		<div class="panelBar">
+			<div class="pages">
+				<span>显示</span>
+				<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+					<option value="10" <eq name="numPerPage" value="10">selected</eq>>10</option>
+					<option value="20" <eq name="numPerPage" value="20">selected</eq>>20</option>
+					<option value="50" <eq name="numPerPage" value="50">selected</eq>>50</option>
+					<option value="100" <eq name="numPerPage" value="100">selected</eq>>100</option>
+					<option value="200" <eq name="numPerPage" value="200">selected</eq>>200</option>
+				</select>
+				<span>共{$totalCount}条</span>
+			</div>
+			<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="10" currentPage="{$currentPage}"></div>
+		</div>
+		<!-- 分页结束 -->
+		
+	</div>
+	
+</div>

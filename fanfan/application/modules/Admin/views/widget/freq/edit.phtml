@@ -1,0 +1,99 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">推送列表</a></li>
+    <li class="current"><a href="javascript:;"><?php if (empty($info['id'])): ?>添加<?php else: ?>编辑<?php endif; ?></a></li>
+	</ul>
+</div>
+<div class="h_a"></div>
+<form method="post" action="<?php echo $baseUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">分类</th>
+			<td class="td">
+				<select id="type" name="type">
+					<?php foreach ($types as $key => $value) { ?>
+						<option value="<?php echo $key; ?>" <?php if ($info['type'] == $key) echo 'selected="selected"'; ?>><?php echo $value; ?></option>
+					<?php } ?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">内容源</th>
+			<td class="td">
+				<?php
+				$tmp = array();
+				foreach ($cpUrls as $k => $v) {
+					if ($k == 1) {
+						continue;
+					}
+					$tmp[$v['type']][$v['id']] = $v['title'];
+				}
+
+				foreach ($types as $tK => $tV) {
+					echo '<select class="url_id">';
+					$vList = isset($tmp[$tK]) ? $tmp[$tK] : array();
+					foreach($vList as $vId => $vTitle) {
+						$select = '';
+						if ($info['url_id'] == $vId) {
+							$select = 'selected="selected"';
+						}
+						echo "<option {$select} value=\"{$vId}\" >{$vTitle}</option>";
+					}
+					echo '</select>';
+				}
+				?>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">总数量/天</th>
+			<td class="td"><input type="text" class="input" name="num" value="<?php echo $info['num']; ?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">推送时间点</th>
+			<td class="td"><input type="text" class="input wc" name="time" value="<?php echo $info['time']; ?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">几天前数据</th>
+			<td class="td"><input type="text" class="input" name="history_day" value="<?php echo $info['history_day']; ?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">序号</th>
+			<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort']; ?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				<input type="radio" name="status" id="status0" <?php echo $info['status']?'checked':'';?> value="0" />
+				关闭
+				<input type="radio" name="status" id="status1" <?php echo $info['status']?'checked':'';?> value="1" />
+				开启
+			</td>
+		</tr>
+
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Widget_Freq/index');
+	});
+
+	$("#type").change(function(){
+		$("#type option").each(function(i,o){
+			if($(this).attr("selected")) {
+				$(".url_id").hide();
+				$(".url_id").eq(i).show();
+				$(".url_id").eq(i).attr("name","url_id");
+			}
+		});
+	});
+	$("#type").change();
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

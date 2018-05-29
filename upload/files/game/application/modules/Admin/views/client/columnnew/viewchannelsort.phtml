@@ -1,0 +1,217 @@
+<?php echo $this->render("layout/header.phtml");?>
+<style>
+	.coloum{
+		width:200px;
+		text-align: center;
+	}
+	.inner_table tr td{
+		padding: 7px 10px 9px;
+	}
+	.inner_table tr td:hover{
+		background: none!important;
+	}
+	.handpick_mask{
+		display: none;
+	}
+</style>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl.'/?column_version=1.5.2';?>">1.5.2</a></li>
+		<li><a href="<?php echo $listUrl.'/?column_version=1.5.3';?>">1.5.3-1.5.7</a></li>
+		<li><a href="<?php echo $listUrl.'/?column_version=1.5.8';?>">1.5.8</a></li>
+		<li><a href="<?php echo $listUrl.'/?column_version=1.5.9';?>">1.5.9及以上</a></li>
+		<li class="current"><a href="javascript:;">查看栏目配置</a></li>
+	</ul>
+</div>
+
+<div class="step mb10">
+	<ul class="cc">
+		<li style="width:25%;background: #74B88A;"  ><span class="fl"><em>设置栏目</em></span></li>
+		<li class="line" style="left:25%"></li>
+		<li style="width:25%;background: #74B88A;"  ><span class="fl"><em>设置频道</em></span></li>
+		<li class="line" style="left:50%"></li>
+		<li style="width:25%" class="current"><span class="fl"><em>频道排序</em></span></li>
+		<li class="line" style="left:75%"></li>
+		<li  style="width:25%"><span class="fl"><em>设置时间</em></span></li>
+	
+	</ul>
+</div>
+<div class="h_a">查看栏目配置 		
+<span class="btn2"><span><a href="<?php echo $infoUrl;?>" style="text-decoration:none;color:#ffffff;">频道位置说明</a></span></span>
+</div>
+<div class="table_list">
+<table >
+	<tr class="hd" >
+		<td width="150px" align="center">栏目</td>
+		<td width="150px">二级频道位置</td>
+		<td width="150px">频道名称</td>
+		<td width="150px">三级频道位置</td>
+		<td width="180px">频道名称</td>
+	</tr>
+</table>
+</div>
+<div class="table_full">
+	<table  width="100%">
+	<?php foreach ($parentinfo as $value){?>
+		<tr class="tr">
+			<td class="coloum"  style="width: 170px;">
+				<?php echo $value['position'].'-'.$value['name']; ?>
+				<input type="hidden" value="$value['id']">
+			</td>
+			<td>
+				<table class="inner_table">
+					<tr >
+						<td>
+							<span  style="width: 90px;display: inline-block;"><?php echo $value['position']; ?>-1</span>
+							<select name="name<?php echo $value['position']; ?>1" class="select wa" disabled="disabled">
+								<option  value="" >空</option>
+							    <?php 
+						        foreach ($info as $val) {
+						      	?>		
+								<option  value="<?php echo $val['name'].'-'.$val['id'].'-'.$val['relevance'].'-'.$val['channel_type'].'-'.'2'.'-'.$val['link'] ;?>"  <?php echo ($positon_arr[$value['position'].'-1'] == $val['name'])? 'SELECTED':'' ?> <?php if($val['relevance'] == 'chosen') echo 'data-handpick=1';  ?> ><?php echo $val['name'].(($val['channel_type'] ==1 )?'(默认)':'(扩展)')  ;?></option>			
+							   <?php }?>	
+							</select>
+						</td>
+					</tr>
+					<tr >
+						<td>
+						<span  style="width: 90px;display: inline-block;"><?php echo $value['position']; ?>-2</span>
+							<select name="name<?php echo $value['position']; ?>2" class="select wa" disabled="disabled">
+							  <option  value="" >空</option>
+						      <?php 
+						        foreach ($info as $val) {
+						      	?>	
+								<option  value="<?php echo $val['name'].'-'.$val['id'].'-'.$val['relevance'].'-'.$val['channel_type'].'-'.'2'.'-'.$val['link'] ;?>"  <?php echo ($positon_arr[$value['position'].'-2'] == $val['name'])? 'SELECTED':'' ?> <?php if($val['relevance'] == 'chosen') echo 'data-handpick=1';  ?> ><?php echo $val['name'].(($val['channel_type'] ==1 )?'(默认)':'(扩展)');?></option>			
+							   <?php }?>	
+							</select>
+						</td>
+					</tr>
+					<tr >
+						<td>
+						<span  style="width: 90px;display: inline-block;"><?php echo $value['position']; ?>-3</span>
+							<select name="name<?php echo $value['position']; ?>3" class="select wa" disabled="disabled">
+							<option  value="" >空</option>
+							   <?php 
+						        foreach ($info as $val) {
+						      	?>	
+								<option  value="<?php echo $val['name'].'-'.$val['id'].'-'.$val['relevance'].'-'.$val['channel_type'].'-'.'2'.'-'.$val['link'] ;?>" <?php echo ($positon_arr[$value['position'].'-3'] == $val['name'])? 'SELECTED':'' ?> <?php if($val['relevance'] == 'chosen') echo 'data-handpick=1';  ?> ><?php echo $val['name'].(($val['channel_type'] ==1 )?'(默认)':'(扩展)');?></option>			
+							   <?php }?>	
+
+							</select>
+						</td>
+					</tr>
+					<tr >
+						<td>
+						<span  style="width: 90px;display: inline-block;"><?php echo $value['position']; ?>-4</span>
+							<select name="name<?php echo $value['position']; ?>4" class="select wa" disabled="disabled">
+							<option  value="" >空</option>
+							   <?php  
+						        foreach ($info as $val) {
+						      	?>
+								<option  value="<?php echo $val['name'].'-'.$val['id'].'-'.$val['relevance'].'-'.$val['channel_type'].'-'.'2'.'-'.$val['link'] ;?>"  <?php echo ($positon_arr[$value['position'].'-4'] == $val['name'])? 'SELECTED':'' ?> <?php if($val['relevance'] == 'chosen') echo 'data-handpick=1';  ?> ><?php echo $val['name'].(($val['channel_type'] ==1 )?'(默认)':'(扩展)');?></option>			
+							   <?php }?>	
+							</select>
+						</td>
+					</tr>
+				</table>	
+			</td>
+		</tr>
+		<?php }?>		
+	</table>
+</div>
+<div class="mb10 tac">
+<a href="<?php echo $viewCloumnAttriUrl.'/?log_id='.$log_id.'&column_version='.$column_version; ?>" style="color: #fff;padding: 6px;display: inline-block;background: #c83f38;border-radius: 2px;width: 50px;text-decoration:none;">下一步</a>
+</div>
+<div class="handpick_mask">
+	<table  id="insert_table" class="">
+		<tr >
+			<td>
+			    <span  style="display: inline-block;width: 200px;text-align:center;">6-1</span>
+				<select name="name61" class="select wa" disabled="disabled">
+				<option  value="" >空</option>
+				 <?php 
+			        foreach ($info as $val) {
+						if($val['relevance'] == 'chosen'){
+							continue;
+						}
+			      	?>
+					<option  value="<?php echo $val['name'].'-'.$val['id'].'-'.$val['relevance'].'-'.$val['channel_type'].'-'.'3'.'-'.$val['link'] ;?>"  <?php echo ($positon_arr['6-1'] == $val['name'])? 'SELECTED':'' ?> <?php if($val['relevance'] == 'chosen') echo 'data-handpick=1';  ?> ><?php echo $val['name'].(($val['channel_type'] ==1 )?'(默认)':'(扩展)');?></option>			
+				   <?php }?>	
+				</select>
+			</td>
+		</tr>
+		<tr >
+			<td>
+			    <span  style="display: inline-block;width: 200px;text-align:center;">6-2</span>
+				<select name="name62" class="select wa" disabled="disabled">
+				<option  value="" >空</option>
+				 <?php 
+			        foreach ($info as $val) {
+                        if($val['relevance'] == 'chosen'){
+                        	continue;
+                        }
+			      	?>
+					<option  value="<?php echo $val['name'].'-'.$val['id'].'-'.$val['relevance'].'-'.$val['channel_type'].'-'.'3'.'-'.$val['link'] ;?>"  <?php echo ($positon_arr['6-2'] == $val['name'])? 'SELECTED':'' ?> <?php if($val['relevance'] == 'chosen') echo 'data-handpick=1';  ?> ><?php echo $val['name'].(($val['channel_type'] ==1 )?'(默认)':'(扩展)');?></option>			
+				   <?php }?>	
+				</select>
+			</td>
+		</tr>
+		<tr >
+			<td>
+			    <span  style="display: inline-block;width: 200px;text-align:center;">6-3</span>
+				<select name="name63" class="select wa" disabled="disabled">
+				<option  value="" >空</option>
+				 <?php 
+			        foreach ($info as $val) {
+						if($val['relevance'] == 'chosen'){
+							continue;
+						}
+			      	?>
+					<option  value="<?php echo $val['name'].'-'.$val['id'].'-'.$val['relevance'].'-'.$val['channel_type'].'-'.'3'.'-'.$val['link'] ;?>"  <?php echo ($positon_arr['6-3'] == $val['name'])? 'SELECTED':'' ?> <?php if($val['relevance'] == 'chosen') echo 'data-handpick=1';  ?> ><?php echo $val['name'].(($val['channel_type'] ==1 )?'(默认)':'(扩展)');?></option>			
+				   <?php }?>	
+				</select>
+			</td>
+		</tr>
+		<tr >
+			<td>
+			    <span  style="display: inline-block;width: 200px;text-align:center;">6-4</span>
+				<select name="name64" class="select wa" disabled="disabled">
+				<option  value="" >空</option>
+				 <?php 
+			        foreach ($info as $val) {
+					if($val['relevance'] == 'chosen'){
+						continue;
+					}
+			      	?>
+					<option  value="<?php echo $val['name'].'-'.$val['id'].'-'.$val['relevance'].'-'.$val['channel_type'].'-'.'3'.'-'.$val['link'] ;?>"  <?php echo ($positon_arr['6-4'] == $val['name'])? 'SELECTED':'' ?> <?php if($val['relevance'] == 'chosen') echo 'data-handpick=1';  ?> ><?php echo $val['name'].(($val['channel_type'] ==1 )?'(默认)':'(扩展)');?></option>			
+				   <?php }?>	
+				</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".table_full").find("select").each(function(){
+		linkage($(this));
+		$(this).change(function(){
+			linkage($(this));
+		})
+	})	
+})
+function linkage(select){
+	var that=select,
+		html=$("#insert_table").html();
+	if(that.find("option:selected").attr('data-handpick')==1){
+		
+		that.parent('td').parent('tr').append(html);
+		// $("#insert_table").show();
+	} else{
+			if(that.parent('td').parent('tr').find("tbody").length>0){
+				
+				that.parent('td').parent('tr').find("tbody").remove();
+			}
+	}
+}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

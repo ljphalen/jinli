@@ -1,0 +1,68 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body id="goodsList">
+	<div class="gotop">
+		<span>返回顶部</span>
+	</div>
+	<div class="module webapp">
+		<header class="header" id="J_header">
+		<?php if($info) {?>
+			<div class="wrap">
+				<div class="title">
+					<a href="<?php echo $webroot.$back;?>" class="back"></a>
+					<a href="/" class="back-home" onclick="baiduStatic('商品列表', '商品列表-返回首页', '商品列表-返回首页点击次数')"></a>
+					<h1><?php echo $info['name'];?></h1>
+				</div>
+			</div>
+		<?php } else {?></body>
+			<div class="wrap box">
+				<div class="title">
+					<a href="/index" class="back"></a>
+				</div>
+				<form class="search" action="<?php echo $webroot;?>/goods/index/">
+					<div class="fieldset">
+						<input class="big" name="keyword" value="<?php echo $search['keyword'];?>" type="text" placeholder="搜品牌、商品名称" onclick="baiduStatic('大红帽商品列表', '大红帽商品列表-搜索', '大红帽商品列表-搜索-搜索框点击次数')">
+						<button class="btn-search" onclick="baiduStatic('大红帽商品列表', '大红帽商品列表-搜索', '大红帽商品列表-搜索-搜索按钮点击次数')"></button>
+					</div>
+				</form>
+			</div>
+		<?php }?>
+		</header>
+		<div class="iScroll" id="J_scrollWrap">
+			<section class="layout-center">
+				<ul id="J_listWrap" data-ajaxUrl="<?php echo $url;?>"></ul>
+			</section>
+		</div>
+		<script type="text/template" id="J_template">
+			<%for(var i=0, len=list.length; i<len; i++) {%>
+				<li class="goods-list">
+					<a class="list-wrap" href="<%=list[i].link%>">
+						<div class="pic">
+							<img src="<?php echo $staticRoot;?>/apps/dhm/asset/img/blank.gif" data-src="<%=list[i].img%>" alt="<%=list[i].title%>">
+						</div>
+						<div class="content">
+							<h3><%=list[i].title%></h3>
+							<p class="price">海淘价：<i class="dollar">￥</i><em><%=(list[i].min_price == list[i].max_price) ? list[i].min_price : (list[i].min_price + '-' + list[i].max_price)%></em></p>
+							<p class="origin-info">
+								<span class="country-pic">
+									<img src="<?php echo $staticRoot;?>/apps/dhm/asset/img/blank.gif" data-src="<%=list[i].logo ? list[i].logo : '<?php echo "$webroot/$appRef"?>/asset/img/icon-country-default.png'%>">
+								</span>
+								<span class="country"><%=list[i].country%></span>
+								<span><%=list[i].brand%></span>
+							</p>
+						</div>
+					</a>
+				</li>
+			<%}%>
+		</script>
+
+		<script type="text/template" id="J_noResultTemplate">
+			<div class="search-no-result">
+				<div class="pic">
+					<img src="<?php echo $staticRoot;?>/apps/dhm/asset/img/icon-search-none.png">
+				</div>
+				<p>暂无搜索结果</p>
+			</div>
+		</script>
+	</div>
+
+<?php echo $this->render("layout/footer.phtml");?>

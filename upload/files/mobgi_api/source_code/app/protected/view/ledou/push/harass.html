@@ -1,0 +1,87 @@
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/float.js"></script>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">防骚挠设置</p>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="app-detail" style="">
+                <form method="POST" action="/push/saveharass" style="">
+                    <ul class="form" style="">
+                        <li>
+                            <input type="hidden" name="id" id="id" value="{{harass.id}}" />
+                            <span class="label" style="font-size: 20px;font-weight: bold;">上限限制：</span>
+                        </li>
+                        
+                        
+                        <li>
+                            <div class="fc" style="padding-left: 50px;">
+                                一个自然日内，同一用户最多收到 <input type="text" name="one_day_max_msg" id="one_day_max_msg" value="{{harass.value.one_day_max_msg}}" required  class="iText" style="width:50px;" /> 条PUSH
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label" style="font-size: 20px;font-weight: bold;">产品限制：</span>
+                        </li>
+                        
+                        <li>
+                            <div class="fc" style="padding-left: 50px;">
+                                <input type="text" name="one_product_msg_limit" id="one_product_msg_limit" value="{{harass.value.one_product_msg_limit}}" required  class="iText"  style="width:50px;" /> 个自然日内，同一用户最多收到 1 条相同产品的PUSH &nbsp;<span class="red">（注：填入 -1 则无限制）</span>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label" style="font-size: 20px;font-weight: bold;">频次限制：</span>
+                        </li>
+                        
+                        <li>
+                            <div class="fc" style="padding-left: 50px;">
+                                同一用户接收连续两条PUSH，需间隔 <input type="text" name="lastest_msg_interval" id="lastest_msg_interval" value="{{harass.value.lastest_msg_interval}}" required  class="iText"  style="width:50px;" /> 小时
+                            </div>
+                        </li>
+                        
+                        <li class="line"></li>
+                        
+                        <li>
+                            <div class="fc">
+                                <input type="button" class="submit" value="保存" onclick="return checksubmit();">
+                                <input type="button" onclick="window.location.href = '/push/harass'" class="cancel" value="取消">
+                            </div>
+                        </li>
+                        
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language="javascript">
+    
+    //检查是否为整数
+    function   isInteger(a)
+    {
+        var   reg=RegExp(/^(-|\+)?\d+$/);
+        return reg.test(a);
+    }
+    
+    function checksubmit(){
+        var one_day_max_msg = $("#one_day_max_msg").val()
+        var one_product_msg_limit = $("#one_product_msg_limit").val()
+        var lastest_msg_interval = $("#lastest_msg_interval").val()
+        if(!isInteger(one_day_max_msg)){
+            jAlert("上限限制必须是整数");
+            return false;
+        }
+        if(!isInteger(one_product_msg_limit)){
+            jAlert("产品限制必须是整数");
+            return false;
+        }
+        if(!isInteger(lastest_msg_interval)){
+            jAlert("频次限制必须是整数");
+            return false;
+        }
+        $('form').submit();
+    }
+</script>

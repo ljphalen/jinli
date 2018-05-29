@@ -1,0 +1,27 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body>
+<?php if($taoke_info) {?>
+	<div class="module bb-detail super">
+		<div id="iScroll">
+			<div class="scroll-pic J_scrollBanner" curIndex="0" >
+				<div class="pic-box">
+					<ul>
+						<li><img src="<?php echo $staticResPath;?>/h5/pic/blank.gif" data-original="<?php echo $taoke_info['pic_url'] . '_460x460.' . end(explode(".",  $taoke_info['pic_url']));?>" alt=""></li>
+					</ul>
+				</div>
+			</div>
+			<div class="tools-bar">
+				<p><span>￥ <?php echo $taoke_info['price'];?></span><a class="check" href="<?php echo $taoke_info['click_url'];?>">查看详情</a></p>
+			</div>
+		</div>
+	</div>
+	<div class="JS-dbMask"></div>
+<?php } else {?>
+<div class="module bb-detail  super">
+		<div id="iScroll" class="xiajia"></div>
+		<footer class="ft"><a href="<?php echo $webroot;?>">再逛逛</a></footer>
+	</div>
+<?php }?>
+<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+<style type="text/css">
+.form-group .label{
+	margin-right: 2px;
+}
+.category_group .col-sm-2{float: left;padding:0 1px 0 0;width: auto; }
+</style>
+<div class="mainw mainw2 clearfix">
+	<div class="rmain fl col-md-11">
+		<div class="panel">
+			<h2 class="yyname">
+				<a href="{:U('apps/index')}">我的应用</a> » 
+				<a href="{:U("apps/manage", array("id"=>$apkinfo[id]))}">{$apkinfo.app_name}</a> »
+				版本: {$apkinfo.version_name}
+			</h2>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-2">
+					<h5 class="oldapkzt">状态：{$apk_status[$apkinfo['status']]}</h5>
+					<div class="thumbnail wauto">
+					<a href="{$vo.detail_url}" title="{$vo.app_name}">
+					<img src="{$largeiconurl}">
+					</a>
+					</div>
+					</div>
+					<div class="col-md-7">
+						 <div class="caption">
+							<h6>应用名：{$apkinfo.app_name}</h6>
+							<h6>版本名：{$apkinfo.version_name}</h6>
+							<h6>版本号：{$apkinfo.version_code}</h6>
+							<h6>上传日期：{$apkinfo.created_at|formatDate|substr=0,10}</h6>
+							<h6>审核日期：{$apkinfo.checked_at|formatDate|substr=0,10}</h6>
+							<h6>上线日期：{$apkinfo.onlined_at|formatDate|substr=0,10}</h6>
+							<if condition="$apkinfo['status'] eq 3">
+							<h6>下线日期：{$apkinfo.offlined_at|formatDate|substr=0,10}</h6>
+							</if>
+						 </div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+ </div>
+
+<div class="mainw mainw2 clearfix">
+	<div class="rmain fl col-md-11">
+		<div class="panel">
+			<h2 class="yyname">详细信息</h2>
+			<div class="panel-body">
+				<form class="form-horizontal" role="form" action="{:U('apps/appsave')}" method="post">
+				
+					<div class="row">
+					    <div class="col-sm-12">
+					    	<h4>基本信息</h4>
+					    </div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-sm-2 control-label">包名称：</label>
+						<div class="col-sm-10">
+							<span>{$apkinfo['package']}</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">应用名称：</label>
+						<div class="col-sm-10">
+							<span>{$apkinfo['app_name']}</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">版本：</label>
+						<div class="col-sm-10">
+							<span>{$apkinfo['version_name']}</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">系统支持：</label>
+						<div class="col-sm-10">
+							<?php
+							$apkConfig = C("apk");
+							$minSDK = $apkinfo['min_sdk_version'];
+							?>
+							<span>Android {$apkConfig['SDK_VER'][$minSDK]}</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">文件大小：</label>
+						<div class="col-sm-10">
+							<span>{$apkinfo['file_size']|showsize|implode="",###}</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">apk md5：</label>
+						<div class="col-sm-10">
+							<span>{$apkinfo['apk_md5']}</span>
+						</div>
+					</div>
+					<div class="row">
+					    <div class="col-sm-12">
+					    	<h4>详细信息</h4>
+					    </div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label">分类：</label>
+						<div class="col-sm-10">
+							<span><php>if($apkinfo['category_one']==200) echo '应用';</php>
+							<php>if($apkinfo['category_one']==100) echo '游戏';</php>
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">子分类：</label>
+						<div class="col-sm-10">
+								<php>
+									$cate = D("Category")->category_tree();
+								</php>
+								{$cate[$apkinfo['category_p']]["name"]}
+								{$cate[$apkinfo['category_p']]["item"][$apkinfo['category_p_son']]}
+								{$cate[$apkinfo['category_s']]["name"]}
+								{$cate[$apkinfo['category_s']]["item"][$apkinfo['category_s_son']]}
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-sm-2 control-label">合作方式：</label>
+						<div class="col-sm-10">
+							<span>
+							<php>if($apkinfo['is_join']==2) echo '普通';</php>
+							<php>if($apkinfo['is_join']==1) echo '联运';</php>
+							</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="developer" class="col-sm-2 control-label">计费模式：</label>
+						<div class="col-sm-10">
+								<span>
+								<php>
+								foreach($feetype as $fee){
+									if($apkinfo['fee_type']==$fee['id']) echo $fee['type_name'];
+								}
+								</php>
+								</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="developer" class="col-sm-2 control-label">计费通道：</label>
+						<div class="col-sm-10 category_group">
+							<volist id="mode" name="fee_mode">
+							<div class="col-sm-2"><label>
+								<php>
+								if(in_array($key, $fee_mode_keys)) {
+									echo '<span class="label label-success">';
+									echo $mode;
+								    echo '</span>';
+								}
+								</php>
+							</label></div>
+							</volist>
+						</div>
+						<div class="col-sm-6"></div>
+					</div>
+					
+					<div class="form-group">
+						<label for="developer" class="col-sm-2 control-label">游戏客服电话：</label>
+						<div class="col-sm-6">
+							<span>{$apkinfo['service_phone']}</span>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+					
+					<div class="form-group">
+						<label for="developer" class="col-sm-2 control-label">开发者：</label>
+						<div class="col-sm-10">
+								<span>{$apkinfo['developer']}</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="agent" class="col-sm-2 control-label">代理商：</label>
+						<div class="col-sm-10">
+								<span>{$apkinfo['agent']}</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="language" class="col-sm-2 control-label">语言：</label>
+						<div class="col-sm-10">
+								<span>
+								<php>if($apkinfo['language']==1) echo '中文';</php>
+								<php>if($apkinfo['language']==2) echo '英文';</php>
+								<php>if($apkinfo['language']==3) echo '其它';</php>
+								</span>
+						</div>
+					</div>
+					
+					<?php
+					$reso = explode("-", $apkinfo['reso']);
+					?>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">适配分辨率：</label>
+						<div class="col-sm-10">
+							 	<php>
+							    foreach( $resoinfo as $key =>$value ){
+								    if( in_array($value['reso_id'],$reso)){
+								    	echo '<span class="label label-success">'.$value['reso_name'].'</span>';
+								    }
+								}
+								</php>
+						</div>
+					</div>
+					
+					<hr>
+					<php>
+					$labelJson = json_decode($apkinfo['label']);
+					$labelArr = objectToArray($labelJson);
+					</php>
+					<volist id="vo" name="labelInfo">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">{$vo['name']}：</label>
+						<div class="col-sm-10">
+							 	<php>
+							 	$check = $labelArr[$key];
+							    foreach( $vo['child'] as $value ){
+								    if( in_array($value['id'],$check)){
+								    	echo '<span class="label label-success">'.$value['name'].'</span>';
+								    }
+								}
+								</php>
+						</div>
+					</div>
+					</volist>
+					<hr>
+					
+					<div class="form-group">
+						<label for="brief" class="col-sm-2 control-label">简述：</label>
+						<div class="col-sm-10">
+								<span>{$apkinfo['brief']}</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="keyword" class="col-sm-2 control-label">热词：</label>
+						<div class="col-sm-10">
+								<span>{$apkinfo['keyword']}</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="description" class="col-sm-2 control-label">应用介绍：</label>
+						<div class="col-sm-10">
+								<p>{$apkinfo['description']|nl2br}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="changelog" class="col-sm-2 control-label">更新日志：</label>
+						<div class="col-sm-10">
+								<p>{$apkinfo['changelog']|nl2br}</p>
+						</div>
+					</div>
+					<div class="form-group screenup">
+						<label for="dddd" class="col-sm-2 control-label">应用截图：</label>
+						<div class="col-sm-10">
+							   <volist name="screenshotinfo" id="data">
+									<div class="col-md-3">
+									   	<div class="thumbnail" >
+										<a href="javascript:void(0)"><img width="150" height="250" src="{:Helper('Apk')->get_url('screen')}{$data.file_path}"></a>
+									   	</div>
+								   	</div>
+							   </volist>							 
+					
+						</div>
+					</div>
+					
+					<div class="form-group iconup">
+						<?php
+						$defaultIcon = cdn('PUBLIC')."/common/images/icon_add.jpg";
+								?>
+						<label for="dddd" class="col-sm-2 control-label">应用图标：</label>
+						<div class="col-sm-10">
+							
+							<div class="row">
+							   <div class="col-md-2" id="smallicon">
+								   <div class="thumbnail">
+								       <a href="javascript:void(0)"><img id="largeIconImg" 
+								       		src="{$largeiconurl|default=$defaultIcon}" width="250" height="250"></a>
+								   </div>
+							   </div>
+							   <div class="col-md-3"></div>
+							</div>
+					
+						</div>
+					</div>
+					
+					<?php
+						$copyrightUpload = D('AppCert')->where(array('apk_id'=>$apkinfo["id"]))->getField('file_path');
+							if($copyrightUpload) {
+								$copyrightUpload = Helper ( "Apk" )->get_url ( "user" ). $copyrightUpload;
+					?>
+					<div class="form-group screenup">
+						<label for="" class="col-sm-2 control-label">著作权证书：</label>
+						<div class="col-sm-10">
+							<div class="col-md-5">
+							   	<div class="thumbnail" >
+								<a href="javascript:void(0)"><img width="400" height="250" src="{$copyrightUpload}" onclick="window.open(this.src)"></a>
+							   	</div>
+						   	</div>
+						</div>
+					</div>
+					
+					<?php
+					}
+					?>
+					<hr>
+					<div class="row">
+					    <div class="col-sm-12">
+					    	<h4>上线信息</h4>
+					    </div>
+					</div>
+					<div class="form-group">
+						<label for="changelog" class="col-sm-2 control-label">期望上线时间：</label>
+						<div class="col-sm-10">
+								<p>{:$apkinfo['onlinetime_type']==1? '立即上线' : $apkinfo['online_time']}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="changelog" class="col-sm-2 control-label">版本更新类型：</label>
+						<div class="col-sm-10">
+								<p>{:$apkinfo['upgrade_type']==1?"普通更新":"强制更新";}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="changelog" class="col-sm-2 control-label">备注：</label>
+						<div class="col-sm-10">
+								<p>{$apkinfo['resume']|nl2br}</p>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<include file="Public:footer" />

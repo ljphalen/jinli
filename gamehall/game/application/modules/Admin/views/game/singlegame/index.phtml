@@ -1,0 +1,85 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<?php
+echo <<<HTML
+<link rel="stylesheet" href="{$staticPath}/game/assets/css/page-recommend.css" />
+<script type="text/javascript" src="{$staticPath}/game/assets/js/page-recommend.js"></script>
+    
+HTML;
+?>
+<div class="nav">
+	<ul class="cc">
+        <li class="current"><a href="<?php echo $listUrl;?>">单机推荐日程</a></li>
+        <li><a href="/Admin/Client_Single/index">旧版推荐</a></li>
+	</ul>
+</div>
+<div class="date">
+	<div class="months">
+		月份
+		<div class="selectDate">
+			<form id="monthForm" method="post" action="" >
+				<img src="<?php echo $staticPath;?>/game/assets/img/u793.png" id="minusMonth"/>
+				<span><?php echo date('Y年m月', $month); ?></span>
+				<input type="hidden" name="token" value="<?php echo $token; ?>" />
+				<input type="hidden" name="date" value="<?php echo date('Y-m', $month); ?>" />
+				<img src="<?php echo $staticPath;?>/game/assets/img/u791.png" id="addMonth"/>
+			</form>
+		</div>
+		<div id="newDate">
+			今天是<?php echo date("Y年m月d日");?>
+		</div>
+	</div>
+	<div class="day" id="day">
+		<?php 
+		$before = $before;
+		$curTime = strtotime(date("Y-m-d"));
+		foreach($list as $key => $value) {
+		    $id = date('Y-m-d', $key);
+            $class = "content";
+            if($key < $curTime) {
+                $class = "beOverdue";
+                echo "<a href='{$editUrl}?day_id={$id}'>";
+            }else if(empty($value)) {
+                $class = "future";
+                echo "<a href='javascript:void(0);' value='{$copyUrl}?day_id={$id}' " . ($before ? "data-copy='true'" : "data-copy='false'") . ">";
+            }else if($curTime == $key) {
+                $class = "new";
+                echo "<a href='{$editUrl}?day_id={$id}'>";
+            }else{
+                echo "<a href='{$editUrl}?day_id={$id}'>";
+            }
+            if(! empty($value)) {
+                $before = true;
+            }else{
+                $before = false;
+            }
+		?>
+        <span class="<?php echo $class;?>"><?php echo date('d', $key);?></span></a>
+	   <?php } ?>
+	</div>
+	<div>
+		<ul class="msg">
+			<li>
+				<span class="beOverdue"></span>已过期内容
+			</li>
+			<li>
+				<span class="new"></span>今天的内容
+			</li>
+			<li>
+				<span class="content"></span>预发布的内容
+			</li>
+			<li>
+				<span class="future"></span>未配置内容
+			</li>
+		</ul>
+	</div>
+</div>
+
+<div id="notConing">
+	<div>
+		<a id="copy" href=""><input type="button" value="复制前一天内容并编辑" class="gray-button" /></a>
+	</div>
+	<div>
+		<a id="newAdd" href=""><input type="button" value="添加内容" class="gray-button" /></a>
+	</div>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

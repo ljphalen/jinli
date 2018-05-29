@@ -1,0 +1,74 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div id="detail-page">
+		<section class="wrap">
+			<div class="detail-field">
+				<dl>
+					<dt class="icon"><img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $info['img'];?>"></dt>
+					<dd class="desc">
+						<p class="name"><?php echo $info['name'];?></p>
+						<p class="info"><span><?php echo $info['category_title'];?></span><em>|</em><span><?php echo $info['language'];?></span><em>|</em><span><?php echo $info['size'];?>M</span></p>
+						<p class="origin"><?php echo $info['company'];?></p>
+					</dd>
+				</dl>
+			</div>
+			<div class="gift-field">
+			<?php if ($gifts) {?>
+			   <?php foreach ($gifts as $key => $value)
+				$href = $webroot.'/kingstone/gift/detail/?id='.$value['id'].'&pc=2&intersrc=detail'.$info['id'].'&t_bi='.$source;
+				?>
+				<a class="gift" data-type=2 data-infpage="<?php echo $value['name'] . ',' . $href . ','. $info['id'] . ','. $value['id'];?>">
+					<span></span><span><?php echo $value['name'];?></span>
+				</a>
+				<?php }?>
+				<?php if ($evaluation) {
+					$href = $webroot.'/kingstone/evaluation/detail/?id='.$evaluation[0]['id'].'&pc=3&intersrc=detail'.$info['id'].'&t_bi='.$source;
+					?>
+					<a class="eva" data-type=1 data-infpage="<?php echo  '评测详情,' . $href ;?>">
+					<span></span><span><?php echo $evaluation[0]['title'];?></span>
+				  </a>
+				<?php }?>
+				<?php if ($strategy) {
+					$href = $webroot.'/kingstone/strategy/index/?id='.$info['id'].'&intersrc=detail'.$info['id'].'&t_bi='.$source;
+					?>
+					<a class="strat" data-type=1 data-infpage="<?php echo  '游戏攻略,' . $href ;?>">
+					<span></span><span>游戏攻略</span>
+				  </a>
+				<?php }?>
+			</div>
+			<div class="detail-scrollPic" id="J_screenshot">
+				<div class="pic-container">
+					<div class="pic-wrap">
+						<?php foreach($info['gimgs'] as $key=>$value){?>
+						<span>
+							<img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $attachPath,$value;?>" data-bigpic="<?php echo $info['gimgs'][$key];?>"></span>
+						<?php }?>
+					</div>
+				</div>
+			</div>
+			<div class="detail-text ui-editor">
+				<div class="text-container">
+					<p><?php echo html_entity_decode($info['descrip']);?></p>
+				</div>
+			</div>
+			<?php if(strnatcmp($apk_version,'1.4.8') >= 0 && !stristr($intersrc,'gltj') && $games){?>
+			<div class="suggest_field">
+				<h1>您可能还喜欢</h1>
+				<ul class="list">
+					<?php $i=0; foreach($games as $key=>$value){
+					if($i < 4){
+					?>
+					<li>
+					  <a data-type=1 data-infpage="<?php echo $value['infpage-v2'];?>">
+					   <img src="<?php echo $staticResPath;?>/pic/blank.gif" data-src="<?php echo $value['img'];?>" alt="">
+					  </a>
+					  <span><?php echo $value['name'];?></span>
+					</li>
+					<?php } $i++;}?>
+				</ul>
+			</div>
+			<?php }?>
+		</section>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

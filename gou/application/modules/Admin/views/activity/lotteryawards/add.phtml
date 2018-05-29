@@ -1,0 +1,53 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li class=""><a href="<?php echo $listUrl . '?cate_id=' . $cate_id;?>">奖品列表</a></li>
+    	<li class="current"><a href="<?php echo $addUrl . '?cate_id=' . $cate_id;?>">添加奖品</a></li>
+	</ul>
+</div>
+<div class="h_a">添加奖品</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">奖品名称</th>
+				<td class="td"><input type="text" class="input wc" name="award_name" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">活动</th>
+				<td class="td">
+					<select name="cate_id">
+						<?php foreach ($list as $key=>$val):?>
+						<option value="<?php echo $val['id'];?>" <?php if($cate_id==$val['id']) echo 'selected="selected"'; ?>><?php echo $val['title'];?></option>
+						<?php endforeach; ?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">奖品总数</th>
+				<td class="td"><input type="text" class="input" name="total" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">中奖概率</th>
+				<td class="td"><input type="text" class="input" name="probability" value=""> %</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input" name="sort" value=""></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $addUrl . '?cate_id=' . $cate_id;?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

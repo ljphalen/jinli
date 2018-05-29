@@ -1,0 +1,47 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+var isLogin = '<?php echo $isLogin ? 'true': 'false';?>';
+</script>
+<body id="mall" >
+  
+	<div class="myinfo-container">
+		<div class="avatorContainer">
+			<img class="avator" src="<?php echo $staticResPath; ?>/pic/blankAvator.gif" data-src="<?php echo $attachPath. $userInfo['avatar'];?>" alt="">
+		</div>
+		<div class="info">
+			<span class="name"><?php echo $userInfo['nickname']; ?></span>
+			<span class="points">当前共<em id="total"><?php echo intval($userInfo['points']); ?></em>积分</span></div>
+			<button id="myPrize" onclick="if(window.gamehall){window.gamehall.onEvent('gamehall.myprize',JSON.stringify({}))}" class="btn-orange">我的奖品</button>
+	</div>
+    
+	<div id="goodsList" class="goods-container">
+		<ul class="goods-lists">
+			<?php foreach($goods as $key=>$value){?>
+			<li>
+			<?php
+				if($value['type'] == 1 && $value['total_num']) {
+					$detailUrl = urldecode($webroot. '/client/Mall/exchangeEntity/?goodId=' . $value['id'].'&puuid='.$puuid.'&uname='.$uname.'&sp='.$sp.'&serverId='.$serverId);
+				} else if($value['type'] == 2 && $value['total_num']){
+					$detailUrl = urldecode($webroot. '/client/Mall/exchangeAcoupon/?goodId=' . $value['id'].'&puuid='.$puuid.'&uname='.$uname.'&sp='.$sp.'&serverId='.$serverId);
+				} 
+			?>
+				<a data-type="0" data-viewtype="WebView" data-source="prizeexchange" data-infpage="<?php echo $value['title'].','.$detailUrl;?>">
+					<div class="goods-list border-1px">
+						<img data-src="<?php echo $attachPath. $value['img'];?>" src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="<?php echo $value['title'];?>">
+						<span class="consume-points">消耗积分：<em><?php echo $value['consume_point']; ?></em></span>
+						<span class="exchange-num">剩余数量：<em><?php echo $value['remaind_num']; ?></em></span>
+					</div>
+				</a>
+			</li>
+			<?php } ?>
+		</ul>
+	</div>
+	
+	<?php if($hasnext){?>
+		<div class="<?php echo $loadingStyle;?> J_loadMore invisible" data-ajaxurl="<?php echo $webroot.'/client/mall/more';?>" data-hasnext="<?php echo $hasnext ? 'true' : 'false'; ?>" data-curpage="<?php echo $page; ?>">
+			<span class="load"></span>
+		</div>
+	<?php }?>
+</body>
+</html>

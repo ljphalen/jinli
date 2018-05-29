@@ -1,0 +1,73 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">第三方网页库列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="get" id="searchForm" >
+<input name="token" type="hidden" value="<?php echo $token;?>"/>
+<div class="table_full">
+	<table width="100%">
+        <tr class="tr">
+            <th class="th">标题</th>
+            <td class="td"><input type="text" class="input wc" name="title" value="<?php echo $params['title'];?>"></td>
+            <th class="th">网页ID</th>
+            <td class="td"><input type="text" class="input wc" name="url_id" value="<?php echo $params['url_id'];?>"></td>
+        </tr>
+        <tr class="tr">
+            <th class="th">ID</th>
+            <td class="td"><input type="text" class="input wc" name="id" value="<?php echo $params['id'];?>"></td>
+            <th class="th">URL</th>
+            <td class="td"><input type="text" class="input wc" name="url" value="<?php echo $params['url'];?>"></td>            
+        </tr>
+        <tr class="tr">
+            <th class="th">平台</th>
+            <td class="td" colspan="3">
+            	<select name="channel_id" id="select">
+                    <option value="">请选择</option>
+                    	<?php foreach($channel as $item):?>
+                        <option value="<?php echo $item['channel_id'];?>" <?php if($params['channel_id']== $item['channel_id']) echo 'selected="selected"';?>><?php echo $item['name'];?></option>
+                        <?php endforeach;?>
+                </select>
+            </td>        
+        </tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span><span style="float:left;">当前总条数：<?php echo $total;?></span></div>
+
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="5%">ID</td>
+		    <td width="10%">网页ID</td>
+            <td width="10%">标题</td>
+            <td width="10%">平台</td>
+            <td width="7%">抓取次数</td>
+            <td width="7%">状态</td>
+            <td width="30%">URL</td>
+            <td width="10%">操作</td>
+		</tr>
+<?php foreach($list as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['url_id'];?></td>
+            <td><?php echo $value['title']; ?></td>
+            <td><?php echo $value['channel'];?></td>
+            <td><?php echo $value['request_count'];?></td>
+            <td><?php echo $value['status'];?></td>
+            <td><?php echo $value['url'];?></td>
+            <td>
+                <a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+                <a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+            </td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+
+<?php echo $this->render("layout/footer.phtml");?>

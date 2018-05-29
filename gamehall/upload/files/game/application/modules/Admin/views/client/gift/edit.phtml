@@ -1,0 +1,127 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $gameListUrl;?>">游戏列表</a></li>
+        <li><a href="<?php echo $privilegeGiftListUrl;?>">特权礼包</a></li>
+        <?php if($giftLevel == User_Config_Vip::GIFT_1){?>
+        <li><a href="<?php echo $hotUrl;?>" style="width:150px">新手礼包(热门礼包)</a></li>
+        <?php } else {?>
+        <li><a href="<?php echo $oneOfPrivilegeGiftListUrl;?>/?giftLevel=<?php echo $giftLevel;?>" style="width:150px"><?php echo $vipTitle."管理";?></a></li>
+        <?php } ?>
+    <li class="current"><a href="javascript:;">编辑礼包</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑礼包</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<input name="egame_id" value="<?php echo $info['game_id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	   <tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input wc" name="sort" value="<?php echo $info['sort'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">礼包名称</th>
+			<td class="td"><input type="text" class="input wc" name="name" value="<?php echo $info['name'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏ID</th>
+			<td class="td"><input type="text" class="input wc" name="game_id" value="<?php echo !$info['game_id'] ? '':$info['game_id']; ?>" id="game_id"><button type="button" id="test" style="margin-left:20px;">获取游戏名称</button><br>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $game_info['name']?>" id="title"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">VIP等级</th>
+			<td class="td"><input type="text" class="input" name="vip_level" value="<?php echo $info['vip_level']?>"><span><font color="#FF0000">(只能填写1~15之间的正整数)</font></span></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">开发者邮箱</th>
+			<td class="td"><input type="text" class="input" name="dev_email" value="<?php echo $info['dev_email']?>"></td>
+		</tr>
+		<tr class="tr">
+				<th class="th">礼包内容</th>
+				<td class="td"><textarea style="width: 800px; height: 500px" class="textarea"
+						name="content"><?php echo $info['content'];?></textarea>
+				</td>
+		</tr> 
+		<tr class="tr">
+			<th class="th">使用时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="use_start_time" name="use_start_time" value="<?php echo date('Y-m-d H:i:s', $info['use_start_time']);?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="use_end_time" name="use_end_time" value="<?php echo date('Y-m-d H:i:s', $info['use_end_time']);?>" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+				<th class="th">使用方法</th>
+				<td class="td"><textarea style="width: 800px; height: 500px" class="textarea"
+						name="method"><?php echo $info['method'];?></textarea>
+				</td>
+		</tr>
+		<?php /* <tr class="tr" style="display:none;">
+				<th class="th">兑奖码</th>
+				<td class="td"><textarea style="width: 800px; height: 500px" class="textarea"
+						name="activation_code"><?php 
+						  foreach($codes as $key=>$value){
+						  	echo $value."\r\n";
+						  }
+						?></textarea>
+				</td>
+		</tr>  */?>
+		<tr class="tr">
+			<th class="th">生效时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="effect_start_time" name="effect_start_time" value="<?php echo date('Y-m-d H:i:s', $info['effect_start_time']);?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="effect_end_time" name="effect_end_time" value="<?php echo date('Y-m-d H:i:s', $info['effect_end_time']);?>" /></div>
+			</td>
+		</tr>
+		<tr class="tr" >
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" <?php echo $remainGifts == 0 && $info['status'] == 0? 'disabled="disabled"':'' ?> >
+                	<option <?php if($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+            	</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#use_start_time').datetimepicker();
+    $('#use_end_time').datetimepicker();
+    $('#effect_start_time').datepicker();
+    $('#effect_end_time').datepicker();
+	ajaxForm('addFrom',function(ret){
+		<?php if($giftVipLevel){?>
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Gift/oneOfPrivilegeGiftList/?giftLevel=<?php echo $giftVipLevel;?>');
+		<?php } else {?>
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Gift/listByGame/?game_id=<?php echo $info['game_id'] ?>');
+		<?php }?>
+	});
+})
+$('#test').click(function(){
+		    $('#game_id,#title').html("");
+			$.ajax({
+				url : baseurl + "/Admin/Client_Gift/get_name",
+				type : 'POST',
+				dataType : 'json',
+				data : 'token='+'<?php echo $token;?>'+'&game_id='+$("#game_id").val(),
+				success : function(ret) {
+					 if (ret.success) {
+						var list = ret.data.list;
+						$('#title').val(list.name) ;
+					} else {
+						showError('', ret.msg);
+					}
+				}
+			});
+			return false;
+	})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

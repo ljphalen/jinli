@@ -1,0 +1,38 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+
+<div id="page" class="ui-refresh">
+
+    <article class="ac">
+        <div id="J_dataList" class="item-box data-box clearfix" >
+
+            <?php if ($subject['desc']) { ?>
+                <div class="topWrap">
+                    <?php echo html_entity_decode($subject['desc']); ?>
+
+                </div>
+            <?php } ?>
+            <?php
+            foreach ($subject["adv_imgs"]as $vaues) {
+
+
+                $len = strlen($vaues);
+                if ($len > 10) {
+                    ?>
+
+                    <ul >
+                        <li style="width:95%;height:auto;margin:.4rem 0 0 .6rem;">
+                            <img  src="<?php echo $attachPath . $vaues ?>" style="width:100%;height: auto;" />
+                        </li>
+                    </ul>
+
+                    <div class="ui-refresh-down none clearfix"></div>
+                    <?php
+                }
+            }
+            ?>
+
+        </div>
+    </article>
+</div>
+
+<?php echo $this->render("layout/footer.phtml"); ?>

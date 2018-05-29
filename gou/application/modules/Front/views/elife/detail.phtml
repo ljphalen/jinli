@@ -1,0 +1,66 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<div id="page">
+	<div class="paccount" id="iscrollWrap">
+		<div class="mainWrap">
+		<?php if ($hasheader) {?>
+		<header id="iHeader" class="hd">
+			<div class="top-wrap">
+				<div class="title">
+					<a href="<?php echo $webroot.'/elife?cid='.$cid ;?>" class="back"></a>
+					<h1>商品详情</h1>
+				</div>
+			</div>
+		</header>
+		<?php }?>
+		<article class="ac clearfix">
+			<div class="free-period detail">
+				<div class="title">
+					<h3><?php echo $info['title'];?></h3>
+				</div>
+				<div class="main J_scrollPro isTouch">
+					<span class="handle ui-slide-prev"><img src="<?php echo $staticResPath;?>/pic//ico_arrow.png" alt="" /></span>
+					<span class="handle ui-slide-next"><img src="<?php echo $staticResPath;?>/pic//ico_arrow.png" alt="" /></span>
+                    <div class="pic ui-slide-scrollbox">
+    					<ul class="ui-slide-scroll oz">
+<?php foreach($info['item_imgs'] as $key=>$img) {?>
+    						<li class="ui-slide-item">
+    							<span><img src="<?php echo $img['url'],'_250x250.',end(explode(".",  $img['url']));?>" alt="" /></span>
+    						</li>
+<?php }?>
+    					</ul>
+    				</div>
+					<div class="ui-slide-tabs tab-item">
+<?php $j = count($info['item_imgs']);for($i=0; $i<$j; $i++) {?>
+						<span class="ui-slide-tab <?php if($i == 0) echo 'ui-slide-tabcur';?>"></span>
+<?php }?>
+					</div>
+				</div>
+			</div>
+			<section class="pro-intro">
+				<p><?php echo html_entity_decode($info['descrip']);?></p>
+				<div class="inf">
+					<p class="special">
+					<span class="price-sale">￥<?php echo $taoke_info['promotion_price'];?></span>
+					<span><?php echo $taoke_info['commission_num'];?>人已购买</span>
+					<span class="extra-tips"><em>预计可返利<?php echo Common::money($taoke_info['commission'] * $taoke_rate);?>元</em></span>
+					</p>
+					<p>
+						<a href="<?php echo $taoke_info['click_url'];?>"><em>立即购买</em></a>
+					</p>
+				</div>
+			</section>
+		</article>
+	</div>
+	
+	<div class="JS-dbMask"></div>
+    <div class="dialog-box J_dialogBox">
+    	<p></p>
+    	<div class="btn">
+        	<a href="<?php echo $webroot?>/user/login/login_step/?refer=<?php echo urlencode($webroot.'/elife/detail?id='.$info['id'].'&cid='.$info['category_id']);?>&return=<?php echo urlencode($webroot.'/elife/detail?id='.$info['id'].'&cid='.$info['category_id']);?>">确定</a>
+        </div>
+    </div>
+ </div>
+</div>
+<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

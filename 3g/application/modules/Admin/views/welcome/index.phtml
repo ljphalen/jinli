@@ -1,0 +1,40 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $listUrl; ?>">欢迎图片列表</a></li>
+			<li><a href="<?php echo $editUrl; ?>">添加欢迎图片</a></li>
+		</ul>
+	</div>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="60">排序</td>
+				<td>名称</td>
+				<td>链接</td>
+				<td>图片</td>
+				<td>版本</td>
+				<td>开始时间</td>
+				<td>结束时间</td>
+				<td>状态</td>
+				<td width="100">操作</td>
+			</tr>
+			<?php foreach ($list as $key => $value) { ?>
+				<tr class="ct">
+					<td><?php echo $value['sort']; ?></td>
+					<td><?php echo $value['name']; ?></td>
+					<td><?php echo $value['url']; ?></td>
+					<td><?php echo '<img src="' . $attachPath . $value['img'] . '" style="width:100px"/>'; ?></td>
+					<td><?php echo $value['ver']; ?></td>
+					<td><?php echo date('Y/m/d H:i:s', $value['start_time']); ?></td>
+					<td><?php echo date('Y/m/d H:i:s', $value['end_time']); ?></td>
+					<td><?php echo $value['status'] == 1 ? '上线' : '下线'; ?></td>
+					<td>
+						<a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+
+						<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

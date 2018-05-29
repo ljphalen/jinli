@@ -1,0 +1,48 @@
+<?php echo $this->render("layout/header.phtml");?>
+<form method="post" action="<?php echo $txtPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="h_a">文本配置</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th"><label for="gou_cut_regular_txt">砍价规则</label></th>
+				<td class="td">
+					<textarea  style="width: 800px; height: 300px" class="textarea" name="gou_cut_regular_txt"><?php echo $configs['gou_cut_regular_txt'];?></textarea>
+				</td>
+			</tr>
+            <tr class="tr">
+                <th class="th">砍价游戏UID黑名单(以半角逗号(,)隔开)</th>
+                <td class="td">
+                    <textarea class="input wc" style="width: 800px;" rows="6" name="gou_cut_blacklist_txt"><?php echo $configs['gou_cut_blacklist_txt'];?></textarea>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">点击统计版本号</th>
+                <td class="td">
+                    <textarea class="input wc" style="width: 800px;" rows="6" name="gou_stat_click_version_txt"><?php echo $configs['gou_stat_click_version_txt'];?></textarea>
+                </td>
+            </tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+	var editor;
+	KindEditor.ready(function (K) {
+		K.token = token;
+		editor = K.create('textarea[name="gou_cut_regular_txt"]', {
+			resizeType: 1,
+			allowPreviewEmoticons: false,
+			items: EDITOR_ITEMS
+		});
+	});
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Config/txt');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

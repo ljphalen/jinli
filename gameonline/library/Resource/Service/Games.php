@@ -1,0 +1,2026 @@
+<?php
+if (!defined('BASE_PATH')) exit('Access Denied!');
+/**
+ * 
+ * Enter description here ...
+ * @author lichanghua
+ *
+ */
+class Resource_Service_Games extends Common_Service_Base{
+	
+	/**
+	 * 根据游戏唯一标识查询游戏信息
+	 * @param unknown_type $params 
+	 * @param boolean $preview 预览标识
+	 * @return boolean
+	 */
+	public static function getGameAllInfo($params, $preview = false) {
+		$game = array();
+		// 内容
+		if(!$preview) $params['status']=1;
+		$game = Resource_Service_Games::getBy ( $params );
+		if (!$game) return false;
+		
+		if(!$preview){
+			$cache = Common::getCache();
+			$ckey = "-gid-" . $game['id'];
+			$cgame = $cache->get($ckey);
+			if ($cgame) return $cgame;
+		}
+		
+		$game_version = Resource_Service_Games::getGameVersionInfo ( $game['id'] );
+
+		if(!$preview){
+			if (!$game_version) return false;
+		}
+		// 分类
+		$game_category = Resource_Service_Games::getGameResourceByCategoryGameId ( $game['id'] );
+		
+		$category = Resource_Service_Attribute::getResourceAttribute ( $game_category ['category_id'] );
+	
+		// 分辨率
+		$min_resolution = Resource_Service_Attribute::getResourceAttribute ( $game_version ['min_resolution'] );
+		$max_resolution = Resource_Service_Attribute::getResourceAttribute ( $game_version ['max_resolution'] );
+		// 系统版本
+		$min_sys_version = Resource_Service_Attribute::getResourceAttribute ( $game_version ['min_sys_version'] );
+		//游戏属性信息【最新、最热、首发】
+		$hot = Resource_Service_Attribute::getResourceAttribute ( $game ['hot'] );
+		//价格
+		$price = Resource_Service_Attribute::getResourceAttribute($game['price']);
+		//支持外设
+		$devices = Resource_Service_Games::getIdxGameResourceDeviceBy(array('game_id' => $game['id']));
+		//游戏分数
+		$game_score = Resource_Service_Score::getByScore(array('game_id' => $game['id']));
+	
+		
+		$game['size'] = $game_version['size'];
+		$game['version'] = $game_version['version'];
+		$game['md5_code'] = $game_version['md5_code'];
+		$game['link'] = $game_version['link'];
+		$game['package'] = $game['package'];
+		$game['min_sys_version'] = $game_version['min_sys_version'];
+		$game['min_resolution'] = $game_version['min_resolution'];
+		$game['max_resolution'] = $game_version['max_resolution'];
+		$game['version_code'] = $game_version['version_code'];
+		$game['status'] = $game_version['status'];
+		$game['vcreate_time'] = $game_version['create_time'];
+		$game['update_time'] = $game_version['update_time'];
+		$game['changes'] = $game_version['changes'];
+		$game['client_star'] = $game_score['score'] ? $game_score['score']/2 : 0;
+		$game['web_star'] = $game_score['score'] ? $game_score['score'] : 0;
+		
+		$game['version_id'] = $game_version['id'];
+		$game['category_title'] = $category['title'];
+		$game['category_id'] = $category['id'];
+		$game['min_resolution_title'] = '240*320'; //$min_resolution['title'];
+		$game['max_resolution_title'] = '1080*1920'; //$max_resolution['title'];
+		$game['min_sys_version_title'] = '1.6'; //$min_sys_version['title'];
+		$game['hot_title'] = $hot['title'];
+		$game['hot_id'] = $game ['hot'];
+		$game['price_title'] = $price['title'];
+		$game['device'] = empty($devices) ? 0 : 1;
+		
+		$game['infpage']  = sprintf("%s,%s,%s,%s,Android%s,%s-%s", 
+				$game['id'],
+				$game['link'],
+				$game['package'],
+				$game['size'], 
+				$game['min_sys_version_title'],
+				$game['min_resolution_title'],
+				$game['max_resolution_title']);
+		//游戏详情图片
+		list(, $gimgs) = Resource_Service_Img::getList(1, 10, array('game_id'=>$game['id']));
+		foreach($gimgs as $key=>$value) {
+			$file = array();
+			//大图
+			$game['gimgs'][] = $value['img'];
+			$file = explode(".", basename($value['img']));
+			//小图
+			$game['simgs'][] = $value['img'] . '_240x400.' . $file[1];
+		}
+		
+		//icon 特殊处理必须放到末尾
+		$game['img'] = $game['big_img'] ? $game['big_img']: ($game['mid_img'] ? $game['mid_img'] : $game['img']);
+		
+		if(!$preview){
+			$cache->set($ckey, $game, 60);
+		}
+		
+		return $game;
+	}
+
+	/**
+	 * 根据游戏唯一标识查询游戏简洁数据
+	 * Api v2 版本使用
+	 * @param unknown_type $params
+	 * @return boolean
+	 */
+	public static function getGameSimpleInfo($params) {
+		$game = self::getGameAllInfo($params);
+		$tmp = array(
+			'id' => $game['id'],
+			'name' => $game['name'],
+			'resume' => $game['resume'],
+			'img' => $game['img'],
+			'size' => $game['size'],
+			'package' => $game['package'],
+			'link' => $game['link'],
+			'category_title' => $game['category_title'],
+			'hot_title' => $game['hot_title'],
+			'hot_id' => $game ['hot_id'],
+			'device' => $game['device']	
+	     );
+		return $tmp;
+	}
+	
+	/**
+	 * 客户端本地化游戏列表输出数组
+	 * @param $data 游戏列表 
+	 * @param $intersrc BI统计参数 
+	 * @param $checkVer 客户端版本判断 
+	 * @param $type 数组中id值的类型.1为game_id,0为id
+	 * @return array
+	 */
+	public static function getClientGameData($data, $intersrc, $checkVer, $type) {
+		if(!$data) return '';
+		foreach($data as $key=>$value) {
+			$id = $type ? $value['game_id'] : ($value['id'] ? $value['id']:$value);
+			$info = Resource_Service_Games::getGameAllInfo(array('id'=>$id));
+				
+			//附加属性处理,1:礼包
+			$attach = array();
+			if (Client_Service_IndexAdI::haveGiftByGame($id)) array_push($attach, '1');
+				
+			$temp = array(
+					'img'=>urldecode($info['img']),
+					'name'=>html_entity_decode($info['name']),
+					'resume'=>html_entity_decode($info['resume']),
+					'package'=>$info['package'],
+					'link'=>$info['link'],
+					'gameid'=>$info['id'],
+					'size'=>$info['size'].'M',
+					'category'=>$info['category_title'],
+					'attach' => ($attach) ? implode(',', $attach) : '',
+					'hot' => Resource_Service_Games::getSubscript($info['hot']),
+					'viewType' => 'GameDetailView',
+					'score' => $info['client_star']
+			);
+			$tmp[] = $temp;
+		}
+		return $tmp;
+	}
+	
+	/**
+	 * 游戏角标
+	 * @param unknown_type $id
+	 * @return intval
+	 */
+	public static function getSubscript($id) {
+		if(!$id) return '';
+		$subscript = 0;
+		switch ($id)
+		{
+			/* 测试
+			case 104:        //最新    
+				$subscript = '1';
+				break;
+			case 105:        //最热
+				$subscript = '2';
+				break;
+			case 106:        //首发
+				$subscript = '3';
+				break;
+			case 116:        //活动
+				$subscript = '4';
+				break;
+			default:
+			*/
+			case 29:        //最新
+				$subscript = '1';
+				break;
+			case 30:        //最热
+				$subscript = '2';
+				break;
+			case 31:        //首发
+				$subscript = '3';
+				break;
+			case 102:        //活动
+				$subscript = '4';
+				break;
+			default:
+		}
+		return $subscript;
+	}
+	
+	/**
+	 * 按条件检索游戏资源表
+	 * @param unknown_type $params
+	 * @return boolean
+	 */
+	public static function getBy($params) {
+		if (!is_array($params)) return false;
+		return self::_getDao()->getBy($params);
+	}
+
+	/**
+	 * 检索游戏资源表所有数据
+	 * Enter description here ...
+	 */
+	public static function getAllResourceGames() {
+		return array(self::_getDao()->count(), self::_getDao()->getAll());
+	}
+	
+	/**
+	 * 分页检索游戏资源表数据
+	 * 
+	 * @param unknown_type $params
+	 * @param unknown_type $page
+	 * @param unknown_type $limit
+	 */
+	public static function getList($page = 1, $limit = 10, $params = array(), $orderBy = array('id'=>'DESC')) {
+		if ($page < 1) $page = 1; 
+		$start = ($page - 1) * $limit;
+		$ret = self::_getDao()->getList($start, $limit, $params, $orderBy);
+		$total = self::_getDao()->count($params);
+		return array($total, $ret);
+	}
+	
+	
+	/**
+	 *
+	 * 后台分页检索游戏资源表数据
+	 * 
+	 * @param unknown_type $params
+	 * @param unknown_type $page
+	 * @param unknown_type $limit
+	 */
+	public static function adminSearch($page = 1, $limit = 10, $params = array(), $orderBy = array('id'=>'DESC')) {
+		$params = self::_cookData($params);
+		if ($page < 1) $page = 1;
+		$start = ($page - 1) * $limit;
+		
+		$sqlWhere = self::_getDao()->_cookParams($params);
+		$ret = self::_getDao()->searchBy($start, $limit, $sqlWhere, $orderBy);
+		$total = self::_getDao()->searchCount($sqlWhere);
+		return array($total, $ret);
+	}
+	
+	/**
+	 * 根据参数查询游戏分类
+	 * @param unknown_type $id
+	 * @return Ambigous <boolean, number>
+	 */
+	public static function getCategoryGames(array $params = array()) {
+		$result = self::_getIdxGameResourceCategoryDao()->getsBy($params, array('sort'=>'DESC','game_id'=>'DESC'));
+		$count = self::_getIdxGameResourceCategoryDao()->count($params);
+		return array($count, $result);
+	}
+	
+	/**
+	 * 根据游戏id集合检索游戏资源表
+	 * @param array $ids
+	 * @return boolean|Ambigous <boolean, mixed, multitype:>
+	 */
+	public static function getByIds(array $ids) {
+		if (!is_array($ids)) return false;
+		return self::_getDao()->getsBy(array('id'=>array("IN", $ids)));
+	}
+	
+	/**	
+	 * 根据条件获取多个游戏
+	 * @param unknown_type $params
+	 * @param unknown_type $orderBy
+	 * @return Ambigous <boolean, mixed>
+	 */
+	public static function getsBy($params, $orderBy = array('id'=>'DESC')) {
+		$params = self::_cookData($params);
+		return self::_getDao()->getsBy($params, $orderBy);
+	}
+	
+	/**
+	 *
+	 * 游戏资源表特殊条件搜索
+	 * @param array $params
+	 * @param int $page
+	 * @param int $limit
+	 */
+	public static function search($page = 1, $limit = 10, $params = array(), $orderBy = array()) {
+		$params = self::_cookData($params);
+		if ($page < 1) $page = 1;
+		$start = ($page - 1) * $limit;
+		$sqlWhere = Db_Adapter_Pdo::sqlWhere($params);
+		$sort = array('sort'=>'DESC','id'=>'DESC');
+		if (count($params['id'])) $sort = array('FIELD '=>self::quoteInArray($params['id'][1]));
+		$ret = self::_getDao()->searchBy($start, $limit, $sqlWhere, $sort);
+		$total = self::_getDao()->searchCount($sqlWhere);
+		return array($total, $ret);
+	}
+	
+	/**
+	 *
+	 * 游戏资源表特殊条件搜索
+	 * @param array $params
+	 * @param int $page
+	 * @param int $limit
+	 */
+	public static function search2($page = 1, $limit = 10, $params = array(), $orderBy = array()) {
+		$params = self::_cookData($params);
+		if ($page < 1) $page = 1;
+		$start = ($page - 1) * $limit;
+		$ret = self::_getDao()->getList($start, $limit, $params, $orderBy);
+		$total = self::_getDao()->count($params);
+		return array($total, $ret);
+	}
+	
+	/**
+	 * where id条件特殊拼组
+	 * @param unknown_type $variable
+	 * @return string
+	 */
+	public function quoteInArray($variable) {
+		if (empty($variable) || !is_array($variable)) return '';
+		$_returns = array();
+		foreach ($variable as $value) {
+			$_returns[] = Db_Adapter_Pdo::quote($value);
+		}
+		return '(' .'`id`'.','. implode(', ', $_returns) . ')';
+	}
+	
+	/**
+	 *
+	 * 游戏资源表特殊搜索 
+	 * @param array $params
+	 * @param int $page
+	 * @param int $limit
+	 */
+	public static function addSearch($page = 1, $limit = 10, $params = array(), $orderBy = array()) {
+		$params = self::_cookData($params);
+		if ($page < 1) $page = 1;
+		$start = ($page - 1) * $limit;
+		$sqlWhere = Db_Adapter_Pdo::sqlWhere($params);
+		$sort = array('id'=>'DESC');
+		$ret = self::_getDao()->searchBy($start, $limit, $sqlWhere, $sort);
+		$total = self::_getDao()->searchCount($sqlWhere);
+		return array($total, $ret);
+	}
+	
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param array $params 
+	 * @param int $page
+	 * @param int $limit
+	 */
+	public static function installSearch($params) {
+		return self::_getDao()->getsBy($params, array('id'=>'DESC'));
+	}
+	
+	/**
+	 * 
+	 * Enter description here ... 
+	 * @param unknown_type $id
+	 */
+	public static function getResourceGames($id) {
+		if (!intval($id)) return false;
+		return self::_getDao()->get(intval($id));
+	}
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $id
+	 */
+	public static function getResourceByGames($id) {
+		if (!intval($id)) return false;
+		return self::_getDao()->getBy(array('id'=>$id,'status'=>1));
+	}
+	
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $id
+	 */
+	public static function getGameInfoByResourceId($id) {
+		if (!intval($id)) return false;
+		return self::_getDao()->getBy(array('id'=>intval($id)), array('id'=>'DESC'));
+	}
+	
+	/**
+	 *
+	 * Enter description here ... 
+	 * @param unknown_type $id
+	 */
+	public static function getGameInfoByName($params) {
+		if (!is_array($params)) return false;
+		$params['status'] = 1;
+		return self::_getDao()->getsBy($params);
+	}
+	
+	/**
+	 * 组装游戏数组
+	 * @游戏数组 $data
+	 */
+	public static function getGameList($data,$webroot) {
+		if (!is_array($data)) return false;
+		
+		$i=1;
+		$tmp = array();
+		foreach($data as $key=>$value){
+			$info = array();
+			$info = self::getGameAllInfo(array('id'=>$value['id']));
+			$tmp[$i]['id'] = $info['id'];
+			$tmp[$i]['from'] = 'gn';
+			$tmp[$i]['name'] = $info['name'];
+			$tmp[$i]['link'] = $info['link'];
+			$tmp[$i]['package'] = $info['package'];
+			$tmp[$i]['resume'] = $info['resume'];
+			$tmp[$i]['language'] = $info['language'];
+			$tmp[$i]['img'] = urldecode($info['img']);
+			$tmp[$i]['size'] = $info['size'];
+			$tmp[$i]['category'] = $info['category_title'];
+			$tmp[$i]['version'] = $info['min_sys_version_title'];
+			$tmp[$i]['min_resolution'] = $info['min_resolution_title'];
+			$tmp[$i]['max_resolution'] = $info['max_resolution_title'];
+			$tmp[$i]['updatetime'] = date('Y-m-d',$value['create_time']);
+			$tmp[$i]['descrip'] = $value['descrip'];
+			$tmp[$i]['company'] = $value['company'];
+			$tmp[$i]['device'] = $info['device'];
+			$i++;
+		}
+		return  $tmp;
+	}
+	
+	/**
+	 * 
+	 * Enter description here ...
+	 * @param unknown_type $data
+	 * @param unknown_type $id
+	 */
+	public static function updateResourceGames($data, $id) {
+		if (!is_array($data)) return false;
+		$data = self::_cookData($data);
+		return self::_getDao()->update($data, intval($id));
+	}
+	
+	
+	
+	public static function getGamesByGameNames(array $params = array()) {
+		return self::_getDao()->getsBy($params, array('id'=>'DESC'));
+	}
+	
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $data
+	 * @param unknown_type $id
+	 */
+	public static function updateResourceGamesStatus($status, $id) {
+		if (!$id) return false;
+		//$time = Common::getTime();
+		return self::_getDao()->update(array('status'=>$status), intval($id));
+	}
+	
+	/**
+	 * 更新游戏下载量
+	 * @param unknown_type $downloads
+	 * @param unknown_type $id
+	 * @return boolean|Ambigous <boolean, number>
+	 */
+	public static function updateResourceGamesDownload($downloads, $id) {
+		if (!$id) return false;
+		return self::_getDao()->update(array('downloads'=>$downloads), intval($id));
+	}
+	
+	
+	public static function updateResourceGamesCertificate($certificate, $appid) {
+		if (!$appid) return false;
+		return self::_getDao()->updateBy(array('certificate'=>$certificate), array('appid'=>intval($appid)));
+	}
+	
+	/**
+	 * 
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function getIdxImgByGameId($game_id) {
+		if (!$game_id) return false;
+		return self::_getIdxGameImgDao()->getBy(array('game_id'=>$game_id));
+	}
+	
+	/**
+	 * 
+	 * @param unknown_type $data
+	 * @return multitype:unknown Ambigous <boolean, mixed, multitype:>
+	 */
+	public static function getGames($data = array()) {
+		$params = self::_cookData($data);
+		$ret = self::_getIdxGameResourceCategoryDao()->getsBy($params, array('sort'=>'DESC', 'game_id'=>'DESC'));
+		$total = self::_getIdxGameResourceCategoryDao()->count($params);
+		return array($total, $ret);
+	}
+	
+		
+	public static function getIdxGamesByCategoryId($page = 1, $limit = 10, $params = array(), $orderBy = array('sort'=>'DESC')) {
+		if ($page < 1) $page = 1;
+		$start = ($page - 1) * $limit;
+		$ret = self::_getIdxGameResourceCategoryDao()->getList($start, $limit, $params, $orderBy);
+		$total = self::_getIdxGameResourceCategoryDao()->count($params);
+		return array($total, $ret);
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function getIdxCategoryByGameId($game_id) {
+		if (!$game_id) return false;
+		return self::_getIdxGameResourceCategoryDao()->getsBy(array('game_id'=>$game_id));
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function updateIdxCategoryStatus($category_id, $status) {
+		if (!$category_id) return false;
+		return self::_getIdxGameResourceCategoryDao()->updateBy(array('status'=>intval($status)), array('category_id'=>intval($category_id)));
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function updateIdxGameCategoryStatus($game_id, $status) {
+		if (!$game_id) return false;
+		return self::_getIdxGameResourceCategoryDao()->updateBy(array('game_status'=>intval($status)), array('game_id'=>intval($game_id)));
+	}
+	
+	/**
+	 * 更新索引表游戏的上线时间和下载量
+	 * @param unknown_type $online_time
+	 * @param unknown_type $game_id
+	 * @return boolean|Ambigous <boolean, number>
+	 */
+	public static function updateIdxGameCategoryOntime($online_time, $downloads, $game_id) {
+		if (!$game_id) return false;
+		return self::_getIdxGameResourceCategoryDao()->updateBy(array('online_time'=>intval($online_time),'downloads'=>$downloads), array('game_id'=>intval($game_id),'game_status'=>1));
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function getIdxModelByGameId($game_id) {
+		if (!$game_id) return false;
+		return self::_getIdxGameResourceModelDao()->getBy(array('game_id'=>$game_id));
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function getIdxPropertyByGameId($game_id) {
+		if (!$game_id) return false;
+		return self::_getIdxGameResourcePropertiesDao()->getBy(array('game_id'=>$game_id));
+	}
+	
+	
+	/**
+	 *
+	 * @return Ambigous <boolean, mixed, multitype:>
+	 */
+	public static function getIdxGameResourceCategorys() {
+		return self::_getIdxGameResourceCategoryDao()->getAll();
+	}
+	
+	/**
+	 *
+	 * @return Ambigous <boolean, mixed, multitype:>
+	 */
+	public static function getIdxResourceCategorys() {
+		return self::_getIdxGameResourceCategoryDao()->getsBy(array('status'=>1));
+	}
+	
+	/**
+	 *
+	 * @return Ambigous <boolean, mixed, multitype:>
+	 */
+	public static function getIdxResourceCategoryGames($params) {
+		return self::_getIdxGameResourceCategoryDao()->getsBy($params);
+	}
+	
+	
+	/**
+	 *
+	 * @param unknown_type $id
+	 * @return Ambigous <boolean, number>
+	 */
+	public static function getGameResourceByCategoryId($id) {
+		return 	self::_getIdxGameResourceCategoryDao()->getsBy(array('category_id'=>intval($id)));
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $id
+	 * @return Ambigous <boolean, number>
+	 */
+	public static function getGameResourceByCategoryIdStatus($id,$orderBy) {
+		return 	self::_getIdxGameResourceCategoryDao()->getsBy(array('category_id'=>intval($id),'game_status'=>1),$orderBy);
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $id
+	 * @return Ambigous <boolean, number>
+	 */
+	public static function getGameResourceByCategoryGameId($id) {
+		return 	self::_getIdxGameResourceCategoryDao()->getBy(array('game_id'=>intval($id),'status'=>1));
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $id
+	 * @return Ambigous <boolean, number>
+	 */
+	public static function getGameResourceByCategoryByGameId($id) {
+		return 	self::_getIdxGameResourceCategoryDao()->getsBy(array("game_id"=>intval($id)));
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $resource_game_id
+	 * @return boolean|mixed
+	 */
+	public static function getIdxGameResourceCategoryBy($params = array()) {
+		if (!is_array($params)) return false;
+		return self::_getIdxGameResourceCategoryDao()->getsBy($params);
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function getIdxVersionByGameId($game_id) {
+		if (!$game_id) return false;
+		return self::_getIdxGameResourceVersionDao()->getsBy(array('game_id'=>$game_id),array('id'=>'DESC'));
+	}
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $params
+	 */
+	public static function deleteIdxVersionByGameId($params) {
+		if (!is_array($params)) return false;
+		return self::_getIdxGameResourceVersionDao()->deleteBy($params);
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function getIdxVersionByVersionId($id,$game_id) {
+		if (!$id) return false;
+		return self::_getIdxGameResourceVersionDao()->getBy(array('id'=>$id,'game_id'=>$game_id));
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function getIdxGameVersionByGameId($game_id) {
+		if (!$game_id) return false;
+		return self::_getIdxGameResourceVersionDao()->getsBy(array('game_id'=>$game_id));
+	}
+	
+	/**
+	 * 
+	 * @param unknown_type $gameid
+	 */
+	public static function getGameVersionInfo($gameid) {
+		return self::_getIdxGameResourceVersionDao()->getBy(array('game_id'=>$gameid, 'status'=>1));
+	}
+	
+	
+	/**
+	 * 
+	 * @param unknown_type $page
+	 * @param unknown_type $limit
+	 * @param unknown_type $params
+	 * @param unknown_type $orderBy
+	 * @return multitype:unknown multitype:
+	 */
+	public static function getVersionList($page = 1, $limit = 10, $params = array(), $orderBy = array('create_time'=>'DESC')) {
+		$params = self::_cookVersionData($params);
+		if ($page < 1) $page = 1;
+		$start = ($page - 1) * $limit;
+		$ret = self::_getIdxGameResourceVersionDao()->getList($start, $limit, $params, $orderBy);
+		$total = self::_getIdxGameResourceVersionDao()->count($params);
+		return array($total, $ret);
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function getIdxVersionByVersionStatus($status) {
+		return self::_getIdxGameResourceVersionDao()->getsBy(array('status'=>intval($status)));
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function updateVersionMd5($id,$md5_code) {
+		if (!$id) return false;
+		return self::_getIdxGameResourceVersionDao()->updateVersionMd5(intval($id),$md5_code);
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function getIdxVersionByResourceGameId($params) {
+		return self::_getIdxGameResourceVersionDao()->getsBy($params);
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function getIdxVersionByNewVersion() {
+		return self::_getIdxGameResourceVersionDao()->getIdxVersionByNewVersion();
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $ids Resource_Service_Games::updateByGameVesion
+	 * @return boolean
+	 */
+	public static function updateByGameVesion($data,$params) {
+		return self::_getIdxGameResourceVersionDao()->updateBy($data, $params);
+	}
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $params
+	 * @param unknown_type $page
+	 * @param unknown_type $limit
+	 */
+	public static function getVersionGames($page = 1, $limit = 10, $params = array()) {
+		$params = self::_cookVersionData($params);
+		if ($page < 1) $page = 1;
+		$start = ($page - 1) * $limit;
+		$ret = self::_getIdxGameResourceVersionDao()->getList($start, $limit, $params, array('game_id'=>'DESC'));
+		$total = self::_getIdxGameResourceVersionDao()->count($params);
+		
+		return array($total, $ret);
+	}
+	
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $params
+	 * @param unknown_type $page
+	 * @param unknown_type $limit
+	 */
+	public static function getVersionSortGames($page = 1, $limit = 10, $params = array()) {
+		$params = self::_cookVersionData($params);
+		if ($page < 1) $page = 1;
+		$start = ($page - 1) * $limit;
+		$ret = self::_getIdxGameResourceVersionDao()->getVersionSortGames(intval($start), intval($limit), $params);
+		$total = self::_getIdxGameResourceVersionDao()->getVersionGamescount($params);
+		return array($total, $ret);
+	}
+	
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function getCountResourceVersion() {
+		return self::_getIdxGameResourceVersionDao()->getCountResourceVersion();
+	}
+	
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $data
+	 */
+	public static function addIdxGameResourceVersion($data) {
+		if (!is_array($data)) return false;
+		$id = self::addResourceVersion($data);
+		$versions = array();
+		if($data['status']){
+			$versions = self::getIdxVersionByGameId($data['game_id']);
+			foreach($versions as $key=>$val){
+				if($val['id'] == $id){
+					$status = 1;
+				} else {
+					$status = 0;
+				}
+				self::_getIdxGameResourceVersionDao()->update(array('status'=>$status), $val['id']);
+				self::updateResourceGamesStatus($data['status'],$data['game_id']);
+				//更新分类索引
+				$categorys = Resource_Service_Games::getIdxCategoryByGameId($data['game_id']);
+				if($categorys){
+					foreach($categorys as $key=>$value){
+						Resource_Service_Games::updateIdxGameCategoryStatus($data['game_id'],$data['status']);
+					}
+				
+				}
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $data
+	 * @param unknown_type $id
+	 */
+	public static function updateIdxGameResourceVersion($data, $id) {
+		if (!is_array($data)) return false;
+		$data = self::_cookVersionData($data);
+		$versions = $tmp = array();
+		if($data['status']){
+			$versions = self::getIdxVersionByGameId($data['game_id']);
+			foreach($versions as $key=>$val){
+				if($val['id'] == $id){
+					$status = 1;
+				} else {
+					$status = 0;
+				}
+				self::_getIdxGameResourceVersionDao()->update(array('status'=>$status), $val['id']);
+			}
+			self::_getIdxGameResourceVersionDao()->update($data, intval($id));
+			self::updateResourceGamesStatus($data['status'],$data['game_id']);
+			//更新分类索引
+			$categorys = Resource_Service_Games::getIdxCategoryByGameId($data['game_id']);
+			if($categorys){
+				Resource_Service_Games::updateIdxGameCategoryStatus($data['game_id'],$data['status']);			
+			}
+			//更新专题索引
+			$subjects = Client_Service_Game::getIdxSubjectBySubjectGameId($data['game_id']);
+			if($subjects){
+				Client_Service_Game::updateSubjectsByGameIds($data['game_id'],$data['status']);
+			}
+			//更新精品推荐索引
+			$besttjs = Client_Service_Besttj::getIdxBesttjByGameId($data['game_id']);
+			if($besttjs){
+				Client_Service_Besttj::updateIdxBesttjStatus($data['game_id'],$data['status']);
+			}
+			//更新装机必备
+			$installes = Client_Service_Installe::getIdxInstalleByGameId($data['game_id']);
+			if($installes){
+				Client_Service_Installe::updateIdxInstalleStatus($data['game_id'],$data['status']);
+			}
+			//更新单机
+			$channels = Client_Service_Channel::getChannelByGameId($data['game_id'],1);
+			if($channels){
+				Client_Service_Channel::updateChannelStatus($data['game_id'],$data['status'],1);
+			}
+			//更新网游
+			$webs = Client_Service_Channel::getChannelByGameId($data['game_id'],2);
+			if($webs){
+				Client_Service_Channel::updateChannelStatus($data['game_id'],$data['status'],2);
+			}
+			//更新标签
+			$labels = Resource_Service_Games::getIdxLabelByGameIdStatus($data['game_id']);
+			if($labels){
+				Resource_Service_Games::updateIdxLabelStatus($data['game_id'],$data['status']);
+			}
+			//更新礼包
+			$gifts = Client_Service_Gift::getGiftByGameId($data['game_id']);
+			if($gifts){
+				Client_Service_Gift::updateGiftGameId($data['status'],$data['game_id']);
+			}
+			//更新猜你喜欢
+			$guess = Client_Service_Game::getGuessByGameId($data['game_id']);
+			if($guess){
+				Client_Service_Game::updateGuessGameId($data['status'],$data['game_id']);
+			}
+			//更新月榜默认数据
+			$months = Client_Service_Game::getMonthRankByGameId($data['game_id']);
+			if($months){
+				Client_Service_Game::updateMonthRankGameId($data['status'],$data['game_id']);
+			}
+			//大家都在玩
+			$webs = Web_Service_Ad::getWebAdByGameId($data['game_id']);
+			if($webs){
+				Web_Service_Ad::updateWebAdStatus($data['status'],$data['game_id']);
+			}
+			//新游尝鲜
+			$tastes = Client_Service_Taste::getTasteGames(array('game_id'=>$data['game_id']));
+			if($tastes){
+				Client_Service_Taste::updateByTasteStatus($data['status'],$data['game_id']);
+			}
+			return true;
+		} else {
+			$versions = self::getIdxVersionByGameId($data['game_id']);
+			foreach($versions as $k=>$v){
+				if($v['id'] != $id){
+					$tmp[] = $v['status'];
+				}
+			}
+			if(count($versions) == 1 || (in_array($data['status'],$tmp) && !in_array(1,$tmp))){
+				self::updateResourceGamesStatus($data['status'],$data['game_id']);
+				//更新分类索引
+				$categorys = Resource_Service_Games::getIdxCategoryByGameId($data['game_id']);
+				if($categorys){
+					Resource_Service_Games::updateIdxGameCategoryStatus($data['game_id'],$data['status']);
+				}
+				//更新专题索引
+				$subjects = Client_Service_Game::getIdxSubjectBySubjectGameId($data['game_id']);
+				if($subjects){
+					Client_Service_Game::updateSubjectsByGameIds($data['game_id'],$data['status']);
+				}
+				//更新广告3
+				$ads = Client_Service_Ad::getByLinkAd($data['game_id']);
+				if($ads){
+					foreach($ads as $key=>$value){
+						Client_Service_Ad::deleteAd($value['id']);
+					}
+				
+				}
+				//更新精品推荐索引
+				$besttjs = Client_Service_Besttj::getIdxBesttjByGameId($data['game_id']);
+				if($besttjs){
+					Client_Service_Besttj::updateIdxBesttjStatus($data['game_id'],$data['status']);
+				}
+				//更新装机必备
+				$installes = Client_Service_Installe::getIdxInstalleByGameId($data['game_id']);
+				if($installes){
+					Client_Service_Installe::updateIdxInstalleStatus($data['game_id'],$data['status']);
+				}
+				//更新单机
+				$channels = Client_Service_Channel::getChannelByGameId($data['game_id'],1);
+				if($channels){
+					Client_Service_Channel::updateChannelStatus($data['game_id'],$data['status'],1);
+				}
+				//更新网游
+				$webs = Client_Service_Channel::getChannelByGameId($data['game_id'],2);
+				if($webs){
+					Client_Service_Channel::updateChannelStatus($data['game_id'],$data['status'],2);
+				}
+				//更新标签
+				$labels = Resource_Service_Games::getIdxLabelByGameIdStatus($data['game_id']);
+				if($labels){
+					Resource_Service_Games::updateIdxLabelStatus($data['game_id'],$data['status']);
+				}
+				//更新礼包
+				$gifts = Client_Service_Gift::getGiftByGameId($data['game_id']);
+				if($gifts){
+					Client_Service_Gift::updateGiftGameId($data['status'],$data['game_id']);
+				}
+				//更新猜你喜欢
+				$guess = Client_Service_Game::getGuessByGameId($data['game_id']);
+				if($guess){
+					Client_Service_Game::updateGuessGameId($data['status'],$data['game_id']);
+				}
+				//更新月榜默认数据
+				$months = Client_Service_Game::getMonthRankByGameId($data['game_id']);
+				if($months){
+					Client_Service_Game::updateMonthRankGameId($data['status'],$data['game_id']);
+				}
+				//大家都在玩
+				$webs = Web_Service_Ad::getWebAdByGameId($data['game_id']);
+				if($webs){
+					Web_Service_Ad::updateWebAdStatus($data['status'],$data['game_id']);
+				}
+				//新游尝鲜
+				$tastes = Client_Service_Taste::getTasteGames(array('game_id'=>$data['game_id']));
+				if($tastes){
+					Client_Service_Taste::updateByTasteStatus($data['status'],$data['game_id']);
+				}
+			}
+			return self::_getIdxGameResourceVersionDao()->update($data, intval($id));
+		}
+	}
+	
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function getIdxVersionByVersionInfo($game_id) {
+		return self::_getIdxGameResourceVersionDao()->getIdxVersionByVersionInfo(intval($game_id));
+	}
+	
+	/**
+	 * 
+	 * Enter description here ...
+	 * @param unknown_type $data
+	 */
+	public static function addResourceVersion($data) {
+		if (!is_array($data)) return false;
+		$data = self::_cookVersionData($data);
+		$ret = self::_getIdxGameResourceVersionDao()->insert($data);
+		if (!$ret) return $ret;
+		return self::_getIdxGameResourceVersionDao()->getLastInsertId(); 
+	}
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $id
+	 */
+	public static function deleteIdxGameResourceVersion($id) {
+		return self::_getIdxGameResourceVersionDao()->delete(intval($id));
+	}
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $id
+	 */
+	public static function getIdxGameResourceVersion($id) {
+		return self::_getIdxGameResourceVersionDao()->get(intval($id));
+	}
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $id
+	 */
+	public static function getIdxGameResourceVersion2() {
+		return self::_getIdxGameResourceVersion2Dao()->getAll();
+	}
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $id
+	 */
+	public static function getIdxGameResourceVersionByMd5($md5) {
+		return self::_getIdxGameResourceVersionDao()->getBy(array('md5_code'=>$md5));
+	}
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $id
+	 */
+	public static function deleteIdxGameResourceDiff($id) {
+		return self::_getIdxGameResourcePackageDao()->delete(intval($id));
+	}
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $params
+	 */
+	public static function deleteIdxGameResourceDiffByGameId($params) {
+		if (!is_array($params)) return false;
+		return self::_getIdxGameResourcePackageDao()->deleteBy($params);
+	}
+	
+	/**
+	 *
+	 * @return Ambigous <boolean, mixed, multitype:>
+	 */
+	public static function getIdxGameResourceAllDiff() {
+		return self::_getIdxGameResourcePackageDao()->getAll();
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $params
+	 * @return multitype:
+	 */
+	public static function getIdxDiffByVersionId($version_id, $obiect_id) {
+		return self::_getIdxGameResourcePackageDao()->getBy(array('version_id'=>$version_id,'object_id'=>$obiect_id));
+	}
+	
+	/**
+	 * 
+	 * @param array $params
+	 * @return Ambigous <boolean, mixed, multitype:>
+	 */
+	public static function getsByIdxDiff($params){
+		return self::_getIdxGameResourcePackageDao()->getsBy($params);
+	}
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $id
+	 */
+	public static function getIdxGameResourceDiff() {
+		return self::_getIdxGameResourcePackageDao()->getCountResourceDiff();
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function getIdxGamePackageByGameId($game_id) {
+		if (!$game_id) return false;
+		return self::_getIdxGameResourcePackageDao()->getsBy(array('game_id'=>$game_id));
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function getIdxVersionByDiffId($id,$game_id) {
+		if (!$id) return false;
+		return self::_getIdxGameResourcePackageDao()->getBy(array('id'=>$id,'game_id'=>$game_id));
+	}
+	
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $data
+	 */
+	public static function addIdxGameResourcePackage($data) {
+		if (!is_array($data)) return false;
+		$data = self::_cookPackageData($data);
+		return self::_getIdxGameResourcePackageDao()->insert($data);
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function getIdxPackageByPackageId($params = array()) {
+		if (!is_array($params)) return false;
+		return self::_getIdxGameResourcePackageDao()->getsBy($params,array('update_time'=>'DESC'));
+	}
+	
+	/**
+	 *
+	 * @return Ambigous <boolean, mixed, multitype:>
+	 */
+	public static function getIdxGameResourceModels() {
+		return self::_getIdxGameResourceModelDao()->getAll();
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $id
+	 * @return Ambigous <boolean, number>
+	 */
+	public static function deleteIdxGameResourceModels($id) {
+		return 	self::_getIdxGameResourceModelDao()->deleteBy(array('game_id'=>$id));
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $resource_model_id
+	 * @return boolean|mixed
+	 */
+	public static function getIdxGameResourceModelBy($params = array()) {
+		if (!is_array($params)) return false;
+		return self::_getIdxGameResourceModelDao()->getsBy($params);
+	}
+	
+	
+	/**
+	 *
+	 * @return Ambigous <boolean, mixed, multitype:>
+	 */
+	public static function getIdxGameResourceProperties() {
+		return self::_getIdxGameResourcePropertiesDao()->getAll();
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $resource_property_id
+	 * @return boolean|mixed
+	 */
+	public static function getIdxGameResourcePropertiesBy($params = array()) {
+		if (!is_array($params)) return false;
+		return self::_getIdxGameResourcePropertiesDao()->getsBy($params);
+	}
+	
+	
+	/**
+	 *
+	 * @param unknown_type $data
+	 * @param unknown_type $sorts
+	 * @return boolean
+	 */
+	public static function updateIdxCategorySort($sorts) {
+		foreach($sorts as $key=>$value) {
+			self::_getIdxGameResourceCategoryDao()->update(array('sort'=>$value), $key);
+		}
+		return true;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $data
+	 * @param unknown_type $sorts
+	 * @return boolean
+	 */
+	public static function getIdxLabelByGameId($game_id) {
+		return self::_getIdxGameResourceLabelDao()->getsBy(array('game_id'=>$game_id,'status'=>1));
+	}
+	
+	/**
+	 * 
+	 * @param unknown_type $game_id
+	 * @param unknown_type $btype
+	 * @return Ambigous <boolean, mixed>
+	 */
+	public static function getIdxLabelLevelByGameId($game_id,$btype) {
+		return self::_getIdxGameResourceLabelDao()->getBy(array('btype'=>$btype,'game_id'=>$game_id,'status'=>1));
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @param unknown_type $btype
+	 * @return Ambigous <boolean, mixed>
+	 */
+	public static function updateIdxLabelLevelByGameId($game_id,$btype,$level) {
+		$tmp[] = array(
+				'id'=>'',
+				'btype'=>$btype,
+				'label_id'=>$level,
+				'game_id'=>$game_id,
+				'status'=>1,
+				'game_status'=>1,
+		);
+		$game_level = self::getIdxLabelLevelByGameId($game_id,$btype);
+		if($game_level) {
+			//如果评级存在，且有值，则更新
+			if($level) return self::_getIdxGameResourceLabelDao()->updateBy(array('label_id'=>$level),array('btype'=>$btype,'game_id'=>$game_id));
+			//如果评级存在，且无值，则删除
+			if(!$level) return self::_getIdxGameResourceLabelDao()->deleteBy(array('btype'=>$btype,'game_id'=>$game_id));
+		}
+		//如果评级不存在，且有值,则添加
+		if($level) return self::_getIdxGameResourceLabelDao()->mutiInsert($tmp);
+		
+		
+	}
+	
+	/**
+	 * 
+	 * @param unknown_type $game_id
+	 * @return Ambigous <boolean, mixed, multitype:>
+	 */
+	public static function getIdxLabelByGameIdStatus($game_id) {
+		return self::_getIdxGameResourceLabelDao()->getsBy(array('game_id'=>$game_id));
+	}
+	
+	/**
+	 * 
+	 * @param unknown_type $id
+	 * @return Ambigous <boolean, mixed, multitype:>
+	 */
+	public static function getIdxLabelByLabelId($id) {
+		return self::_getIdxGameResourceLabelDao()->getsBy(array('label_id'=>$id));
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $id
+	 * @return Ambigous <boolean, mixed, multitype:>
+	 */
+	public static function updateIdxLabelByLabelIdStatus($label_id,$status) {
+		return self::_getIdxGameResourceLabelDao()->updateBy(array('status'=>$status),array('label_id'=>$label_id));
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $game_id
+	 * @return boolean
+	 */
+	public static function updateIdxLabelStatus($game_id,$status) {
+		if (!$game_id) return false;
+		return self::_getIdxGameResourceLabelDao()->updateBy(array('status'=>$status),array('game_id'=>$game_id));
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $resource_game_id
+	 * @return boolean|mixed
+	 */
+	public static function getIdxGameResourceDeviceBy($params = array()) {
+		if (!is_array($params)) return false;
+		return self::_getIdxGameResourceDeviceDao()->getsBy($params);
+	}
+	
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $id
+	 */
+	public static function getIdxGameResourceResolutionByGameId($params) {
+		if (!is_array($params)) return false;
+		return self::_getIdxGameResourceResolutionDao()->getsBy($params,array('attribute_id'=>'ASC'));
+	}
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $data
+	 */
+	public static function addIdxGameResourceCategory($data) {
+		if (!is_array($data)) return false;
+		return self::_getIdxGameResourceCategoryDao()->insert($data);
+	}
+	
+	public static function updateResourceGamesModel($data, $id) {
+		if (!is_array($data)) return false;
+		$data = self::_cookData($data);
+		//开始事务
+		$trans = parent::beginTransaction();
+		try {
+								
+		    //添加包名索引
+			if($model){
+				$models = self::_cookIdxData($data, $id, 1, 'PACKAGE');
+				$ret = self::_getIdxGameResourceModelDao()->mutiInsert($models);
+				if (!$ret) throw new Exception('Add Model fail.', -205);
+			} else {
+				$model_ids = Resource_Service_Games::getIdxGameResourceModelBy(array('game_id'=>intval($id)));
+				if($model_ids){
+					$ret = self::deleteIdxGameResourceModels(intval($id));
+					if (!$ret) throw new Exception('Delete Model fail.', -205);
+				}
+			}
+		
+			//事务提交
+			if($trans) return parent::commit();
+			return true;
+		} catch (Exception $e) {
+			parent::rollBack();
+			return false;
+		}
+	}
+	
+	
+	/**
+	 *
+	 * @param array $data
+	 * @param unknown_type $type
+	 * @return boolean|multitype:unknown
+	 */
+	private static function _gameData(array $data ,$type) {
+		$tmp = array();
+		if (!is_array($data)) return false;
+		foreach($data as $key=>$value){
+			$tmp[] = $value[$type];
+		}
+		return $tmp;
+	}
+	
+	public static function updateResourceGamesByModel($data, $id ,$model) {
+		if (!is_array($data)) return false;
+		$data = self::_cookData($data);
+		//开始事务
+		$trans = parent::beginTransaction();
+		try {
+	
+			//删除机型索引
+			$ret = self::_getIdxGameResourceModelDao()->deleteBy(array('game_id'=>$id));
+			if (!$ret) throw new Exception('Delete Model fail.', -205);
+	
+			//添加机型索引
+			if($model){
+				$models = self::_cookIdxData($model, $id, $data['status'], 'MODEL');
+				$ret = self::_getIdxGameResourceModelDao()->mutiInsert($models);
+				if (!$ret) throw new Exception('Update Model fail.', -205);
+			}
+	
+			//事务提交
+			if($trans) return parent::commit();
+			return true;
+		} catch (Exception $e) {
+			parent::rollBack();
+			return false;
+		}
+	}
+	
+	/**
+	 * 
+	 * Enter description here ...
+	 * @param unknown_type $data
+	 * @param unknown_type $id
+	 */
+	public static function updateResourceGamesIdx($data, $upimg, $img, $id ,$category ,$labels, $resolution, $devlop) {
+		if (!is_array($data)) return false;
+		$data = self::_cookData($data);
+		//开始事务
+		$trans = parent::beginTransaction();
+		try {
+		    
+			//更新游戏
+			$ret = self::updateResourceGames($data, $id);
+			if (!$ret) throw new Exception("Update Game fail.", -202);
+						
+			//修改的图片
+			if($upimg){
+				foreach($upimg as $key=>$value) {
+					if ($key && $value) {
+						Resource_Service_Img::updateGameImg(array('img'=>$value), $key);
+					}
+				}
+			}
+			//新增加的图片
+			if ($img[0] != null && !$devlop) {
+				$gimgs = array();
+				foreach($img as $key=>$value) {
+					if ($value != '') {
+						$gimgs[] = array('game_id'=>$id, 'img'=>$value);
+					}
+				}
+				$ret = Resource_Service_Img::addGameImg($gimgs);
+				if (!$ret) throw new Exception('add GameImg fail.', -203);
+			}
+			
+			//兼容开发者平台
+			if($devlop){
+				if($img){
+					//删除图片
+					$ret = Resource_Service_Img::deleteGameImgByGameId(array('game_id'=>$id));
+					//添加图片
+					foreach($img as $key=>$value) {
+						if ($value != '') {
+							$gimgs[] = array('game_id'=>$id, 'img'=>$value);
+						}
+				   }
+				   $ret = Resource_Service_Img::addGameImg($gimgs);
+				}
+			}
+			
+			//删除分类索引
+			$idx_ret = self::_getIdxGameResourceCategoryDao()->deleteBy(array('game_id'=>$id));
+			
+			
+			//添加分类索引[新版本索引表加上线时间(online_time)，下载量(downloads)2个字段]
+		    if($category){
+		    	//获取该游戏当前的下载量
+		    	$downloads = Client_Service_WeekRank::getRankGameId($id);
+		    	$down = ($downloads) ? $downloads['DL_TIMES'] : 0;
+				$categorys = self::_cookIdxCategoryData($category, $id, $data['status'], $data['online_time'],$down, 'UPCATEGORY');
+				$ret = self::_getIdxGameResourceCategoryDao()->mutiInsert($categorys);
+				if (!$ret) throw new Exception('Add Category fail.', -205);
+			}
+			
+			//添加标签索引
+			if($labels){
+				$tmp = array();
+				$idx_ret = self::_getIdxGameResourceLabelDao()->deleteBy(array('game_id'=>$id));
+				foreach($labels as $key=>$value){
+					$lab = explode('|',$value);
+					$tmp[] = array(
+							'id'=>'',
+							'btype'=>$lab[0],
+							'label_id'=>$lab[1],
+							'game_id'=>$id,
+							'status'=>1,
+							'game_status'=>$data['status'],
+					);
+				}
+				$ret = self::_getIdxGameResourceLabelDao()->mutiInsert($tmp);
+				if (!$ret) throw new Exception('Update Label fail.', -205);
+			}
+			
+			
+			//添加游戏分辨率索引
+			if($resolution){
+				//删除游戏分辨率索引
+				$tmp = array();
+				$idx_ret = self::_getIdxGameResourceResolutionDao()->deleteBy(array('game_id'=>$id));
+				$resolutions = explode('-',$resolution);
+				foreach($resolutions as $key=>$value){
+					$tmp[] = array(
+							'id'=>'',
+							'attribute_id'=>$value,
+							'game_id'=>$id,
+							'status'=>1,
+					);
+				}
+				$ret = self::_getIdxGameResourceResolutionDao()->mutiInsert($tmp);
+				if (!$ret) throw new Exception('Update Resolution fail.', -206);
+			}
+							
+			//事务提交
+			if($trans) {
+				parent::commit();
+				return true;
+			}
+		} catch (Exception $e) {
+			parent::rollBack();
+			print_r($e->getMessage());
+			return false;
+		}
+	}
+	
+	
+	/**
+	 * 更新游戏可编辑的属性
+	 * Enter description here ...
+	 * @param unknown_type $data
+	 * @param unknown_type $id
+	 */
+	public static function updateBaseResourceGames($data,$id ,$category ,$labels, $device, $version_id) {
+		if (!is_array($data)) return false;
+		//开始事务
+		$trans = parent::beginTransaction();
+		try {
+	
+			//更新游戏
+			$ret = self::updateResourceGames($data, $id);
+			if (!$ret) throw new Exception("Update Game fail.", -202);
+				
+			//删除分类索引
+			$idx_ret = self::_getIdxGameResourceCategoryDao()->deleteBy(array('game_id'=>$id));
+				
+				
+			$info = self::getResourceGames($id);
+			//添加分类索引
+			if($category){
+				$categorys = self::_cookIdxCategoryData($category, $id, $info['status'],$info['online_time'],$info['downloads'], 'UPCATEGORY');
+				$ret = self::_getIdxGameResourceCategoryDao()->mutiInsert($categorys);
+				if (!$ret) throw new Exception('Add Category fail.', -205);
+			}
+				
+			//添加标签索引
+			if($labels){
+				$tmp = array();
+				$idx_ret = self::_getIdxGameResourceLabelDao()->deleteBy(array('game_id'=>$id));
+				
+				foreach($labels as $key=>$value){
+					$lab = explode('|',$value);
+					$tmp[] = array(
+							'id'=>'',
+							'btype'=>$lab[0],
+							'label_id'=>$lab[1],
+							'game_id'=>$id,
+							'status'=>1,
+							'game_status'=>$info['status'],
+					);
+				}
+				$ret = self::_getIdxGameResourceLabelDao()->mutiInsert($tmp);
+				if (!$ret) throw new Exception('Update Label fail.', -205);
+			}
+				
+			//删除设备索引
+			$idxds_ret = self::_getIdxGameResourceDeviceDao()->deleteBy(array('game_id'=>$id));
+			//添加设备索引
+			if($device){
+				$devices = self::_cookIdxData($device, $id, $info['status'], 'DEVICE');
+				$ret = self::_getIdxGameResourceDeviceDao()->mutiInsert($devices);
+				if (!$ret) throw new Exception('Add Device fail.', -205);
+			}
+			
+			//查找当前线上版本并且更新最后编辑时间
+			$online_version = self::getIdxGameResourceVersion($version_id);
+			if($online_version){
+				$verData = array('update_time'=>Common::getTime());
+				if($data['changes']) $verData['changes'] = $data['changes'];  
+				$ret = self::_getIdxGameResourceVersionDao()->update($verData, intval($version_id));
+				
+				if (!$ret) throw new Exception('Update Version fail.', -206);
+			}
+			
+				
+			//事务提交
+			if($trans) {
+				parent::commit();
+				return true;
+			}
+		} catch (Exception $e) {
+			parent::rollBack();
+			print_r($e->getMessage());
+			return false;
+		}
+	}
+	
+	/**
+	 * 
+	 * Enter description here ...
+	 * @param unknown_type $id
+	 */
+	public static function deleteResourceGames($id) {
+		return self::_getDao()->delete(intval($id));
+	}
+	
+   /**
+	 * 
+	 * Enter description here ...
+	 * @param unknown_type $id
+	 */
+    public static function deleteResourceGamesIdx($id) {
+    if (!$id) return false;
+		//开始事务
+		$trans = parent::beginTransaction();
+		try {
+		    
+			//删除游戏
+			$info = Resource_Service_Games::getResourceGames($id);
+			Util_File::del(Common::getConfig('siteConfig', 'attachPath') . $info['img']);
+			
+			$ret = self::deleteResourceGames($id);
+			if (!$ret) throw new Exception("Delete Game fail.", -202);
+			
+			//删除游戏预览图片
+			$ret = self::_getIdxGameImgDao()->deleteBy(array('game_id'=>$id));
+			if (!$ret) throw new Exception('Delete GameImg fail.', -205);
+			
+			
+			//删除分类索引
+			$category_ids = self::getIdxCategoryByGameId($id);
+			if($category_ids){
+				$ret = self::_getIdxGameResourceCategoryDao()->deleteBy(array('game_id'=>$id));
+				if (!$ret) throw new Exception('Delete Category fail.', -205);
+			}
+			
+			//删除版本索引
+			$version_ids = self::getIdxGameVersionByGameId($id);
+			if($version_ids){
+				$ret = self::_getIdxGameResourceVersionDao()->deleteBy(array('game_id'=>$id));
+				if (!$ret) throw new Exception('Delete Version fail.', -205);
+			}
+			
+			//删除差分包
+			$packge_ids = self::getIdxGamePackageByGameId($id);
+			if($packge_ids){
+				$ret = self::_getIdxGameResourcePackageDao()->deleteBy(array('game_id'=>$id));
+				if (!$ret) throw new Exception('Delete Package fail.', -205);
+			}
+			
+			//事务提交
+			if($trans) return parent::commit();
+			return true;
+		} catch (Exception $e) {
+			parent::rollBack();
+			return false;
+		}
+	}
+	
+	/**
+	 * 
+	 * Enter description here ...
+	 * @param unknown_type $data
+	 */
+	public static function addResourceGames($data) {
+		if (!is_array($data)) return false;
+		$data = self::_cookData($data);
+		$ret = self::_getDao()->insert($data);
+		if (!$ret) return $ret;
+		return self::_getDao()->getLastInsertId(); 
+	}
+	
+	public static function getKeyword() {
+		list(, $keywords) = Resource_Service_Keyword::getCanUseResourceKeywords(0,1,array('ktype'=>2));
+		return $keywords;
+	}
+	
+	public static function getHots() {
+		list(, $keywords) = Resource_Service_Keyword::getCanUseResourceKeywords(0, 10 ,array('ktype'=>1));
+		$tmp = array();
+		foreach($keywords as $key=>$value) {
+			$tmp[] = $value['name'];
+		}
+		return $tmp;;
+	}
+	
+	/**
+	 * 
+	 * @param array $data
+	 * @param array $img
+	 * @param array $label
+	 * @param array $subject
+	 * @throws Exception
+	 * @return boolean
+	 */
+	public static function addResourceGamesIdx($data, $img, $category,$labels,$resolution) {
+		if (!is_array($data)) return false;
+		//开始事务
+		$trans = parent::beginTransaction();
+		try {
+			//添加游戏
+			$game_id = self::addResourceGames($data);
+			$data['status'] = 1;
+			if (!$game_id) throw new Exception("Add Game fail.", -202);
+				
+			//添加游戏图片
+			if($img){
+				$imgs = self::_cookIdxData($img, $game_id, $data['status'], 'IMG');
+				$ret= Resource_Service_Img::addGameImg($imgs);
+				if (!$ret) throw new Exception('Add GameImg fail.', -203);
+			}
+			
+			//添加分类索引
+			if($category){
+				$categorys = self::_cookIdxCategoryData($category, $game_id, $data['status'],$data['online_time'], 0, 'CATEGORY');
+				$ret = self::_getIdxGameResourceCategoryDao()->mutiInsert($categorys);
+				if (!$ret) throw new Exception('Add Category fail.', -205);
+			}		
+			//添加标签索引
+			if($labels){
+				$tmp = array();
+				foreach($labels as $key=>$value){
+					$lab = explode('|',$value);
+					$tmp[] = array(
+							'id'=>'',
+							'btype'=>$lab[0],
+							'label_id'=>$lab[1],
+							'game_id'=>$game_id,
+							'status'=>1,
+							'game_status'=>0,
+			        );
+				}
+				$ret = self::_getIdxGameResourceLabelDao()->mutiInsert($tmp);
+				if (!$ret) throw new Exception('Add Label fail.', -205);
+			}
+			//添加游戏分辨率索引
+			if($resolution){
+				//删除游戏分辨率索引
+				$tmp = array();
+				$resolutions = explode('-',$resolution);
+				foreach($resolutions as $key=>$value){
+					$tmp[] = array(
+							'id'=>'',
+							'attribute_id'=>$value,
+							'game_id'=>$game_id,
+							'status'=>1,
+					);
+				}
+				$ret = self::_getIdxGameResourceResolutionDao()->mutiInsert($tmp);
+				if (!$ret) throw new Exception('Update Resolution fail.', -206);
+			}
+		//事务提交
+			if($trans) {
+				parent::commit();
+				return $game_id;
+			}
+			
+		} catch (Exception $e) {
+			parent::rollBack();
+			return false;
+		}
+	}
+	
+	private static function _cookIdxData($data, $game_id, $status,  $type) {
+		$tmp = array();
+		foreach($data as $key=>$value) {
+			if ($value != '') {
+				if ($type == 'IMG') {
+					$tmp[] = array('id'=>'', 'game_id'=>$game_id, 'img'=>$value);
+				}else if ($type == 'CATEGORY') {
+					$tmp[] = array('id'=>'', 'status'=>$status, 'category_id'=>$value, 'game_id'=>$game_id,'sort'=>0, 'game_status'=>0);
+				}else if ($type == 'UPCATEGORY') {
+					$tmp[] = array('id'=>'', 'status'=>1, 'category_id'=>$value, 'game_id'=>$game_id,'sort'=>0, 'game_status'=>$status);
+				}else if ($type == 'MODEL') {
+					$tmp[] = array('id'=>'', 'status'=>$status, 'model_id'=>$value, 'game_id'=>$game_id);
+				}else if ($type == 'PROPERTY') {
+					$tmp[] = array('id'=>'', 'status'=>$status, 'property_id'=>$value, 'game_id'=>$game_id);
+				}else if ($type == 'DEVICE') {
+					$tmp[] = array('id'=>'', 'status'=>$status, 'device_id'=>$value, 'game_id'=>$game_id);
+				}
+			}
+		}
+		return $tmp;
+	}
+
+	private static function _cookIdxCategoryData($data, $game_id, $status, $online_time, $downloads, $type){
+		$tmp = array();
+		foreach($data as $key=>$value) {
+			if ($value != '') {
+				if ($type == 'CATEGORY') {
+					$tmp[] = array('id'=>'', 'status'=>$status, 'category_id'=>$value, 'game_id'=>$game_id,'sort'=>0, 'game_status'=>0, 'online_time'=>$online_time,'downloads'=>$downloads);
+				}else if ($type == 'UPCATEGORY') {
+					$tmp[] = array('id'=>'', 'status'=>1, 'category_id'=>$value, 'game_id'=>$game_id,'sort'=>0, 'game_status'=>$status, 'online_time'=>$online_time,'downloads'=>$downloads);
+				}
+			}
+		}
+		return $tmp;
+	}
+	
+	
+	/**
+	 * 
+	 * Enter description here ...
+	 * @param unknown_type $data
+	 */
+	private static function _cookData($data) {
+		$tmp = array();
+		if(isset($data['id'])) $tmp['id'] = $data['id'];
+		if(isset($data['sort'])) $tmp['sort'] = intval($data['sort']);
+		if(isset($data['name'])) $tmp['name'] = $data['name'];
+		if(isset($data['resume'])) $tmp['resume'] = $data['resume'];
+		if(isset($data['label'])) $tmp['label'] = $data['label'];
+		if(isset($data['img'])) $tmp['img'] = $data['img'];
+		if(isset($data['mid_img'])) $tmp['mid_img'] = $data['mid_img'];
+		if(isset($data['big_img'])) $tmp['big_img'] = $data['big_img'];
+		if(isset($data['language'])) $tmp['language'] = $data['language'];
+		if(isset($data['price'])) $tmp['price'] = $data['price'];
+		if(isset($data['package'])) $tmp['package'] = $data['package'];
+		if(isset($data['packagecrc'])) $tmp['packagecrc'] = $data['packagecrc'];
+		if(isset($data['company'])) $tmp['company'] = $data['company'];
+		if(isset($data['descrip'])) $tmp['descrip'] = $data['descrip'];
+		if(isset($data['tgcontent'])) $tmp['tgcontent'] = $data['tgcontent'];
+		if(isset($data['create_time'])) $tmp['create_time'] = intval($data['create_time']);
+		if(isset($data['status'])) $tmp['status'] = $data['status'];
+		if(isset($data['ids'])) $tmp['ids'] = $data['ids'];
+		if(isset($data['hot'])) $tmp['hot'] = $data['hot'];
+		if(isset($data['st'])) $tmp['st'] = $data['st'];
+		if(isset($data['category_id'])) $tmp['category_id'] = $data['category_id'];
+		if(isset($data['cooperate'])) $tmp['cooperate'] = $data['cooperate'];
+		if(isset($data['developer'])) $tmp['developer'] = $data['developer'];
+		if(isset($data['certificate'])) $tmp['certificate'] = $data['certificate'];
+		if(isset($data['appid'])) $tmp['appid'] = intval($data['appid']);
+		if(isset($data['online_time'])) $tmp['online_time'] =$data['online_time'];
+		if(isset($data['secret_key'])) $tmp['secret_key'] = $data['secret_key'];
+		if(isset($data['api_key'])) $tmp['api_key'] = $data['api_key'];
+		if(isset($data['agent'])) $tmp['agent'] = $data['agent'];
+		if(isset($data['level'])) $tmp['level'] = $data['level'];
+		if(isset($data['downloads'])) $tmp['downloads'] = intval($data['downloads']);
+		return $tmp;
+	}
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $data
+	 */
+	private static function _cookCategoryData($data) {
+		$tmp = array();
+		if(isset($data['title'])) $tmp['title'] = $data['title'];
+		if(isset($data['at_type'])) $tmp['at_type'] = intval($data['at_type']);
+		if(isset($data['status'])) $tmp['status'] = intval($data['status']);
+		if(isset($data['img'])) $tmp['img'] = $data['img'];
+		if(isset($data['sort'])) $tmp['sort'] = intval($data['sort']);
+		return $tmp;
+	}
+	
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param unknown_type $data
+	 */
+	private static function _cookVersionData($data) {
+		$tmp = array();
+		if(isset($data['id'])) $tmp['id'] = $data['id'];
+		if(isset($data['link'])) $tmp['link'] = $data['link'];
+		if(isset($data['changes'])) $tmp['changes'] = $data['changes'];
+		if(isset($data['version_code'])) $tmp['version_code'] = $data['version_code'];
+		if(isset($data['version'])) $tmp['version'] = $data['version'];
+		if(isset($data['min_sys_version'])) $tmp['min_sys_version'] = $data['min_sys_version'];
+		if(isset($data['min_resolution'])) $tmp['min_resolution'] = $data['min_resolution'];
+		if(isset($data['max_resolution'])) $tmp['max_resolution'] = $data['max_resolution'];
+		if(isset($data['size'])) $tmp['size'] = $data['size'];
+		if(isset($data['md5_code'])) $tmp['md5_code'] = $data['md5_code'];
+		if(isset($data['status'])) $tmp['status'] = intval($data['status']);
+		if(isset($data['game_id'])) $tmp['game_id'] = $data['game_id'];
+		if(isset($data['create_time'])) $tmp['create_time'] = intval($data['create_time']);
+		if(isset($data['update_time'])) $tmp['update_time'] = intval($data['update_time']);
+		if(isset($data['id'])) $tmp['id'] = $data['id'];
+		return $tmp;
+	}
+	
+	
+	/**
+	 *
+	 * Enter description here ...
+	 */
+	private static function _cookPackageData($data) {
+		$tmp = array();
+		if(isset($data['id'])) $tmp['id'] = $data['id'];
+		if(isset($data['link'])) $tmp['link'] = $data['link'];
+		if(isset($data['game_id'])) $tmp['game_id'] = $data['game_id'];
+		if(isset($data['version_id'])) $tmp['version_id'] = intval($data['version_id']);
+		if(isset($data['object_id'])) $tmp['object_id'] = intval($data['object_id']);
+		if(isset($data['diff_name'])) $tmp['diff_name'] = $data['diff_name'];
+		if(isset($data['new_version'])) $tmp['new_version'] = $data['new_version'];
+		if(isset($data['old_version'])) $tmp['old_version'] = $data['old_version'];
+		if(isset($data['size'])) $tmp['size'] = $data['size'];
+		if(isset($data['create_user'])) $tmp['create_user'] = $data['create_user'];
+		if(isset($data['modify_user'])) $tmp['modify_user'] = $data['modify_user'];
+		if(isset($data['create_time'])) $tmp['create_time'] = $data['create_time'];
+		if(isset($data['update_time'])) $tmp['update_time'] = $data['update_time'];
+		return $tmp;
+	}
+	
+	/**
+	 * 
+	 * @return Resource_Dao_Games
+	 */
+	private static function _getDao() {
+		return Common::getDao("Resource_Dao_Games");
+	}
+	
+	
+	/**
+	 *
+	 * @return Resource_Dao_Img
+	 */
+	private static function _getIdxGameImgDao() {
+		return Common::getDao("Resource_Dao_Img");
+	}
+	
+	/**
+	 *
+	 * @return Resource_Dao_IdxGameResourceCategory
+	 */
+	private static function _getIdxGameResourceCategoryDao() {
+		return Common::getDao("Resource_Dao_IdxGameResourceCategory");
+	}
+	
+	/**
+	 *
+	 * @return Resource_Dao_IdxGameResourceType
+	 */
+	private static function _getIdxGameResourceModelDao() {
+		return Common::getDao("Resource_Dao_IdxGameResourceType");
+	}
+	
+	/**
+	 *
+	 * @return Resource_Dao_IdxGameResourceProperties
+	 */
+	private static function _getIdxGameResourcePropertiesDao() {
+		return Common::getDao("Resource_Dao_IdxGameResourceProperties");
+	}
+	
+	/**
+	 *
+	 * @return Resource_Dao_IdxGameResourceVersion
+	 */
+	private static function _getIdxGameResourceVersionDao() {
+		return Common::getDao("Resource_Dao_IdxGameResourceVersion");
+	}
+	
+	/**
+	 *
+	 * @return Resource_Dao_IdxGameResourcePackage
+	 */
+	private static function _getIdxGameResourcePackageDao() {
+		return Common::getDao("Resource_Dao_IdxGameResourcePackage");
+	}
+	
+	
+	/**
+	 *
+	 * @return Resource_Dao_IdxGameResourceLabel
+	 */
+	private static function _getIdxGameResourceLabelDao() {
+		return Common::getDao("Resource_Dao_IdxGameResourceLabel");
+	}
+	
+	/**
+	 *
+	 * @return Resource_Dao_IdxGameResourceDevice
+	 */
+	private static function _getIdxGameResourceDeviceDao() {
+		return Common::getDao("Resource_Dao_IdxGameResourceDevice");
+	}
+	
+	/**
+	 *
+	 * @return Resource_Dao_IdxGameResourceCooperate
+	 */
+	private static function _getIdxGameResourceCooperateDao() {
+		return Common::getDao("Resource_Dao_IdxGameResourceCooperate");
+	}
+	
+	/**
+	 *
+	 * @return Resource_Dao_IdxGameResourceResolution
+	 */
+	private static function _getIdxGameResourceResolutionDao() {
+		return Common::getDao("Resource_Dao_IdxGameResourceResolution");
+	}
+	
+	/**
+	 *
+	 * @return Resource_Dao_Keyword
+	 */
+	private static function _getResourceKeywordDao() {
+		return Common::getDao("Resource_Dao_Keyword");
+	}
+}

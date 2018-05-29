@@ -1,0 +1,100 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li class="current"><a href="<?php echo $indexUrl;?>?brand_id=<?php echo $brand_id;?>">品牌商品列表</a></li>
+		<li><a href="<?php echo $step1Url;?>?brand_id=<?php echo $brand_id;?>">添加品牌商品</a></li>
+	</ul>
+</div>
+
+<form action="<?php echo $indexUrl;?>" method="post">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">品牌</th>
+				<td class="td">
+					<select name="brand_id">
+						<option value="0">所有品牌</option>
+						<?php foreach ($brand_arr as $key=>$val): ?>
+						<option value="<?php echo $key;?>" <?php if($param['brand_id'] == $key) echo 'selected="selected"';?>><?php echo $val;?></option>
+						<?php endforeach;?>
+					</select>
+				</td>
+				<th class="th" width="60">状态</th>
+				<td class="td">
+					<select name="status">
+						<option value="0" <?php if ($param['status'] == 0) echo 'selected="selected"';?>>所有</option>
+						<option value="1" <?php if ($param['status'] == 1) echo 'selected="selected"';?>>上架</option>
+						<option value="2" <?php if ($param['status'] == 2) echo 'selected="selected"';?>>下架</option>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">
+					<select name="time_type">
+						<option value="0" <?php if ($param['time_type'] == 1) echo 'selected="selected"';?>>不限</option>
+						<option value="1" <?php if ($param['time_type'] == 1) echo 'selected="selected"';?>>开始</option>
+						<option value="2" <?php if ($param['time_type'] == 2) echo 'selected="selected"';?>>结束</option>
+					</select>时间</th>
+				<td class="td">
+					<input class="input" type="text" maxlength="30" id="start_time" name="start_time" value="<?php echo $param['start_time'];?>">
+					<input class="input" type="text" maxlength="30" id="end_time" name="end_time" value="<?php echo $param['end_time'];?>">
+				</td>
+				<th class="th" width="60"></th>
+				<td class="td">
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn">
+			<span>
+				<button type="submit">搜 索</button>
+			</span>
+		</span>
+	</div>
+</form>
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="30">排序</td>
+			<td width="30">ID</td>
+			<td width="150">名称</td>
+			<td width="100">图片</td>
+			<td width="100">品牌</td>
+			<td width="100">时间</td>
+			<td width="50">总点击量</td>
+			<td width="30">状态</td>
+			<td width="120">操作</td>
+		</tr>
+		<?php if(!empty($list)): foreach ($list as $val):?>
+		<tr class="ct">
+			<td><?php echo $val['sort'];?></td>
+			<td><?php echo $val['id'];?></td>
+			<td><?php echo $val['title'];?></td>
+			<td><img width="100" src="<?php if(strpos($val['img'], 'http://') === false) {echo $attachPath,$val['img'];}else{echo $val['img'],'_120x120.',end(explode(".",  $val['img']));};?>"/></td>
+			<td><?php echo $brand_arr[$val['brand_id']];?></td>
+			<td><?php if(!empty($val['start_time'])) echo date('Y-m-d H:i:s', $val['start_time']);?> -<br/> <?php if(!empty($val['end_time'])) echo date('Y-m-d H:i:s', $val['end_time']);?></td>
+			<td><a href="/admin/stat/click?type_id=21&item_id=<?php echo $val['id'];?>" target="_blank"><?php echo $val['hits'];?></a></td>
+			<td><?php echo $val['status'] == 2 ? '下架' : '上架';?></td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $val['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $val['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+		<?php endforeach; endif;?>
+	</table>
+</div>
+<div class="mr10 cc"><?php echo $pager;?></div>
+
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//导购表单数据提交
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+    $('#end_time').datetimepicker();
+})
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,52 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li><a href="<?php echo $listUrl;?>">原因列表</a></li>
+		<li class="current"><a href="<?php echo $addUrl;?>">添加原因</a></li>
+	</ul>
+</div>
+<div class="h_a">添加原因</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+		 	<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input wa" name="sort" value="0"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">类型</th>
+				<td class="td">
+					<select name="type" class="wb">
+	                	<option value="1">退货</option>
+	                	<option value="2">换货</option>
+	            	</select>
+	            </td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td">
+					<select name="status" class="wb">
+	                	<option value="1">开启</option>
+	                	<option value="0">关闭</option>
+	            	</select>
+	            </td>
+			</tr>
+			<tr class="tr" id="descrip">
+				<th class="th">原因内容</th>
+				<td class="td">
+					<textarea class="textarea wc" name="reason"></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $listUrl;?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

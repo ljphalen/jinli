@@ -1,0 +1,57 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+    <ul class="cc">
+        <li><a href="<?php echo $listUrl; ?>">文件列表</a></li>
+        <?php if ($groupid == 1) { ?><li class="current"><a href="javascript:;">上传文件</a></li><?php } ?>
+    </ul>
+</div>
+<div class="h_a">编辑文件</div>
+<form method="post" action="<?php echo $updatePostUrl; ?>" id="editForm">
+    <input name="token" value="<?php echo $token; ?>" type="hidden" />
+    <input name="id" value="<?php echo $info['id']; ?>" type="hidden" />
+    <div class="table_full">
+        <table width="100%">
+
+            <tr class="tr">
+                <th class="th">rom版本号</th>
+                <td class="td">
+                    <?php foreach ($roms as $key => $value) { ?>
+                        <input type="checkbox" name="file_rom[]" value="<?php echo $value['id']; ?>" <?php if ($idx_file_rom[$value['id']]) echo 'checked="ckecked"'; ?> ><?php echo $value['name']; ?>
+                    <?php } ?>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">下载量</th>
+                <td class="td">
+                    <input type="text" class="input" name="down" value="<?php echo $info['down']; ?>">
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">排序</th>
+                <td class="td">
+                    <input type="text" class="input" name="sort" value="<?php echo $info['sort']; ?>">
+                </td>
+            </tr>
+
+            <tr class="tr">
+                <th class="th">分类</th>
+                <td class="td">
+
+                    <?php foreach ($file_type as $key => $value) { ?>
+                        <input type="checkbox" name="file_type[]" value="<?php echo $value['id']; ?>" <?php if (in_array($value['id'], $typeids)) echo 'checked="ckecked"'; ?>><?php echo $value['name']; ?>
+                    <?php } ?>
+                </td>
+
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+    $(document).ready(function() {
+        ajaxForm('editForm', function(ret) {
+            ajaxRedirect(ret, baseurl + '/Admin/File/index?s=1');
+        });
+    })
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

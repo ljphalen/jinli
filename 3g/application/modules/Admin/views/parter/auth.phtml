@@ -1,0 +1,133 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+
+	<div style="padding-top:5px;padding-left:20px;padding-bottom:20px;"><span style="font-size: 15px">详细信息</span></div>
+	<form action="/Admin/Parter/authPost" method="POST" id="addFrom">
+		<div class="table_list">
+			<table width="60%">
+				<tr class="hd">
+					<th class="th" align="center">序列号:</th>
+					<td class="td2"><?php echo $data['id']; ?></td>
+				</tr>
+				<tr class="hd">
+					<th class="th" align="center">日期:</th>
+					<td class="td2"><?php echo $data['date']; ?></td>
+				</tr>
+				<tr class="hd">
+					<th class="th" align="center">业务名称:</th>
+					<td class="td2"><?php echo $busInfo['name']; ?></td>
+				</tr>
+				<tr class="hd">
+					<th class="th" align="center">合作商家:</th>
+					<td class="td2"><?php echo $parter['name']; ?></td>
+				</tr>
+				<tr class="hd">
+					<th class="th" align="center">PV值:</th>
+					<td class="td"><?php echo $data['pv']; ?></td>
+				</tr>
+				<tr class="hd">
+					<th class="th" align="center">结算方式:</th>
+					<td class="td"><?php echo $priceTypes[$data['price_type']]; ?></td>
+				</tr>
+				<?php if ($data['check_status'] == 1) { ?>
+					<tr class="hd">
+						<th class="th" align="center">商家审核状态:</th>
+						<td class="td" style="color:red"><?php echo $confirmStatus[$data['confirm_status']]; ?></td>
+					</tr>
+				<?php } ?>
+				<tr class="hd">
+					<th class="th" align="center">后台结算金额:</th>
+					<td class="td" style="color: red"><?php echo $data['money']; ?> 元</td>
+				</tr>
+				<tr class="hd">
+					<th class="th">实际金额：
+						<?php if (empty($data['receipt_status'])){ ?>
+					<td class="td2" id="td_realmoney">
+						<input type="text" name="real_money" value="<?php echo $data['real_money']; ?>" class="input"> 元
+					</td>
+					<?php }else{ ?>
+					<td class="td2"><span style="color: red"><?php echo $data['real_money']; ?>元</span>
+						<?php } ?>
+				</tr>
+				<tr class="hd">
+					<th class="th">修改原因:
+					<td class="td2">
+						<textarea style="width: 300px;height:120px;" name="reason"><?php echo $data['reason']; ?></textarea>
+					</td>
+				</tr>
+				<tr class="hd">
+					<th class="th">审核对账:
+					<td class="td2" id="td_check">
+						<?php if ($data['check_status'] == 0) { ?>
+							<input type="button" class="mb10" value="通过审核" onfocus="blur();" id="passCheck">
+						<?php } else { ?>
+							<span>审核已通过!</span>
+						<?php } ?>
+					</td>
+				</tr>
+				<?php if ($data['check_status'] == 1 && $data['confirm_status'] == 1) { ?>
+					<tr class="hd">
+						<th class="th">收款状态:</th>
+						<?php if ($data['receipt_status'] == 0) { ?>
+							<td class="td2"  id="td_pay_status">
+							<input type="button" class="mb10" value="确定收款" onfocus="blur();" id="getMoney" style="cursor: pointer;">
+						<?php } else { ?>
+							<td class="td2"><span>已确认收款！</span></td>
+						<?php } ?>
+						</td>
+					</tr>
+				<?php } ?>
+			</table>
+			<div class="mb10 " style="padding-left: 300px"><span class="btn"><span><button onfocus="blur();" type="submit">确定</button></span></span>
+			</div>
+		</div>
+		<input type="hidden" name="token" value="<?php echo $token; ?>">
+		<input type="hidden" name="mid" value="<?php echo $data['id']; ?>">
+	</form>
+	<script type="text/javascript">
+		//表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Parter/month');
+			});
+		});
+
+		$("#passCheck").bind('click', function () {
+			if (confirm('确认通过审核？')) {
+				$.ajax({
+					'type': 'post',
+					'dataType': 'json',
+					'url': '/Admin/Parter/ajaxPassCheck',
+					'data': {'id': '<?php echo $data['id'];?>', 'token': '<?php echo $token;?>'},
+					'success': function (e) {
+						if (e.success) {
+							$("#td_check").html('<span>审核已通过！');
+						}
+						else {
+							alert(e.msg);
+						}
+					}
+				});
+			}
+		});
+
+		$("#getMoney").bind('click', function () {
+			if (confirm('确认通过审核？')) {
+				$.ajax({
+					'type': 'post',
+					'dataType': 'json',
+					'url': '/admin/Parter/ajaxChangePayStatus',
+					'data': {'id': '<?php echo $data['id'];?>', 'token': '<?php echo $token;?>'},
+					'success': function (e) {
+						if (e.success) {
+							$("#td_pay_status").html('<span>已确认收款！</span>');
+							$("#td_realmoney").html('<span><?php echo $data['real_money'];?>元</span>');
+						}
+						else {
+							alert(e.msg);
+						}
+					}
+				});
+			}
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

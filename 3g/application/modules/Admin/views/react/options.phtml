@@ -1,0 +1,60 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">反馈列表</a></li>
+		<li class="current"><a href="<?php echo $optionsUrl; ?>">问题选项列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $optionsUrl; ?>" method="post">
+	<input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">模块分类</th>
+				<td class="td">
+					<select name="parent_id">
+						<option value="0">请选择</option>
+						<?php foreach ($catList as $val) { ?>
+							<option value="<?php echo $val['id']; ?>"  <?php if ($val['id'] == $search['parent_id']) echo 'selected'; ?>><?php echo $val['name'] ?></option>
+						<?php } ?>
+					</select>
+				</td>
+
+				<td><span><a href="/Admin/React/add">添加选项内容</a></span></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="10%">ID</td>
+			<td width="15%">所属模块</td>
+			<td width="15%">内容名</td>
+			<td width="15%">排序</td>
+			<td width="15%">状态</td>
+			<td width="20%">添加时间</td>
+			<td width="10%">操作</td>
+
+		</tr>
+		<?php foreach ($data as $key => $row) { ?>
+			<tr class="ct">
+				<td><?php echo $row['id']; ?></td>
+				<td><?php echo $row['cat_name'] ? $row['cat_name'] : '----'; ?></td>
+				<td><?php echo $row['name']; ?></td>
+				<td><?php echo $row['sort']; ?></td>
+				<td><?php echo $row['status'] == 1 ? '显示' : '关闭'; ?></td>
+				<td><?php echo date('Y-m-d H:i:s', $row['add_time']); ?></td>
+				<td><a href="/Admin/React/edit?id=<?php echo $row['id']; ?>">编辑</a> |
+					<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $row['id']; ?>', '', event);">删除</a>
+				<td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

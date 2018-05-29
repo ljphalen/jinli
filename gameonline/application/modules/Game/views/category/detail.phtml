@@ -1,0 +1,61 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+</script>
+<div id="page">
+		<header class="hd">
+			<h1><div class="omit"><?php echo $title;?></div></h1>
+			<div class="back-home"><a href="javascript:history.go(-1);">&lt;</a></div>
+		</header>
+
+		<article class="ac">
+			<div class="item-list J_gameItem">
+				<ul>
+					<?php foreach($resource_games as $key=>$value) {?>
+					<?php 
+					     if(!$intersrc){
+                            $intersrc = 'CATEGORY';
+					     } 
+					     $href = $webroot.'/index/detail/?id='.$value['id'].'&intersrc='.$intersrc.'&t_bi='.$source;
+					?>
+					<li>
+						<a class="detail" href="<?php echo $href;?>">
+							<div class="pic"><img data-src="<?php echo $value['img'];?>" src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="<?php echo $value['name'];?>"></div>
+							<div class="desc">
+								<h3><?php echo $value['name'];?></h3>
+								<p><?php echo $value['resume'];?></p>
+							</div>
+						</a>
+						<div class="download"><a class="btn" href="<?php echo Common::tjurl($tjUrl, $value['id'], $intersrc, $value['link']);?>&t_bi=<?php echo $source;?>">安装</a></div>
+					</li>
+					<?php }?>
+				</ul>
+			</div>
+			<?php if($hasnext){ ?>
+			<div class="load-more J_loadMore" data-ajaxUrl="<?php echo $webroot.'/category/moreCt/?id='.$id.'&intersrc='.$intersrc.'&t_bi='.$source;?>" data-hasnext="<?php echo $hasnext;?>" data-curpage="<?php echo $page;?>">
+				<span>加载更多</span>
+			</div>
+			<?php } ?>
+		</article>
+
+		<div class="goTop J_gotoTop">
+			<a ></a>
+		</div>
+		<footer class="ft">
+			<div class="wchat" >
+				<img src="<?php echo $staticResPath;?>/pic/wechat.png" alt="" />
+				<div>
+				<p>欢迎关注我们的微信公众帐号！</p>
+				<p>微信号：JXH-20121220</p>
+			    </div>
+			</div>
+			<div class="quick-links">
+				<a href="<?php echo $webroot.'/contact?t_bi='.$source;?>">联系我们</a>
+				<a href="<?php echo $webroot.'/feedback?t_bi='.$source;?>">意见反馈</a>
+				<a href="<?php echo strpos($configs['game_link'], '?') == false ? $configs['game_link'].'&t_bi='.$source :$configs['game_link'].'?t_bi='.$source;?>"><?php echo $configs['game_title'];?></a>
+			</div>
+		</footer>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

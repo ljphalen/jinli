@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>绑定帐号</title>
+	<?php echo $this->render("layout/header.phtml");?>
+</head>
+<body>
+	<div class="main ">
+	<?php if ($isUserInvalid) {?>
+		<div class="J_bindError bindStatus-container">
+			<i class="icon-bindStatus icon-error "></i>
+			<span class="bindInfo">绑定失败！无效链接！</span>
+		</div>
+	<?php } else if ($isBinded) {?>
+		<div class="J_bindOK bindStatus-container">
+			<i class="icon-bindStatus icon-ok"></i>
+			<span class="bindInfo">您已完成绑定！</span>
+			<span class="backtips"><em id="seconds">3</em>秒后返回</span>
+		</div>
+	<?php } else { ?>
+	
+		<div class="J_loginContainer login-content">
+			<span class="bound-tips">您当前未绑定帐号</span>
+			<div class="input phone">
+				<span ></span><input id="phone"  maxlength=11 placeholder="手机号码/帐号" />
+			</div>
+			<div class="input password">
+				<span class="icon-pwd"></span><input id="password" maxlength=16 type="password" placeholder="密码" />
+			</div>
+			<div class="J_code code hidden">
+				<input id="code"  maxlength="4" placeholder="请输入验证码" data-vid="" data-vty="" />
+				<span class="J_loading">
+					<img  src="" data-ajaxUrl="<?php echo $refreshgvcUrl; ?>">
+					<i class="icon-loading hidden"></i>
+				</span>
+				<span class="refresh-tips">点击图片刷新</span>
+			</div>
+			<span class="J_tips error-tips invisible">请先登陆</span>
+			<!-- 登录提交数据url -->
+			<button class="J_login btn" data-ajaxUrl="<?php echo $loginPostUrl?>">登录</button>
+			<div class="protocol">
+				登录Amigo帐号表示同意<a href="">最终用户协议</a>
+			</div>
+			<div class="nav">
+				<a  href="<?php echo $forgetUrl?>">忘记密码？</a>
+				<a class="findPwd"  href="<?php echo $gameRoot.$registerUrl.'?redirect_uri='.$redirectUrl;?>">注册</a>
+			</div>
+		</div>
+		<div class="J_bindOK bindStatus-container hidden">
+			<i class="icon-bindStatus icon-ok"></i>
+			<span class="bindInfo">您已成功绑定！</span>
+			<span class="backtips"><em id="seconds">3</em>秒后返回</span>
+		</div>
+
+		<div class="J_bindError bindStatus-container hidden">
+			<i class="icon-bindStatus icon-error "></i>
+			<span class="bindInfo">绑定失败！请重新绑定！</span>
+			<button class="J_rebind btn-rebind">重新绑定</button>
+		</div>
+		<?php }?>
+	</div>
+
+	<div class="J_mask mask hidden">
+		<div class="submit-mask">
+			<i class="icon-loading"></i>
+			<div>正在提交，请稍等...</div>
+		</div>
+	</div>
+    <?php echo $this->render("layout/footer.phtml");?>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+</body>
+</html>

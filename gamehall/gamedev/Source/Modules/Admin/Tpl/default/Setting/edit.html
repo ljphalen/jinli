@@ -1,0 +1,53 @@
+<div class="page">
+	<div class="pageContent">
+	<form method="post" action="__URL__/upload/navTabId/__MODULE__/callbackType/closeCurrent"
+	 	enctype="multipart/form-data" class="pageForm required-validate" onsubmit="return iframeCallback(this, dialogAjaxDone);">
+	 	<input type="hidden" name="isupdate" value="1">
+		<input type="hidden" name="id" value="{$vo.id}">
+		<div class="pageFormContent" layoutH="58">
+			<div class="unit">
+				<label>标题：</label>
+				<input type="text" class="required" size="60" maxlength="20" name="title" value="{$vo.title}" />
+			</div>
+
+			<div class="unit">
+				<label>链接：</label>
+				<input type="text" name="url" size="60" maxlength="100" value="{$vo.url}"/>
+			</div>
+			
+			<div class="unit">
+				<label>开始时间：</label>
+				<input type="text" name="start_time" class="date required" datefmt="yyyy-MM-dd HH:mm" value="{$vo.start_time|date="Y-m-d H:i",###}" />
+			</div>
+			
+			<div class="unit">
+				<label>结束时间：</label>
+				<input type="text" name="end_time" class="date required" datefmt="yyyy-MM-dd HH:mm" value="{$vo.end_time|date="Y-m-d H:i",###}" >
+			</div>
+
+			<div class="unit">
+				<label>上传图片：</label>
+				<input type="file" name="image">
+				<div style="margin-left:130px">尺寸：1920（宽）*310（高） 格式：png 单张大小：2M以内</div>
+			</div>
+			
+			<div class="unit">
+				<label>状态：</label>
+				<select class="combox" name="status">
+					<option value="1">启用</option>
+					<option value="0">关闭</option>
+				</select>
+				<script type="text/javascript">
+					$("select[name='status']").val({$vo.status});
+				</script>
+			</div>
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">提交</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">关闭</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+	</div>
+</div>

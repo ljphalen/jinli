@@ -1,0 +1,136 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $indexUrl; ?>">机型列表</a></li>
+		<li><a href="<?php echo $editmodelUrl; ?>">添加机型</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl; ?>" method="post">
+	<input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+	<div class="table_full">
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">机型</th>
+					<td class="td">
+						<select name="model">
+							<option value="0">请选择</option>
+							<?php foreach ($attrTypes['1'] as $key => $val) { ?>
+								<option value="<?php echo $val['value']; ?>"  <?php if ($val['value'] == $params['model']) echo 'selected' ?>><?php echo $val['value']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">版本</th>
+					<td class="td">
+						<select name="version">
+							<option value="0">请选择</option>
+							<?php foreach ($attrTypes['2'] as $key => $val) { ?>
+								<option value="<?php echo $val['value']; ?>"   <?php if ($val['value'] == $params['version']) echo 'selected' ?>><?php echo $val['value']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">运营商</th>
+					<td class="td">
+						<select name="operator">
+							<option value="0">请选择</option>
+							<?php foreach ($attrTypes['3'] as $key => $val) { ?>
+								<option value="<?php echo $val['value']; ?>"  <?php if ($val['value'] == $params['operator']) echo 'selected' ?>><?php echo $val['value']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">省份</th>
+					<td class="td">
+						<select name="province" id="province">
+							<option value="0">请选择</option>
+							<?php foreach ($attrTypes['4'] as $key => $val) { ?>
+								<option value="<?php echo $val['value']; ?>" <?php if ($val['value'] == $params['province']) echo 'selected' ?>><?php echo $val['value']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<tr class="tr" id="tr_city" style="display:<?php echo $params['city'] ? '' : 'none'; ?>">
+					<th class="th">城市</th>
+					<td class="td">
+						<select name="city" id="city">
+							<option value="">请选择</option>
+							<?php foreach ($cities as $k => $v) { ?>
+								<option value="<?php echo $v['ext']; ?>"  <?php if ($v['ext'] == $params['city']) echo 'selected'; ?>><?php echo $v['ext']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+			</table>
+		</div>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button type="submit">搜 索</button></span></span>
+	</div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">排序</td>
+			<td>机型</td>
+			<td>版本</td>
+			<td>运营商</td>
+			<td>地域</td>
+			<td>最高优先级别</td>
+			<td width="100px;">操作</td>
+		</tr>
+		<?php foreach ($data as $key => $value) { ?>
+			<tr class="ct">
+				<td><?php echo $value['id']; ?></td>
+				<td><?php echo $value['model']; ?></td>
+				<td><?php echo $value['version']; ?></td>
+				<td><?php echo $value['operator']; ?></td>
+				<td><?php echo $value['area']; ?></td>
+				<td><?php echo $types[$value['prior']]; ?></td>
+				<td>
+					<a href="<?php echo $editmodelUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+					<a href="javascript:" onclick="deleteOne('<?php echo $delModelUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+				</td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+<script>
+	$("#province").bind('change', function () {
+		var provinceName = $("#province option:selected").val();
+
+		if (provinceName) {
+			$.ajax({
+				'url': '/Admin/Model/ajaxGetCityInfo',
+				'type': 'post',
+				'dataType': 'json',
+				'data': {'token': '<?php echo $token;?>', 'province': provinceName},
+				'success': function (e) {
+					var data = '<option  value="0">请选择</option>';
+					if (e.data) {
+						$.each(e.data, function (i, m) {
+							data += '<option value="' + m.ext + '">' + m.ext + '</option>';
+						});
+						$("#city").html(data);
+						$("#tr_city").show();
+					}
+				}
+			});
+		} else {
+			$("#tr_city").hide();
+		}
+
+	});
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<title>{{project_title}} </title>
+<link rel="shortcut icon" href="{{rootUrl}}/favicon.ico" />
+<!-- include 'inc' -->
+<style type="text/css">
+.login{width:500px;height:240px;padding:20px;position:absolute;top:50%;left:50%;margin:-141px 0 0 -271px;border:1px solid #bbb;background:#fff;}
+.login h1{float:none;clear:both;text-align:center;margin-bottom:20px;}
+</style>
+</head>
+<body>
+    <div class="login">
+        <h1>广告管理系统</h1>
+        <form name="form" method="post" action="login/login" onsubmit="return checkinput()">
+        <ul class="form clearfix">
+            <li>
+                <span class="label">用户名：</span>
+                <div class="fc">
+                    <input type="text" class="iText" name="username" id="username" style="width:220px;" />
+                </div>
+            </li>
+            <li>
+                <span class="label">密码：</span>
+                <div class="fc">
+                    <input type="password" class="iText" name="password" id="password" style="width:220px;" />
+                </div>
+            </li>
+            <li>
+                <div class="fc">
+                    <input type="submit" value="登录" class="submit" />
+                </div>
+            </li>
+        </ul>
+        </form>
+    </div>
+</body>
+<script type="text/javascript">
+    function checkinput(){
+        var username=$("#username").val();
+        var password=$("#password").val();
+        if(username==""){
+            alert("请输入用户名");
+            $("#username").focus();
+            return false;
+        }
+        if(password==""){
+            alert("请输入密码");
+            $("#password").focus();
+            return false;
+        }
+        $("#password").val(md5($("#password").val()));
+    }
+</script>
+</html>

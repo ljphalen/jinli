@@ -1,0 +1,76 @@
+@charset "utf-8";
+.footer{
+	margin:25px;
+	color:#a3a3a3;
+	font-size: 12px;
+	@media screen and (max-width:320px){
+		margin:15px;
+	}
+	ul{
+		display: -webkit-box;
+		-webkit-box-pack:justify;
+	}
+	a{
+		color:#a3a3a3;
+	}
+	.nav-top{
+		border-top:1px solid #eee;
+		padding:10px 0 23px 0;
+		[class^="icon-"]{
+			display: block;
+			width:25px;
+			height: 25px;
+			margin-bottom:6px;
+		}
+	}
+	.qrcode-wrapper{
+		padding:0 12px 18px 12px;
+		display: table;
+		img{
+			width:80px;
+			height: 80px;
+			border:1px solid #d8d8d8;
+		}
+		.follow-tips{
+			margin-left:20px;
+			display: inline-block;
+			vertical-align: middle;
+		}
+		@media screen and (max-width:320px){
+			img{
+				width:50px;
+				height: 50px;
+			}
+			.follow-tips{
+				margin-left: 10px;
+			}
+		}
+
+		p+p{margin-top:8px;}
+	}
+	.nav-bottom{
+		border-top:1px solid #eee;
+		padding:20px 22px 30px 22px;
+		a{color:#85be3b;}
+	}
+	.copyright{
+		font-size: 11px;
+		line-height: 1.4;
+		p{
+			text-align: center;
+		}
+
+	}
+}
+
+
+//导航条图标
+$icons:"icon-home","icon-category","icon-webGame","icon-singleGame","icon-rank";
+
+@for $i from 1 through length($icons){
+	$icon:nth($icons,$i);
+	.#{$icon}{
+		background: url("../img/#{$icon}.png");
+		background-size:100% 100%;
+	}
+}

@@ -1,0 +1,52 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <div id="pay_paydesigner_paycheckcompanylist">
+        <div class="content">
+        	<div class="desginer detail">
+        	    <?php echo $this->render("paycheck/designerHeader.phtml"); ?>
+				<div class="desginer_list">
+					<table class="view_list_tb">
+						<thead>
+							<tr>
+								<th>头像</th>
+								<th>昵称</th>
+								<th>姓名</th>
+								<th>公司名称</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach($designers as $designer){ ?>
+							<tr>
+								<td><img src='<?php echo '/themeicon/data/userIcon/'.$designer['icon'] ?>'></td>
+								<td><?php echo $designer['nick_name']; ?></td>
+								<td><?php echo $designer['real_name']; ?></td>
+								<td><?php echo $designer['company_name']; ?></td>
+								<td><a class="btn_txt" href="/Admin/paycheck/company?id=<?php echo $designer['uid']; ?>">详细</a></td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+					<?php echo $this->render("common/pageshow.phtml"); ?>
+				</div>
+			</div>
+        </div><!-- content end -->
+    </div>
+</section>
+<script type="text/javascript">
+	$(function(){
+		//搜索关键词
+		$("#desinger_type_tab").find('li').click(function(){
+			var type = $(this).attr('val');
+			if(type=='personal'){
+				var url = '/admin/paycheck/personallist';
+			} else {
+				var url = '/admin/paycheck/companylist';
+			}
+			window.location.href=url; 
+		});
+	});
+</script>
+</body>
+</html>

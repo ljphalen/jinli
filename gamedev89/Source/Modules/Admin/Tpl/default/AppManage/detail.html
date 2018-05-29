@@ -1,0 +1,238 @@
+<style>
+a.softdown {
+    background: none repeat scroll 0 0 #61B509;
+    border: 1px solid #007900;
+    border-radius: 5px;
+    box-shadow: 0 0 1px #EEEEEE inset;
+    color: #FFFFFF;
+    font-size: 14px;
+    height: 32px;
+    line-height: 32px;
+    overflow: hidden;
+    padding: 0 36px;
+    text-decoration: none;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
+}
+</style>
+<div class="page">
+	<div class="pageContent">
+		 
+		<form method="post" action="__URL__/Verifyed/navTabId/__MODULE__/callbackType/closeCurrent" 
+			class="pageForm required-validate" enctype="multipart/form-data" 
+			onsubmit="return iframeCallback(this,dialogAjaxDone);">
+		<div class="pageFormContent" layoutH="58">
+			<div class="unit">
+				<label>包名称： </label>
+				<span>{$vo.package}</span>
+			</div>
+			<div class="unit">
+				<label>应用名称： </label>
+				<span>{$vo.app_name}</span>
+			</div>
+			<div class="unit">
+				<label>版本： </label>
+				<span>{$vo.version_name}</span>
+			</div>
+			<div class="unit">
+				<label>系统支持： </label>
+				<?php
+				$apkConfig = C("apk");
+				$minSDK = $vo['min_sdk_version'];
+				?>
+				<span>Android {$apkConfig['SDK_VER'][$minSDK]}</span>
+			</div>
+			<div class="unit">
+				<label>文件大小： </label>
+				<span>{$vo['file_size']/1048576 | round=2}M</span>
+			</div>
+			<div class="unit">
+				<label>上传日期： </label>
+				<span>{$vo['created_at']|date="Y-m-d H:i:s",###}</span>
+			</div>
+			<div class="unit">
+				<label>开发者： </label>
+				<span>{$vo['developer']}</span>
+			</div>
+			<div class="unit">
+				<label>客服电话： </label>
+				<span>{$vo['service_phone']}</span>
+			</div>
+			<div class="unit">
+				<label>代理商： </label>
+				<span>{$vo['agent']}</span>
+			</div>
+			<div class="unit">
+				<label>应用分辨率： </label>
+				<php>
+				$resoinfo = D ( "Reso" )->select ();
+				$reso = explode("-", $vo['reso']);
+			    foreach( $resoinfo as $key =>$value ){
+				    if( in_array($value['reso_id'],$reso)){
+				    	echo $value['reso_name']."&nbsp;&nbsp;";
+				    }
+				}
+				</php>
+			</div>
+			<div class="unit">
+				<label>合作方式：</label>
+				<php>if($vo['is_join']==2) echo '普通';</php>
+				<php>if($vo['is_join']==1) echo '联运';</php>
+			</div>
+			<php>
+			$labelJson = json_decode($vo['label']);
+			$labelArr = objectToArray($labelJson);
+			</php>
+			<volist id="lvo" name="labelInfo">
+			<div class="unit">
+				<label>{$lvo['name']}：</label>
+			 	<php>
+			 	$check = $labelArr[$key];
+			    foreach( $lvo['child'] as $value ){
+				    if( in_array($value['id'],$check)){
+				    	echo $value['name'].'&nbsp;&nbsp;';
+				    }
+				}
+				</php>
+			</div>
+			</volist>
+			<div class="unit">
+				<label>应用分类： </label>
+				<php>
+				$Category = D ( "Dev://Category" );
+				$cate_game = $Category->where ( array ('parent_id' => 100) )->select ();
+				$cate_two_info = explode ( '-', $vo ['category_two'] );
+			    foreach( $cate_game as $key =>$value ){
+				    if( in_array($value['id'],$cate_two_info)){
+				    	echo $value['name']."&nbsp;&nbsp;";
+				    }
+				}
+				</php>
+			</div>
+			<div class="unit">
+				<label>语言： </label>
+				<php>if($vo['language']==1) echo '中文';</php>
+				<php>if($vo['language']==2) echo '英文';</php>
+				<php>if($vo['language']==3) echo '其它';</php>
+			</div>
+			<div class="unit">
+				<label>资费信息： </label>
+				<php>
+				$feetype = D("Feetype")->select();
+				foreach($feetype as $fee){
+					if($vo['fee_type']==$fee['id']) echo $fee['type_name'];
+				}
+				</php>
+			</div>
+			<div class="unit">
+				<label>计费通道： </label>
+				<php>
+				$fee_mode_value = explode ( '-', $vo ['fee_mode'] );
+				foreach($feeMode as $key=>$value){
+					if( in_array($key, $fee_mode_value)){
+				    	echo $value."&nbsp;&nbsp;";
+				    }
+				}
+				</php>
+			</div>
+			<div class="unit">
+				<label>简述：</label>
+				<div style="margin-left:130px;width:90%">{$vo['brief']|nl2br}</div>
+			</div>
+			<div class="unit">
+				<label>应用介绍： </label>
+				<div style="margin-left:130px;width:90%">{$vo['description']|nl2br}</div>
+			</div>
+			<div class="unit">
+				<label>更新日志： </label>
+				<div style="margin-left:130px;width:90%">{$vo['changelog']|nl2br}</div>
+			</div>
+			<div class="unit">
+				<label>热词： </label>
+				{$vo['keyword']}
+			</div>
+			<php>
+				$iconUrl = Helper("Apk")->get_url("icon");
+				$screenUrl = Helper("Apk")->get_url("screen");
+				$apkUrl = Helper("Apk")->get_url("apk");
+				// 截图信息
+				$Picture = D ( "Dev://Picture" );
+				$screenshotinfo = $Picture->where ( array ('apk_id' => $vo['id'],'type' => 1, 'status'=>1 ) )->select ();
+				// ICON信息
+				$smalliconinfo = $Picture->where ( array ('apk_id' => $vo['id'],'type' => 2, 'status'=>1 ) )->find ();
+				$middleiconinfo = $Picture->where ( array ('apk_id' => $vo['id'],'type' => 3, 'status'=>1 ) )->find ();
+				$bigiconinfo = $Picture->where ( array ('apk_id' => $vo['id'],'type' => 4, 'status'=>1 ) )->find ();
+			</php>
+			<div class="unit">
+				<label>应用ICON： </label>
+				  <php>
+				  	$default = cdn('PUBLIC')."/common/images/icon_%d.jpg";
+			       	if(empty($smalliconinfo))
+			       		$smallIcon = sprintf($default, 72);
+			       	else
+			       		$smallIcon = $iconUrl.$smalliconinfo['file_path'];
+			       		
+			       	if(empty($middleiconinfo))
+			       		$middleIcon = sprintf($default, 96);
+			       	else
+			       		$middleIcon = $iconUrl.$middleiconinfo['file_path'];
+			       		
+			       	if(empty($bigiconinfo))
+			       		$bigIcon = sprintf($default, 114);
+			       	else
+			       		$bigIcon = $iconUrl.$bigiconinfo['file_path'];
+			      </php>
+				   <a href="javascript:void(0)"><img src="{$smallIcon}" width="72" height="72"></a>
+				   <a href="javascript:void(0)"><img src="{$middleIcon}" width="96" height="96"></a>
+				   <a href="javascript:void(0)"><img src="{$bigIcon}" width="114" height="114"></a>
+			</div>
+			<div class="unit">
+				<label>应用截图： </label>
+				  <php>
+			       if(empty($screenshotinfo)){
+			      </php>
+				   <a href="javascript:void(0)"><img src="{:cdn('PUBLIC')}/common/images/shot_480.jpg" width="120" height="200"></a>
+			      <php>
+			      	}else{
+			      </php>
+				       	<volist name="screenshotinfo" id="data">
+						<a href="javascript:void(0)">
+						<img src="{$screenUrl}{$data.file_path}" width="120" height="200">
+						</a>
+						</volist>
+			      <php>
+			      	}
+			      </php>
+			</div>
+			<div class="unit">
+				<label>立即下载： </label>
+				<a class="softdown" rel="nofollow" href="{$apkUrl}{$vo['file_path']}" target="_blank">
+					应用包下载测试 
+				</a>
+			</div>
+			<br>
+			
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" onclick="return checkDate();">提交</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+	
+	</div>
+</div>
+<script type="text/javascript">
+<!--
+function checkDate(){
+	var reason_id = $.trim($("#reason_id").val());
+	var result_id = $.trim($("#result_id").val());
+	var remarks = $.trim($("#remarks").val());
+	if(reason_id==0 && result_id==2 && remarks.length==0){
+		alert("请选择不通过的原因");
+		return false;
+	}
+	return true;
+}
+//-->
+</script>

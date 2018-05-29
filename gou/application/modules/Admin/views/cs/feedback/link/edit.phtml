@@ -1,0 +1,51 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li><a href="<?php echo $indexUrl;?>">链接列表</a></li>
+        <li class="current"><a href="javascript:;">编辑链接</a></li>
+    </ul>
+</div>
+<div class="h_a">编辑链接</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+    <input name="token" value="<?php echo $token;?>" type="hidden" />
+    <input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">排序</th>
+                <td class="td"><input type="text" class="input wa" name="sort" value="0"></td>
+            </tr>
+            <tr>
+                <th class="th">状态</th>
+                <td class="td">
+                    <select name="status">
+                        <option value=1 <?php echo $info['status']==1?'selected=selected':''; ?>>有效</option>
+                        <option value=0 <?php echo $info['status']==0?'selected=selected':''; ?>>无效</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">链接名称</th>
+                <td class="td"><input type="text" class="input wc" name="name" value="<?php echo $info['name'];?>"></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">链接地址</th>
+                <td class="td">
+                    <textarea name="url" cols="100" rows="4"><?php echo $info['url'];?></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        ajaxForm('addForm',function(ret){
+            ajaxRedirect(ret, '<?php echo Util_Http::getServer("HTTP_REFERER"); ?>');
+        });
+    })
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

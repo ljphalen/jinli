@@ -1,0 +1,70 @@
+<?php echo $this->render("layout/header.phtml");?>
+<section id="page">
+	<!-- 主体内容 -->
+	<section id="content">
+		<section class="psearch">
+			<section class="mod-show-list">
+				<div class="l-wrap">
+					<ul class="mod-item-list">
+						<?php 
+						foreach($goods[0] as $key=>$value) {
+							if(strpos($value['img'], 'http://') === false) {
+								$img = $attachPath.$value['img'];
+							}else{
+								$img = $value['img'].'_200x200.'.end(explode(".",  $value['img']));
+							};
+						?>
+								<li>
+									<a href="<?php echo $webroot,'/goods/detail/?id=',$value['id'];?>">
+										<div class="pic"><img src="<?php echo $img;?>" alt="" /></div>
+										<div class="txt"><?php echo $value['want'] + $value['default_want'];?>人想要     ￥<?php echo $value['price'];?></div>
+									</a>
+								</li>
+						<?php }?>
+					</ul>
+				</div>
+				<div class="m-wrap">
+					<ul class="mod-item-list">
+						<?php 
+								foreach($goods[1] as $key=>$value) {
+								if(strpos($value['img'], 'http://') === false) {
+									$img = $attachPath.$value['img'];
+								}else{
+									$img = $value['img'].'_200x200.'.end(explode(".",  $value['img']));
+									};
+								?>
+								<li>
+									<a href="<?php echo $webroot,'/goods/detail/?id=',$value['id'];?>">
+										<div class="pic"><img src="<?php echo $img;?>" alt="" /></div>
+										<div class="txt"><?php echo $value['want'] + $value['default_want'];;?>人想要     ￥<?php echo $value['price'];?></div>
+									</a>
+								</li>
+						<?php }?>
+					</ul>
+				</div>
+				<div class="r-wrap">
+					<ul class="mod-item-list">
+						<?php 
+								foreach($goods[2] as $key=>$value) {
+								if(strpos($value['img'], 'http://') === false) {
+									$img = $attachPath.$good['img'];
+								}else{
+									$img = $value['img'].'_200x200.'.end(explode(".",  $value['img']));
+									};
+								?>
+								<li>
+									<a href="<?php echo $webroot,'/goods/detail/?id=',$value['id'];?>">
+										<div class="pic"><img src="<?php echo $img;?>" alt="" /></div>
+										<div class="txt"><?php echo $value['want'] + $value['default_want'];;?>人想要     ￥<?php echo $value['price'];?></div>
+									</a>
+								</li>
+						<?php }?>
+					</ul>
+				</div>
+			</section>
+		</section>
+	</section>
+	<!--  /主体内容 -->
+</section>
+</body>
+</html>

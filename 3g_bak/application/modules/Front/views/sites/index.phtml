@@ -1,0 +1,184 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<link rel="stylesheet" href="<?php echo $staticResPath;?>/sitemap/css/navi.min.css" />
+	<title>网址大全</title>
+</head>
+<body id="home">
+<!-- 大广告图 -->
+<?php if(!empty($ads)){?>
+	<div class="gn-ad" id="J_full_slider">
+		<?php foreach($ads as $k=>$v){?>
+			<a class="curr"  href="<?php echo $v['link'];?>">
+				<img src="<?php echo $attachPath.$v['image'];?>">
+			</a>
+			<span class="close"></span>
+		<?php }?>
+	</div>
+<?php }?>
+<!-- 搜索模块 -->
+
+<?php
+function hotnav($list, $attachPath) {
+	$str = '';
+	foreach ($list as $subList) {
+		$str .= '<div class="nav-site-item"><p>';
+		foreach ($subList as $v) {
+			$str .= sprintf('<a href="%s" appImg="%s"><img src="%s" /><span>%s</span></a>', $v['link'], $attachPath . $v['image'], $attachPath . $v['image'], $v['name']);
+		}
+		$str .= '</p></div>';
+	}
+
+	return $str;
+}
+
+
+function column($list, $data, $attachPath) {
+
+	$head = array(
+		1 => 'nav-head',
+		2 => 'novel-head',
+		3 => 'entertain-head',
+		4 => 'shop-head',
+		5 => 'query-head',
+	);
+
+	$str = '';
+	$i   = 1;
+	foreach ($list as $key => $val) {
+		$str .= '<div class="nav-drapdown-box c' . $i . '">';
+		$str .= '<div class="hot-inner"><span class="'.$head[$i].'"></span>';
+		$str .= '<span><img src="' . $attachPath . $data[$key]['image'] . '" class="attention"></span>';
+		$str .= '<span id="all-focus">' . $data[$key]['name'] . '</span></div>';
+		$str .= '';
+		$str .= '<div class="nav-drapdown-content">';
+		if ($val['image']) {
+			$str .= _img($val['image'], $attachPath);
+		}
+		foreach ($val['word5'] as $wk => $w5) {
+			$str .= '<div class="news-wrap">';
+			if (!empty($w5['show'])) {
+				$str .= _words5($w5['show'], $w5['hide']);
+			}
+			if (!empty($w5['hide'])) {
+				$str .= _words5_hide($w5['hide']);
+			}
+			$str .= '</div>';
+		}
+		$str .= '</div></div>';
+		$i++;
+	}
+	return $str;
+}
+
+function _img($list, $attachPath) {
+	$str = '<div class="icon-link"><p>';
+	foreach ($list as $vm) {
+		$str .= sprintf('<a href="%s"> <i><img src="%s"></i><span>%s</span> </a>', $vm['link'], $attachPath . $vm['image'], $vm['name']);
+	}
+	$str .= '</p></div>';
+	return $str;
+}
+
+function _words5($list, $hide) {
+	$str = '';
+	if ($hide) {
+		$str .= '<div class="words5-link news-first-layer news-hide-layer"><p>';
+	} else {
+		$str .= '<div class="words5-link news-first-layer"><p>';
+	}
+	foreach ($list as $val) {
+		$str .= sprintf('<a href="%s"><span>%s</span></a>', $val['link'], $val['name']);
+	}
+	if ($hide) {
+		$str .= '<a class="J-expand"><span><i class="icon-arrow-down"></i></span></a>';
+	}
+	$str .= ' </p></div>';
+
+
+	return $str;
+}
+
+function _words5_hide($list) {
+	$str = '';
+	$tmp = array_chunk($list, 5);
+	$str .= '<div class="news-second-layer"><div class="words5-link">';
+	foreach ($tmp as $subList) {
+		$str .= '<p>';
+		foreach ($subList as $v) {
+			$str .= sprintf('<a href="%s"><span>%s</span></a>', $v['link'], $v['name']);
+		}
+		$str .= ' </p>';
+	}
+	$str .= '</div></div>';
+
+	return $str;
+
+}
+?>
+
+<!-- 热门推荐 -->
+<!-- navigator hot website module start -->
+<section class="nav-recommend-wrap kline pt10 mb7">
+	<div class="nav-recommend-box">
+		<div class="nav-site-list">
+			<?php
+			$hotnavlist =  array_chunk($data['hotContents']['hotnav'],4);
+			echo hotnav($hotnavlist, $attachPath);
+			?>
+		</div>
+	</div>
+</section>
+<!-- navigator hot website module end -->
+
+<!-- 百度热词模块 -->
+<section class="hot-wrap" data-url="http://3g.gionee.com/api/ng/baidu">
+	<div class="hot-inner ui-border-b">
+		<span class="baiduhot-head"></span>
+		<span><img src="<?php echo $staticResPath;?>/sitemap/img/focus.png"  class="attention"></span>
+		<span class="all-focus">大家都在关注</span>
+		<span class="btn-change">换一换</span>
+	</div>
+	<ul class="am-cf">
+		<li><span>1</span> <a></a>
+		</li>
+		<li><span>2</span> <a></a>
+		</li>
+		<li><span>3</span> <a></a>
+		</li>
+		<li><span>4</span> <a></a>
+		</li>
+		<li><span>5</span> <a></a>
+		</li>
+		<li><span>6</span> <a></a>
+		</li>
+		<li><span>7</span> <a></a>
+		</li>
+		<li><span>8</span> <a></a>
+		</li>
+	</ul>
+</section>
+<!-- 百度热词模块 hot words module end-->
+<!-- 网址导航 -->
+<section class="nav-drapdown-wrap">
+	<?php  echo column($data['planContents'], $data['column'], $attachPath); ?>
+</section>
+<footer id="footer">
+	<div class="copyright">
+		<?php
+		$url = $webroot.'/feedback/msg?type=5';
+		?>
+		<a href="<?=$url?>">提建议&gt;&gt;</a><br>
+			<span style="font-family:Arial;">Copyright © 2012 -
+		<script>document.write(new Date().getFullYear());</script><a target="_blank" href="http://www.miitbeian.gov.cn/">粤ICP备05087105号</a></span>
+	</div>
+</footer>
+<div class="J_mask mask hidden"></div>
+<script src="<?php echo $staticResPath;?>/sitemap/js/navi.min.js"></script>
+</body>
+</html>

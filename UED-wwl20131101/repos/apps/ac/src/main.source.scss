@@ -1,0 +1,217 @@
+/*
+ * Created with Sublime Text 3.
+ * User: snowdrop
+ * Date: 2014-03-28
+ * Time: 15:19:56
+ */
+@import "compass/css3";
+html,body{background:#f0f0f0;}
+::-webkit-scrollbar{width:0px; height:0px;}
+img[src$="blank.gif"]{
+	height:100%; background:#f5f5f5 inline-image("../img/default_bg.png") no-repeat center center!important;
+}
+@mixin lg($dir, $col1, $col2){background-color:$col2; @include background-image(linear-gradient($dir, $col1, $col2));}
+#header{
+	height: 42px; line-height:42px;font-size:.8rem;background:#fbfbfb;
+	@include border-radius( 5px 5px 0 0);
+	.hd-title{margin-left:12px;}
+	i{
+		display: inline-block;
+		height: 28px;
+	}
+	a{
+		display:inline-block;height:42px;width:40px;text-align:center;padding-right:4px;
+		&:active{background:#cbcfd5;}
+	}
+}
+.icon{
+	width:2.4rem;height:2.4rem;@include border-radius(2px);
+	img{
+		width:2.4rem;height:2.4rem;
+	}
+}
+.btn{
+	display:inline-block;height:30px;line-height:30px;
+	text-align:center;color:#222222;width: 78px;@include border-radius(20px);
+	font-size:.75rem;
+	// &:hover{
+	// 	color:#fff;border:1px solid #c7a889;@include lg(top,#fed27d,#ff9109);
+	// 	@include box-shadow(0 1px 2px #c7a889);
+	// }
+}
+
+.btn-default{
+	background:#ededed;border:1px solid #cfcfcf;@include lg(top,#f8f8f8,#e5e3e3);
+	@include box-shadow(0 1px 2px #cfcfcf);
+}
+.btn-green{
+	background:#82b530;border:1px solid #94a17c;color:#fff;
+	@include lg(top,#addc61,#82b530);@include box-shadow(0 1px 2px #94a17c);	
+}
+.btnHover{
+	color:#fff;border:1px solid #c7a889!important;@include lg(top,#fed27d,#ff9109);
+	@include box-shadow(0 1px 2px #c7a889) ;
+}
+
+
+//star
+[class^="rank-"]{
+	span{
+		background:url('../img/star-empty.png');display:inline-block;
+		width:12px ;height:12px;background-size:100% 100%;
+	}
+	span+span{margin-left:2px;}
+}
+.rank-2 span:nth-child(1),
+.rank-4 span:nth-child(1),.rank-4 span:nth-child(2),
+.rank-6 span:nth-child(1),.rank-6 span:nth-child(2),.rank-6 span:nth-child(3),
+.rank-8 span:nth-child(1),.rank-8 span:nth-child(2),.rank-8 span:nth-child(3),.rank-8 span:nth-child(4),
+.rank-10 span:nth-child(1),.rank-10 span:nth-child(2),.rank-10 span:nth-child(3),.rank-10 span:nth-child(4),.rank-10 span:nth-child(5),
+.rank-3 span:nth-child(1),
+.rank-5 span:nth-child(1),.rank-5 span:nth-child(2),
+.rank-7 span:nth-child(1),.rank-7 span:nth-child(2),.rank-7 span:nth-child(3),
+.rank-9 span:nth-child(1),.rank-9 span:nth-child(2),.rank-9 span:nth-child(3),.rank-9 span:nth-child(4){
+	background:inline-image('../img/star-full.png');
+	background-size:100% 100%;
+}
+
+.rank-1 span:nth-child(1),
+.rank-3 span:nth-child(2),
+.rank-5 span:nth-child(3),
+.rank-7 span:nth-child(4),
+.rank-9 span:nth-child(5){
+	background:inline-image('../img/star-half.png');
+	background-size:100% 100%;
+}
+
+//icon arrow
+[class^="icon-arrow-"]{
+	position:relative;
+	&:after{
+		content: "";display: inline-block;
+		width: 15px;height: 15px;border: solid #4b4b4b;position:absolute;top:12px;
+		border-width: 0 0 2px 2px;@include transform(rotate(45deg));
+	}
+}
+.icon-arrow-up,.icon-arrow-down{
+	&:after{
+		@include transform(rotate(135deg));
+		width:5px;height:5px;top:.3rem;border-color:#5e5e5e;
+
+	}
+}
+.icon-arrow-down{
+	&:after{
+		@include transform(rotate(-45deg));top:.2rem;
+	}
+}
+
+section.main{
+	position: relative;
+    min-height: 422px;
+    background: inline-image("../img/loading.gif") center  no-repeat;
+    background-size: 2rem 2rem;
+}
+
+.app-list{
+	background:#f0f0f0;display: none;
+	li{
+		display:-webkit-box;-webkit-box-orient:horizontal;position:relative;
+		padding:8px 0 8px 6px;font-size:.8rem;color:#222222;border-bottom:1px solid #cccccc;
+		.info{display:-webkit-box;-webkit-box-flex:1;}
+	}
+	.desc{
+		margin-left: 6px;
+		.size{font-size:.65rem;color:#888;margin-top:4px;}
+		.rank{font-size:14px;}
+	}
+	.download{
+		position:absolute;right:6px;top:18px;
+	}
+}
+.detail-info{
+	display:-webkit-box;-webkit-box-orient:horizontal;position:relative;
+	padding:8px 0 8px 6px;font-size:.8rem;color:#222222;border-bottom:1px solid #cccccc;
+	.desc{
+		margin-left: 6px;
+		.size{font-size:.65rem;color:#888;margin-top:4px;}
+		.rank{font-size:14px;}
+		.type{
+			color:#888;
+			// margin-right:10px;
+		}
+		.version{font-size:0.65rem;color:#888;margin-left:4px;}
+	}
+	.download{
+		position:absolute;right:6px;top:18px;
+	}
+}
+.pic-show{
+	position:relative;overflow:hidden;
+	.wrap{
+		margin:0 6px; padding:10px 0; height:228px; overflow: scroll;
+		ul {height:228px; overflow:hidden;}
+		ul li {
+			float:left; width:132px; height:228px;background:#ffffff;padding:4px;
+			border:1px solid #e8e8e8;
+		}
+		// li+li{margin-left:5px;}
+		img{width:131px; height:219px;}
+	}
+}
+h1.title{
+	font-size:.7rem;color:#555555;padding-left:6px;position:relative;
+	&:before{
+		content:'';position:absolute;background:#ff9000;
+		width:2px;height:.7rem;left:0;
+	}
+}
+.app-desc{
+	color:#888888;font-size:.6rem;position:relative;
+	// overflow:hidden;
+	.content{
+		margin:12px 8px;word-break:break-word;
+		// height:40px;line-height:20px;overflow: hidden;
+		p{white-space: normal!important;}
+	}
+	.showinfo{
+		margin-bottom:8px;float:right;margin-right:20px;display: none;
+		i{margin-left:4px;}
+		&:active{
+			i:after{border-color:#ff9000;}
+		}
+	}
+}
+.suggest-field{
+	color:#444444;font-size:.6rem;border-top:1px solid #cccccc;padding:6px 0 16px;
+	overflow:hidden;
+	.suggest-list{
+		padding:14px 6px 0px;
+		li{float:left;}
+		li+li{margin-left:9px;}
+	}
+	.app-name{
+		text-align: center;margin-top:6px;overflow: hidden;
+		text-overflow: ellipsis;word-break: break-word;white-space: nowrap;max-width: 48px;
+	}
+}
+
+.copyright{
+	width:100%;text-align:center;font-size:.6rem;color:#888888;
+	padding-bottom:8px;padding-top: 30px;
+	a:link,a:visited{color:#888;text-decoration:none;}
+	p+p{margin-top:4px;}
+}
+
+.h-auto{
+	height:auto!important;
+}
+.load-more{
+	border-bottom:2px solid #e8e8e8;text-align:center;
+	padding:6px 0;color:#adadad;font-size:.75rem;
+	.text-tip{padding:6px 0;display:inline-block;}
+	.img-tip{
+		width:30px;height:30px;background:inline-image("../img/loading.gif");
+		background-size:100% 100%;display:none;
+	}
+}

@@ -1,0 +1,94 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">hash列表</a></li>
+	</ul>
+</div>
+
+<form action="<?php echo $listUrl;?>" method="get">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<div class="table_full">
+		<table width="100%">
+		<tr class="tr">
+				<th class="th">平台</th>
+				<td class="td">
+				<select name="channel_id" id="select">
+					<option value="">所有平台</option>
+				<?php foreach ($channel_names as $key=>$value) { ?>
+						<option value="<?php echo $value['id'];?>" <?php if($search['channel_id'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['name'];?></option>
+				<?php } ?>
+				</select>
+				</td>
+				<th class="th">模块</th>
+				<td class="td">
+				<select name="module_id" id="select">
+				<option value="">所有模块</option>
+				<?php foreach ($channel_modules as $key=>$value) { ?>
+						<option value="<?php echo $value['id'];?>" <?php if($search['module_id'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['name'];?></option>
+				<?php } ?>
+				</select>
+				</td>
+				<th class="th">版本</th>
+				<td class="td">
+				<select name="version_id" id="select">
+				<option value="">所有版本</option>
+				<?php foreach ($channel_ids as $key=>$value) { ?>
+						<option value="<?php echo $key;?>" <?php if($search['version_id'] == $key) echo 'selected="selected"';?>><?php echo $value;?></option>
+				<?php } ?>
+				</select>
+				</td>				
+			</tr>
+			<tr class="tr">
+				<th class="th">hash</th>
+				<td class="td">
+				<input class="input wb" type="text" name="hash" value="<?php echo $search['hash'];?>">
+				</td>
+				<th class="th">url</th>
+				<td class="td">
+				<input class="input wb" type="text" name="url" value="<?php echo $search['url'];?>">
+				</td>
+				<th class="th"></th>
+				<td class="td">
+				</td>						
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button type="submit">搜 索</button></span></span>
+	</div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="50">ID</td>
+			<td width="80">hash</td>
+			<td width="120">平台</td>
+			<td width="100">模块</td>
+			<td width="100">版本</td>
+			<td width="100">渠道号</td>
+			<td width="100">链接名称</td>
+			<td>url</td>
+			<td width="80">操作</td>
+		</tr>
+<?php foreach($codes as $key => $value) { ?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['hash']?></td>
+			<td><?php echo $channel_names[$value['channel_id']]['name'];?></td>
+			<td><?php echo $channel_modules[$value['module_id']]['name'];?></td>
+			<td><?php echo $channel_ids[$value['version_id']];?></td>
+			<td><?php echo $value['channel_code']?></td>
+			<td><?php echo $value['name']?></td>
+			<td><?php echo html_entity_decode($value['url']);?></td>
+			<td>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>
+

@@ -1,0 +1,287 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<style type="text/css">
+    .repub{
+        background-color: #cf0;
+    }
+    .error_pub{
+        background-color: #ff5454;
+    }
+</style>
+<!-- 导航栏Ajax加载 指向navagator.html  menuOn表示分别需要高亮的菜单栏id 用下划线_隔开 eg:bz_taotu_taotuPack-->
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- 页面唯一id标识符  一般情况下id=文件名  eg:bz_admin_taotu02-->
+    <div id="bz_admin_taotu_list01">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">套图标签</label>
+                    <div class="tb_cont tb_cell">
+                        <ul class="tag_list tag_one"><!-- tag_one 一级标签 只能选中一个 -->
+                            <a href="/Admin/wallpaperadmin/adminset">
+                                <li class="<?php if (!$tid) echo 'on'; ?>">全部</li></a>
+                            <?php foreach ($targ as $v) { ?>
+                                <a href="/Admin/wallpaperadmin/adminset?tid=<?php echo $v['w_type_id'] ?>">
+                                    <li class="<?php if ($v['w_type_id'] == $tid) echo 'on'; ?>"><?php echo $v["w_type_name"] ?></li></a>
+                            <?php } ?>
+                        </ul>
+
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">排序</label>
+                    <div class="tb_cont tb_cell">
+                        <!-- <div class="select_box">
+                             <label class="select_val">全部</label>
+                             <ul class="select_option select_status">
+                        <?php foreach ($status as $k => $v) { ?>
+                                                                                                                                                                                                     <li val="<?php echo $k; ?>"><?php echo $v; ?></li>
+                        <?php } ?>
+
+                             </ul>
+                         </div><!-- select_box -->
+                        <div class="tb_cont tb_cell">
+                            <label class="select_val " val="<?php echo $sort ?>">
+                                <?php
+                                //  if ($sort == 1) echo "上线时间";
+                                // if ($sort == 2) echo "id编号";
+                                ?>
+
+                            </label>
+                            <ul class="tag_list tag_one sort_cha">
+                                <li val ="1"　class="<?php if ($sort === 1) echo 'on'; ?>">上线时间</li>
+                                <li val ="2" class="<?php if ($sort === 2) echo 'on'; ?>">id编号</li>
+                            </ul>
+                        </div><!-- select_box -->
+                    </div>
+                    <div class="tb_cell">
+                        <ul class="tb_switch">
+                            <!--  <li class="txt_switch">批量管理</li>
+                              <li class="btn_switch switch_pics" openId="viewPics">宫格</li><!-- openId 表示点击时 显示哪个id下的内容 -->
+                            <li class="btn_switch switch_list on" openId="viewList">列表</li>
+                        </ul>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">搜索:</label>
+                    <div class="tb_cont tb_cell">
+                        <input type="text" style="width:350px;" class="rd_1 search_name" value="<?php echo $search ?>">
+                        <button class="btn_s2 search_btn">搜索套图</button>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+            <!-- 列表模式 -->
+            <section class="view view_list show" id="viewList">
+                <!-- 批量管理内容 默认隐藏 -->
+                <div class="view_admin view_list_admin">
+                    <!-- checkClass表示 点击后 哪些class要被选中 -->
+                    <button class="btn_check btn_check_all" checkClass="btn_check_list"></button><label>全选</label><span class="btn btn_s1 pack_approve">批量通过</span><span class="btn btn_s1 pack_del">批量删除</span>
+                </div>
+                <table class="view_list_tb">
+                    <thead>
+                        <tr><th>套图id</th><th>名称</th><th>颜色</th><th>数量</th>
+                            <th>套图标签</th>
+
+                            <th>打包时间</th>
+                            <th>上线时间</th>
+                            <th>操作</th><th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <?php foreach ($wallset as $v) { ?>
+                            <tr class="<?php
+                            //if ($v['set_publish_time'] > time()) echo 'repub';
+                            if ($v['pre_opt']) {
+                                echo "error_pub";
+                            } else if ($v["is_pre"]) {
+                                echo "repub";
+                            }
+                            ?>">
+                                        <!--<td class="tb_img">
+                                <!-- <button class="btn_check btn_check_list"></button>
+                                   <img src="image/test_img01.png">-->
+                                <td class="tb_img">
+                                    <?php echo $v['set_id'] ?>
+                                </td>
+                                <td><?php echo $v['set_name'] ?></td>
+                                <td><span class="color_pan"></span>
+                                    <span class="color_val"><?php echo $v['set_image_color'] ?></span>
+                                </td>
+                                <td><?php echo $v['nums']; ?></td>
+                                <td><?php echo $lineTarg[$v["set_targ"]]['w_type_name'] ?></td>
+                                <td><?php echo date("Y-m-d", $v['set_create_time']) ?></td>
+                                <td><?php if ($v['set_publish_time']) echo date("Y-m-d H:i:s", $v['set_publish_time']); ?></td>
+
+                                <td>
+                                    <a class="btn_txt" href="/Admin/wallpaperadmin/setedit?setid=<?php echo $v['set_id'] ?>">编辑</a>
+                                    <a  val = "<?php echo $v['set_id']; ?>" class="btn_txt pop_btn delBtn" openPopId="fixTipView">删除</a>
+                                </td>
+                                <?php if ($groupid == 3) { ?>
+                                    <td>
+                                        <div class="select_box">
+                                            <label class="select_val val=<?php echo $v['set_status']; ?>"><?php echo $status[$v['set_status']] ?></label>
+                                            <ul class="select_option ch_status" setid="<?php echo $v['set_id'] ?> ">
+                                                <li val="4">已上线</li>
+                                                <li val="5">未上线</li>
+                                            </ul>
+                                        </div><!-- select_box end-->
+                                    </td>
+                                <?php } else { ?>
+                                    <td><?php echo $status[$v['set_status']] ?></td>
+                                <?php } ?>
+                            </tr>
+
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 宫格模式 admin_mode显示各子项目的管理按钮-->
+            <section class="view view_pics " id="viewPics">
+                <!-- 批量管理内容 默认隐藏 -->
+                <div class="view_admin view_pics_admin">
+                    <!-- checkClass表示 点击后 哪些class要被选中 -->
+                    <button class="btn_check btn_check_all" checkClass="btn_check_pics"></button><label>全选</label><span class="btn btn_s1 pack_del">批量删除</span>
+                </div>
+                <h1 class="block_name">全部壁纸</h1>
+                <ul class="view_pics_wrap "><!--  -->
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+
+
+                </ul>
+                <div class="clear-fix"></div>
+            </section>
+
+
+            <?php echo $this->render("common/pageshow.phtml"); ?>
+        </div><!-- content end -->
+
+    </div>
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">是否删除<span>套图</span></p>
+                    <div class="tip_btns">
+                        <button class="btn_s2 del_ok">确定</button>
+                        <button class="btn_s2 btnCancel">取消</button>
+                    </div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+<script type="text/javascript">
+    $(function () {
+        $(".ch_status >li").click(function () {
+            if (window.confirm("您确定要改变该套图状态!")) {
+                var status = $(this).attr("val");
+                var set_id = $.trim($(this).parent().attr("setid"));
+
+                var data = "status=" + status + "&set_id=" + set_id + "&token=" + token;
+                var url = "/Admin/wallpaperadmin/updatestatus";
+                $.post(url, data, function (d) {
+                    if (d)
+                        // window.location.href = "/Admin/wallpaperadmin/adminset
+                        location.reload();
+                });
+
+            }
+        });
+
+        $(".delBtn").click(function () {
+            var setid = $(this).attr("val");
+            $(".del_ok").click(function () {
+                var data = "setid=" + setid + "&token=" + token;
+                var url = "/Admin/wallpaperadmin/delSets";
+                $(".pop_wraper").removeClass("show");
+
+                $.post(url, data, function (d) {
+                    if (d) {
+                        //window.location.href = "/Admin/wallpaperadmin/adminset";
+                        location.reload();
+                    }
+                });
+            })
+        });
+
+        $(".sort_cha >li").click(function () {
+            var v = $(this).attr("val");
+            window.location.href = "/Admin/wallpaperadmin/adminset?sorts=" + v;
+
+        });
+
+        $(".search_btn").on("click", function () {
+            var name = $(".search_name").val();
+            window.location.href = "/Admin/wallpaperadmin/adminset?search=" + name;
+        });
+
+    })
+
+
+</script>
+</body>
+</html>

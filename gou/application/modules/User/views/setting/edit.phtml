@@ -1,0 +1,68 @@
+<?php echo $this->render("layout/newheader.phtml");?>
+<body>
+<?php if($hasheader) {?>
+	<header id="iHeader" class="hd">
+			<div class="top-wrap">
+				<div class="title">
+					<a href="<?php echo $weroot;?>/user/setting/index" class="back"></a>
+					<h1>个人基本信息</h1>
+				</div>
+			</div>
+		</header>
+<?php }?>
+	
+	<div id="iScroll">
+		<article class="ac">
+		<form method="post" action="<?php echo $webroot.$editPostUrl; ?>" id="J_saveForm">
+		<input type="hidden" name="token" value="<?php echo $token?>"/>
+			<section class="form-box">
+				<ul>
+					<li><label>账号：</label><?php echo $user_info['username']?></li>
+					<li><label>姓名：</label><input type="text" name="realname" value="<?php echo $user_info['realname']?>" /></li>
+					<li><label>性别：</label><input type="radio" name="sex" value="2" <?php echo $user_info['sex'] == 2 ? 'checked=checked':'' ;?> id="manLabel"/>男 <input type="radio" name="sex" value="1" <?php echo $user_info['sex'] == 1 ? 'checked=checked':'' ;?> id="womanLabel"/>女</li>
+					<li><label>生日：</label>
+						<span class="select"><select name="year" id="">
+							<option value="0">请选择年</option>
+							<?php foreach($year_list as $key=>$value) {?>
+								<option value="<?php echo $value;?>" <?php echo $year == $value ? 'selected': '' ;?>><?php echo $value;?></option>
+							<?php }?>
+						</select></span>
+						<span class="select"><select name="month" id="">
+							<option value="0">请选择月</option>
+							<?php foreach($month_list as $key=>$value) {?>
+								<option value="<?php echo $value;?>" <?php echo $month == $value ? 'selected': '' ;?>><?php echo $value;?></option>
+							<?php }?>
+						</select></span>
+						<span class="select"><select name="day" id="">
+							<option value="">请选择日</option>
+							<?php foreach($day_list as $key=>$value) {?>
+								<option value="<?php echo $value;?>" <?php echo $day == $value ? 'selected': '' ;?>><?php echo $value;?></option>
+							<?php }?>
+						</select></span>
+					</li>
+					<li><label>Q Q：</label><input type="text" name="qq" value="<?php echo $extend['qq'];?>" /></li>
+					<li><label>职业：</label>
+						<span class="select"><select name="job" id="">
+							<?php foreach($tmp['job'] as $key=>$value){?>
+						   		<option value="<?php echo $key;?>" <?php echo $key == $extend['job'] ? 'selected':''; ?>><?php echo $value;?></option>
+						    <?php } ?>
+						</select></span>
+					</li>
+					<li><label>爱好：</label>
+						<span class="select"><select name="love" id="">
+							<?php foreach($tmp['love']  as $key=>$val){?>
+						    <option value="<?php echo $key;?>" <?php echo $key == $extend['love'] ? 'selected':''; ?>><?php echo $val;?></option>
+						    <?php } ?>
+						</select></span>
+					</li>
+				</ul>
+
+				<div class="submit">
+					<button type="submit"  class="rount-rect gray">确定</button>
+				</div>
+			</section>
+			</form>
+		</article>
+	</div>
+</body>
+</html>

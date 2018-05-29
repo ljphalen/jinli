@@ -1,0 +1,106 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">游戏列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加游戏</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">分类</th>
+			<td class="td">
+			<select name="category_id" class="wa">
+				<option  value="0">全部</option>
+				<?php foreach($categorys as $key=>$value){?>
+				<option <?php if($search['category_id'] == $value['id']) echo 'selected';?> value="<?php echo $value['id'];?>"><?php echo $value['title'];?></option>
+				<?php } ?>
+			</select>
+			</td>
+			<th class="th">专题</th>
+			<td class="td">
+			<select name="subject_id" class="wa">
+				<option  value="0">全部</option>
+				<?php foreach($subjects as $key=>$value){?>
+				<option <?php if($search['subject_id'] == $value['id']) echo 'selected';?> value="<?php echo $value['id'];?>"><?php echo $value['title'];?></option>
+				<?php } ?>
+			</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">标签</th>
+			<td class="td">
+			<select name="label_id" class="wa">
+				<option  value="0">全部</option>
+				<?php foreach($labels as $key=>$value){?>
+				<option <?php if($search['label_id'] == $value['id']) echo 'selected';?> value="<?php echo $value['id'];?>"><?php echo $value['title'];?></option>
+				<?php } ?>
+			</select>
+			</td>
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			    <option  value="0">全部</option>
+				<option <?php if($search['status'] == 2) echo 'selected';?> value="2">开启</option>
+				<option <?php if($search['status'] == 1) echo 'selected';?> value="1">关闭</option>
+			</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td">
+			<input type="text" class="input" name="name" value="<?php echo empty($search['name'])?'':$search['name'];?>">
+		</td>
+		<th class="th" style="display:none;">是否推荐游戏</th>
+		<td class="td" style="display:none;">
+		<select name="recommend" class="wa">
+		 	<option  value="0">全部</option>
+			<option <?php if($search['recommend'] == 2) echo 'selected';?> value="2">是</option>
+			<option <?php if($search['recommend'] == 1) echo 'selected';?> value="1">否</option>
+		</select>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">排序</td>
+			<td>ID</td>
+			<td>标题</td>
+			<td>图标</td>
+			<td>分类</td>
+			<td>专题</td>
+			<td>标签</td>
+			<td>最后编辑时间</td>
+			<td>点击量</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($games as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['name'];?></td>
+			<td><img src="<?php echo $attachPath,$value['img'];?>" style="width:7.2em;height:7.2em"/></td>
+			<td><?php echo $categorys[$value['category_id']]['title'];?></td>
+			<td><?php echo implode($game_subjects[$value['id']], ',');?></td>
+			<td><?php echo implode($game_labels[$value['id']], ',');?></td>
+			<td><?php echo date('Y-m-d H:i:s',$value['create_time']);?></td>
+			<td><?php echo $value['hits'];?></td>
+			<td><?php echo $value['status'] ? '开启':'关闭';?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

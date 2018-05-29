@@ -1,0 +1,65 @@
+<div class="colMain">
+    <div class="title">
+        <p class="fl">图片管理</p>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="toolbar tabs">
+                	<div class="search fl" style="float:right">
+                		<form action="/imgManage/lists" method="GET">
+                			<span>
+                				<input type="hidden" value="{{params.category}}" name="category" />
+                    			<input typt="text" class="iText" name='check_name' value='{{params.check_name}}' /><input type="submit" class="submit" value="" />
+                    			<span class="sign">图片名查询</span>
+                			</span>
+                		</form>
+           			 </div>
+                <ul class="fl">
+                    <li><a href="../imgManage/index">上传图片</a></li>
+                    <li><a href="../imgManage/lists">图片查看</a></li>
+                    <li class='line'></li>
+                </ul>                
+              
+    				<div class="box">
+       					 <div class="title"></div>
+       					 	<ul>
+           					 	<li class='cur'><a href="{{siteUrl}}imgManage/lists?category=0&check_name={{params.check_name}}"><font <!-- if {{params.category}}=="0" --> color="red" <!-- endif --> >所有</font></a></li>
+            					<li class='cur'><a href="{{siteUrl}}imgManage/lists?category=imgmanage_a&check_name={{params.check_name}}"><font <!-- if {{params.category}}=="imgmanage_a" --> color="red" <!-- endif -->>{{category.imgmanage_a}}</font></a></li>
+            					<li class='cur'><a href="{{siteUrl}}imgManage/lists?category=imgmanage_b&check_name={{params.check_name}}"><font <!-- if {{params.category}}=="imgmanage_b" --> color="red" <!-- endif -->>{{category.imgmanage_b}}</font></a></li>
+           						<li class='cur'><a href="{{siteUrl}}imgManage/lists?category=imgmanage_c&check_name={{params.check_name}}"><font <!-- if {{params.category}}=="imgmanage_c" --> color="red" <!-- endif -->>{{category.imgmanage_c}}</font></a></li>
+           						<li class='cur'><a href="{{siteUrl}}imgManage/lists?category=imgmanage_d&check_name={{params.check_name}}"><font <!-- if {{params.category}}=="imgmanage_d" --> color="red" <!-- endif -->>{{category.imgmanage_d}}</font></a></li>
+       						 </ul>
+   					</div>
+   			
+   			</div>
+   			<div class="grid">
+   			 <div class="title"></div>
+   				<table >
+   					<!-- if count({{img}})>0 -->
+   					<!-- loop img -->
+                	<!-- if {{i}}%8 == 0 -->
+					<tr><ul>
+                	<!-- endif -->		
+                	<td style="padding-top:20px"><img  class="pic" name="{{img' value.url}}" src="{{img' value.bre_url}}" title="{{img' value.content}}"  height="80px"><p>{{img' value.name}}</p></td>
+                	<!-- if ({{i}}++)%8 == 7 -->
+                	</ul></tr>
+                	<!-- endif -->
+                	<!-- endloop -->
+                	<!-- if {{i}}%8 != 7 -->
+                	</ul></tr>
+                	<!-- endif -->
+                	<!-- else -->
+                	<tr><ul><td>没有图片</td></ul></tr>
+                	<!-- endif -->
+                </table>
+            </div>
+		</div>
+            <div style="margin: 20px auto; text-align: center;width:290px;">{{pager.pages}}</div>
+    </div>
+</div>   
+<script>
+$(".pic").click(function(){
+	var url = this.name;
+		wind = window.open(url,"newwindow1","toolbar=no,menubar=no,resizable=no,location=no,status=no");		
+});
+</script>       

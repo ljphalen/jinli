@@ -1,0 +1,88 @@
+<?php echo $this->render("layout/header.phtml");?>
+    <div class="nav">
+        <ul class="cc">
+            <li><a href="<?php echo $indexUrl;?>">资讯列表</a></li>
+            <li class="current"><a href="javascript:;">添加资讯</a></li>
+        </ul>
+    </div>
+    <div class="h_a">编辑资讯</div>
+    <form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+        <input name="token" value="<?php echo $token;?>" type="hidden" />
+
+        <div class="table_full">
+            <table width="100%">
+                <tr class="tr">
+                    <th class="th">标题</th>
+                    <td class="td"><input type="text" placeholder="标题不得超过20" class="input wc" name="title"	></td>
+                </tr>
+                <tr class="tr">
+                    <th class="th">分类</th>
+                    <td class="td">
+                        <select name="type">
+                            <?php foreach($type as $k => $v): ?>
+                            <option value="<?php echo $k; ?>"><?php echo$v; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="tr">
+                    <th class="th">底部格式</th>
+                    <td class="td">
+                        <select name="footer_id">
+                            <option value="">请选择</option>
+                            <?php foreach($footer as $v): ?>
+                            <option value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="tr">
+                    <th class="th">排序</th>
+                    <td class="td"><input type="text" placeholder="数值越大越靠前" class="input wc" name="sort"	></td>
+                </tr>
+                <tr class="tr">
+                    <th class="th">摘要</th>
+                    <td class="td"><textarea name="summary" id="summary" cols="112" rows="3" placeholder="请手动填写资讯摘要"></textarea></td>
+                </tr>
+                <tr class="tr" id="content">
+                    <th class="th">内容</th>
+                    <td class="td">
+                        <script id="editor" type="text/plain" style="width:100%;height:500px;"></script>
+                    </td>
+                </tr>
+                <tr class="tr">
+                    <th class="th">状态</th>
+                    <td class="td">
+                            <input type="radio" name="status"  value="1"/>开启
+                            <input type="radio" name="status" checked="true" value="2"/>关闭
+                    </td>
+                </tr>
+                <tr class="tr">
+                    <th class="th">发布时间</th>
+                    <td class="td"><input type="text" class="input" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s');?>"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="mb10 tac">
+            <span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+        </div>
+    </form>
+    <script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+    <script type="text/javascript">
+        var ue = UE.getEditor('editor', {'textarea':'content'});
+        //用户表单数据提交
+        $('#start_time').datetimepicker({
+            //comment the beforeShow handler if you want to see the ugly overlay
+            beforeShow: function() {
+                setTimeout(function(){
+                    $('.ui-datepicker').css('z-index', 99999999999999);
+                }, 0);
+            }
+        });
+        $(function(){
+            ajaxForm('addForm',function(ret){
+                ajaxRedirect(ret, '<?php echo Util_Http::getServer("HTTP_REFERER"); ?>');
+            });
+        });
+    </script>
+<?php echo $this->render("layout/footer.phtml");?>

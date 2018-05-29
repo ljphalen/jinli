@@ -1,0 +1,63 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $quizUrl; ?>">列表</a></li>
+			<li><a href="<?php echo $editQuizUrl; ?>">添加内容</a></li>
+			<li><a href="<?php echo $importQuizUrl; ?>">数据导入</a></li>
+			<li><a href="<?php echo $quizConfigUrl; ?>">配置信息</a></li>
+			<li><a href="<?php echo $quizlogUrl; ?>">统计信息</a></li>
+		</ul>
+	</div>
+	
+		<div class="table_full">
+		<form action="<?php echo $quizUrl; ?>" method="POST" id="form">
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<table width="100%" cellspacing="0" cellpadding="0">
+				<tr class="tr">
+					<th class="th">输入关键词：</th>
+					<td class="td">
+						<input type="text" class="input" value="<?php echo $text;?>"  name="title">
+					</td>
+				</tr>
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+		</form>
+	</div>
+	
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+				<th class="th">题目名</th>
+				<th class="th">选项 A</th>
+				<th class="th">选项 B</th>
+				<th class="th">选项 C</th>
+				<th class="th">选项 D</th>
+				<th class="th">答案</th>
+				<th class="th">添加时间</th>
+				<td class="th">操作</td>
+			</tr>
+			<?php foreach ($dataList as $v) { ?>
+				<tr class="ct">
+				<td class="td"><?php echo $v['id'];?></td>
+					<td class="td"><?php echo $v['title'];?></td>
+					<td class="td"><?php echo $v['option1'];?></td>
+					<td class="td"><?php echo $v['option2'];?></td>
+					<td class="td"><?php echo $v['option3'];?></td>
+					<td class="td"><?php echo $v['option4'];?></td>
+					<td class="td" style="color:red"><?php echo $options[$v['answer']];?></td>
+					<td class="td"><?php echo date('Y-m-d H:i:s', $v['add_time']); ?></td>
+					<td class="td">
+						<a href="<?php echo $editQuizUrl; ?>?id=<?php echo $v['id']; ?>">编辑</a>&nbsp;
+						<a href="javascript:void(0);" onclick="deleteOne('<?php echo $deleteQuizUrl; ?>/?id=<?php echo $v['id']; ?>', '', event);">删除</a>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

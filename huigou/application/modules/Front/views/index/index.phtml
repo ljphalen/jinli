@@ -1,0 +1,101 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div id="">
+	<!-- 主体内容 -->
+	<section id="content">
+		<!-- 图片滚动展示模块 -->
+		<div class="mod-slide mindex">
+			<div class="wrap">
+				<div class="pic">
+					<?php foreach($ads as $key=>$value) { ?>	
+					<a href="<?php echo $value['ad_ptype'] == 1 ? $value['link']: '';?>"><img src="<?php echo $attachPath . $value['img'];?>" alt="<?php echo $value['title'];?>" /></a>
+					<?php }?>
+				</div>
+			</div>
+			<div class="mask"></div>
+			<div class="handle">
+			    <?php foreach($ads as $key=>$value) { ?>
+				<span class="<?php echo $key == 0 ? 'on':'';?>"></span>
+				<?php } ?>
+			</div>
+
+			<div class="mod-search">
+				<div class="short">
+					<a href="<?php echo $webroot,'/search/index'?>"><img src="<?php echo $staticResPath;?>/pic/search-index.png" /></a>
+				</div>
+			</div>
+		</div>
+		<!-- /图片滚动展示模块 -->
+
+		<!-- 倒计时模块 -->
+		<?php if($buygoods) {?>
+		<div class="mod-countdown">
+			<div class="wrap">
+				<div class="line"></div>
+				<div class="title J_countDown" data-starTime="<?php echo $buygoods['start_time'];?>" data-endTime="<?php echo $buygoods['end_time'];?>" data-currentTime="<?php echo strtotime(date('Y-m-d H:i:s',time()));?>" >剩余时间：<span class="hours">00</span>小时<span class="minutes">00</span>分钟<span class="seconds">00</span>秒
+				<?php if(strtotime(date('Y-m-d H:i:s',time())) - $buygoods['end_time'] > 0){ ?>
+				<span class="over">结束</span>
+				<?php } ?>
+				</div>
+				<div class="main">
+					<div class="pic"><img src="<?php echo $attachPath . $buygoods['img'];?>" alt="" /></div>
+					<div class="txt">
+						<p><?php echo $buygoods['title'];?></p>
+						<p><span class="number red"><?php echo $buygoods['price'];?></span>元 可用<span class="number red"><?php echo $buygoods['silver_coin'];?></span>元银币抵现</p>
+						<p class="">
+						<?php if($buygoods['stock_num'] == 0) {?>
+							已有<?php echo $buygoods['purchase_num'];?>人购买<span class="button" href="javascript:;"><a href="#" class="btn gray-arrow"><em>卖光了</em></a></span>
+						<?php } else {?>
+							已有<?php echo $buygoods['purchase_num'];?>人购买<span class="button"><a href="<?php echo $webroot.'/product/';?>" class="btn orange-arrow"><em>查看详情</em></a></span>
+						<?php }?>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php } else {?>
+		<div class="mod-countdown">
+			<div class="wrap">
+				<div class="line"></div>
+				<div class="title" ></div>
+				<div class="main">
+					<div class="pic"> </div>
+					<div class="txt">
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php }?>
+		<!-- /倒计时模块 -->
+
+		<!-- 首页主题模块 -->
+		<div class="showcase">
+			<div class="line"></div>
+			<ul class="mod-item-list">
+				<li>
+					<a href="<?php echo $webroot,'/subject/index'?>">
+						<div class="pic"><img src="<?php echo $staticResPath;?>/pic/theme-pic-01.jpg" alt="" /></div>
+						<div class="txt">主题汇</div>
+					</a>
+				</li>
+				<?php foreach($labels as $key=>$value) {?>	
+				<li>
+					<a href="<?php echo $webroot,'/label/index?pid='.$value['id'];?>">
+						<div class="pic"><img src="<?php echo $attachPath . $value['img'];?>" alt="<?php echo $value['title'];?>" /></div>
+						<div class="txt"><?php echo $value['name'];?></div>
+					</a>
+				</li>
+				<?php } ?>
+				<li>
+					<a href="<?php echo $webroot,'/product/'?>">
+						<div class="pic"><img src="<?php echo $staticResPath;?>/pic/theme-pic-06.jpg" alt="" /></div>
+						<div class="txt">积分换购</div>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<!-- /首页主题模块 -->
+	</section>
+	<!--  /主体内容 -->
+</div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="edit_form" enctype="multipart/form-data">
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr>
+			<th>名称</th>
+			<td>
+				<input type="text" class="easyui-textbox" name="title" required="true" value="<?php echo $info['title']; ?>">
+			</td>
+		</tr>
+
+		<tr>
+			<th>域名</th>
+			<td>
+				<input type="text" style="width:250px;" class="easyui-textbox" name="val" required="true" value="<?=$info['val']?>">
+			</td>
+		</tr>
+
+		<tr>
+			<th>图片</th>
+			<td>
+				<?php
+				if (!empty($info['img'])) {
+					echo '<img style="width:100px;height:100px;" src="' . $attachPath . $info['img'] . '" /><br>';
+				}
+				?>
+				<input type="file" id="img_upload" name="img"/>
+			</td>
+		</tr>
+	</table>
+</form>

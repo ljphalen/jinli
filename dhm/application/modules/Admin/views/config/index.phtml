@@ -1,0 +1,55 @@
+<?php echo $this->render("layout/header.phtml");?>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="h_a">配置管理</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">page title</th>
+				<td class="td">
+				   <textarea name="dhm_page_title" class="input wc" ><?php echo $configs['dhm_page_title'];?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">keywords</th>
+				<td class="td">
+				   <textarea name="dhm_page_keywords" class="input wc" ><?php echo $configs['dhm_page_keywords'];?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">page description</th>
+				<td class="td">
+				   <textarea name="dhm_page_description" class="input wc" ><?php echo $configs['dhm_page_description'];?></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+
+
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Config/index');
+	});
+
+	$.ajax({
+		type:'post',
+		dataType : 'json',
+		url : baseurl + '<?php echo $getExchangeRate;?>',
+		data:'fc=HKD&tc=CNY&token=<?php echo $token;?>',
+		success : function(res){
+			if(res.success){
+				$msg = res.data.rate + ' ( '+res.data.ftc+' )';
+				$('#ex_rate').text($msg);
+			}
+		}
+	});
+
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,529 @@
+<link media="screen" href="{{rootUrl}}/css/chosen.css" rel="stylesheet" type="text/css">
+
+<style>
+    #gamelist{width:30%;background:#fff;border:1px solid #dedede;padding:5px;}
+    #gamelist li{width:100%;height:25px;line-height:25px;text-indent:15px;
+                 border-bottom:1px dashed #ccc;color:#666;cursor:pointer;}
+    </style>
+    <script src="{{rootUrl}}/js/games.js?ver={{staticVer}}" type="text/javascript"></script>
+    <script src="{{rootUrl}}/js/adclicktype.js?ver={{staticVer}}" type="text/javascript"></script>
+    <div class="colMain">
+    <div class="title"><p class="fl">产品信息</p></div>
+    <form action="/reproduct/upd" method="post" name="form">
+        <div class="main">
+            <div class="app-detail">
+                <ul class="form">
+                    <!-- if {{product.ischeck}}==0 --><li><span class="label" style="color:red">未审核生效<!-- endif --></li></span>
+                    <p> <span  style="font-size:18px">基本信息：</span>
+                    <li>
+                            <span class="label">平台类型：</span>
+                            <div class="fc">
+                                <select name="platform" id="platform" onchange="autoPlatform()"   <!-- if {{product.id}} -->disabled <!-- endif --> >
+                                    <option value="0" <!-- if {{product.platform}}== 0 -->selected<!-- endif --> >通用</option>
+                                    <option value="1" <!-- if {{product.platform}}== 1 -->selected<!-- endif --> >Android</option>
+                                    <option value="2" <!-- if {{product.platform}}== 2 -->selected<!-- endif --> >IOS</option>
+                                </select>      
+                            </div>
+                    </li>
+                    <li>
+                        <span class="label">产品名：</span>
+                        <input type="hidden" value="{{product.id}}" name="id" product_updated="{{product.updated}}" >
+                        <input type="hidden" value="{{product.product_name}}" name="pname">
+                        <div class="fc">
+                            <select name="product_id" id="product_id" class="required" required onchange="autoProduct(0)" <!-- if {{product.id}} -->disabled="disabled" <!-- endif -->>
+                                <!-- loop myproduct -->
+                                <option value="{{myproduct' value.id}}" <!-- if {{product.id}}=={{myproduct' value.id}} -->selected<!-- endif --> >{{myproduct' value.product_name}}</option>
+                                <!-- endloop -->
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">APPKEY：</span>
+                        <div class="fc">
+                            <input type="text" id="appkey" <!-- if {{product.id}} -->readonly="readonly"<!-- else -->onkeyup="getGameinfo('gametype', 'pappkey')" onfocus="getGameinfo('gametype', 'pappkey')" <!-- endif --> name="pappkey" value="{{product.appkey}}" class="iText required" />
+                            <select id="gametype" <!-- if {{product.id}} --> disabled="disabled" <!-- else -->onchange="getGameinfo('gametype', 'pappkey')"<!-- endif -->>
+                                <option value="1" selected>名称</option>
+                                <option value="2">APPKEY</option>
+                            </select>
+                            <input type="hidden" name="appkey_is_right" value="1">
+                            <span class="red">*</span>
+                            <ul id="gamelist" style="display:none;">
+
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">包名：</span>
+                        <div class="fc">
+                            <input type="text" name="ppackage" id="ppackage" value="{{product.product_package}}" class="iText" />
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">版本号：</span>
+                        <div class="fc">
+                            <input type="text" name="product_version" id="product_version" value="{{product.product_version}}" class="iText" />
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <span class="label">产品图标：</span>
+                        <div class="fc">
+                            <input type="text" name="picon" id="picon" value="{{product.product_icon}}" class="iText required"  style="width:500px;" />
+                            <input type="button" value="选择图片" class="submit pickimg" id="pickimg"/>
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">IOS启动标识：</span>
+                        <div class="fc">
+                            <textarea id="pdesc" class="iText"  name="ios_identify" style="width:500px;">{{product.ios_identify}}</textarea>
+                        </div>
+                    </li>
+                     <li>
+                        <span class="label">产品介绍：</span>
+                        <div class="fc">
+                            <textarea id="pdesc" class="required" name="pdesc" style="width:500px;">{{product.product_desc}}</textarea>
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li class="line"></li>
+                    
+                     <p> <span  style="font-size:18px">结算配置：</span>
+                    <li>
+                        <span class="label">利润率：</span>
+                        <div class="fc">
+                            <input type="text" name="profit_margin" id="profit_margin" value="{{product.profit_margin}}" class="iText" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label"></span>
+                        <div class="fc">
+                            <input type="radio" name="account_way" value="by_month" checked="checked"/>按月结算
+                            <input type="radio" name="account_way" value="realtime_bidding" disabled='disabled' />实时竞价 
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label"></span>
+                        <div class="fc grid" style='width:28%'>
+                            <table class="account_by_month">
+                                <thead>
+                                    <tr>
+                                        <th>月份</th>
+                                        <th>结算方式</th>
+                                        <th>结算单价</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- if {{ad_product_acounting}} -->     
+                                        <!-- loop ad_product_acounting -->
+                                        <tr>
+                                            <td>{{ad_product_acounting' value.show_month}}月</td>
+                                            <td>
+                                                <select name="account_way_select_{{ad_product_acounting' value.show_month}}" id="account_way_select_{{ad_product_acounting' value.show_month}}">
+                                                    <option value="1" <!-- if {{ad_product_acounting' value.acounting_method}} == 1 -->selected<!-- endif --> >CPM</option>
+                                                    <option value="2" <!-- if {{ad_product_acounting' value.acounting_method}} == 2 -->selected<!-- endif --> >CPC</option>
+                                                    <option value="3" <!-- if {{ad_product_acounting' value.acounting_method}} == 3 -->selected<!-- endif --> >CPA</option>
+                                                    <option value="4" <!-- if {{ad_product_acounting' value.acounting_method}} == 4 -->selected<!-- endif --> >CPI</option>
+                                                    <option value="5" <!-- if {{ad_product_acounting' value.acounting_method}} == 5 -->selected<!-- endif --> >CPD</option>
+                                                    <option value="6" <!-- if {{ad_product_acounting' value.acounting_method}} == 6 -->selected<!-- endif --> >CPS</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type='text' name='account_price_{{ad_product_acounting' value.show_month}}' id='account_price_{{ad_product_acounting' value.show_month}}' class='iText' value="{{ad_product_acounting' value.denominated}}"/>
+                                            </td>
+                                        </tr>
+                                        <!-- endloop -->
+                                    <!-- endif -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </li>
+                    <li class="line"></li>
+                   <p> <span  style="font-size:18px">导量配置：</span>
+                    <li><span class="label"><input type="button" onclick="javascript:$(this).parent().parent().next().toggle();$(this).parent().parent().next().next().toggle();" value="自定义导量计划" class="cancel" style="width:120px"></span></li>
+                    <li style="display:none">
+                        <span class="label">导量限制：</span>
+                        <div class="fc">
+                            <div class="grid">
+                                <div class="gridToolbar"><input type="hidden" name="stat_limit" value='{{product.limitjson}}' /><a href="javascript:void(0)" id="addDL" class="btn fr">新增</a></div>
+                                <table id="DLGrid">
+                                    <thead>
+                                        <tr>
+                                            <th>规则名</th>
+                                            <th>内容</th>
+                                            <th>数值</th>
+                                            <th>内容</th>
+                                            <th>数值</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            <!-- if {{product.limit}} -->     
+                                            <!-- loop product.limit -->
+                                                <tr>
+                                                    <td id="{{product.limit' key}}">{{product.limit' key}}</td>
+                                                    <td>每天</td>
+                                                    <td>{{product.limit' value.day_limit}}</td>
+                                                    <td>总数</td>
+                                                    <td>{{product.limit' value.total_limit}}</td>
+                                                    <td>
+                                                        <a href="javascript:void(0)" class="edit" title="编辑"></a>
+                                                        |
+                                                        <a href="javascript:void(0)" class="del" title="删除"></a>
+                                                    </td>
+                                                </tr>
+                                            <!-- endloop -->
+                                        <!-- endif -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </li>
+			        <li style="display:none">
+                        <span class="label">导量计划：</span>
+                        <div class="fc">
+                            <div class="grid">
+                                    <div class="gridToolbar"><input type="hidden" name="stat_plan" value='<!-- if {{product.planjson}}=="" -->{"stat_plan":[{"start_time":"Now","end_time":"Never"}]}<!-- else -->{{product.planjson}}<!-- endif -->' /><a href="javascript:void(0)" id="addDLJH" class="btn fr">新增</a></div>
+                                <table id="DLJHGrid">
+                                    <thead>
+                                        <tr>
+                                            <th>序号</th>
+                                            <th>开始时间</th>
+                                            <th>结束时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                         <!-- if {{product.plan}} -->
+                                        <!-- loop product.plan -->
+                                                <!-- if {{product.plan' key}} == "default_pan" --> 
+                                                    <!-- loop product.plan.default_pan' key -->
+                                                        <tr>
+                                                            <td>{{product.plan.default_pan' key}}</td>
+                                                            <td><code><?php echo $v2["start_time"];?></code></td>
+                                                            <td><code><?php echo $v2["end_time"];?></td>
+                                                            <td>
+                                                                <a href="javascript:void(0)" class="edit" title="更新"></a>
+                                                                |
+                                                                <a href="javascript:void(0)" class="del" title="删除"></a>
+                                                            </td>
+                                                        </tr>
+                                                    <!-- endloop -->
+                                                <!-- else -->
+                                                    <!-- loop product.plan.default_pan' key -->
+                                                        <tr>
+                                                            <td>{{product.plan.default_pan' key}}</td>
+                                                            <td><code><?php echo $v2["start_time"];?></code></td>
+                                                            <td><code><?php echo $v2["end_time"];?></td>
+                                                            <td>
+                                                                <a href="javascript:void(0)" class="edit" title="更新"></a>
+                                                                |
+                                                                <a href="javascript:void(0)" class="del" title="删除"></a>
+                                                            </td>
+                                                        </tr>
+                                                    <!-- endloop -->
+                                                <!-- endif -->
+                                        <!-- endloop -->
+                                    <!-- else -->
+                                    <tr><td>1</td><td>Now</td><td>Never</td><td><a title="更新" class="edit" href="javascript:void(0)"></a> | <a title="删除" class="del" href="javascript:void(0)"></a></td></tr>
+                                    <!-- endif -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </li>		                    
+                    <li style="display:none">
+                        <span class="label">导量计划：</span>
+                        <div class="fc">
+                            <div class="grid">
+                                    <div class="gridToolbar"><input type="hidden" name="stat_plan" value='<!-- if {{product.planjson}}=="" -->{"stat_plan":[{"start_time":"Now","end_time":"Never"}]}<!-- else -->{{product.planjson}}<!-- endif -->' /><a href="javascript:void(0)" id="addDLJH" class="btn fr">新增</a></div>
+                                <table id="DLJHGrid">
+                                    <thead>
+                                        <tr>
+                                            <th>序号</th>
+                                            <th>开始时间</th>
+                                            <th>结束时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                         <!-- if {{product.plan}} -->
+                                        <!-- loop product.plan -->
+                                                <!-- if {{product.plan' key}} == "default_pan" --> 
+                                                    <!-- loop product.plan.default_pan' key -->
+                                                        <tr>
+                                                            <td>{{product.plan.default_pan' key}}</td>
+                                                            <td><code><?php echo $v2["start_time"];?></code></td>
+                                                            <td><code><?php echo $v2["end_time"];?></td>
+                                                            <td>
+                                                                <a href="javascript:void(0)" class="edit" title="更新"></a>
+                                                                |
+                                                                <a href="javascript:void(0)" class="del" title="删除"></a>
+                                                            </td>
+                                                        </tr>
+                                                    <!-- endloop -->
+                                                <!-- else -->
+                                                    <!-- loop product.plan.default_pan' key -->
+                                                        <tr>
+                                                            <td>{{product.plan.default_pan' key}}</td>
+                                                            <td><code><?php echo $v2["start_time"];?></code></td>
+                                                            <td><code><?php echo $v2["end_time"];?></td>
+                                                            <td>
+                                                                <a href="javascript:void(0)" class="edit" title="更新"></a>
+                                                                |
+                                                                <a href="javascript:void(0)" class="del" title="删除"></a>
+                                                            </td>
+                                                        </tr>
+                                                    <!-- endloop -->
+                                                <!-- endif -->
+                                        <!-- endloop -->
+                                    <!-- else -->
+                                    <tr><td>1</td><td>Now</td><td>Never</td><td><a title="更新" class="edit" href="javascript:void(0)"></a> | <a title="删除" class="del" href="javascript:void(0)"></a></td></tr>
+                                    <!-- endif -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </li> 
+                     <li class="line"></li>
+                    <!--  选项卡start -->
+                    <li>
+                    	<div class="toolbar tabs"  style="margin-bottom:18px;">
+						    <ul class="fl">
+						        <li data-name="illustration"  class="cur"><a href="javascript:void(0);">插图配置与素材</a></li>
+						        <li data-name="video"><a href="javascript:void(0);">视频配置与素材</a></li>
+						    </ul>
+						</div>
+					    <!-- include "illustration" -->
+						<!-- include "video" -->
+	
+                    </li>  <!--  选项卡endsffffddsfddddD-->
+		  			<li>
+		              <div class="fc">
+		                  <input type="button" onclick="checksubmit()" value="确定" class="submit" />
+		                  <input type="button" value="取消" onclick="javascript:location.href = 'lists'" class="cancel" />
+		              </div>
+		          </li>
+                </ul>
+            </div>
+        </div>
+    </form>
+    <div id="imgFrame" style="position:absolute; top:40%; left:40%; z-index:1000; display:none;">
+        <div style="float:right"><a href="javascript:close();">关闭</a></div>
+        <div id="imgbox"></div>
+    </div>
+</div>
+<!-- include "inc" -->
+<script>
+function autoProduct(op) {
+    if (op == 0) {
+        $("#ad_title").find("tbody tr").remove();
+        //$("#adList").find("div:eq(1)").remove()
+    }
+    $("input[name='id']").val($("select[name='product_id']").val());
+    $("input[name='pname']").val($("select[name='product_id']").find("option:selected").text().replace("(T)", "").replace("(A)", "").replace("(I)", ""));
+    ajaxPOST("/reproduct/autoProductinfo", {"product_name": $("input[name='pname']").val(),"platform":$("select[name='platform']").val(),"updated":'{{product.updated}}'}, function(data) {
+        append_resource(data)
+        $("#select_material").attr("href", "javascript:open_resource('/resource/material_pic?product_name="+$("input[name='pname']").val()+"&platform="+$("select[name='platform']").val()+"')");
+    })
+}
+
+function autoProductForVedio() {
+	    $("input[name='id']").val($("select[name='product_id']").val());
+	    $("input[name='pname']").val($("select[name='product_id']").find("option:selected").text().replace("(T)", "").replace("(A)", "").replace("(I)", ""));
+	    ajaxPOST("/reproduct/autoProductForVedio", {"product_name": $("input[name='pname']").val(),"platform":$("select[name='platform']").val(),"updated":'{{product.updated}}'}, function(data) {
+	        update_video_resource(data);
+	    });
+}
+
+//根据返回的素材填充表格
+function update_video_resource(data) {
+    var flag=false;
+    var product_id=$("input[name='id']").val();
+    var product_updated = $("input[name='id']").attr("product_updated");
+    
+    if (data.video != false) {
+        for (var i = 0; i < data.video.length; i++) {
+            if(product_id!=data.video[i].ad_product_id){
+                alert("不属于本产品的素材,请不要添加");
+                return false
+            }   
+            var str = '<tr>' +
+                    '<td><input type="hidden" class="iText" name="incentive_video_ad_id[]" value="" />' + 
+                    '<input type="hidden" class="iText" name="incentive_video_id[]" value="' + data.video[i]["id"] + '"/>' + data.video[i]["id"] +'</td>' +
+                    '<td>视频广告</td>' +
+                   '<td>' +
+          		   '<input type="hidden" class="iText" name="incentive_video_name[]" value="' + data.video[i]["video_name"] + '" />' +data.video[i]["video_name"]+
+                   '</td>'+
+                    '<td><input type="hidden" class="iText" name="incentive_video_state[]"  id="video_istate_pic_' + data.video[i].id + '" value="1"/>' +
+                    ' <span><input type="radio" checked onclick="javascript:$(\'#video_istate_pic_' + data.video[i].id + '\').val(this.value)" name="incentive_video_state_radio_' + data.video[i].id + '" value="1" class="radio"><lable>on</lable></span>' +
+                    '<span><input type="radio"  onclick="javascript:$(\'#video_istate_pic_' + data.video[i].id + '\').val(this.value)" name="incentive_video_state_radio_' + data.video[i].id + '" value="0" class="radio"><lable>off</lable></span>' +
+                    '</td>' +
+                    ' <td><input type="text" class="iText required" name="incentive_video_rate[]"  value="1" style="width:40px"></td>' +
+                    '<td>'+
+                    ' <a title="删除" class="del" href="javascript:void(0)"></a>' +
+                    '</td>' +
+                    '</tr>';
+            if (!checkVedioExsits(data.video[i]["id"], 6)) {
+                $("#ad_title_video").find("tbody").append(str);
+                flag=true;
+            }
+
+        }
+    }
+    if(!flag){
+        jAlert("最近无更新素材");
+    }
+}
+
+//判断是否已经有存在的元素
+function checkVedioExsits(rid, rtype) {
+    var flag = false;
+    $("#ad_title_video").find("tbody tr").each(function(i) {
+                if ($(this).find("input[name='incentive_video_id[]']").val() == rid) {
+                    flag = true;
+                }
+    })
+    return flag;
+}
+
+
+function autoPlatform(productid) {
+    ajaxPOST("/reproduct/autoPlatform", {"platform": $("#platform").val()}, function(data) {
+        var length = data.length;
+        str = '';
+        for (i=0; i<length; i++)
+        {
+            if_selecte = ""
+            if(productid == data[i].id)
+            {
+                if_selecte =  'selected="selected"';
+            }
+            str += '<option value="'+data[i].id+'" '+ if_selecte +'>'+data[i].platform_product_name+'</option>'
+        }
+        $("#product_id").html(str);
+        $("input[name='id']").val($("select[name='product_id']").val());
+        $("input[name='pname']").val($("select[name='product_id']").find("option:selected").text().replace("(T)", "").replace("(A)", "").replace("(I)", ""));
+        $("#select_material").attr("href", "javascript:open_resource('/resource/material_pic?product_name="+$("input[name='pname']").val()+"&platform="+$("select[name='platform']").val()+"')");
+        //重新绑定select的选择组件
+        $("#product_id").removeClass("chzn-done");
+        $("#product_id_chzn").remove();
+        $("#product_id").chosen({});
+        //切换平台的时候需要把原先的广告产品清空．
+        $("#ad_title").find("tbody tr").remove();
+    })
+}
+
+$(function() {
+    setgameid('{{product.product_name}}')
+    $("#platform").val("{{product.platform}}");
+    $("input[name='id']").val($("select[name='product_id']").val());
+    //是编辑页面
+    product_id = "{{product.id}}";
+    if(!product_id)
+    {
+        autoPlatform($("select[name='product_id']").val())
+    }
+    
+    $('input:radio[name="account_way"]').change(function(){
+        if($(this).val() == 'by_month'){
+            $(".account_by_month").show().siblings('.realtime_bidding').hide();
+        }else{
+            $(".realtime_bidding").show().siblings('.account_by_month').hide();
+        }
+    });
+})
+function checksubmit(){
+    if(!checkaveraged()){
+        jAlert("插图配置与视频各类类型广告分配比例必须小于等于1");
+        return false;
+    }
+
+    if(isNaN($('#video_play_per').val()) || $("#video_play_per").val() > 1 ||$("#video_play_per").val() < 0 ){
+        jAlert("视频播放进度0-1数字");
+        return false;
+    }
+
+    $("#product_id").removeAttr("disabled");
+    $("#gametype").removeAttr("disabled");
+    if(!checkMostoneCustomText()){alert('最多只能设置一个自定义文案广告');return false;}
+    $('form').submit();
+}
+
+function showOriginal(img) {
+        obj = $("#imgFrame");
+        document.getElementById("imgbox").innerHTML = "<img src='" + img.getAttribute("src") + "' />";
+        var screenWidth = $(window).width(), screenHeight = $(window).height();  ///当前浏览器窗口的 宽高
+        var scrolltop = $(document).scrollTop();///获取当前窗口距离页面顶部高度
+        var objLeft = (screenWidth - $("#imgFrame").width())/2 ;
+        var objTop = (screenHeight - $("#imgFrame").height())/2 + scrolltop;
+        $("#imgFrame").css({left: objLeft + 'px', top: objTop + 'px'});
+        document.getElementById("imgFrame").style.display = "block";
+        $(window).resize(function() {
+            screenWidth = $(window).width();
+            screenHeight = $(window).height();
+            scrolltop = $(document).scrollTop();
+            objLeft = (screenWidth - obj.width())/2 ;
+            objTop = (screenHeight - obj.height())/2 + scrolltop;
+            obj.css({left: objLeft + 'px', top: objTop + 'px'});
+        });
+        //浏览器有滚动条时的操作、
+        $(window).scroll(function() {
+            screenWidth = $(window).width();
+            screenHeight = $(window).height();
+            scrolltop = $(document).scrollTop();
+            objLeft = (screenWidth - obj.width())/2 ;
+            objTop = (screenHeight - obj.height())/2 + scrolltop;
+            obj.css({left: objLeft + 'px', top: objTop + 'px'});
+        });
+}
+function close() {
+        document.getElementById("imgFrame").style.display = "none";
+}
+
+function showTextContent(content) {
+        obj = $("#imgFrame");
+        document.getElementById("imgbox").innerHTML = "<span style=\"border:solid 1px\">" + content +"<span>";
+        var screenWidth = $(window).width(), screenHeight = $(window).height();  ///当前浏览器窗口的 宽高
+        var scrolltop = $(document).scrollTop();///获取当前窗口距离页面顶部高度
+        var objLeft = (screenWidth - $("#imgFrame").width())/2 ;
+        var objTop = (screenHeight - $("#imgFrame").height())/2 + scrolltop;
+        $("#imgFrame").css({left: objLeft + 'px', top: objTop + 'px'});
+        document.getElementById("imgFrame").style.display = "block";
+        $(window).resize(function() {
+            screenWidth = $(window).width();
+            screenHeight = $(window).height();
+            scrolltop = $(document).scrollTop();
+            objLeft = (screenWidth - obj.width())/2 ;
+            objTop = (screenHeight - obj.height())/2 + scrolltop;
+            obj.css({left: objLeft + 'px', top: objTop + 'px'});
+        });
+        //浏览器有滚动条时的操作、
+        $(window).scroll(function() {
+            screenWidth = $(window).width();
+            screenHeight = $(window).height();
+            scrolltop = $(document).scrollTop();
+            objLeft = (screenWidth - obj.width())/2 ;
+            objTop = (screenHeight - obj.height())/2 + scrolltop;
+            obj.css({left: objLeft + 'px', top: objTop + 'px'});
+        });
+}
+
+</script>
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>
+
+<script>	 
+	    $(".tabs ul li").click(function(){
+	    	$(this).addClass("cur");
+	    	$(this).siblings().removeClass("cur");
+	    	if($(this).attr("data-name") =='illustration'){
+	    		$("#illustration").show();
+	    		$("#video").hide();
+	    	}else{
+	    		$("#illustration").hide();
+	    		$("#video").show();
+	    	}
+	    })
+	</script>
+

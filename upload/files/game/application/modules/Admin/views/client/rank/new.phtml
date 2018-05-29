@@ -1,0 +1,79 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li class="current"><a href="<?php echo $newUrl;?>">最新发布</a></li>
+	    <li><a href="<?php echo $listUrl;?>">下载最多</a></li>
+	    <li><a href="<?php echo $monthUrl;?>">月榜</a></li>
+        <li><a href="<?php echo $setUrl;?>">排行榜设置</a></li>
+        <li><a href="<?php echo $manUrl;?>">排行榜管理</a></li>
+        <li><a href="<?php echo $weekUrl;?>">周榜管理</a></li>
+	</ul>
+</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full" style="display:none;">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">最新游戏显示个数</th>
+				<td class="td">
+				   <input name="client_num" class="wc input" style="width:25%;" value="<?php echo $client_num;?>">
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac" style="display:none;">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Rank/new');
+	});
+})
+</script>
+<div class="h_a">
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="80">ID</td>
+			<td width="150">标题</td>
+			<td width="100">图标</td>
+			<td width="150">分类</td>
+			<td width="150">专题</td>
+			<td width="150">版本</td>
+			<td width="50">大小</td>
+			<td width="120">上线时间</td>
+			<td width="60">状态</td>
+		</tr>
+<?php foreach($games as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['name'];?></td>
+			<td><img src="<?php echo $value['img'];?>" style="width:70px;height:70px;"/></td>
+			<td><?php echo $value['category_title'];?></td>
+			<td><?php echo implode($game_subjects[$value['id']], ',');?></td>
+			<td><?php echo $value['version'];?></td>
+			<td><?php echo $value['size'];?>M</td>
+		    <td><?php echo date('Y-m-d H:i:s', $value['online_time']);?></td>
+			<td><?php echo $value['status'] == 1 ? '已上线' : '已下线';?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_New/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,42 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div id="page">
+	<div class="pindex" id="iscrollWrap">
+		<div class="mainWrap">
+			<!-- 内容区域 START-->
+			<header class="hdWrap">
+					<div class="hd-l"><a href="<?php echo $webroot.'/nav';?>" class="l-arrow">back</a></div>
+					<div class="hd-r"><h1>个人中心</h1></div>	
+			</header>
+			<div class="module">
+				<section class="pcenter">
+					<ul class="mod-text-list">
+						<li><h3>基本资料</h3></li>
+						<li>
+							<a href="<?php echo $webroot;?>/user/userinfo/editstep1" class="r-arrow">
+								<dl class="mod-dl-list">
+									<dd class="user-img"><img src="<?php echo $staticResPath;?>/pic/user-icon01.gif" /></dd>
+									<dd>账号：<?php echo $user_info['username']?></dd>
+									<dd>昵称：<?php echo $user_info['realname']?></dd>
+								</dl>
+							</a>
+						</li>
+					</ul>
+					<ul class="mod-text-list">
+						<li><h3>详细资料</h3></li>
+						<li>
+							<a href="<?php echo $webroot;?>/user/userinfo/editstep2" class="r-arrow">
+								<dl class="mod-dl-list">
+									<dd>QQ：<?php echo $user_info['qq']?></dd>
+									<dd>Email：<?php echo $user_info['email']?></dd>
+									<dd>生日：<?php echo $user_info['birthday'] == '0000-00-00' ? '' : $user_info['birthday'] ;?></dd>
+									<dd>性别：<?php echo $sex[$user_info['sex']];?></dd>
+								</dl>
+							</a>
+						</li>
+					</ul>
+				</section>
+			</div>
+		</div>
+	</div>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

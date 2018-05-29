@@ -1,0 +1,150 @@
+<?php echo $this->render("layout/admin_header.phtml");?>
+	<div class="body">
+		<h1 class="page-title">素材管理</h1>
+		<?php echo $this->render("layout/side.phtml");?>
+		<div class="col-main">
+			<div class="stuff-body">
+				<div class="search-bar">
+					<form action="<?php echo $listUrl;?>" method="get">
+						<label>标题：</label><input class="input" name="keyword"  value="<?php echo $inputVars['keyword']?>"/>
+						<label>类型：</label>
+						<select name="type" class="select" style="margin-right:50px;">
+						    <option  value="0">全部</option>
+							<option <?php if($inputVars['type'] == 1) echo 'selected';?> value="1">单条图文</option>
+							<option <?php if($inputVars['type'] == 2) echo 'selected';?> value="2">多条图文</option>
+						</select>
+						<span class="text">时间：</span>
+						<input style="margin-right:2px;" type="text" name="start_time" class="J_datePicker input" value="<?php echo $inputVars['start_time']?>"/>
+						<label class="sep-text">到</label>
+						<input type="text" name="end_time" class="J_datePicker input" value="<?php echo $inputVars['end_time']?>"/><br>
+						<p style="margin-right:100px;text-align:center;"><button type="submit" class="btn" style="text-align: center;">查询</button></p>
+						<span class="result">当前共有<em id="result"><?php echo $total;?></em>条结果</span>
+					</form>
+					<div id="imgTextAdd" class="btn btn-add">
+						创建消息
+					</div>
+					<ul  class="J_edit_list edit-list hidden">
+						<li>
+							<a href="<?php echo $addUrl . "?dataType=" . $dataTypes[0];?>">单条图文消息</a>
+						</li>
+						<li>
+							<a href="<?php echo $addUrl . "?dataType=" . $dataTypes[1];?>">多条图文消息</a>
+						</li>
+					</ul>
+				</div>
+
+				<!-- 瀑布流 -->
+				<div id="waterfallContainer" class="invisible">
+					<div id="waterfall" data-ajaxUrl="<?php echo $deletePostUrl;?>">
+						<?php 
+						$format = 'Y-m-d H:i:s';
+						foreach ($list as $news) {
+							$newsItems = $itemsList[$news['id']];
+							$itemLenth = count($newsItems);
+    						if($news['type'] == 1){
+    							$newsItem = $itemLenth>0 ? $newsItems[0] : null;
+						 ?>
+							<!-- 单条图文 -->
+								<div class="appmsg">
+									<div class="appmsg-content">
+										<h4 class="appmsg_title">
+											<?php if($newsItem['type'] == 2) {?>
+        									       <a href="<?php echo $newsItem['content_url'];?>"  target="_blank"><?php echo $newsItem['title'];?></a>
+        							       <?php } else {?>
+            									    <a><?php echo $newsItem['title'];?></a>
+        							       <?php } ?>
+										</h4>
+										<div class="appmsg_info">
+							                <em class="appmsg_date"><?php echo date($format, $news['create_time']) ;?></em>
+							                
+							            </div>
+										<div class="appmsg_thumb_wrp">
+												<img src="<?php echo $attachroot.$newsItem['image'];?>" class="appmsg_thumb">
+										</div>
+										<p class="appmsg_desc"><?php echo $newsItem['digest']?></p>
+									</div>
+									<div class="appmsg_opr">
+								        <ul>
+								            <li class="appmsg_opr_item ">
+								                <a  href="<?php echo $editUrl.'?'.'id='.$news['id'];?>">&nbsp;编辑</a>
+								            </li>
+								            <li class="appmsg_opr_item  no_extra">
+								                 <a class="J_del_imageText" data-id="<?php echo $news['id'];?>" href="javascript:void(0);" >&nbsp;删除</a>
+								            </li>
+								        </ul>
+								    </div>
+								</div>
+						<?php 
+                            } elseif($news['type'] == 2){
+    							$newsItem = $itemLenth>0 ? $newsItems[0] : null;
+						 ?>
+								<!-- 多条图文 -->
+								<div class="appmsg multi">
+									<div class="appmsg-content">
+										<div class="appmsg_info">
+							                <em class="appmsg_date"><?php echo date($format, $news['create_time']);?></em>
+							            </div>
+										<div class="cover_appmsg_item">
+											<h4 class="appmsg_title">
+											     <?php if($newsItem['type'] == 2) {?>
+        									       <a href="<?php echo $newsItem['content_url'];?>"  target="_blank"><?php echo $newsItem['title'];?></a>
+            							       <?php } else {?>
+            									    <a><?php echo $newsItem['title'];?></a>
+            							       <?php } ?>
+											</h4>
+											<div class="appmsg_thumb_wrp">
+												<img src="<?php echo $attachroot.$newsItem['image'];?>" class="appmsg_thumb">
+											</div>
+										</div>
+									</div>
+									<!-- 有几个item就显示几个item,此处还应有一个循环 -->
+						<?php 
+        						for ($j=1; $j <$itemLenth; $j++) {
+                                    $newsItem = $newsItems[$j];
+                        ?>
+									<div class="appmsg_item">
+							                <img src="<?php echo $attachroot.$newsItem['image'];?>" class="appmsg_thumb">
+							                <h4 class="appmsg_title">
+							                 <?php if($newsItem['type'] == 2) {?>
+        									       <a href="<?php echo $newsItem['content_url'];?>" target="_blank"><?php echo $newsItem['title'];?></a>
+            							       <?php } else {?>
+            									    <a><?php echo $newsItem['title'];?></a>
+            							       <?php } ?>
+							                </h4>
+							            </div>
+						<?php
+                                }
+						  ?>
+									<div class="appmsg_opr">
+								        <ul>
+								            <li class="appmsg_opr_item ">
+								                <a  href="<?php echo $editUrl.'?'.'id='.$news['id'];?>">&nbsp;编辑</a>
+								            </li>
+								            <li class="appmsg_opr_item  no_extra">
+								                 <a class="J_del_imageText" data-id="<?php echo $news['id'];?>" href="javascript:void(0);" >&nbsp;删除</a>
+								            </li>
+								        </ul>
+								    </div>
+								</div>
+						<?php
+						     }
+						  ?>
+						<?php }?>
+					</div>
+				</div>
+				<?php echo $pager;?>
+			</div>
+		</div>
+	</div>
+	<div class="J_dialog mask  hidden">
+		<div class="dialog-error-container">
+			<h1>提示</h1>
+			<p><i class="icon-info"></i>是否确认删除？</p>
+			<input id="imageTextDelConfirm" class="btn-ok btn-small" type="button" value="是" />
+			<input id="operateCancel" class="btn-ok btn-small" type="button" value="否" />
+		</div>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+	<?php echo $this->render("layout/datePicker.phtml");?>
+</body>
+</html>

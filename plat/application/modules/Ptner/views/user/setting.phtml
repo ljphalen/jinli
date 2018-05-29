@@ -1,0 +1,127 @@
+﻿<?php echo $this->render("user/header.phtml");?>
+<body>
+    <?php echo $this->render("user/top.phtml");?>
+	<div class="main-container">
+		<?php echo $this->render("user/nav.phtml");?>
+		<div class="container">
+			<ul class="nav nav-tabs" id="myTab">
+			  <li class="active"><a href="#home" data-toggle="tab">功能设置</a></li>
+			</ul>
+
+			<div class="tab-content">
+				  <div class="tab-pane active" id="home">
+					<form id="setting-form" class="form-horizontal" role="form" method="post" action="<?php echo $settingPostUrl;?>">
+                        <input type="hidden" name="token" value="<?php echo $token;?>">
+                        <div class="form-group">
+                            <label for="hs_enable" class="col-sm-2 control-label" >上网认证</label>
+                            <div class="col-sm-4">
+                                <div class="switch" data-on="success"  data-on-label="开启" data-off-label="关闭">
+                                    <input id="hs_enable" name="hs_enable" type="checkbox" <?php if($device['hs_enable'] == 1) echo 'checked';?>/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" >登录模式</label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <?php ${'slm'.$ptner['login_mode']} = 'selected';?>
+                                    <select id="login_mode" name="login_mode" class="form-control">
+                                        <option value="1" <?php echo $slm1;?>>不限制</option>
+                                        <option value="2" <?php echo $slm2;?>>登录密码认证</option>
+                                        <option value="3" <?php echo $slm3;?>>手机号认证</option>
+                                        <option value="4" <?php echo $slm4;?>>微信认证</option>
+                                    </select>
+                                </div>
+                                <div id="weixin_pass" class="<?php echo ($ptner['login_mode'] == 4) ? '' : 'hidden';?>">
+                                    <div class="col-md-2" style="padding: 2px">
+                                        <input type="text" name="weixin_name" placeholder="微信公共帐号" class="form-control" value="<?php echo $ptner['weixin_name'];?>">
+                                    </div>
+                                    <div class="col-md-2" style="padding: 2px">
+                                        <input type="text" name="weixin_passwd" placeholder="认证密码" class="form-control" value="<?php echo $ptner['weixin_passwd'];?>">
+                                    </div>
+                                </div>
+                                <div id="login_pass" style="padding: 2px" class="col-md-3 <?php echo ($ptner['login_mode'] == 2) ? '' : 'hidden';?>">
+                                    <input type="text" name="login_passwd" id="login_pass" placeholder="登录认证密码" class="form-control" value="<?php echo $ptner['login_passwd'];?>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--<div id="weixin_pass" class="form-group <?php /*echo ($ptner['login_mode'] == 4) ? '' : 'hidden';*/?>">
+                            <label class="col-sm-2 control-label" ></label>
+                            <div class="row">
+                                <div id="weixin_name" class="col-md-3">
+                                    <input type="text" name="weixin_ name" placeholder="微信公共帐号" class="form-control" value="<?php /*echo $ptner['weixin_name'];*/?>">
+                                </div>
+                                <div id="weixin_pass" class="col-md-3">
+                                    <input type="text" name="weixin_pass" placeholder="登录微信认证密码" class="form-control" value="<?php /*echo $ptner['weixin_passwd'];*/?>">
+                                </div>
+                            </div>
+                        </div>-->
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" >登录时长</label>
+                                <div class="col-sm-6">
+                                    <?php ${'hst'.$device['hs_timeout']} = 'selected';?>
+                                    <select name="hs_timeout" id="hs_timeout" class="form-control">
+                                        <option value="1800" <?php echo $hst1800; ?>>30分钟</option>
+                                        <option value="3600" <?php echo $hst3600; ?>>1个小时</option>
+                                        <option value="7200" <?php echo $hst7200; ?>>2个小时</option>
+                                        <option value="86400" <?php echo $hst86400; ?>>1天</option>
+                                    </select>
+                                </div>
+                        </div>
+						<span class="J_alert alert"></span>
+						<div class="divder">
+					   		 <button type="submit" class="btn btn-primary ">保存</button>
+						</div>
+						
+					</form>
+				  </div>
+			</div>
+
+		</div>
+	</div>	
+	<?php echo $this->render("user/footer.phtml");?>   
+
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/switch.js"></script>
+<script type="text/javascript" src="/static/js/jquery.form.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$("button[type=submit]").click(function(event) {
+			$('#setting-form').ajaxSubmit(function(ret){
+				if (ret.success == false) {
+					$(".J_alert").addClass("alert-danger").html(ret.msg).css('display','block');
+				} else {
+					$(".J_alert").addClass("alert-success").html(ret.msg).css('display','block');
+				}
+				setTimeout(function(){
+					$(".J_alert").hide();
+				}, 1000);
+			});
+			return false;
+		});
+	})
+</script>
+<script type="text/javascript">
+	$(function(){
+        $("#login_mode").on('change', function(){
+            var val = $(this).val();
+
+            $("#login_pass").hide();
+            $("#weixin_pass").hide();
+
+            if (val == 2) {
+                $("#login_pass").removeClass("hidden").show();
+            } else if (val == 4){
+                $("#weixin_pass").removeClass("hidden").show();
+            }
+        })
+	})
+	</script>
+
+	
+</body>
+</html>

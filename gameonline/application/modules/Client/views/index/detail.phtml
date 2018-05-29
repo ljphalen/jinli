@@ -1,0 +1,52 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div id="detail-page">
+		<section class="wrap">
+			<div class="detail-field">
+				<dl>
+					<dt class="icon"><img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $attachPath.$info['img'];?>"></dt>
+					<dd class="desc">
+						<p><span>资费：<em><?php echo $info['price_title']?></em>(<?php echo $info['language'];?>)</span></p>
+						<p><span>类型：<?php echo $info['category_title'];?></span><span>大小：<?php echo $info['size'];?>M</span></p>
+						<p><span >版本：<?php echo $info['version'];?></span><span class="date">更新：<?php echo date('Y-m-d', $info['update_time']);?></span></p>
+						<p>来源：<?php echo $info['company'];?></p>
+					</dd>
+				</dl>
+			</div>
+			<?php if(strnatcmp($apk_version,'1.4.6') >= 0 && !stristr($intersrc,'gltj') && $games){?>
+			<div class="suggest_field">
+				<h1>相关推荐</h1>
+				<ul class="list">
+					<?php $i=0; foreach($games as $key=>$value){
+						if($i < 4){
+				    $href = $webroot.'/client/index/detail/?id='.$value['id'].'&intersrc=gltj'.$value['id'].'&t_bi='.$source;
+					?>
+					<li>
+					  <a data-infpage="<?php echo $value['name'].','.$href.','.$value['infpage'];?>">
+					   <img src="<?php echo $staticResPath;?>/pic/blank.gif" data-src="<?php echo $attachPath. $value['img'];?>" alt="">
+					  </a>
+					</li>
+					<?php } $i++;}?>
+				</ul>
+			</div>
+			<?php }?>
+			<div class="detail-scrollPic" id="J_screenshot">
+				<div class="pic-container">
+					<h1>游戏截图</h1>
+					<div class="pic-wrap">
+						<?php foreach($info['gimgs'] as $key=>$value){?>
+						<span>
+							<img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $attachPath,$value;?>" data-bigpic="<?php echo $attachPath .$info['gimgs'][$key];?>"></span>
+						<?php }?>
+					</div>
+				</div>
+			</div>
+			<div class="detail-text ui-editor">
+				<div class="text-container">
+					<p><?php echo html_entity_decode($info['descrip']);?></p>
+				</div>
+			</div>
+		</section>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

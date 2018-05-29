@@ -1,0 +1,244 @@
+<script src="{{rootUrl}}/js/core.js" type="text/javascript"></script>
+<script src="{{rootUrl}}/js/app-type.js" type="text/javascript"></script>
+<script src="{{rootUrl}}/js/games.js?ver={{staticVer}}" type="text/javascript"></script>
+<style>
+#gamelist{width:30%;background:#fff;border:1px solid #dedede;padding:5px;}
+#gamelist li{width:100%;height:25px;line-height:25px;text-indent:15px;
+             border-bottom:1px dashed #ccc;color:#666;cursor:pointer;}
+</style>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">{{title}}-应用信息</p>
+    <!-- if {{result.app_id}} -->
+        <a class="del" href="/apps/delete?app_id={{result.app_id}}">删除</a>
+    <!-- endif -->
+    </div>
+    <div class="main">
+        <div class="app-detail">
+            <form action="../apps/ischeck" method="POST" >
+                <input type="hidden" name="app_id" value='{{result.app_id}}' />
+                <ul class="form">
+                    <li>
+                        <span class="label">应用名：</span>
+                        <div class="fc">
+                            <input type="hidden" name="app_name" value="{{result.app_name}}">
+                            <input type="hidden" name="ischeck" value="<?php echo $_GET['ischeck'];?>">
+                            {{result.app_name}}
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">Appkey：</span>
+                        <div class="fc Menu2">
+                            {{result.appkey}}
+                            <input type="hidden" name="appkey" value="{{result.appkey}}">
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">开发者：</span>
+                        <div class="fc">
+                            <!--{{select}}-->
+                            {{dev_href}}
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">平台类型：</span>
+                        <div class="fc">
+                            <select id="platform">
+                                <option value="1" <!-- if {{result.platform}}==1 -->selected="selected"<!-- endif --> >Android</option>
+                                <option value="2" <!-- if {{result.platform}}==2 -->selected="selected"<!-- endif --> >IOS</option>
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">应用类型：</span>
+                        <div class="fc">
+                            <div class="iText" id="appType"><span>{{result.appcate_name}}</span><input type='hidden' name="appcate_id" value="{{result.appcate_id}}" autocomplete="off" /></div>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">关键字：</span>
+                        <div class="fc">
+                            <textarea name="app_desc">{{result.app_desc}}</textarea>
+                        </div>
+                    </li>
+<!--                    <li>
+                        <span class="label">应用广告状态：</span>
+                        <div class="fc">
+                            <ul class="in-list">
+                                <li><input type="radio" name="state" id="state1" value='1' if {{result.state}} ==1 checked endif  class="radio" /><label for="state1">开启</label></li>
+                                <li><input type="radio" name="state" id="state2" value="0" if {{result.state}} ==0 checked endif  class="radio" /><label for="state2">关闭</label></li>
+                            </ul>
+                        </div>
+                    </li>-->
+                    <!-- if {{result.app_id}} -->
+<!--                    <li>
+                        <span class="label">应用版本：</span>
+                        <div class="fc">
+                             if {{versionList}} 
+                                 loop versionList 
+                                    {{versionList' value.app_version}}<br />
+                                 endloop 
+                             endif 
+                        </div>
+                    </li>-->
+                    <!-- endif -->
+                    <li>
+                        <span class="label">广告位：</span>
+                        <div class="fc">
+                            <table width="80%" id="pos_tb_box" boder='1'>
+                                <tr><td>广告位ID</td><td>广告位名称</td><td>广告位形式</td><td>广告位状态</td><td>收入结算方式</td><td>结算单价</td></tr>
+                                <!-- loop result.pos -->
+                                <tr id="{{result.pos' value.id}}">
+                                    <td>{{result.pos' value.dever_pos_key}}
+                                        <input type="hidden" name="pos_key[]" value="{{result.pos' value.dever_pos_key}}">
+                                        <input type="hidden" name="pos_id[]" value="{{result.pos' value.id}}">
+                                    </td>
+                                    <td>{{result.pos' value.dever_pos_name}}</td>
+                                    <td>
+                                        <?php echo pos_key_name($v1['pos_key']);?> 
+                                    </td>
+                                    <td>
+                                        <input type="hidden" name="pos_state_{{result.pos' value.id}}[]" value="{{result.pos' value.state}}">
+                                        <input type="radio" name="pos_state_r{{result.pos' value.id}}" onclick="javascript:$(this).parent().find('input[type=hidden]').val($(this).val())" <!-- if {{result.pos' value.state}} == 1  -->checked<!-- endif --> value="1"><label>开</label>
+                                        <input type="radio" name="pos_state_r{{result.pos' value.id}}" onclick="javascript:$(this).parent().find('input[type=hidden]').val($(this).val())" <!-- if {{result.pos' value.state}} == 0 -->checked<!-- endif --> value="0"><label>关</label>
+                                    </td>
+                                    <td>
+                                        <select name="acounting_method[]">
+                                            <option value="1" <!-- if {{result.pos' value.acounting_method}}== 1 -->selected<!-- endif --> <!-- if {{result.pos' value.pos_key}}== 'LIST' -->disabled<!-- endif --> >CPM</option>
+                                            <option value="2" <!-- if {{result.pos' value.acounting_method}}== 2 -->selected<!-- endif -->>CPC</option>
+                                            <option value="5" <!-- if {{result.pos' value.acounting_method}}== 5 -->selected<!-- endif -->>CPD</option>
+                                            <option value="4" <!-- if {{result.pos' value.acounting_method}}== 4 -->selected<!-- endif -->>CPI</option>
+                                            <option disabled value="3" <!-- if {{result.pos' value.acounting_method}}== 3 -->selected<!-- endif -->>CPA</option>
+                                            <option disabled value="6" <!-- if {{result.pos' value.acounting_method}}== 6 -->selected<!-- endif -->>CPS</option>
+                                        </select>
+                                    </td>
+                                    <td><input type="text" name="denominated[]" value="{{result.pos' value.denominated}}"></td>
+                                    
+                                </tr>
+                                <!-- endloop -->
+                            </table>
+                        </div>
+                        <div class="fc" id="pos_box" style="display:none">
+                            <span class="label">广告位：</span>
+                            <input type='hidden' name="pos_id_tmp" value=""/>
+                            <input type='hidden' name="pos_key_tmp" value=""/>
+                            <div id="pos_key_text"></div>
+                            <span class="label">广告位名称：</span>
+                            <div><input type='text' name="pos_name_tmp" value=""/></div>
+                            <span class="label">是否积分：</span>
+                            <div>
+                                <input type="radio" name="jifen" disabled="true" id="state1" value='1' class="radio" /><label for="state1">是</label>
+                                <input type="radio" name="jifen" disabled="true" id="state1" value='1' class="radio" /><label for="state1">否(敬请期待)</label>
+                            </div>
+                            <span class="label">广告形式：</span>
+                            <div>{{ad_pos_type}}</div>
+                            <input type="button" value="确定" onclick='add_pos_key()' />
+                            <input type="button" value="取消" onclick="$('#pos_box').toggle()" />
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">所属配置项：</span>
+                        <div class="fc">
+                            <select id="belong_configid" select="selected" style="text-align:left;width:200px;height:150px;" multiple="multiple" name="belong_configid"> 
+                                <!-- loop adconfig -->
+                                <option value="{{adconfig' value.id}}" <!-- if {{adconfig' value.selected}} ==1 -->selected<!-- endif -->>{{adconfig' value.name}}</option>
+                                <!-- endloop -->
+                            </select>
+                        </div>
+                    </li>
+                    <!-- if {{result.apk_url}} != "" -->
+                    <li>
+                        <span class="label">点击下载应用：</span>
+                        <div class="fc">
+                            <input type='button'  name="download" onclick="javascript:location.href='http://www.mobgi.com/dev/download_apk?file={{result.apk_url}}'" value="点击按钮下载应用"/>
+                        </div>
+                    </li>
+                    <!-- endif -->
+                    <li>
+                        <span class="label">收入调整比例：</span>
+                        <div class="fc">
+                            <input type='text' class="iText required" name="income_rate" value="{{result.income_rate}}" />
+                        </div>
+                    </li>
+                    <!-- if {{result.apk_url}} != "" -->
+                    <li>
+                        <span class="label">审批意见：</span>
+                        <div class="fc">
+                            <input type='text' class="iText required" name="check_msg" value="{{result.check_msg}}" />
+                        </div>
+                    </li>
+                    <!-- endif -->
+                    <li>
+                        <div class="fc">
+                            <input type="hidden" value="{{result.dev_id}}" name="dev_id" />
+                            <!-- if {{result.apk_url}} != "" -->
+                            <input type="button" onclick="checkApp(1)" value="通过审批" class="submit" />
+                            <input type="button" onclick="checkApp(-1)"  value="审批驳回" class="cancel goahead" />
+                            <!-- else -->
+                            <input type="button" onclick="location.href='/apps/index?ischeck=2';return false;" value="确定" class="submit" />
+                            <!-- endif -->
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+$(function(){
+    $("#appType").appType({
+        url:"../apps/appType"
+    });
+})
+function checkApp(ispass){
+    var msg=$("input[name='check_msg']").val();
+    if(msg=="" && ispass==-1){
+        alert("请输入审批意见");
+        $("input[name='check_msg']").focus()
+        return false;
+    }
+    var acounting_method="";
+    $("select[name='acounting_method[]']").each(function(i){
+        acounting_method+=this.value+","
+    });
+    var denominated="";
+    var denominatedflag=true;
+    $("input[name='denominated[]']").each(function(i){
+        if(this.value==""){
+            $(this).focus();
+            alert("请输入计算单价");
+            denominatedflag=false;
+            return false;
+        }
+        denominated+=this.value+","
+    });
+    if(denominatedflag==false){
+        return false;
+    }
+    if($("#belong_configid").val()==null && ispass!=-1){
+        alert("请选择默认所属配置项");
+        $("#belong_configid").focus();
+        return false;
+    }
+    var pos_key="";
+    $("input[name='pos_key[]']").each(function(i){
+        pos_key+=this.value+","
+    });
+    var pos_id="";
+    $("input[name='pos_id[]']").each(function(i){
+        pos_id+=this.value+","
+    });
+    var pos_state=''
+    $("input[name='pos_id[]']").each(function(i){
+        pos_state+=$("input[name='pos_state_"+this.value+"[]']").val()+",";
+    });
+    ajaxPOST("/apps/ischeck","app_id={{result.app_id}}&dev_id="+$("input[name='dev_id']").val()+"&income_rate="+$("input[name='income_rate']").val()+"&belong_configid="+$("#belong_configid").val()+"&app_name="+$("input[name='app_name']").val()+"&appkey="+$("input[name='appkey']").val()+"&ispass="+ispass+"&msg="+msg+"&pos_key="+pos_key+"&pos_id="+pos_id+"&acounting_method="+acounting_method+"&denominated="+denominated+"&pos_state="+pos_state,function(data){
+        if(data.retCode==1){
+            alert(data.data)
+            location.href="/apps/index?ischeck=2"
+        }else{
+            alert(data.data)
+        }
+    })
+;}
+</script>

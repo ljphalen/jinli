@@ -1,0 +1,38 @@
+<?php echo $this->render("layout/header.phtml");?>
+<header id="header"><a href="/front/app/list"><i class="icon-arrow-left"></i></a><span>装机必备</span></header>
+<section >
+	<div class="detail-info">
+		<div class="icon"><img alt="" src="<?php echo $attachPath,$info['icon'];?>" data-src="<?php echo $attachPath,$info['icon'];?>"></div>
+		<div class="desc">
+			<p class="title"><?php echo $info['name'];?><em class="version">(V<?php echo $info['version'];?>)</em></p>
+			<p class="size"><!--<em class="type"><?php /*echo $info['resume'];*/?></em>--><?php echo $info['size'];?>M</p>
+			<p class="rank-<?php echo $info['score'];?>">
+			<span></span><span></span><span></span><span></span><span></span>
+			</p>
+		</div>
+		<div class="download"><a href="<?php echo Common::dlurl("/front/app/dl", $info['id'], $cku, $chl, 'detail' . $info['id'],  $downloadPath . $info['link']);?>" class="btn btn-green">下载</a></div>
+	</div>
+
+	<div class="pic-show">
+		<div class="wrap clearfix">
+			<ul class="list">
+				<?php foreach($imgs as $key=>$value) {?>
+				<li><img src="<?php echo $staticResPath;?>/pic/blank.gif" data-src="
+				<?php echo $attachPath, $value['img'];?>" alt="" /></li>
+				<?php }?>
+			</ul>
+		</div>
+	</div>
+
+	<div class="app-desc">
+		<h1 class="title">应用描述</h1>
+		<div id="J_content" class=" content">
+		<?php echo html_entity_decode($info['descrip']);?>
+		</div>
+		<div class="J_expand showinfo">
+			<p >展开信息<i class="icon-arrow-down"></i></p>
+			<p class="hidden">收起信息<i class="icon-arrow-up"></i></p>
+		</div >
+	</div>
+</section>
+<?php echo $this->render("layout/footer.phtml");?>

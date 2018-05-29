@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>个人中心</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="appRef" content="<?php echo $staticResPath;?>" />
+	<link rel="stylesheet" href="<?php echo $staticSysPath;?>/reset/mpcore.css" />
+	<link rel="stylesheet" href="<?php echo $staticResPath;?>/assets/css/pcenter.css" /></head>		
+</head>
+<body>
+	<div id="page">
+		<div class="pcenter" id="iscrollWrap">
+			<div class="mainWrap">
+				<!-- 内容区域 START-->
+				<?php include "_header.php"; ?>
+				<div class="module">
+					<section class="in-entry">
+					<div class="in-entry-cont">
+						<ul>
+<?php foreach ($user_app as $key=>$value){?>
+							<li>
+								<a href="<?php echo $value['link'];?>"><img src="<?php echo $attachPath.$value['icon'];?>" /></a>
+								<a href="<?php echo $value['link'];?>"><span><?php echo $value['name'];?></span></a>
+							</li>
+<?php }?>
+						</ul>
+					</div>
+					</section>
+				</div>
+
+				<!-- 内容区域 END-->
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="<?php echo $staticSysPath;?>/icat/1.1.3/icat.js" corelib="//zepto.js" main="../3g.navigator.js"></script>
+	<script type="text/javascript">var token = '<?php echo $token;?>';</script>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

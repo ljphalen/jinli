@@ -1,0 +1,58 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">分类列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加分类</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<div class="table_full">
+		<table width="100%">
+		<tr class="tr">
+				<th class="th">分类</th>
+				<td class="td">
+				<select name="type_id">
+<?php foreach($types as $key => $value) {?>
+                <option <?php echo ($search['type_id'] == $key) ? 'selected="selected"' : '';?> value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
+<?php }?>
+	            </select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button type="submit">搜 索</button></span></span>
+	</div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">排序</td>
+			<td width="200">分类名称</td>
+			<td width="100">分类</td>
+			<td width="100">图标</td>
+			<td width="100">状态</td>
+			<td width="100">点击量</td>
+			<td width="120">操作</td>
+		</tr>
+<?php foreach($list as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['name'];?></td>
+			<td><?php echo $types[$value['type_id']]['name'];?></td>
+			<td><img src="<?php echo $attachPath,$value['img'];?>" width=52/></td>
+			<td><?php echo $value['status'] ? '开启':'关闭';?></td>
+			<td><a href="/admin/stat/click?type_id=19&item_id=<?php echo $value['id'];?>" target="_blank"><?php echo $value['hits'];?></a></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

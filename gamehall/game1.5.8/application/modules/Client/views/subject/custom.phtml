@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title><?php echo html_entity_decode($info['title'], ENT_QUOTES);?></title> 
+<meta name="keyword" content="金立, 金立游戏, 游戏大厅" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="format-detection" content="email=no" />
+<link rel="stylesheet" href="<?php echo $staticroot; ?>/apps/game/apkv1/assets/css/subject.css?v=<?php echo $version;?>" />
+</head>
+<script>var token = '<?php echo $token;?>';</script>
+<body class="visualStyle-<?php echo $info['view_tpl']+1;?>">
+	<header class="hd">
+		<div class="banner">
+			<img src="<?php echo $staticResPath; ?>/pic/blank.gif" data-src="<?php echo $attachPath. $info['img'];?>" alt="" />
+		</div>
+		<div class="subject-info">
+			<span class="title"><?php echo html_entity_decode($info['title'], ENT_QUOTES); ?></span>
+			<span class="date"><?php echo date('Y-m-d', $info['start_time'])?></span>
+			<div class="desc">
+                <?php echo html_entity_decode($info['resume'], ENT_QUOTES);?>
+			</div>
+		</div>
+	</header>
+	<article class="ac">
+		<ul class="subject-content-wrapper">
+		<?php foreach($items as $item) {
+                $games = $itemGames[$item['item_id']];
+				if(! $games) {
+				    continue;
+				}
+		?>
+            <?php if($item['view_tpl'] == 1) {
+                $gameInfo = $gamesInfo[$games[0]['game_id']];
+                $reward = $gameInfo['reward'];
+                $rewardInfo = "";
+                if($reward) {
+                    $rewardInfo .= 'data-reward="true"';
+                    $rewardInfo .= ' data-rewardTypeCount="'.$reward['rewardTypeCount'].'"';
+                    $rewardInfo .= ' data-remindDes="'.$reward['remindDes'].'"';
+                    $rewardInfo .= ' data-rewardStatisId="'.$reward['rewardStatisId'].'"' ;
+                }
+            ?>
+			<li class="single">
+			    <button class="J_btn J_download_start btn" data-source="subject<?php echo $info['id'];?>" data-gameId="<?php echo $gameInfo['id'];?>" data-gameName="<?php echo htmlentities($gameInfo['name']);?>" data-downUrl="<?php echo $gameInfo['link'];?>" data-packageName="<?php echo $gameInfo['package'];?>" data-gameSize="<?php echo $gameInfo['size'];?>" data-iconUrl="<?php echo $gameInfo['img'];?>" data-freedl="<?php echo $gameInfo['freedl'];?>" <?php echo $rewardInfo;?>>下载</button>
+		        <a  class='J_gotoDetail applist-wrap'>
+		            <img class="icon" src="<?php echo $staticResPath; ?>/pic/blank.gif" data-src="<?php echo $gameInfo['img'];?>" alt="" />
+		            <div class='applist-wrap-des'>
+		                <p><?php echo html_entity_decode($item['title'], ENT_QUOTES);?></p>
+		                <h3><?php echo $gameInfo['category_title'] ? ($gameInfo['category_title'] . '<em>|</em>') : '';?><?php echo $gameInfo['size'];?>M<em>|</em><?php echo $gameInfo['language'];?></h3>
+		                <div class="rank-<?php echo intval($gameInfo['web_star']) > 10 ? 10 : $gameInfo['web_star'];?>"><span></span><span></span><span></span><span></span><span></span></div>
+		            </div>
+		            <div class="screen-shot">
+						<img  src="<?php echo $staticResPath; ?>/pic/blank.gif" data-src="<?php echo isset($gameInfo['gimgs'][0]) ? $gameInfo['gimgs'][0] : "";?>" alt="" />
+						<img  src="<?php echo $staticResPath; ?>/pic/blank.gif" data-src="<?php echo isset($gameInfo['gimgs'][1]) ? $gameInfo['gimgs'][1] : "";?>" alt="" />
+		            </div>
+		            <div class="desc">
+		            	<?php echo html_entity_decode($item['resume'], ENT_QUOTES);?>
+		            </div>
+		        </a>
+			</li>
+			<?php }elseif ($item['view_tpl'] == 6) {?>
+			<li class="multiple">
+				<h1><?php echo html_entity_decode($item['title'], ENT_QUOTES);?></h1>
+				<div class="subject-desc">
+					<?php echo html_entity_decode($item['resume'], ENT_QUOTES);?>
+				</div>
+				<?php 
+				for ($i = 0; $i < 6; $i++) {
+				    if(! isset($games[$i])) {
+				        break;
+				    }
+				    $game = $games[$i];
+				    $gameInfo = $gamesInfo[$game['game_id']];
+				    $reward = $gameInfo['reward'];
+				    $rewardInfo = "";
+                    if($reward) {
+                        $rewardInfo .= 'data-reward="true"';
+                        $rewardInfo .= ' data-rewardTypeCount="'.$reward['rewardTypeCount'].'"';
+                        $rewardInfo .= ' data-remindDes="'.$reward['remindDes'].'"';
+                        $rewardInfo .= ' data-rewardStatisId="'.$reward['rewardStatisId'].'"' ;
+                    }
+				?>
+				<div class="game-list">
+				    <button class="J_btn J_download_start btn" data-source="subject<?php echo $info['id'];?>" data-gameId="<?php echo $gameInfo['id'];?>" data-gameName="<?php echo htmlentities($gameInfo['name']);?>" data-downUrl="<?php echo $gameInfo['link'];?>" data-packageName="<?php echo $gameInfo['package'];?>" data-gameSize="<?php echo $gameInfo['size'];?>" data-iconUrl="<?php echo $gameInfo['img'];?>" data-freedl="<?php echo $gameInfo['freedl'];?>" <?php echo $rewardInfo;?>>下载</button>
+					<a class='J_gotoDetail applist-wrap'>
+						<img class="icon" src="<?php echo $staticResPath; ?>/pic/blank.gif" data-src="<?php echo $gameInfo['img'];?>" alt="" />
+			            <div class='applist-wrap-des'>
+			                <p><?php echo $gameInfo['name'];?></p>
+			            </div>
+			            <div class="clearfix"></div>
+			            <div class="desc">
+			            	<?php echo html_entity_decode((empty($game['resume']) ? $gameInfo['resume'] : $game['resume']), ENT_QUOTES); ?>
+			            </div>
+		            </a>
+				</div>
+				<?php }?>
+			</li>
+			<?php }?>
+		<?php }?>
+		</ul>
+        <?php 
+        if($before && $after) {
+            $beforeUrl = $webroot . $subDetailUrl.'?id=' . $before['id'] . '&intersrc=SUBJECT' . $before['id'] . '&t_bi=' . $source;
+            $afterUrl = $webroot . $subDetailUrl.'?id=' . $after['id'] . '&intersrc=SUBJECT' . $after['id'] . '&t_bi=' . $source;
+        ?>
+		<div class="subject-nav-wrapper">
+			<a class="J_subjectDetail subject-nav" data-type="<?php echo $before['sub_type'] == 1 ? 'custom' : 'list';?>" data-subjectId="<?php echo $before['id'];?>" data-title="<?php echo $before['title'];?>" data-url="<?php echo $beforeUrl;?>" data-source="subject<?php echo $before['id'];?>" >
+				<img src="<?php echo $staticResPath; ?>/pic/blank.gif" data-src="<?php echo $attachPath. $before['icon'];?>" alt="" />
+				<div><span><?php echo $before['title'];?></span></div>
+			</a>
+			<a class="J_subjectDetail subject-nav" data-type="<?php echo $after['sub_type'] == 1 ? 'custom' : 'list';?>" data-subjectId="<?php echo $after['id'];?>" data-title="<?php echo $after['title'];?>" data-url="<?php echo $afterUrl;?>" data-source="subject<?php echo $after['id'];?>" >
+				<img src="<?php echo $staticResPath; ?>/pic/blank.gif" data-src="<?php echo $attachPath. $after['icon'];?>" alt="" />
+				<div><span><?php echo $after['title'];?></span></div>
+			</a>
+		</div>
+		<?php }?>
+	</article>
+	<script src="<?php echo "$staticroot??/apps/game/apkv1/assets/js/sys/zepto.js,/apps/game/apkv1/assets/js/subject/main.source.js?v=$version";?>" ></script>
+	<script type="text/javascript">
+		function onClientEvent(ac,data){
+	        if(ac==action.statusChange){
+	            subject.getGameStatusFromClient();
+	        }
+		}
+	</script>
+</body>
+</html>

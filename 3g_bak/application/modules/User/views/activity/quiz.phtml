@@ -1,0 +1,62 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>答题赚金币</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="stylesheet" href="<?php echo $staticResPath;?>/events/css/answer.min.css?ver=<?php echo $version;?>" />
+</head>
+<body>
+<div class="app">
+    <div class="ans-top-bar">
+        <a class="icon-back" href="<?php echo $webroot;?>/user/index/index"></a>
+        <span class="ans-top-txt">答题赚金币</span>
+    </div>
+    <div class="banner">
+        <img src="<?php echo $staticResPath;?>/events/pic/ans_banner.jpg" />
+        <p>当前金币 <span id="J_update_gold"><?php echo !empty($scoreInfo)?$scoreInfo['remained_score']:0;?></span><span class="icon-gold"></span></p>
+        <span class="ans-update-score"></span>
+    </div>
+    <div class="main">
+        <div class="content-wrap">
+            <div class="ans-state"  data-pos="<?php echo $pos;?>">
+            <?php foreach($list as $k=>$v){?>
+                <span class="<?php echo $answerStatus[$v['is_right']];?>"></span>
+               <?php }?>
+                <em class="num1" data-num="1">第1题</em>
+                <p class="ans-tip"></p>
+            </div>
+            <div class="ans-list ans-main-list">
+            	<?php foreach($list as $k=>$v){ ?>
+                <div class="ans-item <?php echo $k == $pos ?'':'hidden';?>">
+                    <div class="blank" data-id="<?php echo $v['id'];?>">
+                        <h3><?php echo $v['title'];?></h3>
+                        <p>A、<?php echo $v['option1'];?></p>
+                        <p>B、<?php echo $v['option2'];?></p>
+                        <p>C、<?php echo $v['option3'];?></p>
+                        <p>D、<?php echo $v['option4'];?></p>
+                    </div>
+                    <div class="button"><a href="/user/activity/quizTo?type=help&title=<?=$v['title']?>" target="_blank">求助</a></div>
+                </div>
+              <?php }?>
+            </div>
+        </div>
+    	
+    	<div><?=$config['quiz_rule_content']?></div>
+    	
+    	
+    	
+        <div id="J_toast_tip" class="toast_tip hidden"></div>
+    </div>
+</div>
+<script>	var token = "<?php echo $token;?>";</script>
+<script src="<?php echo $staticResPath;?>/events/js/zepto.min.js?v=<?php echo $version;?>"></script>
+<script src="<?php echo $staticSysPath;?>/smart/0.0.2/smart.min.js?v=<?php echo $version;?>"></script>
+<script src="<?php echo $staticResPath;?>/events/js/answer.min.js?v=<?php echo $version;?>"></script>
+</body>
+</html>

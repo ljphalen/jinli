@@ -1,0 +1,41 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>金立游戏开发者中心</title>
+</head>
+<body>
+<table class="app_report">
+	<tr><th>分类</th><th>状态</th><th>当天（款）</th><th>累计（款）</th></tr>
+	<tr><td>APIKey</td><td>新增</td><td>{$union_apps["total"]}</td><td>{$union_apps_all["total"]}</td></tr>
+	<tr><td>APIKey</td><td>待审核</td><td>{$union_apps["0"]}</td><td>{$union_apps_all["0"]}</td></tr>
+	<tr><td>APIKey</td><td>已审核:总数</td><td>{$union_apps["2"]}</td><td>{$union_apps_all["2"]}</td></tr>
+	<tr><td>APIKey</td><td>已审核:不通过</td><td>{$union_apps["-1"]}</td><td>{$union_apps_all["-1"]}</td></tr>
+	<tr><td>APIKey</td><td>已审核:通过</td><td>{$union_apps["1"]}</td><td>{$union_apps_all["1"]}</td></tr>
+</table>
+	<volist name="is_union" id="union">
+	<php>
+		$apps = $_apps[$key];
+		$apps_all = $_apps_all[$key];
+		$apks = $_apks[$key];
+		$apks_all = $_apks_all[$key];
+	</php>
+		<table class="app_report">
+		<tr><th>{$union}</th><th>状态</th><th>当天（款）</th><th>累计（款）</th></tr>
+		<tr><td>应用总数</td><td>新增</td><td>{$apps["total"]}</td><td>{$apps_all["total"]}</td></tr>
+		<tr><td>版本总数</td><td>新增</td><td>{$apks["total"]}</td><td>{$apks_all["total"]}</td></tr>
+		<tr><td>版本</td><td>未提交</td><td>{$apks["0"]}</td><td>{$apks_all["0"]}</td></tr>
+		<tr><td>版本</td><td>待审核</td><td>{$apks["1"]}</td><td>{$apks_all["1"]}</td></tr>
+		<tr><td>版本</td><td>已审核:总数</td><td>{$apks["4"]}</td><td>{$apks_all["4"]}</td></tr>
+		<tr><td>版本</td><td>已审核:通过(含上线)</td><td>{$apks["2"]}</td><td>{$apks_all["2"]}</td></tr>
+		<tr><td>版本</td><td>上线</td><td>{$apks["3"]}</td><td>{$apks_all["3"]}</td></tr>
+		<tr><td>版本</td><td>已审核:不通过</td><td>{$apks["-1"]}</td><td>{$apks_all["-1"]}</td></tr>
+		<tr><td>版本</td><td>下线</td><td>{$apks["-2"]}</td><td>{$apks_all["-2"]}</td></tr>
+		</table>
+	</volist>
+<style>
+	.app_report,.app_report tr,.app_report th,.app_report td{border:1px gray; text-align: left;}
+	.app_report th{width:150px}
+	.app_report td, th {border: 1px rgb(240, 164, 155);border-bottom-style: inset;}
+</style>
+</body>
+<html>

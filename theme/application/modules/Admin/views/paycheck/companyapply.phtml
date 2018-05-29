@@ -1,0 +1,56 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <div id="pay_paycheck_paycheckcompanyapply">
+        <div class="content">
+            <div class="desginer apply">
+        	    <?php echo $this->render("paycheck/applyHeader.phtml"); ?>
+				<div class="company_apply">
+					<table class="view_list_tb">
+						<thead>
+							<tr>
+								<td>姓名</td>
+								<td>开户银行及支行</td>
+								<td>卡号</td>
+								<td>销售额</td>
+								<td>平台分成</td>
+								<td>个人分成</td>
+								<td>本期提现</td>
+								<td>前期可提现</td>
+								<td>剩余可提现</td>
+								<td>状态</td>
+								<td>备注</td>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach($applys as $apply){ ?>
+							<tr class="bg_color">
+								<td><?php echo $apply['real_name'];?></td>
+								<td><?php echo $apply['bank'].'（'.$apply['branch'].'）';?></td>
+								<td><?php echo $apply['card_number'];?></td>
+								<td><?php echo $apply['total'];?></td>
+								<td><?php echo $apply['sys_income'];?></td>
+								<td><?php echo $apply['final_income'];?></td>
+								<td><?php echo $apply['income'];?></td>
+								<td><?php echo $apply['income'];?></td>
+								<td><?php echo $apply['income'];?></td>
+								<td>
+									<div class="select_box">
+										<label class="select_val">已通过</label>
+										<ul class="select_option">
+											<li>已付款</li>
+											<li>未通过</li>
+										</ul>
+									</div><!-- select_box -->
+								</td>
+								<td></td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
+        </div><!-- content end -->
+    </div>
+</section>
+</body>
+</html>

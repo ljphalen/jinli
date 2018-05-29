@@ -1,0 +1,127 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li class="current"><a href="<?php echo $userListUrl;?>">中奖用户名单</a></li>
+	</ul>
+</div>
+
+<form action="<?php echo $userListUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+			<th class="th">中奖编号</th>
+			<td class="td"><input class="input wb" type="text" name="id" value="<?php echo $param['id'];?>"></td>
+			<th class="th">手机号码</th>
+			<td class="td"><input class="input wb" type="text" name="phone_num" value="<?php echo $param['phone_num'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th" width="60">imei</th>
+			<td class="td"><input class="input wb" type="text" name="imei" value="<?php echo $param['imei'];?>"></td>
+			<th class="th" width="60">微信</th>
+			<td class="td"><input class="input wb" type="text" name="weixin" value="<?php echo $param['weixin'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">中奖时间</th>
+			<td class="td">
+				<input class="input" type="text" maxlength="30" id="start_time" name="start_time" value="<?php echo $dateline['start_time'];?>">
+				<input class="input" type="text" maxlength="30" id="end_time" name="end_time" value="<?php echo $dateline['end_time'];?>">
+			</td>
+			<th class="th">奖品</th>
+			<td class="td">
+				<select name="award_id">
+					<option value="0">...所有...</option>
+					<?php if(!empty($award)): foreach ($award as $val):?>
+					<option value="<?php echo $val['id']?>" <?php if($param['award_id'] == $val['id']) echo 'selected="selected"'; ?>><?php echo $val['award_name'];?></option>
+					<?php endforeach; endif;?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">抽奖活动</th>
+			<td class="td">
+				<select name="cate_id">
+					<option value="0">...所有...</option>
+					<?php if(!empty($category)): foreach ($category as $val):?>
+					<option value="<?php echo $val['id']?>" <?php if($param['cate_id'] == $val['id']) echo 'selected="selected"'; ?>><?php echo $val['title'];?></option>
+					<?php endforeach; endif;?>
+				</select>
+			</td>
+			<th class="th" width="60">奖品发放状态</th>
+			<td class="td">
+				<select name="status">
+					<option value="0" <?php if ($param['status'] == 0) echo 'selected="selected"';?>>所有</option>
+					<option value="1" <?php if ($param['status'] == 1) echo 'selected="selected"';?>>未发放</option>
+					<option value="2" <?php if ($param['status'] == 2) echo 'selected="selected"';?>>发放中</option>
+					<option value="3" <?php if ($param['status'] == 3) echo 'selected="selected"';?>>已发放</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac">
+	<span class="btn">
+		<span>
+			<button type="submit">搜 索</button>
+		</span>
+	</span>
+	<span style="float:left;">当前中奖人数：<?php echo $total;?></span>
+</div>
+</form>
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">中奖编号</td>
+			<td>奖品名称</td>
+			<td>联系电话</td>
+			<td>微信/QQ</td>
+			<td>备注</td>
+			<td>手机IMEI号码</td>
+			<td>中奖时间</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+		<?php foreach($list as $key => $value):?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['award_name'];?></td>
+			<td><?php echo $value['phone_num'];?></td>
+			<td><?php echo empty($value['weixin']) ? $value['qq'] : $value['weixin'];?></td>
+			<td><?php echo $value['remark'];?></td>
+			<td><?php echo $value['imei'];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['dateline']);?></td>
+			<td><?php if ($value['status'] == 1)
+						echo '未发放';
+					  else if($value['status'] == 2)
+					  	echo '发放中';
+					  else if ($value['status'] == 3)
+					  	echo '已发放';
+					  else 
+					  	echo '';
+					  	 
+			?></td>
+			<td>
+				<a href="<?php echo $userInfoUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">更新</a>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+	</table>
+</div>
+
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#start_time").datepicker({
+		dateFormat : 'yy-mm-dd'
+	});
+	
+	$("#end_time").datepicker({
+		dateFormat : 'yy-mm-dd'
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

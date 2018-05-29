@@ -1,0 +1,150 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+<style>
+.col-sm-10 label {
+	font-weight: normal;
+}
+
+.panel-body{*width: 92%}
+.panelws select.form-control{*height: auto!important;*padding: 4px 0;*margin-top: 0px;}
+.thumbnail{*width: auto;}
+.mainw .form-horizontal .form-control-static{padding-top: 0px;}
+.panelws .form-group input{*padding-top: 8px;*height: 22px!important;}
+.panelws .form-group textarea{*padding-top: 8px;}
+</style>
+<div class="mainw mainw2 clearfix">
+	<div class="rmain col-md-12 rmain-inf">
+		<div class="panel panelws">
+			<h2 class="yyname">更新/修改 游戏包</h2>
+			<div class="panel-body">
+				<form class="form-horizontal app-edit" role="form" action="{:U('apps/appsave')}" method="post">
+					<include file="_uploadModal" />
+					
+					<div class="form-group baoname">
+						<label class="col-sm-2 control-label">应用程序：</label>
+						<div class="col-sm-7">
+							<div class="manageupf" style="float:left;">
+						        <div id="apkupload" style="width:150px;">上传应用</div>
+						        <input id="app_id" name="app_id" type="hidden" value="{$appinfo.id}" >
+						        <input type="hidden" id="type" name="type" value="1" />
+							</div>
+							<div>
+								<p>联运游戏需先<a href="#">申请API Key</a></p>
+								<p>支持200M以下游戏上传。200M以上，请<a href="#">使用ftp工具上传</a></p>
+							</div>
+						</div>
+					</div>
+					
+					
+					<div class="row">
+					    <div class="col-sm-12">
+					    	<h4>已获取信息</h4>
+					    </div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-sm-2 control-label">应用名称：</label>
+						<div class="col-sm-4">
+							<p class="form-control-static">
+								<input type="text" class="form-control" maxlength="50" name="app_name" 
+									id="app_name" value="{$apkinfo['app_name']}" />
+							</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">包名称：</label>
+						<div class="col-sm-10">
+							<p class="form-control-static">{$apkinfo['package']}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">版本：</label>
+						<div class="col-sm-10">
+							<p class="form-control-static">{$apkinfo['version_name']}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">系统支持：</label>
+						<div class="col-sm-10">
+							<?php
+							$apkConfig = C("apk");
+							$minSDK = $apkinfo['min_sdk_version'];
+							?>
+							<p class="form-control-static">Android {$apkConfig['SDK_VER'][$minSDK]}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">文件大小：</label>
+						<div class="col-sm-10">
+							<p class="form-control-static">{$apkinfo['file_size']|showsize|implode="",###}</p>
+						</div>
+					</div>
+					
+					<div class="row">
+					    <div class="col-sm-12">
+					    	<h4>上线信息</h4>
+					    </div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">期望上线时间：</label>
+						<div class="col-sm-10 pl0">
+							<div class="controls input-append date form_date col-sm-3" data-date="" data-date-format="yyyy-mm-dd" data-link-field="online_time" data-link-format="yyyy-mm-dd">
+			                    <input size="16" type="text" value="{:empty($apkinfo['online_time'])?'':$apkinfo['online_time']}" 
+			                    	name="online_time" id="online_time" class="form-control" placeholder="{:date('Y-m-d H:i', strtotime('+7 days'))}">
+			                </div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">备注：</label>
+						<div class="col-sm-10 pl0">
+							<label class="col-sm-6">
+							<textarea rows="6" class="form-control appinfotext" style="width:95%" id="resume" name="resume">{$apkinfo['resume']}</textarea>
+							</label>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						
+						<div class="col-md-8">
+							<input type="hidden" name="version_code" id="version_code" value="{$apkinfo.version_code}">
+							<input type="hidden" name="package" id="package" value="{$apkinfo.package}">
+							<input type="hidden" name="app_id" id="app_id" value="{$apkinfo.app_id}">
+							<input type="hidden" name="apk_id" id="apk_id" value="{$apkinfo.id}">
+							<input id="icon_id" name="icon_id" type="hidden" value="" >
+				  			<input id="icon_type" name="icon_type" type="hidden" value="2">
+				  			<input id="saveSub" name="saveSub" type="hidden" value="0">
+							<button type="submit" class="btn btn-success bo128" id="saveBtn" name="edit" value="1" onclick="$('#saveSub').val(0);return true;">仅保存不提交</button>
+							<button type="submit" class="btn btn-success bo128" id="saveSubBtn" onclick="$('#saveSub').val(1);return true;">保存并提交审核</button>
+						</div>
+					</div>
+				</form>
+				
+			</div>
+		</div>
+	</div>
+</div>
+<include file="Public:footer" />
+<include file="./Source/Tpl/Common/alertDialog.html" />
+
+<script type=text/javascript src="{:cdn('PUBLIC')}/common/js/jquery.form.js?{:C('JS_VERSION')}"></script>
+
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/app/jui/css/smoothness/jquery-ui-1.9.1.custom.min.css">
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-1.9.1.custom.min.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/development-bundle/ui/i18n/jquery.ui.datepicker-zh-CN.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$(function(){
+		$("#online_time").datetimepicker({
+			dateFormat:"yy-mm-dd",
+			timeFormat:"hh:mm",
+			regional: 'zh-CN',
+			minDate: new Date({:date('Y')}, {:date('m')} - 1, {:date('d')}, 0, 0),
+			maxDate: new Date(2015, 11, 31, 17, 30)
+			});
+	});
+	
+});
+</script>

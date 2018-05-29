@@ -1,0 +1,96 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>金立游戏开发者中心</title>
+</head>
+<body>
+<h2>今日合同情况</h2>
+<volist name="todayInfo" id="vo">
+    <table class="app_report">
+        <tr>
+            <th colspan="11" style="text-align:left;font-size:16px;">{$type}</th>
+        </tr>
+        <tr>
+            <td>日期</td>
+            <td>合同编号</td>
+            <td width="200px;">游戏名称</td>
+            <td width="200px;">游戏包名</td>
+            <td>账号</td>
+            <td width="200px;">公司名称</td>
+            <td>分成比例</td>
+            <td>税费率</td>
+            <td>签署日期</td>
+            <td>合同状态</td>
+            <td>对接人</td>
+        </tr>
+            <tr>
+                <td>{$vo['ctime']|date='Y-m-d',###}</td>
+                <td>{$vo['number']}</td>
+                <td width="200px;">{$vo['app_name']}</td>
+                <td width="200px;">{$vo['package']}</td>
+                <td>{$vo['contact_email']}</td>
+                <td width="200px;">{$vo['company_name']}</td>
+                <td>{$vo['share']}</td>
+                <td><switch name="vo.receipt_id">
+                        <case value="1">6%</case>
+                        <case value="2">3%</case>
+                        <case value="3">0%</case>
+                    </switch></td>
+                <td>{$vo['ctime']|date="Y-m-d",###}</td>
+                <td>{$vo['status']|ContractModel::getStatus}</td>
+                <php>
+                    $joiner = M('Contract_contact')->where(array('id'=>$vo['join_id']))->getField('name');
+                </php>
+                <td>{$joiner}</td>
+            </tr>
+    </table>
+</volist>
+<h2>累计合同情况</h2>
+<volist name="historyInfo" id="vo">
+    <table class="app_report">
+        <tr>
+            <th colspan="11" style="text-align:left;font-size:16px;">{$type}</th>
+        </tr>
+        <tr>
+            <td>日期</td>
+            <td>合同编号</td>
+            <td width="200px;">游戏名称</td>
+            <td width="200px;">游戏包名</td>
+            <td>账号</td>
+            <td width="200px;">公司名称</td>
+            <td>分成比例</td>
+            <td>税费率</td>
+            <td>签署日期</td>
+            <td>合同状态</td>
+            <td>对接人</td>
+        </tr>
+        <tr>
+            <td>{$vo['ctime']|date='Y-m-d',###}</td>
+            <td>{$vo['number']}</td>
+            <td width="200px;">{$vo['app_name']}</td>
+            <td width="200px;">{$vo['package']}</td>
+            <td>{$vo['contact_email']}</td>
+            <td width="200px;">{$vo['company_name']}</td>
+            <td>{$vo['share']}</td>
+            <td><switch name="vo.receipt_id">
+                <case value="1">6%</case>
+                <case value="2">3%</case>
+                <case value="3">0%</case>
+            </switch></td>
+            <td>{$vo['ctime']|date="Y-m-d",###}</td>
+            <td>{$vo['status']|ContractModel::getStatus}</td>
+            <php>
+                $joiner = M('Contract_contact')->where(array('id'=>$vo['join_id']))->getField('name');
+            </php>
+            <td>{$joiner}</td>
+        </tr>
+    </table>
+</volist>
+
+<style>
+	.app_report,.app_report tr,.app_report th,.app_report td{border:1px gray; text-align: left;}
+	.app_report th{width:150px}
+	.app_report td {border: 1px rgb(240, 164, 155);border-bottom-style: inset;}
+</style>
+</body>
+<html>

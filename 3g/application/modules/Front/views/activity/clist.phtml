@@ -1,0 +1,96 @@
+<?php
+$pageData = array(
+	'last_url'        => '/front/activity/clist',
+	'call_url'        => '/front/activity/cindex',
+	'contact_url'     => '/front/activity/contact',
+	'tips_url'        => '/front/activity/tips',
+	'me_url'          => '/front/activity/me',
+	'center_url'      => '/user/index/index',
+	'call_css_url'    => sprintf('%s/call/css/call.min.css?v=%s', $staticResPath, $version),
+	'call_js_url'     => sprintf('%s/call/js/call.min.js?v=%s', $staticResPath, $version),
+	'localsdk_js_url' => sprintf('%s/call/js/localsdk.min.js?v=%s', $staticResPath, $version),
+	'require_js_url'  => sprintf('%s/call/js/lib/require.js?v=%s', $staticResPath, $version)
+);
+?>
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<title>畅聊免费打电话</title>
+	<link rel="stylesheet" type="text/css" href="<?=$pageData['call_css_url']?>" />
+	<script src="<?=$pageData['localsdk_js_url']?>"></script>
+</head>
+<body class="ui-app">
+<div class="ui-top-bar ui-border-b">
+	<!-- <a class="ui-pos link-back" href="<?=$pageData['center_url']?>"></a> -->
+	<span class="ui-top-txt">最近通话</span>
+	<a class="ui-pos link-logout" data-toggle="dialog" data-target="#myActionsheet" data-type="actionsheet" data-effect="from-bottom" data-cache="false" data-url="<?php echo $webroot; ?>/front/activity/clear" id="js-call-clear">清空</a>
+</div>
+
+<div class="ui-page page1 js-active">
+	<div class="ui-page-content">
+		<ul class="call-list js-active">
+			<?php
+			$cs = !empty($cs)?$cs:array();
+			foreach($cs as $v):
+					$url = sprintf('%s/front/activity/cindex/?tel=%s', $webroot, $v['contact']);
+			?>
+					<li class="ui-border-b" data-fixed="true">
+						<a class="call-tel call-kefu" href="<?=$url?>"><?=$v['name'];?></a>
+					</li>
+			<?php
+			endforeach;
+			?>
+			<?php
+			foreach($data as $k=>$v):
+				if (!empty($v['called_name']) && $v['called_name'] == 'underfined') {
+					$v['called_name'] = '';
+				}
+
+				$callee = !empty($v['called_name'])?$v['called_name']:$v['callee'];
+				$disname = !empty($v['address'])?$v['address']:$v['callee'];
+				$url = sprintf('%s/front/activity/cindex/?tel=%s&name=%s',$webroot, $v['callee'],$v['name']);
+			?>
+				<li class="ui-border-b">
+					<span class="call-tel" data-tel="<?php echo $v['callee'];?>"><?=$v['callee']?><br><i><?=$disname?></i></span>
+					<span class="call-time"><?php echo $v['callTime']; ?></span>
+					<a href="<?=$url?>" class="call-sta icon-calling"></a>
+				</li>
+			<?php endforeach;?>
+
+		</ul>
+	</div>
+</div>
+
+<div class="ui-bottom-bar call-bottom-bar ui-border-t">
+	<a href="<?=$pageData['last_url']?>" class="s1 active"><i></i>最近通话</a>
+	<a href="<?=$pageData['call_url']?>" class="s2"><i></i>拔号</a>
+	<script type="text/javascript">
+		if(localSDK.support().code == 1){
+			document.write('<a href="<?=$pageData['contact_url']?>" class="s5"><i></i>联系人</a>');
+		}
+	</script>
+	<a class="s4" href="<?=$pageData['me_url']?>"><i></i>我</a>
+</div>
+
+<div id="myActionsheet" role="dialog" class="ui-dialog" aria-labelledby="myActionsheetLable" aria-hidden="true">
+	<div class="js-dialog-content ui-actionsheet">
+		<ul>
+			<li>通话记录清空后不可恢复，确定清空？</li>
+			<li id="js-actionsheet-ok">确定</li>
+		</ul>
+		<span style="display:none;" role="button" data-dismiss="dialog" id="dialog-cancel"></span>
+		<a id="js-actionsheet-cancel" class="ui-actionsheet-cancel">取消</a>
+	</div>
+</div>
+
+<script data-main="<?=$pageData['call_js_url']?>" src="<?=$pageData['require_js_url']?>"></script>
+<script type="text/javascript">
+	var token = "<?php echo $token;?>";
+</script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<include file="Public:header" />
+
+<div class="mainw clearfix">
+	<include file="nav_left" />
+    
+	<div class="rmain fl">
+   	  <h2 class="yyname">联系人添加</h2>
+   	  <form class="form-horizontal" id="editform" method="post" action="{:U('user/save_contact')}" role="form">
+      <div class="formd formd2 contactadd">
+      	<div class="lid"><label class="tlab"><em>*</em>业务负责：</label>
+        	<div class="colr fl">
+      	 	  <input type="text" class="w324 int" name="contact_business" value="{$info.contact_business}" placeholder="" id="contact_business">
+         	  <span class="help-block">如商务、运营、客服或者游戏接入负责人</span>
+         	</div>
+         	<div class="col-sm-4">
+				<div id="contact_businessTip" class="onCorrect"></div>
+			</div>
+      	</div>
+        <div class="lid"><label class="tlab"><em>*</em>负责应用：</label>
+          <div class="colr fl">
+            <input type="text" class="w324 int" name="own_app" value="{$info.own_app}" placeholder="" id="own_app">
+            <span class="help-block">此商务或者运营负责的游戏应用</span>
+          </div>
+          <div class="col-sm-4">
+              <div id="own_appTip" class="onCorrect"></div>
+            </div>
+        </div>
+        <div class="lid"><label class="tlab"><em>*</em>联系人姓名：</label>
+          <div class="colr fl">
+            <input type="text" class="w324 int" name="contact_name" value="{$info.contact_name}" placeholder="" id="contact_name">
+            <span class="help-block"></span>
+          </div>
+          <div class="col-sm-4">
+              <div id="contact_nameTip" class="onCorrect"></div>
+            </div>
+        </div>
+        <div class="lid"><label class="tlab"><em>*</em>联系电话：</label>
+          <div class="colr fl">
+            <input type="text" class="w324 int" name="contact_mobile" value="{$info.contact_mobile}" placeholder="" id="contact_mobile">
+            <span class="help-block">填写手机号码或者座机号码，座机号码格式为：区号-固话号码</span>
+          </div>
+          <div class="col-sm-4">
+              <div id="contact_mobileTip" class="onCorrect"></div>
+            </div>
+        </div>
+      	<div class="lid"><label class="tlab"><em>*</em>邮箱地址：</label>
+          <div class="colr fl">
+            <input type="text" class="w324 int" name="contact_email" value="{$info.contact_email}" placeholder="" id="contact_email">
+            <span class="help-block"></span>
+          </div>
+          <div class="col-sm-4">
+              <div id="contact_emailTip" class="onCorrect"></div>
+            </div>
+        </div>
+        <div class="lid"><label class="tlab"><em>*</em>QQ：</label>
+          <div class="colr fl">
+            <input type="text" class="w324 int" name="contact_qq" value="{$info.contact_qq}" placeholder="" id="contact_qq">
+            <span class="help-block"></span>
+          </div>
+          <div class="col-sm-4">
+              <div id="contact_qqTip" class="onCorrect"></div>
+            </div>
+        </div>
+      	<div class="btnw">
+      		<input type="hidden" name="id" value="{$info.id}"/>
+	      	<button type="submit" class="btn btn-success bo80">保存</button><a class="btn btn-success bo80" href="{:U('user/contact')}">取消</a></div>
+	    </div>
+      </form>
+    </div>
+</div>
+<load href="{:cdn('PUBLIC')}/app/validate/formValidator-4.1.1.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/themes/126/js/theme.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/themes/126/style/style.css?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/formValidatorRegex.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/common/js/validate.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/common/js/resizeImg.js?{:C('JS_VERSION')}" />
+
+<script type="text/javascript">
+$.formValidator.initConfig({
+	theme : "126",
+	errorFocus : false,
+	formID : "editform",
+	mode:"AutoTip"
+});
+
+$("#contact_business").formValidator({}).inputValidator({
+	min : 1,
+	max : 50,
+	onError : "业务负责长度不正确(限50个字符)",
+	onCorrect : " "
+});
+$("#own_app").formValidator({}).inputValidator({
+	min : 1,
+	max : 200,
+	onError : "负责应用长度不正确(限200个字符)",
+	onCorrect : " "
+});
+$("#contact_name").formValidator({}).inputValidator({
+	min : 1,
+	max : 50,
+	onError : "联系人姓名长度不正确(限50个字符)",
+	onCorrect : " "
+});
+$("#contact_mobile").formValidator({}).inputValidator({
+	min : 1,
+	max : 18,
+	onError : "联系电话长度不正确(限18个字符)",
+	onCorrect : " "
+}).regexValidator({
+	regExp : "^([\\d-]+)$",
+	onError : "只允许-和数字"
+});
+$("#contact_email").formValidator({}).inputValidator({
+	min : 1,
+	max : 50,
+	onError : "邮箱地址长度不正确(限50个字符)",
+	onCorrect : " "
+}).regexValidator({
+	//regExp : "^([\\w-.]+)@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([\\w-]+.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$",
+	regExp : "^[+a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$",
+	onError : "您输入的邮箱格式不正确，请确认"
+});
+$("#contact_qq").formValidator({}).inputValidator({
+	min : 1,
+	max : 12,
+	onError : "QQ长度不正确(限12个字符)",
+	onCorrect : " "
+}).regexValidator({
+	regExp : "^([\\d]+)$",
+	onError : "只允许数字"
+});
+</script>
+<include file="Public:footer" />

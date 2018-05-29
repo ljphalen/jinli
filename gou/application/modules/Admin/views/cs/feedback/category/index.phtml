@@ -1,0 +1,80 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+    <ul class="cc">
+        <li class="current"><a href="<?php echo $indexUrl; ?>">归类列表</a></li>
+        <li><a href="<?php echo $addUrl; ?>">添加归类</a></li>
+    </ul>
+</div>
+<form action="<?php echo $indexUrl; ?>" method="get" id="searchForm">
+    <input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">二级归类</th>
+                <td class="td">
+                    <input type="text" name="name" value="<?php echo $search['name']; ?>"/>
+                </td>
+                <th class="th">一级归类</th>
+                <td class="td">
+                    <select name="parent_id" id="parent">
+                        <option value=0>请选择</option>
+                        <?php foreach ($parent as $k => $v): ?>
+                            <option value="<?php echo $v['id']; ?>" <?php if ($v['id'] == $search['parent_id']) echo "selected=selected"; ?>><?php echo $v['name']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac">
+		<span class="btn">
+			<span>
+				<button type="submit">搜 索</button>
+			</span>
+		</span>
+    </div>
+</form>
+<div class="table_list">
+    <table width="100%">
+        <tr class="hd">
+            <td width="30">排序</td>
+            <td width="30">ID</td>
+            <td>一级归类</td>
+            <td>二级归类</td>
+            <td>问题数</td>
+            <td>操作</td>
+        </tr>
+        <?php foreach ($data as $key => $value) { ?>
+            <tr class="ct">
+                <td><?php echo $value['item']['sort']; ?></td>
+                <td><?php echo $value['item']['id']; ?></td>
+                <td><?php echo $value['item']['name']; ?></td>
+                <td></td>
+                <td><?php echo $fb_cat_count[$value['item']['id']] ? $fb_cat_count[$value['item']['id']]['total'] : 0; ?></td>
+                <td>
+                    <a href="<?php echo $editUrl; ?>/?id=<?php echo $value['item']['id']; ?>" class="mr10">编辑</a>
+                    <a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $value['item']['id']; ?>', '', event);">删除</a>
+                </td>
+            </tr>
+            <?php foreach ($value['child'] as $key => $value) { ?>
+                <tr class="ct">
+                    <td><?php echo $value['sort']; ?></td>
+                    <td><?php echo $value['id']; ?></td>
+                    <td>--</td>
+                    <td><?php echo $value['name']; ?></td>
+                    <td><?php echo $fb_cat_count[$value['id']] ? $fb_cat_count[$value['id']]['total'] : 0; ?></td>
+                    <td>
+                        <a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+                        <a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+                    </td>
+                </tr>
+            <?php } ?>
+        <?php } ?>
+    </table>
+</div>
+<div class="mr10 cc">
+    <?php echo $pager; ?>
+</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

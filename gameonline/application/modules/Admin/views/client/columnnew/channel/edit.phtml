@@ -1,0 +1,109 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li ><a href="<?php echo $listUrl;?>">栏目管理</a></li>
+		<li><a href="<?php echo $listChannelUrl;?>">频道管理</a></li>
+    	<li class="current"><a href="javascript:;">编辑<?php echo $channel_type[$type]; ?>频道</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑<?php echo $channel_type[$type]; ?>频道</div>
+<form method="post" action="<?php echo $editChannePostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+	<input name="channel_type" value="<?php echo $info['channel_type'];?>" type="hidden" />
+	<input name="relevance"   value="<?php echo $info['relevance'];?>" type="hidden" />
+	<table width="100%">
+	   <tr class="tr">
+			<th class="th">名称</th>
+			<td class="td"><input type="text" class="input wc" name="name" value="<?php echo $info['name']?>"></td>
+		</tr>
+		 <tr class="tr">
+			<th class="th">位置</th>
+			<td class="td"><input type="text" class="input wc" name="position" value="<?php echo $info['pid'].'-'.$info['position'];?>" readonly="true" /></td>
+		</tr>
+		<?php if( ($info['channel_type'] == 2) )  { ?>
+		<tr class="tr">
+			<th class="th">显示的列表</th>
+			<td class="td">
+			<select name="show_type" class="select wa">
+			<?php foreach($show_type as $key=>$val) {?>
+				<option <?php echo ($info['show_type'] == $key )?'selected':''; ?> value="<?php echo $key;?>"><?php echo $val['name'];?></option>
+			<?php }?>	
+			</select>
+			</td>
+		</tr>	
+		<!-- 网页 -->
+		<tr class="tr">
+			<th class="th">URL</th>
+			<td class="td">
+			<select name="link" class="select">
+			
+			</select>
+			</td>
+		</tr>
+		<?php }?>
+		<tr class="tr" >
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="select wa">
+				<option <?php if ($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+				<option <?php if ($info['status'] != 1) echo 'selected';?> value="2">关闭</option>
+			</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg">
+						<img src="<?php echo ($info['icon_default'])?$attachPath.$info['icon_default']:$staticPath.'/img/content/nopic.jpg';?>"/>
+						<input type="hidden" name="icon_default" value="<?php echo $info['icon_default'];?>">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<div style="display:none;">
+<?php foreach($show_type as $key=>$temp) {?>
+	<select name="<?php echo $temp['value'];?>" >
+	    <?php foreach ($ext_list_arr[$temp['value']] as $ke=>$val){ ?>
+		<option  value="<?php echo $ke ?>" <?php if($info['link'] == $ke) echo "selected"; ?>><?php echo $val['title'].'-'.$val['url']; ?></option>
+		<?php }?>
+	</select>
+<?php }?>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Columnnew/channel_index');
+	});	
+
+	$("[name=show_type]").each(function(){
+		changeType($(this));
+	})
+	$("[name=show_type]").change(function(){
+		changeType($(this));
+	})	
+})
+function changeType(select){
+	var html='';
+	if(select.val()==1){
+		html=$('[name=ListView]').html();
+	} else if(select.val()==2){
+		html=$('[name=WebView]').html();
+	} else if(select.val()==3){
+		html=$('[name=RankView]').html();
+	} else if(select.val()==4){
+		html=$('[name=WeiboView]').html();
+	}
+	$('[name=link]').html(html);
+}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>微信送积分</title>
+<link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/call/css/style.min.css?ver=<?php echo $version;?>" />
+</head>
+
+<body class="ui-app">
+
+<div class="ui-top-bar">
+	<a class="ui-pos icon-back" href="<?php echo $webroot;?>/user/index/index"></a>
+	<span class="ui-top-txt">微信送金币</span>
+	<!-- <a class="ui-pos icon-menu" href="#"></a> -->
+</div>
+
+<div class="ui-page page1 js-active">
+	<div class="ui-page-content">
+		<!-- 消息列表 START-->
+		<div class="ui-page-blank">
+			<div class="ui-prize-hd ui-border-b">
+				<div class="prize-box">
+					<?php if(in_array($data['status'],array(0,1))){?>
+						<?php if($data['status'] == 0){?>
+							<div class="prize-area"></div>
+							<div id="scratchpad" class="prize-mask"></div>
+						<?php } else {?>
+							<div class="prize-area">
+								<div class="prize-con">
+									<p>微信验证码</p><p><?php echo $data['code'];?></p>
+								</div>
+							</div>
+						<?php }?>
+					<?php } else{ ?>
+						<div class="prize-area" >
+							<div class="prize-con">
+							<p>您已经领取过金币啦</p>
+							<p>想获取更多金币请去隔壁转转吧</p>
+							</div>
+						</div>
+					<?php }?>
+				</div>
+			</div>
+			<div class="ui-prize-bd">
+				<?php echo $config;?>
+			</div>
+		</div>
+		<!-- 消息列表 END-->
+	</div>
+</div>
+<script src="<?php echo $staticResPath;?>/call/js/jquery.js?v=<?php echo $version;?>"></script>
+<script src="<?php echo $staticResPath;?>/call/js/wScratchPad.js?v=<?php echo $version;?>"></script>
+<style type="text/css">
+	.prize-mask{
+		width:320px; height: 80px;
+	}
+</style>
+<script type="text/javascript">
+	var isRead = false;
+	$(function() {
+		//setTimeout(function(){$('.prize-area').show();},300);
+		$('#scratchpad').wScratchPad({
+			size        : 5,          // The size of the brush/scratch.
+			bg          : 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==',  // Background (image path or hex color).
+			fg          : 'assets/img/ggl-bg1.png',  // Foreground (image path or hex color).
+			realtime    : true,       // Calculates percentage in realitime.
+			scratchMove: function(e, percent) {
+				if(percent > 10 && isRead === false){
+					isRead = true;
+					hadReadCode(isRead);
+				}
+
+				if(percent > 70){
+					this.clear();
+				}
+			}
+		});
+	});
+
+
+	function hadReadCode(isRead){
+		if(isRead === true){
+			$.ajax({
+				type: 'get',
+				url: '<?php echo $webroot;?>/user/activity/scratching',
+				dataType: 'jsonp',
+				success: function(data){
+					if(data.success){
+						$('.prize-area').html('<div class="prize-con"><p>微信验证码</p><p>A8NF</p></div>');
+					}
+				},
+				error: function(){
+					$('.prize-area').html('<div class="prize-con"><p>网络太不给力了</p><p>数据请求失败，请检查网络并刷新重试！</p></div>');
+					//alert('网络数据请求失败，请检查网络！');
+				}
+			});
+		}
+	}
+	
+</script>
+</body>
+</html>

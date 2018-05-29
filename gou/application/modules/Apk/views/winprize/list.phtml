@@ -1,0 +1,61 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+	<body data-pagerole="body">
+	<div class="module">
+		<header id="iHeader" class="hd">
+			<div class="top-wrap">
+				<div class="title">
+					<a href="" class="back"></a>
+					<h1>我的砍价订单</h1>
+				</div>
+			</div>
+		</header>
+
+		<section id="iScroll">
+			<div class="gotop">
+				<span>返回顶部</span>
+			</div>
+			<div class="J_proDetail" data-ajaxurl="/gou/new/api/cut/orderlist.php">
+				<div class="wrap"></div>
+			</div>
+		</section>
+		<script id="J_dtemplate" type="text/icat-template">
+			<ul class="cut-list">
+				<%for(var i=0, len=data.list.length; i<len; i++){%>
+				<li>
+					<div class="date">下单日期：<%=data.list[i].create_time%></div>
+					<a class="figure" href="<%=data.list[i].detail_url%>">
+						<div class="pic">
+							<img src="<%= blankPic %>" data-src="<%= data.list[i].img %>">
+						</div>
+						<div class="title"><h3><%= data.list[i].title %></h3></div>
+						<div class="price">￥<%= data.list[i].price %></div>
+					</a>
+					<div class="buyer-info">
+						<p>
+							<span>收货人：<em><%= data.list[i].buyer_name %></em></span>
+							联系电话：<em><%= data.list[i].phone %></em>
+						</p>
+						<p>收货地址：<%= data.list[i].address %></p>
+					</div>
+					<div class="handle">
+						<%if(data.list[i]['cancel_url'] || data.list[i]['edit_url'] || data.list[i]['pay_url']){%>
+						<%if(data.list[i]['cancel_url']) {%>
+						<span class="btn" id="J_cancel" data-url="<%=data.list[i]['cancel_url']%>">取消订单</span>
+						<%}%>
+						<%if(data.list[i]['edit_url']) {%>
+						<a class="btn" href="<%=data.list[i]['edit_url']%>">修改订单信息</a>
+						<%}%>
+						<%if(data.list[i]['pay_url']) {%>
+						<a class="btn" href="<%=data.list[i]['pay_url']%>">立即支付</a>
+						<%}%>
+						<%} else {%>
+						<span><%=data.list[i]['status']%></span>
+						<%}%>
+					</div>
+				</li>
+				<%}%>
+			</ul>
+		</script>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/newfooter.phtml");?>

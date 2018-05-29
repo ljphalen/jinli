@@ -1,0 +1,48 @@
+<?php echo $this->render("layout/newheader.phtml");?>
+<body>
+<?php if($taoke_info) {?>
+	<div class="module bb-detail">
+	<?php if ($hasheader) {?>
+		<header id="iHeader" class="hd">
+			<div class="top-wrap">
+				<div class="title">
+					<a href="<?php echo $webroot.'/user/want/index';?>" class="back"></a>
+					<h1><?php echo Util_String::substr($info['title'], 0, 10, '', true);?></h1>
+				</div>
+			</div>
+		</header>
+	<?php }?>
+		<div id="iScroll">
+			<div class="scroll-pic J_scrollBanner" curIndex="0" >
+				<div class="pic-box">
+					<ul>
+						<li><img src="<?php echo $staticResPath;?>/h5/pic/blank.gif" data-original="<?php echo $taoke_info['pic_url'] . '_460x460.' . end(explode(".",  $taoke_info['pic_url']));?>" alt=""></li>
+					</ul>
+				</div>
+			</div>
+			<div class="tools-bar">
+					<p><span>￥ <?php echo $taoke_info['price'];?></span><a class="check" href="<?php echo $taoke_info['click_url'];?>">查看详情</a></p>
+					<div class="favor J_hover">
+						<a href="javascript:void(0);" class="selected"></a>
+					</div>
+				</div>
+		</div>
+	</div>
+<?php } else {?>
+<div class="module bb-detail">
+<?php if ($hasheader) {?>
+		<header id="iHeader" class="hd">
+			<div class="top-wrap">
+				<div class="title">
+					<a href="<?php echo $webroot.'/user/want/index';?>" class="back"></a>
+					<h1>商品详情</h1>
+				</div>
+			</div>
+		</header>
+<?php }?>
+		<div id="iScroll" class="xiajia" <?php if(!$hasheader) echo 'style="top:0;"'?>></div>
+		<footer class="ft"><a href="<?php echo $webroot;?>">再逛逛</a></footer>
+	</div>
+<?php }?>
+</body>
+</html>

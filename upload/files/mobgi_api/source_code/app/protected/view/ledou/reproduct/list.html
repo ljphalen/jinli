@@ -1,0 +1,127 @@
+{{pagerCss}}
+<div class="colMain">
+            <div class="title"><p class="fl">产品列表</p></div>
+            <div class="main">
+                <div class="toolbar">
+                    <div class="search fl">
+                        <span>
+                            <form name="form" method="GET" action="lists">
+                                <span class="label">平台类型：</span>
+                                <select name="platform" id="platform">
+                                    <option value="">所有</option>
+                                    <option value="0">通用</option>
+                                    <option value="1">Android</option>
+                                    <option value="2">IOS</option>
+                                </select>   
+                                <input typt="text" id="keyword" name="keyword" value="{{keyword}}" class="iText" /><input type="submit" class="submit" value="" />
+                            </form>
+                        </span>
+                    </div>
+                    <a href="add" class="fr add">新增</a>
+                </div>
+                <div class="content">
+                    <div class="grid">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>产品编号</th>
+                                    <th>平台类型</th>
+                                    <th>产品名</th>
+                                    <th>导量规则</th>
+                                    <th>广告内容</th>
+                                    <th>属性</th>
+                                    <th>最后操作人</th>
+                                    <th>最后更新时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- loop products -->
+                                        <tr>
+                                            <td><span class="blue">{{products' value.id}}</span></td>
+                                            <td><!-- if {{products' value.platform}}==1 -->Android<!-- elseif {{products' value.platform}}==2 -->IOS<!-- else -->通用<!-- endif --></td>
+                                            <td>{{products' value.product_name}}</td>
+                                            <td>
+                                                <!-- if {{products' value.limit}} -->
+                                                    <!-- loop products' value.limit -->
+                                                        <!-- if {{products' value' value}} -->
+                                                            <!-- if {{products' value.limit' key}}=="ad_stat_limit" -->
+                                                                <p>导量控制：</p>
+                                                                <!-- loop products' value.limit value' value -->
+                                                                        <p>{{products' value.limit value' value' key}}:每天:<?php echo $v3["day_limit"]?>  总数:<?php echo $v3["total_limit"]?></p>
+                                                                <!-- endloop -->
+                                                            <!-- endif -->
+                                                            <!-- if {{products' value.limit' key}}=="ad_stat_plan" -->
+                                                                <p>导量计划：</p>
+                                                                <!-- loop products' value.limit.ad_stat_plan.stat_plan -->
+                                                                    <p><?php echo $v2["start_time"]?>～<?php echo $v2["end_time"]?></p>
+                                                                <!-- endloop -->
+                                                            <!-- endif -->
+                                                        <!-- endif -->    
+                                                    <!-- endloop -->
+                                                <!-- endif -->
+                                            </td>
+                                            <td>
+                                                <!-- if {{products' value.adcontent}} -->
+                                                                    <p>插屏：{{products' value.adcontent.nembed}} 则</p>
+                                                                    <p>Banner：{{products' value.adcontent.embed}} 则</p>
+                                                                    <p>PUSH：{{products' value.adcontent.push}} 则</p>
+                                                                    <p>自定义：{{products' value.adcontent.custom}} 则</p>
+                                                                    <p>列表：0 则</p>
+                                                                     <p>视频：{{products' value.adcontent.video}} 则</p>
+                                                <!-- endif -->
+                                            </td>
+                                            <td>
+                                                版本号:{{products' value.product_version}}<Br>
+                                                插图点击类型:
+                                                <script>
+                                         var click_type='{{products' value.click_type_object}}';
+                                        if(click_type!=""){
+                                                        if(click_type.search("inner_install_manage")!=-1){
+                                                            document.write("内建下载安装");
+                                                        }
+                                                        if(click_type.search("start_app")!=-1){
+                                                            document.write("启动应用");
+                                                        }
+                                                        if(click_type.search("direct_url")!=-1){
+                                                            document.write("使用浏览器打开URL");
+                                                        }
+                                                        if(click_type.search("inner_url")!=-1){
+                                                            document.write("使用内建浏览器打开URL");
+                                                        }
+                                                        if(click_type.search("ad_list")!=-1){
+                                                            document.write("打开列表广告");
+                                                        }
+                                                        if(click_type.search("user_action")!=-1){
+                                                            document.write("内建下载安装");
+                                                        }
+                                                    }else{
+                                                        document.write("无动作");
+                                                    }
+                                                </script>
+                                                <br />视频点击类型:: {{products' value.video}}
+                                            </td>
+                                            <td>{{products' value.owner}}</td>
+                                            <td><?php echo format_time($v1['updated']); ?></td>
+                                            <td>
+                                                <a href="add?id={{products' value.id}}" class="edit" title="编辑"></a>
+<!--                                                |
+                                                <a href="del?productid={{products' value.id}}" class="del" title="删除"></a>-->
+                                            </td>
+                                        </tr>
+                                <!-- endloop -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination">{{pager.pages}}</div>
+                </div>
+            </div>
+        </div>
+
+
+<script>
+$(function() {
+    $("#platform").val("{{result.platform}}");
+    $("#keyword").val("{{result.keyword}}");
+})
+</script>

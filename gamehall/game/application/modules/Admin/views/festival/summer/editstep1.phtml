@@ -1,0 +1,141 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<style>
+.step2 li{
+    width: 23%;
+}
+.step2 li.line{
+	position: static;
+}
+</style>
+<div class="nav">
+	<ul class="cc">
+       <li class="current"><a href="javascript:;">编辑活动</a></li>
+	</ul>
+</div>
+<div class="step step2 mb10">
+		<ul class="cc">
+			<li class="current">编辑活动</li>
+			<li class="line"></li>
+			<li><span class="fl"><em></em></span>编辑任务</li>
+
+			<li class="line"></li>
+			<li><span class="fl"><em></em></span>编辑奖品</li>
+		</ul>
+</div>
+
+<form method="post" action="<?php echo $editStep1PostUrl.'/?id='. $infoData[Activity_Service_Cfg::ID];?>" id="addFrom">
+<input name="<?php echo Activity_Service_Cfg::ID;?>" value="<?php echo $infoData[Activity_Service_Cfg::ID];?>" type="hidden" />
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">活动标题</th>
+			<td class="td"><input type="text" class="input wc" name="<?php echo Activity_Service_Cfg::NAME;?>" value="<?php echo $infoData[Activity_Service_Cfg::NAME];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">生效时间</th>
+			<td class="td">
+			     <div>
+			         <input class="input"  type="text" maxlength="30" style="width:143px; " 
+			         id="<?php echo Activity_Service_Cfg::START_TIME;?>" 
+			         name="<?php echo Activity_Service_Cfg::START_TIME;?>" 
+			         value="<?php echo date('Y-m-d H:i:s', $infoData[Activity_Service_Cfg::START_TIME]);?>" 
+			         />
+			          至 
+			         <input class="input" type="text" maxlength="30" style="width:143px;" 
+			         id="<?php echo Activity_Service_Cfg::END_TIME;?>" 
+			         name="<?php echo Activity_Service_Cfg::END_TIME;?>" 
+			         value="<?php echo date('Y-m-d H:i:s', $infoData[Activity_Service_Cfg::END_TIME]);?>" 
+			         />
+			     </div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图片<br>(1080*660)</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="<?php echo Activity_Service_Cfg::IMG;?>">
+						<img src="<?php echo $attachPath.$infoData[Activity_Service_Cfg::IMG];?>"/>
+						<input type="hidden" name="<?php echo Activity_Service_Cfg::IMG;?>" value="<?php echo $infoData[Activity_Service_Cfg::IMG];?>">
+					</li>
+				</ul>			
+                <p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId='.Activity_Service_Cfg::IMG;?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">预热时间</th>
+			<td class="td">
+			     <div>
+			         <input class="input" type="text" maxlength="30" style="width:143px;" id="<?php echo Activity_Service_Cfg::PREHEAT_TIME;?>" name="<?php echo Activity_Service_Cfg::PREHEAT_TIME;?>" value="<?php echo date('Y-m-d H:i:s', $infoData[Activity_Service_Cfg::PREHEAT_TIME]);?>" />
+			     </div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">预热图片<br>(1080*1798)</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="<?php echo Activity_Service_Cfg::PREHEAT_IMG;?>">
+						<img src="<?php echo $attachPath.$infoData[Activity_Service_Cfg::PREHEAT_IMG];?>"/>
+						<input type="hidden" name="<?php echo Activity_Service_Cfg::PREHEAT_IMG;?>" value="<?php echo $infoData[Activity_Service_Cfg::PREHEAT_IMG];?>">
+					</li>
+				</ul>			
+                <p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId='.Activity_Service_Cfg::PREHEAT_IMG;?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动说明</th>
+			<td class="td">
+			         <textarea name="<?php echo Activity_Service_Cfg::EXPLAIN;?>" style="height:240px;width:800px"><?php echo $infoData[Activity_Service_Cfg::EXPLAIN];?></textarea>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏大厅版本</th>
+			<td class="td">
+			    <span><label>请选择最低参与版本<br/></label></span>
+			    <?php foreach ($clientConfig as $key=>$item):?>
+				<span><label><input type="radio" name="<?php echo Activity_Service_Cfg::CLIENT_VER;?>" value="<?php echo $key;?>" <?php echo ($key == $infoData[Activity_Service_Cfg::CLIENT_VER]) ? 'checked' : '';?>><?php echo $item;?></label></span>
+				<?php endforeach;?>
+			   	</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status">
+                	<option value="1" <?php echo ($infoData[Activity_Service_Cfg::STATUS]==1) ? 'selected' : '';?> >开启</option>
+                	<option value="0" <?php echo ($infoData[Activity_Service_Cfg::STATUS]==0) ? 'selected' : '';?> >关闭</option>
+            </select></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">下一步</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 var editor;
+	 KindEditor.ready(function(K) {
+	     K.token = '<?php echo $token;?>';
+	        editor = K.create('textarea[name="<?php echo Activity_Service_Cfg::EXPLAIN; ?>"]', {
+	        resizeType : 1,
+	        allowPreviewEmoticons : false,
+	        allowImageUpload : true,
+	        uploadJson : '<?php echo $uploadImgUrl;?>',
+	        items : EDITOR_ITEMS
+	   });
+     });
+	 $('#<?php echo Activity_Service_Cfg::START_TIME; ?>').datetimepicker();
+     $('#<?php echo Activity_Service_Cfg::END_TIME; ?>').datetimepicker();
+	 $('#<?php echo Activity_Service_Cfg::PREHEAT_TIME; ?>').datetimepicker();
+	 
+	 ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $editStep2Url.'/?id='. $infoData['id'];?>');
+	 }, function(){
+			editor.sync();
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

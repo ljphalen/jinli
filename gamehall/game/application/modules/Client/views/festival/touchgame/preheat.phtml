@@ -1,0 +1,24 @@
+<?php echo $this->render("festival/touchgame/header.phtml");?>
+<body>
+<?php $preheatConfig = json_decode($info['preheat_config'], true);?>
+<div class="preheat">
+    <div class="bg"  style="background: #ffdf47 url(<?php echo $attachPath . $preheatConfig['img1'];?>); background-size:100% 100%;">
+        <div class="time">
+            <h1>距离活动开始还有:</h1>
+            <p id="date"><span>01</span>时<span>12</span>分<span>05</span>秒</p>
+        </div>
+        <div class="fish">
+            <img id="finshSmall" src="<?php echo $attachPath . $preheatConfig['img2'];?>"  />
+            <img id="finshBig" src="<?php echo $attachPath . $preheatConfig['img3'];?>" />
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    var preheatData = {
+        timeStart:<?php echo $time;?>,
+        timeEnd:<?php echo $info['start_time'];?>
+    }
+</script>
+<script src="<?php echo "{$staticroot}/apps/game/smallGame/catsEatFish/assets/js/preheat.js?v={$version}"?>"></script>
+</html>

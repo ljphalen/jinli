@@ -1,0 +1,142 @@
+<div class="colMain">
+    <div class="title"><p class="fl">应用统计报表</p></div>
+    <div class="main">
+        <form class="app-detail" action="/Statis/appStatis" method="POST" >
+            <ul class="form">
+                <li>
+                    <span class="label">选择日期范围：</span>
+                    <input type="text" class="iText datepicker" name="sdate" value="{{params.sdate}}"  />
+                    至
+                    <input type="text" class="iText datepicker" name="edate" value="{{params.edate}}"   />
+                </li>
+
+                <li>
+                    <span class="label">选择应用：</span>
+                    <table>
+                        <tr>
+                            <td><input type="text" class="iText search_input" id="left"  style="width: 190px;" /></td>
+                            <td width="150px"></td>
+                            <td><input type="text" class="iText search_input" id="right"  style="width: 190px;" /></td>
+                        </tr>
+                        <tr>
+                            <td><select id="left_sel" class="multi" multiple="multiple" _target="right_sel" style="width: 300px;height: 100px;">
+                                <!-- loop appleft -->
+                                <option _name="{{appleft' value}}" value="{{appleft' key}}">{{appleft' value}}</option>
+                                <!-- endloop -->
+                            </select></td>
+                            <td align="center">
+                                <input type="button" class="btn selMove" _from="left_sel" _to="right_sel" value="添加->"/><br />
+                                <input type="button" class="cancel selMove" _from="right_sel" _to="left_sel" value="<-删除"/>
+                            </td>
+                            <td><select id="right_sel" name="app_keys[]" class="multi" multiple="multiple" _target="left_sel" style="width: 300px;height: 100px;">
+                                <!-- loop appright -->
+                                <option _name="{{appright' value}}" value="{{appright' key}}">{{appright' value}}</option>
+                                <!-- endloop -->
+                            </select></td>
+                        </tr>
+                    </table>
+                </li>
+                <li>
+                    <div class="fc">
+                        <input type="submit" value="查询" class="submit" />
+                        <input type="button" value="导出" class="cancel export" />
+                    </div>
+                </li>
+            </ul>
+        </form>
+
+        <div class="grid export_table" style="margin-top:10px;">
+            <table class="stat_tbl tablesorter">
+                <thead class="pos_header"><tr>
+                        <th>应用名称</th>
+                        <th>活跃用户数</th>
+                        <th>启动数</th>
+                        <th>请求数</th>
+                        <th>请求成功数</th>
+                        <th>展示数</th>
+                        <th>展示比例</th>
+                        <th>点击数</th>
+                        <th>点击率</th>
+                        <th>下载完成数</th>
+                        <th>安装数</th>
+                </tr></thead>
+                <tbody>
+                    <!-- loop result -->
+                    <tr>
+                        <td>
+                            <a class="blue" href="{{siteUrl}}Statis/getProductByAppKey?appkey={{result' value.gpkg}}&sdate={{params.sdate}}&edate={{params.edate}}&channel_id={{channel}}">
+                                <?php echo $data['appList'][$v1['gpkg']];?>
+                            </a>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a class="blue thickbox" href="{{siteUrl}}Statis/appStatisByDay?appkey={{result' value.gpkg}}&field=impressions&sdate={{params.sdate}}&edate={{params.edate}}&channel_id={{channel}}&TB_iframe=true" title="应用-<?php echo $data['appList'][$v1['gpkg']];?>">
+                                {{result' value.requests}}
+                            </a>
+                        </td>
+                        <td>{{result' value.requests_success}}</td>
+                        <td>{{result' value.impressions}}</td>
+                        <td>{{result' value.impressions_rate}}%</td>
+                        <td>{{result' value.clicks}}</td>
+                        <td>{{result' value.clicks_rate}}%</td>
+                        <td>{{result' value.finish_downloads}}</td>
+                        <td>{{result' value.installed}}</td>
+                    </tr> 
+                    <!-- endloop -->
+                </tbody>
+                <tr>
+                    <td><span class="blue" >合计</span></td>
+                    <td>{{total.dau}}</td>
+                    <td>{{total.AdStartUp}}</td>
+                    <td>{{total.requests}}</td>
+                    <td>{{total.requests_success}}</td>
+                    <td>{{total.impressions}}</td>
+                    <td>{{total.impressions_rate}}%</td>
+                    <td>{{total.clicks}}</td>
+                    <td>{{total.clicks_rate}}%</td>
+                    <td>{{total.finish_downloads}}</td>
+                    <td>{{total.installed}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$(function(){
+    // 排序
+    $(".stat_tbl").tablesorter();
+    var tab_pos = $(".pos_header").offset().top;
+    $(window).scroll( function() {
+        if(tab_pos < $(window).scrollTop()){
+            $(".pos_header").css('position','fixed').css('top', '0px').css('padding-right', '16px');
+            $(".pos_header > tr > th").each(function(i){
+                $(this).css('width', $(".stat_tbl > tbody").find("td").eq(i).css('width'));
+            });
+        }else{
+            $(".pos_header").css('position','static');
+        }
+    } );
+    $('.datepicker').datepicker({
+        changeMonth:true,
+        changeYear:true,
+        minDate:new Date(),
+        dateFormat : "yy-mm-dd",
+        minDate: "2013-01-01"
+    });
+    $("input[name=sdate]").change(function(){
+        $("input[name=edate]").datepicker('option','minDate',$(this).val());
+    });
+    $("form").submit(function(){
+        $("#right_sel").children("option").attr("selected","selected");
+    });
+    $(".export").click(function(){
+        var tbl = $(".export_table").html();
+        var file_name = "app_stats";
+        $("body").append("<form method='POST' action='/Statis/export' id='export' style='display:none;'><input type='text' value='"+tbl+"' name = 'data' /><input type='text' value="+file_name+" name = 'file_name' /></form>")
+        $("#export").submit();
+    });
+})
+</script>
+<script type="text/javascript" src="{{rootUrl}}/js/thickbox.js"></script>
+<link rel="stylesheet" href="{{rootUrl}}/css/thickbox.css" type="text/css" />

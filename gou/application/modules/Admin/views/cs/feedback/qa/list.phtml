@@ -1,0 +1,43 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li><a href="<?php echo $indexUrl;?>">反馈用户列表</a></li>
+        <li class="current"><a href="javascript:;">反馈记录</a></li>
+    </ul>
+</div>
+<div class="h_a">反馈记录</div>
+    <div>UID:<?php echo $uid; ?></div>
+    <div class="table_list">
+        <table width="100%">
+            <tr class="hd">
+                <td width="150">反馈时间</td>
+                <td width="32">类型</td>
+                <td width="120">归类/客服</td>
+                <td width="200">机型/版本</td>
+                <td>内容</td>
+            </tr>
+            <?php foreach($data as $key => $value) {?>
+                <?php if($value['type']==0): ?>
+                <tr class="ct">
+                    <td><?php echo date('Y-m-d H:i:s',$value['create_time'])?></td>
+                    <td>反馈</td>
+                    <td><?php echo $cates[$value['cat_id']]['name']; ?> </td>
+                    <td><?php echo $value['model'].'/'.$value['version'];?></td>
+                    <td><?php echo $value['content'];?></td>
+                </tr>
+                <?php else: ?>
+                    <tr class="ct">
+                        <td><?php echo date('Y-m-d H:i:s',$value['create_time'])?></td>
+                        <td><font color="red">回复</font></td>
+                        <td>
+                            <img src="<?php echo $value['kf']['avatar']; ?>" alt="" width="15"/><?php echo $value['kf']['nickname']; ?>
+                        </td>
+                        <td>系统</td>
+                        <td><?php echo $value['content'];?></td>
+                    </tr>
+                    <?php endif; ?>
+            <?php } ?>
+        </table>
+    </div>
+
+<?php echo $this->render("layout/footer.phtml");?>

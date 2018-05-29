@@ -1,0 +1,29 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $listUrl; ?>">地址列表</a></li>
+		<li><a href="<?php echo $addUrl; ?>">添加地址</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="120">名称</td>
+			<td>地址</td>
+			<td width="100">状态</td>
+			<td width="100">操作</td>
+		</tr>
+		<?php foreach ($blackurl as $key => $value) { ?>
+			<tr class="ct">
+				<td><?php echo $value['name']; ?></td>
+				<td><?php echo $value['url']; ?></td>
+				<td><?php echo $value['status'] == 1 ? '白名单' : '黑名单'; ?></td>
+				<td>
+					<a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+					<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+				</td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

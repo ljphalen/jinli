@@ -1,0 +1,134 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $indexUrl; ?>">订单列表</a></li>
+		</ul>
+	</div>
+	<div>查询条件</div>
+	<form method="post" action="<?php echo $editPostUrl; ?>" id="addForm">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+
+				<tr class="tr">
+					<th class="th">订单类型</th>
+					<td class="td"><select name="order_type">
+							<option value="0">请选择</option>
+							<?php foreach ($orderTypes as $k => $v) { ?>
+								<option value="<?php echo $k; ?>" <?php if ($k == $order_type) echo 'selected'; ?>><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+
+				<tr class="tr">
+					<th class="th">订单号</th>
+					<td class="td"><input class="input" name="order_sn" value="<?php echo $order_sn; ?>"></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">用户手机号</th>
+					<td class="td"><input type="text" class="input" name="username" value="<?php echo $username; ?>">
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">被充值号</th>
+					<td class='td'><input type="text" class="input"  name="recharge_number"   value="<?php echo $rechargeNum;?>" >
+				
+				<tr class="tr">
+					<th class="th">订单时间范围</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $sdate; ?>"> 至
+						<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $edate; ?>">
+					</td>
+				</tr>
+			</table>
+		</div>
+		<input name="id" id="id" value="<?php echo $data['id']; ?>" type="hidden">
+
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+		<input type="hidden" name="export" id="export" value="0">
+
+		<div class="h_a">
+			&nbsp; <span id="total" style="color: red;font-size:14px"></span>
+			<span style="float:left;"><input type="button" value="导出" id="downLoad"></span>
+		</div>
+
+	</form>
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+				<th class="th">订单号</th>
+				<th class="th">商品ID</th>
+				<th class="th">用户手机号</th>
+				<th class="th">充值号</th>
+				<th class="th">订单总金额</th>
+				<th class="th">实际金额</th>
+				<th class="th">消耗总积分</th>
+				<th class="th">订单状态</th>
+				<th class="th">支付状态</th>
+				<th class="th">配送状态</th>
+				<th class="th">下单时间</th>
+				<th class="th">最后更新人</th>
+				<th class="th">最后更新时间</th>
+				<th class="th">操作</th>
+			</tr>
+			<?php foreach ($data as $v) {
+				; ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['id'];?></td>
+					<td class="td" align="left"><?=$v['order_sn'];?></td>
+					<td class="td" align="left"><?php echo $v['goods_id']; ?></td>
+					<td class="td"><?php echo $v['username']; ?></td>
+					<td class="td" style="color:blue"><?php echo $v['recharge_number'] ? $v['recharge_number'] : '---'; ?></td>
+					<td class="td"><?php echo $v['order_type'] == 999 ? $v['order_amount'] / 60 : $v['order_amount']; ?></td>
+					<td class="td" style="color: blue"><?php echo $v['ordercrach']; ?></td>
+					<td class="td"><?php echo $v['total_cost_scores'] ?></td>
+					<td class="td" style="color:  blue"><?php echo $v['order_status']; ?></td>
+					<td class="td" style="color:  blue"><?php echo $v['pay_status']; ?></td>
+					<td class="td" style="color:  blue"><?php echo $v['shipping_status']; ?></td>
+					<td class="td"><?php echo date('Y-m-d H:i:s', $v['add_time']); ?></td>
+					<td class="td"><?php echo $v['last_operator'] ? $v['last_operator'] : '---'; ?></td>
+					<td class="td"><?php echo $v['last_time'] ? $v['last_time'] : '---'; ?></td>
+					<td class="td">
+						<a href="<?php echo $detailURL; ?>/?order_id=<?php echo $v['id']; ?>">详情</a>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#sdate").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#edate").datepicker({dateFormat: 'yy-mm-dd'});
+		});
+
+		$("#downLoad").bind('click', function () {
+			$("#export").val(1);
+			$("#addForm").submit();
+			$("#export").val(0);
+		});
+
+		function resiuue(id) {
+			if (id <= 0) {
+				alert('该订单有错误！');
+			}
+
+			$.ajax({
+				'dataType': 'json',
+				'type': 'post',
+				'data': {'token': '<?php echo $token;?>', 'id': id},
+				'url': '/Admin/Order/reissue',
+				'success': function (e) {
+					alert(e.data.msg);
+					//location.reload();
+				}
+			})
+		}
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

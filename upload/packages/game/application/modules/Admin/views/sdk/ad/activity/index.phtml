@@ -1,0 +1,120 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">公告活动管理</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	   <tr class="tr">
+		  <th class="th">名称</th>
+		  <td class="td"><input type="text" class="input" name="title" value="<?php echo empty($search['title'])?'':$search['title'];?>"></td>
+		  <th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			    <option  value="0">全部</option>
+				<option <?php if($search['status'] == 2) echo 'selected';?> value="2">开启</option>
+				<option <?php if($search['status'] == 1) echo 'selected';?> value="1">关闭</option>
+			</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">生效时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo $search['start_time']?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo $search['end_time']?>" /></div>
+			</td>
+			 <th class="th">游戏id</th>
+		  <td class="td"><input type="text" class="input" name="game_ids" value="<?php echo empty($search['game_ids'])?'':$search['game_ids'];?>"></td>
+		</tr>
+		<tr class="tr">
+		   <!--  -->
+		 	<th class="th">游戏名称</th>
+	  		<td class="td"><input type="text" class="input" name="name" value="<?php echo empty($search['name'])?'':$search['name'];?>"></td>
+		  	<th class="th">显示范围</th>
+		  	<td class="td">
+			  	<select name="show_type" class="select wa">
+				    <option  value="0">全部</option>
+				    <option <?php if($search['show_type'] == 1) echo 'selected';?> value="1">包含公告</option>
+					<option <?php if($search['show_type'] == 2) echo 'selected';?> value="2">包含活动</option>
+					<option <?php if($search['show_type'] == 3) echo 'selected';?> value="3">活动和公告</option>
+				</select>
+		  	</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2">
+	   <span><button onclick="$('#action').val('open');" type="submit">开启</button></span>
+	</span>
+	<span class="btn2">
+	   <span><button onclick="$('#action').val('close');" type="submit">关闭</button></span>
+	</span>
+	<span class="btn2">
+	   <span><button onclick="$('#action').val('sort');" type="submit">重新排序</button></span>
+	</span>
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+		    <td width="60">排序</td>
+		    <td >公告/活动ID</td>	   
+			<td  width="150">名称</td>
+			<td>生效时间</td>
+			<td>显示范围</td>
+			<td>覆盖游戏数量</td>
+			<td width="150">覆盖游戏id</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($ads as $key => $value) {?>
+		<tr class="ct">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>		
+			<td><input type="text" class="input" style="width:30px" name="sort[<?php echo $value['id'];?>]" value="<?php echo $value['sort'];?>"></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo Util_String::substr(html_entity_decode($value['title'],ENT_QUOTES), 0, 20,'UTF8',true);?></td>		
+		    <td><?php echo date('Y-m-d H:i:s', $value['start_time']);?><br /><?php echo date('Y-m-d H:i:s', $value['end_time']);?></td>
+		    <td><?php  $show_type = explode(',',$value['show_type']) ;
+		               $str = '';
+		               foreach ($show_type as $val){
+		               	  $str .= $show_type_name[$val].',';
+		               }
+		               $str = rtrim($str,',');
+		               echo $str;
+		    ?></td>
+		    <td><?php echo $value['game_num'];?></td>
+		    <td><?php echo $value['game_ids'];?></td>
+			<td><?php echo $value['status'] == 1 ? '<font color="red">开启</font>' : '关闭';?></td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Sdk_Ad_Activity/index');
+	});
+
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

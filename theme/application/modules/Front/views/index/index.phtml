@@ -1,0 +1,113 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div id="page"  class="ui-refresh home">
+    <article class="ac">
+        <?php if (count($subjects) == 2) { ?>
+            <div class="topic-box clearfix">
+                <ul>
+                    <?php
+                    foreach ($subjects as $subject) {
+                        if ($subject['file'] && count($subject['file'] == 1)) {
+                            $down_url = $webrootDown . $downloadUrl . '/' . $subject['file'][0][0] . '_' . $pt;
+                            $link = sprintf("%d,%s,%s/detail?id=%d&pre=%d&next=%d&update_time=%d&sid=%d,%s,%d", $subject['file'][0][0], $subject['file'][0]['title'], $webroot, $subject['file'][0][0], 0, 0, $subject['pre_publish'], $subject['id'], $down_url, $subject['file'][0]['since']);
+                        } else {
+                            $link = $webroot . '/subject?sid=' . $subject['id'] . '|' . $subject['title'];
+                        }
+                        ?>
+                        <li><a data-inftheme="<?php echo $link; ?>">
+                                <img src="<?php echo $attachPath . $subject['img']; ?>" alt="">
+                            </a></li>
+
+                    <?php } ?>
+                </ul>
+            </div>
+        <?php } ?>
+
+
+        <div class="topic-box clearfix none J_home_topic" <?php if ($special_complete) echo 'style="display:block;"'; ?>>
+            <?php if ($special_complete) { ?>
+                <ul>
+                    <li><a data-inftheme="<?php echo $webroot . $subjectsUrl . '?orderby=down|历史专题'; ?>">
+                            <img src="<?php echo $staticResPath; ?>/pic/banner_theme_04.png" alt="">
+                        </a></li>
+                    <li><a data-inftheme="<?php echo $webroot . $themesUrl . '|排行榜'; ?>">
+                            <img src="<?php echo $staticResPath; ?>/pic/banner_theme_05.png" alt="">
+                        </a></li>
+                </ul>
+            <?php } ?>
+        </div>
+
+        <?php
+        if ($new_total > 0) {//有新品才显示新品推荐
+            ?>
+            <div class="item-box">
+                <h3>新品推荐</h3>
+                <ul>
+                    <?php
+                    $i = 1;
+                    foreach ($new_files as $key => $value) {
+                        $pre = $next = 1;
+                        if ($i == 1) $pre = 0;
+                        if ($new_total == $i) $next = 0;
+                        $link = sprintf("%s/detail?id=%d&pre=%d&next=%d&update_time=%d&sid=%d", $webroot, $value['id'], $pre, $next, $value['packge_time'], $newSubject['id']);
+                        ?>
+                        <li>
+                            <a data-inftheme="<?php echo $value['id'] ?>,<?php echo $value['title'] ?>,<?php echo $link; ?>,<?php echo $webrootDown . $downloadUrl . '/' . $value['id'] . '_' . $pt; ?>,<?php echo $value['since']; ?>">
+                                <span class="pic"><img src="<?php echo $staticResPath; ?>/pic/pic_nopreview.png"
+                                                       data-lazyload="true" data-src="<?php echo $attachPath . $new_imgs[$value['id']]['pre_face_s']; ?>"></span>
+                                <em><?php echo Util_String::substr($value['title'], 0, 6, '', true); ?></em>
+                            </a>
+                        </li>
+                        <?php
+                        $i ++;
+                    }
+                    ?>
+                </ul>
+            </div>
+            <?php
+        }
+        ?>
+        <div id="J_dataList" class="data-box item-box" data-ajaxUrl="<?php echo $webroot . '/index/more?firstpage=' . count($special_files); ?>">
+            <h3>精品推荐</h3>
+            <ul>
+                <?php
+                $i = 1;
+                foreach ($special_files as $key => $value) {
+                    $pre = $next = 1;
+                    if ($i == 1) $pre = 1;
+                    if ($special_total == $i) $next = 0;
+                    $link = sprintf("%s/detail?id=%d&pre=%d&next=%d&update_time=%d&sid=%d", $webroot, $value['id'], $pre, $next, $value['packge_time'], $specialSubject['id']);
+                    ?>
+                    <li>
+                        <a data-inftheme="<?php echo $value['id'] ?>,<?php echo $value['title'] ?>,<?php echo $link; ?>,<?php echo $webroot . $downloadUrl . '/' . $value['id'] . '_' . $pt; ?>,<?php echo $value['since']; ?>">
+                            <span class="pic"><img src="<?php echo $staticResPath; ?>/pic/pic_nopreview.png"
+                                                   data-lazyload="true" data-src="<?php echo $attachPath . $special_imgs[$value['id']]['pre_face_s']; ?>"></span>
+                            <em><?php echo Util_String::substr($value['title'], 0, 6, '', true); ?></em>
+                        </a>
+                    </li>
+                    <?php
+                    $i ++;
+                }
+                ?>
+
+            </ul>
+            <div class="ui-refresh-down none clearfix"></div>
+        </div>
+
+    </article>
+</div>
+<script id="J_itemView" type="text/html">
+    <% for (var i = 0; i < data.list.length; i++) { %>
+    <li>
+        <a data-infTheme="<%= data.list[i].id %>,<%= data.list[i].title %>,<%= data.list[i].link %>,<%= data.list[i].down %>,<%= data.list[i].since %>">
+            <span class="pic"><img data-lazyload="true" src="<?php echo $staticResPath; ?>/pic/pic_nopreview.png" data-src="<%= data.list[i].img %>"></span>
+            <em><%= data.list[i].title %></em>
+        </a>
+    </li>
+    <% } %>
+    <% if (data.hasmore === true) { %>
+    <li><a data-inftheme="<?php echo $webroot . $themesMoreUrl . '|更多主题'; ?>"><span><img src="<?php echo $staticResPath; ?>/pic/banner_theme_03.png"></span></a></li>
+    <% } %>
+
+</script>
+
+<?php echo $this->render("layout/footer.phtml"); ?>

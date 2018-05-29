@@ -1,0 +1,43 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">地址列表</a></li>
+		<li class="current"><a href="javascript:;">添加地址</a></li>
+	</ul>
+</div>
+<div class="h_a">添加地址</div>
+<form method="post" action="<?php echo $addPostUrl; ?>" id="addForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">名称</th>
+				<td class="td"><input type="text" class="input" name="name" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">地址</th>
+				<td class="td"><input type="text" class="input wc" name="url" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td"><select name="status">
+						<option value="1">白名单</option>
+						<option value="0">黑名单</option>
+					</select></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	//用户表单数据提交
+	$(document).ready(function () {
+		ajaxForm('addForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Blackurl/add');
+		});
+	})
+
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

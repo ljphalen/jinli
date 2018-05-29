@@ -1,0 +1,38 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">分享日志</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+			<th class="th">用户UID</th>
+			<td class="td"><input class="input wb" type="text" name="uid" value="<?php echo $param['uid'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span><span style="float:left;">当前日志总数：<?php echo $total;?></span></div>
+
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>用户UID</td>
+			<td>点击量时间</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['uid'];?></td>
+            <td><?php echo date('Y-m-d H:i:s', $value['hits_time']);?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/admin/highcharts.js"></script>
+<?php echo $this->render("layout/footer.phtml");?>

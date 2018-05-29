@@ -1,0 +1,132 @@
+@charset "UTF-8";
+@import "compass/css3";
+@import "lookitui/reset";
+@import "lookitui/vars";
+@import "lookitui/func";
+
+body{line-height:30px; background:#f4f4f4;}
+
+a:link,a:visited{color:#979797;}
+.menu-panel{
+    margin:0 auto; width:320*$px; position:relative; z-index:101;
+    .menu-panel-logo{
+    	width:320*$px;
+        img{width:320*$px; height:30*$px;}
+        background:url('../img/top-bg.png') no-repeat left bottom;
+        @include background-size(auto 8*$px);
+        padding-bottom:8*$px;
+    }
+    .menu-panel-drapbox{
+        position:absolute; right:10px; top:4px; z-index: 1000;
+        .drapdown {width:80px; height:30*$px; padding-left:15px;}
+        .drapdown .label{vertical-align:middle;}
+        .drapdown .icon {
+            display:inline-block; vertical-align:middle; margin-left:5px; width:16px;  height:30*$px; background:url('../img/icon-arrow-down.png') center no-repeat;
+            @include background-size(100% auto);
+        }
+        ul{display:none;}
+        li a {display:block; width:80px; padding-left:15px; height:35*$px; line-height:35*$px; border-top:1px solid #e6e6e6; color:#444;}
+        li a:hover, li:active{color:#f98d42;}
+    }
+    .menu-panel-drapbox-active{
+        background:#f4f4f4;
+        .drapdown .icon { -webkit-transform:rotate(180deg);}
+        @include box-shadow(0 0 3px rgba(0,0,0,.4));
+        ul{display:block;}
+    }
+}
+
+.ui-slider{
+	position:relative; top:-8*$px; z-index:100; width:320*$px; margin:0 auto; overflow:hidden;
+	.ui-slider-content{width:100%; height:100%; position:relative; overflow:hidden;}
+	.ui-slider-pic{
+		display:-webkit-box; -webkit-box-align:center; -webkit-box-pack:center;
+		li{width:320*$px; height:344*$px; position:relative;}
+		span{display:block; width:100%; font-size:35*$px; position:absolute; top:15*$px; text-align:center; color:#727272;}
+		img{width:100%; height:100%;}
+	}
+
+	.ui-slider-handle{
+		position:absolute; bottom:10*$px; width:100%; text-align:center; line-height:normal;
+		span{
+			display:inline-block; width:10*$px; height:10*$px; background-image:url("../img/slider-handle.png"); background-position:left top; background-repeat:no-repeat;
+			@include background-size(cover);
+			
+		}
+		span.on{background-position:right top;}
+	}
+}
+
+@-webkit-keyframes into{
+	100% {display:block;}
+}
+
+.ui-tab-wrap{padding:0 10px;}
+.ui-tab-title{
+	padding-top:10*$px; overflow:hidden; position:relative;
+	&::after{content:''; position:absolute; left:50%; top:40%; height:40%; width:1px; background:#c5c5c5;}
+	li{float:left; display:inline-block; width:50%; border-bottom:1px solid #e3e3e3; text-align:center; font-size:$big-font-size;}
+	li a{ display:block; width:100%; margin:0 auto -1px; border-bottom:1px solid transparent;}
+	li .sel{color:#ff781a; border-bottom-color:#f98d42;}
+}
+
+//.ui-tab-content{display:none;}
+.content {
+	img {max-width:320*$px;}
+}
+
+.ui-tb-list{
+	.ui-tb-title{padding:20px 10px 5px; color:#727272; font-size:18*$px; /* border-bottom:1px solid #e6e6e6; */}
+	& .ui-tb-tr, & .ui-tb-ul{
+		border-bottom:1px solid #e6e6e6;
+		/* background:inline-image("../img/highlight.png") no-repeat center bottom; 
+		@include background-size(auto 18px); */
+	}
+	.ui-tb-tr{
+		padding:0 0 10px 10px; color:#b6b6b6; overflow:hidden;
+		li{display:-webkit-box;}
+		span{display:block; text-align:left;}
+		span:nth-child(2){-webkit-box-flex:1;}
+		.ui-tb-th{color:#949494; width:70px;}
+	}
+
+	.ui-tb-ul{
+		padding:0 10px 20px; line-height:normal; overflow:hidden;
+		li{float:left; width:33.33%; height:150px; text-align:center; color:#b6b6b6; padding:10px 0;}
+		li h3{color:#8f8f8f; margin-top:10px;}
+		li img{width:59px; height:59px;}
+	}
+}
+
+.ui-show-pic{
+	display:none; text-align:center; margin:0 -10px;
+	.ui-show-part1,.ui-show-part2,.ui-show-part3{
+		max-width:360px; margin:0 auto; color:#979797;
+		position:relative;
+		img{width:100%; height:auto;}
+	}
+
+	.ui-show-part1{
+		padding-top:40px;
+		.pos{position:absolute; left:15*$px; top:40px; text-align:left;}
+	}
+
+	.ui-show-part2{
+		text-align:right;
+		.pos{display:inline-block; text-align:left; padding:10px;}
+	}
+
+	.ui-show-part3{
+		padding-top:30px;
+		.pos{position:absolute; left:15px; top:40px; text-align:left;}
+	}
+}
+
+footer{
+	padding:10px 20px;
+	p{vertical-align:middle;}
+	img{margin:-2px 10px 0 0;}
+	a{color:#757575;}
+}
+
+

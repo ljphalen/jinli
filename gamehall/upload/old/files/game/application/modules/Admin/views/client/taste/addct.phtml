@@ -1,0 +1,46 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">尝鲜列表</a></li>
+		<li class="current"><a href="">添加内容</a></li>
+	</ul>
+</div>
+<div class="step mb10">
+		<ul class="cc">
+			<li >选择内容</li>
+			<li class="line"></li>
+			<li class="current"><span class="fl"><em></em></span>设置时间</li>
+		</ul>
+</div>
+<div class="h_a">请为刚才选择的内容设置生效时间</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+				<th class="th"><label class="mr20"><input  name="effective_status" value="0" type="radio">立即生效</label></th>
+		</tr>
+		<tr class="tr">
+				<th class="th"><label class="mr20"><input  checked name="effective_status" value="1" type="radio">稍后生效</label></th>
+				<td class="td">
+				    <th class="th">生效时间</th>
+					 <td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="" /> </div></td>
+				</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">完成</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	 $('#start_time').datetimepicker({
+         timeFormat: "hh:00:00",
+         dateFormat: "yy-mm-dd"
+     });
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Taste/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

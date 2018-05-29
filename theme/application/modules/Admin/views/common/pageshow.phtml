@@ -1,0 +1,70 @@
+<div class="com_tb_page" style="padding-left: 250px">
+    <?php if ($page > $pages / 2) { ?>
+        <a href="?page=<?php echo (($page - 9) > 0) ? $page - 9 : 1
+        ?>&tid=<?php
+           if ($tid) echo $tid . "&";
+           if ($pare) echo $pare;
+           ?>">
+            <span class = "pageBtn"><</span>
+        </a>
+        <?php
+    }
+    ?>
+    <p class="pageList"><?php for ($i = $pagestart; $i <= $pageall; $i++) { ?>
+            <a href="?page=<?php echo $i ?>&<?php
+            if ($tid) echo'tid=' . $tid . "&";
+            if ($pare) echo $pare;
+            ?>"
+               <?php if ($page == $i) echo "class='on'" ?>>
+                <span class="pageBtn"><?php echo $i ?></span>
+            </a>
+            <?php
+            if ($i >= ($pagestart + 9)) {
+                break;
+            }
+            ?>
+        <?php } ?>
+
+
+    </p><?php
+    if ($pageall > 10 && $pageall - 5 >= $page) {
+        echo ' <span class="pageFont">...</span>';
+        ?>
+        <a href="?page=<?php echo ($page + 9) < $pageall ? $page + 9 : $pageall ?>&<?php
+        if ($tid) echo'tid=' . $tid . "&";
+        if ($pare) echo $pare;
+        ?>" >
+            <span class="pageBtn">></span></a>
+    <?php } ?>
+    <span class="pageFont">到第</span>
+    <span class="pageFont"><input class="pageInput" type="text" value="<?php echo $page ?>"></span>
+    <span class="pageFont">页</span>
+    <span class="pageFont"><button class="pageOk">确定</button></span>
+    <span class="pageFont"><?php echo $count ?>条记录，共<?php echo $pageall ?>页</span>
+</div>
+
+<script>
+    $(function () {
+        var tid = "<?php echo $tid ?>";
+
+
+        var pare = "<?php echo $pare ?>";
+        $(".pageOk").click(function () {
+
+            var page = $(".pageInput").val();
+            if (isNaN(page)) {
+                page = 1;
+            }
+            if (page == "") {
+                page = 1;
+            }
+            if (page < 1)
+                page = 1;
+
+            if (!tid) {
+                type = 0;
+            }
+            window.location.href = "?page=" + page + "&tid=" + tid + "&" + pare;
+        })
+    })
+</script>

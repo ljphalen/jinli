@@ -1,0 +1,204 @@
+<div class="colMain">
+    <div class="title"><p class="fl">产品统计报表</p></div>
+    <div class="main">
+        <form class="app-detail" action="/Statis/productStatis" method="POST" >
+            <ul class="form">
+                <li>
+                    <span class="label">选择日期范围：</span>
+                    <input type="text" class="iText datepicker" name="sdate" value="{{params.sdate}}"  />
+                    至
+                    <input type="text" class="iText datepicker" name="edate" value="{{params.edate}}"   />
+                </li>
+
+                <li>
+                    <span class="label">选择产品：</span>
+                    <table>
+                        <tr>
+                            <td><input type="text" class="iText search_input" id="left"  style="width: 190px;" /></td>
+                            <td width="150px"></td>
+                            <td><input type="text" class="iText search_input" id="right"  style="width: 190px;" /></td>
+                        </tr>
+                        <tr>
+                            <td><select id="left_sel" class="multi" multiple="multiple" _target="right_sel" style="width: 300px;height: 100px;">
+                                <!-- loop pleft -->
+                                <option _name="{{pleft' value}}" value="{{pleft' key}}">{{pleft' value}}</option>
+                                <!-- endloop -->
+                            </select></td>
+                            <td align="center">
+                                <input type="button" class="btn selMove" _from="left_sel" _to="right_sel" value="添加->"/><br />
+                                <input type="button" class="cancel selMove" _from="right_sel" _to="left_sel" value="<-删除"/>
+                            </td>
+                            <td><select id="right_sel" name="p_ids[]" class="multi" multiple="multiple" _target="left_sel" style="width: 300px;height: 100px;">
+                                <!-- loop pright -->
+                                <option _name="{{pright' value}}" value="{{pright' key}}">{{pright' value}}</option>
+                                <!-- endloop -->
+                            </select></td>
+                        </tr>
+                    </table>
+                </li>
+                <li>
+                    <div class="fc">
+                        <input type="submit" value="查询" class="submit" />
+                        <input type="button" value="导出" class="cancel export" />
+                    </div>
+                </li>
+            </ul>
+        </form>
+
+        <div class="grid less export_table" style="margin-top:10px;">
+            <table class="stat_tbl tablesorter">
+                <thead class="pos_header"><tr>
+                        <th>产品名称</th>
+                        <th>展示数</th>
+                        <th>展示比例</th>
+                        <th>点击数</th>
+                        <th>点击率</th>
+                        <th>下载完成数</th>
+                        <th>安装数</th>
+                        <th>启动数</th>
+                        <th>注册数</th>
+                </tr></thead>
+                <tbody>
+                    <!-- loop result -->
+                    <tr>
+                        <td><a class="blue" href="{{siteUrl}}Statis/productApp?pid={{result' value.pid}}&sdate={{params.sdate}}&edate={{params.edate}}"><?php echo $data['pList'][$v1['pid']];?></a></td>
+                        <td>{{result' value.impressions}}</td>
+                        <td>{{result' value.impressions_rate}}%</td>
+                        <td>{{result' value.clicks}}</td>
+                        <td>{{result' value.clicks_rate}}%</td>
+                        <td>{{result' value.finish_downloads}}</td>
+                        <td>{{result' value.installed}}</td>
+                        <td>{{result' value.startups}}</td>
+                        <td>{{result' value.registers}}</td>
+                    </tr> 
+                    <!-- endloop -->
+                </tbody>
+                <tr>
+                    <td><span class="blue" >合计</span></td>
+                    <td>{{total.impressions}}</td>
+                    <td>{{total.impressions_rate}}%</td>
+                    <td>{{total.clicks}}</td>
+                    <td>{{total.clicks_rate}}%</td>
+                    <td>{{total.finish_downloads}}</td>
+                    <td>{{total.installed}}</td>
+                    <td>{{total.startups}}</td>
+                    <td>{{total.registers}}</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="grid more" style="margin-top:10px;display: none;">
+            <table class="stat_tbl tablesorter">
+                <thead class="pos_header"><tr>
+                        <th>产品名称</th>
+                        <th>包大小</th>
+                        <th>展示数</th>
+                        <th>点击数</th>
+                        <th>点击率</th>
+                        <th>开始下载数</th>
+                        <th>开始下载/点击</th>
+                        <th>取消下载数</th>
+                        <th>取消下载/点击</th>
+                        <th>完成下载数</th>
+                        <th>完成下载/开始下载</th>
+                        <th>安装数</th>
+                        <th>安装/下载数</th>
+                        <th>注册数</th>
+                        <th>注册/安装</th>
+                        <th>注册/展示</th>
+                </tr></thead>
+                <tbody>
+                    <!-- loop result -->
+                    <tr>
+                        <td><a class="blue" href="{{siteUrl}}Statis/productApp?pid={{result' value.pid}}&sdate={{params.sdate}}&edate={{params.edate}}"><?php echo $data['pList'][$v1['pid']];?></a></td>
+                        <td><?php echo $data['package_size'][$v1['pid']];?></td>
+                        <td>{{result' value.impressions}}</td>
+                        <td>{{result' value.clicks}}</td>
+                        <td>{{result' value.clicks_rate}}%</td>
+                        <td>{{result' value.start_downloads}}</td>
+                        <td>{{result' value.start_downloads_rate}}%</td>
+                        <td>{{result' value.cancel_downloads}}</td>
+                        <td>{{result' value.cancel_downloads_rate}}%</td>
+                        <td>{{result' value.finish_downloads}}</td>
+                        <td>{{result' value.finish_downloads_rate}}%</td>
+                        <td>{{result' value.installed}}</td>
+                        <td>{{result' value.installed_rate}}%</td>
+                        <td>{{result' value.registers}}</td>
+                        <td>{{result' value.registers_rate}}%</td>
+                        <td>{{result' value.registers_impressions}}</td>
+                    </tr> 
+                    <!-- endloop -->
+                </tbody>
+                    <tr>
+                        <td><span class="blue" >合计</span></td>
+                        <td></td>
+                        <td>{{total.impressions}}</td>
+                        <td>{{total.clicks}}</td>
+                        <td>{{total.clicks_rate}}%</td>
+                        <td>{{total.start_downloads}}</td>
+                        <td>{{total.start_downloads_rate}}%</td>
+                        <td>{{total.cancel_downloads}}</td>
+                        <td>{{total.cancel_downloads_rate}}%</td>
+                        <td>{{total.finish_downloads}}</td>
+                        <td>{{total.finish_downloads_rate}}%</td>
+                        <td>{{total.installed}}</td>
+                        <td>{{total.installed_rate}}%</td>
+                        <td>{{total.registers}}</td>
+                        <td>{{total.registers_rate}}%</td>
+                        <td>{{total.registers_impressions}}</td>
+                    </tr> 
+            </table>
+        </div>
+        <!-- if {{params.sdate}} -->
+        <a class="btn amore">更多详细信息</a>
+        <!-- endif -->
+    </div>
+</div>
+<script type="text/javascript">
+$(function(){
+ 	// 排序
+    $(".stat_tbl").tablesorter();
+    var tab_pos = $(".pos_header").offset().top;
+    $(window).scroll( function() {
+        if(tab_pos < $(window).scrollTop()){
+            $(".pos_header").css('position','fixed').css('top', '0px').css('padding-right', '16px');
+            $(".pos_header > tr > th").each(function(i){
+                $(this).css('width', $(".stat_tbl > tbody").find("td").eq(i).css('width'));
+            });
+        }else{
+            $(".pos_header").css('position','static');
+        }
+    } );
+    $('.datepicker').datepicker({
+        changeMonth:true,
+        changeYear:true,
+        minDate:new Date(),
+        dateFormat : "yy-mm-dd",
+        minDate: "2013-01-01"
+    });
+    $("input[name=sdate]").change(function(){
+        $("input[name=edate]").datepicker('option','minDate',$(this).val());
+    });
+    $("form").submit(function(){
+        $("#right_sel").children("option").attr("selected","selected");
+    });
+    $(".amore").live('click',function(){
+        if ($(this).hasClass("showMore")){
+            $(".more").hide().removeClass("export_table");
+            $(".less").show().addClass("export_table");
+            $(this).removeClass("showMore").text("更多详细信息");
+        }else{
+            $(".more").show().addClass("export_table");
+            $(".less").hide().removeClass("export_table");
+            $(this).addClass("showMore").text("显示简要信息");
+        }
+    });
+    
+    $(".export").click(function(){
+        var tbl = $(".export_table").html();
+        var file_name = "product_stats";
+        $("body").append("<form method='POST' action='/Statis/export' id='export' style='display:none;'><input type='text' value='"+tbl+"' name = 'data' /><input type='text' value="+file_name+" name = 'file_name' /></form>")
+        $("#export").submit();
+    });
+})
+</script>

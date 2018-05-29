@@ -1,0 +1,814 @@
+<?php echo $this->render("layout/header.phtml");?>
+<style type="text/css">
+.block {
+	width:95%;
+ 	height:20px; 
+ 	line-height:20px; 
+	margin:2px;
+ 	border:1px solid #e5e3e3;
+	text-align:center;
+}
+.block2{
+	color:red;
+}
+#prize_layout td{
+	background: #f9f9f9;
+}
+</style>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $pointShopIndexUrl;?>">积分商城</a></li>
+        <li><a href="<?php echo $pointCJIndexUrl;?>">积分抽奖</a></li>
+        <li><a href="<?php echo $presendIndexUrl;?>">人工发放</a></li>
+        <li class="current"><a href="javascript:void();">添加抽奖活动</a></li>
+	</ul>
+</div>
+<form action="<?php echo $addPostUrl;?>" method="post" id="addForm">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">	
+	   <tr class="tr">
+			<th class="th">名称</th>
+			<td class="td"><input type="text" class="input" name="title" value=""></td>
+		</tr>
+		<tr class="tr">
+		    <th class="th">抽奖时间</th>
+			<td class="td" colspan="2">
+			<div>
+				<input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="" /> 
+				至 
+				<input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="" />
+			</div>
+			</td>
+		</tr>
+		<tr class="tr">
+		    <th class="th">活动图片</th>
+			<td class="td" colspan="2">
+			<ul class="uploadImg">
+					<li id="AdImg">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="img" value="">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">最低版本</th>
+			<td class="td"><input type="text" class="input" name="version" value="1.5.5"> 默认1.5.5以上版本皆可参与</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">消耗积分</th>
+			<td class="td"><input type="text" class="input" name="point" value=""> <span><font color="#FF0000">请填写大于0的正整数。</font></span> </td> 
+		</tr>
+		<tr class="tr">
+			<th class="th">活动说明</th>
+			<td class="td"><textarea style="width: 800px; height: 300px" class="textarea" name="descript"></textarea>
+			</td>
+		</tr> 
+		</table>
+		<div id ="prize_config">
+		<table width="100%">
+		<tr class="tr">
+			<td colspan="2"><div class="h_a">配置奖项</div></td>
+		</tr> 
+		<tr class="tr">
+			    <th class="th">
+				 <table width ="100px;" id="prize_layout">
+					<tr>
+					 <td width ="33%"><div class="block block2"><span>添加</span></div></td>
+					 <td width ="33%"><div class="block"><span>2</span></div></td>
+					 <td width ="33%"><div class="block"><span>3</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block"><span>8</span></div></td>
+					 <td width ="33%"><div class="block"><span></span></div></td>
+					 <td width ="33%"><div class="block"><span>4</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block"><span>7</span></div></td>
+					 <td width ="33%"><div class="block"><span>6</span></div></td>
+					 <td width ="33%"><div class="block"><span>5</span></div></td>
+					</tr>
+			    </table>
+			   </th>
+			   <td class="td">
+				<div class="table_full" width ="500px;">
+					<table width="100%">	
+	   					<tr class="tr">
+							<th class="th">奖品类型</th>
+							<td class="td">
+								<input type="hidden" name="prize_pos_1" value="1"/>
+								<select name="prize_type_1" class="select wa" pos="1">
+  									<option  value="1">实体</option>
+			   	 					<option  value="2">A券</option>
+			   	 					<option  value="3">积分</option>
+			   	 					<option  value="0">不中</option>
+								</select>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="text" class="input" name="prize_amount_1" value="" style="display: none;">
+								<span id="prize_tips_1" ></span>
+			 				</td>
+						</tr>
+						<tr class ="tr input_1 day_1" style="display: none;">
+							<th class="th">有效期</th>
+							<td class="td">
+								<input type="text" class="input" name="prize_day_1" value=""> 天 请填写大于0的正整数
+							</td>
+						</tr>
+						<tr class="tr input_1">
+							<th class="th">奖品名称</th>
+							<td class="td"><input type="text" class="input" name="prize_title_1" value="" ></td>
+						</tr>
+						<tr class="tr">
+		   					 <th class="th">奖品图片</th>
+								<td class="td" colspan="2">
+									<ul class="uploadImg">
+										<li id="AdImg1">
+											<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+											<input type="hidden" name="prize_img_1" value="" ">
+										</li>
+									</ul>			
+									<p style="clear:both;">
+	                  					<iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg1';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+									</p>
+								</td>
+						</tr>
+						<tr class="tr input_1">
+							<th class="th">中奖概率</th>
+							<td class="td"><span><input type="text" class="input" name="prize_probability_1" value="" > <span><font color="#FF0000">此处填写【0-1000000】的整数。</font></span> </span></td>
+						</tr>
+						<tr class="tr input_1">
+							<th class="th">发放最小间隔</th>
+							<td class="td"><span><input type="text" class="input" name="prize_min_space_1" value="" > 秒 <span><font color="#FF0000">请填写大于等于0的整数。</font></span> </span></td>
+						</tr>
+						<tr class="tr input_1">
+							<th class="th">每日发放最大数量</th>
+							<td class="td"><span><input type="text" class="input" name="prize_max_win_1" value="" > 个/天 <span><font color="#FF0000">请填写大于等于0的整数。</font></span> </span></td>
+						</tr>
+					</table>
+				  </div>
+			     </td>
+		         </tr> 
+		         <tr class="tr">
+			    <th class="th">
+				 <table width ="100px;" id="prize_layout">
+					<tr>
+					 <td width ="33%"><div class="block"><span>1</span></div></td>
+					 <td width ="33%"><div class="block block2"><span>添加</span></div></td>
+					 <td width ="33%"><div class="block"><span>3</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block"><span>8</span></div></td>
+					 <td width ="33%"><div class="block"></div></td>
+					 <td width ="33%"><div class="block"><span>4</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block"><span>7</span></div></td>
+					 <td width ="33%"><div class="block"><span>6</span></div></td>
+					 <td width ="33%"><div class="block"><span>5</span></div></td>
+					</tr>
+			    </table>
+			   </th>
+			   <td class="td">
+				<div class="table_full" width ="500px;">
+					<table width="100%">	
+	   					<tr class="tr">
+							<th class="th">奖品类型</th>
+							<td class="td">
+								<input type="hidden" name="prize_pos_2" value="2"/>
+								<select name="prize_type_2" class="select wa" pos="2">
+  									<option  value="1">实体</option>
+			   	 					<option  value="2">A券</option>
+			   	 					<option  value="3">积分</option>
+			   	 					<option  value="0">不中</option>
+								</select>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="text" class="input" name="prize_amount_2" value="" style="display: none;">
+								<span id="prize_tips_2"></span>
+			 				</td>
+						</tr>
+						<tr class ="tr input_2 day_2" style="display: none;">
+							<th class="th">有效期</th>
+							<td class="td">
+								<input type="text" class="input" name="prize_day_2" value=""> 天 请填写大于0的正整数
+							</td>
+						</tr>
+						<tr class="tr input_2">
+							<th class="th">奖品名称</th>
+							<td class="td"><input type="text" class="input" name="prize_title_2" value="" ></td>
+						</tr>
+						<tr class="tr">
+		   					 <th class="th">奖品图片</th>
+								<td class="td" colspan="2">
+									<ul class="uploadImg">
+										<li id="AdImg2">
+											<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+											<input type="hidden" name="prize_img_2" value="" >
+										</li>
+									</ul>			
+									<p style="clear:both;">
+	                  					<iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg2';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+									</p>
+								</td>
+						</tr>
+						<tr class="tr input_2">
+							<th class="th">中奖概率</th>
+							<td class="td"><span><input type="text" class="input" name="prize_probability_2" value="" > <span><font color="#FF0000">此处填写【0-1000000】的整数。</font></span> </span></td>
+						</tr>
+						<tr class="tr input_2">
+							<th class="th">发放最小间隔</th>
+							<td class="td"><span><input type="text" class="input" name="prize_min_space_2" value="" > 秒 <span><font color="#FF0000">请填写大于等于0的整数。</font></span> </span></td>
+						</tr>
+						<tr class="tr input_2">
+							<th class="th">每日发放最大数量</th>
+							<td class="td"><span><input type="text" class="input" name="prize_max_win_2" value="" > 个/天 <span><font color="#FF0000">请填写大于等于0的整数。</font></span> </span></td>
+						</tr>
+					</table>
+				  </div>
+			     </td>
+		         </tr> 
+		         <tr class="tr">
+			    <th class="th">
+				 <table width ="100px;" id="prize_layout">
+					<tr>
+					 <td width ="33%"><div class="block"><span>1</span></div></td>
+					 <td width ="33%"><div class="block"><span>2</span></div></td>
+					 <td width ="33%"><div class="block block2"><span>添加</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block"><span>8</span></div></td>
+					 <td width ="33%"><div class="block"></div></td>
+					 <td width ="33%"><div class="block"><span>4</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block"><span>7</span></div></td>
+					 <td width ="33%"><div class="block"><span>6</span></div></td>
+					 <td width ="33%"><div class="block"><span>5</span></div></td>
+					</tr>
+			    </table>
+			   </th>
+			   <td class="td">
+				<div class="table_full" width ="500px;">
+					<table width="100%">	
+	   					<tr class="tr">
+							<th class="th">奖品类型</th>
+							<td class="td">
+								<input type="hidden" name="prize_pos_3" value="3"/>
+								<select name="prize_type_3" class="select wa" pos="3">
+  									<option  value="1">实体</option>
+			   	 					<option  value="2">A券</option>
+			   	 					<option  value="3">积分</option>
+			   	 					<option  value="0">不中</option>
+								</select>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="text" class="input" name="prize_amount_3" value="" style="display: none;">
+								<span id="prize_tips_3"></span>
+			 				</td>
+						</tr>
+						<tr class ="tr input_3 day_3" style="display: none;">
+							<th class="th">有效期</th>
+							<td class="td">
+								<input type="text" class="input" name="prize_day_3" value=""> 天 请填写大于0的正整数
+							</td>
+						</tr>
+						<tr class="tr input_3">
+							<th class="th">奖品名称</th>
+							<td class="td"><input type="text" class="input" name="prize_title_3" value="" ></td>
+						</tr>
+						<tr class="tr">
+		   					 <th class="th">奖品图片</th>
+								<td class="td" colspan="2">
+									<ul class="uploadImg">
+										<li id="AdImg3">
+											<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+											<input type="hidden" name="prize_img_3" value="" >
+										</li>
+									</ul>			
+									<p style="clear:both;">
+	                  					<iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg3';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+									</p>
+								</td>
+						</tr>
+						<tr class="tr input_3">
+							<th class="th">中奖概率</th>
+							<td class="td"><span><input type="text" class="input" name="prize_probability_3" value="" > <span><font color="#FF0000">此处填写【0-1000000】的整数。</font></span> </span></td>
+						</tr>
+						<tr class="tr input_3">
+							<th class="th">发放最小间隔</th>
+							<td class="td"><span><input type="text" class="input" name="prize_min_space_3" value="" > 秒 <span><font color="#FF0000">请填写大于等于0的整数。</font></span> </span></td>
+						</tr>
+						<tr class="tr input_3">
+							<th class="th">每日发放最大数量</th>
+							<td class="td"><span><input type="text" class="input" name="prize_max_win_3" value="" > 个/天 <span><font color="#FF0000">请填写大于等于0的整数。</font></span> </span></td>
+						</tr>
+					</table>
+				  </div>
+			     </td>
+		         </tr> 
+		         <tr class="tr">
+			    <th class="th">
+				 <table width ="100px;" id="prize_layout">
+					<tr>
+					 <td width ="33%"><div class="block"><span>1</span></div></td>
+					 <td width ="33%"><div class="block"><span>2</span></div></td>
+					 <td width ="33%"><div class="block"><span>3</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block"><span>8</span></div></td>
+					 <td width ="33%"><div class="block"></div></td>
+					 <td width ="33%"><div class="block block2"><span>添加</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block"><span>7</span></div></td>
+					 <td width ="33%"><div class="block"><span>6</span></div></td>
+					 <td width ="33%"><div class="block"><span>5</span></div></td>
+					</tr>
+			    </table>
+			   </th>
+			   <td class="td">
+				<div class="table_full" width ="500px;">
+					<table width="100%">	
+	   					<tr class="tr">
+							<th class="th">奖品类型</th>
+							<td class="td">
+								<input type="hidden" name="prize_pos_4" value="4"/>
+								<select name="prize_type_4" class="select wa" pos="4">
+  									<option  value="1">实体</option>
+			   	 					<option  value="2">A券</option>
+			   	 					<option  value="3">积分</option>
+			   	 					<option  value="0">不中</option>
+								</select>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="text" class="input" name="prize_amount_4" value="" style="display: none;">
+								<span id="prize_tips_4"></span>
+			 				</td>
+						</tr>
+						<tr class ="tr input_4 day_4" style="display: none;">
+							<th class="th">有效期</th>
+							<td class="td">
+								<input type="text" class="input" name="prize_day_4" value=""> 天 请填写大于0的正整数
+							</td>
+						</tr>
+						<tr class="tr input_4">
+							<th class="th">奖品名称</th>
+							<td class="td"><input type="text" class="input" name="prize_title_4" value="" ></td>
+						</tr>
+						<tr class="tr">
+		   					 <th class="th">奖品图片</th>
+								<td class="td" colspan="2">
+									<ul class="uploadImg">
+										<li id="AdImg4">
+											<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+											<input type="hidden" name="prize_img_4" value="" >
+										</li>
+									</ul>			
+									<p style="clear:both;">
+	                  					<iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg4';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+									</p>
+								</td>
+						</tr>
+						<tr class="tr input_4">
+							<th class="th">中奖概率</th>
+							<td class="td"><span><input type="text" class="input" name="prize_probability_4" value="" > <span><font color="#FF0000">此处填写【0-1000000】的整数。</font></span> </span></td>
+						</tr>
+						<tr class="tr input_4">
+							<th class="th">发放最小间隔</th>
+							<td class="td"><span><input type="text" class="input" name="prize_min_space_4" value="" > 秒 <span><font color="#FF0000">请填写大于等于0的整数。</font></span> </span></td>
+						</tr>
+						<tr class="tr input_4">
+							<th class="th">每日发放最大数量</th>
+							<td class="td"><span><input type="text" class="input" name="prize_max_win_4" value="" > 个/天 <span><font color="#FF0000">请填写大于等于0的整数。</font></span> </span></td>
+						</tr>
+					</table>
+				  </div>
+			     </td>
+		         </tr> 
+		         <tr class="tr">
+			    <th class="th">
+				 <table width ="100px;" id="prize_layout">
+					<tr>
+					 <td width ="33%"><div class="block"><span>1</span></div></td>
+					 <td width ="33%"><div class="block"><span>2</span></div></td>
+					 <td width ="33%"><div class="block"><span>3</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block"><span>8</span></div></td>
+					 <td width ="33%"><div class="block"></div></td>
+					 <td width ="33%"><div class="block"><span>4</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block"><span>7</span></div></td>
+					 <td width ="33%"><div class="block"><span>6</span></div></td>
+					 <td width ="33%"><div class="block block2"><span>添加</span></div></td>
+					</tr>
+			    </table>
+			   </th>
+			   <td class="td">
+				<div class="table_full" width ="500px;">
+					<table width="100%">	
+	   					<tr class="tr">
+							<th class="th">奖品类型</th>
+							<td class="td">
+								<input type="hidden" name="prize_pos_5" value="5"/>
+								<select name="prize_type_5" class="select wa" pos="5">
+  									<option  value="1">实体</option>
+			   	 					<option  value="2">A券</option>
+			   	 					<option  value="3">积分</option>
+			   	 					<option  value="0">不中</option>
+								</select>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="text" class="input" name="prize_amount_5" value=""  style="display: none;">
+								<span id="prize_tips_5"></span>
+			 				</td>
+						</tr>
+						<tr class ="tr input_5 day_5" style="display: none;">
+							<th class="th">有效期</th>
+							<td class="td">
+								<input type="text" class="input" name="prize_day_5" value=""> 天 请填写大于0的正整数
+							</td>
+						</tr>
+						<tr class="tr input_5">
+							<th class="th">奖品名称</th>
+							<td class="td"><input type="text" class="input" name="prize_title_5" value="" ></td>
+						</tr>
+						<tr class="tr">
+		   					 <th class="th">奖品图片</th>
+								<td class="td" colspan="2">
+									<ul class="uploadImg">
+										<li id="AdImg5">
+											<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+											<input type="hidden" name="prize_img_5" value="" >
+										</li>
+									</ul>			
+									<p style="clear:both;">
+	                  					<iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg5';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+									</p>
+								</td>
+						</tr>
+						<tr class="tr input_5">
+							<th class="th">中奖概率</th>
+							<td class="td"><span><input type="text" class="input" name="prize_probability_5" value="" > <span><font color="#FF0000">此处填写【0-1000000】的整数。</font></span> </span></td>
+						</tr>
+						<tr class="tr input_5">
+							<th class="th">发放最小间隔</th>
+							<td class="td"><span><input type="text" class="input" name="prize_min_space_5" value="" > 秒 <span><font color="#FF0000">请填写大于等于0的整数。</font></span> </span></td>
+						</tr>
+						<tr class="tr input_5">
+							<th class="th">每日发放最大数量</th>
+							<td class="td"><span><input type="text" class="input" name="prize_max_win_5" value="" > 个/天 <span><font color="#FF0000">请填写大于等于0的整数。</font></span> </span></td>
+						</tr>
+					</table>
+				  </div>
+			     </td>
+		         </tr> 
+		         <tr class="tr">
+			    <th class="th">
+				 <table width ="100px;" id="prize_layout">
+					<tr>
+					 <td width ="33%"><div class="block"><span>1</span></div></td>
+					 <td width ="33%"><div class="block"><span>2</span></div></td>
+					 <td width ="33%"><div class="block"><span>3</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block"><span>8</span></div></td>
+					 <td width ="33%"><div class="block"></div></td>
+					 <td width ="33%"><div class="block"><span>4</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block"><span>7</span></div></td>
+					 <td width ="33%"><div class="block block2"><span>添加</span></div></td>
+					 <td width ="33%"><div class="block"><span>5</span></div></td>
+					</tr>
+			    </table>
+			   </th>
+			   <td class="td">
+				<div class="table_full" width ="500px;">
+					<table width="100%">	
+	   					<tr class="tr">
+							<th class="th">奖品类型</th>
+							<td class="td">
+							    <input type="hidden" name="prize_pos_6" value="6"/>
+								<select name="prize_type_6" class="select wa" pos="6">
+  									<option  value="1">实体</option>
+			   	 					<option  value="2">A券</option>
+			   	 					<option  value="3">积分</option>
+			   	 					<option  value="0">不中</option>
+								</select>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="text" class="input" name="prize_amount_6" value=""  style="display: none;">
+								<span id="prize_tips_6"></span>
+			 				</td>
+						</tr>
+						<tr class ="tr input_6 day_6" style="display: none;">
+							<th class="th">有效期</th>
+							<td class="td">
+								<input type="text" class="input" name="prize_day_6" value=""> 天 请填写大于0的正整数
+							</td>
+						</tr>
+						<tr class="tr input_6">
+							<th class="th">奖品名称</th>
+							<td class="td"><input type="text" class="input" name="prize_title_6" value="" ></td>
+						</tr>
+						<tr class="tr">
+		   					 <th class="th">奖品图片</th>
+								<td class="td" colspan="2">
+									<ul class="uploadImg">
+										<li id="AdImg6">
+											<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+											<input type="hidden" name="prize_img_6" value="" >
+										</li>
+									</ul>			
+									<p style="clear:both;">
+	                  					<iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg6';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+									</p>
+								</td>
+						</tr>
+						<tr class="tr input_6">
+							<th class="th">中奖概率</th>
+							<td class="td"><span><input type="text" class="input" name="prize_probability_6" value="" > <span><font color="#FF0000">此处填写【0-1000000】的整数。</font></span> </span></td>
+						</tr>
+						<tr class="tr input_6">
+							<th class="th">发放最小间隔</th>
+							<td class="td"><span><input type="text" class="input" name="prize_min_space_6" value="" > 秒 <span><font color="#FF0000">请填写大于等于0的整数。</font></span> </span></td>
+						</tr>
+						<tr class="tr input_6">
+							<th class="th">每日发放最大数量</th>
+							<td class="td"><span><input type="text" class="input" name="prize_max_win_6" value="" > 个/天 <span><font color="#FF0000">请填写大于等于0的整数。</font></span> </span></td>
+						</tr>
+					</table>
+				  </div>
+			     </td>
+		         </tr> 
+		         <tr class="tr">
+			    <th class="th">
+				 <table width ="100px;" id="prize_layout">
+					<tr>
+					 <td width ="33%"><div class="block"><span>1</span></div></td>
+					 <td width ="33%"><div class="block"><span>2</span></div></td>
+					 <td width ="33%"><div class="block"><span>3</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block"><span>8</span></div></td>
+					 <td width ="33%"><div class="block"></div></td>
+					 <td width ="33%"><div class="block"><span>4</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block block2"><span>添加</span></div></td>
+					 <td width ="33%"><div class="block"><span>6</span></div></td>
+					 <td width ="33%"><div class="block"><span>5</span></div></td>
+					</tr>
+			    </table>
+			   </th>
+			   <td class="td">
+				<div class="table_full" width ="500px;">
+					<table width="100%">	
+	   					<tr class="tr">
+							<th class="th">奖品类型</th>
+							<td class="td">
+							   <input type="hidden" name="prize_pos_7" value="7"/>
+								<select name="prize_type_7" class="select wa" pos="7">
+  									<option  value="1">实体</option>
+			   	 					<option  value="2">A券</option>
+			   	 					<option  value="3">积分</option>
+			   	 					<option  value="0">不中</option>
+								</select>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="text" class="input" name="prize_amount_7" value="" style="display: none;">
+								<span id="prize_tips_7"></span>
+			 				</td>
+						</tr>
+						<tr class ="tr input_7 day_7" style="display: none;">
+							<th class="th">有效期</th>
+							<td class="td">
+								<input type="text" class="input" name="prize_day_7" value=""> 天 请填写大于0的正整数
+							</td>
+						</tr>
+						<tr class="tr input_7">
+							<th class="th">奖品名称</th>
+							<td class="td"><input type="text" class="input" name="prize_title_7" value="" ></td>
+						</tr>
+						<tr class="tr">
+		   					 <th class="th">奖品图片</th>
+								<td class="td" colspan="2">
+									<ul class="uploadImg">
+										<li id="AdImg7">
+											<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+											<input type="hidden" name="prize_img_7" value="" >
+										</li>
+									</ul>			
+									<p style="clear:both;">
+	                  					<iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg7';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+									</p>
+								</td>
+						</tr>
+						<tr class="tr input_7">
+							<th class="th">中奖概率</th>
+							<td class="td"><span><input type="text" class="input" name="prize_probability_7" value="" >  <span><font color="#FF0000">此处填写【0-1000000】的整数。</font></span> </span></td>
+						</tr>
+						<tr class="tr input_7">
+							<th class="th">发放最小间隔</th>
+							<td class="td"><span><input type="text" class="input" name="prize_min_space_7" value="" > 秒 <span><font color="#FF0000">请填写大于等于0的整数。</font></span> </span></td>
+						</tr>
+						<tr class="tr input_7">
+							<th class="th">每日发放最大数量</th>
+							<td class="td"><span><input type="text" class="input" name="prize_max_win_7" value=""> 个/天 <span><font color="#FF0000">请填写大于等于0的整数。</font></span> </span></td>
+						</tr>
+					</table>
+				  </div>
+			     </td>
+		         </tr> 
+		         <tr class="tr">
+			    <th class="th">
+				 <table width ="100px;" id="prize_layout">
+					<tr>
+					 <td width ="33%"><div class="block"><span>1</span></div></td>
+					 <td width ="33%"><div class="block"><span>2</span></div></td>
+					 <td width ="33%"><div class="block"><span>3</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block block2"><span>添加</span></div></td>
+					 <td width ="33%"><div class="block"></div></td>
+					 <td width ="33%"><div class="block"><span>4</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block"><span>7</span></div></td>
+					 <td width ="33%"><div class="block"><span>6</span></div></td>
+					 <td width ="33%"><div class="block"><span>5</span></div></td>
+					</tr>
+			    </table>
+			   </th>
+			   <td class="td">
+				<div class="table_full" width ="500px;">
+					<table width="100%">	
+	   					<tr class="tr">
+							<th class="th">奖品类型</th>
+							<td class="td">
+							    <input type="hidden" name="prize_pos_8" value="8"/>
+								<select name="prize_type_8" class="select wa" pos="8">
+  									<option  value="1">实体</option>
+			   	 					<option  value="2">A券</option>
+			   	 					<option  value="3">积分</option>
+			   	 					<option  value="0">不中</option>
+								</select>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="text" class="input" name="prize_amount_8" value="" style="display: none;">
+								<span id="prize_tips_8"></span>
+			 				</td>
+						</tr>
+						<tr class ="tr input_8 day_8" style="display: none;">
+							<th class="th">有效期</th>
+							<td class="td">
+								<input type="text" class="input" name="prize_day_8" value=""> 天 请填写大于0的正整数
+							</td>
+						</tr>
+						<tr class="tr input_8">
+							<th class="th">奖品名称</th>
+							<td class="td"><input type="text" class="input" name="prize_title_8" value="" ></td>
+						</tr>
+						<tr class="tr">
+		   					 <th class="th">奖品图片</th>
+								<td class="td" colspan="2">
+									<ul class="uploadImg">
+										<li id="AdImg8">
+											<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+											<input type="hidden" name="prize_img_8" value="" >
+										</li>
+									</ul>			
+									<p style="clear:both;">
+	                  					<iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg8';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+									</p>
+								</td>
+						</tr>
+						<tr class="tr input_8">
+							<th class="th">中奖概率</th>
+							<td class="td"><span><input type="text" class="input" name="prize_probability_8" value="" > <span><font color="#FF0000">此处填写【0-1000000】的整数。</font></span> </span></td>
+						</tr>
+						<tr class="tr input_8">
+							<th class="th">发放最小间隔</th>
+							<td class="td"><span><input type="text" class="input" name="prize_min_space_8" value="" > 秒 <span><font color="#FF0000">请填写大于等于0的整数。</font></span> </span></td>
+						</tr>
+						<tr class="tr input_8">
+							<th class="th">每日发放最大数量</th>
+							<td class="td"><span><input type="text" class="input" name="prize_max_win_8" value="" > 个/天 <span><font color="#FF0000">请填写大于等于0的整数。</font></span> </span></td>
+						</tr>
+					</table>
+				  </div>
+			     </td>
+		         </tr> 
+			</table>
+  		</div>
+  		<table width="100%">
+  			 <tr class="tr">
+			    <th class="th">
+				 <table width ="100px;" id="prize_layout">
+					<tr>
+					 <td width ="33%"><div class="block"><span>1</span></div></td>
+					 <td width ="33%"><div class="block"><span>2</span></div></td>
+					 <td width ="33%"><div class="block"><span>3</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block"><span>8</span></div></td>
+					 <td width ="33%"><div class="block block2"><span>添加</span></div></td>
+					 <td width ="33%"><div class="block"><span>4</span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block"><span>7</span></div></td>
+					 <td width ="33%"><div class="block"><span>6</span></div></td>
+					 <td width ="33%"><div class="block"><span>5</span></div></td>
+					</tr>
+			    </table>
+			   </th>
+			   <td class="td">
+				<div class="table_full" width ="500px;">
+					<table width="100%">	
+	   					<tr class="tr">
+							<th class="th">开关</th>
+							<td class="td">
+								<select name="status" class="select wa">
+  									<option value="1">开启</option>
+			   	 					<option value="0">关闭</option>
+								</select>
+			 				</td>
+						<tr/>	
+					</table>
+				  </div>
+			 </td>
+		  </tr> 
+		</table>
+  </div>
+  
+<div class="mb10 tac"><span class="btn"><span><button type="submit">完成</button></span></span></div>
+</form>
+
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+var editor;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor = K.create('textarea[name="descript"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+    $('#end_time').datetimepicker();
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Point_Prize/index');
+	},function(){
+		editor.sync();
+	});
+
+	/*
+	* 奖项配置选项事件联动处理
+	*/
+	$("#prize_config select").each(function(){
+		var pos = $(this).attr('pos');
+		$(this).bind('change', function(){
+			 var check=$(this).val();
+			 switch (check) {
+				 case '1' :
+					 $("#prize_config tr.input_"+pos+"").show();
+					 $("#prize_config tr.day_"+pos+"").hide();
+					 $("input[name='prize_amount_"+pos+"']").hide().attr('tips', '');
+					 $("#prize_tips_"+pos).html('');
+					 break;
+				 case '2' :
+					 $("#prize_config tr.input_"+pos+"").show();
+					 $("input[name='prize_amount_"+pos+"']").show();
+					 var tips = $(this).find("option:selected").text();
+					 tips += ' 请填写大于0的正整数';
+					 $("input[name='prize_amount_"+pos+"']").attr('tips', tips);
+					 $("#prize_tips_"+pos).html(tips);
+					 break;
+				 case '3' :
+					 $("#prize_config tr.input_"+pos+"").show();
+					 $("#prize_config tr.day_"+pos+"").hide();
+					 $("input[name='prize_amount_"+pos+"']").show();
+					 var tips = $(this).find("option:selected").text();
+					 tips += ' 请填写大于0的正整数';
+					 $("input[name='prize_amount_"+pos+"']").attr('tips', tips);
+					 $("#prize_tips_"+pos).html(tips);
+					 break;
+				 case '0' :
+					 $("input[name='prize_amount_"+pos+"']").hide().attr('tips', '');
+					 $("#prize_config tr.input_"+pos+"").hide();
+					 $("#prize_tips_"+pos).html('');
+					 break;
+			 }	 
+		});	
+	});
+
+//	console.log($(this).text());	
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

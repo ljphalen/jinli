@@ -1,0 +1,38 @@
+<dl>
+	<dt>普通数据</dt>
+	<dd><a href="{:U('Chart/index')}" id="index_tab2">普通数据</a></dd>
+</dl>
+<dl>
+	<dt>联运数据</dt>
+	<dd><a href="{:U('Chart/union')}" id="union_tab2">用户付费</a></dd>
+	<dd><a href="{:U('Chart/union_dau')}" id="union_dau_tab2">留存用户</a></dd>
+</dl>
+<script>$(".lnav #<?php echo strtolower(ACTION_NAME);?>_tab2").addClass("on");</script>
+
+<style>
+.tab th, .tab td{padding-left:5px;}
+.Wdate{width:80px;vertical-align:middle;padding:0px 3px;height:20px;}
+.chartselect{width:200px;}
+.Wdate{width:80px;vertical-align:middle;padding:8px;height:20px;display: inline-block;float: none}
+.tab th, .tab td{text-align: center;}
+.datac .btn-green{margin-top: 4px;}
+</style>
+
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/app/jui/css/smoothness/jquery-ui-1.9.1.custom.min.css">
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-1.9.1.custom.min.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/development-bundle/ui/i18n/jquery.ui.datepicker-zh-CN.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+	$(function(){
+		$(".Wdate").datepicker({
+			dateFormat:"yy-mm-dd",
+			regional: 'zh-CN',
+			minDate: new Date({:date('Y')-1}, {:date('m')} - 1, {:date('d')}, 0, 0),
+			maxDate: new Date(2015, 11, 31, 17, 30)
+			});
+	});
+});
+</script>

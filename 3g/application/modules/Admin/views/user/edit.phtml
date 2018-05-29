@@ -1,0 +1,40 @@
+<form method="post" action="<?php echo $editPostUrl; ?>" id="edit_form">
+	<input name="uid" value="<?php echo $userInfo['uid']; ?>" type="hidden"/>
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr>
+			<th>用户名</th>
+			<td>
+				<input type="text" class="input" name="username" maxlength="30" value="<?php echo $userInfo['username']; ?>" disabled="disabled">
+			</td>
+		</tr>
+		<tr>
+			<th>用户Email</th>
+			<td>
+				<input type="text" maxlength="30" name="email" class="input input_wa" disabled="disabled" value="<?php echo $userInfo['email']; ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>用户密码</th>
+			<td><input type="password" maxlength="20" name="password" class="input"></td>
+		</tr>
+		<tr>
+			<th>重复密码</th>
+			<td><input type="password" maxlength="20" name="r_password" class="input"></td>
+		</tr>
+		<tr>
+			<th>用户组</th>
+			<td>
+				<?php if ($userInfo['groupid'] == 0) {
+					echo '超级管理员';
+				} else { ?>
+					<select name="groupid">
+						<?php foreach ($groups as $key => $value) { ?>
+							<option <?php echo $userInfo['groupid'] == $value['groupid'] ? 'selected="selected"' : ''; ?> value="<?php echo $value['groupid']; ?>"><?php echo $value['name']; ?></option>
+						<?php } ?>
+					</select>
+				<?php } ?>
+			</td>
+		</tr>
+	</table>
+</form>

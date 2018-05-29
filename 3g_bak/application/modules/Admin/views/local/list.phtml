@@ -1,0 +1,26 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current">数据列表</li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<th class="th">ID</th>
+			<th class="th">信息内容</th>
+			<th class="th">操作</th>
+		</tr>
+		<?php foreach ($data as $v) { ?>
+			<tr class="ct">
+				<td class="td"><?=$v['id'];?></td>
+				<td class="td"><?=$v['info'];?></td>
+				<td class="td"><a href="<?php echo $editUrl; ?>/?id=<?php echo $v['id']; ?>">编辑</a>&nbsp;
+					<a href="javascript:void(0);" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $v['id']; ?>', '', event);">删除</a>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+
+<?php echo $this->render("layout/footer.phtml"); ?>
+	

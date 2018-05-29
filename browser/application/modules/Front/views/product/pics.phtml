@@ -1,0 +1,30 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div id="page" class="products">
+		<?php echo $this->render("layout/nav.phtml");?>
+		<article class="ct">
+			<div class="scroll-pro J_scrollPro isTouch">
+				<span class="handle ui-slide-prev ui-slide-prevdis"><s>&lt;</s></span>
+				<span class="handle ui-slide-next"><s>&gt;</s></span>
+				<div class="box ui-slide-scrollbox">
+					<ul class="ui-slide-scroll oz">
+						<?php foreach($pics as $key=>$value) {?>
+						<li class="ui-slide-item"><i><img src="<?php echo $attachPath .'/'. $value;?>" ></i></li>
+						<?}?>
+					</ul>
+				</div>
+				<div class="ui-slide-tabs point">
+<?php 
+$i = 1;
+foreach($pics as $key=>$value) {
+$sel = $i == 1 ? "ui-slide-tabcur" : "";
+?>
+<span class="ui-slide-tab <?php echo $sel;?>"></span>
+<?php 
+$i++;
+}
+?>
+				</div>
+			</div>
+		</article>
+	</div>
+<?php echo $this->render("layout/footer.phtml");?>

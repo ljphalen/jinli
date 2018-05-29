@@ -1,0 +1,79 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $indexUrl; ?>">会员列表</a></li>
+		<li class="current"><a href="javascript:;">编辑会员</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑会员</div>
+<form method="post" action="<?php echo $editPostUrl; ?>" id="editFrom">
+	<input name="id" value="<?php echo $userInfo['id']; ?>" type="hidden"/>
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">用户名</th>
+				<td class="td"><?php echo $userInfo['username']; ?></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">姓名</th>
+				<td class="td"><?php echo $userInfo['realname']; ?></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">手机</th>
+				<td class="td"><input type="text" value="<?php echo $userInfo['mobile']; ?>" name="mobile"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">QQ</th>
+				<td class="td"><input type="text" value="<?php echo $userInfo['qq']; ?>" name="qq"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">生日</th>
+				<td class="td"><?php echo $userInfo['birthday']; ?></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">地址</th>
+				<td class="td"><?php echo $userInfo['address']; ?></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">性别</th>
+				<td class="td"><?php echo $sex[$userInfo['sex']]; ?></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">注册时间</th>
+				<td class="td"><?php echo date('Y-m-d H:i:s', $userInfo['register_time']); ?></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">最后登录时间</th>
+				<td class="td"><?php echo date('Y-m-d H:i:s', $userInfo['last_login_time']); ?></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">签到次数</th>
+				<td class="td"><?php echo $userInfo['signin_num']; ?></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td">
+					<select name="status">
+						<?php foreach ($status as $key => $value) { ?>
+							<option <?php echo $userInfo['status'] == $key ? 'selected="selected"' : ''; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">保存</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	//用户表单数据提交
+	$(document).ready(function () {
+		ajaxForm('editFrom', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Gioneeuser/index');
+		});
+	})
+
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,239 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript"
+src="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.js"></script>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!--wp02-壁纸编辑-->
+    <div id="zt_admin_edit">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">名称</label>
+                    <div class="tb_cont tb_cell">
+                        <input type="hidden" class="rd_1 themeid" value="<?php echo $themeinfo['id'] ?>">
+                        <input type="text" class="rd_1 name" value="<?php echo $themeinfo['title'] ?>">
+                    </div>
+                </div><!-- com_tb end -->
+
+            </div><!-- com_tb_wrap end -->
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">英文名</label>
+                    <div class="tb_cont tb_cell">
+                        <input style="width:200px;" type="text" class="rd_1 ename" value="<?php echo $themeinfo['Ename'] ?>">
+                    </div>
+
+                </div><!-- com_tb end -->
+
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle">预览图</label>
+                    <div class="tb_cont tb_cell cell_upload_wrap">
+
+                        <div class="cell_img_canvas" id="cell_img_canvas1">
+                            <!-- 已经存在了的预览图 start-->
+                            <?php foreach ($imgs as $v) { ?>
+                                <a><img src="<?php echo $imageurl . $v['img'] ?>" class="tb_cell_img" style="height: auto;"></a>
+                            <?php } ?>
+
+                            <!-- 已经存在了的预览图 end-->
+                        </div>
+                        <!-- <div class="cell_upload" id="cell_drag1">
+                                <div class="cell_upload_btn"><button class="btn_s3">选择文件</button><input type="file" id="fileLoader"></div>
+                                <span class="cell_upload_tip">允许主题大小不能超过2M</span>
+                        </div> -->
+                    </div>
+                </div><!-- com_tb end -->
+            </div>
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">一级标签</label>
+                    <div class="tb_cont tb_cell">
+                        <div class="select_box">
+                            <label class="select_val maintarg" val="<?php echo $selecttype[0] ?>" >
+                                <?php if ($selecttype[1]) echo $selecttype[1]; ?></label>
+
+                            <ul class="select_option" style="display: none;">
+                                <?php foreach ($filetype as $v) { ?>
+                                    <li val="<?php echo $v['id'] ?>"><?php echo $v['name'] ?></li>
+                                <?php } ?>
+
+                            </ul>
+                        </div><!-- select_box -->
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell align_top">二级标签</label>
+
+                    <div class="tb_cont tb_cell">
+                        <ul class="tag_add_wrap selected_subtargs">
+                            <?php foreach ($themesub_type as $v) { ?>
+                                <li class="btn_tag" subid="<?php echo $v['sedtype_id']; ?>">
+                                    <span><?php echo $subtypeline[$v['sedtype_id']]; ?></span>
+                                    <i class="tag_del"></i>
+                                </li>
+                            <?php } ?>
+                            <li class="btn_tag_add pop_btn" openPopId="fixTagView"><span>+</span></li>
+                        </ul>
+                    </div>
+
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle">主题简介</label>
+                    <div class="tb_cont tb_cell txt_editor_wrap">
+                        <textarea class=" txt_editor themeDesc"><?php echo ltrim($themeinfo['descript']); ?></textarea>
+                    </div>
+                </div><!-- com_tb end -->
+            </div>
+
+            <div class="com_tb_wrap no_border">
+
+                <?php if ($groupid == 3) { ?>
+                    <div class="com_tb">
+                        <label class="tb_cell">上线时间</label>
+                        <div class="tb_cont tb_cell">
+                            <input type="text" onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" readonly value='<?php echo $datatimes ?>' class="laydate-icon linetime">
+                        </div><br/>
+
+
+                    </div><!-- com_tb_wrap end --></br>
+                <?php } ?>
+                <div class="com_tb">
+                    <label class="tb_cell">状态</label>
+                    <div class="tb_cont tb_cell">
+                        <div class="select_box">
+                            <label class="select_val status_data" val="<?php echo $themeinfo['status'] ?>"><?php echo $status[$themeinfo['status']] ?></label>
+                            <ul class="select_option" id="zt_editApprove">
+                                <!--<li val="3">通过</li>
+                                <li val="2">不通过</li>-->
+                                <?php foreach ($selstatus as $k => $v) { ?>
+                                    <li val="<?php echo $k ?>"><?php echo $v ?></li>
+                                <?php } ?>
+                            </ul>
+
+
+                        </div><!-- select_box -->
+                    </div>
+
+                </div><!-- com_tb end -->
+
+            </div><!-- com_tb_wrap end -->
+
+            <!-- 富文本编辑器 -->
+            <div class="com_tb_wrap none" id="zt_editEditor">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle"></label>
+                    <div class="tb_cont tb_cell txt_editor_wrap ">
+                        <textarea class="txt_editor resData"><?php echo $themeinfo['reason'] ?></textarea>
+                    </div>
+                </div><!-- com_tb end -->
+            </div>
+
+            <div class="bnts_wrap"><button class="btn_s2 pop_btn" openPopId="fixTipView">保存</button></div>
+        </div><!-- content end -->
+
+    </div>
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">确定保存修改?</p>
+                    <div class="tip_btns"><button class="btn_s2 save_ok">确定</button></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+<!-- 弹窗 图片 pop_style_img表示是图片 带该class的 点击页面其它区域会关闭该图片-->
+<div class="pop_wraper pop_style_img" id="fixPicView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_img">
+                    <div class="pop_img_src"><img src="image/test_img02.png"></div>
+                    <div class="pop_close"></div>
+                </div>
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+<!-- 弹窗 添加标签-->
+<div class="pop_wraper" id="fixTagView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tags">
+                    <ul class="tag_add_wrap tag_list">
+                        <?php foreach ($subtypeline as $k => $v) { ?>
+                            <li class="btn_tag" subid="<?php echo $k; ?>"><span><?php echo $v; ?></span><i class="tag_del"></i></li>
+                        <?php } ?>
+                    </ul>
+                    <div class="tag_btns"><button class="btn_s2 btn_tag_add_confirm">确定</button><button class="btn_s2 btn_tag_add_cancel">取消</button></div>
+                    <div class="pop_close"></div>
+                </div>
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+<script type="text/javascript">
+    $(function () {
+        $(".save_ok").click(function () {
+            $(".pop_wraper").removeClass("show");
+            var subids = $(".selected_subtargs >li").map(function () {
+                return $(this).attr("subid");
+            }).get().join("_");
+
+            var themeid = $(".themeid").val();
+            var wName = $(".name").val();
+            var eName = $(".ename").val();
+            var wtarg = $(".maintarg").attr("val");
+            var themeDesc = $(".themeDesc").val();
+            var conns = $(".resData").val();
+
+            var pubtime = $(".linetime").val();
+
+            var check = $(".status_data").attr("val");
+            if (check == 2 && conns == '') {
+                alert("请填写不通过原因");
+                return 0;
+            }
+            var data = "tid=" + themeid + "&pubtime=" + pubtime + "&wName=" + wName + "&wtarg=" + wtarg + "&themeDesc=" + themeDesc + "&ename=" + eName
+                    + "&subids=" + subids + "&check=" + check + "&conns=" + conns + "&token=" + token;
+
+            url = "/Admin/Fileadmin/editPost";
+            $.post(url, data, function (d) {
+                if (d) {
+                    history.go(-1);
+                }
+            })
+        })
+    })
+</script>
+
+
+</body>
+</html>

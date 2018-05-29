@@ -1,0 +1,57 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">用户反馈列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">联系方式</th>
+			<td class="td"><input class="input" type="text" name="mobile" value="<?php echo $search['contact'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status">
+				<option <?php if($search['status'] == 0) echo 'selected';?> value="0">全部</option>
+				<option <?php if($search['status'] == 1) echo 'selected';?> value="1">未审核</option>
+				<option <?php if($search['status'] == 2) echo 'selected';?> value="2">已审核通过</option>
+			</select>
+			
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">编号</td>
+			<td width="100">联系方式</td>
+			<td>反馈内容</td>
+			<td>回复内容</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($reacts as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['contact'];?></td>
+			<td><?php echo $value['react'];?></td>
+			<td><?php echo $value['reply'];?></td>
+			<td><?php if($value['status'] == 1) {echo '未审核';} else { echo '已审核通过';};?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">审核</a>
+			<a onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '是否要删除该用户组？', event);" href='javascript:'>删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

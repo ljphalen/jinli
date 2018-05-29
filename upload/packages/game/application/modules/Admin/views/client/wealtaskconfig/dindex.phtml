@@ -1,0 +1,61 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $listUrl;?>">福利任务</a></li>
+		<li class="current"><a href="<?php echo $dlistUrl;?>">连续登录</a></li>
+		<li ><a href="<?php echo $dailyTaskUrl;?>">每日任务</a></li>
+		<li><a href="<?php echo $taskInfoConfigUrl;?>">任务说明</a></li>
+	</ul>
+</div>
+<form action="<?php echo $dlistUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+      <table width="100%">
+	   <tr class="tr">
+			<th class="th">任务名称</th>
+			<td class="td"><input type="text" class="input" name="task_name" value="<?php echo $s['task_name'];?>"></td>
+			<th class="th">任务状态</th>
+			<td class="td">
+			 <select name="status" class="select wa">
+			    <option  value="0">全部</option>
+				<option <?php if ($s['status'] == 2) echo 'selected';?> value="2">开启</option>
+				<option <?php if ($s['status'] == 1) echo 'selected';?> value="1">关闭</option>
+			 </select>
+		   </td>
+	 </tr>
+	 </table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+    <span class="btn2"><span><button ><a href="<?php echo $jeditUrl;?>" class="mr10" style="color:white;">奖励配置</a></button></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="btn2"><span><button><a href="<?php echo $continueLoginDetailUrl;?>" class="mr10" style="color:white;">奖励明细</a></button></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="btn2"><span><button><a href="<?php echo $continueLoginActivityAddUrl;?>" class="mr10" style="color:white;">添加活动</a></button></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;共<?php echo $total;?>条结果</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100"> 活动id</td>
+			<td width="400">活动名称</td>
+			<td width="150">活动时间</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['task_name'];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['start_time']);?><br><?php echo date('Y-m-d H:i:s', $value['end_time']);?></td>
+			<td><?php echo $value['status'] ? '开启' : '关闭';?></td>
+			<td>
+			<a href="<?php echo $deditUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">活动编辑</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

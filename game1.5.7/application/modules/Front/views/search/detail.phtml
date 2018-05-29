@@ -1,0 +1,168 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="wrap">
+	<div class="content">
+		<div class="bread_crumbs">当前位置： <a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $tj_object, $tj_intersrc, $webroot.'/Front/Category/index/');?>">分类</a><span class="gt">&gt;</span><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $tj_object, $tj_intersrc, $webroot.'/Front/Category/index/');?>"><?php echo $game['category']; ?></a><span class="gt">&gt;</span><a href="javascript:void(0)"><?php echo $game['name']; ?></a></div>
+		<div class="main">
+			<div class="mod_box gameInfo_box">
+				<div class="game_intro">
+					<a href="javascript:void(0)" class="thumb"><img alt="<?php echo $game['name']; ?>" src="<?php echo $game['img']; ?>"></a>
+					<h4><?php echo $game['name']; ?></h4>
+					<p class="sum"><span class="type"><?php echo $game['category_title']; ?></span><span class="size">大小：<?php echo $game['size']; ?>M</span><span class="versions">版本：<?php echo $game['apply_version']; ?></span></p>
+					<p class="btn_area"><a class="gray_btn" href="javascript:void(0)">安装到手机</a><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'dlpc',$game['package'] ,$tj_intersrc, $game['link']);?>" class="normal_btn">下载到电脑</a></p>
+					<span class="weixin">
+					<?php 
+					//$url_qr = Common::aimiTjUrl($tjUrl, '', '', 'QR', '', 'baidu',$h5_webroot.'/search/detail/?stype=1&from=baidu&id='.$game['id'] );
+					$url_qr = $webroot.'/Front/Index/qrtj/?from=baidu&id='.$game['id'].'&action=QR&intersrc='.$tj_intersrc.'&channel='.$tj_channel.'&cku='.$tj_cku.'&object='.$game['package'] ;
+					?>	
+					<img src="<?php echo $webroot . '/api/qrcode/index?p='. urlencode($url_qr); ?>" alt="QR code" width="100" height="100" />
+					</span>
+				</div>
+			</div>		
+			<!-- 游戏截图 s-->
+			<div class="mod_box print_box">
+				<div class="hd"><i class="hd_ico"></i><h2 class="title">游戏截图</h2></div>
+				<div class="bd">
+					<div class="slide_box">
+						<ul class="slide_pic clearfix">
+						<?php foreach($game['simgs'] as $key=>$value){?>
+							<li>
+								<img class="lazy" data-original="<?php echo $value;?>"  alt="<?php echo $game['name']; ?>" src ="<?php echo $staticResPath; ?>/images/default_detail.png?v=<?php echo $version;?>">
+							</li>
+						<?php }?>
+						</ul>
+						<a href="javascript:void(0)" class="prev icon btn">&lt;</a>
+						<a href="javascript:void(0)" class="next icon btn">&gt;</a>
+					</div>
+					
+				</div>
+			</div>	
+			<!-- 游戏简介 s-->
+			<?php if ($game['descrip']) {?>
+				<div class="mod_box intro_box">
+					<div class="hd"><i class="hd_ico"></i><h2 class="title">游戏简介</h2></div>
+					<div class="bd">
+						<div class="intro_con" id="j_content"><?php echo html_entity_decode($game['descrip']); ?></div>
+						<?php  if (strlen($game['descrip']) > 200){?>
+						<p class="show_more"><a href="javascript:void(0)" id="j_toggle" class="show">展开更多</a></p>
+						<?php }?>
+					</div>
+				</div>
+			 <?php }?>
+			<!-- 小编八卦 s-->
+			<?php if( $game['tgcontent'] ) {?>
+			<div class="mod_box intro_box">
+				<div class="hd"><i class="hd_ico"></i><h2 class="title">小编八卦</h2></div>
+				<div class="bd">
+					<div class="intro_con" id="j_content1"><?php echo html_entity_decode($game['tgcontent']); ?></div>
+					<?php  if (strlen($game['tgcontent']) > 200){?>
+						<p class="show_more"><a href="javascript:void(0)" id="j_toggle1" class="show">展开更多</a></p>
+					<?php }?>
+				</div>
+			</div>
+			<?php }?>
+			<!-- 分享至好友 s-->
+	        <?php echo $this->render("layout/share.phtml");?>
+		</div>
+		<div class="aside">
+			<!-- 游戏信息 s-->
+			<div class="mod_box gameIntro_box">
+				<div class="hd"><i class="hd_ico"></i><h2 class="title">游戏信息</h2></div>
+				<div class="bd">
+					<ul class="intro_list">
+						<li class="name"><span>开发商：</span><?php echo $game['developer']; ?></li>
+						<li>更新日期：<?php echo $game['updatetime']; ?></li>
+						<li>适应系统：Android<?php echo $game['versions']; ?>以上</li>
+					</ul>
+					<?php if ($safe_arr && !$safe_arr['safe_flag'] == -1) {?>
+					<div class="intro_tips">
+					<?php 
+						if ($safe_arr['safe_flag'] == 1 && $safe_arr['ad_flag'] == 1 ){
+					       echo  "无病毒、无广告";
+					     }else if($safe_arr['safe_flag'] == 1){
+					     	echo "无病毒";
+					     }else if($safe_arr['ad_flag'] == 1){
+					     	echo "无广告";
+					     }
+                     ?>
+					</div>
+					<?php }?>
+				</div>
+			</div>
+			<?php if($gift) { ?>
+			<!-- 领取礼包 s-->
+			<div class="mod_box gift_box">
+				<div class="hd"><i class="hd_ico"></i><h2 class="title">领取礼包</h2></div>	
+				<div class="bd">
+					<ul class="news_list">
+					<?php foreach ($gift as $key=>$val) { ?>
+						<li><a href="javascript:void(0)"><?php echo $val['name'];?></a></li>
+					<?php } ?>	
+					</ul>	
+					<a class="get_btn" href="javascript:void(0);" title="立即领取" onclick="javascript:tjUrl('<?php echo $tj_channel; ?>','<?php echo $tj_cku; ?>','visit','<?php echo $ami_web_info['package'];?>','<?php echo 'gamedetail_libao_gid'.$game['id']; ?>');" >立即领取</a>
+					<p class="download_tips">下载安装金立游戏客户端 即可领取游戏礼包</p>
+				</div>
+			</div>
+			<?php } ?>
+			<!-- 你可能喜欢 s-->
+			<div class="mod_box like_box">
+				<div class="hd"><i class="hd_ico"></i><h2 class="title">你可能喜欢</h2></div>
+				<div class="bd">
+					<ul class="game_list2">
+					<?php foreach($recommGames as $key=>$val) {?>  
+						<li>
+							<a class="thumb" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $game['package'], $from?$tj_intersrc:('gamedetail_glike'.$val['id'].'_gid'.$game['id']), $webroot.'/Front/Game/detail/?id='.$val['id']) ;?>"><img class="lazy" data-original="<?php echo $val['img'];?>" src="<?php echo $staticResPath; ?>/images/default_icon.png?v=<?php echo $version;?>" alt="<?php echo $val['name'];?>" /></a>
+							<h4><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $game['package'], $from?$tj_intersrc:('gamedetail_glike'.$val['id'].'_gid'.$game['id']), $webroot.'/Front/Game/detail/?id='.$val['id']) ;?>"><?php echo $val['name'];?></a></h4>
+							<p class="type"><?php echo $val['category_title'];?></p>
+							<a class="download_btn" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'startdl', $game['package'], $from?$tj_intersrc:('gamedetail_glike'.$val['id'].'_gid'.$game['id']), $val['link']) ;?>" title="下载">下载</a>
+						</li>
+					<?php } ?>	
+					</ul>
+				</div>
+			</div>
+		</div>
+	 <!-- 右侧的悬浮框 -->
+	    <?php echo $this->render("layout/right.phtml");?>
+	</div>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>
+<script type="text/javascript" src="<?php echo $staticResPath; ?>/js/jquery.SuperSlide.2.1.1.js?v=<?php echo $version;?>"></script>
+<script>
+	$(".slide_box").slide({ mainCell:"ul",vis:3,pnLoop:false,prevCell:".prev",nextCell:".next",effect:"leftLoop"});
+	$(function(){
+		var to_url = '<?php echo $webroot.'/Front/Android/index/';?>';
+		$('.get_btn').click(function(){
+            alert('下载并安装金立游戏客户端即可领取游戏礼包');
+            location.href=to_url;
+		});
+		$("#j_toggle").click(function(){
+			if($("#j_toggle").hasClass('show')){
+				tjUrl('<?php echo $tj_channel; ?>','<?php echo $tj_cku; ?>','open_des<?php echo $game['id']; ?>','<?php echo $tj_object;?>','<?php echo $tj_intersrc; ?>');		
+				return ;
+			}
+			if($("#j_toggle").hasClass('hide')){
+				tjUrl('<?php echo $tj_channel; ?>','<?php echo $tj_cku; ?>','close_des<?php echo $game['id']; ?>','<?php echo $tj_object;?>','<?php echo $tj_intersrc; ?>');
+				return ;
+			}
+	    });
+		$("#j_toggle1").click(function(){
+			if($("#j_toggle1").hasClass('show')){
+				tjUrl('<?php echo $tj_channel; ?>','<?php echo $tj_cku; ?>','open_bagua<?php echo $game['id']; ?>','<?php echo $tj_object;?>','<?php echo $tj_intersrc; ?>');
+				$("#j_toggle1").html('收起');
+				 $('#j_content1').addClass('auto');
+				 $("#j_toggle1").removeClass('show');
+				 $("#j_toggle1").addClass('hide');
+				return ;
+			}
+			if($("#j_toggle1").hasClass('hide')){
+				tjUrl('<?php echo $tj_channel; ?>','<?php echo $tj_cku; ?>','close_bagua<?php echo $game['id']; ?>','<?php echo $tj_object;?>','<?php echo $tj_intersrc; ?>');
+				$("#j_toggle1").html('展开更多');
+				$('#j_content1').removeClass('auto');
+				 $("#j_toggle1").removeClass('hide')
+				 $("#j_toggle1").addClass('show');
+				return ;
+			}
+	    });
+	});
+</script>
+</body>
+</html>

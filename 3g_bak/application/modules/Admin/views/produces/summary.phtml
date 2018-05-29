@@ -1,0 +1,42 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $indexUrl; ?>">商品列表</a></li>
+			<li><a href="<?php echo $addUrl; ?>">添加商品</a></li>
+			<li class="current"><a href="<?php echo $summaryUrl; ?>">汇总信息</a></li>
+		</ul>
+	</div>
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+				<th class="th">名称</th>
+				<th class="th">链接</th>
+				<th class="th">单次积分数</th>
+				<th class="th">开始时间</th>
+				<th class="th">结束时间</th>
+				<th class="th">排序</th>
+				<th class="th">状态</th>
+				<th class="th">操作</th>
+			</tr>
+			<?php foreach ($list as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['id'];?></td>
+					<td class="td" align="left"><?=$v['name'];?></td>
+					<td class="td"><?php echo $v['link']; ?></td>
+					<td class="td"><?php echo $v['score']; ?></td>
+					<td class="td"><?php echo date('Y-m-d H:i:s', $v['start_time']) ?></td>
+					<td class="td"><?php echo date('Y-m-d H:i:s', $v['end_time']) ?></td>
+					<td class="td"><?php echo $v['sort']; ?></td>
+					<td class="td" style='color:blue'><?php echo $v['status'] ? '开启' : '结束'; ?></td>
+					<td class="td"><a href="<?php echo $editUrl; ?>/?id=<?php echo $v['id']; ?>">编辑</a>&nbsp;
+						<a href="javascript:void(0);" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $v['id']; ?>', '', event);">删除</a>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

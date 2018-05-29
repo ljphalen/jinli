@@ -1,0 +1,50 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $expuserUrl; ?>">等级用户数据</a></li>
+			<li><a href="<?php echo $expchannelUrl; ?>">经验获取途经</a></li>
+			<li class="current"><a href="<?php echo $exprankUrl; ?>">经验值排名</a></li>
+			<li><a href="<?php echo $expusedUrl; ?>">等级特权使用情况</a></li>
+		</ul>
+	</div>
+
+	<div class="table_list">
+		<table width="100%">
+			<tr class="ct">
+				<td class="td2">ID</td>
+				<td class="td2">用户ID</td>
+				<td class="td2">类型</td>
+				<td class="td2">获得经验数</td>
+				<td class="td2">获得时间</td>
+			</tr>
+			<?php
+			foreach ($dataList as $k => $v) { ?>
+				<tr class="ct">
+					<td class="td2"><?php echo $v['id']; ?></td>
+					<td class="td2"><?php echo $v['uid']; ?></td>
+					<td class="td2"><?php echo $types[$v['type']]; ?></td>
+					<td class="td2"><?php echo $v['points']; ?></td>
+					<td class="td2"><?php echo date('Y-m-d H:i:s', $v['add_time']); ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#sdate").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#edate").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#total").text('<?php echo $sum;?>');
+			$("#downLoad").bind('click', function () {
+				$("#hidden_export").val(1);
+				$("#addFrom").submit();
+				$("#hidden_export").val(0);
+			});
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,42 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">规则列表</a></li>
+    <li class="current"><a href="javascript:;">添加规则</a></li>
+	</ul>
+</div>
+<div class="h_a">添加规则</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">价格(元)</th>
+			<td class="td"><input type="text" class="input" name="price" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">概率(%)</th>
+			<td class="td"><input type="text" name="rate" class="input"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">次数(次)</th>
+			<td class="td"><input type="text" name="times" class="input"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">范围(天)</th>
+			<td class="td"><input type="text" name="scope" class="input"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Faterule/index');
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

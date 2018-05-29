@@ -1,0 +1,44 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div id="">
+	<!-- 主体内容 -->
+	<section id="content">
+		<section class="ptheme lazyload" data-ajaxUrl="<?php echo $webroot,'/subject/more/'?>">
+		<?php foreach($subjects as $key=>$value):?>
+			<div class="block">
+				<ul class="mod-text-list">
+					<li class="bline"><span><?php echo date('m月d日',$value['start_time']);?></span><span><?php echo date('H:i',$value['start_time']);?></span></li>
+					<li>
+						<dl class="mod-dl-list">
+							<dd><a href="<?php echo $webroot,'/subject/detail?id=',$value['id']; ?>"><img src="<?php echo $attachPath . $value['icon'];?>" alt="" /></a></dd>
+							<dd>
+								<span><?php echo $value['title']; ?></span>
+								<span class="fr">商品数：<?php echo intval($counts[$value['id']]['count']);?></span>
+							</dd>
+						</dl>
+					</li>
+				</ul>
+			</div>
+		<?php endforeach;?>
+		</section>
+	</section>
+	<!--  /主体内容 -->
+</div>
+<script type="template" id="J_itemView">
+		 {each data.list}
+		  <div class="block">
+			  <ul class="mod-text-list">
+				<li class="bline">{$value.start_time}</li>
+				<li>
+					<a href="{$value.href}">
+					<dl class="mod-dl-list">
+						<dd><img src="{$value.img}" alt="" /></dd>
+						<dd><span>{$value.title}</span><span class="fr">商品数：{$value.count}</span></dd>
+					</dl>
+					</a>
+				</li>
+				</ul>
+			</div>
+			{/each}
+</script>
+</body>
+</html>

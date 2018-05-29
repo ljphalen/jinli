@@ -1,0 +1,59 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">机组列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加机组</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">机型关键字</th>
+			<td class="td"><input type="text" class="input" name="title" value="<?php echo $search['title'];?>"></td>
+		</tr>	
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>名称</td>
+			<td>机型</td>
+			<td>最后编辑时间</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($pgroups as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['title'];?></td>
+			<td width="500"><?php echo $value['p_title'];?></td>
+        	<td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+			<td>
+			<?php if($value['id'] != 1) {?>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			&nbsp;&nbsp;<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>">管理机组</a>
+			&nbsp;&nbsp;<a href="<?php echo $addCtUrl;?>/?id=<?php echo $value['id'];?>">添加机组</a>
+			&nbsp;&nbsp;<a href="<?php echo $filerListUrl;?>/?id=<?php echo $value['id'];?>">内容过滤</a>
+			<?php } ?>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script>
+$(document).ready(function(){
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Resource_Pgroup/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

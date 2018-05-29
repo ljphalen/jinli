@@ -1,0 +1,1 @@
+<script type="text/javascript" src="<?php echo $sysRef;?>/icat/1.1.3/icat.js" corelib="//zepto.js" main="../game.source.js"></script>

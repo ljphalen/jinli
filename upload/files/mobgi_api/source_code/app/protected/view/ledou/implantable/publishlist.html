@@ -1,0 +1,43 @@
+{{pagerCss}}
+<div class="colMain">
+            <div class="title"><p class="fl">客户列表</p></div>
+            <div class="main">
+                <div class="toolbar">
+                    <div class="search fl">
+                        <span>
+                            <form name="form" method="GET" action="publishlist">
+                                <input typt="text" id="keyword" name="keyword" value="{{keyword}}" class="iText" /><input type="submit" class="submit" value="" />
+                            </form>
+                        </span>
+                    </div>
+                    <a href="publishadd" class="fr add">新增</a>
+                </div>
+                <div class="content">
+                    <div class="grid">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>公司名称</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- loop publishs -->
+                                        <tr>
+                                            <td>{{publishs' value.compay}}</td>
+                                            <td>
+                                                <a href="publishedit?publishid={{publishs' value.id}}" class="edit" title="编辑"></a>
+                                                |
+                                                <a href="publishdel?publishid={{publishs' value.id}}" class="del" title="删除"></a>
+                                            </td>
+                                        </tr>
+                                <!-- endloop -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination">{{pager.pages}}</div>
+                </div>
+            </div>
+        </div>
+
+

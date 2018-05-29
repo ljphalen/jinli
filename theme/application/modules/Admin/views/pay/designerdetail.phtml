@@ -1,0 +1,85 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.css" rel="stylesheet" type="text/css">
+<script type="text/javascript"src="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath ?>appjs/payment/payment-line.js"></script>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <div id="pay_paydesigner_designerdetail">
+        <div class="content">
+        	<div class="opertaer_detail">
+            	<div class="com_tb_wrap">
+            		<div class="com_tb">
+            			<label class="tb_cell">名称</label>
+            			<div class="tb_cont tb_cell">
+            				<p><?php echo $designer['nick_name']; ?></p>
+            			</div>
+            		</div><!--com_tb end-->
+            	</div><!--com_tb_wrap end-->
+            	<div class="com_tb_wrap">
+            		<div class="com_tb">
+            			<label class="tb_cell">注册日期</label>
+            			<div class="tb_cont tb_cell">
+            				<p class="regist_time"><?php echo date('Y.m.d', $designer['registertime']); ?></p>
+            			</div>
+            		</div><!--com_tb end-->
+            	</div><!--com_tb_wrap end-->
+            	<div class="com_tb_wrap">
+            		<div class="com_tb">
+            			<label class="tb_cell">主题资源</label>
+            			<div class="tb_cont tb_cell">
+            				<div class="down_num bottom_icon"><span><?php echo count($themes); ?></span></div>
+                            <div class="showdetail none"><p>显示购买次数的内容</p></div>
+                            <div class="desginer_pro">
+                            	<ul>
+                            		<?php foreach($themes as $theme){ ?>
+                            		<li>
+                            			<div class="li_img"><img src='<?php echo $imageurl . $theme['cover'] ?>'></div>
+                            			<div class="li_intro">
+                            				<p class="li_intro_name"><?php echo $theme['title']; ?></p>
+                            				<p class="li_intro_price"><?php echo $theme['price']; ?>A</p>
+                            				<p class="li_intro_time"><?php echo date('Y.m.d', $theme['create_time']); ?></p>
+                            			</div>
+                            		</li>
+                            		<?php } ?>
+                            	</ul>
+                            </div>
+            			</div>
+            		</div><!--com_tb end-->
+            	</div><!--com_tb_wrap end-->
+            	<div class="com_tb_wrap">
+            		<div class="com_tb">
+            			<label class="tb_cell" style="width:6rem;">总下载次数</label>
+            			<div class="tb_cont tb_cell">
+            				<p class="regist_time"><?php echo $designer['download_times']; ?></p>
+            			</div>
+            		</div><!--com_tb end-->
+            	</div><!--com_tb_wrap end-->
+            	<div class="com_tb_wrap">
+            		<div class="com_tb">
+            			<label class="tb_cell">总营业额</label>
+            			<div class="tb_cont tb_cell">
+            				<p class="regist_time"><?php echo $designer['sum']; ?></p>
+            			</div>
+            		</div><!--com_tb end-->
+            	</div><!--com_tb_wrap end-->
+            	<div class="bnts_wrap"><button class="btn_s2 " id="comeBack" openPopId="desginerTruePrice">返回</button></div>
+            </div>
+        </div><!-- content end -->
+    </div>
+</section>
+<script type="text/javascript">
+	$(function(){
+		$('.down_num').on('click',function(){
+	        if($(this).hasClass('bottom_icon')){
+	            $(this).removeClass('bottom_icon').addClass('top_icon');
+	            $('.showdetail').removeClass('none');
+
+	        }else if($(this).hasClass('top_icon')){
+	            $(this).removeClass('top_icon').addClass('bottom_icon');
+	            $('.showdetail').addClass('none');
+	        }
+	    });
+	});
+</script>
+</body>
+</html>

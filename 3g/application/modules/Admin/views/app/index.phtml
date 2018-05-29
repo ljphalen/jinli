@@ -1,0 +1,79 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $listUrl; ?>">应用列表</a></li>
+		<li><a href="<?php echo $addUrl; ?>">添加应用</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl; ?>" method="post" id="searchForm">
+	<input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">分类</th>
+				<td class="td">
+					<select name="type_id">
+						<option value="">所有分类</option>
+						<?php foreach ($types as $key => $value) { ?>
+							<option <?php echo ($param['type_id'] == $value['id']) ? 'selected="selected"' : ''; ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button type="submit">搜 索</button></span></span>
+	</div>
+
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="100">排序</td>
+				<td width="100">名称</td>
+				<td width="100">图标</td>
+				<td width="100">分类</td>
+				<td width="50">星级</td>
+				<td width="50">是否推荐</td>
+				<td width="50">点击量</td>
+				<td width="100">状态</td>
+				<td width="100"><span style="float:right">
+					<select name="order_by" onchange="submitForm(this.value)">
+						<option value="">排序方式</option>
+						<option <?php echo ($order_by == 'id') ? 'selected="selected"' : ''; ?> value="id">上传时间</option>
+						<option <?php echo ($order_by == 'sort') ? 'selected="selected"' : ''; ?> value="sort">排序</option>
+						<option <?php echo ($order_by == 'hits') ? 'selected="selected"' : ''; ?> value="hits">点击量</option>
+					</select></span>操作
+				</td>
+			</tr>
+			<?php foreach ($recmarks as $key => $value) { ?>
+				<tr class="ct">
+					<td><?php echo $value['sort']; ?></td>
+					<td><?php echo $value['name']; ?></td>
+					<td><img src="<?php echo $value['img'] ? $attachPath . $value['img'] : ''; ?>" width="30"/></td>
+					<td><?php echo $types[$value['type_id']]['name']; ?></td>
+					<td><?php echo $value['star']; ?></td>
+					<td><?php echo $value['is_recommend'] ? '<font color="green">是</font>' : '否'; ?></td>
+					<td><?php echo $value['hits']; ?></td>
+					<td><?php echo $value['status'] == 1 ? '开启' : '关闭'; ?></td>
+					<td>
+						<a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+						<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+</form>
+<script type="text/javascript">
+	$(document).ready(function () {
+		submitForm = function () {
+			$("#searchForm").submit();
+		};
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

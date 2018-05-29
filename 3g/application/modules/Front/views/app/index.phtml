@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title><?php echo $pageTitle?></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="appRef" content="<?php echo $staticResPath;?>/app" />
+	<link rel="stylesheet" href="<?php echo $staticResPath;?>/app/assets/css/gnapp.css?v=<?php echo $version;?>" /></head>		
+</head>
+<body>
+				
+<!-- 内容区域 END-->
+<div class="index_data" style="display:none"><?php echo $json_data;?></div>
+<div id="wrapper">
+	<div class="container fullscreen">
+		<div class="mainWrap">
+			<div class="module"></div>
+			<div class="module"></div>
+			<div class="module"></div>
+			<div class="module"></div>
+			<div class="module"></div>
+			<div class="module"></div>
+		</div>
+	</div>
+</div>
+<!--*********************************************下面是页面模板 **************************************-->
+<!-- 推荐应用模板 -->
+<script id="J_itemView" type="text/template">
+	<section class="item-side">
+		<% if (status == 1) { %>
+		<div class="app-item-bton button"><a href="<%= link %>" class="btn open-btn">打 开</a></div>
+		<% } else { %>
+		<div class="app-item-bton button"><span data-link="<%= link %>" data-addUrl="<%= addUrl %>" class="btn add-btn">添 加</span></div>
+		<% } %>
+	</section>
+	<section class="item-cont">
+			<dl class="clearfix">
+				<dt class="item-icon"><img src="<%= img %>" alt="" /></dt>
+				<dd class="item-title"><%= title %></dd>
+				<dd class="item-star">
+					<span class="score-star score<%= star %>">
+						<span class="star1"></span>
+						<span class="star2"></span>
+						<span class="star3"></span>
+						<span class="star4"></span>
+						<span class="star5"></span>
+					</span>
+				</dd>
+				<dd class="item-text"><%= appInfo %> | <%= appType %></dd>
+			</dl>
+	</section>
+</script>
+<!-- 应用分类模板 -->
+<script id="J_appCateView" type="text/template">
+	<div class="app-cate">
+		<ul>
+			<?php foreach ($app_type as $key=>$value) {?>
+				<li><a href="#category/<?php echo $value['id'];?>">
+					<div><?php echo $value['name'];?></div>
+					<div><?php echo $value['descrip'];?></div>
+					</a>
+				</li>
+			<?php }?>
+		</ul>
+	</div>
+</script>
+<!-- 返回导航头部 -->
+<script id="J_backNavView" type="text/template">
+	<div class="m-nav">
+		<section><a class="back" href="#module/category"><span>返回</span></a></section>
+		<section><span id="J_backNavTitle"></span></section>
+		<section></section>
+	</div>
+</script>
+<!-- 公共头部模板 -->
+<script id="J_topBannerView" type="text/template">
+	<header class="hd">
+		<div class="slide banner">
+			<img src="<?php echo $staticResPath;?>/pic/apps_banner.jpg" alt="在线应用" />
+		</div>
+	</header>
+</script>
+<!-- 菜单导航模板 -->
+<script id="J_tabMenuView" type="text/template">
+	<ul class="in-tabs" id="app-tabs">
+		<li data-link="#module/recommend" data-type="url" data-target="recommend" data-ajaxUrl="json.php">推荐</li>
+		<li data-link="#module/category" data-type="url" data-target="category">分类</li>
+		<li data-link="#module/rank" data-type="url" data-target="rank">排行</li>
+		<li data-link="#module/news" data-type="url" data-target="news" data-ajaxUrl="json.php">新品</li>
+	</ul>
+</script>
+			
+<?php echo $this->render("layout/tj.phtml");?>
+<script src="<?php echo $staticSysPath;?>/icat/1.1.5/icat.js?v=<?php echo $version;?>"></script>
+<script src="<?php echo $staticResPath;?>/app/assets/js/gnapp.js?v=<?php echo $version;?>"></script>
+<script type="text/javascript">var token = '<?php echo $token;?>';</script>
+</body>
+</html>

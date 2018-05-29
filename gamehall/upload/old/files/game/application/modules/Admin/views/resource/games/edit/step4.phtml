@@ -1,0 +1,68 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl.'?type='.$type;?>">游戏列表</a></li>
+		<li class="current"><a>版本管理</a></li>
+	</ul>
+</div>
+<div class="h_a">
+    <a href="<?php echo $step2editUrl.'?id='.$gameId.'&type='.$type;?>">
+    <input type="button" value="差分包列表"/>
+    </a>
+</div>
+<div class="table_full">
+<dl style="display:-webkit-box">
+	<dt style="width:64px;height:64px;" >
+		<img style="height: 100%;width:auto;" src="<?php echo $gameInfo['img'];?>">
+	</dt>
+	<dd style="padding-left: 64px">
+		<p><span class="name">游戏名称:<?php echo $gameInfo['name'];?></span></p>
+		<p><span class="id">游戏ID:<?php echo $gameId;?></span></p>
+		<p><span class="type">主分类:<?php echo $mainCategory['parent']['title'];?> - <?php echo $mainCategory['sub']['title'];?></span></p>
+		<?php if($lessCategory):?>
+		<p><span class="type">次分类:<?php echo $lessCategory['parent']['title'];?> - <?php echo $lessCategory['sub']['title'];?></span></p>
+		<?php endif;?>
+		<p><span class="name">游戏包名:<?php echo $gameInfo['package'];?></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当前版本：<?php echo $versionInfo['version'];?></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当前游戏大小：<?php echo $versionInfo['size'].'M';?></span></p>
+	</dd>
+</dl>
+</div>
+<div id="container" style="background:#f2f2f2;font-size:12px;" >
+		<div id="title" style="background:#c9c9c9;height:40px;line-height:40px;border:1px solid black;padding-left:10px"> 版本<?php echo $versionInfo['version'];?>对应的差分包共<?php echo count($packages);?>个</div>
+		<div id="info">
+			<ul style="list-style:none;padding-left:10px;">
+			<?php foreach($packages as $key=>$value){?>
+			<li style="position:relative;border-bottom:1px solid">
+				<p style="font-size:14px;font-weight:bold;" >差分包<?php echo $key + 1;?>：<?php echo $value['diff_name'];?></p>
+				<p>
+					<span style="display:inline-block;width:260px">文件字节大小：<?php echo $value['file_size'];?></span>
+					<span style="display:inline-block;width:260px">文件大小：<?php echo $value['size'];?>M</span>
+					<span style="margin-left:60px;display:none;">查分版本：v<?php echo $value['old_version'];?></span>
+				</p>
+				<p>
+				    <span style="display:inline-block;width:560px">下载地址：<?php echo $value['link'];?></span>
+				</p>
+				<p>
+				    <span style="display:inline-block;width:260px">差分包对象版本ID：<?php echo $value['object_id'];?></span>
+				</p>
+				<p>
+					<span style="display:inline-block;width:260px">创建时间：<?php echo $value['create_user'];?>@<?php echo date('Y-m-d H:i:s', $value['create_time']);?></span>
+					<span style="margin-left:60px;display:none;">最新维护时间：<?php echo $value['modify_user'];?>@<?php echo date('Y-m-d H:i:s', $value['update_time']);?></span>
+				</p>
+				<div style="position:absolute;right:10px;top:0px">
+				<a href="<?php echo $value['link'];?>">
+				   <input style="width:70px;height:30px;background-color:#ff8600;color:white;border-radius:5px;cursor: pointer;" type="button" value="下载"/>
+			    </a>
+				</div>
+			</li>
+			<?php }?>
+		</ul>
+		</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Resource_Games/edit_step2?id=<?php echo $id;?>&type=<?php echo $type;?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

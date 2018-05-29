@@ -1,0 +1,95 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $listUrl;?>">活动记录</a></li>
+         <li class="current"><a href="<?php echo $logUrl.'?uname='.$uname;?>">查看记录</a></li>
+	</ul>
+</div>
+<form action="<?php echo $logUrl.'?uname='.$uname;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="uname" type="hidden" value="<?php echo $uname;?>" />
+<div class="table_full">
+	<table width="100%">	
+		 <tr>
+		  <th class="th">答题日期</th>
+			<td class="td">
+			<select name="day_id" class="wa">
+			    <option  value="0">全部</option>
+			    <option <?php if($s['day_id'] == 01) echo 'selected';?> value="01">第一天</option>
+				<option <?php if($s['day_id'] == 02) echo 'selected';?> value="02">第二天</option>
+				<option <?php if($s['day_id'] == 03) echo 'selected';?> value="03">第三天</option>
+				<option <?php if($s['day_id'] == 04) echo 'selected';?> value="04">第四天</option>
+				<option <?php if($s['day_id'] == 05) echo 'selected';?> value="05">第五天</option>
+				<option <?php if($s['day_id'] == 06) echo 'selected';?> value="06">第六天</option>
+				<option <?php if($s['day_id'] == 07) echo 'selected';?> value="07">第七天</option>
+			</select>
+			</td>
+			<th class="th">答题状态</th>
+		 	<td class="td">
+			 <select name=status class="select wa">
+			      <option  value="0">全部</option>
+				<option <?php if ($s['status'] == 1) echo 'selected';?> value="1">错误</option>
+				<option <?php if ($s['status'] == 2) echo 'selected';?> value="2">正确</option>
+			 </select>
+			</td>
+		</tr>
+		 <tr>
+			<th class="th">答题时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo $s['start_time'];?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo $s['end_time'];?>" /></div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2" style="display:none;"><span><button onclick="$('#action').val('close');" type="submit">未发放</button></span></span>
+    <span class="btn2" style="display:none;"><span><button onclick="$('#action').val('open');" type="submit">已发放</button></span></span>
+	<span>账号:&nbsp;&nbsp;&nbsp;<?php echo $uname;?>&nbsp;&nbsp;&nbsp;答题记录共&nbsp;&nbsp;&nbsp;<?php echo $total;?>&nbsp;&nbsp;&nbsp;条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>用户账号</td>
+			<td>答题日期</td>
+			<td>答题题号</td>
+			<td>答题时间</td>
+			<td>选择答案</td>
+			<td>答题状态</td>
+			<td>积分</td>
+		</tr>
+<?php foreach($logs as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['uname'];?></td>
+			<td><?php echo $quota[$value['day_id']];?></td>
+			<td><?php echo '第 '.$value['answer_id'].' 题';?></td>	
+			<td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+			<td><?php echo $value['daan'];?></td>	
+			<td><?php echo $value['status'] ? '正确': '错误';?></td>
+		    <td><?php echo $value['score'];?></td>			
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Festival_Guoqing/log?uname=<?php echo $uname;?>');
+	});
+	 $("#extportBtn").click(function(){
+			$("#exportForm").submit();
+     });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

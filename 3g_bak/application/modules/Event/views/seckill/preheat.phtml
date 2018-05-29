@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>金立浏览器双十一特别活动</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/events/css/db_eleven_prev.min.css?ver=<?php echo $version;?>"/>
+    <script src="<?php echo $staticResPath;?>/events/js/zepto.min.js?ver=<?php echo $version;?>"></script>
+    <script type="text/javascript">
+        var token = "<?php echo $token;?>";
+        var initConfig = {
+            login:<?php echo $data['login']; ?>, //是否已经登陆 1：已经登陆      0：未登陆
+            loginUrl:"<?php echo $data['loginUrl']; ?>", //要跳转的登陆页
+            status:<?php echo $data['remind']; ?>,   // 0：还未预约     1:已经预约   2:已经预约需要弹出提示预约成功
+        };
+        var jiangping = {};
+    </script>
+</head>
+<body class="ui-app">
+    <div class="main">
+        <div class="main-hd">
+            <div class="banner">
+                <img src="<?php echo $staticResPath;?>/events/pic/dbelv_banner_hd.jpg" width="100%" height="auto" />
+                <div class="banner-text"><span>预约时间：11月9日-11月10日</span></div>
+            </div>
+        </div>
+        <div class="main-bd">
+        	<div class="prizes">
+        		<div class="line">
+        			<div class="line-lef">
+        				<div><span>10:00抢</span></div>
+        				<div><span>14:00抢</span></div>
+        				<div><span>18:00抢</span></div>
+        			</div>
+        			<div class="line-rit">
+        				<div><span>12:00抢</span></div>
+        				<div><span>16:00抢</span></div>
+        				<div><span>20:00抢</span></div>
+        			</div>
+        		</div>
+        		<div class="lef">
+        			<div>
+        				<img src="<?php echo $staticResPath;?>/events/pic/20151111_pic01.png">
+        				<span>100元话费(10名)</span>
+        			</div>
+        			<div>
+        				<img src="<?php echo $staticResPath;?>/events/pic/20151111_pic05.png">
+        				<span>电取暖器(5名)</span>
+        			</div>
+        			<div>
+        				<img src="<?php echo $staticResPath;?>/events/pic/20151111_pic04.png">
+        				<span>按摩机(3名)</span>
+        			</div>
+        		</div>
+        		<div class="rit">
+        			<div>
+        				<img src="<?php echo $staticResPath;?>/events/pic/20151111_pic03.png">
+        				<span>ELIFE S7(2名)</span>
+        			</div>
+        			<div>
+        				<img src="<?php echo $staticResPath;?>/events/pic/20151111_pic02.png">
+        				<span>2000金币(50名)</span>
+        			</div>
+        			<div>
+        				<img src="<?php echo $staticResPath;?>/events/pic/20151111_pic06.png">
+        				<span>豆浆机(5名)</span>
+        			</div>
+        		</div>
+        	</div>
+        	<div class="btn-row">
+                <?php if($data['remind'] >= 1):?>
+        		<a class="button wide btn-had-remind">已设置提醒</a>
+                <?php else:?>
+                    <a id="js-ifok" class="button wide" href="<?php echo $webroot; ?>/event/seckill/remind">马上免费预约</a>
+                <?php endif; ?>
+        	</div>
+        </div>
+        <div class="main-ft">
+        	<div class="act-title">温馨提示：</div>
+            <ul class="act-rules">
+                <li>1、预约用户可在11日首场秒杀开始前15分钟收到短信提醒；</li>
+                <li>2、登陆个人中心才能参与预约；</li>
+                <li>3、新注册用户预约还可获得额外惊喜；</li>
+            </ul>
+            <div class="ft-lisence">
+            	<div>本活动最终解释权归金立浏览器所有</div>
+            	<div>有问题请联系官方QQ群：274289481</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示信息 -->
+        <div class="pop-toast-wrap pop-toast-fadein" style="display:none;">已成功设置提醒！</div>
+    <!-- /提示信息 -->
+    
+    <script>
+
+        $(function(){
+            if(initConfig.login !== 0){
+                console.log(window.localStorage.getItem('act-preheat-remind') == 0);
+                if(initConfig.status === 2){
+                    if(window.localStorage.getItem('act-preheat-remind') == 0){
+                        $('.pop-toast-wrap').show();
+                        window.localStorage.setItem('act-preheat-remind',1);
+                    }
+                } else {
+                    window.localStorage.setItem('act-preheat-remind', 0);
+                }
+            } else {
+                // 未登陆
+                $("#js-ifok").attr("href",initConfig.loginUrl);
+            }
+        });
+    	
+        // if(initConfig.login==0){
+        //     $("#js-ifok").attr("href",initConfig.loginUrl);
+        // }else{
+        //     if(initConfig.status>=1){
+        //         $("#js-ifok").text("已经预约").addClass("disable").removeAttr("href");
+        //         if(initConfig.status==2){
+        //             $(function(){
+        //                 alert("预约成功！");
+        //             })
+        //         }
+        //     }else if(initConfig.status==0){
+        //         if(initConfig.login==0){
+        //             $("#js-ifok").attr("href",initConfig.loginUrl);
+        //         }
+        //     }
+        // }
+    	
+    </script>
+    
+    
+</body>
+</html>

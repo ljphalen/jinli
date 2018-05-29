@@ -1,0 +1,63 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body>
+	<div class="module">
+
+		<div id="iScroll" class="layout-center J_proDetail" data-ajaxurl="<?php echo $webroot;?>/api/apk_winprize/award">
+			<ul class="award-record-wrap wrap"></ul>
+		</div>
+	</div>
+	<script id="J_dtemplate" type="text/icat-template">
+		<%if (!data.list.length&&data.curpage==1) {%>
+		<div class="connect-error">
+			<a href="javascript:window.share.gotoHuodongProductList();" class="wrap">
+				<div class="pic"></div>
+				<div class="desc">无记录，轻触去活动列表</div>
+			</a>
+		</div>
+		<%}%>
+		<%for(var i=0, len=data.list.length; i<len; i++) {%>
+		<li class="award-record-list">
+			<div class="award-box-wrap">
+				<div class="side">
+					<%if (data.list[i].status==0){%>
+						<div class="notice"></div>
+					<%}%>
+					<div class="pic">
+						<img src="<%=blankPic%>" data-src="<%=data.list[i].image%>">
+					</div>
+				</div>
+				<div class="main">
+					<div class="title">
+						<div class="inner">
+							<span class="period">第<%=data.list[i].no%>期</span>
+							<h1><%=data.list[i].title%></h1>
+						</div>
+					</div>
+					<div class="score"><i class="icon-first-cup"></i><%=data.list[i].shortest_time%>&quot;</div>
+					<%if(data.list[i].status==1){%>
+						<div class="status"><em>待发货</em></div>
+					<%} else if (data.list[i].status==2){%>
+						<div class="status">
+							<a href="<%=data.list[i]['express_url']%>">快递单号：<%=data.list[i].express_code%></a>
+							<em>已发货</em>
+						</div>
+					<%} else if (data.list[i].status==3){%>
+						<div class="status"><em>已签收</em></div>
+					<%} else if (data.list[i].status==4){%>
+						<div class="status"><em>订单关闭</em></div>
+					<%}%>
+				</div>
+			</div>
+			<%if (data.list[i].status==0){%>
+			<a href="<?php echo $webroot;?>/winprize/award?goods_id=<%=data.list[i].goods_id%>" class="go-award-btn">去领奖</a>
+			<%} else {%>
+			<div class="award-info">
+				<div class="info">收货人：<%=data.list[i].buyer_name%><span>联系电话：<%=data.list[i].mobile%></span></div>
+				<address>收货地址：<%=data.list[i].address%></address>
+			</div>
+			<%}%>
+		</li>
+		<%}%>
+	</script>
+	<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/newfooter.phtml");?>

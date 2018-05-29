@@ -1,0 +1,325 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+
+<!-- 导航栏Ajax加载 指向navagator.html  menuOn表示分别需要高亮的菜单栏id 用下划线_隔开 eg:bz_taotu_taotuPack-->
+
+<style type="text/css">
+    li a{
+        display:inline-block;
+        width: 100%;
+    }
+
+</style>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- 壁纸详情-wp01-->
+    <div id="zt_admin_res01">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">一级标签</label>
+                    <div class="tb_cont tb_cell">
+                        <ul class="tag_list tag_one"><!-- tag_one 一级标签 只能选中一个 -->
+                            <a href="/Admin/Fileadmin/index"> <li value="0" class="<?php if (!$type) echo 'on' ?>">
+                                    所有
+                                </li></a>
+                            <?php foreach ($alltype as $k => $v) { ?>
+                                <a href="/Admin/Fileadmin/index?tid=<?php echo $k ?>">
+                                    <li value="<?php echo $k ?>" class="<?php if ($type == $k) echo 'on' ?>">
+                                        <?php echo $v ?>
+                                    </li></a>
+                            <?php } ?>
+                        </ul>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">二级标签</label>
+                    <div class="tb_cont tb_cell">
+                        <ul class="tag_list tag_two">
+
+                            <?php foreach ($sedtype as $v) { ?>
+                                <li val="<?php echo $v['id'] ?>" class="<?php
+                                if (in_array($v['id'], $selectedsed)) {
+                                    echo 'on';
+                                }
+                                ?>">
+                                        <?php echo $v['name']; ?>
+                                </li>
+                            <?php } ?>
+                            <!-- <li val="11110" class="on">灯光</li>
+                              <li class="on" val="34049">光影</li>-->
+                        </ul>
+
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">搜索:</label>
+                    <div class="tb_cont tb_cell">
+                        <input type="text" style="width:350px;" class="rd_1 search_name" value="<?php echo $search ?>">
+                        <button class="btn_s2 search_btn">搜索主题</button>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">状态</label>
+                    <div class="tb_cont tb_cell">
+                        <ul class="tag_list select_status_ch">
+                            <?php foreach ($status as $k => $v) { ?>
+                                <li val="<?php echo $k ?>"  <?php if ($status_sel == $k) {
+                                echo 'class="on"';
+                            } ?>> <?php echo $v ?></li>
+<?php } ?>
+                        </ul>
+                    </div>
+                    <div class="tb_cell">
+                        <ul class="tb_switch">
+                            <!--  <li class="txt_switch">批量管理</li>
+                              <li class="btn_switch switch_pics" openId="viewPics">宫格</li><!-- openId 表示点击时 显示哪个id下的内容 -->
+                            <li class="btn_switch switch_list on" openId="viewList">列表</li>
+                        </ul>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+
+            <!-- 宫格模式 admin_mode显示各子项目的管理按钮-->
+            <section class="view view_pics " id="viewPics">
+                <!-- 批量管理内容 默认隐藏 -->
+                <div class="view_admin view_pics_admin">
+                    <!-- checkObj表示 点击后 哪些class要被选中 -->
+                    <button class="btn_check btn_check_all" checkClass="btn_check_pics"></button><label>全选</label><span class="btn btn_s1 pack_del">批量删除</span>
+                </div>
+                <h1 class="block_name">全部主题</h1>
+                <ul class="view_pics_wrap "><!--  -->
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+
+
+                </ul>
+                <div class="clear-fix"></div>
+            </section>
+
+            <!-- 列表模式 -->
+            <section class="view view_list show" id="viewList">
+                <!-- 批量管理内容 默认隐藏 -->
+                <div class="view_admin view_list_admin">
+                    <!-- checkObj表示 点击后 哪些class要被选中 -->
+                    <button class="btn_check btn_check_all" checkClass="btn_check_list"></button>
+                    <label>全选</label><span class="btn btn_s1 pack_approve">批量通过</span>
+                    <span class="btn btn_s1 pack_del">批量删除</span>
+                </div>
+                <table class="view_list_tb">
+                    <thead>
+                        <tr><th style="width:12rem">主题</th>
+                            <th>名称</th>
+                            <th>一级标签</th>
+                            <th>二级标签</th>
+                            <th>上线时间</th>
+                            <th>包类别</th>
+                            <th>操作</th>
+                        <!--    <th>排序</th>-->
+                            <th>下载量</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<?php foreach ($theme as $v) { ?>
+                            <tr>
+                                <td><button class="btn_check btn_check_list"></button>
+                                    <img src="<?php echo $imageurl . '/' . str_replace('.webp', '.jpg', $themeimage[$v['id']][0]['img']); ?>" style="width:5rem; height:auto"></td>
+                                <td><?php echo $v['Ename'] . "<br/>" . $v['title'] ?></td>
+                                <td>
+                                    <?php
+                                    //一级标签;
+                                    foreach ($idx as $t) {
+                                        if ($v['id'] == $t['file_id']) {
+                                            echo $alltype[$t['type_id']] . " ";
+                                        }
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    //二级标签;
+                                    $i = 1;
+                                    foreach ($sedidx[$v['id']] as $sedval) {
+
+                                        echo $linesed[$sedval] . "<br/>";
+                                        if ($i >= 3) {
+                                            echo '....';
+                                            break;
+                                        }
+                                        $i++;
+                                    }
+                                    ?>
+
+                                </td>
+                                <td><?php echo date("Y-m-d H:i:s", $v['create_time']) ?></td>
+                                <td><?php echo "V" . $v['package_type'] ?></td>
+                                <td><a class = "btn_txt" href = "/Admin/fileadmin/fileedit?themeid=<?php echo $v["id"] ?>">编辑</a>
+                                    <?php if ($userinfo['groupid'] == 2 || $userinfo['username'] == 'admin') { ?>
+                                        <a class = "btn_txt" onclick="downloadFile('<?php echo $downloadroot . $v["file"] ?>');" href = "javascript:void(0);">下载</a>
+                                <?php } ?>
+                                <?php if ($userinfo['groupid'] == 3) { ?>
+                                        <a  val = <?php echo $v['id']; ?> class="btn_txt pop_btn delBtn" openPopId = "fixTipView">删除</a></td>
+    <?php } ?>
+                   <!-- <td>
+                        <input type="text" <?php if ($tid != 10) echo 'readonly '; ?> style="width:70px;" class="rd_1 sort_theme" value="<?php echo $search ?>">
+                        <button vid="<?php echo $v['id'] ?>" class="btn_s3 <?php if ($tid != 10) echo 'none'; ?> ">保存</button>
+                    </td>-->
+                                <td><?php echo $v['down'] ?></td>
+                                <td val="<?php echo $v['status'] ?>"><?php echo $status[$v['status']] ?></td>
+                            </tr>
+<?php } ?>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 分页模块 -->
+<?php echo $this->render("common/pageshow.phtml"); ?>
+
+        </div><!-- content end -->
+
+    </div>
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">是否删除主题<span></span></p>
+                    <div class="tip_btns">
+                        <button class="btn_s2 del_ok">确定</button>
+                        <button class="btn_s2 btnCancel">取消</button>
+                    </div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+
+<script type="text/javascript">
+    $(function () {
+        $(".delBtn").click(function () {
+            var theme = $(this).attr("val");
+            var status = $(this).parent().next().attr("val");
+            $(".del_ok").click(function () {
+                if (status == 4) {
+                    $(".pop_wraper").removeClass("show");
+                    alert("上架状态不能删除!!");
+                    return 0;
+                }
+                var data = "id=" + theme + "&token=" + token;
+                var url = "/Admin/Fileadmin/delete";
+                $(".pop_wraper").removeClass("show");
+                $.post(url, data, function (d) {
+                    if (d) {
+                        // window.location.href = "/Admin/fileadmin/index";
+                        history.go(0);
+                    }
+                })
+            })
+        });
+        $(".search_btn").on("click", function () {
+            var name = $(".search_name").val();
+            window.location.href = "/Admin/fileadmin/index?search=" + name;
+        });
+        $(".tag_two >li").click(function () {
+            var ids = $(".tag_two>li").filter(".on").map(function () {
+                return $(this).attr("val");
+            }).get().join("_");
+
+            var id = $(".tag_one>a").find("li.on").attr("value");
+            var data = "ids=" + ids + "&tid=" + id + "&token=" + token;
+            var url = "/Admin/Fileadmin/index?" + data;
+
+            window.location.href = url;
+        })
+
+        $(".select_status_ch >li").click(function () {
+            var ids = $(".tag_two>li").filter(".on").map(function () {
+                return $(this).attr("val");
+            }).get().join("_");
+
+            var id = $(".tag_one>a").find("li.on").attr("value");
+            var status = $(this).attr("val");
+
+            var data = "ids=" + ids + "&tid=" + id + "&status=" + status;
+
+            var url = "/Admin/Fileadmin/index?" + data;
+
+            window.location.href = url;
+        })
+
+    })
+    // 下载函数
+    function downloadFile(url) {
+        if (typeof downloadFile.iframe === "undefined") {
+            downloadFile.iframe = document.createElement("iframe");
+        }
+        document.body.appendChild(downloadFile.iframe);
+        downloadFile.iframe.style.display = "none";
+        downloadFile.iframe.src = url;
+    }
+</script>
+</body>
+</html>

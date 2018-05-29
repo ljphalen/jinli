@@ -1,0 +1,36 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $indexUrl; ?>">积分总表</a></li>
+		</ul>
+	</div>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="10%">ID</td>
+				<td width="10%">用户名</td>
+				<td width="12%">组别</td>
+				<td width="15%">获取积分的类型</td>
+				<td width="10%">积分变动前</td>
+				<td>积分变动后</td>
+				<td>获取的积分数</td>
+				<td>获取时间</td>
+			</tr>
+			<?php foreach ($list as $key => $value) {
+				?>
+				<tr class="ct">
+					<td><?php echo $value['id']; ?></td>
+					<td><?php echo $value['username']; ?></td>
+					<td><?php echo $groupType[$value['group_id']]['val']; ?></td>
+					<td><?php echo $scoreTypes[$value['score_type']]; ?></td>
+					<td><?php echo $value['before_score']; ?></td>
+					<td><?php echo $value['after_score']; ?></td>
+					<td><?php echo $value['affected_score']; ?></td>
+					<td><?php echo date('Y-m-d H:i:s', $value['add_time']); ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?></div>
+<?php echo $this->render("layout/footer.phtml"); ?>

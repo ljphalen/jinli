@@ -1,0 +1,107 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">频道列表</a></li>
+    <li class="current"><a href="javascript:;">编辑频道</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑频道</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">链接类型</th>
+			<td class="td">
+				<label class="mr20"><input <?php if($info['ad_ptype'] == 1) echo 'checked';?> name="ad_ptype"  value="1" type="radio" onclick ="showContent(1)">内容</label>
+				<label class="mr20"><input <?php if($info['ad_ptype'] == 2) echo 'checked';?> name="ad_ptype"  value="2" type="radio" onclick ="showContent(2)">分类</label>
+				<label class="mr20"><input <?php if($info['ad_ptype'] == 3) echo 'checked';?> name="ad_ptype"  value="3" type="radio" onclick ="showContent(3)">专题</label>
+				<label class="mr20"><input <?php if($info['ad_ptype'] == 4) echo 'checked';?> name="ad_ptype"  value="4" type="radio" onclick ="showContent(4)">外链</label>
+				<span style="color: red">(选择分类时，链接ID输入框填写游戏主分类的ID)</span>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th" id="th_link">链接ID</th>
+			<td class="td"><input type="text" name="link" class="input" value="<?php echo $info['link'];?>" id="link"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图标</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="sicon">
+						<img src="<?php echo $attachPath,$info['icon'];?>"/>
+						<input type="hidden" name="icon" value="<?php echo $info['icon'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=sicon';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="simg">
+						<img src="<?php echo !$info['img'] ?  $staticPath.'/img/content/nopic.jpg' : $attachPath,$info['img'];?>" id="img-src" />
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>" id="img">
+					</li>
+					<li><a href="javascript:void(0)" onclick="delImg()">删　除</a></li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=simg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">开始结束时间</th>
+			<td class="td"><div><input class="input" type="text" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $info['start_time']);?>" /> 至 <input class="input" type="text" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s', $info['end_time']);?>" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status" min-width="100px">
+                	<option <?php if($info['status'] == 1) echo 'selected="selected"';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 0) echo 'selected="selected"';?>value="0">关闭</option>
+            </select></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+showContent = function(flag) {
+	if (flag != 4) {
+	 $("#th_link").html('链接ID');
+	 $("#link").removeClass('wc');
+	 
+	} else {
+	 $("#th_link").html('外链接');
+	 $("#link").addClass('wc');
+	}
+}
+$(document).ready(function(){
+	 showContent(<?php echo $info['ad_ptype'];?>);
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Ad_Channel/index');
+	});
+})
+function delImg(){
+	$("#img").val("");
+	$("#img-src").attr("src","<?php echo $staticPath;?>/img/content/nopic.jpg");
+}
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

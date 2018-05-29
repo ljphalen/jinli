@@ -1,0 +1,105 @@
+<?php echo $this->render("layout/header3.phtml");
+$_listUrl = $this->listUrl;
+$_editUrl = $this->editUrl;
+$_delUrl  = $this->delUrl;
+?>
+
+	<div data-options="region:'center',split:true,border:false" style="overflow: hidden;">
+
+		<div id="datagrid_toolbar" style="padding:5px;">
+			<div style="float: left;">
+				<form method="post" id="search_form" style="padding: 0px;" onsubmit="search(datagrid,'#search_form');return false;">
+
+					<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+					<input name="togrid" value="1" type="hidden"/>
+					<a href="javascript:search(datagrid,'#search_form');" class="easyui-linkbutton" iconCls="icon-search" plain="true">查 询</a>
+				</form>
+
+			</div>
+			<div align="left">
+				<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="add()">新增</a>
+				<span class="toolbar-btn-separator"></span>
+				<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
+				<span class="toolbar-btn-separator"></span>
+				<block name="button"></block>
+				<a href="#"></a>
+			</div>
+		</div>
+		<table id="datagrid" toolbar="#datagrid_toolbar" border="false"></table>
+	</div>
+
+
+	<script>
+		var token = "<?php echo $token;?>";
+		var edit_W = 400;
+		var edit_H = 400;
+		var datagrid;
+		$(function () {
+
+			//数据列表
+			datagrid = $("#datagrid").datagrid({
+				url: '<?php echo $_listUrl;?>',
+				queryParams: {'togrid': 1, 'token': token},
+				fit: true,
+				autoRowHeight: false, //自动行高
+				border: false,
+				pagination: true, //分页栏
+				pagePosition: 'bottom', //分页栏位置
+				rownumbers: true,//显示行数
+				striped: true,//显示条纹
+				showFooter: true, //显示统计行
+				pageSize: 20,//每页记录数
+				remoteSort: true,//是否通过远程服务器对数据排序
+				singleSelect: false,//只允许选择单行
+				// main content
+
+				sortName: 'id',//默认排序字段
+				sortOrder: 'asc',//默认排序方式 'desc' 'asc'
+				idField: 'id',
+				columns: [[
+					{field: 'ck', checkbox: true},
+					{field: 'id', title: 'ID', sortable: true, align: 'center', width: 60},
+					{field: 'title', title: '名称', sortable: false, width: 140},
+					{field: 'start_time', title: '开始时间', sortable: true, width: 100},
+					{field: 'end_time', title: '结束时间', sortable: false, align: 'center', width: 100},
+					{field: 'total_num', title: '达成额度', sortable: false, align: 'center', width: 60},
+					{field: 'result_num', title: '显示结果数量', sortable: false, align: 'center', width: 80},
+					{field: 'wx_appid', title: '微信ID', sortable: false, align: 'center', width: 120},
+					{field: 'total_amount', title: '互动总额度', sortable: false, align: 'center', width: 80},
+					{field: 'amount_num', title: '互动总次数', sortable: false, align: 'center', width: 80},
+					{field: 'user_num', title: '参与用户数量', sortable: false, align: 'center', width: 80},
+					{field: 'created_at', title: '添加时间', sortable: false, align: 'center', width: 100}
+				]],
+
+				onLoadSuccess: function () {
+					$(this).datagrid('clearSelections');//取消所有的已选择项
+					$(this).datagrid('unselectAll');//取消全选按钮为全选状态
+				},
+				onRowContextMenu: function (e, rowIndex, rowData) {
+					e.preventDefault();
+					$(this).datagrid('unselectAll');
+					$(this).datagrid('selectRow', rowIndex);
+					$('#datagrid_menu').menu('show', {
+						left: e.pageX,
+						top: e.pageY
+					});
+				},
+				onDblClickRow: function (rowIndex, rowData) {
+					edit(rowIndex, rowData);
+				}
+			});
+
+		});
+
+
+		function add() {
+			addData("添加", "#edit_form", datagrid, "<?php echo $_editUrl;?>", edit_W, edit_H);
+		}
+		function edit(rowIndex, rowData) {
+			editData(rowIndex, rowData, "编辑", '#edit_form', datagrid, "<?php echo $_editUrl;?>", edit_W, edit_H, 'id');
+		}
+		function del() {
+			delData(datagrid, "<?php echo $_delUrl;?>");
+		}
+	</script>
+<?php echo $this->render("layout/footer3.phtml"); ?>

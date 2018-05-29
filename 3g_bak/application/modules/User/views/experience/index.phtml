@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>我的等级</title>
+<link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/call/css/style.min.css?ver=<?php echo $version;?>" />
+</head>
+
+<body class="ui-app">
+    <div class="ui-top-bar">
+        <a class="ui-pos icon-back" href="<?php echo $webroot;?>/user/index/index"></a>
+        <span class="ui-top-txt">我的等级</span>
+        <!-- <a class="ui-pos icon-menu" href="#"></a> -->
+    </div>
+    <div class="ui-page page1 js-active">
+        <div class="ui-page-content">
+            <div class="ui-box mygrade">
+                <ul class="ui-box-info">
+                    <li><span class="span-jifen curr_grade"><b>当前等级</b><b>Lv <?php echo $userInfo['experience_level'];?></b></span></li>
+                    <li><a href="<?php echo $webroot;?>/user/experience/detail" class="curr_grade_a"><span class="span-jifen curr_grade"><b>当前经验值</b><b><?php echo $gatherData['experience_points'];?></b><b class="icon-more" title=""></b></span></a>
+                    </li>
+                    <li>
+                        <div class="exp-progressbar">
+                            <div>Lv <?php echo $userInfo['experience_level'];?></div>
+                            <div class="user-exp-wrap">
+                                <div class="user-exp-val"><?php echo $gatherData['experience_points'];?>/<?php echo $nextLevelPoints;?></div>
+                                <div class="user-exp-bg"></div>
+                                <div class="user-exp-inner" style="width:<?php echo bcdiv($gatherData['experience_points'],$nextLevelPoints,2) * 100?>%;"></div>
+                            </div>
+                            <div>Lv<?php echo $userInfo['experience_level'] +1;?></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="ui-box">
+                <div class="ui-caption">当前特权</div>
+            </div>
+            <!-- 等级奖品区域 -->
+            <div class="ui-box">
+                <ul class="rank-prizes">
+                	
+                	<?php if(!empty($list)){
+                			foreach($list as $k=>$v){
+                		?>
+                    <li>
+                        <div><a href="<?php echo $v['link'];?>"><img src="<?php echo $attachPath.$v['image'];?>"  alt=""></a><span><?php echo $v['name'];?></span></div>
+                    </li>
+                <?php } }else{?>
+                    <li style="">
+                        <div><img src="<?php echo $staticResPath;?>/call/pic/no-privilege.jpg" alt="" class="no-privilege"></div>
+                    </li>
+                   <?php }?>
+                </ul>
+            </div>
+            <div class="ui-box">
+                <div class="ui-caption">等级说明</div>
+            </div>
+            <div class="ui-box">
+                <div class="rank_desc">
+                    <div><span>如何获得经验</span><i class="icon-dropdown"></i></div>
+                    <div class="exp_desc" style="display: none;">
+                      <?php echo html_entity_decode($rules['user_experience_points_rule']);?>
+                    </div>
+                </div>
+                <div class="rank_desc">
+                    <div><span>等级说明及对应特权</span><i class="icon-dropdown"></i></div>
+                    <div class="grade_desc" style="display:none;">
+                       <?php echo html_entity_decode($rules['user_experience_privilege_info']);?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script id="main" data-baseurl="<?php echo $staticResPath;?>/call/js" data-version="<?php echo $version;?>" src="<?php echo $staticResPath;?>/call/js/lib/require.js?v=<?php echo $version;?>"></script>
+<script>
+    require(['<?php echo $staticResPath;?>/call/js/common.js?v=<?php echo $version;?>'],function(){
+        require(['page/grade']);
+    });
+</script>
+</body>
+
+</html>

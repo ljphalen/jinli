@@ -1,0 +1,77 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $configUrl; ?>">基本配置</a></li>
+			<li><a href="<?php echo $indexUrl; ?>">信息列表</a></li>
+			<li class="current"><a href="<?php echo $addUrl; ?>">添加活动内容</a></li>
+			<li><a href="<?php echo $userUrl ?>">用户列表</a>
+			<li><a href="<?php echo $logUrl ?>">通话记录</a>
+			<li><a href="<?php echo $service; ?>">添加客服信息</a>
+			<li><a href="<?php echo $serviceList; ?>">客服信息列表</a>
+			<li><a href="<?php echo $tipsListUrl ?>">规则说明</a>
+
+		</ul>
+	</div>
+	<div class="h_a">添加信息</div>
+	<form method="post" action="<?php echo $addPostUrl; ?>" id="addFrom">
+		<input name="token" id="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">开始日期</th>
+					<td class="td">
+						<div>
+							<input class="input" type="text" maxlength="30" style="width:160px;" id="start_time" name="start_time" value=""/>
+						</div>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">结束时间</th>
+					<td class="td"><input class="input" type="text" style="width:160px" name="end_time" id="end_time">
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">通话结束时间</th>
+					<td class="td">
+						<input class="input" type="text" style="width:160px;" name="valid_time" id="vilid_time"/></td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">发放总数</th>
+					<td class="td"><input type="text" name="number" class="input" style="width: 160px;"></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">排序</th>
+					<td class="td"><input type="text" class="input" name="sort" value="0" style="width: 160px"></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">状态</th>
+					<td class="td">
+						<select name="status" style="width: 160px">
+							<option value="1">开启</option>
+							<option value="0">关闭</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+	<script type="text/javascript">
+		//广告表单数据提交
+		$(document).ready(function () {
+			$('#start_time').datetimepicker();
+			$('#end_time').datetimepicker();
+			$('#vilid_time').datetimepicker();
+			ajaxForm('addFrom', function (ret) {
+					ajaxRedirect(ret, baseurl + '/Admin/VoIP/index');
+				}
+			);
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,34 @@
+<?php echo $this->render("festival/touchgame/header.phtml");?>
+<body>
+<div class="ranking-list">
+    <div class="title">
+        游戏排行榜
+    </div>
+    <ul id="roll" class="notice-list">
+        <li>
+            <div class="sub-title nickname">排名</div>
+            <div class="sub-title prop">用户名</div>
+            <div class="sub-title prize">最高纪录</div>
+        </li>
+        <?php
+        if($data):
+            foreach($data as $key=>$item):?>
+                <li>
+                    <div class="omit"><?php echo $key+1?></div>
+                    <div><?php echo substr_replace($item['uname'], '****', 3, 4);?></div>
+                    <div class="omit"><?php echo $item['score'];?></div>
+                </li>
+        <?php
+            endforeach;
+        else:
+        ?>
+            <li>
+                <div></div>
+                <div>正在计算中...</div>
+                <div></div>
+            </li>
+        <?php endif; ?>
+    </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div id="page">
+		<header class="hd">
+			<h1>销售网点</h1>
+			<div class="back">
+				<a href="<?php echo $webroot?>/services/index"><span class="left-arrow"><i></i></span></a>
+			</div>
+		</header>
+		<form method="post" action="<?php echo $saleUrl;?>" id="searchForm">
+		<input name="token" value="<?php echo $token;?>" type="hidden" />
+		<article class="ac">
+			<div class="form-box">
+				<form action="">
+					<h3>选择你所在的：</h3>
+					<ul>
+						<li>
+							<label for="province">省份：</label>							
+							<select name="province" id="province" onchange="setcity(this.value, 0)">
+							<option value="">请选择省份</option>
+<?php foreach ($province as $key=>$value) {?>
+								 <option <?php echo $search['province'] == $value['id']? 'selected="selected"' : '';?> value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
+<?php }?>
+							</select>
+						</li>
+						<li>
+							<label for="">市区：</label>
+							<select name="city" id="city"></select>
+						</li>						
+						<li><input type="submit" name="submit" class="btn" value="搜索"></li>
+					</ul>
+				</form>
+			</div>
+			
+			<div class="radius-table">
+				<table>
+					<tr>
+						<th>销售网点</th>
+						<th>店面地址</th>
+						<th>咨询电话</th>
+					</tr>
+					<?php if($address) { foreach($address as $key=>$value){?>
+					<tr>
+						<td><?php echo $value['name'];?></td>
+						<td><?php echo $value['address'];?></td>
+						<td><?php if($value['tel']) {?><a href="tel:<?php echo $value['tel'];?>"><?php }?><?php echo $value['tel'];?><?php if($value['tel']) {?></a><?php }?></td>
+					</tr>
+					<?php } }else{?>
+					<tr>
+						<td colspan=3><?php if($search['province']) {?>暂无服务网点<?php }else{?>请选择您所在的省市查找网点<?php }?></td>
+					</tr>
+					<?php }?>
+				</table>
+			</div>
+		</article>
+		</form>
+	</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	var citys = <?php echo json_encode($city);?>;
+	setcity = function(province, chval) {
+		var options = '';
+		$.each(citys, function(index,data){
+			var s = '';
+			if (data.parent_id == province) {
+				if(data.id == chval) s = 'selected';
+				options += '<option value="'+data.id+'" '+s+'>'+data.name+'</option>';
+			}
+		});
+		$("select[name='city']").html(options);
+	}
+	
+	setcity($("#province")[0].value, <?php echo $search['city'] ? $search['city'] : 0;?>);
+})
+
+</script>
+<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/footer.phtml");?>

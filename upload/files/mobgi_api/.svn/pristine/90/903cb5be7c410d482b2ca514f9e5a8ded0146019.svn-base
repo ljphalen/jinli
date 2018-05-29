@@ -1,0 +1,1 @@
+insert into ad_condition_manage set value='date',type='default',status=1,data_type=1,name='ÈÕÆÚ',condition_id="date",createdate=UNIX_TIMESTAMP(),updatedate=UNIX_TIMESTAMP(),operator='stephenfeng'

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="MobileOptimized" content="320"/>
+	<meta name="Iphone-content" content="320"/>
+
+	<script src="<?php echo $staticResPath; ?>/vod/jquery-1.11.1.min.js"></script>
+	<link type="text/css" href="<?php echo $staticResPath; ?>/vod/header_v4.css" rel="stylesheet"/>
+	<link type="text/css" href="<?php echo $staticResPath; ?>/vod/mobile-play-v4.css" rel="stylesheet"/>
+
+	<title><?php echo $tvs_list[$nodeId]; ?> - 移动版播放页</title>
+</head>
+<body>
+<div>
+
+
+</div>
+<div id="content">
+	<?php
+	$no   = 0;
+	$info = array();
+	$now = time();
+	foreach ($data as $k => $val) {
+		$no = $k;
+		$info = $val;
+		if ($now <= strtotime($val['endTime']) && $now >= strtotime($val['startTime'])) {
+			break;
+		}
+	}
+	
+	?>
+<!--
+<?php
+var_dump($data);
+echo "当前：".$no."\n码率：".json_encode($info['code']);
+?>
+-->
+	<div id="play-head">
+		<label class="channel-name">
+		<select name="node" id="node">
+	<?php foreach($tvs as $name => $nodeList): ?>
+   <optgroup label="<?php echo $name;?>">
+   <?php foreach($nodeList as $vname => $id): 
+	$class = ($nodeId== $id) ? 'selected="selected"':'';
+   ?>
+    <option <?php echo $class; ?> value="<?php echo $id;?>"><?php echo $vname;?></option>
+	<?php endforeach; ?>
+   </optgroup>
+   <?php endforeach;?>
+</select>
+		</label>
+	</div>
+
+	<div id="play-panel">
+
+		<video x-webkit-airplay="allow" webkit-playsinline="true" style="width:100%;height:100%;" preload="auto" src="<?php echo $info['playUrl']; ?>"></video>
+	</div>
+
+	<div id="bill-wrap">
+		<div id="bill-head">
+			<div class="title">节目单：</div>
+		</div>
+
+		<div id="bill-panel">
+			<ul class="bill-list">
+				<?php
+				$k=0;;
+				foreach ($data as $k => $val):
+					if (strtotime($no) > strtotime($k)) {
+						continue;
+					}
+					$time  = date('H:i', strtotime($val['startTime']));
+					$class = 'after';
+					if ($k == $no) {
+						$time  = '直播中';
+						$class = 'current';
+					}
+					$k++;
+					?>
+					<li class="<?php echo $class; ?>">
+						<div class="bill-time"><?php echo $time; ?></div>
+						<div class="bill-content"><?php echo $val['name']; ?></div>
+					</li>
+				<?php endforeach; ?>
+
+			</ul>
+
+		</div>
+	</div>
+</div>
+
+
+<div id="footer">
+	<div id="copy-right"></div>
+</div>
+<script>
+	$('#node').bind('change', function () {
+		var id = $(this).val();
+		window.location.href = '?nodeId=' + id;
+	});
+
+</script>
+
+</body>
+</html>

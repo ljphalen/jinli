@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<?php $this->title="";$this->hasSearch=false; ?>
+	<meta charset="UTF-8">
+	<title>金立游戏大厅</title>
+	<?php echo $this->render("layout/cssInc.phtml");?>
+</head>
+<body>
+	<?php echo $this->render("layout/header.phtml");?>
+	<div id="container"></div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+<?php echo $this->render("layout/scriptInc.phtml"); ?>
+<script type="text/javascript">
+	var searchHotData = {
+		list:<?php echo $apihot?>,
+                defaultSearch: '<?php echo $defaultKeyword?>',
+		searchMoreUrl:'/Api/Local_Search/searchMore'
+                ,href:'/search/list'
+	};
+	searchHotData.picturePath = '<?php echo $appImg?>';
+	React.render(
+		React.createElement(SearchGameHotWords, {items: searchHotData})
+	  , document.getElementById('container')
+	);
+</script>
+<?php echo $this->render("layout/lastscriptInc.phtml"); ?>
+</html>

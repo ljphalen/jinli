@@ -1,0 +1,632 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>金立浏览器双十一特别活动</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/events/css/db_eleven_index.min.css?ver=<?php echo $version;?>"/>
+    <link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/events/css/swiper.min.css?ver=<?php echo $version;?>" />
+    <script src="<?php echo $staticResPath;?>/events/js/zepto.min.js?ver=<?php echo $version;?>"></script>
+    <script type="text/javascript" src="<?php echo $staticResPath;?>/events/js/swiper.min.js?ver=<?php echo $version;?>" ></script>
+    <script type="text/javascript">
+        var token = "<?php echo $token;?>";
+        var initConfig = {
+            ifend:<?php echo $data['ifEnd']; ?>,//1：活动已结束 0:活动未结束
+        	iflogin: <?php echo $data['login']; ?>,	//是否登录
+        	loginUrl:"<?php echo $data['loginUrl']; ?>", //登录的跳转链接
+        	currentTime:<?php echo $data['nowTime']; ?>,
+            reminderTime: 900   //按钮中提前提示时间15分*60
+        };
+        var prizes = <?php echo $prize; ?>;
+        
+        var systime = ((new Date().getTime())/1000).toFixed(0);
+    </script>
+</head>
+<body class="ui-app">
+    <div class="main">
+        <div class="main-hd">
+            <div class="banner">
+                <img src="<?php echo $staticResPath;?>/events/pic/dbelv_index_hd.jpg" width="100%" height="auto" />
+                <div class="banner-text">
+                	<span class="title">距下一场秒杀</span>
+                	<div id="js-top-countdown" class="count-down" data-time="0">
+                		<i>0</i><i>0</i>:<i>0</i><i>0</i>:<i>0</i><i>0</i>
+                	</div>
+                </div>
+            </div>
+        </div>
+        <div class="main-bd">
+        	<div id="js-time-tab" class="time-tab">
+                <?php foreach($data['prizeList'] as $k=>$v ){?>
+        		<div class="" data-t="<?php echo $v['start_time']; ?>" data-e="<?php echo $v['end_time'];?>" data-num="<?php echo $v['number'];?>">
+        			<div><?php echo Common::formatHMDate($v['start_time']); ?></div>
+        			<span></span>
+        		</div>
+                <?php }?>
+        	</div>
+        	<div class="bd-prizes">
+        		<div class="bd-prizes-bg">
+        			<img src="<?php echo $staticResPath;?>/events/pic/dbelev_index_bg.jpg" width="100%" height="auto">
+        		</div>
+        		<div id="js-bd-prize-cont" class="bd-preze-container">
+	        		<div id="js-prize-slider" class="swiper-container">
+	        			<div class="swiper-wrapper bd-prizes-list">
+                            <?php foreach($data['prizeList'] as $k=>$v ){ ?>
+                                <div class="swiper-slide" data-id="<?php echo $v['id'];?>">
+                                    <img src="<?php echo $attachPath.$v['image'];?>">
+                                    <div><?php echo $v['name'];?><span>(<?php echo $v['show_number'];?>名)</span></div>
+                                </div>
+                            <?php }?>
+		        		</div>
+	        		</div>
+        		</div>
+                <div id="js-nosnag-hint" class="nosnag-hint" style="display:none;">
+        			<div id="js-nosnag-title" class="nosnag-title">哎呀手慢了，xx点再来哦！</div>
+        			<div class="nosnag-btn">
+        				<button id="js-nosnag-btn" class="button wide">返回</button>
+        			</div>
+        		</div>
+        	</div>
+        	<div id="js-button-slider" class="button-container swiper-container">
+        		<div id="js-skill-buttons" class="swiper-wrapper button-list">
+                    <?php foreach($data['prizeList'] as $k=>$v ){ ?>
+        			<div class="swiper-slide stop-swiping"  data-id="<?php echo $v['id'];?>">
+        				<button class="js-killbtn button wide" type="button">先登录，再秒杀</button>
+        			</div>
+                    <?php }?>
+        		</div>
+        		<div class="button-no-handler"></div>
+        	</div>
+        </div>
+        <div class="main-ft">
+        	<div class="act-title">活动规则：</div>
+            <ul class="act-rules">
+                <li>1、10:00、12:00、14:00、16:00、18:00、20:00 6个整点准时0元秒杀，以页面时间为准；</li>
+                <li>2、用户登录个人中心才能参与活动、次数不限；</li>
+                <li>3、每场秒杀奖品数量有限，秒完即止；</li>
+                <li>4、获奖用户需在中奖后30分钟内完成领奖，逾期视为自动放弃奖品；</li>
+                <li>5、所有实物奖品在活动结束后3个工作日内寄出（如遇节假日则顺延）；</li>
+            </ul>
+            <div class="ft-lisence">
+            	<div>本活动最终解释权归金立浏览器所有</div>
+            	<div>有问题请联系官方QQ群：274289481</div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="js-dlog" class="dialog" style="display:none;">
+    	<div class="dialog-wrap">
+    		<div class="dialog-img"><img id="js-dlog-img" src=""/></div>
+    		<div class="dialog-title">
+    			<span id="js-dlog-title">您有奖品未领取成功，快去领奖吧！</span>
+    		</div>
+    		<div class="dialog-subtitle">
+    			<span id="js-dlog-subtitle">请在<i class='autorun-time' data-time='100'>30分60秒</i>之内领取奖品,过时会自动失效</span>
+    		</div>
+    		<div id="js-dlog-btnrow" class="btn-row">
+    			<button class="button">放弃奖品</button>
+    			<button class="button">继续领奖</button>
+    		</div>
+    	</div>
+    </div>
+    
+    
+    <script>
+        
+    	$(function(){
+    		var tapEvent = 'touchstart' in window ? 'tap' : 'click';
+            if(initConfig["reminderTime"]==undefined){
+                initConfig.reminderTime = 900;
+            }
+            
+    		var prizeSlider = new Swiper('#js-prize-slider',{
+    			speed:300,
+    			onSlideChangeStart:function(swiper){
+    				$("#js-time-tab>div").eq(swiper.activeIndex).addClass('active').siblings('.active').removeClass('active');
+    			}
+    		});
+    		var btnSlider = new Swiper('#js-button-slider',{
+    			effect : 'fade',
+    			speed:100,
+    			touchRatio : 0,
+    			preventClicks:true,
+    			swipeHandler:'.button-no-handler'
+    		});
+    		prizeSlider.params.control = btnSlider;
+    		$("#js-time-tab>div").on(tapEvent,function(){
+    			var idx = $(this).index();
+    			prizeSlider.slideTo(idx, 0, true);
+    		});
+    		
+    		
+    		function topTimeToDom(ts){
+    			if (isNaN(ts)) {
+		            return "--:--";
+		        }
+		        var h = parseInt(ts / 3600);
+		        var m = parseInt((ts % 3600) / 60);
+		        var s = parseInt(ts % 60);
+		        h = h < 10 ? '0' + h : h + "";
+		        m = m < 10 ? '0' + m : m + "";
+		        s = s < 10 ? '0' + s : s + "";
+                var rstr = "";
+                for(var i in h){
+                    rstr+= "<i>"+ h[i] +"</i>";
+                }rstr+=":";
+                for(var i in m){
+                    rstr+= "<i>"+ m[i] +"</i>";
+                }rstr+=":";
+                for(var i in s){
+                    rstr+= "<i>"+ s[i] +"</i>";
+                }
+    		    return rstr;
+            }
+            
+            function topTimeAutoRun() {
+		        var timediv = $("#js-top-countdown");
+		        var remainTime = parseInt(timediv.data("time")) - parseInt(((new Date().getTime())/1000).toFixed(0));
+		        
+		        if (remainTime > 0) {
+		            //remainTime--;
+		            timediv.html(topTimeToDom(remainTime));
+                    
+                    if(remainTime == initConfig.reminderTime){
+                        var upc = $("#js-time-tab>.upcoming").index();
+                        $(".js-killbtn").eq(upc).append($('<i class="btn-time-autorun" data-time="'+timediv.data("time")+'"></i>'));
+                        btnTimeAutoRun();
+                    }
+                    
+		            //timediv.data("time", remainTime);
+		        } else { //超过了等待时间
+                    timediv.html(topTimeToDom(0));
+		            var inp = $("#js-time-tab>.inprogress").addClass("overdue").removeClass("inprogress").index();
+                    var upc = $("#js-time-tab>.upcoming").addClass("inprogress").removeClass("upcoming").index();
+                    $(".js-killbtn").eq(upc).text("0元秒杀").removeClass("disable").removeClass("js-disable");
+                    var inpdom = $(".js-killbtn").eq(inp).addClass("disable");
+                    if(!inpdom.hasClass("js-disable")){
+                        inpdom.text("已抢光");
+                    }
+                        
+                    if(upc<5){
+                        $(".js-killbtn").eq(upc+1).text("即将开始");
+                        var nowtime = ((new Date().getTime())/1000).toFixed(0);
+                        var subt = nowtime-systime + initConfig.currentTime;
+                        var subtime = systime-initConfig.currentTime;
+                        
+                        var nupc = $("#js-time-tab>div").eq(upc+1).addClass("upcoming");
+                        var t = nupc.data("t")-0;
+                        timediv.data("time",t+subtime);
+                        timediv.html(topTimeToDom(t-subt));
+                        remainTime = t+subtime;
+                    }else{
+                        //活动最后一场转为正在进行中
+                    }
+		        }
+		        if (remainTime >= 1) {
+		            setTimeout(function() {
+		                topTimeAutoRun();
+		            }, 1000);
+		        }
+		    }
+            function TimeToStr(ts) {
+		        if (isNaN(ts)) {
+		            return "--:--";
+		        }
+		        var h = parseInt(ts / 3600);
+		        var m = parseInt((ts % 3600) / 60);
+		        var s = parseInt(ts % 60);
+		        h = h < 10 ? '0' + h : h;
+		        m = m < 10 ? '0' + m : m;
+		        s = s < 10 ? '0' + s : s;
+		        if (h <= 0) {
+		            return (m + ":" + s);
+		        }
+		        return (h + ":" + m + ":" + s );
+		    }
+    		function myTimeToStr(ts) {
+		        if (isNaN(ts)) {
+		            return "--:--";
+		        }
+		        var h = parseInt(ts / 3600);
+		        var m = parseInt((ts % 3600) / 60);
+		        var s = parseInt(ts % 60);
+		        h = h < 10 ? '0' + h : h;
+		        m = m < 10 ? '0' + m : m;
+		        s = s < 10 ? '0' + s : s;
+		        if (h <= 0) {
+		            return (m + "分" + s +"秒");
+		        }
+		        return (h + "小时" + m + "分" + s + "秒");
+		    }
+            
+            function btnTimeAutoRun(){  //按钮中的倒计时
+                var timei = $("i.btn-time-autorun");
+		        var remainTime = parseInt(timei.data("time")) - parseInt(((new Date().getTime())/1000).toFixed(0));
+		        
+		        if (remainTime > 0) {
+		            //remainTime--;
+		            timei.text(TimeToStr(remainTime));
+		            //timei.data("time", remainTime);
+		        } else { //超过了等待时间
+                    timei.text(TimeToStr(0));
+                    timei.remove();
+		            //prizeExpries();
+		            return;
+		        }
+		        if (remainTime >= 1) {
+		            timeoutvar = setTimeout(function() {
+		                btnTimeAutoRun();
+		            }, 1000);
+		        }
+            }
+		    
+		    timeoutvar = -1;
+		    function timeAutoRun() {
+		        var timei = $("i.autorun-time");
+                if(timei.length<=0){
+                    return ;
+                }
+		        var remainTime = parseInt(timei.data("time")) - parseInt(((new Date().getTime())/1000).toFixed(0));
+		        
+		        if (remainTime > 0) {
+		            //remainTime--;
+		            timei.text(myTimeToStr(remainTime));
+		            //timei.data("time", remainTime);
+		        } else { //超过了等待时间
+                    timei.text(myTimeToStr(0));
+                    
+                    $("#js-dlog").addClass("reload");
+                    myDialog(dlogimg.attr("src"),"您的奖品已超过领取时间，奖品自动失效","",[{name:"好吧",fun:function(){
+                                window.location.reload();
+                            }}]);
+                    //window.location.reload();
+                    
+                    
+		            //prizeExpries();
+		            return;
+		        }
+		        if (remainTime >= 1) {
+		            timeoutvar = setTimeout(function() {
+		                timeAutoRun();
+		            }, 1000);
+		        }
+		    }
+            
+            var dlogwindow = $("#js-dlog");
+            var dlogimg = $("#js-dlog-img");
+            var dlogtitle = $("#js-dlog-title");
+            var dlogsubtitle = $("#js-dlog-subtitle");
+            var dlogbtnrow = $("#js-dlog-btnrow");
+            
+            function myDialog(imgsrc,mainmsg,submsg,buttons){
+                if(imgsrc==null||imgsrc===""){
+                    dlogimg.removeAttr("src");
+                }else{
+                    dlogimg.attr("src",imgsrc);
+                }
+                dlogtitle.html(mainmsg);
+                dlogsubtitle.html(submsg);
+                dlogbtnrow.html("");
+                if(buttons.length>0){
+                    var wideclass = "";
+                    if(buttons.length==1)
+                        wideclass = " wide"
+                    for(var bi in buttons){
+                        dlogbtnrow.append($("<button class='button"+wideclass+"'>"+buttons[bi]["name"]+"</button>").click(buttons[bi]["fun"])[0]);
+                    }
+                }
+                dlogwindow.show();
+                clearTimeout(timeoutvar);
+                timeoutvar = setTimeout( function(){timeAutoRun();},1000);
+            }
+            
+	    	setTimeout(function(){//test
+                return ;
+                var lefttime =parseInt(((new Date().getTime())/1000).toFixed(0)) + 100;
+                
+                myDialog("","您有奖品未领取成功，快去领奖吧！","请在<i class='autorun-time' data-time='"+lefttime+"'>"+myTimeToStr(lefttime)+"</i>之内领取奖品，过时会自动失效",[{name:"放弃奖品",fun:function(){
+                                console.log("放弃奖品点击");
+                            }},{name:"继续领奖",fun:function(){
+                                console.log("去领奖点击");
+                            }}]);
+            },1000);
+            
+    		
+    		$(".dialog").on(tapEvent,function(e){
+		    	if(e.srcElement==this){
+                    if($(this).hasClass("reload")){
+                        window.location.reload();   
+                    }
+		    		$(this).hide();
+		    	}
+		    });
+    		
+            
+            $(".js-killbtn").on(tapEvent,function(){
+                var $this = $(this);
+                if($this.hasClass("js-disable")){
+                    return ;
+                }
+                if(initConfig.iflogin==0){
+                    window.location.href = initConfig.loginUrl;
+                    return ;
+                }
+                var ifprizeurl = $this.data("prizeurl");
+                if(ifprizeurl!=undefined){
+                    window.location.href = ifprizeurl;
+                    return;
+                }
+                
+                var did = $this.parent().data("id");
+                $this.addClass("js-disable");
+                setTimeout(function(){
+                    $.ajax({
+                        type:'get',
+                        url:'ajaxDrawing',
+                        data:{prize_id:did},
+                        dataType:'json',
+                        success:function(data){
+                            //console.log(data);
+                            if(data["success"]==true){
+                                var img = "";
+                                if(data.data.prize_image){
+                                    img = data.data.prize_image;
+                                }
+                                
+                                var expiretime = data.data.expireSeconds;
+                                var outtime = parseInt(((new Date().getTime())/1000).toFixed(0)) + expiretime;
+                                
+                                $(".bd-prizes-list>div[data-id='"+did+"']").addClass("snag");
+                                $this.text("赶紧领奖去").data("prizeurl",data.data.prize_url).removeClass("js-disable");
+                                
+                                myDialog(img,data.data.err_msg,"请在<i class='autorun-time' data-time='"+outtime+"'>"+myTimeToStr(expiretime)+"</i>之内领取奖品，过时会自动失效",[{name:"放弃奖品",fun:function(){
+                                        var $this2 = $(this);
+                                        if($this2.hasClass("comfirm")){
+                                            $(this).text("放弃中..");
+                                            $.ajax({
+                                                type:'get',
+                                                url:'giveUpPrize',
+                                                data:{prize_id:data.data["prize_id"]},
+                                                dataType:'json',
+                                                success:function(data){
+                                                    dlogwindow.hide();
+                                                    $this.addClass("disable").addClass("js-disable").text("已放弃");
+                                                    $(".bd-prizes-list>div[data-id='"+did+"']").removeClass("snag");
+                                                },
+                                                error:function(){
+                                                    alert("网络请求失败！");
+                                                }
+                                            });
+                                        }else{
+                                            dlogtitle.html("确认放弃？放弃后奖品不再补发哦！");
+                                            $this2.text("确认放弃");
+                                            $this2.addClass("comfirm");
+                                        }
+                                }},{name:"去领奖",fun:function(){
+                                    window.location.href = data.data.prize_url;
+                                }}]);
+                            }else{
+                                if(data.data.err_code==='1'){
+                                    $this.addClass("disable").text("已抢到");
+                                }else if(data.data.err_code==='-1'){
+                                    $this.addClass("disable").text("已抢光");
+                                    $(".bd-prizes-list>div[data-id='"+did+"']").addClass("end");
+                                    
+                                    var didx = $this.parent().index();
+                                    var tishiyu = "哎呀手慢了";
+                                    var btntishi = "去下一场";
+                                    if(didx<5){
+                                        tishiyu ="哎呀，手慢了，"+ $("#js-time-tab>div").eq(didx+1).find("div").text()+"再来哦！";
+                                    }else{
+                                        tishiyu = "55555，手慢啦！"
+                                        btntishi = "好吧";
+                                    }
+                                    $("#js-nosnag-title").text(tishiyu);
+                                    $("#js-nosnag-btn").data("countdown","5").text(btntishi+" (5)").data("cidx",didx);
+                                    $("#js-nosnag-hint").show();
+                                    $("#js-bd-prize-cont").css("opacity","0");
+                                    $("#js-button-slider").css("opacity","0");
+                                    // setTimeout(function(){
+                                    //     $("#js-nosnag-hint").hide();
+                                    //     $("#js-bd-prize-cont").css("opacity","1");
+                                    //     $("#js-button-slider").css("opacity","1");
+                                    // },5000);
+                                    var sitv = setInterval(function(){
+                                        $bt = $("#js-nosnag-btn");
+                                        var times = $bt.data("countdown");
+                                        times-=1;
+                                        $bt.data("countdown",times);
+                                        if(times<=0){
+                                            $bt.click();
+                                            clearInterval(sitv);
+                                        }else{
+                                            $bt.text(btntishi+" ("+times+")");
+                                        }
+                                    },1000);
+                                    
+                                    
+                                }else if(data.data.err_code==='-2'){
+                                    $this.removeClass("disable").removeClass("js-disable");
+                                }else if(data.data.err_code==='0'){
+                                    $this.addClass("disable").text("请刷新页面后重试！");
+                                }else{//-3
+                                    $this.addClass("disable").text("请刷新页面后重试！");
+                                }
+                                
+                            }
+                        },
+                        error:function(){
+                            alert("网络请求失败！");
+                            $this.removeClass("js-disable");
+                        }
+                    });
+                },Math.random()*3000);
+            });
+            $("#js-nosnag-btn").on(tapEvent,function(){
+                if ("none"==$("#js-nosnag-hint").css("display")){
+                    console.log(1)
+                }else{
+                    var cidx = $(this).data("cidx");
+                    if(cidx!==undefined&&cidx<5){
+                        prizeSlider.slideNext();
+                    }
+                    console.log(2)
+                }
+                $("#js-nosnag-hint").hide(); 
+                $("#js-bd-prize-cont").css("opacity","1");
+                $("#js-button-slider").css("opacity","1");
+            });
+            
+            
+            function init(){
+                
+                if(initConfig.ifend==1){
+                    $(".main-hd").addClass("end");
+                    $(".js-killbtn").text("活动已结束");
+                    var bimg = $(".main-hd.end>div.banner>img");
+                    bimg.attr("src",bimg.attr("src").replace("dbelv_index_hd.jpg","dbelv_index_hd_end.jpg"));
+                    $(".js-killbtn").addClass("disable").addClass("js-disable")
+                }else{
+                    if(initConfig.iflogin==1){
+                        $(".js-killbtn").text("0元秒杀");
+                    }
+                }
+                
+                //ajaxDrawing
+                
+                var nowtime = ((new Date().getTime())/1000).toFixed(0);
+                var subt = nowtime-systime + initConfig.currentTime;
+                var subtime = systime-initConfig.currentTime;
+                //console.log("["+subt+"]");
+                
+                var flag = true,flag2 = true;
+                $("#js-time-tab>div").forEach(function(a,idx){
+                    var $a = $(a);
+                    var t = $a.data("t")-0;
+                    var e = $a.data("e")-0;
+                    if(initConfig.ifend==1){
+                        $a.addClass("overdue");
+                        return;
+                    }
+                    //console.log("["+t+" , "+e+"]")
+                    if(subt<t){
+                        if(flag){
+                            $a.addClass("upcoming").addClass("active");
+                            $(".js-killbtn").eq(idx).addClass("disable").addClass("js-disable").text("即将开始");
+                            $("#js-top-countdown").data("time",t+subtime).html(topTimeToDom(t-subt));
+                            if((t-subt)<initConfig.reminderTime){
+                                $(".js-killbtn").eq(idx).append($('<i class="btn-time-autorun" data-time="'+(t+subtime)+'"></i>'));
+                                btnTimeAutoRun();
+                            }
+                            setTimeout(function() {
+                                topTimeAutoRun();
+                            }, 1000);
+                            prizeSlider.slideTo(idx, 0, true);
+                            flag = false;
+                            flag2 = false;
+                        }else{
+                            if(flag2){
+                                $a.addClass("upcoming");
+                                $(".js-killbtn").eq(idx).addClass("disable").addClass("js-disable").text("即将开始");
+                                $("#js-top-countdown").data("time",t+subtime).html(topTimeToDom(t-subt));
+                                
+                                if((t-subt)<initConfig.reminderTime){
+                                    $(".js-killbtn").eq(idx).append($('<i class="btn-time-autorun" data-time="'+(t+subtime)+'"></i>'));
+                                    btnTimeAutoRun();
+                                }
+                                
+                                setTimeout(function() {
+                                    topTimeAutoRun();
+                                }, 1000);
+                                flag2 = false;
+                            }else{
+                                $(".js-killbtn").eq(idx).addClass("disable").addClass("js-disable").text("未开始");
+                            }
+                        }
+                    }else if(subt>=t&&subt<e){
+                        $a.addClass("inprogress").addClass("active");
+                        prizeSlider.slideTo(idx, 0, true);
+                        var num = parseInt($a.data("num"));
+                        if(isNaN(num)||num<=0){
+                            $(".js-killbtn").eq(idx).addClass("disable").addClass("js-disable").text("已抢光");
+                            $(".bd-prizes-list>div").eq(idx).addClass("end");
+                        }
+                        flag = false;
+                    }else if(subt>=e){
+                        $a.addClass("overdue");
+                        $(".js-killbtn").eq(idx).addClass("disable").addClass("js-disable").text("已抢光");
+                        $(".bd-prizes-list>div").eq(idx).addClass("end");
+                    }
+                });
+                if(flag&&flag2){//已结束的情况
+                    $("#js-time-tab>div").eq(0).addClass("active");
+                    $(".main-hd").addClass("end");
+                    $(".js-killbtn").text("活动已结束");
+                    var bimg = $(".main-hd.end>div.banner>img");
+                    bimg.attr("src",bimg.attr("src").replace("dbelv_index_hd.jpg","dbelv_index_hd_end.jpg"));
+                }
+                
+                
+                // 领奖弹窗
+                
+                for(var pi in prizes){
+                    var pid = prizes[pi]["prize_id"];
+                    if(prizes[pi]["prizeStatus"]==="0"){
+                        currentprize = prizes[pi];
+                        var expiretime = currentprize["remainedSeconds"];
+                        var outtime = parseInt(((new Date().getTime())/1000).toFixed(0)) + expiretime;
+                        myDialog(currentprize["prizeImageUrl"],"您还有奖品未领取成功，快去领奖吧！","请在<i class='autorun-time' data-time='"+outtime+"'>"+myTimeToStr(expiretime)+"</i>之内领取奖品，过时会自动失效",[{name:"放弃奖品",fun:function(){
+                                    var $this = $(this);
+                                    if($this.hasClass("comfirm")){
+                                        $(this).text("放弃中..");
+                                        $.ajax({
+                                            type:'get',
+                                            url:'giveUpPrize',
+                                            data:{prize_id:currentprize["prize_id"]},
+                                            dataType:'json',
+                                            success:function(data){
+                                                dlogwindow.hide();
+                                                $("#js-skill-buttons>div[data-id='"+pid+"']>button").addClass("disable").addClass("js-disable").text("已放弃");
+                                                $(".bd-prizes-list>div[data-id='"+pid+"']").removeClass("snag");
+                                            },
+                                            error:function(){
+                                                alert("网络请求失败！");
+                                            }
+                                        });
+                                    }else{
+                                        dlogtitle.html("确认放弃？放弃后奖品不再补发哦！");
+                                        $this.text("确认放弃");
+                                        $this.addClass("comfirm");
+                                    }
+                                }},{name:"去领奖",fun:function(){
+                                    console.log(currentprize)
+                                    window.location.href = currentprize["prizeUrl"];
+                                    
+                                }}]);
+                            $(".bd-prizes-list>div[data-id='"+pid+"']").addClass("snag");   //添加抢到啦 圈圈图片
+                            $("#js-skill-buttons>div[data-id='"+pid+"']>button").text("去领奖吧").data("prizeurl",currentprize["prizeUrl"]);
+                         break;
+                    }else if(prizes[pi]["prizeStatus"]==="1"){
+                        $("#js-skill-buttons>div[data-id='"+pid+"']>button").text("抢到啦！").addClass("js-disable").addClass("disable");
+                        $(".bd-prizes-list>div[data-id='"+pid+"']").addClass("snag");   //添加抢到啦 圈圈图片
+                    }else if(prizes[pi]["prizeStatus"]==="-2"){
+                        $("#js-skill-buttons>div[data-id='"+pid+"']>button").text("已放弃").addClass("js-disable").addClass("disable");
+                    }else if(prizes[pi]["prizeStatus"]==="-1"){
+                        $("#js-skill-buttons>div[data-id='"+pid+"']>button").text("已放弃").addClass("js-disable").addClass("disable");
+                    }
+                }
+                
+            }
+            init();
+    		
+    	});
+    	
+    </script>
+    
+</body>
+</html>
+

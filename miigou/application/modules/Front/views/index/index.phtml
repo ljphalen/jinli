@@ -1,0 +1,25 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body id="list" data-pagerole="body">
+	<div class="module">
+		<section id="iScroll">
+			<div class="tj-list J_tjList" data-ajaxUrl="<?php echo $webroot.$apiUrl;?>?kid=<?php echo $kid;?>" data-hasnext="true">
+				<ul>
+					<?php foreach($data as $key=>$value){?>
+					<li>
+						<a href="<?php echo $value['link'];?>">
+							<div class="pic">
+								<img src="<?php echo $value['img'];?>" alt="">
+								<span class="price">￥<?php echo $value['price'];?></span>
+							</div>
+							<div class="desc"><?php echo Util_String::substr($value['title'], 0, 22, '', true);?></div>
+						</a>
+					</li>
+					<?php }?>
+				</ul>
+				<div id="pullUp">
+					<span class="pullUpIcon"></span><span class="pullUpLabel">滑动加载更多...</span>
+				</div>
+			</div>
+		</section>
+	</div>
+<?php echo $this->render("layout/footer.phtml");?>

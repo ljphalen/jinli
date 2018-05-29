@@ -1,0 +1,48 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<body>
+	<div class="hd">登录</div>
+	<div class="content ">
+		<i class="icon-amigo"></i>
+		<div class="input phone">
+			<span >账号</span><input id="phone"  maxlength=11 placeholder="请输入手机号码" />
+		</div>
+		<div class="input password">
+			<span class="">密码</span><input id="password" maxlength=16 type="password" placeholder="请输入密码" />
+		</div>
+		<div class="J_code code hidden">
+			<input id="code"  maxlength="4" placeholder="请输入验证码" data-vid="" data-vty="" />
+			<span class="J_loading ">
+				<img  src=""  data-ajaxUrl="<?php echo $webroot.$refreshgvcUrl; ?>">
+				<i class="icon-loading hidden"></i>
+			</span>
+			<span class="refresh-tips">点击图片刷新</span>
+		</div>
+		<span class="J_tips error-tips invisible">验证失败</span>
+		<!-- 登录提交数据url -->
+		<a class="J_login btn" data-ajaxUrl="<?php echo $webroot . $loginPostUrl;?>">登录</a>
+		<div class="nav">
+		<a  href="<?php echo $webroot.$registerUrl.'?redirect_uri='.$redirectUrl;?>">注册账号</a>
+		<a class="findPwd" target="_blank" href="<?php echo $forgetUrl; ?>">找回密码</a>
+		</div>
+	</div>
+
+
+	<!-- 提交成功弱提示-->
+	<div class="J_mask mask hidden">
+		<div class="submit-mask">
+			<i class="icon-loading"></i>
+			<div>正在提交，请稍等...</div>
+		</div>
+		
+	</div>
+
+	<div class="J_tipBox tip-box hidden">
+		<p></p>
+		<div class="boxBg"></div>
+	</div>
+
+	<script src="<?php echo $staticResPath; ?>/assets/js/jquery.js?v=<?php echo $version;?>" ></script>
+	<script src="<?php echo $staticResPath; ?>/assets/js/versign.source.js?v=<?php echo $version;?>" ></script>
+
+</body>
+</html>

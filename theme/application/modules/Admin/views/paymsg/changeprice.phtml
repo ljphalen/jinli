@@ -1,0 +1,71 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<script type="text/javascript" src="<?php echo $staticPath ?>appjs/payment/paylist.js"></script>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <div id="pay_paymsg_changeprice">
+        <div class="content">
+        	<div class="pay_paymsg_paymsgchangeprice">
+        		<div class="com_tb_wrap">
+	                <div class="com_tb">
+	                    <label class="tb_cell">搜索:</label>
+	                    <div class="tb_cont tb_cell">
+	                        <input type="text" style="width:350px;" class="rd_1 search_name" value="<?php echo $keyword; ?>">
+	                        <button class="btn_s2 detial_search_btn" id="search_btn">搜索</button>
+	                    </div>
+	                </div><!-- com_tb end -->
+            	</div>
+            	<div class="change_price_list">
+					<div class="price_list_cont">
+						<table class="view_list_tb toggle_icon">
+							<thead>
+								<tr>
+									<th>主题</th>
+									<th>名称</th>
+									<th>设计师</th>
+									<th class="on <?php if($_GET['sort'] == 'current_price' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="current_price">修改前价格</th>
+									<th class="on <?php if($_GET['sort'] == 'apply_price' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="apply_price">修改后价格</th>
+									<th class="on <?php if($_GET['sort'] == 'created_time' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="created_time">申请时间</th>
+									<th>状态</th>
+									<th>操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach($prices as $price){ ?>
+								<tr>
+									<td><img src='<?php echo $imageurl.$price['cover'] ?>'></td>
+									<td><?php echo $price['title']; ?></td>
+									<td><?php echo $price['nick_name']; ?></td>
+									<td><?php echo $price['current_price']; ?>A</td>
+									<td><?php echo $price['apply_price']; ?>A</td>
+									<td><?php echo date('Y.m.d', $price['created_time']); ?></td>
+									<td><?php if($price['status'] == 1) { 
+										echo '已通过';
+									} elseif($price['status'] == 0){
+										echo '待审核';
+									}else{
+										echo '未通过';
+									} ?></td>
+									<td><a class="btn_txt" href="/Admin/paymsg/cpdetail?id=<?php echo $price['id']; ?>">详情</a></td>
+								</tr>
+								<?php } ?>
+							</tbody>
+						</table>
+						<?php echo $this->render("common/pageshow.phtml"); ?>
+					</div>
+				</div>
+        	</div>
+        </div><!-- content end -->
+    </div>
+</section>
+<script type="text/javascript">
+	$(function(){
+		//搜索关键词
+		$("#search_btn").click(function(){
+			var keyword = $(".search_name").val();
+			var url = '/admin/paymsg/changeprice?keyword='+keyword;
+			window.location.href=url; 
+		});
+	});
+</script>
+</body>
+</html>

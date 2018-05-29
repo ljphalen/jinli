@@ -1,0 +1,17 @@
+<?php
+$str = '<div id="js-slide-news" class="slide-news ui-tapimg-wrap"><ul>';
+foreach ($list['img'] as $val) {
+	$ext = pathinfo($val['img'], PATHINFO_EXTENSION);
+	$img = empty($val['ext']) ? $val['img'] : $val['img'].'_640x300.'.$ext;
+	//$img = $val['img'];
+	$str .= sprintf('<li><a class="pic-wrap" href="%s"><img class="pic" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" data-src="%s" /></a><a class="txt" href="%s">%s</a></li>', $val['link'], $img, $val['link'], $val['name']);
+}
+$str .= '</ul></div>';
+
+$str .= '<ul id="js-news-list" class="ui-normal-list">';
+foreach ($list['txt'] as $val) {
+	$str .= sprintf('<li><a href="%s"><span class="txt">%s</span></a></li>', $val['link'], $val['name']);
+}
+$url = Common::clickUrl('view_more', 'LOCAL_NAV', Common::getCurHost() . '/nav/news/index?type=more');
+$str .= sprintf('</ul><div  class="ui-gd-2 ui-border-tb"><div class="btn-wrap"><p id="js-news-btn" data-mid="%s" data-pos="1"><span><i class="icon-switch"></i>换一换</span></p><p><a href="%s" onclick="local.navtive.event.log(\'card_checkmoreTheH5\',%s)"><i class="icon-more"></i>更多新闻</a></p></div></div><div class="ui-gd-shadown"></div>', $columnId, $url,$columnId);
+echo $str;

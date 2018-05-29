@@ -1,0 +1,58 @@
+<div class="page">
+	<div class="pageContent">
+	<form id="article_form" method="post" action="__URL__/addSave/navTabId/__MODULE__/callbackType/closeCurrent"
+		class="pageForm required-validate" enctype="multipart/form-data" role="form" 
+		onsubmit="return iframeCallback(this, navTabAjaxDone);">
+		<input type="hidden" name="id" value="{$info.id}" />
+		<input type="hidden" name="status" value="{$info.status}" />
+		<div class="pageFormContent" layoutH="58">
+			<div class="unit">
+				<label>标题：</label>
+				<input type="text" name="title" id="title" size="100" maxlength="200" value="{$info.title}" class="required"/>
+			</div>
+			<div class="unit">
+				<label>内容：</label>
+				<textarea class="editor {forcePtag:false}" name="content" style="width:80%;min-height:300px;"
+					forcePtag="false"
+					tools="mfull"
+					upImgUrl="{:U('Upload/save','type=image')}"
+					upImgExt="jpg,jpeg,gif,png"
+					tools="simple">{$info.content|safe}</textarea>
+			</div>
+			<div class="unit">
+				<label>发布者：</label>
+				<input type="text" name="author" id="author" size="30" maxlength="100" value="{$info.author|default=$admin[nickname]}" class="required"/>
+			</div>
+			<div class="unit">
+				<label>开始时间：</label>
+				<php>$time = date("Y-m-d H:i:00");</php>
+				<input type="text" readonly="true" value="{$info.start_time|default=$time}" datefmt="yyyy-MM-dd HH:mm:ss" size="25" class="date textInput readonly valid" name="start_time">
+			</div>
+			<div class="unit">
+				<label>结束时间：</label>
+				<php>$time = date("Y-m-d H:i:00");</php>
+				<input type="text" readonly="true" value="{$info.end_time|default=$time}" datefmt="yyyy-MM-dd HH:mm:ss" size="25" class="date textInput readonly valid" name="end_time">
+			</div>
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="button" class="sub_act" onclick="return sub_act({:AnnouncementModel::STATUS_PRE_RELEASE});" status="{:AnnouncementModel::STATUS_PRE_RELEASE}" >保存并发布</button></div></div></li>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="button" class="sub_act" onclick="return sub_act({:AnnouncementModel::STATUS_SAVE});" status="{:AnnouncementModel::STATUS_SAVE}" >仅保存</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+	
+	</div>
+</div>
+
+<script type="text/javascript">
+function sub_act(status)
+{
+	$("input[name='status']").val(status);
+	$("#article_form").submit();
+}
+if ($ != jQuery) {
+    $ = jQuery.noConflict();
+}
+</script>

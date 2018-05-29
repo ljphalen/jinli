@@ -1,0 +1,59 @@
+<?php echo $this->render("layout/header2.phtml");?>
+	<div id="page">
+		<div class="paccount" id="iscrollWrap">
+			<div class="mainWrap">
+				<?php if ($hasheader) {?>
+				<header class="hdWrap">
+					<div class="hd-l"><a href="<?php echo $webroot;?>/goods<?php echo $refer ? '/after' : '';?>" class="l-arrow"></a></div>
+					<div class="hd-r"><h1>商品详情</h1></div>	
+				</header>
+				<?php }?>
+				<!-- 内容区域 START-->
+				<article class="ac clearfix">
+					<div class="free-period detail">
+						<div class="title">
+							<h3><?php echo $info['title'];?></h3>
+						</div>
+						<div class="main J_scrollPro isTouch">
+							<span class="handle ui-slide-prev"><img src="<?php echo $staticResPath;?>/pic/ico_arrow.png" alt="" /></span>
+							<span class="handle ui-slide-next"><img src="<?php echo $staticResPath;?>/pic/ico_arrow.png" alt="" /></span>
+		                    <div class="pic ui-slide-scrollbox">
+		    					<ul class="ui-slide-scroll oz">
+<?php foreach($imgs as $key=>$value) {?>
+		    						<li class="ui-slide-item">
+		    							<span><img src="<?php echo $attachPath,$value['img'];?>" alt="" /></span>
+		    						</li>
+<?php }?>
+		    					</ul>
+		    				</div>
+							<div class="ui-slide-tabs tab-item">
+<?php $j = count($imgs);for($i=0; $i<$j; $i++) {?>
+								<span class="ui-slide-tab <?php if($i == 0) echo 'ui-slide-tabcur';?>"></span>
+<?php }?>
+							</div>
+						</div>
+					</div>
+					<section class="pro-intro">
+						<p><?php echo html_entity_decode($info['descrip']);?></p>
+						<div class="inf">
+							<p><span class="price-sale">￥<?php echo $info['price'];?></span><span class="zt-orange">可用<?php echo $info['silver_coin'];?>元银币抵现</span></p>
+							<p>
+								<a href="tel:0755-82583525" class="add-one">
+									<em>联系我们</em>
+								</a>
+								<?php if ($info['stock_num'] == 0 || $disable) {?>
+									<a class="disabled"><em>立即购买</em></a>
+								<?php } else {?>
+									<a href="<?php echo $webroot,'/order/detail/?id=',$info['id'];?>"><em>立即购买</em></a>
+								<?php }?>
+							</p>
+						</div>
+					</section>
+				</article>
+				<!-- 内容区域 END-->
+			</div>
+		</div>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

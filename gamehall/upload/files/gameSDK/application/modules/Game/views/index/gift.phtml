@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<?php $this->title="礼包详情";$this->hasSearch="true"; ?>
+	<meta charset="UTF-8">
+	<title>金立游戏大厅</title>
+	<?php echo $this->render("layout/cssInc.phtml");?>
+</head>
+<body>
+	<?php echo $this->render("layout/header.phtml");?>
+	<div id="container"></div>
+	<div id="footer"></div>
+</body>
+<?php echo $this->render("layout/scriptInc.phtml"); ?>
+<script type="text/javascript">
+	var packageData = {
+		name:'<?=$giftInfo['name']?>',
+		residual:<?=$giftRemainNum?>,
+		total:<?=$giftTotal?>,
+		imgUrl:'<?php echo $gameInfo['big_img'] ? $gameInfo['big_img']: ($gameInfo['mid_img'] ? $gameInfo['mid_img'] : $gameInfo['img']);?>',
+		download:'/index/linkRedirect/?url=<?=$gameInfo['link']?>&intersrc=giftdetail<?=$gameInfo['game_id']?>_clientdl',
+		contents:'<?=html_entity_decode($giftInfo['content'], ENT_QUOTES)?>',
+		date:'<?=date("Y年m月d日 H:i:s",$giftInfo['use_start_time'])."-".date("Y年m月d日 H:i:s",$giftInfo['use_end_time'])?>',
+		useMethod:'<?=html_entity_decode($giftInfo['method'])?>'
+	};
+	React.render(
+		React.createElement(PackageDetails, {items: packageData})
+	  , document.getElementById('container')
+	);
+	$(function(){
+		 $('#footer').html('<?php echo str_replace(PHP_EOL, '', $this->render("layout/footer.phtml")); ?>');	   
+ })
+	
+</script>
+<?php echo $this->render("layout/lastscriptInc.phtml"); ?>
+</html>

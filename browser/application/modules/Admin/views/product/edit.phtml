@@ -1,0 +1,95 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">机型列表</a></li>
+    <li class="current"><a href="javascript:;">编辑机型</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑机型</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editProductForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort'];?>"></td>
+		</tr>
+		<tr class="tr">
+				<th class="th">是否新品</th>
+				<td class="td">
+				<input type="hidden" name="is_new" id="is_new" value="<?php echo $info['is_new'];?>"/>
+				<input type="checkbox" onclick="if(this.checked){$('#is_new').val(1);}else{$('#is_new').val(0);}"
+					<?php echo $info['is_new'] == 1 ? 'checked="checked"' : '';?> >(选中表示设置为新品)</td>
+			</tr>
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input" name="title" value="<?php echo $info['title'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">价格</th>
+			<td class="td"><input type="text" class="input" name="price" value="<?php echo $info['price'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">机型</th>
+			<td class="td"><input type="text" class="input" name="mark" value="<?php echo $info['mark'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">系列</th>
+			<td class="td"><select name="type">
+<?php foreach($types as $key => $value) {
+$sel = ($key == $info['type']) ? 'selected="seclected"' : '';
+?>
+                <option <?php echo $sel;?> value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php }?>
+            </select></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">参数</th>
+			<td class="td">
+				<textarea name="param" style="width: 800px; height: 400px;"><?php echo $info['param'];?></textarea>
+			</td>
+		</tr>
+
+		<tr class="tr">
+			<th class="th">描述</th>
+			<td class="td">
+				<textarea name="descrip" style="width: 800px; height: 400px;"><?php echo $info['descrip'];?></textarea>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+KindEditor.ready(function(K) {
+	K.token = $('#token').val();
+    editor = K.create('textarea[name="param"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : false,
+        items : EDITOR_ITEMS
+    });
+});
+
+var editor1;
+KindEditor.ready(function(K) {
+	K.token = $('#token').val();
+    editor1 = K.create('textarea[name="descrip"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : false,
+        items : EDITOR_ITEMS
+    });
+});
+
+$(document).ready(function(){
+	ajaxForm('editProductForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Product/index');
+	}, function() {
+		editor1.sync();
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

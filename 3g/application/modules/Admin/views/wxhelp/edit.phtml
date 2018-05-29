@@ -1,0 +1,77 @@
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="edit_form">
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr>
+			<th>名称</th>
+			<td>
+				<input type="text" style="width:250px;" class="easyui-textbox" name="title" required="true" value="<?php echo $info['title']; ?>">
+			</td>
+		</tr>
+
+		<tr>
+			<th>开始时间</th>
+			<td>
+				<input type="text" style="width: 150px" name="start_time" class="easyui-datetimebox" value="<?php echo date('Y-m-d H:i:s', $info['start_time']); ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>结束时间</th>
+			<td>
+				<input type="text" style="width: 150px" name="end_time" class="easyui-datetimebox" value="<?php echo date('Y-m-d H:i:s', $info['end_time']); ?>">
+			</td>
+		</tr>
+
+		<tr>
+			<th>额度数量</th>
+			<td>
+				<input type="text" class="easyui-textbox" name="total_num" required="true" value="<?=$info['total_num']?>">
+			</td>
+		</tr>
+
+		<tr>
+			<th>额度数量</th>
+			<td><textarea name="rule_num" style="width:250px;height: 50px;"><?=$info['rule_num']?></textarea></td>
+		</tr>
+		<tr>
+			<th>结果数量</th>
+			<td>
+				<input type="text" class="easyui-textbox" name="result_num" required="true" value="<?=$info['result_num']?>">
+			</td>
+		</tr>
+
+
+		<tr>
+			<th>weixin appid</th>
+			<td>
+				<input type="text" style="width:250px;" class="easyui-textbox" name="wx_appid" required="true" value="<?=$info['wx_appid']?>">
+			</td>
+		</tr>
+		<tr>
+			<th>weixin appkey</th>
+			<td>
+				<input type="text" style="width:250px;" class="easyui-textbox" name="wx_appkey" required="true" value="<?=$info['wx_appkey']?>">
+			</td>
+		</tr>
+		<tr>
+			<th>地址</th>
+			<td>
+				<?php
+				$token = Common::encrypt(Common::jsonEncode(array('id' => intval($info['id']), 'home' => 1)));
+				echo sprintf('%s/wxhelp/index?token=%s', Common::getCurHost(), urlencode($token));
+				?>
+			</td>
+		</tr>
+		<tr>
+			<th>qrcode</th>
+			<td>
+				<?php
+				echo $info['qrcode']['url'] . "<br>";
+				echo $info['qrcode']['qrcode_url'];
+				?>
+
+			</td>
+		</tr>
+
+	</table>
+</form>

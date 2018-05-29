@@ -1,0 +1,81 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $listUrl;?>">积分商城</a></li>
+        <li><a href="<?php echo $pointPrizeIndexUrl;?>">积分抽奖</a></li>
+        <li><a href="<?php echo $presendIndexUrl;?>">人工发放</a></li>
+        <li class="current"><a href="<?php echo $presendDetailUrl.'?presendId='.$s['presendId'];?>">发放明细</a></li>
+        <li><a href="<?php echo $pointDescIndexUrl;?>">积分说明管理</a></li>
+	</ul>
+</div>
+
+<div class="table_full">
+<dl style="display:-webkit-box">
+	<dd style="padding-left: 0px">
+		<p><span>发放原因:<?php echo $info['reason'];?></span></p>
+		<p><span>发放时间:<?php echo date('Y-m-d H:i:s', $info['send_time']);?></span></p>
+		<p><span>发放用户:定向</span></p>
+		<p><span>发放数量:<?php echo $info['send_num'];?></span></p>
+	</dd>
+</dl>
+</div>
+
+<form action="<?php echo $presendDetailUrl.'?presendId='.$s['presendId'];?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="presendId" type="hidden" value="<?php echo $s['presendId'];?>" />
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr">
+			<th class="th">账号</th>
+			<td class="td"><input type="text" class="input" name="uname" value="<?php echo $s['uname'];?>"></td>
+			<th class="th">昵称</th>
+			<td class="td"><input type="text" class="input" name="nickname" value="<?php echo $s['nickname'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;共<?php echo $total;?>条结果</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="btn2"><span style="position:absolute;right:90px;margin-top:-10px;"><button type="button" id="exportBtn">导出excel</button></span></span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td>头像</td>
+			<td>账号</td>
+			<td>UUID</td>
+			<td>昵称</td>
+		</tr>
+<?php foreach($presendDetails as $key => $value) {?>
+		<tr class="ct">
+		    <td><?php echo $avatars[$value['uuid']]['avatar'] ? "<img src='{$attachPath}{$avatars[$value['uuid']]['avatar']}' style='width:7.2em;height:7.2em'/>" : '-';?></td>
+		    <td><?php echo $value['uname'];?></td>	
+		    <td><?php echo $value['uuid'];?></td>
+			<td><?php echo $avatars[$value['uuid']]['nickname'];?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<div class="mr10 cc">
+	<form action="<?php echo $presendDetailExportUrl;?>" method="post" id="exportForm">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<input name="presendId" type="hidden" value="<?php echo $s['presendId'];?>" />
+	<input name="nickname" type="hidden"  value="<?php echo $s['nickname'];?>">
+	<input name="uname" type="hidden"  value="<?php echo $s['uname'];?>">
+	</form>
+</div>
+<script>
+$(document).ready(function(){
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Mall_Goods/presendDetail');
+	});
+	$("#exportBtn").click(function(){
+		$("#exportForm").submit();
+    });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

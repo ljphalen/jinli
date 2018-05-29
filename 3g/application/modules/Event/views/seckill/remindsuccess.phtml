@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>金立浏览器双十一特别活动</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/events/css/db_eleven_prev.min.css?ver=<?php echo $version;?>"/>
+    <script src="<?php echo $staticResPath;?>/events/js/zepto.min.js?ver=<?php echo $version;?>"></script>
+    <script type="text/javascript">
+        var token = "";
+        var initConfig = {
+        };
+    </script>
+</head>
+<body class="ui-app">
+    <div class="main">
+        <div class="main-hd">
+            <div class="banner">
+                <img src="<?php echo $staticResPath;?>/events/pic/dbelv_banner_hd.jpg" width="100%" height="auto" />
+                <div class="banner-text"><span>预约时间：11月9日-11月10日</span></div>
+            </div>
+        </div>
+        <div class="main-bd hd-space">
+        	
+        	<div class="text-title bt-space">预约成功！新注册用户还可领取30金币呦！</div>
+        	<div class="btn-row">
+	        	<a id="js-lqbtn" class="button wide" onclick="getJB();">我要领取</a>
+	        </div>
+	        <div class="btn-row">
+	        	<a class="button wide" href="<?php echo $webroot; ?>/event/seckill/preheat">不用了，回到活动页</a>
+	        </div>
+            
+            <script>
+                (function(){
+                    var clicked = false;
+                    var webroot = '<?php echo $webroot; ?>';
+                    window.getJB =  function(){
+                        if(clicked){
+                            return ;
+                        }
+                        clicked = true;
+                        $.ajax({
+                            url:'<?php echo $webroot; ?>/event/seckill/ajaxGetJb',
+                            type:'get',
+                            dataType:'json',
+                            success:function(data){
+                                console.log(data);
+                                if(data.success&&data.data['url']){
+                                    window.location.href = webroot+data.data['url'];
+                                }else{
+                                    alert(data['data']["err_msg"]);
+                                }
+                                $("#js-lqbtn").text("已领取").addClass("disable");
+                                
+                            },
+                            error:function(){
+                                alert("网络请求失败!");
+                                clicked = false;
+                            }
+                            
+                        });
+                        
+                        
+                    }
+                })();
+                
+                
+            </script>
+	        	
+        </div>
+    </div>
+    
+    
+</body>
+</html>

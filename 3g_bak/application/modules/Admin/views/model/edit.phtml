@@ -1,0 +1,125 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $attributesUrl; ?>">模块列表</a></li>
+		<li class="current"><a href="javascript:;">添加类别</a></li>
+	</ul>
+</div>
+<div class="h_a">添加信息</div>
+<form method="post" action="<?php echo $editPostUrl; ?>" id="addFrom">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">模块类型</th>
+				<td class="td"><select name="type" id="type">
+						<?php foreach ($types as $key => $value) { ?>
+							<option value="<?php echo $key; ?>"  <?php if ($data['type'] == $key) echo 'selected' ?>><?php echo $value; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+
+			<tr class="tr" id="tr_normal">
+				<th class="th">模块名</th>
+				<td class="td">
+					<input type="text" class="input" name="value" value="<?php echo $data['value'] ? $data['value'] : '' ?>" id="value">
+				</td>
+			</tr>
+
+			<tr class="tr" id="tr_province" style="display:none">
+				<th class="th">省份</th>
+				<td class="td"><select name="province_id" id="province_id">
+						<option value="0">请选择</option>
+						<?php foreach ($provinces as $key => $val) { ?>
+							<option value="<?php echo $val['name']; ?>"  <?php if ($val['name'] == $data['value']) echo 'selected'; ?>><?php echo $val['name']; ?></option>
+						<?php } ?>
+					</select></td>
+			</tr>
+
+			<tr class="tr" id="tr_city" style="display:<?php echo $data['ext'] ? '' : 'none'; ?>">
+				<th class="th">城市</th>
+				<td class="td"><select name="city_name" id="city_name">
+						<option value="0">请选择</option>
+						<?php foreach ($cities as $k => $v) { ?>
+							<option value="<?php echo $v['name']; ?>" <?php if ($v['name'] == $data['ext']) echo 'selected'; ?>><?php echo $v['name']; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<input name="id" id="id" value="<?php echo $data['id']; ?>" type="hidden">
+
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	//表单数据提交
+	$(document).ready(function () {
+		ajaxForm('addFrom', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Model/attributes');
+		});
+
+		var tid = '<?php echo $tid;?>';
+		if (tid == 4) {
+			$("#tr_normal").hide();
+			$("#tr_province").show();
+			$("#tr_city").show();
+
+		} else {
+			$("#tr_normal").show();
+			$("#tr_province").hide();
+			$("#tr_city").hide();
+
+		}
+	});
+
+	$("#type").bind('change', function () {
+		var typeValue = $("#type option:selected").val();
+		if (typeValue == 4) {
+			$("#tr_normal").hide();
+			$("#tr_city").hide();
+			$.ajax({
+				'url': '/Admin/Model/ajaxGetProvinceInfo',
+				'type': 'post',
+				'dataType': 'json',
+				'data': {'token': '<?php echo $token;?>'},
+				'success': function (e) {
+					var data = "<option value=''>请选择</option>";
+					$.each(e.data, function (i, m) {
+						data += "<option value='" + m.id + "'>" + m.name + "</option>";
+					});
+					$("#province_id").html(data);
+					$("#tr_province").show();
+				}
+			});
+		} else {
+			$("#tr_province").hide();
+			$("#tr_normal").show();
+			$("#value").val('');
+			$("#tr_city").hide();
+		}
+	});
+
+	$("#province_id").bind('change', function () {
+		var province_id = $("#province_id option:selected").val();
+		$.ajax({
+			'url': '/Admin/Model/ajaxGetProvinceInfo',
+			'type': 'post',
+			'dataType': 'json',
+			'data': {'token': '<?php echo $token;?>', 'province_id': province_id},
+			'success': function (e) {
+				var data = "<option value='0'>请选择</option>";
+				$.each(e.data, function (i, m) {
+					data += "<option value='" + m.name + "'>" + m.name + "</option>";
+				});
+				$("#city_name").html(data);
+				$("#tr_province").show();
+				$("#tr_city").show();
+			}
+		});
+	});
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

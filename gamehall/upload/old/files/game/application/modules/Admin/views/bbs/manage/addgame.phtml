@@ -1,0 +1,106 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">论坛管理</a></li>
+    <li class="current"><a href="javascript:;">添加论坛</a></li>
+	</ul>
+</div>
+<div class="step mb10">
+		<ul class="cc">
+			<li class="current">选择内容</li>
+			<li class="line"></li>
+			<li>设置论坛</li>
+		</ul>
+</div>
+<form action="<?php echo $addGameUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="adid" id="adid" type="hidden" value="<?php echo $adid ;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+		    <th class="th">游戏id</th>
+		    <td class="td"><input type="text" class="input" name="game_id" value="<?php echo empty($search['game_id'])?'':$search['game_id'];?>" maxlength="10"></td>
+			 <th class="th">游戏名称</th>
+		  <td class="td"><input type="text" class="input" name="name" value="<?php echo empty($search['name'])?'':$search['name'];?>" maxlength="20"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">更新时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo $search['start_time']?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo $search['end_time']?>" /></div>
+			</td>
+			
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form method="post" action="<?php echo $addGamePostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="game_id" id="game_id" value="" type="hidden" />
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>ID</td>
+			<td>标题</td>
+			<td>图标</td>
+			<td>分类</td>
+			<td>大小</td>
+			<td>版本</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+	   <?php foreach($games as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['name'];?></td>
+			<td><img src="<?php echo $value['img'];?>" style="width:7.2em;height:7.2em"/></td>
+        	<td><?php echo $value['category_title'];?></td>
+        	<td><?php echo $value['size'].'M';?></td>
+        	<td><?php echo $value['version'];?></td>
+        	<td><?php echo $value['status'] ? '已上线' : '已下线';?></td>
+        	<td>
+        	<?php
+        	if (in_array($value['id'], $gameIds)){?>
+        	<font color="green">√</font>
+        	<?php }else{?>
+        	<a href="javascript:void();" onclick="javascript:addGame('<?php echo $value['id']; ?>');return false;" class="mr10">添加</a>
+        	<?php }?>
+        	</td>
+		</tr>
+	<?php }?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+     //提交表单
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect1(ret, baseurl+'/Admin/Bbs_Manage/addSet');
+	});
+
+})
+// ajax跳转
+function ajaxRedirect1(ret, url) {
+	if (ret == '')
+		return false;
+	if (ret) {
+		if (ret.success) {
+			location.href = url+'?game_id='+ret.data.game_id;
+		} else {
+			showError('', ret.msg);
+		}
+	}
+}
+// ajax跳转
+function addGame(game_id) {
+	$('#game_id').val(game_id);
+	$('#addFrom').submit();
+}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

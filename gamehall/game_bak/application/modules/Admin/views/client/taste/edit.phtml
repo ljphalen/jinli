@@ -1,0 +1,52 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">尝鲜列表</a></li>
+    <li class="current"><a href="javascript:;">编辑内容</a></li>
+	</ul>
+</div>
+<div class="table_full">
+<dl style="display:-webkit-box">
+	<dt style="width:64px;height:64px; " >
+	<img style="height: 100%;width:auto;" src="<?php echo $info['img'];?>" alt="" >
+	</dt>
+	<dd style="padding-left: 64px">
+		<p><span class="name">游戏名称:<?php echo $info['name'];?></span></p>
+		<p><span class="id">游戏ID:<?php echo $info['id'];?></span></p>
+	</dd>
+</dl>
+</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $id;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				<select name="status">
+                	<option <?php if($t_info['status'] == 1) echo 'selected';?> value="1">开启</option>
+                	<option <?php if($t_info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+            	</select>
+            </td>
+		</tr>
+		<tr class="tr">
+			<th class="th">生效时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $t_info['start_time']);?>" /></div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">完成</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Taste/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

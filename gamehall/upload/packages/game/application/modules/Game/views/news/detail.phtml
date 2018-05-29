@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<?php $this->title="功略详情";$this->hasSearch="true"; ?>
+	<meta charset="UTF-8">
+	<title>游戏大厅</title>
+	<?php echo $this->render("layout/cssInc.phtml");?>
+</head>
+<body>
+	<?php echo $this->render("layout/header.phtml");?>
+	<div id="container">
+    </div>
+	<?php include '_footer.php';?>
+	<div id="footer"></div>
+</body>
+<?php echo $this->render("layout/scriptInc.phtml");?>
+<script type="text/javascript">
+	var infoBulletinData = <?php echo $data?>;
+	React.render(
+		React.createElement(Article, {items: infoBulletinData})
+	  , document.getElementById('container')
+	);
+	$(function(){
+		 $('#footer').html('<?php echo str_replace(PHP_EOL, '', $this->render("layout/footer.phtml")); ?>');	   
+ })
+</script>
+<script src="<?php echo "$appJs/loadImg.js$timestamp";?>" type="text/javascript"></script>
+</html>

@@ -1,0 +1,160 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">资源列表</a></li>
+    <li class="current"><a href="javascript:;">编辑资源</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑资源</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input wc" name="name" value="<?php echo $info['name'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">短描述</th>
+			<td class="td"><textarea class="input wc" name="description"><?php echo $info['description'];?></textarea></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">描述</th>
+			<td class="td"><textarea class="input wc" name="resume" rows="10"><?php echo $info['resume'];?></textarea></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">类型</th>
+			<td class="td">
+				<label class="mr20"><input <?php if($info['ptype'] == 1) echo 'checked';?> name="ptype" value="1" type="radio">安装包</label>
+				<label class="mr20"><input <?php if($info['ptype'] == 2) echo 'checked';?> name="ptype" value="2" type="radio">H5</label>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">链接</th>
+			<td class="td"><input type="text" name="link" class="input wc" value="<?php echo $info['link'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">大小</th>
+			<td class="td"><input type="text" name="size" class="input wc" value="<?php echo $info['size'];?>">(KB)</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">应用标识</th>
+			<td class="td"><input type="text" name="company" class="input wc" value="<?php echo $info['company'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">包名</th>
+			<td class="td"><input type="text" name="package" class="input wc" value="<?php echo $info['package'];?>"/></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">版本号</th>
+			<td class="td"><input type="text" name="version" class="input wc" value="<?php echo $info['version'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">版本名称</th>
+			<td class="td"><input type="text" name="version_name" class="input wc" value="<?php echo $info['version_name'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">md5</th>
+			<td class="td"><input type="text" name="md5_sign" class="input wc" value="<?php echo $info['md5_sign'];?>"/></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg">
+						<img src="<?php echo $attachPath.$info['icon'];?>"/>
+						<input type="hidden" name="icon" value="<?php echo $info['icon'];?>">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+	            	<iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">应用详情图片<br>(2～5张图片)</th>
+			<td class="td">
+				<?php foreach($resource_imgs as $key=>$value) {?>
+				<div id="upimg<?php echo $value['id'];?>">
+					<ul class="uploadImg">
+						<li id="upImg<?php echo $value['id'];?>">
+							<img src="<?php echo $attachPath.$value['img'];?>"/>
+							<input type="hidden" name="upImg[<?php echo $value['id'];?>]" value="<?php echo $value['img'];?>">
+						</li>
+						<li><a href="javascript:void(0)" onclick="deleteImg('<?php echo $deleteImgUrl;?>?id=<?php echo $value['id'];?>', 'upimg<?php echo $value['id'];?>', event);">删　除</a></li>
+					</ul>
+					<p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=upImg',$value['id'];?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>
+				</div>
+				<?php }?>
+				<div id="imgs"></div>
+				<div class="mb10"><button onclick="addupload();" onfocus="blur();" type="button" class="btn">＋添加预览图片</button></div>				 
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status" class="wa">
+                	<option <?php if($info['status'] == 1) echo 'selected="selected"';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 0) echo 'selected="selected"';?> value="0">关闭</option>
+            </select></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+	K.token = token;
+    editor = K.create('textarea[name="resume"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        items : EDITOR_ITEMS
+    });
+});
+
+//资源表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Resource/index?s=1');
+	});
+
+	var imgc = 0;
+	addupload  = function() {
+		var al = $('<ul class="uploadImg"><li id="Img'+imgc+
+				'"><img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/><input type="hidden" name="simg['+imgc+
+				']" value=""></li></ul><p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>'
+				+imgc+'" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>');
+		$('#imgs').append(al);
+		imgc++;
+	}
+	
+	deleteImg = function(url, elid, e) {
+		showConfirm("确认删除该条信息？", function() {
+			$.ajax({
+				url : url,
+				type : 'POST',
+				dataType : 'json',
+				data : 'token='+token,
+				success : function(ret) {
+					if (ret.success) {
+						$('#'+elid).remove();
+					} else {
+						showError('', ret.msg);
+					}
+				}
+			});
+		}, e);
+	}
+});
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,183 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li style="display:none;"><a href="<?php echo $listUrl;?>">积分概况</a></li>
+        <li class="current"><a href="<?php echo $pointShopIndexUrl;?>">积分商城</a></li>
+        <li><a href="<?php echo $pointPrizeIndexUrl;?>">积分抽奖</a></li>
+        <li><a href="<?php echo $presendIndexUrl;?>">人工发放</a></li>
+        <li><a href="<?php echo $pointDescIndexUrl;?>">积分说明管理</a></li>
+	</ul>
+</div>
+<div class="h_a">添加商品</div>
+<form method="post" action="<?php echo $addGoodPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="htype" id = "htype" type="hidden" value="2" />
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr">
+			<th class="th">商品名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+	    </tr>
+		<tr class="tr">
+			<th class="th">商品图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="img" value="">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">商品icon</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="iconImg">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="icon" value="">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=iconImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+				<th class="th">商品介绍</th>
+				<td class="td"><textarea style="width: 800px; height: 200px" class="textarea" name="descrip"></textarea>
+				</td>
+		</tr>
+	    <tr class="tr">
+			<th class="th">商品类型</th>
+			<td class="td">
+				<select name="type" onchange='showtd()'>
+<?php foreach($type as $key=>$value) {?>				
+					<option value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php }?>
+				</select>
+				&nbsp;&nbsp;&nbsp;<span id="effectime">有效期:<input type="text" class="input" name="effect_time" value=""></span>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">总数量</th>
+			<td class="td"><input type="text" class="input" name="total_num" value=""><span><font color="#FF0000">(必须填写正整数)</font></span></td>
+		     
+		</tr>
+		<tr class="tr">
+			<th class="th">每人兑换数量</th>
+			<td class="td"><input type="text" class="input" name="preson_limit_num" value=""><span><font color="#FF0000">(必须填写正整数，如果兑换为实体只能填写为“1”)</font></span></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">兑换1件商品消耗积分</th>
+			<td class="td">
+			   <div> 
+			         <div> <input type="text" id="consume_point" class="input" name="consume_point" value=""> </div> 
+			         <div> <label class="mr20"><input  type="checkbox" id="discount" name="isdiscount"  value="1" onclick ="disableContent()">限时折扣</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input class="input" id="zhekou" type="text" name="zhekou" value="" /> 折<span id="zkret"></span><span>&nbsp;&nbsp;&nbsp;&nbsp;<font color="#FF0000">[必须填写1~10之间的数值，不能填写字母]</font></span></div> 
+			         <div> 折扣时间 <input class="input" type="text" maxlength="30" style="width:143px;" id="zhekou_start_time" name="zhekou_start_time" value="" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="zhekou_end_time" name="zhekou_end_time" value="" /></div>
+			  </div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">生效时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="" /></div>
+			</td>
+		</tr>
+		<tr class="tr" >
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="select wa">
+				<option "selected" value="1">开启</option>
+				<option  value="0">关闭</option>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">保存</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor = K.create('textarea[name="descrip"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+//广告表单数据提交
+function showtd(){
+	var value=$("select[name=type]").val();
+	if(value == 1) {
+		$('#effectime').hide();
+	} else {
+		$('#effectime').show();
+	}
+}
+function disableContent(){
+	if($('#discount').attr('checked')) {
+		 $('#zhekou').css("background", ""); 
+		 $("#zhekou").attr("disabled",false);
+		 $('#zhekou_start_time').css("background", ""); 
+		 $("#zhekou_start_time").attr("disabled",false);
+		 $('#zhekou_end_time').css("background", ""); 
+		 $("#zhekou_end_time").attr("disabled",false);
+	} else {
+		 $("#zhekou").val('');
+		 $('#zhekou').css("background", "#C0C0C0"); 
+		 $("#zhekou").attr("disabled",true);
+		 $('#zhekou_start_time').css("background", "#C0C0C0"); 
+		 $("#zhekou_start_time").attr("disabled",true);
+		 $('#zhekou_end_time').css("background", "#C0C0C0"); 
+		 $("#zhekou_end_time").attr("disabled",true);
+	}
+}
+$("#zhekou").keyup(function(){
+	var zhekou =$("#zhekou").val();
+	var consume_point =$("#consume_point").val();
+	if(zhekou < 1 || zhekou >= 10){
+		 alert('折扣不能小于1或者大于10，必须填写1~10之间的数值，不能填写字母');
+		 return false;
+	}
+	re=/^([0-9]+(\.)?([0-9]*)?)$/;
+    if(!re.test(zhekou)){
+   	 alert('折扣必须是数值,必须填写1~10之间的数值，不能填写字母');
+	 return false;
+    }
+	var discount = Math.round(consume_point * (zhekou / 10));
+	if(discount <1){
+		discount = 1;
+	}
+    $("#zkret").html("<span>(<em style='color:#0000C6;font-size:15px'>"+discount+"</em>积分)</span>");
+});
+$(document).ready(function(){
+	 $('#effectime').show();
+	 $('#zhekou').css("background", "#C0C0C0"); 
+	 $("#zhekou").attr("disabled",true);
+	 $('#zhekou_start_time').css("background", "#C0C0C0"); 
+	 $("#zhekou_start_time").attr("disabled",true);
+	 $('#zhekou_end_time').css("background", "#C0C0C0"); 
+	 $("#zhekou_end_time").attr("disabled",true);
+	 
+	 $('#zhekou_start_time').datetimepicker();
+     $('#zhekou_end_time').datetimepicker();
+	 $('#start_time').datetimepicker({
+	        timeFormat: "hh:00:00",
+	        dateFormat: "yy-mm-dd"
+	    });
+     $('#end_time').datetimepicker({
+         timeFormat: "hh:00:00",
+         dateFormat: "yy-mm-dd"
+     });
+	 ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Mall_Goods/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,43 @@
+<div class="colMain">
+    <div class="title"><p class="fl">CACHE</p></div>
+    <div class="main">
+        <div class="toolbar">
+            <div class="search fl">
+                <!-- loop portlist -->
+                <!-- if {{port}}== {{portlist' value.port}} -->
+                    <a href="/cache/index?port={{portlist' value.port}}" style="color: blue">{{portlist' value.port}}</a>
+                <!-- else -->
+                    <a href="/cache/index?port={{portlist' value.port}}">{{portlist' value.port}}</a>
+                <!-- endif -->
+                <!-- endloop -->
+            </div>
+            <input type="button" onclick="javascript:if(confirm('你确定刷新缓存吗\r\n此操作不可逆并会使服务器压力短暂性剧增,请不要在高峰时段操作!'))location.href='/cache/flushdb'" value="刷新缓存">
+        </div>
+        <!-- if {{keys}} -->
+        <div class="content">
+            <div class="app-detail">
+                <!-- loop keys -->
+                <span style="margin: 20px" onfocus="javascript:get(this,'/cache/get?port={{port}}&key={{keys' value}}')" title="">{{keys' value}}    <a href="javascript:delkey('{{keys' value}}')">删除</a></span><br>
+                <!-- endloop -->
+                <br><span style="padding-left: 20px;"><a href="javascript:void(0)" onclick="clean()">清空</a></span>
+            </div>
+        </div>
+        <!-- endif -->
+    </div>
+</div>
+<script>
+    function clean(){
+        if(confirm("你确定清空REDIS端口为{{port}}的数据吗,此操作可能使服务器压力短暂性剧增")){
+            location.href="/cache/cleanredis?port={{port}}";
+        }
+    }
+    function delkey(key){
+        if(confirm("你确定删除端口{{port}}下KEY为"+key+"值吗?")){
+            location.href="/cache/del?port={{port}}&key="+key;
+        }
+    }
+    function get(thiss,key){
+        alert("ss");
+        $(thiss).attr("title","sss");
+    }
+</script>

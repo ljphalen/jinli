@@ -1,0 +1,67 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div id="page">
+	<?php echo $this->render("layout/nav.phtml");?>
+	<article class="ac">
+	<?php if($ads) {?>
+		<div class="slide-pic banner">
+			<div class="pic">
+				<a href="<?php echo Common::BI(strpos(html_entity_decode($ads['link']), '?') == false ? $ads['link'].'?chl_id=2&index_id=1' : $ads['link'].'&chl_id=2&index_id=1', $t_bi);?>"><img src="<?php echo $attachPath . $ads['img'];?>" alt="<?php echo $ads['title']?>" /></a>
+			</div>
+		</div>
+	<?php }?>
+
+		<div class="download">
+			<section class="">
+				<div id="app-cont">
+					<div id="download-app-list" class="app-list" data-ajaxUrl="<?php echo $webroot.'/resource/more';?>">
+						<!-- 列表 -->
+					<?php
+					foreach($resourceassign as $key=>$value){
+					?>
+							<div class="app-item-list">
+								<div class="app-item-left">
+									<a href="<?php echo $value['href'];?>">
+										<div class="app-item-img">
+											<img src="<?php echo $value['img'];?>" alt="" />
+										</div>
+										<div class="app-item-info">
+												<div class="app-item-title"><?php echo $value['title'];?></div>
+												<div class="star star<?php echo $value['star'];?>"></div>
+												<div class="app-item-text"><?php echo $value['summary'];?></div>
+										</div>
+									</a>
+								</div>
+								<div class="app-item-bton button"><a href="<?php echo $value['down_url']?>" class="btn gray">下载</a></div>
+							</div>
+					<?php  }?>
+					</div>
+				</div>
+			</section>
+		</div>
+
+	</article>
+</div>
+
+
+<script id="J_itemView" type="text/template">
+	{each data.list}
+	<div class="app-item-list">
+
+	<div class="app-item-left">
+		<a href="{$value.href}">
+			<div class="app-item-img">
+				<img src="{$value.img}" />
+			</div>
+			<div class="app-item-info">
+				<div class="app-item-title">{$value.title}</div>
+				<div class="star star{$value.star}"></div>
+				<div class="app-item-text">{$value.summary}</div>
+			</div>
+		</a>
+	</div>
+		<div class="app-item-bton button"><a href="{$value.down_url}" class="btn gray">下载</a></div>
+	</div>
+	{/each}
+</script>
+<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/footer.phtml");?>

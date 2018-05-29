@@ -1,0 +1,96 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $bussinessUrl; ?>">业务列表</a></li>
+			<li class="current"><a href="javascript:;"><?php echo $data['id'] ? '编辑' : '添加'; ?>信息</a></li>
+			<li><a href="<?php echo $linkListUrl; ?>">业务链接列表</a></li>
+			<li><a href="<?php echo $editLinkUrl; ?>">添加业务链接</a></li>
+		</ul>
+	</div>
+	<div class="h_a">添加页面</div>
+	<form method="post" action="<?php echo $postBusinessUrl; ?>" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">合作商名</th>
+					<td class="td">
+						<select name="parter_id">
+							<option value="0">请选择</option>
+							<?php foreach ($parters as $k => $v) { ?>
+								<option value="<?php echo $v['id']; ?>" <?php if ($data['parter_id'] == $v['id']) echo 'selected'; ?>><?php echo $v['name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">业务名称</th>
+					<td class="td"><input type="text" name="name" id="name" value="<?php echo $data['name']; ?>"></td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">合作模式</th>
+					<td class="td">
+						<select name="model">
+							<option value="0">请选择</option>
+							<?php foreach ($modelTypes as $k => $v) { ?>
+								<option value="<?php echo $k; ?>" <?php if ($data['model'] == $k) echo 'selected'; ?>><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">合作单价</th>
+					<td class="td">
+						收费模式：<select name="price_type">
+							<?php foreach ($priceTypes as $k => $v) { ?>
+								<option value="<?php echo $k; ?>" <?php if ($data['price_type'] == $k) echo 'selected'; ?>><?php echo $v; ?></option>
+							<?php } ?>
+						</select>&nbsp; &nbsp;
+						<input type="text" name="price" id="price" class="input" value="<?php echo $data['price']; ?>">(单位：元）
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">开始时间</th>
+					<td class="td">
+						<input name="sdate" id="sdate" class="input" value="<?php echo date('Y-m-d', $data['start_time']); ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">结束时间</th>
+					<td class="td">
+						<input type="text" name="edate" id="edate" class="input" value="<?php echo date('Y-m-d', $data['end_time']); ?>">
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">状态</th>
+					<td class="td"><select name="status">
+							<option value='0'   <?php if ($data['status'] == 0) echo 'selected'; ?>>关闭</option>
+							<option value='1' <?php if ($data['status'] == 1) echo 'selected'; ?>>开启</option>
+						</select></td>
+				</tr>
+			</table>
+			<input type="hidden" value="<?php echo $data['id']; ?>" name="id">
+
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+		</div>
+
+	</form>
+
+	<script type="text/javascript">
+		//表单数据提交
+		$(document).ready(function () {
+
+			$("#sdate").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#edate").datepicker({dateFormat: 'yy-mm-dd'});
+
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Parter/business');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

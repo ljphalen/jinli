@@ -1,0 +1,71 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+<style>
+	.mainw2{*z-index: 20}
+	.mainzindex{*z-index: 10;}
+</style>
+<div class="mainw mainw2  clearfix">
+    <div class="rmain fl col-md-11 mainwk">
+        <div class="panel">
+			<h2 class="yyname"><a href="{:U('apps/index')}">我的应用</a> » {$app.app_name} » 礼包管理</h2>
+	        <div class="farea farea-key">
+		        <a href="{:U('Gift/add', array("id"=>$app[id]))}" class="btn-green fr">添加礼包</a>
+	        </div>
+
+            <div class="panel-body">
+                <div class="row">
+					<div class="form-group col-sm-10">
+						<div class="col-sm-3">
+							{:Helper("Form")->name("status")->option(GiftModel::$status)->default('全部')->value($status)->class('form-control')->select();}
+							<script>
+								$("select[name=status]").change(function(){
+									var url = "<php> echo U("gift/manage", array("id"=>$app[app_id]))</php>?status=";
+									window.location.href = url+$(this).val();
+								});
+
+								$("select[name=status]").val();
+							</script>
+						</div>
+						<div class="col-sm-4">当前共有 {$gifts|count} 条结果</div>
+					</div>
+
+                    <div class="col-md-12">
+                        <div class="">
+							<table class="table">
+						      <thead>
+						        <tr>
+						          <th>ID</th>
+						          <th>礼包名称</th>
+						          <th>数量（剩余/总)</th>
+						          <th>生效时间</th>
+								  <th>上线时间</th>
+								  <th>状态</th>
+								  <th>操作</th>
+						        </tr>
+						      </thead>
+						      <tbody>
+						        <volist name="gifts" id="vo">
+						        <tr>
+						          <th scope="row">{$vo.id}</th>
+						          <td>{$vo.name}</td>
+						          <td>{$vo.total|default=0}/{$vo.used|default=0}</td>
+						          <td>{$vo.vtime_from|date="Y-m-d",###}</td>
+						          <td><gt name="vo.atime" value="1">{$vo.atime|date="Y-m-d",###}</gt></td>
+						          <td>{$vo.status|GiftModel::getStatus}</td>
+								  <td>
+								  	<lt name="vo.status" value="2"><a href="{:U("Gift/edit", array("id"=>$vo[id]))}">修改</a></lt>
+								  </td>
+						        </tr>
+								</volist>
+						      </tbody>
+						    </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<include file="Public:footer" />

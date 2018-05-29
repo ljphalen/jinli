@@ -1,0 +1,57 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<form method="post" action="<?php echo $connPostUrl; ?>" id="editForm">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="h_a"><b>联网时间配置</b> (注意：输入时请切换到半角状态)</div>
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">联网时间(v1.0-v2.0)</th>
+					<td class="td">
+						<input name="widget_connect1" type="text" class="input wc" value="<?php echo $configs['widget_connect1']; ?>">
+						<br>（请输入24小时标准时间格式，如03:00 [服务器瞬间压力过大 设置一个时间]）
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">widget配色(v1.0-v2.0)</th>
+					<td class="td">
+						<input name="widget_color" type="text" class="input wc" value="<?php echo $configs['widget_color']; ?>">
+						<br>（请输入颜色，如#33dd33,#44dd33, 多个颜色用,分割）
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">标题字数 (v1.0-v2.0)</th>
+					<td class="td">
+						<input name="title_len" type="text" class="input" value="<?php echo $configs['title_len']; ?>">个
+						<br>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">概要字数 (v1.0-v2.0)</th>
+					<td class="td">
+						<input name="summary_len" type="text" class="input" value="<?php echo $configs['summary_len']; ?>">个
+						<br>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">js,css版本控制</th>
+					<td class="td">
+						<input name="asset_ver" type="text" class="input" value="<?php echo $configs['asset_ver']; ?>">
+						<br>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac">
+			<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			ajaxForm('editForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Widget/conn');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

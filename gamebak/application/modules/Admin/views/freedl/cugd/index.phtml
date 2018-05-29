@@ -1,0 +1,153 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $listUrl;?>">免流量游戏列表</a></li>
+		<li ><a href="<?php echo $addUrl;?>">添加免流量游戏</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post" >
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">	
+	   <tr class="tr">
+			<th class="th">分类</th>
+			<td class="td">
+			 <select name="gcategory" class="select wa">
+			    <option  value="0">全部</option>
+			    <?php foreach ($gcategory as $value):?>
+			    <option <?php if($search['gcategory'] == $value[0]) echo 'selected';?> value="<?php echo $value[0];?>"><?php echo $value[1];?></option>
+			    <?php endforeach;?>
+			 </select>
+		   	</td>
+		   	<th class="th">合作方式</th>
+			<td class="td">
+			 <select name="cooperate" class="select wa">
+			    <option  value="0">全部</option>
+			    <option <?php if($search['cooperate'] == 2) echo 'selected';?> value="2">普通</option>
+				<option <?php if($search['cooperate'] == 1) echo 'selected';?> value="1">联运</option>
+			 </select>
+		   	</td>
+		<tr/>
+		<tr class="tr">  	
+			<th class="th">免流量状态</th>
+			<td class="td">
+			 <select name="status" class="select wa">
+			    <option  value="0">全部</option>
+				<option <?php if ($search['status'] == 2) echo 'selected';?> value="2">已上线</option>
+				<option <?php if ($search['status'] == 1) echo 'selected';?> value="1">已下线</option>
+			 </select>
+		   </td>
+		   <th class="th">资源状态</th>
+			<td class="td">
+			 <select name="custatus" class="select wa">
+			    <option  value="0">全部</option>
+				<option <?php if ($search['custatus'] == 1) echo 'selected';?> value="1">审核中</option>
+				<option <?php if ($search['custatus'] == 2) echo 'selected';?> value="2">审核通过</option>
+				<option <?php if ($search['custatus'] == 3) echo 'selected';?> value="3">审核不通过</option>
+				<option <?php if ($search['custatus'] == 4) echo 'selected';?> value="4">上线</option>
+				<option <?php if ($search['custatus'] == 5) echo 'selected';?> value="5">下线</option>
+			 </select>
+		   </td>
+		 <tr/>
+		 <tr class="tr"> 
+		 	<th class="th">游戏id</th>
+			<td class="td"><input type="text" class="input" name="gid" value="<?php echo $search['gid'];?>"></td>
+		   <th class="th">游戏名称</th>
+		   <td class="td"><input type="text" class="input" name="title" value="<?php echo $search['title'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="40">ID</td>
+		    <td width="40">游戏图标</td>
+		    <td width="50">名称</td>
+		    <td width="40">游戏ID</td>
+			<td width="40">APPID</td>
+		    <td width="50">联通资源ID</td>
+			<td width="50">联通资源版本</td>
+			<td width="60">联通资源状态</td>
+			<td width="120">联通资源操作时间</td>
+			<td width="40">游戏内容库状态</td>
+			<td width="40">免流量游戏状态</td>
+			<td width="100">联通资源操作</td>
+		</tr>
+<?php foreach($data as $key => $value) {?>
+		<tr class="ct">
+		    <td><?php echo $value['id'];?></td>
+		    <td><img src="<?php echo $value['icon'];?>" style="width:7.2em;height:7.2em"/></td>
+			<td><a target="blank" href="<?php echo $frontroot . '/client/index/detail/?id=',$value['gameid'].'&preview=true';?>"><?php echo $value['name']; ?></a></td>
+			<td><?php echo $value['gameid'];?></td>
+			<td><?php echo $value['appid'];?></td>
+			<td><?php echo $value['contentid'];?></td>
+			<td><?php echo $value['version'];?></td>
+			<td><?php echo $custatus[$value['custatus']];?></td>
+			<td>
+			<?php echo ($value['createtime']) ? '提交审核: ' . date('Y-m-d H:i:s', $value['createtime']) : '----';?>
+			<br/>
+			<?php echo ($value['cuonlinetime']) ? '审核通过: ' . date('Y-m-d H:i:s', $value['cuonlinetime']) : '----';?>
+			</td>
+			<td><?php echo ($value['gamestatus']) ? '上线' : '下线';?></td>
+			<td><?php echo (($value['gamestatus']) && (in_array($value['custatus'], array('2', '4')))) ? '上线' :  '下线' ;?></td>
+			<td>
+			<?php if(in_array($value['custatus'], array('1', '3'))):?>
+			<div id="opt_<?php echo $value['id'];?>" >
+			<a href="javascript:;" onclick="sub_action('<?php echo $repeatUrl;?>', '<?php echo $value['id'];?>');"  class="mr10">重新提交</a>
+			</div>
+			<span id="tips_<?php echo $value['id'];?>" style="display: none;">提交中...</span>
+			<?php endif;?>
+			<?php if ($value['gamestatus']) : ?>
+			<div id="opt_<?php echo $value['id'];?>" >
+			<?php if((in_array($value['custatus'], array('5')))):?>
+			<a href="javascript:;" onclick="sub_action('<?php echo $onUrl;?>', '<?php echo $value['id'];?>');"  class="mr10">上线</a>
+			<?php endif;?>
+			<?php if(in_array($value['custatus'], array('2', '4'))):?>
+			<a href="javascript:;" onclick="sub_action('<?php echo $offUrl;?>', '<?php echo $value['id'];?>');"  class="mr10">下线</a>
+			<?php endif;?>
+			</div>
+			<span id="tips_<?php echo $value['id'];?>" style="display: none;">提交中...</span>
+			<?php endif;?>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script type="text/javascript">
+//ajax数据提交
+function sub_action(url, id){
+	$.ajax({
+		url : baseurl + url,
+		type : 'POST',
+		dataType : 'json',
+		data : 'token='+'<?php echo $token;?>'+'&id='+id,
+		beforeSend:function(){
+			   $("#opt_"+id).hide();
+	           $("#tips_"+id).show();
+	    },
+		success : function(ret) {
+			 if (ret.success) {
+				showMsg('', ret.msg);
+				setTimeout(function() {
+					location.href = baseurl + '<?php echo $listUrl; ?>';
+				}, 800);
+			} else {
+				showError('', ret.msg);
+			}
+		},
+	    complete: function() {
+		    $("#tips_"+id).hide();
+		    $("#opt_"+id).show();
+		}
+	});
+}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

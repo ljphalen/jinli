@@ -1,0 +1,47 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">设备列表</a></li>
+    <li class="current"><a href="javascript:;">广告配置</a></li>
+	</ul>
+</div>
+<form method="post" action="<?php echo $adeditPostUrl;?>" id="editFrom">
+    <input name="ht" value="<?php echo $ht;?>" type="hidden"/>
+    <input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<div class="h_a">广告配置</div>
+	<table width="100%">
+	<?php for($i=1; $i<=5; $i++) {?>
+		<tr class="tr">
+			<th class="th">广告<?php echo $i;?></th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="gimg<?php echo $i;?>">
+						<img src="<?php echo $attachPath,$ads[$i]['img'];?>"/>
+						<input type="hidden" name="imgs[<?php echo $i;?>]" value="<?php echo $ads[$i]['img'];?>">
+					</li>
+				</ul>
+				<p style="clear:both;">
+	            <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=gimg'.$i;?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+				<ul class="uploadImg">
+					<li>
+						链接地址&nbsp;:&nbsp;<input class="input wc" name="links[<?php echo $i;?>]" value="<?php echo $ads[$i]['link'];?>">
+					</li>
+				</ul>
+				</td>
+		</tr>
+		<?php }?>
+	</table>	
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">保存</button></span></span></div>
+</form>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $listUrl;?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

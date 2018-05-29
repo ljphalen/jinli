@@ -1,0 +1,427 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<style>
+.step2 li{
+    width: 23%;
+}
+.step2 li.line{
+	position: static;
+}
+.prize-container {
+	 padding: 7px 0 9px !important;
+}
+.prize-container > div {
+	 border-bottom: 1px solid #eee;
+	 padding: 10px;
+}
+.prize-container .image-container {
+	border-bottom: 0px;
+}
+
+.ex-container, .image-container {
+	 overflow: hidden;
+}
+.ex-container > div, .image-container > div {
+	float: left;
+	width: 49%;
+	border-right: 1px solid #eee;
+}
+.ex-container > div:last-child, .image-container > div:last-child {
+	border-right: 0px;
+	margin-left: 5px;
+}
+.uploadImg img {
+	width: 150px;
+	height: 150px;
+}
+.ex-wrapper > p {
+	margin-bottom: 10px;
+}
+.prize-tips {
+	margin: auto auto 8px 10px;
+	color: red;
+}
+iframe {
+    width: 100%;
+	height: 80px;
+}
+
+.wc {
+	 width: 350px;
+}
+
+.rule-textarea {
+	border: 0;
+	resize: none;
+	min-height: 60px;
+	margin-top: 10px;
+	background: #f9f9f9;
+	outline: none;
+	display: block;
+}
+.rule-textarea:hover {
+	background: #f9f9f9;
+	border: 0;
+}
+
+.mask {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	min-height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	z-index: 99;
+	font-size: 14px;
+}
+.condition-container {
+    background: #fff;
+	min-height: 100px;
+	top: 250px;
+	position: fixed;
+	width: 600px;
+	margin: 0 auto;
+	left: 0;
+	right: 0;
+	padding: 10px;
+	padding-bottom: 20px;
+}
+.title-container {
+    position: relative;
+	margin-bottom: 10px;
+}
+.title-container #close-dialog {
+    right: 0;
+	position: absolute;
+	font-size: 20px;
+	cursor: pointer;
+	top: -5px;
+	font-weight: bold;
+}
+.serise-list span {
+    float: left;
+	width: 16%;
+	overflow: hidden;
+	margin-bottom: 5px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.footer-container {
+    text-align: center;
+	margin-top: 10px;
+}
+.clearfix:after {
+    content: "\0020";
+	display: block;
+	height: 0;
+	clear: both;
+}
+.clear {
+    clear: both;
+}
+.hidden {
+    display: none !important;
+}
+</style>
+<div class="nav">
+	<ul class="cc">
+	   <li ><a href="<?php echo $indexUrl;?>">道具兑换</a></li>
+       <li class="current"><a href="javascript:;">添加兑换活动</a></li>
+	</ul>
+</div>
+<div class="step step2 mb10">
+		<ul class="cc">
+			<li ><span class="fl"><em></em></span>添加活动</li>
+			<li class="line"></li>
+			<li ><span class="fl"><em></em></span>添加道具</li>
+			<li class="line"></li>
+			<li><span class="fl"><em></em></span>添加游戏</li>
+			<li class="line"></li>
+			<li class="current">添加奖品</li>
+		</ul>
+</div>
+<div style="clear: both;"></div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom" novalidate>
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+		<table width="100%">
+			<tr class="tr" >
+				<th class="th">兑奖专区</th>
+				<td class="td"><input type="text" class="input" name="prizeColumnName"  value=""> <span style="color:red">&nbsp;&nbsp;最多支持添加9个奖品</span></td>
+			</tr>
+			<tr class="tr J_seriesContainer">
+				<th class="th">奖品<span class="J_index">1</span></th>
+				<td class="td prize-container">
+					<div>
+						<span>奖品名称&nbsp;&nbsp;</span>
+						<input type="text" class="input" name="prizes[1][prizeName]"  value="">
+					</div>
+                    <div>
+                        <span>奖品顺序&nbsp;&nbsp;</span>
+                        <input type="text" class="input" name="prizes[1][prizeSort]"  value="">
+                    </div>
+					<div >
+						<span>奖品类型&nbsp;&nbsp;</span>
+						<select name="prizes[1][prizeType]" class="J_select select">
+							<option value="1" selected>实物</option>
+							<option value="2" >A券</option>
+							<option value="3">积分</option>
+						</select>
+						<div class="J_acoinContainer hidden" style="display:inline-block;" >
+							<span>&nbsp;&nbsp;&nbsp;面额&nbsp;&nbsp;&nbsp;</span>
+							<input type="text" class="input" name="prizes[1][denomination1]"  value="">
+							<span>&nbsp;&nbsp;&nbsp;有效期&nbsp;&nbsp;&nbsp;</span>
+							第<input type="number" class="input" name="prizes[1][startTime]"  value="" min="1">天
+							<span>&nbsp;至&nbsp;</span>
+							第<input type="number" class="input" name="prizes[1][endTime]"  value="" min="1">天
+						</div>
+						<div class="J_pointContainer hidden" style="display:inline-block;">
+							<span>&nbsp;&nbsp;&nbsp;面额&nbsp;&nbsp;&nbsp;</span>
+							<input type="text" class="input" name="prizes[1][denomination2]"  value="">
+						</div>
+					</div>
+					<div class="ex-container">
+						<div class="ex-wrapper">
+							<p>
+								<span>总数量&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+								<input type="text" class="input" name="prizes[1][prizeTotal]"  value="">
+							</p>
+							<p>
+								<span>兑换规则&nbsp;&nbsp;</span>
+								<textarea type="textarea" class="textarea wc" name="prizes[1][prizeRule]"  value=""></textarea>
+							</p>
+						</div>
+						<div class="condition-wrapper">
+							<span>兑换条件&nbsp;&nbsp;</span>
+							<button class="J_editMeal" type="button">编辑勋章</button>
+							<textarea type="textarea" class="J_textarea textarea wc rule-textarea"  readonly="true"  ></textarea>
+							<input type="hidden" name="prizes[1][prizeCondition]" class="J_medalRule" value="">
+						</div>
+					</div>
+					<div class="image-container" >
+						<div class="prize-album">
+							<div class="uploadImg">
+								<div class="J_smallimg" id="simg1">
+									<div class="prize-tips">奖品小图</div>
+									<img src="<?php echo $staticPath;?>/img/content/nopic.jpg">
+									<input type="hidden" name="prizes[1][prizeIcon]" value="">
+								</div>
+							</div>
+							<iframe src="<?php echo $uploadUrl.'/?imgId=simg1';?>"  frameborder="0" scrolling="no"></iframe>
+						</div>
+						<div class="prize-album">
+							<div class="uploadImg">
+								<div class="J_largeimg" id="limg1">
+									<div class="prize-tips">奖品大图</div>
+									<img src="<?php echo $staticPath;?>/img/content/nopic.jpg">
+									<input type="hidden" name="prizes[1][prizeImg]" value="">
+								</div>
+							</div>
+							<iframe src="<?php echo $uploadUrl.'/?imgId=limg1';?>"  frameborder="0" scrolling="no"></iframe>
+						</div>
+					</div>
+					
+				</td>
+			</tr>
+			<tr class="J_addSeries tr">
+				<th class="th"></th>
+				<td class="td"><span class="btn"><span><button id="addSeries"  type="button">添加一个奖品</button></td>
+			</tr>
+		</table>
+	</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">完成</button></span></span></div>
+</form>
+<div class="J_dialog mask hidden">
+	<div class="condition-container">
+		<div class="title-container">
+			<span >请选择需要添加的条件</span>
+			<!-- <span id="close-dialog">X</span> -->
+		</div>
+		<div class="body-container">
+			   <?php foreach ($propsData['props'] as $groupKey =>  $items):?>
+			       <div class="serise-list">
+				    <span class="seriesName"><?php echo $items['groupName']?></span>
+				    <?php foreach ($items['items'] as $propKey => $item):?>
+				    <span><input type="checkbox" data-value="<?php echo $item['propName']?>" data-id="<?php echo "{$groupKey}_{$propKey}"?>" /><?php echo $item['propName']?></span>
+				    <?php endforeach;?>
+				   </div>
+				<div class="clearfix"></div>
+			  <?php endforeach;?>
+		</div>
+		<div class="footer-container">
+			<span class="btn"><span><button id="saveCondition" >保存</button></span></span>
+		</div>
+	</div>
+	
+</div>
+
+<script type="text/javascript">
+var iframeSrc="<?php echo $uploadUrl.'/?imgId=';?>";
+var nopicImgSrc="<?php echo $staticPath;?>/img/content/nopic.jpg";
+
+var currentIndex=0;
+$(function(){
+	//编辑勋章-保存
+	$("#saveCondition").click(function(event) {
+		//添加数据
+		var dialog=$(".J_dialog");
+		var checkboxList=dialog.find('input[type=checkbox]');
+		var htmlArr=[];idArr=[];
+		checkboxList.each(function(index, el) {
+			if($(this).prop('checked')){
+				htmlArr.push($(this).attr('data-value'));
+				idArr.push($(this).attr('data-id'));
+			}
+		});
+		var curPrizeContainer=$($('tr.J_seriesContainer')[currentIndex]);
+		curPrizeContainer.find('.J_textarea').val(htmlArr.join(','));
+		curPrizeContainer.find('.J_medalRule').val(idArr.join(','));
+		
+		checkboxList.prop('checked',false);
+		dialog.addClass('hidden');
+	});
+
+	//编辑勋章
+	$("body").on('click', '.J_editMeal', function(event) {
+		var parent=$(this).parents('tr.J_seriesContainer');
+		currentIndex=parent.prevAll('tr.J_seriesContainer').length;
+		var medalRuleIdList=$(this).siblings('.J_medalRule').val();
+		var idArr=medalRuleIdList.split(',');
+		var dialog=$(".J_dialog");
+		var checkboxList=dialog.find('input[type=checkbox]');
+		for(var i=0,len=idArr.length;i<len;i++){
+			checkboxList.each(function(index, el) {
+				var id=$(this).attr('data-id');
+				if(id==idArr[i]){
+					$(this).prop('checked', true);
+				}
+			});
+		}
+		dialog.height($('body').height());
+		dialog.removeClass('hidden');
+	});
+
+	//奖品类型切换
+	$("body").on('change', '.J_select', function(event) {
+		changePrizeType($(this));
+	});
+
+	$(".J_select").each(function(index, el) {
+		changePrizeType($(this));
+	});
+
+    //删除道具
+    $("body").on('click','.J_delprize',function(event) {
+        var obj = $(this).parent().parent().parent().parent().parent();
+        obj.remove();
+    });
+
+	//添加1个系列
+	$("#addSeries").click(function(event) {
+		currentIndex=$(".J_seriesContainer").length;
+		var index = currentIndex + 1;
+        if(index > 9) return; // 最多支持9个奖品
+		var html='<tr class="tr J_seriesContainer">\
+			<th class="th">奖品<span class="J_index">'+index+'</span></th>\
+			<td class="td prize-container">\
+				<div>\
+					<span>奖品名称&nbsp;&nbsp;</span>\
+					<input type="text" class="input" name="prizes['+index+'][prizeName]"  value="">\
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\
+					<span class="btn"><span><button class="J_delprize" type="button">删除奖品</button></span></span>\
+				</div>\
+				<div>\
+                    <span>奖品顺序&nbsp;&nbsp;</span>\
+                    <input type="text" class="input" name="prizes['+index+'][prizeSort]"  value="">\
+                </div>\
+				<div >\
+					<span>奖品类型&nbsp;&nbsp;</span>\
+					<select name="prizes['+index+'][prizeType]" class="J_select select">\
+						<option value="1" selected >实物</option>\
+						<option value="2" >A券</option>\
+						<option value="3">积分</option>\
+					</select>\
+					<div class="J_acoinContainer hidden" style="display:inline-block;" >\
+						<span>&nbsp;&nbsp;&nbsp;面额&nbsp;&nbsp;&nbsp;</span>\
+						<input type="text" class="input" name="prizes['+index+'][denomination1]"  value="">\
+						<span>&nbsp;&nbsp;&nbsp;有效期&nbsp;&nbsp;&nbsp;</span>\
+						第<input type="number" class="input" name="prizes['+index+'][startTime]"  value="" min="1">天\
+						<span>&nbsp;至&nbsp;</span>\
+						第<input type="number" class="input" name="prizes['+index+'][endTime]"  value="" min="1">天\
+					</div>\
+					<div class="J_pointContainer hidden" style="display:inline-block;">\
+						<span>&nbsp;&nbsp;&nbsp;面额&nbsp;&nbsp;&nbsp;</span>\
+						<input type="text" class="input" name="prizes['+index+'][denomination2]"  value="">\
+					</div>\
+				</div>\
+				<div class="ex-container">\
+					<div class="ex-wrapper">\
+						<p>\
+							<span>总数量&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>\
+							<input type="text" class="input" name="prizes['+index+'][prizeTotal]"  value="">\
+						</p>\
+						<p>\
+							<span>兑换规则&nbsp;&nbsp;</span>\
+							<textarea type="textarea" class="textarea wc" name="prizes['+index+'][prizeRule]"  value=""></textarea>\
+						</p>\
+					</div>\
+					<div class="condition-wrapper">\
+						<span>兑换条件&nbsp;&nbsp;</span>\
+						<button class="J_editMeal" type="button">编辑勋章</button>\
+						<textarea type="textarea" class="J_textarea textarea wc rule-textarea" \
+						readonly="true" ></textarea>\
+						<input type="hidden" name="prizes['+index+'][prizeCondition]" class="J_medalRule" value="">\
+					</div>\
+				</div>\
+				<div class="image-container" >\
+					<div class="prize-album">\
+						<div class="uploadImg">\
+							<div class="J_smallimg" id="simg'+index+'">\
+								<div class="prize-tips">奖品小图</div>\
+								<img src="'+nopicImgSrc+'">\
+								<input type="hidden" name="prizes['+index+'][prizeIcon]" value="">\
+							</div>\
+						</div>\
+						<iframe src="'+iframeSrc+'simg'+index+'" frameborder="0" scrolling="no"></iframe>\
+					</div>\
+					<div class="prize-album">\
+						<div class="uploadImg">\
+							<div class="J_largeimg" id="limg'+index+'">\
+								<div class="prize-tips">奖品大图</div>\
+								<img src="'+nopicImgSrc+'">\
+								<input type="hidden" name="prizes['+index+'][prizeImg]" value="">\
+							</div>\
+						</div>\
+						<iframe src="'+iframeSrc+'limg'+index+'"  frameborder="0" scrolling="no"></iframe>\
+					</div>\
+				</div>\
+			</td>\
+		</tr>';
+		$(".J_addSeries").before(html);
+	});
+
+})
+function changePrizeType(ele){
+	var type=ele.find('option:selected').val();
+	if(type==1){//实物
+		ele.siblings('.J_acoinContainer').addClass('hidden');
+		ele.siblings('.J_pointContainer').addClass('hidden');
+	}else if(type==2){
+		ele.siblings('.J_acoinContainer').removeClass('hidden');
+		ele.siblings('.J_pointContainer').addClass('hidden');
+	}else if(type==3){
+		ele.siblings('.J_acoinContainer').addClass('hidden');
+		ele.siblings('.J_pointContainer').removeClass('hidden');
+	}
+}
+
+
+//广告表单数据提交
+$(document).ready(function(){
+	 ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $indexUrl;?>');
+	 });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,81 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $listUrl . '?page_id=' . $pageId; ?>">分类列表</a></li>
+			<li class="current"><a href="javascript:;">添加分类</a></li>
+		</ul>
+	</div>
+	<div class="h_a">添加分类</div>
+	<form method="post" action="<?php echo $addPostUrl; ?>" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">页面</th>
+					<td class="td">
+						<select name="page_id">
+							<option value="1">导航首页</option>
+							<option value="2">导航子页</option>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">名称</th>
+					<td class="td"><input type="text" class="input" name="name" value=""></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">名称颜色</th>
+					<td class="td">
+						<input type="text" class="input" name="color" value="">（填写颜色值，如:#1459A3,#0F8755, 不填写则显示为默认颜色）
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">描述</th>
+					<td class="td"><input type="text" class="input wc" name="description" value="">（字数不要超过12字）</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">描述颜色</th>
+					<td class="td">
+						<input type="text" class="input" name="desc_color" value="">（填写颜色值，如:#1459A3,#0F8755, 不填写则显示为默认颜色）
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">图标</th>
+					<td class="td">
+						<ul class="uploadImg">
+							<li id="AppImg">
+								<img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+								<input type="hidden" name="icon" value="">
+							</li>
+						</ul>
+						<p style="clear:both;">
+							<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=AppImg'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">排序</th>
+					<td class="td"><input type="text" class="input" name="sort" value="0">（填写一个数字，数字越大越靠后）</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">状态</th>
+					<td class="td"><select name="status" min-width="100px">
+							<option <?php if ($info['status'] == 1) echo 'selected="selected"'; ?> value="1">开启</option>
+							<option <?php if ($info['status'] == 0) echo 'selected="selected"'; ?>value="0">关闭</option>
+						</select></td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script type="text/javascript">
+		//表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Ngtype/index?page_id=<?php echo $pageId;?>');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

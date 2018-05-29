@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>娱乐休闲</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <!--    <meta name="sige-full-screen" content="true" />-->
+    <link rel="stylesheet" href="<?=$staticResPath?>/joke/css/style.min.css?v=<?=$version?>" />
+</head>
+<body>
+<!-- 分类栏目Tab -->
+<div class="mod-tab-nav">
+    <ul id="J_TabMenuPanel" class="nav">
+        <?php
+        foreach ($columns as $k => $val):
+            $class = $val['appId'] == $appId ? 'class="active"' : '';
+            $name   = $val['appId'] == $appId ? $val['appName'] : sprintf('<a href="/nav/fun/index?appId=%d">%s</a>', $val['appId'], $val['appName']);
+            ?>
+            <li <?=$class?> data-appId="<?=$val['appId']?>"><?=$name?></li>
+        <?php endforeach; ?>
+
+    </ul>
+</div>
+
+<!-- tab content -->
+<div id="J_TabContentPanel" class="mod-tab-con mod-main">
+    <div class="mod-fun-list"></div>
+    <div id="J_LoadingTips" class="loading" style="text-align:center;padding:10px 0; color:#999;">
+        <img src="data:image/gif;base64,R0lGODlhEAALAPQAAP///zMzM+Li4tra2u7u7jk5OTMzM1hYWJubm4CAgMjIyE9PT29vb6KiooODg8vLy1JSUjc3N3Jycuvr6+Dg4Pb29mBgYOPj4/X19cXFxbOzs9XV1fHx8TMzMzMzMzMzMyH5BAkLAAAAIf4aQ3JlYXRlZCB3aXRoIGFqYXhsb2FkLmluZm8AIf8LTkVUU0NBUEUyLjADAQAAACwAAAAAEAALAAAFLSAgjmRpnqSgCuLKAq5AEIM4zDVw03ve27ifDgfkEYe04kDIDC5zrtYKRa2WQgAh+QQJCwAAACwAAAAAEAALAAAFJGBhGAVgnqhpHIeRvsDawqns0qeN5+y967tYLyicBYE7EYkYAgAh+QQJCwAAACwAAAAAEAALAAAFNiAgjothLOOIJAkiGgxjpGKiKMkbz7SN6zIawJcDwIK9W/HISxGBzdHTuBNOmcJVCyoUlk7CEAAh+QQJCwAAACwAAAAAEAALAAAFNSAgjqQIRRFUAo3jNGIkSdHqPI8Tz3V55zuaDacDyIQ+YrBH+hWPzJFzOQQaeavWi7oqnVIhACH5BAkLAAAALAAAAAAQAAsAAAUyICCOZGme1rJY5kRRk7hI0mJSVUXJtF3iOl7tltsBZsNfUegjAY3I5sgFY55KqdX1GgIAIfkECQsAAAAsAAAAABAACwAABTcgII5kaZ4kcV2EqLJipmnZhWGXaOOitm2aXQ4g7P2Ct2ER4AMul00kj5g0Al8tADY2y6C+4FIIACH5BAkLAAAALAAAAAAQAAsAAAUvICCOZGme5ERRk6iy7qpyHCVStA3gNa/7txxwlwv2isSacYUc+l4tADQGQ1mvpBAAIfkECQsAAAAsAAAAABAACwAABS8gII5kaZ7kRFGTqLLuqnIcJVK0DeA1r/u3HHCXC/aKxJpxhRz6Xi0ANAZDWa+kEAA7" alt=""><br />数据正在加载中...
+    </div>
+</div>
+<!-- load script -->
+<script>
+    var require = {
+        urlArgs: 'v=<?=$version;?>' // 异步加载文件的版本号
+    };
+</script>
+<?php $changyanappid = Gionee_Service_Config::getValue('changyan_app_id') ?>
+<script id="cy_cmt_num" src="http://changyan.sohu.com/upload/plugins/plugins.list.count.js?clientId=<?=$changyanappid?>"></script>
+<script data-main="<?=$staticResPath?>/joke/js/main.min" src="<?=$staticResPath?>/joke/js/require.min.js?v=<?=$version?>"></script>
+<!-- /load script -->
+</body>
+</html>

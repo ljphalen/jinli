@@ -1,0 +1,74 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">专题列表</a></li>
+		<li class="current"><a href="">管理内容</a></li>
+	</ul>
+</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th"><?php echo $info['title'];?></th>
+		</tr>	
+	</table>
+</div>
+<form action="<?php echo $editCtUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="id" id="id" type="hidden" value="<?php echo $info['id'];?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">关键字</th>
+			<td class="td"><input type="text" class="input" name="name" value="<?php echo $name;?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<input name="id" id="id" type="hidden" value="<?php echo $info['id'];?>" />
+<div class="h_a">
+    <span class="btn2"><span><button onclick="$('#action').val('sort');" type="submit">重新排序</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('delete');" type="submit">删除</button></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="30">排序</td>
+			<td width="30">ID</td>
+			<td>标题</td>
+			<td>图标</td>
+			<td>大小</td>
+			<td>版本号</td>
+			<td>状态</td>
+		</tr>
+<?php foreach($games as $key => $value) {?>
+		<tr class="ct">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $subject_games[$value['id']]['id'],'|',$value['id'];?>" type="checkbox"></td>
+			<td><input type="text" class="input" style="width:30px" name="sort[<?php echo $subject_games[$value['id']]['id'];?>]" value="<?php echo $subject_games[$value['id']]['sort'];?>"></td>
+			<td><?php echo $value['id'];?></td>
+			<td><a target="blank" href="<?php echo $frontroot.'/client/index/detail/?id=',$value['id'];?>"><?php echo $value['name'];?></a></td>
+			<td><img src="<?php echo $value['img'];?>" style="width:7.2em;height:7.2em"/></td>
+        	<td><?php echo $oline_versions[$value['id']]['size'];?>M</td>
+        	<td><?php echo $oline_versions[$value['id']]['version'];?></td>
+        	<td><?php echo $value['status'] ? '已上线' : '已下线';?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script>
+$(document).ready(function(){
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Client_Subject/editCt?id=<?php echo $info['id'];?>&s=1');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

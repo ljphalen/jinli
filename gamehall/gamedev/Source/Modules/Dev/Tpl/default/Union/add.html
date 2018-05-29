@@ -1,0 +1,208 @@
+<include file="Public:header" />
+<style>
+	.formd input:-ms-input-placeholder{color:#aaa;}
+	.swwso{padding-top: 8px;display: inline-block;}
+	.swwso a{color: #ffa954;text-decoration: underline;}
+    .formd3 .tlab{width: 128px;}
+	.category{max-width: 400px;}
+</style>
+<div class="mainw mainw2 clearfix">
+    <div class="rmain fl">
+        <if condition="$contractStatus eq 2">
+            <div class="row" >
+                <div class="col-sm-12">
+                    <h4 style="padding: 5px;">请尽快回传加盖公司合同章后的合同扫描件，避免影响正常的结算。
+                        <a class="btn btn-success" href="{:U('Contract/show',array('id'=>$id))}" target="_blank">点击下载合同</a>
+                        <a class="btn btn-success" href="{:U('Contract/reapply',array('id'=>$id))}">合同回传</a>
+                    </h4>
+                </div>
+            </div>
+        </if>
+        <div class="flow-w flow-w2">
+            <div class="flow"><span >第一步：签署合同</span><span class="on">第二步：申请联运</span></div>
+        </div>
+        <br/>
+    	<h2 class="yyname">申请联运</h2>
+		<div class="insub insub2 mt30">
+        	<h3>应用信息填写</h3>
+        	<form class="form-horizontal" role="form" action="{:U("union/save_appkey")}" method="post" onsubmit="javascript:ajax_test(this);return false;">
+        	<input type="hidden" name="contract_id" value="{$contract.id}">
+            <div class="formd formd3">
+                <div class="lid">
+                    <label class="tlab"><span class="tlab"><em>*</em>应用包名：</span></label>
+                    <div class="colr fl">
+                    	<input type="text" name="package" maxlength="200" class="int" value="{$contract.package}" placeholder="com.gionee.game.am" readonly/>
+					  
+					    <span class="help-block">
+						<eq name="contract.app_type" value="1">
+							审核通过后不能修改，<span style="color: red;">上传的游戏包名必须和此包名一致</span>
+						<else/>
+							必须<span style="color: red;">以.am结尾</span>，审核通过后不能修改，<span style="color: red;">上传的游戏包名必须和此包名一致</span>
+						</eq>
+						</span>
+                    </div>
+                </div>
+
+                <div class="lid">
+                    <label class="tlab"><span class="tlab"><em>*</em>应用名称：</span></label>
+                    <div class="colr fl">
+                      <input type="text" name="name" class="int" value="{$contract.app_name}" placeholder="超级马力" readonly />
+                    </div>
+                </div>
+                <div class="lid">
+                    <label class="tlab"><span class="tlab"><em>*</em>应用类型：</span></label>
+                    <div class="colr fl">
+                      <span class="spanlab"><input type="radio" name="type" value="1" <eq name="contract.app_type" value="1">checked</eq> onclick="return false;"/>单机</span>
+                      <span class="spanlab"><input type="radio" name="type" value="0" <eq name="contract.app_type" value="0">checked</eq> onclick="return false;"/>网游</span>
+                    </div>
+                </div>
+				<div class="lid">
+                    <label class="tlab"><span class="tlab"><em>*</em>应用分类：</span></label>
+                    <div class="colr fl category">
+                    	<php>
+                    		$category = D("Category")->category_game();
+							//过滤手机网游和破解游戏
+							unset($category[157]);
+							unset($category[32]);
+							
+							$form = Helper("Form")->name("category")->option($category);
+							$form->itpl('<span class="spanlab">%s</span>');
+                    	</php>
+						
+						{:$form->radio()}
+                    </div>
+                </div>
+                <div class="lid">
+                    <label class="tlab"><span class="tlab"><em>*</em>包体大小：</span></label>
+                    <div class="colr fl">
+                      <input type="text" name="apk_size" class="int" placeholder="10 MB"  />
+                    </div>
+                </div>
+                <div class="lid">
+                    <label class="tlab"><span class="tlab"><em>*</em>应用阶段：</span></label>
+                    <div class="colr fl">
+                      <select class="form-controln control120" name="stage">
+	                      <option value="0">请选择</option>
+				          <option value="1">删档封测</option>
+				          <option value="2">不删档封测</option>
+				          <option value="3">删档内测</option>
+				          <option value="4">不删档内测</option>
+				          <option value="5">公测</option>
+                      </select>
+                    </div>
+                </div>
+                <div class="lid">
+                    <label class="tlab"><span class="tlab"><em>*</em>首发情况：</span></label>
+                    <div class="colr fl">
+                      <select class="form-controln control120" name="public_mode">
+	                      <option value="0">请选择</option>
+				          <option value="1">独代首发</option>
+				          <option value="2">联合首发</option>
+						  <option value="3">非首发</option>
+                      </select>
+                    </div>
+                </div>
+                
+                 <div class="lid">
+                     <label class="tlab"><span class="tlab"><em>*</em>期望上线时间：</span></label>
+                     <div class=" fl">
+ 						<div class="input-group">
+							<span class="input-group-addon"> <input type="radio" name="public_time_type" id="public_time1" value="1" checked="true">
+ 								指定时间
+							</span> <input type="text" class="form-int" name="public_time1" placeholder="{:date('Y-m-d', strtotime('+7 days'))}" onclick='$("#public_time1").attr("checked", "checked");'>
+ 						</div>
+						<div class="input-group">
+						<span class="input-group-addon">
+							<input type="radio" name="public_time_type" id="public_time2" value="2"> 大致时间
+						</span>
+						<input type="text" class="form-int" name="public_time2" placeholder="{:date('n', strtotime('+31 days'))}月底" onclick='$("#public_time2").attr("checked", "checked");'>
+				 		</div>
+ 					</div>  
+                 </div>
+
+                
+                <div class="lid">
+                    <label class="tlab"><span class="tlab"><em>*</em>apk下载链接：</span></label>
+                    <div class="colr fl">
+						<input type="text" name="apk_url" class="int" placeholder="http://gionee.com/v1.apk" style="width:500px" />
+						<span class="help-block">请填写Demo包评测的下载链接</span>
+                    </div>
+                </div>
+                <div class="lid">
+                    <label class="tlab"><span class="tlab"><em>*</em>密钥发送邮箱：</span></label>
+                    <div class="colr fl">
+						<input type="text" name="email" class="int" placeholder="dev.game@gionee.com" />
+                    </div>
+                </div>
+                
+                <div class="lid">
+                    <label class="tlab"><span class="tlab"><em>*</em>申请渠道：</span></label>
+                    <div class=" fl" style="width:80%;">
+						<div class="input-group">
+							<span class="input-group-addon"> <input type="radio" name="channel" id="defaultChannel" value="1" checked="">
+								默认渠道
+							</span>
+							<input type="text" class="form-int" placeholder="请填写" value="游戏大厅" onclick='$("#defaultChannel").attr("checked", true);'>
+						</div>
+						<div class="input-group">
+						<span class="input-group-addon">
+							<input type="radio" name="channel" id="userChannel" value="0"> 其它渠道
+						</span>
+						<input type="text" class="form-int" placeholder="请填写" name="userchannel">
+				 		</div>
+						<span class="help-block">默认渠道为游戏大厅，如果不是提交到游戏大厅的版本，请勾选其他渠道后再填写</span>          	         	
+					</div>  
+                </div>
+                
+					<script>
+					$("input[name='userchannel']").focus(function(){ $("#userChannel").attr("checked", true); });
+					</script>
+					
+					<php>if(!D("Dev://Accountinfo")->isTax($uid)){</php>
+					<div class="lid">
+	                    <label class="tlab">温馨提示：</span></label>
+	                    <div class="colr fl">
+	                    	<div class="swwso">您的税务资料还不完整，请先完善您的税务登记信息！<a href="{:U('user/taxfix')}" target="_blank" >点击这里去完善资料</a></div>
+	                    </div>
+	                </div>
+	                
+	                <script>
+	                $(function(){
+	                	$('.unionaddb').click(function(){ alert( '您的税务资料还不完整，请先完善您的税务登记信息' );return false; });
+	                });
+	                </script>
+					<php>}</php>
+                
+                <div class="btnw unionaddb"><button type="submit" class="btn-bred">提交申请</button></div>
+			</form>
+		</div>
+	</div>
+    </div>
+</div>
+
+<script>
+function ajax_test(f)
+{
+	$.post(f.action, $( f ).serialize(), function(d){
+		if(d.status == 0){alert(d.info);return false;}
+		window.location="{:U('success')}";
+	});
+}
+
+$(function(){
+	$("[name=public_time1]").datetimepicker({
+		dateFormat:"yy-mm-dd",
+		timeFormat:"hh:mm",
+		regional: 'zh-CN',
+		numberOfMonths: 2,
+		minDate: new Date({:date('Y')}, {:date('m')} - 1, {:date('d')}, 0, 0),
+		maxDate: new Date(2015, 11, 31, 17, 30)
+		});
+})
+</script>
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/app/jui/css/smoothness/jquery-ui-1.9.1.custom.min.css">
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-1.9.1.custom.min.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/development-bundle/ui/i18n/jquery.ui.datepicker-zh-CN.js"></script>
+
+<include file="Public:footer" />

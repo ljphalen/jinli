@@ -1,0 +1,91 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+<style>
+    .htlist{ width:744px; overflow:hidden;}
+    .htlist ul{ width:1000px; overflow:hidden;}
+    .htlist li{ float:left; display:inline; border:1px solid #dfdfdf; width:74%; padding:20px 0 20px 0; margin:0 24px 24px 0; border-radius:4px; overflow:hidden; }
+    .htlist .imga{width:54px; height:54px; margin:5px 15px 0 15px; overflow:hidden;}
+    .htlist .imga img{max-width:100%; height:auto;}
+    .htlist  h6{ font-size:14px; }
+    .htlist  h6 em{ font-size:12px;}
+    .htlist  h6 a{color: #428bca}
+    .insub .more {
+        border-top: 1px solid #f3f3f3;
+        margin: 31px 10px 0;
+        float: left;
+        display: inline;
+    }
+</style>
+<div class="mainw clearfix">
+	<include file="Union:nav_left" />
+    <div class="rmain fl">
+    	<h2 class="yyname ">联运申请</h2>
+
+        <div class="farea farea-key">
+            <div class="numsub">
+            	<eq name="_POST.search" value="1">
+            		<div class="fl">当前搜索到<em class="fblue"> {$count|default=0} </em> 个联运申请记录</div>
+            		<else/>
+					<div class="fl">您当前共有<em class="fblue"> {$count|default=0} </em> 个联运申请记录</div>
+            	</eq>
+            	
+        		<a style="width: 110px;" href="{:U("Help/page", array("id"=>6))}" target="_help" class="btn-green fr">联运流程</a>
+        		<a style="width: 110px;" href="{:U('Contract/add')}" class="btn-green fr">申请联运</a>
+            </div>
+        </div>
+	
+		<gt name="count" value="-1">
+	        <form action="{:U('Union/uindex')}" method="post">
+	        	<input type="hidden" name="search" value="1" />
+	            <div class="row">
+	                <div class="col-md-2">
+	                    <h4>申请列表</h4>
+	                </div>
+	                <div class="col-md-3">
+	
+	                </div>
+	                <div class="col-md-4">
+	                    <div class="form-group">
+	                        <input type="text" class="form-control" maxlength="30" name="name" value="{$app_name}" id="name" placeholder="输入游戏名称">
+	                    </div>
+	                </div>
+	                <div class="col-md-1">
+	                    <button type="submit" class="btn btn-green">查 询</button>
+	                </div>
+	            </div>
+	        </form>
+		</gt>
+
+        <notempty name="contracts">
+	        <div class="insub gamelist">
+	            <div class="htlist mt30">
+	        	<ul>
+	                <foreach name="contracts" item="v">
+	                <li>
+	                    <a title="{$v.app_name}" class="imga fl">
+	                        <img src="{:cdn('PUBLIC')}/common/images/no_photo.png" width="54" height="54">
+	                    </a>
+	                    <div class="picr">
+	                        <h6>{$v.app_name} <span class="badge">{$v.package}</span><em></em></h6>
+	                        <p class="fgray">合同状态：{$v.status}</p>
+	                        <p class="fgray">密匙状态：{$v.union_status}</p>
+	                    </div>
+	                    <div class="more">
+	                        <div><a href="{$v.url}" class="btn-xq2">{$v.text}</a></div>
+							
+							<notempty name="v.url_union">
+								<div style="padding-top:8px;"><a href="{$v.url_union}" class="btn-xq2">{$v.text_union}</a></div>
+							</notempty>
+	                    </div>
+	                </li>
+	                </foreach>
+	            </ul>
+	          </div>
+	        </div>
+        </notempty>
+        <div class="page">
+			{$page}
+		</div>
+    </div>
+</div>
+<include file="Public:footer" />

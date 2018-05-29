@@ -1,0 +1,91 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $indexUrl;?>">划屏游戏</a></li>
+        <li class="current"><a href="javascript:;">分数记录</a></li>
+	</ul>
+</div>
+<form action="<?php echo $totalUrl.'?id='. $info['id'];?>" method="post" >
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+        <tr class="tr">
+            <th class="th">帐号</th>
+            <td class="td"><input type="text" class="input" name="uname" value="<?php echo $search['uname'];?>"></td>
+            <th class="th">活动状态</th>
+            <td class="td">
+                <select name="status" class="select wa">
+                    <option  value="0">全部</option>
+                    <option <?php if ($search['status'] == 2) echo 'selected';?> value="2">有效</option>
+                    <option <?php if ($search['status'] == 1) echo 'selected';?> value="1">无效</option>
+                </select>
+            </td>
+        </tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+
+</div>
+
+<div class="h_a">
+    <?php $waringConfig = json_decode($info['waring_config'], true);?>
+    共 <?php echo $info['join']?> 人参与活动，游戏次数 <?php echo $info['times']?> 次，积分发放 <?php echo $info['points']?> 。 当前游戏的分数阈值为 <?php echo $waringConfig['score']?> ，超过 <?php echo $waringConfig['score']?> 分的数据自动不生效， 这里只实时展示游戏最高记录前10的排行数据。
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="80">排序</td>
+            <td width="80">uuid</td>
+			<td width="150">帐号</td>
+			<td width="150">游戏次数</td>
+			<td width="80">最高记录</td>
+            <td width="80">获得积分</td>
+            <td width="80">状态</td>
+			<td width="150">操作</td>
+		</tr>
+		<?php foreach ($items as $key=> $item):?>
+			<tr class = "ct">
+		    	<td> <?php echo $key + 1;?> </td>
+                <td> <?php echo $item['uuid'];?> </td>
+				<td> <?php echo $item['uname'];?> </td>
+                <td> <?php echo $item['times'];?> </td>
+                <td> <?php echo $item['score'];?> </td>
+                <td> <?php echo $item['points'];?> </td>
+				<td> <?php echo $item["status"] ? '有效' : '无效';?> </td>
+				<td>
+					<a href="<?php echo $exportUrl . '/?id=' . $info['id'] . '&uuid=' . $item['uuid'];?>" class="mr10">导出</a>
+                    <a href="javascript:" onclick="optionOne('<?php $status = $item['status'] ? 0 : 1; echo "{$optionUrl}/?id={$item['id']}&status={$status}&uuid={$item['uuid']}";?>', '', event);"><?php echo $item['status'] ? '设置无效' : '设置有效' ?></a>
+                </td>
+			</tr>
+		<?php endforeach;?>
+	</table>
+</div>
+<script>
+    var token = '<?php echo $token; ?>';
+    function optionOne(url, msg, e) {
+        if (msg == '')
+            msg = '确认修改该条信息？';
+        showConfirm(msg, function() {
+            $.ajax({
+                url : url,
+                type : 'POST',
+                dataType : 'json',
+                data : 'token='+token,
+                success : function(ret) {
+                    if (ret.success) {
+                        showMsg('', ret.msg);
+                        setTimeout(function() {
+                            location.reload();
+                        }, 500);
+                    } else {
+                        showError('', ret.msg);
+                    }
+                }
+            });
+        }, e);
+
+    }
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

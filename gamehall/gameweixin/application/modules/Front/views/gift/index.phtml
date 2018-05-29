@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>我的礼包</title>
+	<?php echo $this->render("layout/header.phtml");?>
+</head>
+<body >
+	<div class="J_mygiftList mygift-container">
+		<ul class="giftList">
+			<?php foreach ($myGift as $gift) { ?>
+				<li>
+					<a href="<?php echo $gift['url'];?>">
+						<table>
+							<tr>
+								<td colspan="2">
+									<span class="name"><?php echo $gift['name']?></span>
+								</td>
+							</tr>
+							<tr>
+								<td><span class="date" style="width:60px">有效期：</span></td>
+								<td><span class="date"><?php echo $gift['startDate'];?>至<?php echo $gift['endDate'];?></span></td>
+							</tr>
+							<tr>
+								<td><div class="code">兑换码：</div> </td>
+								<td><div class="code"><span style="word-break:break-all;"><?php echo $gift['code'];?></span></div></td>
+							</tr>
+						</table>
+					</a>
+				</li>
+			<?php }?>
+		</ul>
+	</div>
+	<?php if($hasNext) {?>
+	<div class="load-more J_loadMore" data-ajaxurl="<?php echo $giftPageListPostUrl.'?token='.$token;?>" data-hasnext="<?php echo $hasNext;?>" data-curpage="<?php echo $page;?>">
+		<span class="J_load load ">点击加载更多</span>
+		<div class="J_loading loading hidden"><i class="icon-loading"></i>正在加载,请稍等</div>
+	</div>
+	<?php }?>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

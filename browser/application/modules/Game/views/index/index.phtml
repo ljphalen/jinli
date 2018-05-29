@@ -1,0 +1,43 @@
+<?php echo $this->render("layout/game_header.phtml");?>
+	<div id="page" class="home">
+		<div class="mainfocus isTouch" <?php if(count($ads) > 1) echo 'id="mainfocus"';?>>
+			<div class="ui-slide-scrollbox">
+				<ul class="ui-slide-scroll clearfix">
+					<?php foreach($ads as $key=>$value) {?>				
+					<li class="ui-slide-item"><a tj-cr="true" href="<?php echo $value['link'];?>"><img src="<?php echo $attachPath,$value['img'];?>" alt="<?php echo $value['title'];?>"></a></li>
+					<?php }?>
+				</ul>
+			</div>
+			<?php $j=count($ads); if($j > 1) {?>
+			<div class="mask"></div>
+			<div class="ui-slide-tabs">
+				<?php for($i=0; $i<$j; $i++) {?>
+				<span class="ui-slide-tab <?php if($i==0) echo 'ui-slide-tabcur';?>"></span>
+				<?php }?>
+			</div>
+			<?php }?>
+			<span class="ui-slide-prev"></span>
+			<span class="ui-slide-next"></span>
+		</div>
+		
+		<div class="nav-list">
+			<ul>
+				<?php foreach($games as $key=>$value){?>
+				<li>
+					<a tj-cr="true" href="/index/detail/?id=<?php echo $value['id'];?>" class="intro clearfix">
+						<div class="pic"><img src="<?php echo $attachPath,$value['img'];?>" alt="" /></div>
+						<div class="desc">
+							<h2><strong><?php echo $value['name'];?></strong></h2>
+							<p><span><?php echo $value['resume'];?></span></p>
+						</div>
+					</a>
+					<a tj-cr="true" href="<?php echo $value['link'];?>" class="download"><span>下载</span></a>
+				</li>
+				<?php }?>
+			</ul>
+			<div id="J_loadMore" dt-ajaxUrl="/index/more/" class="more <?php if(!$hasnext) echo 'disable';?>"><em href=""><span>点击加载更多</span></em></div>
+		</div>
+		
+	</div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $indexUrl;?>">客服列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加客服</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="30">排序</td>
+			<td width="30">ID</td>
+			<td>客服昵称</td>
+			<td>客服头像</td>
+			<td>操作</td>
+		</tr>
+        <?php foreach($data as $key => $value) {?>
+        <tr class="ct">
+            <td><?php echo $value['sort']; ?></td>
+            <td><?php echo $value['id']; ?></td>
+            <td><?php echo $value['nickname']; ?></td>
+            <td><img src="<?php echo $attachPath.$value['avatar'];?>" width="40" /></td>
+            <td>
+                <a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+                <a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+            </td>
+        </tr>
+        <?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

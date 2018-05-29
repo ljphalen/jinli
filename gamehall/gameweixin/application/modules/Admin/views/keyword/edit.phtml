@@ -1,0 +1,71 @@
+<?php echo $this->render("layout/admin_header.phtml");?>
+
+	<div class="body">
+	<h1 class="page-title" >编辑关键词</h1>
+		<?php echo $this->render("layout/side.phtml");?>
+		<div class="col-main">
+			<div class="J_gift_error_tips error-pop-tips hidden">
+			</div>
+			<div class="keyword-body">
+				<h2 class="title">添加(编辑)关键词</h2>
+				<div class="keyword-edit-container">
+					<div class="keyword-column-container">
+						<span class="text">关键词:</span>
+						<div class="keyword-container">
+							<input id="keyword" class="input" value="<?php echo $data['keyword'];?>" />
+							<span class="tips dark">多个关键词注意使用分号间隔，如李白;杜甫</span>
+						</div>
+					</div>
+					<div class="keyword-column-container">
+						<span class="text">类型:</span>
+						<div class="type-container">
+							<input id="fullMatch" type="radio" name="type" <?php if ($data['match_type'] == 1) echo 'checked';?> value="full" ><label for="fullMatch">&nbsp;完全匹配&nbsp;&nbsp;（用户输入完全一样的词才会触发）</label><br/>
+							<input id="blurMatch" type="radio" name="type"  <?php if ($data['match_type'] == 2) echo 'checked';?> value="blur" ><label for="blurMatch">&nbsp;模糊匹配&nbsp;&nbsp;（只要用户输入的词包含本关键词才会触发）</label>
+						</div>
+					</div>
+					<div class="keyword-column-container">
+						<span class="text">触发事件:</span>
+						<div class="event-container">
+							<input id="textEvent" type="radio" name="event" <?php if ($data['opt_type'] == 3) echo 'checked';?> value="text" ><label for="textEvent">&nbsp;文本消息&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+							<input id="appMsg" type="radio" name="event"  <?php if ($data['opt_type'] == 1) echo 'checked';?> value="appMsg" ><label for="appMsg">&nbsp;图文消息&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+							<input id="systemReply" type="radio" name="event" <?php if ($data['opt_type'] == 2) echo 'checked';?> value="sysReply" ><label for="systemReply">&nbsp;系统回复</label>
+							<textarea id="textTypeArea" val="" class=""><?php echo $data['text_content'];?></textarea>
+							<div class="J_appMsg appMsg-container hidden">
+								<a id="chooseMsg" class="btn-upload">选择图文</a>&nbsp;&nbsp;&nbsp;
+								<span id="appMsgName" class="name dark" data-id="<?php echo $materialId?>">已选择：<?php echo $materialTitle?></span>
+							</div>
+							<div class="J_sysReply sysReply-container hidden">
+								<select id="reply">
+									<option value="acoin" <?php if ($data['sys_event'] == 1) echo 'selected';?>>A币查询</option>
+									<option value="gift" <?php if ($data['sys_event'] == 2) echo 'selected';?>>礼包查询</option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="btn-container">
+						<button id="keywordSave" class="btn" data-id="<?php echo $data['id'];?>" data-ajaxUrl="<?php echo $editPostUrl;?>" >保存</button>
+						<a href="<?php echo $listUrl?>" class="btn">取消</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="J_dialog hidden">
+		<div id="mask" ></div>
+		<div id="appMsg_Dialog" >
+			<div class="title-container">
+				<span>选择素材</span>
+				<i class="J_close icon-close">X</i>
+			</div>
+			<iframe width="800" height="512" frameborder="0" name="appMsg_Iframe"  src="<?php echo $materialDialogUrl;?>"></iframe>
+			<div class="btn-container iframe-Dialog-btn no-topborder">
+				<button id="chooseAppMsg" class="btn">确定</button>
+				<button  class="J_close btn">取消</button>
+			</div>
+		</div>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

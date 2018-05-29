@@ -1,0 +1,220 @@
+<script type="text/javascript" src="{{rootUrl}}/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/float.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/layer/layer.js"></script>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">{{configapp.config_name}}->{{configapp.appname}}->推广计划</p>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="app-detail" style="">
+                <form method="POST" action="/implantable/plan_save" style="">
+                    <ul class="form" style="">
+                        <li>
+                            <input type="hidden" name="config_id" value="{{config_id}}">
+                            <input type="hidden" name="plan_id" value="{{plan.plan_id}}">
+                            <span class="label">配置项名称：</span>
+                            <div class="fc">
+                                {{configapp.config_name}}
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">条件配置：</span>
+                            <div class="fc">
+                                <a href="/implantable/editconfig?configid={{config_id}}">{{configapp.appname}}</a>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">计划时间：</span>
+                            <div class="fc">
+                                <input type="text" name="start_time" id="start_time" value="<!-- if {{plan.id}} -->{{plan.stime}}<!-- else -->{{stime}}<!-- endif -->" class="iText required"/> 到 <input type="text" name="end_time" id="end_time" value="<!-- if {{plan.id}} -->{{plan.etime}}<!-- else -->{{etime}}<!-- endif -->" class="iText required"/>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">素材配置：</span>
+                            <div class="fc">
+                                <div class="content">
+                                    <div class="grid">
+                                        <div class="gridToolbar">
+                                            <p class="fr">
+                                                <a href="javascript:showPop()" id="addBlock" class="btn">新增</a>
+                                            </p>
+                                        </div>
+                                    <table width="100px">
+                                        <thead>
+                                            <tr>
+                                            <!-- loop block -->
+                                                <th data-blockkey="{{block' value.blockkey}}">{{block' value.blockname}}</th>
+                                            <!-- endloop -->
+                                            </tr>
+                                        </thead>
+                                        <tbody >
+                                            <input type="hidden" name="block" id="source_block" value='{{plan.block}}'/>
+                                            <input type="hidden" name="product_name" id="product_name" value=""/>
+                                            <tr id="block_box">
+                                                    <!-- loop plan.sourcePname -->
+                                                        <!-- if {{plan.lobcktype' value.product_name}} -->
+                                                            <td>{{plan.lobcktype' value.product_name}}</td>
+                                                        <!-- else -->
+                                                            <td>空</td>
+                                                        <!-- endif -->
+                                                    <!-- endloop -->
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="line"></li>
+                        <li>
+                            <div class="fc">
+                                <input type="submit" class="submit" value="确定">
+                                <input type="button" onclick="window.location.href = '/implantable/planveiw?config_id={{config_id}}'" class="cancel" value="取消">
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function showPop(){
+        layer.open({
+            type: 1,
+            title:"选择素材",
+            skin: 'layui-layer-rim', //加上边框
+            area: ['35%', 'auto'], //宽高
+            shade:0.3,
+            content:'<div class="addAD">\n\
+                            <div class="grid">\n\
+                                <div class="app-detail">\n\
+                                    <ul class="form">\n\
+                                            <li>\n\
+                                                    <span class="label">产品名称：</span>\n\
+                                                        <div class="fc">\n\
+                                                            <select name="inapp" class="required" id="inapp" onchange="productMapsource(this)">\n\
+                                                            <!-- loop product -->\n\
+                                                                <option value="{{product' value.pid}}" data-blockkey=\'{{product' value.source}}\'>{{product' value.product_name}}</option>\n\
+                                                            <!-- endloop -->\n\
+                                                            </select>\n\
+                                                        </div>\n\
+                                            </li>\n\
+                                            <li>\n\
+                                                    <span class="label">广告类型：</span>\n\
+                                                            <div class="fc" id="appblock">\n\
+                                                            <!-- loop block -->\n\
+                                                                        {{block' value.blockname}}<input type="checkbox" name="" value="{{block' value.blockkey}}" class="iText" disabled="disabled"/><br>\n\
+                                                            <!-- endloop -->\n\
+                                                            </div>\n\
+                                            </li>\n\
+                                    </ul>\n\
+                                </div>\n\
+                            </div>\n\
+                            <div style="text-align:center;padding:10px 0;">\n\
+                                    <a href="javascript:sourceSelect()" class="btn" id="ok">确定</a>\n\
+                                    <a href="javascript:layer.closeAll()" class="cancel" id="cancel">取消</a>\n\
+                            </div>\n\
+                    </div>'
+            });
+            var html="";
+            
+            //$("#inapp").append(html);
+}
+function productMapsource(thiss){
+    var blockkey=$(thiss).find ("option:selected").attr("data-blockkey");
+    blockkey= eval(blockkey);
+    var appblock=$(".addAD").find("input");
+    if(blockkey.length<1){
+        appblock.removeAttr("checked");
+        return false;
+    }
+    $("#product_name").val($(thiss).find ("option:selected").text());
+    appblock.each(function(x){
+        for(var i=0;i<blockkey.length;i++){
+            if(blockkey[i].blockkey==this.value){
+                $(this).attr("checked","true");
+                $(this).attr("name",blockkey[i].id);
+                break;
+            }else{
+                $(this).removeAttr("checked");
+                $(this).attr("name","");
+            }
+        }
+        $(this).attr("disabled","disabled");
+    })
+}
+function sourceSelect(){
+    var appblock=$(".addAD").find("input");
+    var source_block=$("#source_block");
+    var pid="";
+    var html=""
+    appblock.each(function(i){
+        //console.log(i);
+        if(appblock.length==i+1){
+            pid+=this.name;
+        }else{
+            pid+=this.name+",";
+        }
+        if(this.name==""){
+            html+="<td>空</td>";
+        }else{
+            html+="<td>"+$("#product_name").val()+"</td>";
+        }
+    })
+    source_block.val(pid);
+    $("#block_box").html(html);
+    layer.closeAll();
+}
+$(function(){
+    var startDateTextBox = $('#start_time');
+    var endDateTextBox = $('#end_time');
+    startDateTextBox.datetimepicker({
+            dateFormat: 'yy-mm-dd', 
+            timeFormat: 'HH:mm:ss',
+            stepHour: 1,
+            stepMinute: 1,
+            stepSecond: 1,
+            //numberOfMonths: 2,
+            minDate: -1,
+            onClose: function(dateText, inst) {
+		if (endDateTextBox.val() != '') {
+			var testStartDate = startDateTextBox.datetimepicker('getDate');
+			var testEndDate = endDateTextBox.datetimepicker('getDate');
+			if (testStartDate > testEndDate)
+				endDateTextBox.datetimepicker('setDate', testStartDate);
+		}
+		else {
+			endDateTextBox.val(dateText);
+		}
+            },
+            onSelect: function (selectedDateTime){
+                    endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
+            }
+    });
+    endDateTextBox.datetimepicker({
+            dateFormat: 'yy-mm-dd', 
+            timeFormat: 'HH:mm:ss',
+            stepHour: 1,
+            stepMinute: 1,
+            stepSecond: 1,
+            //numberOfMonths: 2,
+            minDate: 0,
+            onClose: function(dateText, inst) {
+		if (startDateTextBox.val() != '') {
+			var testStartDate = startDateTextBox.datetimepicker('getDate');
+			var testEndDate = endDateTextBox.datetimepicker('getDate');
+			if (testStartDate > testEndDate)
+				startDateTextBox.datetimepicker('setDate', testEndDate);
+		}
+		else {
+			startDateTextBox.val(dateText);
+                }
+            },
+            onSelect: function (selectedDateTime){
+                    startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
+            }
+    });
+})
+</script>

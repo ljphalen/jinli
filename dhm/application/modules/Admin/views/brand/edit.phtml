@@ -1,0 +1,229 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">品牌列表</a></li>
+    <li class="current"><a href="javascript:;">编辑品牌</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑品牌</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input wa" name="sort" value="<?php echo $info['sort'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">品牌分类</th>
+			<td class="td">
+				<select name="category_id" class="wa">
+				<?php foreach ($categorys as $key=>$value) {?>
+					<option <?php if ($info['category_id'] == $value['id']) echo 'selected = selected';?>  value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
+				<?php }?>
+				</select>				
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">所属国家</th>
+			<td class="td">
+				<select name="country_id" class="wa" id="country_combo">
+				<?php foreach($countrys as $key=>$value) { ?>
+					<option  <?php if ($info['country_id'] == $value['id']) echo 'selected = selected';?> value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
+				<?php }?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status" class="wa">
+                	<option <?php if($info['status'] == 1) echo 'selected="selected"';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 2) echo 'selected="selected"';?> value="2">关闭</option>
+            </select></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">是否推荐</th>
+			<td class="td">
+			<select name="is_top" class="wa">
+                	<option <?php if($info['is_top'] == 1) echo 'selected="selected"';?> value="1">是</option>
+                	<option <?php if($info['is_top'] == 0) echo 'selected="selected"';?> value="0">否</option>
+            </select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">品牌名称</th>
+			<td class="td"><input type="text" class="input wc" name="name" value="<?php echo $info['name'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg">
+						<img src="<?php echo $attachPath.$info['image'];?>"/>
+						<input type="hidden" name="image" value="<?php echo $info['image'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">品牌logo</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="Img">
+						<img src="<?php echo $attachPath.$info['logo'];?>"/>
+						<input type="hidden" name="logo" value="<?php echo $info['logo'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		
+		<tr class="tr" id="descrip">
+				<th class="th">内容</th>
+				<td class="td"><textarea
+						style="width: 800px; height: 200px" class="textarea"
+						name="brand_desc"><?php echo $info['brand_desc'];?></textarea>
+				</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+	K.token = token;
+    editor = K.create('textarea[name="brand_desc"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $adminroot.$uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+$(function(){
+    ajaxForm('addForm',function(ret){
+        ajaxRedirect(ret, '<?php echo Util_Http::getServer("HTTP_REFERER"); ?>');
+    });
+});
+</script>
+<style>
+    .ui-button { margin-left: -1px; }
+    .ui-button { top :1.2px; }
+    .ui-button-icon-only .ui-button-text { padding: 0.36em; }
+    .ui-autocomplete-input { margin: 0; padding: 0.48em 0 0.47em 0.45em;width:275px; left:0px }
+</style>
+<script>
+    (function( $ ) {
+        $.widget( "ui.combobox", {
+            _create: function() {
+                var self = this,
+                    select = this.element.hide(),
+                    selected = select.children( ":selected" ),
+                    value = selected.val() ? selected.text() : "";
+                var input = this.input = $( "<input>" )
+                    .insertAfter( select )
+                    .val( value )
+                    .autocomplete({
+                        delay: 0,
+                        minLength: 0,
+                        source: function( request, response ) {
+                            var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+                            response( select.children( "option" ).map(function() {
+                                var text = $( this ).text();
+                                if ( this.value && ( !request.term || matcher.test(text) ) )
+                                    return {
+                                        label: text.replace(
+                                            new RegExp(
+                                                "(?![^&;]+;)(?!<[^<>]*)(" +
+                                                $.ui.autocomplete.escapeRegex(request.term) +
+                                                ")(?![^<>]*>)(?![^&;]+;)", "gi"
+                                            ), "<strong>$1</strong>" ),
+                                        value: text,
+                                        option: this
+                                    };
+                            }) );
+                        },
+                        select: function( event, ui ) {
+                            ui.item.option.selected = true;
+                            self._trigger( "selected", event, {
+                                item: ui.item.option
+                            });
+                        },
+                        change: function( event, ui ) {
+                            if ( !ui.item ) {
+                                var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( $(this).val() ) + "$", "i" ),
+                                    valid = false;
+                                select.children( "option" ).each(function() {
+                                    if ( $( this ).text().match( matcher ) ) {
+                                        this.selected = valid = true;
+                                        return false;
+                                    }
+                                });
+                                if ( !valid ) {
+                                    // remove invalid value, as it didn't match anything
+                                    $( this ).val( "" );
+                                    select.val( "" );
+                                    input.data( "autocomplete" ).term = "";
+                                    return false;
+                                }
+                            }
+                        }
+                    })
+                    .addClass( "ui-widget ui-widget-content ui-corner-left" );
+
+                input.data( "autocomplete" )._renderItem = function( ul, item ) {
+                    return $( "<li></li>" )
+                        .data( "item.autocomplete", item )
+                        .append( "<a>" + item.label + "</a>" )
+                        .appendTo( ul );
+                };
+
+                this.button = $( "<button type='button'>&nbsp;</button>" )
+                    .attr( "tabIndex", -1 )
+                    .attr( "title", "Show All Items" )
+                    .insertAfter( input )
+                    .button({
+                        icons: {
+                            primary: "ui-icon-triangle-1-s"
+                        },
+                        text: false
+                    })
+                    .removeClass( "ui-corner-all" )
+                    .addClass( "ui-corner-right ui-button-icon" )
+                    .click(function() {
+                        // close if already visible
+                        if ( input.autocomplete( "widget" ).is( ":visible" ) ) {
+                            input.autocomplete( "close" );
+                            return;
+                        }
+
+                        // work around a bug (likely same cause as #5265)
+                        $( this ).blur();
+
+                        // pass empty string as value to search for, displaying all results
+                        input.autocomplete( "search", "" );
+                        input.focus();
+                    });
+            },
+
+            destroy: function() {
+                this.input.remove();
+                this.button.remove();
+                this.element.show();
+                $.Widget.prototype.destroy.call( this );
+            }
+        });
+    })( jQuery );
+</script>
+<script>
+    //auto complete
+    $('#country_combo').combobox();
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

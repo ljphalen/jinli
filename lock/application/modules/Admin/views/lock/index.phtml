@@ -1,0 +1,63 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">锁屏列表</a></li>
+		<li><a href="<?php echo $step1Url;?>">添加锁屏</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">锁屏类型</th>
+			<td class="td">
+			<select name="channel_id" class="wa">
+				<option value="0">所有类型</option>
+<?php foreach($channels as $key=>$value) {?>
+				<option <?php if($search['channel_id'] == $key) echo 'selected';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php }?>
+			</select>
+			</td>
+			<th class="th">名称</th>
+			<td class="td">
+				<input type="text" class="input wc" name="keyword" value="">
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="30">排序</td>
+			<td>ID</td>
+			<td>名称</td>
+			<td>icon</td>
+			<td>类型</td>
+			<td>分辨率</td>
+			<td>点击量</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($lock as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><img src="<?php if(strpos($value['icon'], 'http://') === false) {echo $attachPath,$value['icon'];}else{echo $value['icon'];};?>" width="100"/></td>
+			<td><?php echo $channels[$value['channel_id']];?></td>
+			 <td><?php echo $value['resolution'];?></td>
+	        <td><?php echo $value['hits'];?></td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,96 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">导航列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加导航</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<div class="table_full">
+		<table width="100%">
+		<tr class="tr">
+				<th class="th">一级分类</th>
+				<td class="td">
+				<select name="type" id="type">
+				<option value="">所有分类</option>
+<?php 
+foreach($types as $key => $value) {
+?>
+                <option <?php echo ($param['type'] == $key) ? 'selected="selected"' : '';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php 
+}
+?>
+	            </select>
+				</td>
+			</tr>
+<?php foreach($types as $k=>$type){?>
+		<tr class="tr" id="navtype<?php echo $k;?>" style="display:none">
+			<th class="th">二级分类</th>
+			<td class="td">
+		<select name="">
+<?php 
+foreach($navtypes as $key => $value) {
+if($k == $value['type']) {
+?>
+                <option <?php echo $param['navtype'] == $value['id'] ? 'selected="selected"' : '';?> value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
+<?php 
+}
+}
+?>
+                </select>
+		</td>
+		</tr>
+
+<?php }?>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button type="submit">搜 索</button></span></span>
+	</div>
+
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">排序</td>			
+			<td width="100">名称</td>
+			<td width="100">一级分类</td>
+			<td width="100">二级分类</td>
+			<td>链接</td>
+			<td  width="100">操作</td>
+		</tr>
+<?php foreach($navs as $key => $value) {
+?>
+		<tr class="ct">
+			<td><?php echo $value['sort'];?></td>			
+            <td><?php echo $value['name'];?></td>
+            <td><?php echo $types[$value['type']];?></td>
+            <td><?php echo $navtypes[$value['navtype']]['name'];?></td>
+			<td><?php echo $value['link'];?></td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>&page=<?php echo $page?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script type="text/javascript">
+var sel = $("#type").val(); 
+$("#type").change(function() {
+	showNavTypes($(this).val());	
+})
+showNavTypes = function (value) {
+	$("#navtype" + sel).hide();
+	$("#navtype" + sel).find('select').attr('name', '');
+	$("#navtype" + value).find('select').attr('name', 'navtype');
+	$("#navtype" + value).show();
+	sel = value;	
+}
+showNavTypes(sel);
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

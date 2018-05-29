@@ -1,0 +1,100 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $indexUrl; ?>">标签列表</a></li>
+			<li><a href="<?php echo $editUrl; ?>">添加标签</a></li>
+			<li class="current"><a href="<?php echo $importUrl; ?>">数据导入</a></li>
+		</ul>
+	</div>
+	<div class="h_a">数据导入</div>
+	<form method="post" action="<?php echo $importPostUrl; ?>" id="addFrom" enctype="multipart/form-data">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr" id="tr_type">
+					<th class="th">标签分类</th>
+					<td class="td">
+						<select name="type" id="type">
+							<option value="0">请选择</option>
+							<?php if(!empty($dataList)) {?>
+								<option value="-1">全部</option>
+							<?php } ?>
+							<?php foreach($dataList as $k=>$v){?>
+								<option value="<?php echo $v['id'];?>"><?php echo $v['name'];?></option>
+							<?php }?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">选择文件</th>
+					<td class="td"><input type="file" class="input" name="data" value=""></td>
+					<td class="td"><a href="<?php echo $exportUrl; ?>">标签导出</a></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">是否有子目录</th>
+					<td class="td">
+					<input type="radio" name="has_subset"  value="1"  checked="checked">有 
+					<input type="radio" name="has_subset" value="0">没有
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+
+	<script type="text/javascript">
+		//广告表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Label/import');
+			});
+		})
+
+		$("#type").bind('change', function () {
+			var pid = $("#type").val();
+			parseData(pid,'label_first',  'label[level_1]', 'type','一级分类');
+		});
+
+		$("#label_first").live('change', function () {
+			var pid = $("#label_first  option:selected").val();
+			parseData(pid,'label_second',  'label[level_2]', 'label_first','二级分类');
+		});
+
+		$("#label_second").live('change', function () {
+			var pid = $("#label_second option:selected").val();
+			parseData( pid,'label_three',  'label[level_3]', 'label_second','三级分类');
+		});
+
+		$("#label_three").live('change', function () {
+			var pid = $("#label_three option:selected").val();
+			parseData(pid,'label_four',  'label[level_4]', 'label_three','四级分类');
+		});
+
+		function parseData( pid, label,selected_name, pre_label,name) {
+			if(pid <=0) return false
+			$.ajax({
+				'type': 'post',
+				'dataType': 'json',
+				'url': '/Admin/Label/ajaxGetCategoryData',
+				'data': {'token': '<?php echo $token;?>', 'pid': pid},
+				'success': function (e) {
+					if (e.data) {
+						var html = '<tr class="tr"  id="tr_' + label + '"><th class="th">'+name+'</th><td class="td"><select name="' + selected_name + '" id="' + label + '"><option value="0">请选择</option><option value="-1">全部子标签</option>';
+						$.each(e.data, function (i, m) {
+							html += '<option value="' + m.id + '">' + m.name + '</option>';
+						})
+						html += '</select></td></tr>';
+						if ($("#tr_" + label)[0]) {
+							$("#tr_" + label).html(html);
+						} else {
+							$("#tr_" + pre_label).after(html);
+						}
+					}
+				}
+			});
+		}
+
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

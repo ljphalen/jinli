@@ -1,0 +1,79 @@
+<?php echo $this->render("layout/header2.phtml"); ?>
+	<section class="main-content">
+	<header class="header navbar bg-default">
+		<ul class="nav navbar-nav">
+			<li class="active">
+				<a href="<?php echo $listUrl; ?>">专题列表</a>
+			</li>
+			<li>
+				<a href="<?php echo $addUrl; ?>">添加专题</a>
+			</li>
+		</ul>
+	</header>
+
+	<div class="content-wrap">
+		<div class="row">
+			<div class="col-lg-12">
+				<section class="panel">
+					<header class="panel-heading">
+						<form class="form-horizontal" action="<?php echo $listUrl; ?>" method="post">
+							<input name="token" id="token" value="<?php echo $token; ?>" type="hidden"/>
+
+							<div class="form-group 	no-margin">
+								<label class="col-sm-1 control-label">关键字: </label>
+
+								<div class="col-sm-5">
+									<input type="text" name="title" class="form-control" value="<?php echo $param['title'] ?>">
+								</div>
+								<div class="col-sm-1">
+									<button type="submit" name="sub" class="btn btn-primary">搜索</button>
+								</div>
+							</div>
+						</form>
+					</header>
+					<table class="table table-bordered  no-margin">
+						<!-- table content start -->
+						<tr>
+							<td>编号ID</td>
+							<td>期数</td>
+							<td>专题标题</td>
+							<td>短链接</td>
+							<td>专题色调</td>
+							<td>初始点赞数</td>
+							<td>用户点赞数</td>
+							<td>开始时间</td>
+							<td>结束时间</td>
+							<td>状态</td>
+							<td>操作</td>
+						</tr>
+						<?php foreach ($topics as $key => $value) { ?>
+							<tr>
+								<td><?php echo $value['id']; ?></td>
+								<td>第<?php echo $value['sort']; ?>期</td>
+								<td><?php echo $value['title']; ?></td>
+								<td><?php echo $value['url']; ?></td>
+								<td>
+									<div style="height:20px;width:50px;background-color:<?php echo $colors[$value['color']]; ?>;"></div>
+								</td>
+								<td><?php echo $value['init_like'] ? $value['init_like'] : 0; ?></td>
+								<td><?php echo $value['like_num']; ?></td>
+								<td><?php echo date('Y-m-d h:i:s', $value['start_time']); ?></td>
+								<td><?php echo date('Y-m-d h:i:s', $value['end_time']); ?></td>
+								<td><?php echo $value['status'] == 1 ? '开启' : '关闭'; ?></td>
+								<td>
+									<a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+									<a target="_blank" href="<?php echo $frontroot . $viewUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">预览</a>
+									<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+								</td>
+							</tr>
+						<?php } ?>
+					</table>
+				</section>
+				<div class="mr10 cc">
+					<?php echo $pager; ?>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+<?php echo $this->render("layout/footer2.phtml"); ?>

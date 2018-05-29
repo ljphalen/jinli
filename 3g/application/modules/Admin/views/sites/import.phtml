@@ -1,0 +1,53 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class=""><a href="<?php echo $indexUrl; ?>">分类列表</a></li>
+			<li class=""><a href="<?php echo $catAddUrl; ?>">添加分类</a></li>
+			<li class=""><a href="<?php echo $contentUrl; ?>">内容列表</a></li>
+			<li class=""><a href="<?php echo $addContentUrl; ?>">添加内容</a></li>
+			<li class="current"><a href="<?php echo $importUrl; ?>">数据导入</a></li>
+			<li class=""><a href="<?php echo $tongjiUrl; ?>">统计信息</a></li>
+		</ul>
+	</div>
+	<div class="h_a">数据导入</div>
+	<form method="post" action="<?php echo $importUrl; ?>" id="addFrom" enctype="multipart/form-data">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+
+				<tr class="tr">
+					<th class="th">分类文件</th>
+					<td class="td"><input type="file" class="input" name="category" value=""></td>
+					<td class="td"><a href="<?php echo $exportUrl; ?>?type=category">导出</a></td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<form method="post" action="<?php echo $importUrl; ?>" id="addFrom1" enctype="multipart/form-data">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+
+				<tr class="tr">
+					<th class="th">内容文件</th>
+					<td class="td"><input type="file" class="input" name="content" value=""></td>
+					<td class="td"><a href="<?php echo $exportUrl; ?>?type=content">导出</a></td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script type="text/javascript">
+		//广告表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Sites/import');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

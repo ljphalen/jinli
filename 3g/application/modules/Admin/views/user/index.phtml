@@ -1,0 +1,22 @@
+<?php echo $this->render("layout/header3.phtml"); ?>
+
+<?php echo $this->render("layout/tblist-s.phtml"); ?>
+
+sortName:'id',//默认排序字段
+sortOrder:'desc',//默认排序方式 'desc' 'asc'
+idField : 'uid',
+columns:[[
+{field:'ck',checkbox:true},
+{field:'uid',title:'UID',sortable:true,align:'center',width:60},
+{field:'username',title:'用户名',sortable:false,align:'center',width:100},
+{field:'groupname',title:'用户组',sortable:false,align:'center',width:120,
+formatter:function(value, row, index){
+return row.groupid == 0 ? '超级管理员' : row.groupname;
+}},
+{field:'lastLogin',title:'注册时间',sortable:true,width:180},
+{field:'loginIp',title:'注册IP',sortable:true,align:'center',width:120},
+]],
+
+<?php echo $this->render("layout/tblist-e.phtml"); ?>
+
+<?php echo $this->render("layout/footer3.phtml"); ?>

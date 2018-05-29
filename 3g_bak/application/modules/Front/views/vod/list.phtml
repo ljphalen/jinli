@@ -1,0 +1,54 @@
+<?php echo $this->render("vod/header.phtml");?>
+
+
+<body>
+
+<!--header begin-->
+<div class="v_header_logo">
+	<h1><a href="/vod/list">金立直播</a></h1>
+</div>
+<!--header end-->
+
+<!-- 直播标签滚动 begin -->
+<div id="top_menu" class="top_menu">
+    <div class="top_menu_list">
+	    <?php
+	    foreach($column_list as $key => $name):
+		$cur = ($key == $group)?'cur':'';
+		?>
+        <a href ="/vod/list?group=<?=$key?>" class="btn <?=$cur?>"><?=$name?></a>
+		<?php endforeach;?>
+    </div>
+</div>
+<!-- 直播标签滚动 end -->
+
+<!-- 直播内容 begin -->
+<div class="livecon">
+    <div class="live_con">
+        <ul id="js_lists">
+		
+	        <?php 
+			foreach($list as $val):
+			$nextTime = date('H:i',strtotime($val['next']['start_time']));
+			$nextName = $val['next']['name'];
+			$imgFile  = Yaf_Application::app()->getConfig()->attachroot . '/attachs/vod/'.$val['id'].'.jpg';
+			?>
+            <li>
+	            <a href="/vod/info?id=<?=$val['id']?>" target="_self">
+		            <img src="<?=$imgFile?>" alt="">
+		            <em class="tvname"><?=$val['name']?></em>
+		            <h3>
+			            <i></i>
+			            <em><?=$val['cur']['name']?></em>
+		            </h3>
+		            <span><?=$nextTime?>  <?=$nextName?></span>
+	            </a>
+            </li>
+			<?php endforeach;?>
+
+        </ul>
+    </div>
+</div>
+
+
+<?php echo $this->render("vod/footer.phtml");?>

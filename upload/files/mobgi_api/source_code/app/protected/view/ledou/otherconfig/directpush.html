@@ -1,0 +1,203 @@
+<link rel="stylesheet" href="{{rootUrl}}/css/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/Categorywidget_sdk.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/float.js"></script>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">下载器配置</p>
+    </div>
+    <div class="main">
+        <div class="toolbar tabs" style="padding-left:20px;padding-top: 20px;padding-right: 20px;padding-bottom: 3px;overflow: auto ">
+            <a href="/othercf/index?type=directpush" class="fr add btn">添加配置</a>
+            <ul class="fl">
+                    <li><a href="/othercf/index?type=install">安装提醒</a></li>
+                    <li><a href="/othercf/index?type=downloader">下载器管理</a></li>
+                    <li><a href="/othercf/index?type=pushcdnset">PUSH CDN 间隔</a></li>
+                    <li><a href="/othercf/index?type=quit">应用退出提示配置</a></li>
+                    <li><a href="/othercf/index?type=channellink">渠道下载地址配置</a></li>
+                    <li><a href="/othercf/index?type=channelimit">渠道限制配置</a></li>
+                    <li><a href="/othercf/index?type=carousel">BANNER轮播配置</a></li>
+                    <li><a href="/othercf/index?type=showdetails">是否显示详情</a></li>
+                    <!--<li><a href="/othercf/rtb">RTB报价配置</a></li>-->
+                    <li><a href="/othercf/index?type=tcaggr">腾讯聚合广告配置</a></li>
+                    <li class="cur"><a href="/othercf/index?type=directpush">定向推送</a></li>
+            </ul>
+        </div>
+        <div class="app-detail">
+            <h3>配置列表</h3>
+            <ul class="form">
+                <li>
+                    <table width="100%" style="margin-left: 40px;text-align:center;">
+                    <thead>
+                        <tr>
+                            <th>配置项名称</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                        <tbody>
+                            <!-- if {{list}} -->
+                                <!-- loop list -->
+                                <tr>
+                                    <td>{{list' value.config_name}}</td>
+                                    <td><a href="/othercf/index?type=directpush&config_name={{list' value.config_name}}">编辑</a> <a href="/othercf/del?type=directpush&config_name={{list' value.config_name}}">删除</a></td>
+                                </tr>
+                                <!-- endloop -->
+                            <!-- endif -->
+                        </tbody>
+                    </table>
+                </li>
+            </ul>
+        <form action="/othercf/configsave" method="POST" >
+            <input type="hidden" name="id" value='{{result.id}}' />
+            <input type="hidden" name="channel_id[]" value="CURRENT00000" />
+            <h3>基础配置</h3>
+            <ul class="form">
+                <li>
+                    <span class="label">配置名称：</span>
+                    <div class="fc">
+                        <input type="text" <!-- if {{id}} -->readonly<!-- endif --> class="iText config_name" name="config_name" value="{{config_name}}" />
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">产品：</span>
+                    <table class="muti">
+                        <tr>
+                            <td><input type="text" class="iText muti_input" to="left" style="width:190px;"/></td>
+                            <td width="150px"></td>
+                            <td><input type="text" class="iText muti_input" to="right" style="width:190px;"/></td>
+                        </tr>
+                        <tr>
+                            <td><select class="muti_left" multiple="multiple" style="height: 180px;width: 199px;"></select></td>
+                            <td align="center">
+                                <input type="button" class="btn muti_add" to="right" value="添加->"/><br />
+                                <input type="button" class="btn muti_add all" to="right" value="添加所有->"/><br />
+                                <input type="button" class="cancel muti_add" to="left" value="<-删除"/><br />
+                                <input type="button" class="cancel muti_add all" to="left" value="<-删除所有"/>
+                            </td>
+                            <td><select class="muti_right" multiple="multiple" style="height: 180px;width: 199px;"></select></td>
+                        </tr>
+                    </table>
+                    <input type="hidden" name="appkey" class="muti_data" value="{{appkey}}" />
+                </li>
+                <li>
+                    <input type="hidden" name="types" value="directpush" />
+                    <span class="label">退出应用提示开关：</span>
+                    <div class="fc">
+                        <input type="radio" class="checkbox" <!-- if {{config_detail.directpushtips}}=="true" -->  checked <!-- elseif {{config_detail.directpushtips}}!="false" --> checked <!-- endif -->name="data[directpushtips]" value="true"><label for="state1">开启</label>
+                        <input type="radio" class="checkbox" <!-- if {{config_detail.directpushtips}}=="false" -->  checked <!-- endif -->name="data[directpushtips]" value="false"><label for="state2">关闭</label>
+                    </div>
+                </li>
+                <li class="line"></li>
+                <li>
+                    <div class="fc">
+                        <input type="submit" value="保存" class="submit" />
+                    </div>
+                </li>
+            </ul>
+        </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+   var mutiSel = function(target){
+    var input = $("."+target+"_input");
+    var lmuti = $("."+target+"_left"), rmuti = $("."+target+"_right");
+    var btn = $("."+target+"_add"), data = $("."+target+"_data");
+    // fill data to select
+    if ({{left}}){
+        $.each({{left}},function(id, value){
+            lmuti.append("<option value='"+id+"'>"+value+"</option>");
+        });
+    }
+    if ({{right}}){
+        $.each({{right}},function(id, value){
+            rmuti.append("<option value='"+id+"'>"+value+"</option>");
+        });
+    }
+    // live button action
+    btn.live("click", function(){
+        var to = $(this).attr('to');
+        if ($(this).hasClass('all')){
+            var opt = "option";
+        }else{
+            var opt = "option:selected";
+        }
+        if (to == 'left'){
+            rmuti.find(opt).each(function(){
+                lmuti.append($(this));
+            });
+        }else{
+            lmuti.find(opt).each(function(){
+                rmuti.append($(this));
+            });
+        }
+        var dataStr = "";
+        rmuti.find('option').each(function(){
+            dataStr += $(this).val()+",";
+        });
+        data.val(dataStr.replace(/\,$/g, ""));
+    });
+    lmuti.find("option").live("dblclick", function(){
+        rmuti.append($(this));
+        var dataStr = "";
+        rmuti.find('option').each(function(){
+            dataStr += $(this).val()+",";
+        });
+        data.val(dataStr.replace(/\,$/g, ""));
+    });
+    rmuti.find("option").live("dblclick", function(){
+        lmuti.append($(this));
+        var dataStr = "";
+        rmuti.find('option').each(function(){
+            dataStr += $(this).val()+",";
+        });
+        data.val(dataStr.replace(/\,$/g, ""));
+    });
+    // live input search action
+    input.live("keyup", function(){
+        var search = $(this).val();
+        var to = $(this).attr('to');
+        $("."+target+"_"+to).find("option").each(function(){
+            if ( $(this).text().indexOf(search) >= 0 ){ // 有匹配
+                $("."+target+"_"+to).prepend($(this));
+            }
+        });
+    });
+};
+
+
+    
+    $(function(){
+        //产品
+        mutiSel('muti');
+        //应用
+        $("form").submit(function(){
+            if ($(".config_name").val()==""){
+                alert("请输入配置名称");
+                $(".config_name").focus();
+                return false;
+            }
+            if ($("#appkey").val()==""){
+                alert("请选择应用");
+                $("#appkey").focus();
+                return false;
+            }
+            id = "{{id}}";
+            if(id=="" &&$(".app-detail>ul.form>li table tbody tr").length >0){
+                jAlert("最多只能设置一个定向推送配置");
+                return false;
+            }
+            
+            if($(".muti_right>option").length > 2){
+                jAlert("最多选择两个应用");
+                return false;
+            }
+            $("#channel_id > option").each(function(){
+                $(this).attr("selected","selected");
+            });
+        });
+        appkey();
+    });
+</script>

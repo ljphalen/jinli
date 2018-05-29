@@ -1,0 +1,48 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li><a href="<?php echo $listUrl;?>">商户列表</a></li>
+        <li class="current"><a href="<?php echo $addUrl;?>">添加商户</a></li>
+    </ul>
+</div>
+<div class="h_a">添加用户组</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id='groupForm'>
+    <input name="token" value="<?php echo $token;?>" type="hidden" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">登录用户名</th>
+                <td class="td"><input type="text" name="username" class="input wb"></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">密码</th>
+                <td class="td"><input type="password" name="passwd" class="input wb"></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">重复密码</th>
+                <td class="td"><input type="password" name="repasswd" class="input wb"></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">手机号</th>
+                <td class="td"><input type="text" name="phone" class="input wb"></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">店铺名称</th>
+                <td class="td"><input type="text" name="s_name" class="input wb"></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">详细地址</th>
+                <td class="td"><input type="text" name="s_detail" class="input wb"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">保存</button></span></span></div>
+</form>
+<script type="text/javascript">
+    $(document).ready(function(){
+        ajaxForm('groupForm',function(ret){
+            ajaxRedirect(ret, baseurl+'/Admin/Ptner/index');
+        });
+    })
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,61 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $content; ?>">数据列表</a></li>
+			<li><a href="<?php echo $editUrl; ?>">添加合作商</a></li>
+		</ul>
+	</div>
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<td>ID</td>
+				<td>名称</td>
+				<td>帐号</td>
+				<td>密码</td>
+				<td>导航链接</td>
+				<td>操作</td>
+			</tr>
+			<?php foreach ($list as $v) { ?>
+				<tr class="ct">
+					<td class="td"><?=$v['id'];?></td>
+					<td class="td"><?=$v['name'];?></td>
+					<td class="td"><?php echo $v['account']; ?></td>
+					<td class="td"><?php echo $v['pass']; ?></td>
+					<td class="td">
+						<?php if (!empty($v['ngList'])) { ?>
+							<table id="parter_nav_<?php echo $v['id']; ?>" style="display:none;width:680px;">
+								<tr>
+									<td style="width:60px;">名称</td>
+									<td>链接</td>
+									<?php foreach ($v['ngList'] as $ng) { ?>
+								<tr>
+									<td><?php echo $ng['title']; ?></td>
+									<td><?php echo $ng['link']; ?></td>
+								</tr>
+								<?php } ?>
+							</table>
+							<p>
+			<span class="btn2">
+			<span><button style="cursor:pointer;" class="parter_nav_switch" pid="<?php echo $v['id']; ?>">展开</button></span>
+			</span>
+							</p>
+						<?php } ?>
+					</td>
+					<td class="td"><a href="<?php echo $editUrl; ?>/?id=<?php echo $v['id']; ?>">编辑</a>&nbsp;
+						<a href="javascript:void(0);" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $v['id']; ?>', '', event);">删除</a>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<script>
+		$(".parter_nav_switch").click(function () {
+			var pid = $(this).attr("pid");
+			var txt = $(this).html() == "展开" ? "折叠" : "展开";
+			txt == "展开" ? $("#parter_nav_" + pid).hide() : $("#parter_nav_" + pid).show();
+			$(this).html(txt);
+		});
+	</script>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

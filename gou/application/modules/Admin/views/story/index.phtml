@@ -1,0 +1,183 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $indexUrl;?>">知物列表</a></li>
+		<li><a href="<?php echo $listUrl;?>">稿源列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加知物</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="get">
+    <input name="token" type="hidden" value="<?php echo $token;?>" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">栏目</th>
+                <td class="td">
+                    <select name="category_id">
+                        <option value="0">不限</option>
+                        <?php foreach ($cats as $cid=>$cat): ?>
+                            <option value="<?php echo $cid;?>" <?php if($param['category_id'] == $cid) echo 'selected="selected"';?>><?php echo $cat['title'];?></option>
+                        <?php endforeach;?>
+                    </select>
+                </td>
+                <th class="th" width="60">状态</th>
+                <td class="td">
+                    <select name="status">
+                        <option value="0" <?php if ($param['status'] == 0) echo 'selected="selected"';?>>所有</option>
+                        <option value="1" <?php if ($param['status'] == 1) echo 'selected="selected"';?>>已发布</option>
+                        <option value="2" <?php if ($param['status'] == 2) echo 'selected="selected"';?>>待发布</option>
+                    </select>
+                </td>
+                <th class="th">发布作者</th>
+                <td class="td">
+                    <select name="author_id">
+                        <option value="0">不限</option>
+                        <?php foreach ($authors as $aid=>$author): ?>
+                            <option value="<?php echo $aid;?>" <?php if($param['author_id'] == $aid) echo 'selected="selected"';?>><?php echo $author['nickname'];?></option>
+                        <?php endforeach;?>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">标题</th>
+
+                <td class="td">
+                    <input class="input" type="text"   name="title"  value="<?php echo $param['title'];?>" >
+                </td>
+                <th class="th">
+                    <select name="time_type">
+                        <option value="0" <?php if ($param['time_type'] == 0) echo 'selected="selected"';?>>不限</option>
+                        <option value="1" <?php if ($param['time_type'] == 1) echo 'selected="selected"';?>>创建</option>
+                        <option value="2" <?php if ($param['time_type'] == 2) echo 'selected="selected"';?>>发布</option>
+                    </select>时间</th>
+                <td class="td">
+                    <input class="input" type="text" maxlength="30" id="from_time" name="from_time" value="<?php echo $param['from_time'];?>">
+                    <input class="input" type="text" maxlength="30" id="to_time" name="to_time" value="<?php echo $param['to_time'];?>">
+                </td>
+                <th class="th">文章来源</th>
+                <td class="td">
+                    <select name="channel">
+                        <option value="-1">不限</option>
+                        <?php foreach ($channel as $key=>$name): ?>
+                            <option value="<?php echo $key;?>" <?php if(isset($param['channel']) && $param['channel'] == $key) echo 'selected="selected"';?>><?php echo $name;?></option>
+                        <?php endforeach;?>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac">
+		<span class="btn">
+			<span>
+				<button type="submit">搜 索</button>
+			</span>
+		</span>
+    </div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+            <td width="40">排序</td>
+            <td width="40">ID</td>
+			<td width="100">标题</td>
+			<td width="80">栏目</td>
+			<td width="160">封面图</td>
+			<td width="80">作者</td>
+			<td width="80">状态</td>
+			<td width="120">发布时间</td>
+			<td width="120">创建时间</td>
+			<td width="40">点赞</td>
+            <td width="40">收藏</td>
+            <td width="40">评论</td>
+            <td width="40">点击</td>
+            <td width="240">操作</td>
+		</tr>
+<?php foreach($data as $key => $value) {?>
+		<tr class="ct <?php if($value['status']) echo 'blue';?>">
+            <td><?php echo $value['sort'];?></td>
+            <td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title']?></td>
+			<td><?php echo $value['category']?></td>
+			<td><?php if($value['images']): ?><?php foreach(array_slice(explode(',', $value['images']), 0, 3) as $img): ?><img src="<?php echo $attachPath.$img; ?>" height="16" /><?php endforeach;endif; ?></td>
+            <td><?php echo $value['author']?></td>
+            <td><?php echo $value['pub_status']?></td>
+            <td><?php echo date('Y-m-d H:i:s', $value['start_time']);?></td>
+            <td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+            <td><?php echo $value['praise'];?></td>
+            <td><?php echo $value['favorite'];?></td>
+            <td><?php echo $value['comment'];?></td>
+            <td><a href="/admin/stat/click?type_id=28&item_id=<?php echo $value['id'];?>" target="_blank"><?php echo $value['hits'];?></a></td>
+
+
+			<td>
+				<a href="<?php echo $editUrl;?>/?backurl=index&id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+                <a href="javascript:;" class="mr10 active_btn" data-status="0" data-id="<?php echo $value['id']; ?>" >撤稿</a>
+                <a href="<?php echo $webroot.$previewUrl;?>?id=<?php echo $value['id'];?>" class="mr10" target="_blank">预览</a>
+                <?php if(!$value['recommend']): ?><a href="javascript:;" data-type="1"  data-id="<?php echo $value['id']; ?>" class="mr10 top_btn" target="_blank">置顶</a>
+                <?php else: ?>
+                    <?php $topUrl ?>
+                <a href="javascript:;" class="mr10 top_btn" data-type="0" data-id="<?php echo $value['id']; ?>" target="_blank">取消置顶</a>
+                <?php endif; ?>
+            </td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script>
+$(function(){
+    $('a.active_btn').click(function(){
+        var data = {};
+        data.id  = $(this).data('id');
+        data.token  = '<?php echo $token; ?>';
+        data.status  = $(this).data('status');
+        $.ajax({
+            url:'<?php echo $activeUrl ?>',
+            type:'post',
+            data:data,
+            dataType:'json',
+            success:function(res){
+                if(res.success==true){
+                    window.location.reload();
+                }
+            }
+        });
+    });
+   $('a.top_btn').click(function(){
+       var data = {};
+       data.id  = $(this).data('id');
+       data.token  = '<?php echo $token; ?>';
+       data.type  = $(this).data('type');
+       $.ajax({
+           url:'<?php echo $topUrl ?>',
+           type:'post',
+           data:data,
+           dataType:'json',
+           success:function(res){
+               if(res.success==true){
+                    window.location.reload();
+               }
+           }
+       });
+   });
+
+});
+
+
+$(document).ready(function() {
+    $("#to_time").datepicker({
+        dateFormat : 'yy-mm-dd'
+    });
+
+    $("#from_time").datepicker({
+        dateFormat : 'yy-mm-dd'
+    });
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>
+

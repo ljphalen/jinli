@@ -1,0 +1,13 @@
+<?php
+$str .= '<div class="mod-stock-list"><ul>';
+$i = 1;
+foreach ($list as $val) {
+	$hot = '';
+	if (empty($val['is_out'])) {
+		$hot = '<i style="background: #ff5a1e;">热</i>';
+	}
+	$i++;
+	$str .= sprintf('<li>%s<a href="%s"><span class="txt">%s</span></a></li>', $hot,$val['link'], $val['name']);
+}
+$str .= '</ul></div>';
+echo $str;

@@ -1,0 +1,117 @@
+<?php echo $this->render("layout/admin_header.phtml");?>
+	<div class="body">
+	   <h1 class="page-title" >编辑礼包</h1>
+		<?php echo $this->render("layout/side.phtml");?>
+		<div class="col-main">
+			<div class="J_gift_error_tips error-pop-tips hidden">
+			</div>
+			<div class="gift-body">
+				<div class="gift-edit-container">
+					<div class="gift-column-container">
+						<span class="text">礼包名称<em class="asterisk">*</em>:</span>
+						<input id="giftName1" class="input" value="<?php echo $giftData['title'];?>"/>
+						<!-- <span class="J_tips_ok tips-ok">√</span> -->
+					</div>
+					<div class="gift-column-container">
+						<span class="text">礼包类型<em class="asterisk">*</em>:</span>
+						<select id="codeType" class="select"  disabled>
+							<option <?php if($giftData['code_type'] == 2) echo 'selected';?>  value="2">多个</option>
+							<option <?php if($giftData['code_type'] == 1) echo 'selected';?> value="1">1个</option>
+						</select>
+					</div>
+					<div class="gift-column-container">
+						<span class="text">礼包信息<em class="asterisk">*</em>:</span>
+						<div class="editorContainer">
+							<!--style给定宽度可以影响编辑器的最终宽度-->
+						<script type="text/plain" id="myEditor" style="width:500px;height:400px;"><?php echo html_entity_decode($giftData['content']);?></script>
+						</div>
+					</div>
+					<div class="gift-column-container">
+						<span class="text">激活码<em class="asterisk">*</em>:</span>
+						<?php if($giftData['code_type'] == Admin_Service_Gift::CODE_TYPE_MULTI) {?>
+						<div class="code-container">
+							<span class="text dark">(请上传txt文档，每行一个礼包)</span>
+							<a href="javascript:;" class="btn-upload">
+								<input id="giftFile" type="file" name="file" >添加激活码
+							</a>
+							<a id="startUploadCode" data-ajaxUrl="<?php echo $fileUploadUrl?>"  href="javascript:;" class="btn-upload">开始上传</a>
+							<!-- <span class="J_tips_ok tips-ok">√</span> -->
+							<span id="giftCodeName" data-codeUrl="<?php echo 'none'?>" class="text dark"><?php echo $giftData['code_file_name']?></span>
+						</div>
+						<?php } else {?>
+						<div class="code-container" id="giftCodeDiv" >
+							<input id="giftCode" class="input" value="<?php echo $giftData['single_code'];?>"/>
+						</div>
+						<?php }?>
+					</div>
+					<div class="gift-column-container">
+						<span class="text"><em class="asterisk">发放数量*</em>:</span>
+						<input id="giftSendCount" value=<?php echo $sendCount;?> class="text" disabled readonly  />
+					</div>
+					<?php $format = 'Y-m-d H:i:s';?>
+					<div class="gift-column-container">
+						<span class="text">兑换有效期<em class="asterisk">*</em>:</span>
+						<input type="text" id="exStartDate" class="J_datePicker J_readonly input" value="<?php echo date($format, $giftData['exchange_start_time']);?>">
+						<label class="sep-text">到</label>
+						<input type="text" id="exEndDate" class="J_datePicker J_readonly input" value="<?php echo date($format, $giftData['exchange_end_time']);?>">
+						<!-- <span class="J_tips_ok tips-ok">√</span> -->
+					</div>
+					<div class="gift-column-container">
+						<span class="text">中奖概率<em class="asterisk">*</em>:</span>
+						<div class="rate-container">
+							<input id="giftRate" class="input" value="<?php echo floatval($giftData['probability']);?>" />
+							<!-- <span class="J_tips_ok tips-ok">√</span> -->
+							<span class="text dark">(请填写0-1之间的数字,  最多四位小数)</span>
+						</div>
+						
+					</div>
+					<div class="gift-column-container">
+						<span class="text">是否有效<em class="asterisk">*</em>:</span>
+						<select id="selectStatus" class="select">
+							<option <?php if($giftData['status'] == 1) echo 'selected';?>  value="1">有效</option>
+							<option <?php if($giftData['status'] == 0) echo 'selected';?> value="0">无效</option>
+						</select>
+					</div>
+					<div class="J_giftEventDate gift-column-container">
+						<span class="text">活动有效期<em class="asterisk">*</em>:</span>
+						<input type="text" id="eventStartDate" class="J_datePicker J_readonly input" value="<?php if($giftData['activity_start_time']) echo date($format, $giftData['activity_start_time']);?>" >
+						<label class="sep-text">到</label>
+						<input type="text" id="eventEndDate" class="J_datePicker J_readonly input" value="<?php if($giftData['activity_end_time']) echo date($format, $giftData['activity_end_time']);?>" >
+					</div>
+				</div>
+				<div class="btn-container">
+					<button id="giftPreview" class="btn">预览</button>
+					<button id="giftSave" class="btn" data-ajaxUrl="<?php echo $addEditPortUrl?>" >保存</button>
+					<a href="<?php echo $listUrl?>" class="btn">取消</a><!-- 回到上一页 -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+	<?php echo $this->render("layout/datePicker.phtml");?>
+	<?php echo $this->render("layout/ueditor.phtml");?>
+	<div class="J_dialog mask hidden">
+		<div class="gift-preview-container">
+			<div class="gift-header-wrapper">
+				<i id="closePreviewDialog" class="icon-close">X</i>
+				<span >热门礼包</span>
+			</div>
+			<div class="gift-banner-wrapper">
+				<h1>礼包刮刮乐</h1>
+				<div class="scratch-container">
+				</div>
+			</div>
+			<div class="info-container">
+				<div class="gift-info">
+					<h3>礼包名称：</h3>
+					<div id="preview-giftName"></div>
+					<h3>兑换时间：</h3>
+					<div id="preview-giftExTime"></div>
+					<h3>礼包信息：</h3>
+					<div id="preview-gift" class="ui-editor"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

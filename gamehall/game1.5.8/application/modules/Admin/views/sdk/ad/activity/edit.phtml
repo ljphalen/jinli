@@ -1,0 +1,119 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">公告活动管理</a></li>
+     <li><a href="<?php echo $addUrl;?>">添加</a></li>
+    <li class="current"><a href="javascript:;">编辑</a></li>
+	</ul>
+</div>
+<div class="step mb10">
+		<ul class="cc">
+			<li class="current">编辑</li>
+			<li class="line"></li>
+			<li><span class="fl"><em></em></span>配置游戏</li>
+		</ul>
+</div>
+<div class="h_a">编辑</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort']; ?>" id="sort"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">显示范围</th>
+			<td class="td">
+			    <label><input name="show_type[]" type="checkbox" <?php  echo in_array(1, explode(',', $info['show_type']))?'checked':'' ; ?> value="1" />公告 </label> 
+				<label><input name="show_type[]" type="checkbox" <?php  echo in_array(2, explode(',', $info['show_type']))?'checked':'' ; ?> value="2" />活动 </label> 
+	         </td>
+		</tr>
+	
+		<tr class="tr">
+			<th class="th">名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title']; ?>" id="title"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">生效时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s',$info['start_time']); ?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s',$info['end_time']); ?>" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg">
+						<img src="<?php echo ($info['img'])?$attachPath.$info['img']:$staticPath.'/img/content/nopic.jpg';?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th" id="th_link">内容</th>
+			<td class="td" > 
+		        <textarea  style="width:600px; height:300px" class="textarea" name="ad_content" id="ad_content" ><?php echo $info['ad_content']; ?></textarea>
+			</td>
+		</tr>
+		<tr class="tr" id="is_payment" style="<?php echo ($info['ad_type'] == 1)?'display:none;':'';  ?>">
+			<th class="th" >是否出现充值快捷方式</th>
+			<td class="td">
+				<label class="mr20"><input  name="is_payment"  value="1" type="radio" <?php echo ($info['is_payment'] == 1)?'checked':'';?>  >是</label>
+				<label class="mr20"><input  name="is_payment"  value="0" type="radio" <?php echo ($info['is_payment'] == 0)?'checked':'';?>  >否</label>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status">
+                	<option value="1" <?php echo $info['status'] == 1?'SELECTED':'';?> >开启</option>
+                	<option value="0" <?php echo $info['status'] == 0?'SELECTED':'';?> >关闭</option>
+            </select></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">下一步</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	var editor;
+	 KindEditor.ready(function(K) {
+			K.token = '<?php echo $token;?>';
+		    editor = K.create('textarea[name="ad_content"]', {
+		        resizeType : 1,
+		        allowPreviewEmoticons : false,
+		        allowImageUpload : true,
+		        uploadJson : '<?php echo $uploadImgUrl;?>',
+		        items : EDITOR_ITEMS
+		    });
+		});
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+
+     //提交表单
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect1(ret, baseurl+'/Admin/Sdk_Ad_Activity/editGame');
+	},function(){
+		editor.sync();
+	});
+})
+// ajax跳转
+function ajaxRedirect1(ret, url) {
+	if (ret == '')
+		return false;
+	if (ret) {
+		if (ret.success) {
+			location.href = url+'/?action=step1&adid='+ret.data.id+'&show_type='+ret.data.show_type;
+		} else {
+			showError('', ret.msg);
+		}
+	}
+}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

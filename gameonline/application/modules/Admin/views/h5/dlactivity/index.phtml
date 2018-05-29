@@ -1,0 +1,80 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">下载活动列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加下载活动</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">	
+		 <tr>
+		   <th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			    <option  value="0">全部</option>
+				<option <?php if($search['status'] == 2) echo 'selected';?> value="2">开启</option>
+				<option <?php if($search['status'] == 1) echo 'selected';?> value="1">关闭</option>
+			</select>
+			</td>
+			<th class="th">活动名称</th>
+			<td class="td"><input type="text" class="input" name="name" value="<?php echo $search['name'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $statusUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">开启</button></span></span>
+    <span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">关闭</button></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td>活动ID</td>
+			<td>活动名称</td>
+			<td>活动开启图片</td>
+			<td>活动关闭图片</td>
+			<td>参与活动的游戏ID</td>
+			<td>活动开始 - 活动结束</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($data as $key => $value) {?>
+		<tr class="ct">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['name'];?></td>
+			<td><img src="<?php echo $attachPath . $value['open_img'];?>" witdh="200" height="50"/></td>
+			<td><img src="<?php echo $attachPath . $value['close_img'];?>" witdh="200" height="50"/></td>
+			<td><?php echo html_entity_decode($value['games']);?></td>
+		    <td><?php echo date('Y-m-d H:i', $value['start_time']);?> - <?php echo date('Y-m-d H:i', $value['end_time']);?> </td>
+			<td><?php echo $value['status'] == 1 ? '开启' : '关闭';?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<a href="<?php echo $logUrl;?>?id=<?php echo $value['id'];?>" class="mr10">中奖记录</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/H5_Dlactivity/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,41 @@
+<?php echo $this->render("../../Front/views/layout/header.phtml");?>
+<!-- 主体内容 -->
+	<section id="content">
+		<section class="order">
+			<section class="order-score">
+			    <?php if(count($order)){?>
+				<ul class="mod-text-list">
+				    <?php foreach($order as $key=>$value){?>
+					<li>
+						<a href="<?php echo $webroot,$orderdetailUrl,'?id=',$value['id'];?>" class="r-arrow">
+						<ul class="mod-tw-list">
+							<li><img src="<?php echo $attachPath . $goods[$value['goods_id']]['img'];?>" alt="<?php echo $goods[$value['goods_id']]['title'];?>" /></li>
+							<li>
+								<dl>
+									
+									<dd><?php echo $goods[$value['goods_id']]['title'];?></dd>
+									<dd>单价：<?php echo $goods[$value['goods_id']]['price'];?>元</dd>
+									<dd>数量：<?php echo $value['number'];?></dd>
+									<dd>成交时间：<?php echo date('Y-m-d H:i:s',$value['create_time']);?></dd>
+									<dd>状态：<span  class="zt-orange"><?php echo Gc_Service_Order::orderStatus($value['status']); ?></span></dd>
+								</dl>
+							</li>
+						</ul>
+						<p>实际支付：<span class="zt-red"><?php echo $value['real_price'];?>元</span>（使用<span class="zt-orange"><?php echo $value['silver_coin'];?></span>元银币）</p>
+						</a>
+					</li>
+					<?php } ?>
+				</ul>
+				<?php } else {?>
+				<div class="no-data-tips">
+					<p><img src="<?php echo $staticResPath;?>/pic/icon-order-score-gray.png" alt="" /></p>
+					<p>您还未购买任何商品哦，赶快去逛逛吧！</p>
+					<p class="button"><a href="<?php echo $webroot;?>" class="btn orange">去逛逛</a></p>
+				</div>
+				<?php } ?>
+			</section>
+		</section>
+	</section>
+<!--  /主体内容 -->
+</body>
+</html>

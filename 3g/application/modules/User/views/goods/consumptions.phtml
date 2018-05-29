@@ -1,0 +1,84 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>兑换中心</title>
+<link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/call/css/style.min.css" />
+</head>
+
+<body id="award-page" class="ui-app">
+
+<div class="ui-top-bar">
+	<a class="ui-pos icon-back" href="<?php echo $webroot;?>/user/index/index"></a>
+	<span class="ui-top-txt">兑换中心</span>
+	<!-- <a class="ui-pos icon-menu" href="#"></a> -->
+</div>
+
+<div class="ui-page page1 js-active">
+	<div class="ui-page-content">
+		<div class="ui-box">
+			<div class="ui-award-info">
+				<a class="s s2" href="<?php echo $webroot;?>/user/center/score">
+					<span class="span-jifen">金币 <b><?php echo $userScores['remained_score'];?></b><em class="icon-gold"></em></span>
+				</a>
+			</div>
+		</div>
+		<div class="ui-box">
+			<div class="ui-award-ad">
+				<?php foreach ($ads as $v){?>
+					<a href="<?php echo $v['link'];?>"><img src="<?php echo $attachPath.$v['image'];?>"></a>
+				<?php }?>
+			</div>
+		</div>
+		<div class="ui-box">
+			<div class="ui-caption"></div>
+		</div>
+		<!-- 消息列表 START-->
+		<div class="ui-box">
+			<div class="ui-box-award">
+				<ul class="ui-award-list" id="js-award-list">
+					<?php  foreach($data as $k=>$v){?>
+					<li class="ui-award-item">
+						<div class="pic"><img src="<?php echo $attachPath.$v['image'];?>" width="104" height="62" /></div>
+						<div class="txt"><?php echo $v['name'];?></div>
+						<div class="btn"><span class="ui-button ui-inline-block ui-normal" data-url="<?php echo $webroot;?>/user/goods/ajaxCheckScore?goods_id=<?php echo $v['id'];?>">立即兑换</span></div>
+					</li>
+					<?php }?>
+				</ul>
+			</div>
+		</div>
+		<!-- 消息列表 END-->
+	</div>
+</div>
+
+<div id="triggerDialog" class="none" data-toggle="dialog" data-target="#myActionsheet"  data-type="actionsheet" data-effect="from-bottom" data-cache="false" ></div>
+<div id="myActionsheet" role="dialog" class="ui-dialog" aria-labelledby="myActionsheetLable" aria-hidden="true">
+    <div class="js-dialog-content ui-actionsheet">
+        <ul>
+            <li>您的金币不够</li>
+            <li role="button" id="js-actionsheet-ok">确定</li>
+        </ul>
+        <a role="button" data-dismiss="dialog" class="ui-actionsheet-cancel">取消</a>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+	var token = "<?php echo $token;?>";
+</script>
+<script data-main="main" src="<?php echo $staticResPath;?>/call/vendor/requirejs/require.js"></script>
+<?=$this->render("layout/jspath.phtml");?>
+<script type="text/javascript">
+	function report2baidu(n1,n2){
+		_hmt.push(['_trackEvent', 'gnnav-ucenter', n1, n2]);
+	}
+</script>
+
+<?=$this->render("layout/tj.phtml");?>
+</body>
+</html>

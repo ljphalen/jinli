@@ -1,0 +1,111 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <div id="pay_payapply_apply">
+        <div class="content">
+        	<div class="user_apply_detial">
+
+        		<div class="com_tb_wrap view_list_app">
+        			<ul>
+        				<li class="hover">申请</li>
+        				<li id="applylist_btn">历史</li>
+        			</ul>
+        		</div>
+        		<div class="apply_cont">
+	        		<div class="com_tb_wrap" style="border-bottom:0px;">
+	        			<div class="tb_cont">
+	        				<p>本次可提现金额<b class="price_account"><?php echo $apply['income']; ?></b>元</p>
+	        				<p>收入情况：</p>
+	        				<table>
+	        					<thead>
+	        						<tr>
+	        							<td>订单状态</td>
+	        							<td>营业额（A币）</td>
+	        							<td>销售个数</td>
+	        							<td>增值税（元）</td>
+	        							<td>渠道成本（元）</td>
+	        							<td>分成（元）</td>
+	        							<td>平台分成（元）</td>
+	        						</tr>
+	        					</thead>
+	        					<tbody>
+	        						<tr>
+	        							<td>普通订单</td>
+	        							<td><?php echo $apply['sum']; ?></td>
+	        							<td><?php echo $apply['count']; ?></td>
+	        							<td><?php echo $apply['add_value_tax']; ?></td>
+	        							<td><?php echo $apply['channel_cost']; ?></td>
+	        							<td><?php echo $apply['income']; ?></td>
+	        							<td><?php echo $apply['sys_income']; ?></td>
+	        						</tr>
+	        					</tbody>
+	        				</table>
+	        				<input type="hidden" value="<?php echo $apply_time; ?>" name="apply_time" />
+	        				
+	        				 <div class="bnts_wrap"><?php if($apply['allow']){?><button class="btn_s2" id="saveBtn">保存</button><?php } ?></div>
+	        				 <span class="pop_btn none" openPopId="notice" id="hideSaveBtn"></span>
+
+	        				 <p>提醒:</p>
+	        				 <p>1.提现前请务必保证已绑定银行卡（<a>个人中心</a>完善资料）</p>
+	        				 <p>2.申请提现时间为每月的1-10号，逾期无法提交申请</p>
+	        				 <p>3.单次分成>100元，才可提现</p>
+	        				 <p>4.个人设计由金立公司代扣税</p>
+	        			</div>
+	        		</div>
+        		</div>
+        	</div>
+        </div><!-- content end -->
+    </div>
+</section>
+
+<!-- 弹窗 未绑定银行卡提示-->
+<div class="pop_wraper" id="notice">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">您还没有绑定银行卡，请在<a href="/admin/ucenter/edit" target="_blank">个人中心</a>绑定。</p>
+                    <div class="tip_btns">
+                        <button class="btn_s2 btnCancel">确定</button>
+                        <button class="btn_s2 btnCancel">取消</button>
+                    </div>
+                    <div class="pop_close"></div>
+                </div>
+                <!-- pop_cont_tip 结束 -->
+            </div>
+            <!-- pop_content 结束 -->
+        </div>
+        <!-- pop-inner 结束 -->
+    </div>
+    <!-- pop-outer 结束 -->
+</div>
+<!-- pop-wraper 结束 -->
+
+<script type="text/javascript">
+	var bank = "<?php echo trim($designer['bank']);?>";
+	$(function(){
+		$("#applylist_btn").click(function(){
+			window.location.href="/Admin/pay/applylist";
+		});
+
+		$("#saveBtn").click(function(){
+			if(bank){
+				var apply_time = $("input[name='apply_time']").val();
+				var url = '/Admin/pay/do_apply';
+				var data = {'apply_time': apply_time, 'token': token};
+				$.post(url, data, function (d) {
+	                if (d) {
+	                    window.location.href = "/Admin/pay/applylist";
+	                } else {
+	                	alert("提现申请提交失败");
+	                }
+	            })
+			} else {
+				$("#hideSaveBtn").click();
+			}
+		});
+	});
+</script>
+</body>
+</html>

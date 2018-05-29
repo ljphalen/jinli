@@ -1,0 +1,111 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">应用列表</a></li>
+		<li class="current"><a href="<?php echo $editUrl;?>">编辑应用</a></li>
+	</ul>
+</div>
+
+<form action="<?php echo $editPostUrl;?>" method="post" id="editFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $data['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">应用名称</th>
+			<td class="td"><input type="text" class="input wc" name="name" value="<?php echo $data['name'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">应用归属</th>
+			<td class="td">
+			<select name="belong" class="select wa">
+			   <?php foreach($belong as $key => $value){?>
+				<option <?php if ($key == $data['belong']) echo 'selected';?> value="<?php echo $key?>"><?php echo $value?></option>
+				<?php }?>
+			</select>
+			</td>
+	    </tr> 
+		<tr class="tr">
+			<th class="th">分数</th>
+			<td class="td"><input type="text" class="input wc" name="score" value="<?php echo $data['score'];?>"><span class="help_a"> 总分10分</span></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">简述</th>
+			<td class="td"><input type="text" class="input wc" name="resume" value="<?php echo $data['resume'];?>" /> <span> 不超过15个字</span></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">上传图标</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="Img">
+						<img src="<?php echo $attachPath . $data['icon'];?>"/>
+						<input type="hidden" name="imgId" value="<?php echo $data['icon'];?>">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</td>
+		</tr>
+		 <tr class="tr">
+            <th class="th">应用预览</th>
+            <td class="td">
+                <div id="imgs">
+				<?php foreach($simg as $key=>$value) {?>
+                    <img src="<?php echo $attachPath,$value['img'];?>" style="hight:400px;width:300px"/>
+                    <a href="javascript:" onclick="deleteOne('<?php echo $deleteImgUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+                  <?php }?>
+                </div>
+                <div class="mb10"><button onclick="addupload();" onfocus="blur();" type="button"　class="btn">＋添加预览图片</button></div>
+            </td>
+        </tr>
+
+		<tr class="tr">
+			<th class="th">应用类名</th>
+			<td class="td"><input type="text" class="input wc" name="class" value="<?php echo $data['class'];?>"> <span> 多个类名用英文逗号 "," 来分割,末尾不需要加逗号。</span></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">支持最低Android版本</th>
+			<td class="td"><input type="text" class="input w" name="min_os" value="<?php echo $data['min_os'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">应用介绍</th>
+				<td class="td"><textarea style="width: 800px; height: 250px" class="textarea" name="descrip" ><?php echo $data['descrip'];?></textarea>
+			</td>
+		</tr> 
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">完成</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+
+<script type="text/javascript">
+//应用表单数据提交
+var editor;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor = K.create('textarea[name="descrip"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+
+$(document).ready(function(){
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Resource_Apps/index');
+	},function(){
+		editor.sync();
+	});
+
+    var imgc = 1;
+    addupload  = function() {
+        var al = $('<ul class="uploadImg"><li id="Img'+imgc+'"><img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/><input type="hidden" name="simg['+imgc+']" value=""></li></ul><p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>'+imgc+'&mkthumb=1" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>');
+        $('#imgs').append(al);
+        imgc++;
+    }
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,72 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath ?>jssdk/plugins/highchart/highcharts.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath ?>jssdk/plugins/highchart/exporting.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath ?>appjs/payment/payment-line.js"></script>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <div id="zt_ucenter_edit">
+        <div class="content">
+        	<!--支付内容开始-->
+        	<div class="py_content">
+        		<div class="py_content_top">
+        			<table>
+        				<thead>
+                        <tr><th>总销售量</th><th>总营业额</th>
+                            <th>基本支付营业额</th>
+                        </tr>
+                    	</thead>
+                    	<tbody>
+                    		<tr>
+                    			<td>25446套</td>
+                    			<td>85120000币</td>
+                    			<td>652000RMB</td>
+                    		</tr>
+                    	</tbody>
+        			</table>
+        		</div>
+        		<div class="pay_content_mid">
+        			<div class="pay_view_tab">
+        				<ul>
+        					<li class="firstWeek hover">一周</li>
+        					<li>一个月</li>
+        					<li>半年</li>
+        					<li>一年</li>
+        				</ul>
+        			</div>
+        			<div class="clear-fix"></div>
+        			<div class="pay_time">
+        					<label class="strat_time">起始时间</label>
+        					<input type="text" onClick="laydate({istime:   true, format: 'YYYY-MM-DD hh:mm:ss'})" readonly class="laydate-icon datepicker" style="margin-right:3rem">
+        					<label class="end_time">终止时间</label>
+        					<input type="text" onClick="laydate({istime:   true, format: 'YYYY-MM-DD hh:mm:ss'})" readonly class="laydate-icon datepicker">
+        					<button class="btn_s2 search_btn">查询</button>
+        			</div>
+        			<div class="clear-fix"></div>
+        			<div class="pay_all_account"><p>总销售量</p><span class="pay_num">646套</span></div>
+        			<div class="clear-fix"></div>
+                    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        		</div>
+        		<div class="pay_content_btm">
+        				<div class="pay_all_account price"><p>总营业额</p><span class="pay_money">12964A币</span></div>
+        		</div>
+        	</div>
+        	<!--支付内容结束-->
+        </div><!-- content end -->
+    </div>
+</section>
+
+</body>
+<script type="text/javascript">
+	$(function(){
+	$('.pay_view_tab li').each(function(index){
+			var $this = $(this);
+			$this.click(function(){
+				$this.siblings().removeClass('hover');
+				$this.addClass('hover');	
+				});
+	   });
+})
+</script>
+</html>

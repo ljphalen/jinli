@@ -1,0 +1,51 @@
+<?php echo $this->render("layout/header.phtml");?>
+<section id="page">
+	<!-- 主体内容 -->
+	<section id="content">
+		<section class="psearch">
+			<section class="mod-search">
+				<div class="long">
+					<form action="#" method="get" name="form-search" id="J_form_search">
+						<input type="text" name="keyword" value="<?php echo $keyword;?>" autocomplete="off" class="inp" />
+						<input type="submit" value="" />
+					</form>
+				</div>
+				<?php if(!$total){?>
+				<div class="top-tags">
+				 <h3>搜索 0条结果，请尝试一下其他搜索</h3>
+				</div>
+				<?php }?>
+			</section>
+			<section class="mod-show-list" id="J_publWrap" data-ajaxUrl="<?php echo $webroot,'/search/more/?keyword='.$keyword;?>">
+					<ul class="mod-item-list" style="display:none;">
+						<?php 
+								foreach($goods as $key=>$value) {
+								if(strpos($value['img'], 'http://') === false) {
+									$img = $attachPath.$value['img'];
+								}else{
+									$img = $value['img'].'_200x200.'.end(explode(".",  $value['img']));
+									};
+								?>
+								<li>
+									<a href="<?php echo $value['click_url'];?>">
+										<div class="pic"><img src="<?php echo $value['pic_url'];?>" alt="" /></div>
+										<div class="txt">￥<?php echo $value['price'];?></div>
+									</a>
+								</li>
+						<?php }?>
+					</ul>
+			</section>
+		</section>
+	</section>
+	<!--  /主体内容 -->
+</section>
+<script type="template" id="J_itemView">
+	<li>
+		<a href="{list.click_url}">
+			<div class="pic"><img src="{list.img}" alt="" /></div>
+			<div class="txt">￥{list.price}</div>
+		</a>
+	</li>
+</script>
+</body>
+</html>

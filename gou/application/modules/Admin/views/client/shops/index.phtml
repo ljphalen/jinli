@@ -1,0 +1,112 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>?channel_id=<?php echo $search['channel_id'];?>">店铺列表</a></li>
+		<li><a href="<?php echo $addUrl;?>?channel_id=<?php echo $search['channel_id'];?>">添加店铺</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="get">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+        <tr class="tr">
+            <th class="th">昵称</th>
+            <td class="td">
+                <input type="text" class="input" name="nick" value="<?php echo $search['nick']; ?>">
+            </td>
+            <th class="th">店铺</th>
+            <td class="td">
+                <input type="text" class="input" name="shop_title" value="<?php echo $search['shop_title']; ?>">
+            </td>
+        </tr>
+		<tr class="tr">
+			<th class="th">平台</th>
+			<td class="td">
+				<select name="channel_id" >
+					<?php foreach($channels as $k=>$v) {?>
+						<option value="<?php echo $k; ?>" <?php if($k==$search['channel_id'])echo 'selected="selected"' ?>><?php echo $v; ?></option>
+					<?php } ?>
+				</select>
+			</td>
+			<th class="th">标签</th>
+			<td class="td">
+				<select name="tag_id" >
+					<option value="">不限</option>
+					<?php foreach($tags as $tag) {?>
+						<option value="<?php echo $tag['id']; ?>" <?php if($tag['id']==$search['tag_id'])echo 'selected="selected"' ?>><?php echo $tag['name']; ?></option>
+					<?php } ?>
+				</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('sort');" type="submit">重新排序</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">关闭</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">开启</button></span></span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		<td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="30">排序</td>
+			<td width="30">ID</td>
+			<td>昵称</td>
+			<td>已同步</td>
+			<td>tags</td>
+			<td>店铺名称</td>
+			<td>商品图片</td>
+			<td>logo</td>
+			<td>收藏量</td>
+			<td>状态</td>
+			<td width="165">操作</td>
+		</tr>
+<?php foreach($shops as $key => $value) {?>
+		<tr class="ct">
+			<td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><input type="text" class="input" style="width:30px" name="sort[<?php echo $value['id'];?>]" value="<?php echo $value['sort'];?>"></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['nick'];?></td>
+			<td><?php echo implode(',',$value['channel']) ;?></td>
+			<td><?php echo $value['tag'] ?></td>
+			<td><?php echo $value['shop_title'];?></td>
+			<td>
+			<?php
+			$images = array();
+			 if($value['goods_img']) {
+			    $images = explode(',', html_entity_decode($value['goods_img']));
+              foreach ($images as $img) { ?>
+                    <img src="<?php echo $img ?>" alt="" height="50" width="50"/>
+          <?php }} ?>
+          </td>
+			<td><img src="<?php if(strpos($value['logo'], 'http://') === false) {echo $attachPath,$value['logo'];}else{echo $value['logo'];};?>" width=50></td>
+			<td><?php if($value['favorite_count']<0){echo 0;}else{echo $value['favorite_count'];}?></td>
+			<td><?php echo $value['status'] == 1 ? '开启' : '关闭';?></td>
+			<td>
+			<a href="<?php echo $value['shop_url'];?>" target="_blank" class="mr10">查看店铺</a>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<a href="<?php echo $copyUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">copy</a>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Shops/index?channel_id=<?php echo $search['channel_id'];?>');
+	});
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,384 @@
+<div class="box">
+<!-- loop result.addetail -->
+            <ul class="form">
+                <li>
+                    <input type="hidden" name="ad_id" class="iText" value="{{result.addetail' value.id}}" />
+                    <input type="hidden" name="ad_info_id" class="iText" value="{{result.addetail' value.ad_info_id}}" />
+                    <input type="hidden" name="ad_product_id" class="iText" value="{{result.ad_product_id}}" />
+                    <span class="label">广告标题：</span>
+                    <div class="fc">
+                        <input type="text" name="ad_title" id="ad_title" class="iText" value="{{result.ad_name}}"/>
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">广告描述：</span>
+                    <div class="fc">
+                        <input type="text" class="iText" name="ad_desc" id="ad_desc" value="{{result.ad_desc}}"/>
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">广告状态：</span>
+                    <div class="fc">
+                        <ul class="in-list">
+                            <li><input type="radio" class="radio" id="ad_state" name="ad_state" value="1" <!-- if {{result.state}}==1 --> checked<!-- endif -->><label for="state1">开启</label></li>
+                            <li><input type="radio" class="radio" id="ad_state" name="ad_state" value="0" <!-- if {{result.state}}==0 --> checked<!-- endif -->><label for="state2">关闭</label></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">显示产品详情：</span>
+                    <div class="fc">
+                        <ul class="in-list">
+                            <li><input type="radio" class="checkbox"  name="p_desc_show"  <!-- if {{result.show_detail}}==1 --> checked<!-- endif --> value="1"><label for="state1">开启</label></li>
+                            <li><input type="radio" class="checkbox"  name="p_desc_show"  <!-- if {{result.show_detail}}==0 --> checked<!-- endif --> value="0"><label for="state2">关闭</label></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                                <span class="label">屏幕显示比例：</span>
+                                <div class="fc">
+                                    <input type="text" class="iText" name="screen_ratio" id="screen_ratio" value="{{result.addetail' value.screen_ratio}}" />
+                                    <span class="red">*</span>
+                                </div>
+                            </li>
+                        <li>
+                    <span class="label">广告图标：</span>
+                    <div class="fc">
+                               <input type="text" class="iText" name="ad_pic_url" id="ad_pic_url" value="{{result.addetail' value.ad_pic_url}}"  style="width:500px"  />
+                               <input type="button" value="选择图片" class="submit pickimg" id="pickimg"/>
+                               <span class="red">*</span>
+                    </div>
+                </li>
+                <li>
+                    
+                    <span class="label">广告类型：</span>
+                    <div class="fc">
+                        <select name="ad_type" id="adType" disabled="disabled">
+                            <option value="0" <!-- if {{result.type}}==0 --> selected<!-- endif -->>抢占式</option>
+                            <option value="1" <!-- if {{result.type}}==1 --> selected<!-- endif -->>嵌入式</option>
+                            <option value="2" <!-- if {{result.type}}==2 --> selected<!-- endif -->>PUSH</option>
+                        </select>
+                        <select id="pm" name="ad_nembdsubtype" <!-- if {{result.type}}==0 --> style="display:'';"<!-- else -->style="display:none;"<!-- endif --> onchange="getAdPos($('#adType').val(),$('#pm').val())">
+                            <option value="0" <!-- if {{result.type}}==0 && {{result.addetail' value.type}}==0 --> selected<!-- endif -->>半屏</option>
+                            <option value="1" <!-- if {{result.type}}==0 && {{result.addetail' value.type}}==1 --> selected<!-- endif -->>全屏</option>
+                        </select>
+                        <select id="gglx" name="ad_embdsubtype" <!-- if {{result.type}}==1 --> style="display:'';"<!-- else -->style="display:none;"<!-- endif --> onchange="getAdPos($('#adType').val(),$('#pm').val())">
+                            <option value="0" <!-- if {{result.type}}==1 && {{result.addetail' value.type}}==0 --> selected<!-- endif -->>Banner横幅图片广告</option>
+                            <option value="1" <!-- if {{result.type}}==1 && {{result.addetail' value.type}}==1 --> selected<!-- endif -->>Banner横幅文字广告</option>
+                            <option value="2" <!-- if {{result.type}}==1 && {{result.addetail' value.type}}==2 --> selected<!-- endif -->>插页广告</option>
+                            <option value="3" <!-- if {{result.type}}==1 && {{result.addetail' value.type}}==3 --> selected<!-- endif -->>浮窗广告</option>
+                        </select>
+                        <select id="push_select" name="ad_push" <!-- if {{result.type}}==2 --> style="display:'';"<!-- else -->style="display:none;"<!-- endif --> onchange="getAdPos($('#adType').val(),$('#push_select').val())">
+                            <option value="0" <!-- if {{result.type}}==2 && {{result.addetail' value.type}}==0 --> selected<!-- endif -->>消息</option>
+                            <option value="1" <!-- if {{result.type}}==2 && {{result.addetail' value.type}}==1 --> selected<!-- endif -->>APP</option>
+                            <option value="2" <!-- if {{result.type}}==2 && {{result.addetail' value.type}}==2 --> selected<!-- endif -->>快捷方式</option>
+                        </select>
+                        <script>
+                                if($("#pm").css("display")!="none"){
+                                    setTimeout(function(){getAdPos($("#adType").val(),$("#pm").val(),"{{result.pos}}")},100);
+                                }
+                                if($("#gglx").css("display")!="none"){
+                                    setTimeout(function(){getAdPos($("#adType").val(),$("#gglx").val(),"{{result.pos}}")},100);
+                                }
+                                if($("#push_select").css("display")!="none"){
+                                    setTimeout(function(){getAdPos($("#adType").val(),$("#push_select").val(),"{{result.pos}}")},100);
+                                }
+                        </script>
+                        <select id="ad_pos" name="ad_pos" style="display: none">
+                            
+                        </select>
+                    </div>
+                </li>
+                <li>
+                            <span class="label">广告目标点击类型：</span>
+                            <div class="fc">
+                                <p>
+                                    <select name="" id="adclickType">
+                                        <option value="1">内建下载安装</option>
+                                        <option value="2">启动应用</option>
+                                        <option value="3">使用浏览器打开URL</option>
+                                        <option value="4">使用内建浏览器打开URL</option>
+                                        <option value="5">打开列表广告</option>
+                                        <option value="6">自定义动作</option>
+                                        <option value="0" selected>无动作</option>
+                                    </select>
+                                    <input type="hidden" style="width:800px;" class="iText" name="clictypeobj" id="adclictypeobj" value='{{result.ad_click_type_object}}' />
+                                </p>
+                                <div id="adclickTypeBox" style="display:none">
+                                    <div style="display:none" id="adclickType_1">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">包名：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="text" class="iText" id="adpackage_name" name="product_package" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <span class="adclicktypelebel">安装包大小：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="text" name="package_size" id="adpackage_size" class="iText number" />
+                                                    <input type="button" value="自动获取" onclick="javascript:packageSize()" class="submit" />
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <span class="adclicktypelebel">文件泛MD5：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="text" name="file_md5" id="adfile_md5" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="adclickType_2">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">包名：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="text" class="iText" name="package_name" id="adpackage_name_start_app" style="width:200px;" />
+                                                    <input type="text" class="iText" name="activity" id="adactivity_start_app" style="width:211px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="adclickType_3">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">使用浏览器打开URL：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="hidden" name="direct_url_open" id="addirect_url" value="1" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="adclickType_4">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">使用内建浏览器打开URL：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="hidden" name="inner_url_open" id="adinner_url" value="1" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="adclickType_5">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">打开列表广告：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="hidden" name="ad_list_open" id="adad_list" value="1" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="adclickType_6">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">自定义动作：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="text" name="user_action_value" id="aduser_action_value" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                <li>
+                    <span class="label">广告目标：</span>
+                    <div class="fc">
+                        <input type="text" style="width:500px;" value="{{result.ad_target}}" name="ad_target" id="ad_target" class="iText">
+                    </div>
+                </li>
+                <li class="line"></li>
+                <li id="adTypeOption">
+                    
+                        <ul <!-- if {{result.type}}==0 -->style="display:'';"<!-- else -->style="display:none;"<!-- endif -->>
+                            <li>
+                                <span class="label">显示时长：</span>
+                                <div class="fc">
+                                    <input type="text" class="iText" name="show_time" id="show_time" value="<!-- if {{result.type}}==0 -->{{result.addetail' value.show_time}}<!-- endif -->" />
+                                    <span class="red">*</span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="label">屏幕支持方向：</span>
+                                <div class="fc">
+                                    <ul class="in-list">
+                                        <li><input type="radio" class="checkbox" name="screen_type" value="0" <!-- if {{result.addetail' value.screen_type}}==0 --> checked<!-- endif -->><label>横屏</label></li>
+                                        <li><input type="radio" class="checkbox" name="screen_type" value="1" <!-- if {{result.addetail' value.screen_type}}==1 --> checked<!-- endif -->><label>竖屏</label></li>
+                                        <li><input type="radio" class="checkbox" name="screen_type" value="2" <!-- if {{result.addetail' value.screen_type}}==2 --> checked<!-- endif -->><label>都支持</label></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul <!-- if {{result.type}}==1 -->style="display:'';"<!-- elseif {{result.type}}==2 -->style="display:'';"<!-- else -->style="display:none;"<!-- endif -->>
+                            <li>
+                                <span class="label">标题：</span>
+                                <div class="fc">
+                                    <input type="text" class="iText" name="ad_name" id="ad_name" value="<!-- if {{result.type}}==1 -->{{result.addetail' value.ad_name}}<!-- elseif {{result.type}}==2 -->{{result.addetail' value.ad_name}}<!-- endif -->" />
+                                    <span class="red">*</span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="label">描述：</span>
+                                <div class="fc">
+                                    <input type="text" class="iText" name="ad_subdesc" id="ad_subdesc" value="<!-- if {{result.type}}==1 -->{{result.addetail' value.ad_desc}}<!-- elseif {{result.type}}==2 -->{{result.addetail' value.ad_desc}}<!-- endif -->" />
+                                    <span class="red">*</span>
+                                </div>
+                            </li>
+                        </ul>
+                </li>
+            </ul>
+<!-- endloop -->
+</div>
+<div style="text-align:center;padding:10px 0;">
+    <a id="ok" class="btn" href="javascript:void(0)">确定</a>
+    <a class="cancel" href="javascript:void(0)">取消</a>
+</div>
+<script>
+$(function(){
+    getAdPos($('#adType').val(),$('#pm').val());
+    $("#adType").change(function(){
+        var _v = $(this).val();
+        if(_v == 1){
+            $("#gglx").show();
+            $("#pm").hide();
+            $("#push_select").hide();
+            $("#adTypeOption").children(":eq(1)").show().siblings().hide();
+            getAdPos($('#adType').val(),$('#gglx').val());
+        }
+        if(_v == 0){
+            $("#gglx").hide();
+            $("#push_select").hide();
+            $("#pm").show();
+            $("#adTypeOption").children(":eq(0)").show().siblings().hide();
+            getAdPos($('#adType').val(),$('#pm').val());
+        }
+        if(_v == 2){
+            $("#gglx").hide();
+            $("#pm").hide();
+            $("#push_select").show();
+            $("#adTypeOption").children(":eq(1)").show().siblings().hide();
+            getAdPos($('#adType').val(),$('#push_select').val());
+        }
+    });
+    //产品目标点击类型
+    var adparam = {};
+    function initadparamad(_v){
+        var _v = _v || $("#adclickType").val();
+        //if(_v == 1){
+//            adparam = {};
+//            adparam.inner_install_manage = {};
+       // }
+        if(_v == 2){
+            adparam = {};
+            adparam.start_app = {};
+        }
+        if(_v == 3){
+            adparam = {};
+            adparam.direct_url = {};
+        }
+        if(_v == 4){
+            adparam = {};
+            adparam.inner_url = {};
+        }
+        if(_v == 5){
+            adparam = {};
+            adparam.ad_list = {};
+        }
+        if(_v == 6){
+            adparam = {};
+            adparam.user_action = {};
+        }
+         $.each($("#adclickType_" + _v).find("input"),function(){
+            if($(this).hasClass("submit")){
+                return true;//跳过“自动获取”按钮的当次循环
+            }
+            //if(_v == 1){
+                 //adparam.inner_install_manage[$(this).attr("name")] = $(this).val();
+            //}
+             if(_v == 2){
+                 adparam.start_app[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 3){
+                 adparam.direct_url[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 4){
+                 adparam.inner_url[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 5){
+                 adparam.ad_list[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 6){
+                 adparam.user_action[$(this).attr("name")] = $(this).val();
+             }
+        });
+         if(_v == 0){
+            $("input[id='adclictypeobj']").val("{\"no_action\":\"\"}").change();
+        }else if(_v==1){
+            $("input[id='adclictypeobj']").val('').change();
+         }else{
+            $("input[id='adclictypeobj']").val(obj2str(adparam)).change();
+        }
+    }
+    $("#adclickType").change(function(){
+        var _v = $(this).val();
+        if(_v != 0){
+                if(_v!=3 && _v!=4 && _v!=5 && _v!=1){
+                    $("#adclickTypeBox").show();
+                    $("#adclickType_" + _v).show().siblings().hide();
+                }else{
+                    $("#adclickTypeBox").hide();
+                }
+        }else{
+            adparam = {'no_action':''};
+            $("#adclickTypeBox").hide();
+        }
+        initadparamad(_v);
+    });
+    $("#adclickTypeBox").find("input:text").change(function(){
+        initadparamad($("#adclickType").val());
+    });
+    function iniClickType(){
+        var clickobj=$("#adclictypeobj").val();
+        if(clickobj!=''){
+            $("#adclickTypeBox").show();
+            $("#adclickType_1").hide();
+            clickobj=str2json(clickobj);
+//            if(typeof clickobj.inner_install_manage!="undefined"){
+//                $("#adclickType").val(1);
+//                $("#adclickType_1").show();
+//                $("#adpackage_name").val(clickobj.inner_install_manage.product_package);
+//                $("#adpackage_size").val(clickobj.inner_install_manage.package_size);
+//                $("#adfile_md5").val(clickobj.inner_install_manage.file_md5);
+//            }
+            if(typeof clickobj.start_app!="undefined"){
+                $("#adclickType").val(2);
+                $("#adclickType_2").show();
+                $("#adpackage_name_start_app").val(clickobj.start_app.package_name);
+                $("#adactivity_start_app").val(clickobj.start_app.activity);
+            }
+            if(typeof clickobj.direct_url!="undefined"){
+                $("#adclickType").val(3);
+            }
+            if(typeof clickobj.inner_url!="undefined"){
+                $("#adclickType").val(4);
+            }
+            if(typeof clickobj.ad_list!="undefined"){
+                $("#adclickType").val(5);
+            }
+            if(typeof clickobj.no_action!="undefined"){
+                $("#adclickType").val(0);
+                $("#adclickType_0").show();
+            }
+        }else{
+            $("#adclictypeobj").val('{"no_action":""}')
+        }
+    };
+    if($("#clickType").val()!=1){
+        iniClickType()
+    }
+    
+});
+</script>

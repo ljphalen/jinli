@@ -1,0 +1,163 @@
+<?php echo $this->render("layout/header.phtml");?>
+<style type="text/css" >
+	#item_container{
+		border-top: 1px solid #ccc;
+		padding: 5px 9px;
+		background: #e6e6e6;
+		border-bottom: 1px solid #fff;
+		color: #63402b;
+	}
+	#item_container span{
+		background: #fff;
+		border: 1px solid #797979;
+		color: #000;display: inline-block;
+		padding: 4px;cursor:pointer;
+		margin: 2px;
+	}
+</style>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">尝鲜列表</a></li>
+		<li class="current"><a href="">添加内容</a></li>
+	</ul>
+</div>
+<div class="step mb10">
+		<ul class="cc">
+			<li class="current">选择内容</li>
+			<li class="line"></li>
+			<li><span class="fl"><em></em></span>设置时间</li>
+		</ul>
+</div>
+<form action="<?php echo $addUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input wb" name="name" value="<?php echo $s['name'];?>"></td>
+			<th class="th">ID</th>
+			<td class="td"><input type="text" class="input wb" name="id" value="<?php echo $s['id'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div id="item_container"> 
+<p>共选择<em id='result'></em>个游戏</p>
+</div>
+</div>
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('add');" type="submit">添加</button></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+	<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已添加共<?php echo count($taste_ids) - count($current_games);?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input  type="checkbox" class="checkAll"></td>
+			<td>ID</td>
+			<td>标题</td>
+			<td>图标</td>
+			<td>分类</td>
+			<td>大小</td>
+			<td>版本</td>
+			<td>状态</td>
+		</tr>
+<?php if($games) {?>
+<?php foreach($games as $key => $value) {?>
+		<tr class="ct">
+		    <td data-check="<?php echo $value['id'];?>">
+		    <?php if (!in_array($value['id'], $taste_ids)) {?>
+		    <input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox">
+		    <?php }else{?>
+		    <font color="green">√</font>
+		    <?php }?>
+		    </td>
+			<td data-id="<?php echo $value['id'];?>"><?php echo $value['id'];?></td>
+			<td data-name="<?php echo $value['name'];?>"><?php echo $value['name'];?></td>
+			<td><img src="<?php echo $value['img'];?>" style="width:7.2em;height:7.2em"/></td>
+        	<td><?php echo $category_title[$value['id']] ? implode($category_title[$value['id']], ',') : '';?></td>
+        	<td><?php echo $oline_versions[$value['id']]['size'];?>M</td>
+        	<td><?php echo $oline_versions[$value['id']]['version'];?></td>
+        	<td><?php echo $value['status'] ? '已上线' : '已下线';?></td>
+		</tr>
+<?php }} ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('batchForm', function(ret) {
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Taste/addCt');
+	});
+
+	container=$("#item_container");
+	$("#result").html(container.children('span').length);
+	//全选or 反选
+	$(".checkAll").click(function(){
+		var id='',name='';
+		$(".checkbox").each(function(){
+			id=$(this).parents().siblings('td[data-id]').attr('data-id');
+			if($(this).attr("checked")){
+		        $(this).removeAttr("checked");
+		        if(isAdd(id)){
+		        	removeItem(id);
+		        }
+		    }
+		    else{
+		        $(this).attr("checked",'true');
+				name=$(this).parents().siblings('td[data-name]').attr('data-name');
+				if(!isAdd(id)){
+					addItem(id,name);
+				}
+		    }
+		});	
+	});
+	$(".checkbox").click(function(){
+		var id='',name='';
+		id=$(this).parents().siblings('td[data-id]').attr('data-id');
+		if($(this).attr("checked")){
+			name=$(this).parents().siblings('td[data-name]').attr('data-name');
+			if(!isAdd(id)){
+				addItem(id,name);
+			}
+	    }
+	    else{
+			if(isAdd(id)){
+	        	removeItem(id);
+	        }
+	    }
+	})
+})
+function isAdd(id){
+	var ret=false,
+		spanArr=container.children('span');
+	for(var i=0,len=spanArr.length;i<len;i++){
+		if($(spanArr[i]).attr('data-id')==id){
+			ret=true;
+			break;
+		}
+	}
+	return ret;
+}
+function addItem(id,name){
+	var delImgStr='<a style="background: url(<?php echo $staticPath;?>/img/layout/tab.png);width: 7px;height: 7px;display: inline-block;background-position: -20px 20px;margin-left:2px;"></a></span>',
+		html='<span onclick="removeItem('+id+')" data-id='+id+'><a >'+name+'</a>'+delImgStr;
+	container.append(html);
+	$("#result").html(container.children('span').length);
+}
+function removeItem(id){
+	$("span[data-id="+id+"]").remove();
+	$("td[data-check="+id+"]").children('.checkbox').removeAttr('checked');
+	$("#result").html(container.children('span').length);
+}
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

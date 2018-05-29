@@ -1,0 +1,90 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li class="current"><a href="<?php echo $indexUrl;?>">积分列表</a></li>
+    </ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+    <input name="token" type="hidden" value="<?php echo $token;?>" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">UID</th>
+                <td class="td"><input class="input wb" type="text" name="uid" value="<?php echo $param['uid'];?>"></td>
+            </tr>
+            <tr class="tr">
+                <th class="th"><span style="float:left;">当前会员总数：<?php echo $total;?></span></th>
+                <td class="td"><span class="btn"><span><button type="submit">搜 索</button></span></span></td>
+                <td class="td" colspan="2">
+                    <span class="btn"><span><button type="button" onclick="cleanScore();">批量清空积分</button></span></span>
+                    <span class="btn"><a href="<?php echo $downloadUrl; ?>"><span><button type="button">下载</button></span></span></a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</form>
+<div class="table_list">
+    <table width="100%">
+        <tr class="hd">
+            <td width="5%">ID</td>
+            <td width="12%">UID</td>
+            <td width="8%">ScoreID</td>
+            <td width="5%">昵称</td>
+            <td width="9%">移动电话</td>
+            <td width="6%"><a href="<?php echo $url . '&sum_score=1' ?>">总积分 &darr;</a></td>
+            <td width="6%">签到次数</td>
+            <td width="10%">连续签到次数</td>
+            <td width="6%">砍价次数</td>
+            <td width="9%">分享砍价次数</td>
+            <td width="9%">朋友帮砍次数</td>
+            <td width="10%">操作</td>
+        </tr>
+        <?php foreach($summary as $key => $value) {?>
+            <tr class="ct">
+                <td><?php echo $value['id'];?></td>
+                <td><?php echo $value['uid'];?></td>
+                <td><?php echo $value['user']['scoreid'];?></td>
+                <td><?php echo $value['user']['nickname'];?></td>
+                <td><?php echo $value['user']['mobile'];?></td>
+                <td><?php echo $value['sum_score'];?></td>
+                <td><?php echo $value['sum_sign'];?></td>
+                <td><?php echo sprintf('%s / %s', $value['sum_runon'], $value['sign_date']);?></td>
+                <td><?php echo $value['sum_cut'];?></td>
+                <td><?php echo $value['sum_scut'];?></td>
+                <td><?php echo $value['sum_fcut'];?></td>
+                <td>
+                    <a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+                    <a href="<?php echo $listUrl;?>/?uid=<?php echo $value['uid'];?>" class="mr10">积分累计</a>
+                </td>
+            </tr>
+        <?php } ?>
+    </table>
+</div>
+<div class="mr10 cc">
+    <?php echo $pager;?>
+</div>
+
+<script type="text/javascript">
+    cleanScore = function(e){
+        showConfirm("确认清空所有用户积分？", function() {
+            ajaxLoader.show();
+            $.ajax({
+                url	:'<?php echo $cleanUrl; ?>',
+                type:'post',
+                dataType: 'json',
+                data:'token=<?php echo $token;?>',
+                success : function(ret) {
+                    ajaxLoader.hide();
+                    if (ret.success) {
+                        alert(ret.msg);
+                    } else {
+                        showError('', ret.msg);
+                    }
+                }
+            });
+        }, e);
+    };
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

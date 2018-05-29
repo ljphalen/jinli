@@ -1,0 +1,34 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $listUrl;?>">游戏推荐列表</a></li>
+        <li><a href="<?php echo $dayUrl;?>">每日一荐</a></li>
+        <li class="current"><a href="javascript:void(0);">推荐开关</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑推荐开关</div>
+<form method="post" action="<?php echo $closePostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+    <table width="100%">
+		<tr class="tr">
+			<th class="th">状态(<span style="color: red">*</span>)</th>
+			<td class="td"><select name="status" class="input">
+                	<option <?php if($status == 0) echo 'selected';?> value="0">开启</option>
+                	<option <?php if($status == 1) echo 'selected';?> value="1">关闭</option>
+            </select>&nbsp;关闭后，1.5.7版本将使用旧版本的配置
+            </td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $closeUrl;?>');
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,68 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li class="current"><a href="<?php echo $listUrl . '?cate_id=' . $cate_id;?>">奖品列表</a></li>
+    	<li class=""><a href="<?php echo $addUrl . '?cate_id=' . $cate_id;?>">添加奖品</a></li>
+	</ul>
+</div>
+	<form action="<?php echo $userListUrl;?>" method="get">
+		<input name="token" type="hidden" value="<?php echo $token;?>" />
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">抽奖活动</th>
+					<td class="td">
+						<select name="cate_id">
+							<option value="0">...所有...</option>
+							<?php if(!empty($category)): foreach ($category as $val):?>
+								<option value="<?php echo $val['id']?>" <?php if($param['cate_id'] == $val['id']) echo 'selected="selected"'; ?>><?php echo $val['title'];?></option>
+							<?php endforeach; endif;?>
+						</select>
+					</td>
+					<th class="th" width="60">奖品名称</th>
+					<td class="td">
+						<input type="text" name="award_name" value="<?php echo $param['award_name'];?>"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac">
+	<span class="btn">
+		<span>
+			<button type="submit">搜 索</button>
+		</span>
+	</span>
+			<span style="float:left;">当前中奖人数：<?php echo $total;?></span>
+		</div>
+	</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">ID</td>
+			<td>排序</td>
+			<td>奖品名称</td>
+			<td>活动名称</td>
+			<td>奖品总数</td>
+			<td>中奖人数</td>
+			<td>中奖概率</td>
+			<td>操作</td>
+		</tr>
+		<?php foreach($list as $key => $value):?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['award_name'];?></td>
+			<td><?php echo $category[$value['cate_id']]['title'];?></td>
+			<td><?php echo $value['total'];?></td>
+			<td><?php echo $value['winners'];?></td>
+			<td><b><?php echo $value['probability'] * 100;?> %</b></td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+	</table>
+</div>
+<div class="mr10 cc"><?php echo $pager;?></div>
+
+<?php echo $this->render("layout/footer.phtml");?>

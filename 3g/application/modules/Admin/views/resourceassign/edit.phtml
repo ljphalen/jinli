@@ -1,0 +1,84 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">资源分配列表</a></li>
+		<li class="current"><a href="javascript:;">编辑资源分配</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑资源分配</div>
+<form method="post" action="<?php echo $editPostUrl; ?>" id="editResourceForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<input name="mid" value="<?php echo $assignlist[0]['model_id']; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">系列</th>
+				<td class="td"><select name="series_id" onchange="setmodels(this.value)">
+						<option value="0" <?php if ($assignlist[0]['series_id'] == 0) echo 'selected'; ?>>无系列</option>
+						<?php foreach ($series as $key => $value) { ?>
+							<option value="<?php echo $value['id']; ?>" <?php if ($assignlist[0]['series_id'] == $value['id']) echo 'selected'; ?>><?php echo $value['name']; ?></option>
+						<?php } ?>
+					</select></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">机型</th>
+				<td class="td">
+					<select name="model_id"></select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">资源</th>
+				<td class="td">
+					<div class="resource">
+						<ul>
+							<?php foreach ($resources as $key => $value) { ?>
+								<li>
+									<label><input type="checkbox" name="rids[]" onclick="setinput(<?php echo $value['id'] ?>)" value="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" <?php if ($value['checked']) echo 'checked="ckecked"'; ?>><?php echo $value['name']; ?>
+									</label><span id="sort<?php echo $value['id'] ?>"><?php if ($value['checked']) echo '排序：<input type="text" name="sort[]" class="input" value="' . $value['order_id'] . '" style="width:80px;">'; ?></span>
+								</li>
+							<?php } ?>
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	$(document).ready(function () {
+		ajaxForm('editResourceForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Resourceassign/index');
+		});
+
+		var models = <?php echo json_encode($models);?>;
+		setmodels = function (series, chval) {
+			if (series != 0) {
+				var options = '';
+				$.each(models, function (index, data) {
+					var s = '';
+					if (data.series_id == series) {
+						if (data.id == chval) s = 'selected';
+						options += '<option value="' + data.id + '" ' + s + '>' + data.name + '</option>';
+					}
+				});
+			} else {
+				var options = '<option value="0">无机型</option>';
+			}
+			$("select[name='model_id']").html(options);
+		}
+		setmodels(<?php echo $assignlist[0]['series_id'];?>, <?php echo $assignlist[0]['model_id'];?>);
+
+		setinput = function (id) {
+			var input = '';
+			if (id && $("#" + id)[0].checked == true) {
+				input = '排序：<input type="text" name="sort[]" class="input" value="" style="width:80px;">';
+			}
+			$("#sort" + id).html(input);
+		}
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

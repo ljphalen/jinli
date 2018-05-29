@@ -1,0 +1,112 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+
+<div class="mainw clearfix">
+	<include file="nav_left" />
+	<div class="rmain fl">
+		<div class="panel">
+			<h2 class="yyname">我的资料</h2>
+			<div class="panel-body">
+				<div class="row">
+				    <div class="col-sm-12 userinforow">
+				    	<h4>企业基本信息<small><b>&nbsp;&nbsp;营业执照信息一经审核，将不能修改</b></small></h4>
+				    </div>
+				</div>
+				<form class="form-horizontal userinfoform" role="form">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">帐户：</label>
+						<div class="col-sm-8">
+							<span class="form-control-static">{$account.email}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<a href="{:U('user/pwdedit')}" class="fetchApk">更改密码</a>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="nickname" class="col-sm-4 control-label">企业简称：</label>
+						<div class="col-sm-8">
+							<span>{$account.nickname}</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="contact" class="col-sm-4 control-label">联系人：</label>
+						<div class="col-sm-8">
+							<span>{$info.contact}</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="phone" class="col-sm-4 control-label">联系人手机：</label>
+						<div class="col-sm-8">
+							<span>{$info.phone}</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="contactEmail" class="col-sm-4 control-label">联系人邮箱：</label>
+						<div class="col-sm-8">
+							<span>{$info.contact_email}</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="nickname" class="col-sm-4 control-label">公司注册名称：</label>
+						<div class="col-sm-8">
+							<span>{$info.company}</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="nickname" class="col-sm-4 control-label">营业执照注册号：</label>
+						<div class="col-sm-8">
+							<span>{$info.passport_num}</span>
+						</div>
+					</div>
+					<div class="form-group imgtopf">
+						<label for="companyPassport" class="col-sm-4 control-label">营业执照扫描件：</label>
+						<div class="col-sm-6">
+							<span><notempty name="info.company_passport">
+								<a href="{:Helper('Apk')->get_url('user')}{$info['company_passport']}" target="_blank">
+									<img src="{:Helper('Apk')->get_url('user')}{$info['company_passport']}" onload="javascript:resizeimg(this,330,200);" width="330" height="200" />
+								</a>
+							</notempty></span>
+						</div>
+						<div class="col-sm-2">
+							<span id="authStatus"></span>
+						</div>
+					</div>
+					
+					
+					<div class="form-group">
+						<label for="taxNumber" class="col-sm-4 control-label">税务登记证号：</label>
+						<div class="col-sm-8">
+							<span>{$info.tax_number}</span>
+						</div>
+					</div>
+
+					<div class="form-group imgtopf">
+						<label for="taxPassport" class="col-sm-4 control-label">税务登记证扫描件：</label>
+						<div class="col-sm-6">
+							<span><notempty name="info.tax_passport">
+								<a href="{:Helper('Apk')->get_url('user')}{$info['tax_passport']}" target="_blank">
+									<img src="{:Helper('Apk')->get_url('user')}{$info['tax_passport']}" onload="javascript:resizeimg(this,330,200);" width="330" height="200" />
+								</a>
+							</notempty></span>
+						</div>
+						<div class="col-sm-2">
+							<span id="authStatus"></span>
+						</div>
+					</div>
+	
+					<div class="btnw userinfo">
+						
+							<a href="{:U('user/edit')}" id="infoedit" class="btnwbotg">修改资料</a><br>
+						
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<load href="{:cdn('PUBLIC')}/common/js/resizeImg.js?{:C('JS_VERSION')}" />
+<script type="text/javascript">
+if ($ != jQuery) {
+    $ = jQuery.noConflict();
+}
+</script>
+<include file="Public:footer" />

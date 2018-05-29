@@ -1,0 +1,201 @@
+<script src="{{rootUrl}}/js/core.js" type="text/javascript"></script>
+<script src="{{rootUrl}}/js/app-type.js" type="text/javascript"></script>
+<script src="{{rootUrl}}/js/games.js?ver={{staticVer}}" type="text/javascript"></script>
+<style>
+#gamelist{width:30%;background:#fff;border:1px solid #dedede;padding:5px;}
+#gamelist li{width:100%;height:25px;line-height:25px;text-indent:15px;
+             border-bottom:1px dashed #ccc;color:#666;cursor:pointer;}
+</style>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">{{title}}-应用信息</p>
+    <!-- if {{result.app_id}} -->
+        <a class="del" href="/apps/delete?app_id={{result.app_id}}">删除</a>
+    <!-- endif -->
+    </div>
+    <div class="main">
+        <div class="app-detail">
+            <form action="../apps/save" method="POST" >
+                <input type="hidden" name="app_id" value='{{result.app_id}}' />
+                <ul class="form">
+                    <li>
+                        <span class="label">应用名：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" required name="app_name" <!-- if {{result.app_id}} --> readonly<!-- endif --> onkeyup="getGameinfo('type','app_name')" onfocus="getGameinfo('type','app_name')" style="width:220px;" value="{{result.app_name}}" />
+                            <span class="red">*</span>
+                            <ul id="gamelist" style="display:none;" onmouseout="javascript:$('#gamelist').toggle()"></ul>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">Appkey：</span>
+                        <div class="fc Menu2">
+                            <input type="text" id="appkey" class="iText required"  <!-- if {{result.appkey}}!='' -->readonly<!-- endif -->  required style="width:220px;" name="appkey" value="{{result.appkey}}" />
+                            <!-- if {{result.app_id}} --><!-- else -->
+<!--                                 <select id="type" onchange="getGameinfo('type','appkey')">
+                                     <option value="1" selected>名称</option>
+                                     <option value="2">APPKEY</option>
+                                 </select>-->
+                            <!-- endif -->
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">包名：</span>
+                        <div class="fc Menu2">
+                            <input type="text" id="packagename" class="iText required" <!-- if {{result.packagename}}!='' -->readonly<!-- endif -->  required style="width:220px;" name="packagename" value="{{result.packagename}}" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">开发者：</span>
+                        <div class="fc">
+                            {{select}}
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">平台类型：</span>
+                        <div class="fc">
+                            <select id="platform"  name="platform">
+                                <option value="1">Android</option>
+                                <option value="2">IOS</option>
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">应用类型：</span>
+                        <div class="fc">
+                            <div class="iText" id="appType"><span>{{result.appcate_name}}</span><input type='hidden' name="appcate_id" value="{{result.appcate_id}}" autocomplete="off" /></div>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">关键字：</span>
+                        <div class="fc">
+                            <textarea name="app_desc">{{result.app_desc}}</textarea>
+                        </div>
+                    </li>
+<!--                    <li>
+                        <span class="label">应用广告状态：</span>
+                        <div class="fc">
+                            <ul class="in-list">
+                                <li><input type="radio" name="state" id="state1" value='1' if {{result.state}} ==1 checked endif  class="radio" /><label for="state1">开启</label></li>
+                                <li><input type="radio" name="state" id="state2" value="0" if {{result.state}} ==0 checked endif  class="radio" /><label for="state2">关闭</label></li>
+                            </ul>
+                        </div>
+                    </li>-->
+                    <!-- if {{result.app_id}} -->
+<!--                    <li>
+                        <span class="label">应用版本：</span>
+                        <div class="fc">
+                             if {{versionList}} 
+                                 loop versionList 
+                                    {{versionList' value.app_version}}<br />
+                                 endloop 
+                             endif 
+                        </div>
+                    </li>-->
+                    <!-- endif -->
+                    <li>
+                        <span class="label">广告位：</span>
+                        <div class="fc">
+                            <table width="80%" id="pos_tb_box" boder='1'>
+                                <tr><td>广告位ID</td><td>广告位名称</td><td>广告位形式</td><td>广告位状态</td><td>收入结算方式</td><td>结算单价</td><td>广告显示概率</td><td>操作</td><td></td></tr>
+                                <!-- loop result.pos -->
+                                <tr id="{{result.pos' value.id}}">
+                                    <td>{{result.pos' value.dever_pos_key}}
+                                        <input type="hidden" name="pos_key[]" value="{{result.pos' value.dever_pos_key}}">
+                                        <input type="hidden" name="pos_id[]" value="{{result.pos' value.id}}">
+                                    </td>
+                                    <td>{{result.pos' value.dever_pos_name}}</td>
+                                    <td>
+                                        <?php echo pos_key_name($v1['pos_key']);?> 
+                                        </td>
+                                    <td>
+                                        <input type="radio" name="pos_state_{{result.pos' value.id}}[]" onclick="set_pos_state('{{result.pos' value.dever_pos_key}}',1)" <!-- if {{result.pos' value.state}} == 1  -->checked<!-- endif --> value="1"><label>开</label>
+                                        <input type="radio" name="pos_state_{{result.pos' value.id}}[]" onclick="set_pos_state('{{result.pos' value.dever_pos_key}}',0)" <!-- if {{result.pos' value.state}} == 0 -->checked<!-- endif --> value="0"><label>关</label>
+                                    </td>
+                                    <td><select name="acounting_method[]" style="min-width:10%">
+                                            <option value="1" <!-- if {{result.pos' value.acounting_method}}== 1 -->selected<!-- endif --> <!-- if {{result.pos' value.pos_key}}== 'LIST' -->disabled<!-- endif -->>CPM</option>
+                                            <option value="2" <!-- if {{result.pos' value.acounting_method}}== 2 -->selected<!-- endif -->>CPC</option>
+                                            <option value="5" <!-- if {{result.pos' value.acounting_method}}== 5 -->selected<!-- endif -->>CPD</option>
+                                            <option value="4" <!-- if {{result.pos' value.acounting_method}}== 4 -->selected<!-- endif -->>CPI</option>
+                                            <option disabled value="3" <!-- if {{result.pos' value.acounting_method}}== 3 -->selected<!-- endif -->>CPA</option>
+                                            <option disabled value="6" <!-- if {{result.pos' value.acounting_method}}== 6 -->selected<!-- endif -->>CPS</option>
+                                        </select>
+                                    </td>
+                                    <td><input type="text" class="iText" style="width:22%" name="denominated[]" value="{{result.pos' value.denominated}}"></td>
+                                    <td><input type="text" class="iText" style="width:20%" name="rate[]" value="{{result.pos' value.rate}}"></td>
+                                    <td><input type="hidden" name="pos_name[]" value="{{result.pos' value.dever_pos_name}}">
+                                        <input type="hidden" name="pos_key_type[]" value="{{result.pos' value.pos_key}}">
+                                        <a onclick="update_pos_key('{{result.pos' value.id}}')">编辑</a>  <a onclick="del_pos_key(this)">删除</a></td>
+                                </tr>
+                                <!-- endloop -->
+                            </table>
+                            <input type='button' name="add_pos" onclick="$('#pos_box').toggle();createposkey()" value="添加广告位"/>
+                        </div>
+                        <div class="fc" id="pos_box" style="display:none">
+                            <span class="label">广告位：</span>
+                            <input type='hidden' name="pos_id_tmp" value=""/>
+                            <input type='hidden' name="pos_key_tmp" value=""/>
+                            <div id="pos_key_text"></div>
+                            <span class="label">广告位名称：</span>
+                            <div><input type='text' name="pos_name_tmp" value=""/></div>
+                            <span class="label">是否积分：</span>
+                            <div>
+                                <input type="radio" name="jifen" disabled="true" id="state1" value='1' class="radio" /><label for="state1">是</label>
+                                <input type="radio" name="jifen" disabled="true" id="state1" value='1' checked class="radio" /><label for="state1">否(敬请期待)</label>
+                            </div>
+                            <span class="label">广告形式：</span>
+                            <div>{{ad_pos_type}}</div>
+                            <input type="button" value="确定" onclick='add_pos_key()' />
+                            <input type="button" value="取消" onclick="$('#pos_box').toggle()" />
+                        </div>
+                    </li>
+                    <!-- if {{result.apk_url}} != "" -->
+                    <li>
+                        <span class="label">点击下载应用：</span>
+                        <div class="fc">
+                            <input type='button'  name="download" onclick="javascript:location.href='http://www.mobgi.com/dev/download_apk?file={{result.apk_url}}'" value="点击按钮下载应用"/>
+                        </div>
+                    </li>
+                    <!-- endif -->
+                    <li>
+                        <span class="label">收入调整比例：</span>
+                        <div class="fc">
+                            <input type='text' class="iText required" name="income_rate" value="{{result.income_rate}}" />
+                        </div>
+                    </li>
+                    <li>
+                        <div class="fc">
+                            <input type="button" onclick="confirmSubmit();" value="确定" class="submit" />
+                            <input type="button" value="取消" class="cancel" onclick="window.location.href='/apps/index'" />
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+$(function(){
+    $("#appType").appType({
+        url:"../apps/appType"
+    });
+    
+    $(".submit").click(function(){
+        var canSubmit = true;
+        $("input[name='denominated[]']").each(function(){
+            if($(this).val()==''){
+                canSubmit = false;
+                alert('添加广告位的结算单价不能为空')
+                $(this).focus();
+                return false;
+            }
+        });
+        if(canSubmit){
+            $('form').submit();
+            return true;
+        }
+    });
+    
+})
+</script>

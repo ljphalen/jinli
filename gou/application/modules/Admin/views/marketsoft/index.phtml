@@ -1,0 +1,40 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li class="current"><a href="<?php echo $listtUrl;?>">软件列表</a></li>
+    	<li class=""><a href="<?php echo $addUrl;?>">添加软件</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">ID</td>
+			<td>软件包名称</td>
+			<td>APK名称</td>
+			<td>版本号</td>
+			<td>md5</td>
+			<td>下载地址</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+		<?php foreach($list as $key => $value):?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['package'];?></td>
+			<td><?php echo $value['apk'];?></td>
+			<td><?php echo $value['version'];?></td>
+			<td><?php echo $value['apk_md5'];?></td>
+			<td><?php echo $value['download_url'];?></td>
+			<td><?php if($value['status']) echo '可用'; else echo '不可用';?></td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

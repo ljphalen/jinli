@@ -1,0 +1,28 @@
+<?php
+echo <<<HTML
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>管理中心 Management center</title>
+<link href="$staticPath/admin/css/login.css" rel="stylesheet" />
+<script>if (parent.window.location.href != location.href) parent.window.location.href = location.href;</script>
+</head>
+<body>
+<div class="wrap">
+	<h1><a href="#">管理中心</a></h1>
+	<form method="post" name="login" action="$loginUrl"><!-- action = //逃避自动匹配 -->
+		<input TYPE="hidden" name="Login_f" value="1">
+		<input name="token" type="hidden" value="$token" />
+	<div class="login">
+		<div class="input_text"><label for="admin_name">账号名</label></div>
+		<input class="input" id="admin_name" name="username" type="text" tabindex="1" />
+		<div class="input_text"><label for="admin_pwd">密码</label></div>
+		<input class="input" id="admin_pwd" type="password" name="password" tabindex="2" />
+		<input name="submit" type="image" class="btn" src="$staticPath/admin/img/login/btn.png" />
+	</div>
+	</form>
+</div>
+</body>
+</html>
+HTML;

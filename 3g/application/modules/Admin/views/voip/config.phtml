@@ -1,0 +1,89 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $configUrl; ?>">基本配置</a></li>
+		<li><a href="<?php echo $indexUrl; ?>">信息列表</a></li>
+		<li><a href="<?php echo $addUrl; ?>">添加活动内容</a></li>
+		<li><a href="<?php echo $userUrl ?>">用户列表</a>
+		<li><a href="<?php echo $logUrl ?>">通话记录</a>
+		<li><a href="<?php echo $service; ?>">添加客服信息</a>
+		<li><a href="<?php echo $serviceList; ?>">客服信息列表</a>
+		<li><a href="<?php echo $tipsListUrl ?>">规则说明</a>
+	</ul>
+</div>
+<div class="h_a">配置管理</div>
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="editForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">余额</th>
+				<td class="td">
+					<?php echo $info['balance']; ?>
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">云之讯APPID</th>
+				<td class="td">
+					<input name="appId" type="text" class="input wc"
+					       value="<?php echo $data['appId']; ?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">云之讯 SID</th>
+				<td class="td">
+					<input name="accountSid" type="text" class="input wc"
+					       value="<?php echo $data['accountSid']; ?>">
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">云之讯 TOKEN</th>
+				<td class="td">
+					<input name="accountToken" type="text" class="input wc"
+					       value="<?php echo $data['accountToken']; ?>">
+				</td>
+			</tr>
+
+			<!--
+		<tr  class="tr">
+			<th class="th">每月赠送时长(秒)</th>
+			<td  class="td">
+				<input name="month_call_time" type="text" class="input"
+				       value="<?php echo $data['month_call_time']; ?>">
+			</td>
+		</tr>
+		-->
+			<tr class="tr">
+				<th class="th">每次登录赠送时长(秒)</th>
+				<td class="td">
+					<input name="login_per_time" type="text" class="input wc"
+					       value="<?php echo $data['login_per_time']; ?>">
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">主叫号码</th>
+				<td class="td">
+					<input name="show_number" type="text" class="input"
+					       value="<?php echo $data['show_number']; ?>">
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+
+</form>
+<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+		ajaxForm('editForm', function (ret) {
+			ajaxRedirect(ret, <?php echo $this->baseUrl; ?>);
+		});
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>
+

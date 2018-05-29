@@ -1,0 +1,1 @@
+ALTER TABLE ad_info add show_detail bool not null DEFAULT false after `type`

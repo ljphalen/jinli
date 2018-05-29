@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="format-detection" content="email=no" />
+	<title>活动详情</title>
+	<link rel="stylesheet" href="<?php echo $staticroot; ?>/apps/game/apkv1/assets/css/activity.css?v=<?php echo $version;?>">
+	<script type="text/javascript">var game_source='<?php echo $game_source?>', t_bi = "<?php echo $t_bi;?>";</script>
+	<script type="text/javascript" src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/zepto.js?v=<?php echo $version;?>"></script>
+	<script type="text/javascript" src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/ac/main.js?v=<?php echo $version;?>"></script>
+	<script>var token = '<?php echo $token;?>';</script>
+</head>
+<body id="activity-page">
+  <?php if(trim($info['placard'])){?>
+	<!-- 中奖公告 如果没有公告这个模块就不显示 -->
+	<div class="J_ac_anno activity-anno-wrapper">
+		<div class="title-container">
+			<div class="placeholder"></div>
+			<div class="title-content">
+				<h1 class="title">中奖公告</h1>
+				<div class="J-expand showContainer">展开<i class="icon-arrow-down"></i></div>
+			</div>
+		</div>
+		<div class="J_content ac-content ui-editor">
+		   <?php echo html_entity_decode($info['placard']); ?>
+		</div>
+	</div>
+   <?php }?>
+   
+   	<!-- 活动对应游戏下载，只在分享的时候才下载 -->
+   	<?php if($isShare == '1'){?>
+	<div class="download-wrapper">
+		<a class="" href="<?php echo  Common::tjurl($tjUrl, '', $intersrc, $game['link'] ,'');?>&t_bi=<?php echo $source;?>">
+			<img src="<?php echo $game['img'];?>" alt=""/>
+			<div class="text">
+				<p>微信用户请先点击右上角的设置,</p>
+				<p>选择通过浏览器打开,即可下载</p>
+			</div>
+			<span class="btn-green"><i class="icon-download-gray"></i>立即下载</span>
+		</a>
+	</div>
+	<?php }?>
+	<!-- 活动说明 -->
+	<div class="activity-wrapper ">
+		<div class="title-container">
+			<h1 class="title">活动说明</h1>
+		</div>
+		<div class="ac-content ui-editor">
+		  <?php echo html_entity_decode($info['content']); ?>
+		</div>
+	</div>
+
+	<div class="contactInfo-wrapper">
+		<p><i class="icon-phone"></i>客服电话：<?php echo $configs['game_service_tel'] ?></p>
+		<p><i class="icon-qq"></i>客服QQ：<?php echo $configs['game_service_qq'] ?></p>
+		<p><i class="icon-group"></i>玩家交流群：189360286</p>
+	</div>
+	<!-- 游戏大厅客户端下载，分享之后才会显示 -->
+	<?php 
+	if($isShare == '1'){
+		if($shareto == 'wechat'){
+			if($qudao == 'gamehall') {
+				$wechat_url = $configs['game_amgo_url'];
+			} else {
+				$wechat_url = $configs['game_aimi_url'];
+			}
+        }else{
+        	$wechat_url ='http://gamedl.gionee.com/Attachments/dev/apks/2014/11/04/1415081037723.apk';
+        }	
+	?>
+	<div class="gamehall-download-wrapper">
+		<div class="content">
+			<i class="J_close icon-close" onclick="document.getElementsByClassName('gamehall-download-wrapper')[0].className+=' hidden';"></i>
+			<div class="btn-wrapper">
+				<a href="<?php echo  Common::tjurl($tjUrl, '', $intersrc, $wechat_url ,'');?>&t_bi=<?php echo $source;?>" class="btn-red"><i class="icon-download-red"></i><br/>立即下载</a>
+			</div>
+		</div>
+	</div>
+	<?php }?>
+</body>
+</html>

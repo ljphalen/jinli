@@ -1,0 +1,191 @@
+<form id="pagerForm" action="{:U('Contract/check')}" method="post">
+	<input type="hidden" name="pid" value="{$_REQUEST.pid}"/>
+	<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+	<input type="hidden" name="numPerPage" value="{$_REQUEST.numPerPage}" />
+	<input type="hidden" name="orderField" value="{$_REQUEST.orderField}" />
+	<input type="hidden" name="orderDirection" value="{$_REQUEST.orderDirection}" />
+	<volist name="_search" key="name" id="field">
+		<input type="hidden" name="_search[{$key}]" value="{$field|safe}"/>
+	</volist>
+</form>
+
+<div class="page">
+	<div class="pageHeader">
+		<form onsubmit="return navTabSearch(this);" action="{:U('Contract/check')}" method="post" name="check_myform" id='check_myform'>
+		<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+		<div class="searchBar">
+			<ul class="searchContent" style="overflow: inherit; height: auto;">
+                <!--<li>-->
+                    <!--<label>应用状态：</label>-->
+                    <!--<select class="combox" id="status" name="_search[status]">-->
+                        <!--<option value="" selected>全部</option>-->
+                        <!--<option value="0" <if condition="$_REQUEST._search.app_name eq '0'">selected</if>>未提交</option>-->
+                        <!--<option value="1" <if condition="$_REQUEST._search.app_name eq '1'">selected</if>>审核中</option>-->
+                        <!--<option value="2" <if condition="$_REQUEST._search.app_name eq '2'">selected</if>>审核通过</option>-->
+                        <!--<option value="3" <if condition="$_REQUEST._search.app_name eq '3'">selected</if>>已上线</option>-->
+                        <!--<option value="-1" <if condition="$_REQUEST._search.app_name eq '-1'">selected</if>>审核不通过</option>-->
+                        <!--<option value="-2" <if condition="$_REQUEST._search.app_name eq '-2'">selected</if>>已下线</option>-->
+                        <!--<option value="-3" <if condition="$_REQUEST._search.app_name eq '-3'">selected</if>>认领下线</option>-->
+                        <!--<option value="-4" <if condition="$_REQUEST._search.app_name eq '-4'">selected</if>>封号下线</option>-->
+                    <!--</select>-->
+                    <!--<script type="text/javascript">-->
+                        <!--$("select[name='_search[status]']").val("{:$_search[status]}");-->
+                    <!--</script>-->
+                <!--</li>-->
+
+				<li>
+					<label>合同状态：</label>
+					<select id="_search_check_status" class="combox" name="_search[status]">
+                        <option value="" selected>全部</option>
+                        <option value="2">未回传</option>
+                        <option value="3">审核中</option>
+                        <option value="4">审核通过</option>
+                        <option value="-2">审核不通过</option>
+                        <option value="5">即将到期</option>
+                    </select>
+                    <script>$("#_search_check_status").val("{$_search[status]}");</script>
+				</li>
+                <li>
+                    <label>合同类型：</label>
+                    <select id="_search__type" class="combox" name="_search[type]">
+                        <option value="" selected>全部</option>
+                        <option value="0">主合同</option>
+                        <option value="1">续签合同</option>
+                    </select>
+                    <script>$("#_search__type").val("{$_search[type]}");</script>
+                </li>
+                <li>
+                    <label>开发者名称：</label>
+                    <input type="text" name="_search[company_name]" value="{$_search[company_name]}" class="medium" >
+                </li>
+                <li>
+                    <label>邮箱：</label>
+                    <input type="text" name="_search[contact_email]" value="{$_search[contact_email]}" class="medium" >
+                </li>
+                <li>
+                    <label>合同名称：</label>
+                    <input type="text" name="_search[name]" value="{$_search[name]}" class="medium" >
+                </li>
+				<li>
+					<label>应用名称：</label>
+					<input type="text" name="_search[app_name]" value="{$_search[app_name]}" class="medium" >
+				</li>
+                <li>
+                    <label>应用包名：</label>
+                    <input type="text" name="_search[package]" value="{$_search[package]}" class="medium" >
+                </li>
+				<li>
+					<label>创建时间：</label>
+					<input type="text" name="_search[startDay]" value="{$_search[startDay]}" class="date" size="12" readonly/>
+					到<input type="text" name="_search[endDay]" value="{$_search[endDay]}" class="date" size="12" readonly/></a>
+				</li>
+                <li>
+                    <php>
+                        $receipts = M('contract_receipt')->getField('id,ratio');
+                    </php>
+                    <label>税费率：</label>
+					{:Helper("Form")->name('_search[receipt_id]')->class('combox')->option($receipts)->value($_search["receipt_id"])->select();}
+                </li>
+
+				<div class="buttonActive"><div class="buttonContent"><button type="button" id="check_sub">查询</button></div></div>
+                <div class="buttonActive"><div class="buttonContent"><button type="button" id="check_export" >导出</button></div></div>
+				 <script type="text/javascript">
+				$("#check_export").click(function(){
+					$("#check_myform").attr('action',"{:U('Contract/check_export')}");
+					$("#check_myform").attr('onsubmit','');
+					$("#check_myform").submit();
+				});
+				
+				$("#check_sub").click(function(){
+					$("#check_myform").attr('action',"");
+					$("#check_myform").attr('onsubmit','return navTabSearch(this);');
+					$("#check_myform").submit();
+				});
+
+				</script>
+			</ul>
+		</div>
+		</form>
+	</div>
+    <div class="pageContent">
+		<table class="list listW" width="100%" layoutH="138">
+			<thead>
+				<tr>
+					<th width="50" orderField="id" class="{:orderField('id','asc')}">编号</th>
+	                <th>合同编号</th>
+	                <th>应用名称</th>
+	                <th>包名</th>
+	                <th>合同名称</th>
+					<th>税费率</th>
+					<th>分成比例</th>
+                    <th>应用状态</th>
+	                <th>开发者</th>
+					<th>签署日期</th>
+                    <th>回传日期</th>
+                    <th>合同有效期</th>
+                    <th>合同类型</th>
+                    <th>合同状态</th>
+					<th width="100">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="list">
+				<tr target="sid_node" rel="{$vo['id']}">
+					<td class="app">{$vo['id']}</td>
+                    <td class="app">{$vo['number']}</td>
+                    <td class="app">{$vo['app_name']}</td>
+                    <td class="package">{$vo['package']}</td>
+                    <td class="package">{$vo['name']}</td>
+                    <td class="">
+                        <switch name="vo.receipt_id">
+                            <case value="1">6%</case>
+                            <case value="2">3%</case>
+                            <case value="3">0%</case>
+                        </switch>
+                    </td>
+                    <td class="tc4">{$vo.share}</td>
+                    <!--TODO -->
+                    <td class="tc4">{$vo.app_status}</td>
+                    <!--TODO-->
+                    <td class="tc4">{$vo.company_name}</td>
+					<td class="time">{$vo['ctime']|date="Y-m-d",###}</td>
+					<td class="time">
+                        <gt name="vo['rtime']" value="0">
+                            {$vo['rtime']|date="Y-m-d",###}
+                        </gt>
+                    </td>
+					<td class="time">{$vo['vtime']|date="Y-m-d",###}<br/>
+                        {$vo['etime']|date="Y-m-d",###}
+                    </td>
+					<td class="tc5">
+                        <if condition="$vo['type'] eq '0'">主合同<else/>续签合同</if>
+                    </td>
+					<td class="tc5">{$vo['status']|ContractModel::getStatus}</td>
+					<td>
+                        <if condition="$vo[status]==3">
+                            <a href="{:U('Contract/authorize', array('id'=>$vo['id'],'check'=>1))}" target="dialog" width="800" height="700" mask="true"><b style="color:red;">审核</b></a>
+                        <else/>
+						<neq name="vo.status" value="0">
+							<a href="{:U('Contract/details', array('id'=>$vo['id'],'check'=>1))}" target="dialog" width="800" height="800" >资料</a>
+						</neq>
+                        </if>
+                    </td>
+				</tr>
+			</volist>
+			</tbody>
+		</table>
+		<div class="panelBar">
+			<div class="pages">
+				<span>显示</span>
+				<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+					<option value="10" <eq name="numPerPage" value="10">selected</eq>>10</option>
+					<option value="20" <eq name="numPerPage" value="20">selected</eq>>20</option>
+					<option value="50" <eq name="numPerPage" value="50">selected</eq>>50</option>
+					<option value="100" <eq name="numPerPage" value="100">selected</eq>>100</option>
+					<option value="200" <eq name="numPerPage" value="200">selected</eq>>200</option>
+				</select>
+				<span>共{$totalCount}条</span>
+			</div>
+			<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="10" currentPage="{$currentPage}"></div>
+		</div>
+	</div>

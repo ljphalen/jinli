@@ -1,0 +1,179 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li <?php echo $status==1?'class="current"':''; ?>><a href="<?php echo $status_url.'status='.Widget_Service_Source::STATUS_OK;?>">发布列表</a></li>
+			<li <?php echo $status==0?'class="current"':''; ?>><a href="<?php echo $status_url.'status='.Widget_Service_Source::STATUS_CLOSE;?>">关闭列表</a></li>
+			<li <?php echo $status==-5?'class="current"':''; ?>><a href="<?php echo $status_url.'status='.Widget_Service_Source::STATUS_DORP;?>">废弃列表</a></li>
+			<li><a href="<?php echo $editUrl; ?>">人工添加数据</a></li>
+		</ul>
+	</div>
+
+<?php
+//保留用户所选的复选框
+if ($_REQUEST['url_id']) {
+	$selected = is_string($_REQUEST['url_id']) ? explode(',', $_REQUEST['url_id']) : $_REQUEST['url_id'];
+}
+?>
+	<form action="/Admin/Widget_Source/index" method="post">
+		<input name="token" type="hidden" value="<?php echo $token; ?>">
+		<input name="status" type="hidden" value="<?php echo $status; ?>">
+		<div class="table_full">
+			<table width="100%">
+				<tbody>
+				<tr class="tr">
+					<th class="th" style="width: 40px;">来源</th>
+					<td>
+						<div id="tabs">
+							<ul>
+								<?php
+								foreach ($cpcate as $key => $vals):
+									if (!empty($cp[$key][0])):
+								?>
+									<li><a href="#tabs-<?php echo $key; ?>"><?php echo $cp[$key][0]; ?></a></li>
+								<?php
+								endif;
+								endforeach;
+								?>
+							</ul>
+							<?php
+	                        foreach ($cpcate as $key => $vals):
+							if (!empty($cp[$key][0])):
+							?>
+								<div id="tabs-<?php echo $key; ?>">
+									<?php foreach ($vals as $value) : ?>
+										<div style="height: 24px; width:200px; display:inline-block;">
+											<input type="checkbox" <?php if (in_array($value['id'], $selected)) echo 'checked="checked"'; ?> name="url_id[<?php echo $value['id']; ?>]" value="<?php echo $value['id']; ?>"/><?php echo $value['title']; ?>
+										</div>
+									<?php endforeach; ?>
+								</div>
+							<?php
+							endif;
+							endforeach;
+							?>
+						</div>
+
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th" style="width: 40px;">标题</th>
+					<td class="td">
+						<input class="input wc" name="title" value="<?php echo $search['title']; ?>"/>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="mb10 tac">
+			<span class="btn"><span><button type="submit">搜 索</button></span></span>
+		</div>
+	</form>
+	<form id="batchForm" action="/Admin/Widget_Source/batch" method="post">
+		<input name="token" type="hidden" value="<?php echo $token; ?>">
+		<input name="action" id="action" type="hidden" value="">
+
+		<div class="h_a">
+			<?php if ($status == 0):?>
+			<span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">开启</button></span></span>
+			<?php elseif ($status == 1): ?>
+			<span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">关闭	</button></span></span>
+			<?php endif;?>
+			<span class="btn2"><span><button onclick="$('#action').val('delete');" type="submit">删除</button></span></span>
+			<?php if ($status == -5):?>
+			<span class="btn2"><span><button onclick="$('#action').val('clear');" type="submit">一键清理废弃数据</button></span></span>
+			<?php endif;?>
+			<span> 共<?php echo $total; ?>条结果</span>
+		</div>
+		<div class="mr10 cc">
+			<?php echo $pager; ?>
+		</div>
+		<div class="table_list">
+			<table width="100%">
+				<tr class="hd">
+					<td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+					<td width="50">编号</td>
+					<td width="60">来源</td>
+					<td width="120">分类</td>
+					<td width="60">图片</td>
+					<td>标题</td>
+					<td width="40">状态</td>
+					<td width="60">查看</td>
+					<td width="120">添加时间</td>
+
+					<td width="40"></td>
+				</tr>
+				<?php foreach ($result as $key => $value) {
+					$num = Widget_Service_Log::getNumByNewsKey($value['id']);
+				?>
+					<tr class="ct">
+						<td>
+							<?php if ($value['status'] == 1 || $value['status'] == 0) { ?>
+								<input class="checkbox" name="ids[]" value="<?php echo $value['id']; ?>" type="checkbox">
+							<?php } ?>
+						</td>
+						<td><?php echo $value['id']; ?></td>
+						<td title="<?php echo $cp[$value['source']][0]; ?>"><?php echo $cp[$value['source']][1]; ?></td>
+						<td><?php echo $cpurl[$value['url_id']]['title']; ?></td>
+						<td>
+							<?php
+							if (substr($value['img'], 0, 4) == 'http') {
+								$imgPath = $value['img'];
+							} else {
+								$imgPath = $attachPath . "/source/" . $value['img'];
+							}
+							if ($value['status'] == 1):
+							?>
+								<img width="121" height="101" src="<?php echo $imgPath . "_400x357." . end(explode(".", $value['img'])); ?>"/>
+							<?php else: ?>
+								<a target="_blank" href="<?php echo $imgPath; ?>" class="mr10">查看</a>
+							<?php endif; ?>
+						</td>
+
+						<td title="<?php echo htmlspecialchars($value['summary']); ?>">
+							<font color="<?php echo $value['color'] ?>"><?php echo $value['title']; ?></font></td>
+						<td>
+
+							<?php
+							$statusArr = array(0 => '关闭', 1 => '<font color="green">已发布</font>', '-1' => '图片下载中', '-2' => '图片取色', -5 => '已废弃');
+							echo $statusArr[$value['status']];
+							?>
+
+						</td>
+						<td><?php echo $num; ?></td>
+
+						<td title="<?php echo date('Y-m-d H:i:s', $value['source_time']); ?>"><?php echo date('Y-m-d H:i:s', $value['create_time']); ?></td>
+
+						<td>
+							<?php if (in_array($value['status'], array(Widget_Service_Source::STATUS_OK, Widget_Service_Source::STATUS_CLOSE))): ?>
+								<a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+							<?php endif; ?>
+						</td>
+					</tr>
+				<?php } ?>
+			</table>
+		</div>
+		<div class="h_a">
+			<?php if ($status == 0):?>
+				<span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">开启</button></span></span>
+			<?php elseif ($status == 1): ?>
+				<span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">关闭	</button></span></span>
+			<?php endif;?>
+			<span class="btn2"><span><button onclick="$('#action').val('delete');" type="submit">删除</button></span></span>
+			<?php if ($status == -5):?>
+				<span class="btn2"><span><button onclick="$('#action').val('clear');" type="submit">一键清理废弃数据</button></span></span>
+			<?php endif;?>
+			<span> 共<?php echo $total; ?>条结果</span>
+		</div>
+		<div class="mr10 cc">
+			<?php echo $pager; ?>
+		</div>
+	</form>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			ajaxForm('batchForm', function (data) {
+				ajaxRedirect(data, baseurl + '/Admin/Widget_Source/index?s=1');
+			});
+			$("#tabs").tabs();
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

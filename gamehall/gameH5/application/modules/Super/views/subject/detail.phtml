@@ -1,0 +1,50 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+</script>
+<div id="page">
+		<article class="ac">
+			<div class="slide-pic h J_slidePic">
+				<div class="slideWrap">
+					<div class="pic">
+						<a><img src="<?php echo $attachPath.$info['img'];?>"></a>
+					</div>
+				</div>
+				<div class="handle">
+					<span class="on"></span>
+					<span></span>
+					<span></span>
+				</div>
+			</div>
+			<div class="item-list J_gameItem">
+				<ul>
+				    <?php if(count($games)){?>
+					<?php foreach($games as $key=>$value) {?>
+					<li>
+						<a class="detail" href="<?php echo $webroot.'/super/game/detail/?id='.$value['id'].'&intersrc=SUBJECT&t_bi='.$source;?>">
+							<div class="pic"><img src="<?php echo $attachPath. $value['img'];?>" alt="<?php echo $value['name'];?>"></div>
+							<div class="desc">
+								<h3><?php echo $value['name'];?></h3>
+								<p><?php echo $value['resume'];?></p>
+							</div>
+						</a>
+						<div class="download"><a class="btn" href="<?php echo Common::tjurl($tjUrl, $value['id'], 'GAME', $value['link']);?>">安装</a></div>
+					</li>
+					<?php }?>
+					<?php }?>
+				</ul>
+			</div>
+			<?php if($hasnext){ ?>
+			<div class="load-more J_loadMore" data-ajaxUrl="<?php echo $webroot.'/super/subject/moreSj/?id='.$id.'&t_bi='.$source;?>" data-hasnext="<?php echo $hasnext;?>" data-curpage="<?php echo $page;?>">
+				<span>加载更多</span>
+			</div>
+			<?php } ?>
+		</article>
+
+		<footer class="ft">
+			<div class="back-top"><a class="btn" href="#top">返回顶部</a></div>
+		</footer>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<?php echo $this->render("layout/header.phtml");?>
+<section id="page">
+	<!-- 主体内容 -->
+	<section id="content">
+		<section class="product">
+			<section class="product-score">
+				<nav>
+					<ul>
+						<li <?php if(!$st) echo 'class="actived"';?>><a href="<?php echo $webroot.'/product/';?>">正在进行</a></li>
+						<li <?php if($st) echo 'class="actived"';?>><a href="<?php echo $webroot.'/product/?st=1';?>">即将开始</a></li>
+					</ul>
+				</nav>
+				  <ul class="mod-text-list">
+				     <?php if(!$st && count($buygoods) > 0){?>
+				     <li>
+						<ul class="mod-tw-list">
+							<li><img src="<?php echo $attachPath . $buygoods['img'];?>" alt="" /></li>
+							<li>
+								<dl>
+									<dd><?php echo $buygoods['title'];?></dd>
+									<dd><span class="zt-orange"><?php echo $buygoods['price'];?></span>元 可用<span class="zt-orange"><?php echo $buygoods['silver_coin'];?></span>元银币抵现</dd>
+									<dd>已有<?php echo $buygoods['purchase_num'];?>人购买 <a href="<?php echo $webroot,'/product/detail?id=',$buygoods['id']; ?>" class="button fr"><span class="btn orange-arrow"><em>查看详情</em></span></a></dd>
+								</dl>
+							</li>
+						</ul>
+						<p class="J_countDown"  data-starTime="<?php echo $buygoods['start_time'];?>" data-endTime="<?php echo $buygoods['end_time'];?>" data-currentTime="<?php echo strtotime(date('Y-m-d H:i:s',time()));?>"><span class="zt-orange"><?php echo $st == 0 ? "剩余" :"还有";?><span class="hours">00</span>小时<span class="minutes">00</span>分钟<span class="seconds">00</span>秒 <?php echo $st == 0 ? "" :"开始";?> 
+						</span></p>
+					</li>
+					<?php } ?>
+				    <?php foreach($goods as $key=>$value){ ?>
+				    <?php if($value['id'] != $buygoods['id'] && count($goods) > 0){?>
+					<li>
+						<ul class="mod-tw-list">
+							<li><img src="<?php echo $attachPath . $value['img'];?>" alt="" /></li>
+							<li>
+								<dl>
+									<dd><?php echo $value['title'];?></dd>
+									<dd><span class="zt-orange"><?php echo $value['price'];?></span>元 可用<span class="zt-orange"><?php echo $value['silver_coin'];?></span>元银币抵现</dd>
+									<?php if(!$st){ ?>
+									<dd>已有<?php echo $value['purchase_num'];?>人购买
+									    <?php if($value['stock_num'] <= 0){?> 
+										<span class="button fr"><span class="btn gray-arrow"><em>卖光了</em></span></span>
+										<?php } else {?>
+										<a href="<?php echo $webroot,'/product/detail?id=',$value['id']; ?>" class="button fr">
+										<span class="btn orange-arrow"><em>查看详情</em></span></a>
+										<?php } ?>
+									</dd>
+									<?php } else { ?>
+									<dd><a href="javascript:;" class="button fr"><span class="btn gray-arrow"><em>即将开始</em></span></a></dd>
+									<?php } ?>
+								</dl>
+							</li>
+						</ul>
+						<p class="J_countDown"  data-starTime="<?php echo $value['start_time'];?>" data-endTime="<?php echo $value['end_time'];?>" data-currentTime="<?php echo strtotime(date('Y-m-d H:i:s',time()));?>"><span class="zt-orange"><?php echo $st == 0 ? "剩余" :"还有";?><span class="hours">00</span>小时<span class="minutes">00</span>分钟<span class="seconds">00</span>秒 <?php echo $st == 0 ? "" :"开始";?> 
+						</span></p>
+					</li>
+				   <?php  } }?>
+				</ul>
+			</section>
+		</section>
+	</section>
+	<!--  /主体内容 -->
+</section>
+</body>
+</html>

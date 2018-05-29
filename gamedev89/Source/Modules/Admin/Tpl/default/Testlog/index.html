@@ -1,0 +1,128 @@
+<form id="pagerForm" action="__ACTION__" method="post">
+	<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+	<input type="hidden" name="numPerPage" value="{$_REQUEST.numPerPage}" />
+	<input type="hidden" name="orderField" value="{$_REQUEST.orderField}" />
+	<input type="hidden" name="orderDirection" value="{$_REQUEST.orderDirection}" />
+	<volist name="_search" key="name" id="field">
+		<input type="hidden" name="_search[{$key}]" value="{$field|safe}"/>
+	</volist>
+</form>
+
+<div class="page">
+
+	<!--查询开始-->
+	<div class="pageHeader">
+		<form onsubmit="return navTabSearch(this);" action="__URL__" method="post" name="myform" id = 'myform'>
+		<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+        <input type="hidden" name="type" value="{$_REQUEST.type}"/>
+		<div class="searchBar">
+			<ul class="searchContent" style=" overflow:inherit;">
+				
+				<li>
+					<label>应用名称：</label>
+					<input type="text" name="_search[app_name]" value="{$_REQUEST._search.app_name}"/>
+				</li>
+				<li>
+					<label>应用包名：</label>
+					<input type="text" name="_search[package]" value="{$_REQUEST._search.package}"/>
+				</li>
+				<li class="select_admin_id">
+					<label>审核人：</label>
+					{$adminList}
+					<script>$(".select_admin_id select").val('{$_search.admin_id}');</script>
+				</li>
+                <li>
+					<label>审核时间：</label>
+					<input type="text" name="_search[timeStart]" value="{$_REQUEST._search.timeStart}" class="date" yearstart="-10" yearend="0" pattern="yyyy-MM-dd" readonly/>
+					到<input type="text" name="_search[timeEnd]" value="{$_REQUEST._search.timeEnd}" class="date" yearstart="-10" yearend="0" pattern="yyyy-MM-dd" readonly/>
+				</li>
+                
+                <div class="buttonActive"><div class="buttonContent"><button type="submit">查询</button></div></div>
+			</ul>
+
+		</div>
+		</form>
+	</div>
+	<!--查询结束-->
+	
+	<div class="pageContent">
+			<div class="panelBar">
+		<ul class="toolBar">
+			<li class="line">line</li>
+			<li><a class="icon" href="{:U('Testlog/export')}" target="dwzExport" targetType="navTab" title="实要导出这些记录吗?"><span>导出EXCEL</span></a></li>
+		</ul>
+	</div>
+		<!-- 列表开始 -->
+		<table class="list" width="100%" layoutH="138">
+			<thead>
+			<tr>
+				<th orderField="id" class="{:orderField('id','asc')}">ID</th>
+				<th>审核日期</th>
+				<th>应用名称</th>
+				<th>版本名称</th>
+				<th>审核结果</th>
+				<th>审核备注</th>
+				<th>审核人</th>
+				<th>操作</th>
+			</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="list">
+				<php>
+					$testUrl = Helper("Apk")->get_url("test");
+					$accounts = D("Dev://Accounts")->getAccountById($vo['account_id']);
+				</php>
+			
+				<tr target="sid_user" rel="{$vo['id']}">
+					<td>{$vo['id']}</td>
+					<td><notempty name="vo.checked_at">{$vo['checked_at']|date="Y-m-d H:i:s",###}</notempty></td>
+					<td>{$vo['app_name']}</td>
+					<td>{$vo['version_name']}</td>
+					<td>
+					
+					 <php>
+			       	  if($vo['result_id']==1){
+			       	  	echo "已通过";
+				      }
+				      else{
+				      	echo "未通过";
+				      }
+				      </php>
+					
+					</td>
+					<td width="250">
+					{$vo['remarks']}
+					</td>
+					<td>
+					{:D("Admin")->where(array("id"=>$vo['admin_id']))->getField('nickname');}
+					</td>
+					<td width="150">
+						<notempty name="vo.doc_file"><a href="{$testUrl}{$vo['doc_file']}">下载文档</a><else/>无测试文档</notempty>
+					</td>
+				</tr>
+				
+			</volist>
+			</tbody>
+		</table>
+		<!-- 列表结束 -->
+		
+		<!-- 分页开始 -->
+		<div class="panelBar">
+			<div class="pages">
+				<span>显示</span>
+				<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+					<option value="10" <eq name="numPerPage" value="10">selected</eq>>10</option>
+					<option value="20" <eq name="numPerPage" value="20">selected</eq>>20</option>
+					<option value="50" <eq name="numPerPage" value="50">selected</eq>>50</option>
+					<option value="100" <eq name="numPerPage" value="100">selected</eq>>100</option>
+					<option value="200" <eq name="numPerPage" value="200">selected</eq>>200</option>
+				</select>
+				<span>共{$totalCount}条</span>
+			</div>
+			<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="10" currentPage="{$currentPage}"></div>
+		</div>
+		<!-- 分页结束 -->
+		
+	</div>
+	
+</div>

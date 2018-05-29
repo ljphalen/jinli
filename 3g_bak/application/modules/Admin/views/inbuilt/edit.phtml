@@ -1,0 +1,88 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<style>
+	.iform {
+		width: 200px;
+	}
+</style>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $indexUrl; ?>">书签列表</a></li>
+		<li class="current"><a href="<?php echo $editUrl; ?>">編輯书签</a></li>
+	</ul>
+</div>
+<div class="h_a">添加书签</div>
+<form method="post" action="<?php echo $this->baseUrl;; ?>" id="addForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input type="hidden" value="<?php echo $data['id']; ?>" name="id">
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">Key(格式：模块名_位置)*</th>
+				<td class="td"><input type="text" class="input" name="key" value="<?php echo $data['key']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">链接*</th>
+				<td class="td">
+					<input type="text" name="url" id="url" class="input wc" value="<?php echo $data['url']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">名称 (后台看)*</th>
+				<td class="td">
+					<input type="text" name="name" id="name" class="input" value="<?php echo $data['name']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">分组 (后台看)*</th>
+				<td class="td">
+					<input type="text" name="cate" id="cate" class="input" value="<?php echo $data['cate']; ?>"></td>
+			<tr>
+
+			<tr class="tr">
+				<th class="th">排序 (后台看)</th>
+				<td class="td">
+					<input type="text" name="sort" id="sort" class="input" value="<?php echo $data['sort']; ?>"></td>
+			<tr>
+
+			<tr class="tr">
+				<th class="th">用途</th>
+				<td class="td"><input name="usage" id="usage" class="input wc" value="<?php echo $data['usage']; ?>">
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">机型</th>
+				<td class="td">
+					<input type="text" name="model" id="model" class="input" value="<?php echo $data['model']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">版本</th>
+				<td class="td">
+					<input type="text" name="version" id="version" class="input" value="<?php echo $data['version']; ?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">运营商</th>
+				<td class="td">
+					<input type="text" name="operator" id="operator" class="input" value="<?php echo $data['operator'] ?>">
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+	//用户表单数据提交
+	$(document).ready(function () {
+		$('#start_time').datetimepicker();
+		$('#end_time').datetimepicker();
+
+		ajaxForm('addForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/inbuilt/index');
+		});
+	})
+
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

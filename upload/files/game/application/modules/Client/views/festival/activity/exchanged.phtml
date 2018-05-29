@@ -1,0 +1,36 @@
+<?php echo $this->render("festival/activity/header.phtml");?>
+<body>
+	<header class="pic-container-ac">
+		<img data-src="<?php echo $attachPath . $prizeInfo['img']; ?>" src="<?php echo $staticroot; ?>/apps/game/events/medalEvent/pic/blank.gif" alt=""/>
+	</header>
+	<acrticle class="ac">
+		<div class="prize-tips-container">
+			<h1 class="sub-title"><?php echo $prizeInfo['name'] ?></h1>
+			<?php $propsArr = explode(',', $prizeInfo['condition']);?>
+			<span class="prize-tips">兑换此奖品需要集齐<?php echo $prizeInfo['condition'] ? count($propsArr) : 0; ?>个<?php echo $festivalInfo['prop_name']?></span>
+		</div>
+		<div class="address-info-container">
+			<h1 class="exchange-tips">您已兑换此奖品</h1>
+			<div class="address-info">
+				<div class="ui-form-item">
+					<label>收货人：</label>
+					<span><?php echo $exchangeInfo['contact'];?></span>
+				</div>
+				<div class="ui-form-item">
+					<label>联系电话：</label>
+					<span><?php echo $exchangeInfo['phone'];?></span>
+				</div>
+				<div class="ui-form-item">
+					<label>收货地址：</label>
+					<span><?php echo $exchangeInfo['address'];?></span>
+				</div>
+			</div>
+			<div class="recive-tips">
+				如果收货信息填写错误或有其它疑问，请拨打<br/>
+				客服电话:<?php echo $servicePhone;?>
+			</div>
+		</div>
+	</acrticle>
+	
+</body>
+</html>

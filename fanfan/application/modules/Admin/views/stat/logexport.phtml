@@ -1,0 +1,35 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="table_full">
+	<form action="<?php echo $baseUrl; ?>" method="POST">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+		<table width="100%" cellspacing="0" cellpadding="0">
+			<tr class="tr1">
+				<td class="td1">
+					类型:<select name="type" id="type">
+						<?php
+						foreach($types as $type => $name):
+							?>
+							<option value="<?php echo $type;?>"><?php echo $name;?></option>
+						<?php endforeach; ?>
+					</select>
+					开始日期:<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $sdate; ?>">
+					结束日期:<input class="input" type="text" maxlength="30" id="edate" name="edate" value="<?php echo $edate; ?>">
+
+					<input type="submit" value="生成报表"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+	<script type="text/javascript">
+		$(document).ready(function () {
+
+			$("#sdate").datepicker({
+				dateFormat: 'yymmdd'
+			});
+			$("#edate").datepicker({
+				dateFormat: 'yymmdd'
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

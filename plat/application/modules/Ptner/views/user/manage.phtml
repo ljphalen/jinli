@@ -1,0 +1,181 @@
+﻿<?php echo $this->render("user/header.phtml");?>
+<body>
+    <?php echo $this->render("user/top.phtml");?>
+    <div class="main-container">
+        <?php echo $this->render("user/nav.phtml");?>
+        <div class="container">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="active"><a href="#home" data-toggle="tab">主页设置</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="home">
+                    <form id="setting-form" class="form-horizontal" role="form" method="post" action="<?php echo $managePostUrl;?>">
+                        <input type="hidden" name="token" value="<?php echo $token;?>">
+                        <div class="form-group">
+                            <label for="title" class="col-sm-2 control-label">商户名称</label>
+                            <div class="col-sm-8">
+                                <input value="<?php echo $data['title'];?>" name="title" class="form-control" id="title" placeholder="商户名称">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="title" class="col-sm-2 control-label">选择主题</label>
+                            <div class="col-sm-10">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <?php ${'theme_'.$data['theme']} = 'active';?>
+                                    <label class="btn btn-default <?php echo $theme_snack;?>">
+                                        <input type="radio" name="theme" id="theme" value="snack">
+                                        通用主题</label>
+                                    <label class="btn btn-default <?php echo $theme_;?>">
+                                        <input type="radio" name="theme" id="theme" value="">
+                                        大众主题</label>
+                                    <label class="btn btn-default <?php echo $theme_coffee;?>">
+                                        <input type="radio" name="theme" id="theme" value="coffee">
+                                        咖啡主题</label>
+                                    <label class="btn btn-default <?php echo $theme_hair;?>">
+                                        <input type="radio" name="theme" id="theme" value="hair">
+                                        美发主题</label>
+                                    <label class="btn btn-default <?php echo $theme_food;?>">
+                                        <input type="radio" name="theme" id="theme" value="food">
+                                        餐饮主题</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="title" class="col-sm-2 control-label">商户logo</label>
+                            <div class="col-sm-9">
+                                <input type="hidden" name="logo" value="<?php echo $data['logo'];?>"/>
+                                <div class="input-group">
+                                    <a href="javascript:void(0);" class="btn_addPic">
+                                        <span><em>+</em>上传logo</span>
+                                        <input data-url="/ptner/user/upload?type=logo" img-target="logo"  name="img" class="filePrew" type="file">
+                                    </a>
+                                </div>
+                                <div class="preview-pane">
+                                    <div class="preview-container" style="width:120px;height:120px">
+                                        <img id="logo-pic" src="<?php echo $attachPath,$data['logo']?>">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="title" class="col-sm-2 control-label">商户广告</label>
+                            <div class="col-sm-9">
+                                <input type="hidden" name="baner" value="<?php echo $data['baner'];?>"/>
+                                <div class="input-group">
+                                    <a href="javascript:void(0);" class="btn_addPic">
+                                        <span><em>+</em>上传广告图</span>
+                                        <input data-url="/ptner/user/upload?type=baner" img-target="baner" name="img" class="filePrew" type="file">
+                                    </a>
+                                </div>
+                                <div class="preview-pane">
+                                    <div class="preview-container">
+                                        <img id="baner-pic" src="<?php echo $attachPath,$data['baner']?>">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="J_alert alert"></span>
+                        <div class="divder">
+                            <button type="button" id="preview" class="btn btn-warning">预览</button>
+                            <button type="submit" class="btn btn-primary">发布</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog" style="width: 380px; height: 600px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">预览</h4>
+                </div>
+                <div class="modal-body">
+                    <iframe id="preview-frame" frameborder="0" height="480px" style="width: 100%; border: 0px"></iframe>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+<?php echo $this->render("user/footer.phtml");?>
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="/static/js/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="/static/js/jquery.fileupload.js"></script>
+<script type="text/javascript" src="/static/js/jquery.form.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $("button[type=submit]").click(function(event) {
+            $('#setting-form').ajaxSubmit(function(ret){
+                if (ret.success == false) {
+                    $(".J_alert").addClass("alert-danger").html(ret.msg).css('display','block');
+                } else {
+                    $(".J_alert").addClass("alert-success").html(ret.msg).css('display','block');
+                }
+                setTimeout(function(){
+                    $(".J_alert").hide();
+                }, 1000);
+            });
+            return false;
+        });
+    })
+</script>
+<script type="text/javascript">
+    var hip;
+    $('.filePrew').bind('fileuploadsubmit', function (e, data) {
+        data.formData = {token: $("input[name=token]").val()};
+        hip = $(this).attr("img-target");
+    }).fileupload({
+        url: $(this).attr("data-url"),
+        dataType: 'json',
+        success:function(ret) {
+            if (ret.success) {
+                $("#"+ hip+"-pic").attr("src", "<?php echo $attachPath?>"+ret.data);
+                $("input[name="+ hip+"]").val(ret.data);
+            } else {
+            }
+        },
+        done: function (e, data) {
+        }
+    })
+</script>
+
+<script type="text/javascript">
+    $('#preview').click(function(){
+        $.ajax({
+            method:'POST',
+            url: "<?php echo $previewPostUrl;?>",
+            data: $('#setting-form').serialize()
+        }).done(function(ret) {
+            if (ret.success == false) {
+                $(".J_alert").addClass("alert-danger").html(ret.msg).css('display','block');
+            } else {
+                $("#preview-frame").attr("src", "<?php echo $previewUrl;?>");
+                $("#myModal").modal({                    // wire up the actual modal functionality and show the dialog
+                    "backdrop"  : "static",
+                    "keyboard"  : true,
+                    "show"      : true                     // ensure the modal is shown immediately
+                }).show();
+            }
+            setTimeout(function(){
+                $(".J_alert").hide();
+            }, 1000);
+        });
+        return false;
+    })
+
+</script>
+
+</body>
+</html>

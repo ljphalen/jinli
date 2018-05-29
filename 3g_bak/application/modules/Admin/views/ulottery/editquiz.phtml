@@ -1,0 +1,82 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+			<ul class="cc">
+			<li><a href="<?php echo $quizUrl; ?>">列表</a></li>
+			<li class="current"><a href="<?php echo $editQuizUrl; ?>">添加内容</a></li>
+			<li><a href="<?php echo $importQuizUrl; ?>">数据导入</a></li>
+			<li class=""><a href="<?php echo $quizConfigUrl; ?>">配置信息</a></li>
+			<li><a href="<?php echo $quizlogUrl; ?>">统计信息</a></li>
+
+		</ul>
+	</div>
+	<div class="table_list">
+		<form method="post" action="<?php echo $postQuizUrl; ?>" id="addForm">
+			<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+			<div class="table_full">
+				<table style="width: 100%">
+					<tr class="tr">
+						<th class="th">测试题名:</th>
+						<td class="td"><input name="title" id="title" class="input" value="<?php echo $data['title']; ?>">
+						</td>
+					</tr>
+					
+						<tr class="tr">
+						<th class="th">检索关键词:</th>
+						<td class="td"><input name="keywords" id="keywords" class="input" value="<?php echo $data['keywords']; ?>">
+						</td>
+					</tr>
+					
+					<tr class="tr">
+						<th class="th" >答案选项 A:</th>
+						<td class="td">
+							<input  type = "text"  name="option1" id="answer1" class="input" value="<?php echo $data['option1']; ?>"></td>
+					</tr>
+					<tr class="tr">
+						<th class="th">答案选项 B:</th>
+						<td class="td"><input type = "text"   name="option2" id="option2" class="input" value="<?php echo $data['option2']; ?>">
+						</td>
+					</tr>
+
+					<tr class="tr">
+						<th class="th">答案选项 C:</th>
+						<td class="td">
+							<input  type = "text"  name="option3"  id="option3" class="input" value="<?php echo $data['option3']; ?>"></td>
+					</tr>
+
+					<tr class="tr">
+						<th class="th">答案选项 D:</th>
+						<td class="td">
+							<input  type = "text"  name="option4"   class="input" value="<?php echo $data['option4']; ?>">
+						</td>
+					</tr>
+					<tr class="tr">
+						<th class="th">状态</th>
+						<td class="td">
+							<select name="answer">
+							<option value="0">选择</option>
+							<?php foreach($options as $k=>$v){?>
+								<option value="<?php echo $k;?>" <?php if($k == $data['answer']) echo 'selected';  ?>><?php echo $v;?></option>
+							<?php }?>
+							</select>
+						</td>
+					</tr>
+
+				</table>
+				<div class="mb10 tac">
+					<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+				</div>
+				<input type="hidden" value="<?php echo $data['id']; ?>" name="id">
+			</div>
+		</form>
+	</div>
+
+	<script type="text/javascript">
+		//用户表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Ulottery/quiz');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

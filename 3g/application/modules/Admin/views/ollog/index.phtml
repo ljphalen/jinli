@@ -1,0 +1,41 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $editUrl; ?>">添加日志记录</a></li>
+		<li class="current"><a>上线日志列表</a></li>
+	</ul>
+</div>
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">ID</td>
+			<td>上线日期</td>
+			<td>上线说明</td>
+			<td>添加人</td>
+			<td>添加时间</td>
+			<td>修改人</td>
+			<td>修改时间</td>
+			<td width="120">操作</td>
+		</tr>
+		<?php foreach ($list as $key => $value) { ?>
+			<tr class="ct">
+				<td><?php echo $value['id']; ?></td>
+				<td><?php echo $value['online_date']; ?></td>
+				<td><?php echo $value['title']; ?></td>
+				<td><?php echo $value['admin_name']; ?></td>
+				<td><?php echo date('Y-m-d H:i:s', $value['add_time']); ?></td>
+				<td><?php echo $value['modifier'] ? $value['modifier'] : '--'; ?></td>
+				<td><?php echo $value['edit_time'] ? date('Y-m-d H:i:s', $value['edit_time']) : '--'; ?></td>
+				<td>
+					<a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+					<?php if ($userinfo['username'] == 'admin') { ?>
+						<a href="javascript:" onclick="deleteOne('<?php echo $delUrl; ?>?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+					<?php } ?>
+				</td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?></div>

@@ -1,0 +1,77 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body>
+	<div class="module webapp dhm-shopping-cat">
+		<!-- 购物车为空的时候 -->
+	    <?php if(!$cart) {?>
+		<div class="page-no-result">
+			<div class="tip-wrap">
+				<div class="pic cart"></div>
+				<p class="tip">您的购物车暂时没有商品</p>
+				<a href="<?php echo $webroot;?>" class="btn btn-submit">去逛逛</a>
+			</div>
+		</div>
+<?php } else {?>
+		<div class="select-bar">
+			<div class="custom-checkbox">
+				<input name="checkboxAll" type="checkbox" id="J_selectAll">
+				<label for="J_selectAll">全选</label>
+			</div>
+			<span id="J_delete" data-ajaxUrl="<?php echo $webroot;?>/cart/del">删除</span>
+		</div>
+		<section class="iScroll">
+			<form name="goods-buy" id="goods-buy" action="<?php echo $buyUrl; ?>" method="post">
+				<input type="hidden" value="<?php echo "$token" ?>" name="token"> 
+				<div class="goods-list-wrap">
+					<ul class="goods-list" id="J_goodsList">
+						<?php foreach($cart as $item){?>
+						<li class="list-wrap">
+							<div class="checkbox-wrap">
+								<input name="cart_ids[]" value="<?php echo $item['id'];?>" class="J_checkbox" type="checkbox">
+							</div>
+							<a href="<?php echo $webroot;?>/goods/detail?id=<?php echo $item['goods_id'];?>" class="pic">
+								<img src="<?php echo $staticPath;?>/assets/img/pic_imgDefault.png" data-src="<?php echo Common::getAttachPath() . $goods[$item['goods_id']]['img']; ?>">
+							</a>
+							<div class="detail">
+								<a href="<?php echo $webroot;?>/goods/detail?id=<?php echo $item['goods_id'];?>" class="title"><?php echo Util_String::substr($goods[$item['goods_id']]['title'], 0, 36, '', true); ?></a>
+								<span class="price J_price">￥<?php echo $item['price']; ?></span>
+								<ul class="add-minus-num float-right">
+									<li class="J_minus <?php if($item['goods_num'] <= 1) echo 'dis';?>" data-goodsid="<?php echo $item['goods_id'];?>">-</li>
+									<li class="J_count"><?php echo $item['goods_num'];?></li>
+									<li class="J_add" data-goodsid="<?php echo $item['goods_id'];?>">+</li>
+								</ul>
+							</div>
+						</li>
+						<?php }?>
+					</ul>
+				</div>
+			</form>
+		</section>
+		<div class="submit-orders-bar">
+			<div class="side float-left">
+				<span>已选<em id="J_num"><?php echo $cart_num;?></em>件</span>
+				<p class="price">合计：<em id="J_total">￥<?php echo $cart_total;?></em></p>
+			</div>
+			<button id="J_submitOrder" class="btn btn-submit float-right">结算</button>
+		</div>
+		<?php }?>
+	</div>
+	
+	<div id="J_modalDelete" class="modal J_modal" style="display:none;"></div>
+	
+	<script type="text/template" id="delete-template">
+		<div class="simple-dialog">
+			<div class="title">确定要删除<em><%=count>1?('这'+count):'该'%></em>款商品吗?</div>
+			<div class="wrap">
+				<div class="modal-cancel J_modalCancel">取消</div>
+				<div id="J_modalEnsure" class="modal-ensure J_modalCancel">确定</div>
+			</div>
+		</div>
+	</script>
+
+	<?php echo $this->render("layout/footer.phtml");?>
+
+	<script>
+		require(['shoppingCat']);
+	</script>
+</body>
+</html>

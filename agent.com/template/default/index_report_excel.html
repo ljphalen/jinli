@@ -1,0 +1,81 @@
+<{config_load file="site.conf"}>
+<{include file="public/pageHead.html"}>
+<link href="/template/default/css/validate.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/template/default/js/jquery.validate.js"></script>
+<script type="text/javascript" src="/template/default/css/main.css"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#theForm").validate({
+	});	
+});
+
+function create_excel(obj,ym){
+	$(obj).attr('disabled',true);
+	$(obj).val('正在生成...');
+	$.get("index.php?ac=<{$ac}>&ym="+ym+"&opt=create&t="+new Date().getTime(),function(data){
+		if(data.status=='1'){
+			alert('生成对帐单['+ym+'对帐单成功]');
+			document.location.reload();
+		}else{
+			alert('生成对帐单失败]');
+		}
+		$(obj).val('生成对帐单');
+		$(obj).attr("disabled",false);
+	},'json');
+}
+</script>
+<h1><span class="action-span"></span>
+<span class="action-span1">查询统计报表</span><span id="search_id"
+	class="action-span1"> - <{$actionText}></span>
+<div style="clear: both"></div>
+</h1>
+
+<div class="main-div">
+<form action="index.php?ac=<{$ac}>" method="post" enctype="multipart/form-data" name="theForm" id="theForm">
+<table width="100%">
+	<{if $error}>
+	<tr align="center">
+		<td colspan="2" style="color: red"><{$error}></td>
+	</tr>
+	<{/if}>
+	<tr>
+    <td colspan="3">
+    <div class="main-div">
+        <h1>
+            <div class="section_title">
+                <{$actionText}>            </div>
+        </h1>
+        <table border="0" cellpadding="4" cellspacing="1" id="list-table__" style="border:1px;">
+            <tbody>
+                <tr>
+                     <td align="center" nowrap="nowrap">日期</td>
+                     <td align="center" nowrap="nowrap">我方接入计费平台对帐单</td>
+                     <td align="center" nowrap="nowrap">爱贝计费平台对帐单</td>
+                     <td align="center" nowrap="nowrap">渠道自有支付对帐单</td>
+					 <td align="center" nowrap="nowrap">移动自有渠道对帐单</td>
+                      <td align="center" nowrap="nowrap">操作</td>
+                </tr>
+            <{foreach from=$dates key=key item=item}>
+                <tr>
+                  <td align="center" nowrap="nowrap"><{$item}></td>
+                    <td align="center" nowrap="nowrap"><{if isset($files[$item])}><a href="index.php?ac=report_excel&opt=export&ym=<{$item}>&type=1">导出对帐单</a><{/if}></td>
+                    <td align="center" nowrap="nowrap"><{if isset($files[$item])}><a href="index.php?ac=report_excel&opt=export&ym=<{$item}>&type=2">导出对帐单</a><{/if}></td>
+                    <td align="center" nowrap="nowrap"><{if isset($files[$item])}><a href="index.php?ac=report_excel&opt=export&ym=<{$item}>&type=3">导出对帐单</a><{/if}></td>
+                    <td align="center" nowrap="nowrap"><{if isset($files[$item])}><a href="index.php?ac=report_excel&opt=export&ym=<{$item}>&type=4">导出对帐单</a><{/if}></td>
+                    <td align="center" nowrap="nowrap"><input type="button" value="<{if isset($files[$item])}>重新<{/if}>生成对帐单" onclick="create_excel(this,'<{$item}>');" /></td>
+                </tr>
+            <{/foreach}>
+            </tbody>
+        </table>
+    </div>    </td>
+    </tr>
+    <tr>
+        <td colspan="2"></td>
+    </tr>
+  </tbody>
+</table>
+</form>
+</div>
+
+<{include file="public/pageFoot.html"}>
+<script src="/template/default/js/common.js" type="text/javascript" language="javascript"></script>

@@ -1,0 +1,111 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">产品列表</a></li>
+		<li class="current"><a href="javascript:;">添加产品</a></li>
+	</ul>
+</div>
+<div class="h_a">添加产品</div>
+<form method="post" action="<?php echo $addPostUrl; ?>" id="addFrom">
+	<input name="token" id="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">机型名称</th>
+				<td class="td"><input type="text" class="input" name="name" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input" name="sort" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td"><select name="status">
+						<option value="1">开启</option>
+						<option value="0">关闭</option>
+					</select></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">产品主图</th>
+				<td class="td">
+					<div id="imgs"></div>
+					<div class="mb10">
+						<button onclick="addupload();" onfocus="blur();" type="button" class="btn">＋添加预览图片</button>
+					</div>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">功能</th>
+				<td class="td">
+					<textarea name="function" style="width: 800px; height: 400px;"></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">外观</th>
+				<td class="td">
+					<textarea name="outward" style="width: 800px; height: 400px;"></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">参数</th>
+				<td class="td">
+					<textarea name="parameter" style="width: 800px; height: 400px;"></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+		var editor1, editor2, editor3;
+		KindEditor.ready(function (K) {
+			K.token = $('#token').val();
+			editor1 = K.create('textarea[name="function"]', {
+				resizeType: 1,
+				allowPreviewEmoticons: false,
+				allowImageUpload: true,
+				uploadJson: '<?php echo $uploadImgUrl;?>',
+				items: EDITOR_ITEMS
+			});
+
+			K.token = $('#token').val();
+			editor2 = K.create('textarea[name="outward"]', {
+				resizeType: 1,
+				allowPreviewEmoticons: false,
+				allowImageUpload: true,
+				uploadJson: '<?php echo $uploadImgUrl;?>',
+				items: EDITOR_ITEMS
+			});
+
+			K.token = $('#token').val();
+			editor3 = K.create('textarea[name="parameter"]', {
+				resizeType: 1,
+				allowPreviewEmoticons: false,
+				allowImageUpload: true,
+				uploadJson: '<?php echo $uploadImgUrl;?>',
+				items: EDITOR_ITEMS
+			});
+
+		});
+
+		var imgc = 1;
+		addupload = function () {
+			var al = $('<ul class="uploadImg"><li id="Img' + imgc + '"><img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/><input type="hidden" name="simg[' + imgc + ']" value=""></li></ul><p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>' + imgc + '" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>');
+			$('#imgs').append(al);
+			imgc++;
+		}
+
+		ajaxForm('addFrom', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Elifeserver/add');
+		}, function () {
+			editor1.sync();
+			editor2.sync();
+			editor3.sync();
+		});
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

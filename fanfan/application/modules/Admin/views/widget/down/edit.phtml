@@ -1,0 +1,138 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">资源列表</a></li>
+    <li class="current"><a href="javascript:;"><?php echo !empty($info['id'])?'编辑':'添加'; ?>资源</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑资源</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editResourceForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">CP</th>
+			<td class="td">
+				<select id="cp_id" name="cp_id" class="select">
+					<?php foreach ($cps as $key => $value) { ?>
+						<option value="<?php echo $key; ?>" <?php if ($info['cp_id'] == $key) echo 'selected'; ?>><?php echo "{$value[0]}({$value[1]})"; ?></option>
+					<?php } ?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">资源名称</th>
+			<td class="td"><input type="text" class="input" name="name" value="<?php echo $info['name'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">简述</th>
+			<td class="td"><input type="text" class="input wc" name="desc_s" value="<?php echo $info['desc_s'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">简述(展开)</th>
+			<td class="td"><textarea class="input" name="desc" class="textarea wc" style="height:150px;width:450px"><?php echo $info['desc'];?></textarea></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">温馨提示</th>
+			<td class="td"><input type="text" class="input wc" name="tip" value="<?php echo $info['tip'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">下载地址</th>
+			<td class="td"><input type="text" class="input wc" name="url" value="<?php echo $info['url'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">公司名称</th>
+			<td class="td"><input type="text" class="input" name="company" value="<?php echo $info['company'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">资源大小</th>
+			<td class="td"><input type="text" class="input" name="size" value="<?php echo $info['size'];?>"></td>
+		</tr>
+
+		<tr class="tr">
+				<th class="th">图标</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="ResourceImg">
+						<img src="<?php echo $attachPath . $info['icon'];?>" width="100" />
+							<input type="hidden" name="icon" value="<?php echo $info['icon'];?>"> <br />
+						<a href="javascript:;">删除</a></li>
+					</ul>
+					<p style="clear: both;">
+						<iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=ResourceImg';?>" style="height: 50px; width: 100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tr>
+		<tr class="tr">
+			<th class="th">资源图片</th>
+			<td class="td">
+					<?php
+					$i=0;
+					foreach($info['pic'] as $picUrl) {
+						$imgName = "upImg{$i}";
+					?>
+						<div id="<?php echo $imgName;?>">
+							<ul class="uploadImg">
+								<li id="<?php echo $imgName;?>">
+									<img src="<?php echo $attachPath.$picUrl;?>"/>
+									<input type="hidden" name="simg[<?php echo $i;?>]" value="<?php echo $picUrl;?>">
+								</li>
+								<li><a href="javascript:void(0)" onclick="deleteImg('<?php echo $imgName;?>', event);">删除</a></li>
+							</ul>
+
+							<p style="clear:both;"><!--<iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=upImg',$i;?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>--></p>
+
+						</div>
+					<?php
+						$i++;
+					}?>
+				<div id="imgs"></div>
+				<div class="mb10"><button onclick="addupload();" onfocus="blur();" type="button"　class="btn">＋添加预览图片</button></div>				 
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">备注</th>
+			<td class="td"><textarea class="input" name="mark" class="textarea wc" style="height:60px;width:300px"><?php echo $info['mark'];?></textarea></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editResourceForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Widget_Down/index');
+	},function(){
+		editor.sync();
+	})
+
+	var editor;
+	KindEditor.ready(function(K) {
+		K.token = $('#token').val();
+		editor = K.create('textarea[name="desc"]', {
+			resizeType : 1,
+			allowPreviewEmoticons : false,
+			allowImageUpload : false,
+			items : EDITOR_ITEMS
+		});
+	});
+
+
+	var imgc = <?php echo $i;?>;
+	addupload  = function() {
+		var al = $('<ul class="uploadImg"><li id="Img'+imgc+'"><img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/><input type="hidden" name="simg['+imgc+']" value=""></li></ul><p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>'+imgc+'" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>');
+		$('#imgs').append(al);
+		imgc++;
+	}
+	deleteImg = function(elid, e) {
+		showConfirm("确认删除该条信息？", function() {
+			$('#'+elid).remove();
+		}, e);
+	}
+	
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

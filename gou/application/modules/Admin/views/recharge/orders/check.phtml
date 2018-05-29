@@ -1,0 +1,68 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="javascript:;">充值状态查询</a></li>
+	</ul>
+</div>
+
+<form action="<?php echo $checkUrl;?>" method="post" id="searchForm" >
+	<input name="token" type="hidden" value="<?php echo $token;?>"/>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">订单号</th>
+				<td class="td">
+					<input class="input wb" type="text" id="trade_no" name="trade_no" value="<?php echo $order['trade_no'];?>" />
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn">
+			<span>
+				<button type="submit">搜 索</button>
+			</span>
+		</span>
+	</div>
+	
+</form>
+
+<?php if($order && $status){?>
+<div class="h_a">充值状态</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td" style="width:30%"><?php echo $status['status'] .'('.$status['code'].')';?></td>
+			<?php if($order['rec_status'] == 3 && $status['code'] != -1) {?>
+			<th class="th">补发充值状态</th>
+			<td class="td" style="width:30%">
+				<form method="post" action="<?php echo $recheckUrl;?>" id="editFrom">
+				<input name="token" value="<?php echo $token;?>" type="hidden" />
+				<input name="trade_no" value="<?php echo $order['trade_no'];?>" type="hidden" />
+				<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">补发</button></span></span></div>
+				</form>
+			</td>
+			<?php } if($status['code'] == -1 && $order['status'] == 2){?>
+				<td class="td" style="width:30%">
+				<form method="post" action="<?php echo $rechargeUrl;?>" id="editFrom">
+				<input name="token" value="<?php echo $token;?>" type="hidden" />
+				<input name="trade_no" value="<?php echo $order['trade_no'];?>" type="hidden" />
+				<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">补充</button></span></span></div>
+				</form>
+			</td>
+			<?php }?>
+		</tr>
+	</table>
+</div>
+<?php }?>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $checkUrl;?>');
+	});
+})
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

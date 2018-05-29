@@ -1,0 +1,276 @@
+<?php extract($pageData);?>
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>导航二级页面</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<link rel="stylesheet" href="<?php echo $staticResPath;?>/nav/css/navigator.min.css?v=<?php echo $version;?>" />
+	<script type="text/javascript">var token = '<?php echo $token;?>';</script>
+</head>
+
+<body>
+<script type="text/javascript">
+	var t_bi = '<?php echo $t_bi;?>';
+	//var typeData = <?php echo json_encode($pageData);?>;
+</script>
+<section id="wrapper">
+   <header class="cateNavi">
+      <div class="left">
+         <a href="<?php echo $webroot.'/nav';?>">首页</a>
+      </div>
+      <div class="right">
+         <nav id="tnav" class="wrap">
+         <?php 
+         	$i = 1;
+         	foreach($navHeader as $k=>$v){
+         ?>
+            <a href="#type_id=<?php echo $v[id] ?>" data-nid="<?php echo $i; ?>" data-tid="<?php echo $v[id];?>"><?php echo $v['name'];?></a>
+         <?php 
+     			$i++;
+     		}
+     	 ?>
+      </div>
+   </header>
+	<section class="module cate-search-wrap">
+		<form name="search-form" method="get" action="http://m.baidu.com/ssid=0/from=1670b/bd_page_type=1/uid=EED33CCA81FCF5178750360E15F8025D/s">
+			<div class="nav-search">
+				<!-- 默认 -->
+				<input type="text" name="word" class="form-input" autofoucs="false" autocomplete="off" placeholder="请输入搜索关键词" />
+				<input type="submit" name="channel_11" class="form-button" value="搜索"/>
+			</div>
+		</form>
+<!-- 		<div class="hot-words-box">
+			<div class="baidu-hot-words"></div>
+			<span id="J_convert" class="btn-convert" onclick="_hmt.push(['_trackEvent','GNnav数据','导航搜索-切换','导航搜索-换一换'])">换一换</span>
+		</div> -->
+		</div>
+	</section>
+	<section class="mcate m" id="mcate">
+    	<?php 
+         	$n = 1;
+         	foreach($navHeader as $k=>$v){
+         ?>
+            <div id="navcon<?php echo $n; ?>" class="navcon"></div>
+         <?php 
+     			$n++;
+     		}
+     	 ?>
+	</section>
+</section>
+<script id="tmpl_img_x_1" type="text/html">
+	<div class="drapdown-ads-img1">
+		<%for(var i = 0; i < list.length; i++) {%>
+			<%if(i == 0){%>
+				<a href="<%=list[i]['link']%><%=t_bi%>"  onclick="_hmt.push(['_trackEvent','GNnav数据','<%=stat['column']%>','<%=stat['column']%>_<%=list[i]['pos']%>'])"><img src="<%=list[i]['img']%>" alt=""></a>
+			<%}%>
+		<%}%>
+	</div>
+</script>
+<script id="tmpl_img_x_2" type="text/html">
+	<div class="drapdown-ads-img2">
+		<%for(var i = 0; i < list.length; i++) {%>
+			<%if(i < 2){%>
+				<a href="<%=list[i]['link']%><%=t_bi%>" onclick="_hmt.push(['_trackEvent','GNnav数据','<%=stat['column']%>','<%=stat['column']%>_<%=list[i]['pos']%>'])"><img src="<%=list[i]['img']%>" alt=""></a>
+			<%}%>
+		<%}%>
+	</div>
+</script>
+<script id="tmpl_img_x_3" type="text/html">
+	<ul class="hot-movie">
+		<%for(var i = 0; i < list.length; i++) {%>
+			<%if (i < 3){%>
+				<li>
+		<a href="<%=list[i]['link']%><%=t_bi%>" onclick="_hmt.push(['_trackEvent','GNnav数据','<%=stat['column']%>','<%=stat['column']%>_<%=list[i]['pos']%>'])">
+			<img src="<%=list[i]['img']%>" width="86" height="118" />
+			<p><%=list[i]['title']%></p>
+		</a>
+	</li>
+			<%}%>
+		<%}%>
+	</ul>
+</script>
+<script id="tmpl_words3" type="text/html">
+	<div class="movie-link">
+		<p>
+		<%for(var i = 1; i <= list.length; i++) {%>
+			<a href="<%=list[i-1]['link']%><%=t_bi%>" onclick="_hmt.push(['_trackEvent','GNnav数据','<%=stat['column']%>','<%=stat['column']%>_<%=list[i-1]['pos']%>'])"><%=list[i-1]['title']%></a>
+			<%if(i%3 == 0){%>
+				</p>
+				<%if( i != list.length){%><p><%}%>
+			<%}%>
+		<%}%>
+	</div>
+</script>
+<script id="tmpl_words4" type="text/html">
+	<div class="words4-link">
+		<p>
+		<%for(var i = 1; i <= list.length; i++) {%>
+			<a href="<%=list[i-1]['link']%><%=t_bi%>" onclick="_hmt.push(['_trackEvent','GNnav数据','<%=stat['column']%>','<%=stat['column']%>_<%=list[i-1]['pos']%>'])"><%=list[i-1]['title']%></a>
+			<%if(i%4 == 0){%>
+				</p>
+				<%if( i != list.length){%><p><%}%>
+			<%}%>
+		<%}%>
+	</div>
+</script>
+<script id="tmpl_words5" type="text/html">
+	<div class="words5-link">
+		<p>
+		<%for(var i = 1; i <= list.length; i++) {%>
+			<a href="<%=list[i-1]['link']%><%=t_bi%>" onclick="_hmt.push(['_trackEvent','GNnav数据','<%=stat['column']%>','<%=stat['column']%>_<%=list[i-1]['pos']%>'])"><%=list[i-1]['title']%></a>
+			<%if(i%5 == 0){%>
+				</p>
+				<%if( i != list.length){%><p><%}%>
+			<%}%>
+		<%}%>
+	</div>
+</script>
+<script id="tmpl_news_list" type="text/html">
+	<ul class="hot-news">
+	    <%for(i = 1; i <= list.length; i++) {%>
+		<li><a href="<%=list[i-1]['link']%><%=t_bi%>" onclick="_hmt.push(['_trackEvent','GNnav数据','<%=stat['column']%>','<%=stat['column']%>_<%=list[i-1]['pos']%>'])"><i class="num"><%=i%></i><span class="txt"><%=list[i-1]["title"]%><span></a></li>
+	    <%}%>
+	</ul>
+</script>
+<script id="tmpl_like" type="text/html">
+	<div class="movie-link">
+		<p>
+		<%for(var i = 1; i <= list.length; i++) {%>
+			<a href="<%=list[i-1]['link']%><%=t_bi%>" onclick="_hmt.push(['_trackEvent','GNnav数据','<%=stat['column']%>','<%=stat['column']%>_<%=list[i-1]['pos']%>'])" style="color:<%=list[i-1]['color']%>"><%=list[i-1]['title']%></a>
+			<%if(i%3 == 0){%>
+				</p>
+				<%if( i != list.length){%><p><%}%>
+			<%}%>
+		<%}%>
+	</div>
+</script>
+
+<script id="tmpl_bread" type="text/html">
+	<div class="drapdown-mod">
+		<div class="title"><h3><span><%=list[0]['title']%></span></h3></div>
+	</div>
+</script>
+
+<script id="tmpl_hot_link" type="text/html">
+	<div class="drapdown-ads-link">
+		<a href="<%=list[0]['link']%>">
+			<i class="icon-hot">hot</i>
+            <%=list[0]['title']%>
+        </a>
+	</div>
+</script>
+<script type="text/javascript" src="<?php echo $staticResPath;?>/nav/js/zepto.js?v=<?php echo $version;?>"></script>
+<script src="<?php echo $staticResPath;?>/nav/js/tempcore.js?v=<?php echo $version;?>"></script>
+<script type="text/javascript">
+   $(function(){
+      // 初始化数据
+      initData(0);
+      // 监听hash事件
+      window.onhashchange = function(){
+         initData();
+      }
+
+      //var initData = typeData['cinner2'];
+
+      function initData(flag){
+         var initTid = '', initNid= '';
+         if (location.hash == '') {
+            initTid = $('#tnav a').first().attr('data-tid');
+         } else {
+            initTid = location.hash.split('=')[1];
+         }
+
+         document.title = $('a[data-tid="'+initTid+'"]').text();
+         
+         var offLeft = $('a[data-tid="'+initTid+'"]').offset().left;
+         var scrLeft = $('#tnav').scrollLeft();
+         if (flag === 0) {
+            $('#tnav').scrollLeft(offLeft - 60);
+         } else {
+            $('#tnav').scrollLeft(scrLeft);
+         }
+
+         initNid = $('a[data-tid="'+initTid+'"]').attr('data-nid');
+
+         $('#tnav a').removeClass('selected');
+         $('#mcate .navcon').addClass('none');
+
+         $('a[data-tid="'+initTid+'"]').addClass('selected');
+         $('#navcon'+initNid).removeClass('none');
+         getAjaxData(initNid, initTid);
+      }
+
+      // $('#tnav a').on('click',function(){
+      //    var tid = $(this).attr('data-tid');
+      //    var nid = $(this).attr('data-nid');
+      //    $('#tnav a').removeClass('selected');
+      //    $('#mcate .navcon').addClass('none');
+      //    $(this).addClass('selected');
+      //    $('#navcon'+nid).removeClass('none');
+
+      //    getAjaxData(nid, tid);
+      // });
+
+      function getAjaxData(wrapId, typeId){
+         $.ajax({
+            url: "<?php echo $webroot; ?>/api/ng/cate?type_id=" + typeId,
+            method: 'get',
+            dataType: 'jsonp',
+            success: function(data){
+               getHtmlRender("navcon"+wrapId, data.data['cinner']);
+            } 
+         });
+      }
+
+      function getHtmlRender(wrap,arr){
+         var tmp = []; otmpl = {
+            'img1': 'tmpl_img1', // 一栏图片样式
+            'img2': 'tmpl_img2', // 两栏图片样式
+            'img3': 'tmpl_img3', // 三栏图片样式
+            'words3': 'tmpl_words3', // 三栏文字链接
+            'words4': 'tmpl_words4', // 四栏文字链接
+            'words5': 'tmpl_words5', // 五栏文字链接
+            'link': 'tmpl_news_list', // 新闻列表
+            'hotlink': 'tmpl_hot_link', // 推荐文字链广告
+            'like': 'tmpl_like', // 猜你喜欢
+            'bread': 'tmpl_bread' // 三栏小说样式
+         };
+
+         var content = arr.data.content;
+
+         for (var i = 0, lens = content.length; i < lens; i++) {
+            
+            content[i].t_bi = window.t_bi ? window.t_bi : '';
+
+            if (content[i]["list"]  != false){
+               var tdata = template.render(otmpl[content[i]["tpl"]],content[i]);
+               tmp.push(tdata);
+            }
+         }
+
+         $("#"+wrap).html(tmp.join(''));
+         tmp = null;
+      }
+
+      // $('.cateNavi').slidePic({
+      //    slidePanel: '.wrap',
+      //    slideItem: '.wrap a',
+      //    handleItem: '',
+      //    fixCurrent: function(){
+      //       var slideItem = $('.cateNavi a'), curIndex = 0;
+      //       $.each(slideItem, function(i, v){
+      //          var child = $(this).find('.selected');
+      //          if(child.length) curIndex = i;
+      //       });
+      //       return curIndex;
+      //    }
+      // });
+   });
+</script>
+<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

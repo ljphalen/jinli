@@ -1,0 +1,16 @@
+#2014-11-04 修正
+开发者平台计划任务：
+*/15 * * * * cd /data/www/gamedev && /usr/local/php.5.4.13/bin/php cli.php Apk > /tmp/apk.log  
+#说明：apk包处理的计划任务，包括 差分包、安全检查、签名 操作
+*/10 * * * * cd /data/www/gamedev && /usr/local/php.5.4.13/bin/php cli.php Block deblock > /dev/null 2&1  
+#说明：自动解封用户的计划任务。
+*/10 * * * * cd /data/www/gamedev && /usr/local/php.5.4.13/bin/php cli.php Sync get > /dev/null 2&1 
+#说明：同步运营平台游戏分类、游戏分辨率、游戏标签到开发者平台。
+*/10 * * * * cd /data/www/gamedev && /usr/local/php.5.4.13/bin/php cli.php Message send > /dev/null 2&1
+#说明：计划任务用来处理 1)与账号相关的（重置密码、审核注册账号）——注册邮箱 2)与应用相关的（审核应用，上下线收到邮件，发布消息）——联系人邮箱 邮件的发送
+*/5 * * * * cd /data/www/gamedev && /usr/local/php.5.4.13/bin/php cli.php Testin >/dev/null 2>&1
+#说明：计划任务用来发送游戏到testin做自动检测
+*/10 * * * * cd /data/www/gamedev && /usr/local/php.5.4.13/bin/php cli.php Online index
+#说明: 计划任务用来处理游戏的自动上线操作
+0   18 * * * cd /data/www/gamedev && /usr/local/php.5.4.13/bin/php cli.php Smtp everyDayReport
+#说明：定时发送审核后台每日审核简报

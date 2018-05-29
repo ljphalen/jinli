@@ -1,0 +1,5 @@
+#/bin/sh
+./command 'close'
+sleep 10
+ps -ef | grep "main.php" | grep -v 'grep' | awk '{print $2}'|xargs kill -9
+ps -ef | grep 'game worker' | grep -v 'grep' | awk '{print $2}' | xargs kill -9 &

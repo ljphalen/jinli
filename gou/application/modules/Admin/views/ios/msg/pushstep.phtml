@@ -1,0 +1,48 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="javascript:;">发送push设置</a></li>
+	</ul>
+</div>
+<div class="h_a">发送push设置</div>
+<form method="post" action="<?php echo $pushUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $id;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">发送对象</th>
+			<td class="td">
+				<select name="type_id" id="select">
+						<option value="1">所有用户</option>
+						<option value="2">指定用户</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr" id="imei" style="display:none">
+			<th class="th">token</th>
+			<td class="td"><textarea class="input" name="imei" class="textarea wc" style="height:120px;width:400px"></textarea>
+			(请填写token,多个用;号隔开)
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">发送</button></span></span></div>
+</form>
+<script type="text/javascript">
+//表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Ios_Msg/index');
+	});
+	$('#select').change(function(){
+		option = $(this).children('option:selected').val();
+        if(option != '2'){
+        	$('#imei').hide();
+        }else{
+        	$('#imei').show(); 
+        }        
+    }); 
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

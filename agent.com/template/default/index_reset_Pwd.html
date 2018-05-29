@@ -1,0 +1,91 @@
+<{config_load file="site.conf"}> <{include file="public/pageHead.html"}>
+<link href="/template/default/css/validate.css" rel="stylesheet"
+	type="text/css" />
+<script src="/template/default/js/jquery.validate.js" type="text/javascript"
+	language="javascript"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#theForm").validate({
+		rules: {
+			oldpwd:"required",
+			newpwd:{
+				required:true,
+				minlength:6,
+				maxlength:32
+			},
+			repwd: {
+				required:true,
+				equalTo:"#newpwd"
+			}
+		},
+		messages: {
+			oldpwd: "请输入旧密码",
+			newpwd:{
+				required:"请输入新密码",
+				minlength:"密码不能小于6个字符",
+				maxlength:"密码不能多于32个字符"
+			},
+			repwd: {
+				required:"请再次输入密码",
+				equalTo:"再次输入密码不正确"
+			}
+		}
+	});	
+});
+</script>
+<h1><span class="action-span"></span>
+<span class="action-span1">个人信息</span><span id="search_id"
+	class="action-span1"> - <{$actionText}></span>
+<div style="clear: both"></div>
+</h1>
+
+<div class="main-div">
+<form action="/index.php?ac=reset_Pwd" method="post"
+	enctype="multipart/form-data" name="theForm" id="theForm">
+<table width="100%">
+	<{if $error}>
+	<tr align="center">
+		<td colspan="2" style="color: red"><{$error}></td>
+	</tr>
+	<{/if}>
+	<tr>
+    <td colspan="3">
+    <div class="main-div">
+        <h1>
+            <div class="section_title">
+                密码设置
+            </div>
+        </h1>
+        <table id="list-table__" width="100%">
+            <tbody>
+                <tr>
+                    <td class="label_2" width="301">旧密码：</td>
+                    <td width="768"><input id="oldpwd" type="password" name="oldpwd" /><label><span>*</span>请输入密码</label></td>
+                </tr>
+                <tr>
+                    <td class="label_2" width="301">新密码：</td>
+
+                    <td><input id="newpwd" type="password" name="newpwd" /><label><span>*</span>6~32字符英文字母、数字或特殊字符任意组合</label></td>
+                </tr>
+                <tr>
+                    <td class="label_2" width="301">确认密码：</td>
+                    <td><input id="repwd" type="password" name="repwd" /><label><span>*</span>请再次输入密码</label></td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div>
+    </td>
+    </tr>
+    <tr>
+        <td colspan="2" align="center"><input type="submit" name="smt" id="smt" value="提交"
+            class="button" /></td>
+    </tr>
+  </tbody>
+</table>
+</form>
+</div>
+
+<{include file="public/pageFoot.html"}>
+<script src="/template/default/js/common.js" type="text/javascript"
+	language="javascript"></script>

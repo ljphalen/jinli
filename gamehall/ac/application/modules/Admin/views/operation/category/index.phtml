@@ -1,0 +1,31 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">分类列表</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>ID</td>
+			<td>名称</td>
+			<td>操作</td>
+		</tr>
+	 <?php foreach ($result as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td>
+			 	<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>&title=<?php echo $value['title'];?>">应用管理</a>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="<?php echo $sortUrl;?>/?id=<?php echo $value['id'];?>&title=<?php echo $value['title'];?>">应用排序</a>
+			</td>
+		</tr>
+	<?php } ?>
+	</table>
+</div>
+
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

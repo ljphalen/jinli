@@ -1,0 +1,47 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+
+<script>
+    var token = '<?php echo $token; ?>';
+</script>
+<div id="page" class="ui-refresh">
+    <article class="ac">
+        <div id="J_dataList" class="item-box data-box clearfix" data-ajaxUrl="<?php echo $more_url . '&pt=' . $pt; ?>">
+            <ul>
+                <?php
+                $i = 1;
+                foreach ($files as $key => $value) {
+                    $pre = $next = 1;
+                    if ($i == 1) $pre = 0;
+                    if ($file_total == $i) $next = 0;
+                    if ($i % $perpage == 0 && ($file_total - ($page * $perpage) == 0)) $next = 0;
+                    $link = sprintf("%s/detail?id=%d&pre=%d&next=%d&updatetime=%d&orderby=%s", $webroot, $value['id'], $pre, $next, $value['packge_time'], $orderby);
+                    $link = $tid ? $link . '&tid=' . $tid : $link;
+                    ?>
+                    <li>
+                        <a data-inftheme="<?php echo $value['id'] ?>,<?php echo $value['title'] ?>,<?php echo $link; ?>,<?php echo $webroot . $downloadUrl . '/' . $value['id'] . '_' . $pt; ?>,<?php echo $value['since'] ?>">
+                            <span class="pic">
+                                <img data-lazyload="true"  src="<?php echo $staticResPath; ?>/pic/pic_nopreview.png" data-src="<?php echo $attachPath . $imgs[$value['id']]['pre_face_s']; ?>" />
+                            </span>
+                            <em><?php echo Util_String::substr($value['title'], 0, 6, '', true); ?></em>
+                        </a>
+                    </li>
+                    <?php
+                    $i ++;
+                }
+                ?>
+            </ul>
+            <div class="ui-refresh-down none clearfix"></div>
+        </div>
+    </article>
+</div>
+<script id="J_itemView" type="text/html">
+    <% for (var i = 0; i < data.list.length; i++) { %>
+    <li>
+        <a data-infTheme="<%= data.list[i].id %>,<%= data.list[i].title %>,<%= data.list[i].link %>,<%= data.list[i].down %>,<%= data.list[i].since %>">
+            <span class="pic"><img data-lazyload="true" src="<?php echo $staticResPath; ?>/pic/pic_nopreview.png" data-src="<%= data.list[i].img %>"></span>
+            <em><%= data.list[i].title %></em>
+        </a>
+    </li>
+    <% } %>
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

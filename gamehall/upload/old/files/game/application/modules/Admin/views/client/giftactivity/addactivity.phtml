@@ -1,0 +1,182 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $hdListUrl;?>">活动列表</a></li>
+    <li><a href="<?php echo $listUrl;?>">送礼包</a></li>
+    <li class="current"><a href="javascript:;">添加礼包活动</a></li>
+	</ul>
+</div>
+
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="0"></td>
+		</tr>	
+		<tr class="tr" >
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="select wa">
+				<option "selected" value="1">开启</option>
+				<option  value="0">关闭</option>
+			</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+		</tr>
+		<tr class="tr" >
+			<th class="th">活动类型</th>
+			<td class="td">
+			<select name="activity_type" class="select wa">
+				    <?php foreach($activityType as $key=>$val) {?>   
+					<option value="<?php echo $key;?>" <?php if(1 == $key) echo 'selected';?>><?php echo $val;?></option>					
+					<?php }?> 
+			</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏ID</th>
+			<td class="td"><input type="text" class="input" name="game_id" value="<?php echo !$info['game_id'] ? '':$info['game_id']; ?>" id="gameId"><button type="button" id="test" style="margin-left:20px;">获取游戏名称</button><br>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏名称</th>
+			<td class="td"><input type="text" class="input wc" name="name" value="" id="name"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动开始结束时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="effect_start_time" name="effect_start_time" value="" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="effect_end_time" name="effect_end_time" value="" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">礼包类型</th>
+			<td class="td">
+			<select name="gift_num_type" class="select wa" onchange='showtd()'>
+				    <?php foreach($giftNumType as $key=>$val) {?>   
+					<option value="<?php echo $key;?>" <?php if(1 == $key) echo 'selected';?>><?php echo $val;?></option>					
+					<?php }?> 
+			</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">发放用户数量</th>
+			<td class="td"><input type="text" class="input" name="gift_number" value="" id="gift_number"></td>
+		</tr>
+		<tr class="tr" id="tr-import" style="display:none;">
+			<th class="th">激活码</th>
+			<td class="td">
+			<div style="float:left;">
+					<iframe src="/Admin/Client_Giftactivity/import" style="border:none;width:275px;height:50px;"></iframe>
+				</div>
+				<textarea id="importInputTxt" name="importInputTxt" class="textarea wc" style="height:200px; width:800px"><?php echo $info['sendInput'];?></textarea>
+				<br/>
+			<span style="color:red">支持TXT格式的文件，礼包需要按照每行1个的格式排列。</span>
+			</td>
+		</tr>
+		<tr class="tr" id="tr-type">
+			<th class="th">激活码</th>
+			<td class="td"><input type="text" class="input wc" name="gift_code" value="" id="gift_code"></td>
+		</tr>
+		<tr class="tr">
+				<th class="th">礼包内容</th>
+				<td class="td"><textarea style="width: 800px; height: 200px" class="textarea" name="content"></textarea>
+				</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">使用开始结束时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="use_start_time" name="use_start_time" value=""/> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="use_end_time" name="use_end_time" value="" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+				<th class="th">使用方法</th>
+				<td class="td"><textarea style="width: 800px; height: 200px" class="textarea" name="method"></textarea>
+				</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor = K.create('textarea[name="content"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+var editor1;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor1 = K.create('textarea[name="method"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+$(document).ready(function(){
+	$('#effect_start_time').datetimepicker({
+        timeFormat: "hh:00:00",
+        dateFormat: "yy-mm-dd"
+    });
+    $('#effect_end_time').datetimepicker({
+        timeFormat: "hh:00:00",
+        dateFormat: "yy-mm-dd"
+    });
+    $('#use_start_time').datetimepicker();
+	$('#use_end_time').datetimepicker(); 
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_GiftActivity/index');
+	},function(){
+		editor.sync();
+		editor1.sync();
+	});
+})
+$('#test').click(function(){
+		    $('#gameId,#name').html("");
+			$.ajax({
+				url : baseurl + "/Admin/Client_GiftActivity/getGameName",
+				type : 'POST',
+				dataType : 'json',
+				data : 'token='+'<?php echo $token;?>'+'&gameId='+$("#gameId").val(),
+				success : function(ret) {
+					 if (ret.success) {
+						var list = ret.data.list;
+						$('#name').val(list.name) ;
+					} else {
+						showError('', ret.msg);
+					}
+				}
+			});
+			return false;
+})
+
+function showtd(){
+	var value = $("select[name=gift_num_type]").val();
+	if (value == 1) {
+		 $("#tr-import").hide();
+		 $("#tr-type").show();
+		 $("#gift_number").removeAttr("disabled");
+		 $("#gift_number").css({"color":"#000"});
+	} else if(value == 2){
+		 $("#tr-import").show();
+		 $("#tr-type").hide();
+		 $("#gift_number").attr("disabled","disabled");
+		 $("#gift_number").css({"color":"#888"});
+	}
+}
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,120 @@
+<div class="colMain">
+    <div class="title"><p class="fl">{{title}}-开发者财务信息</p></div>
+    <div class="main">
+        <div class="content">
+            <div class="toolbar tabs">
+                <ul class="fl">
+                    <li><a href="../developer/edit?dev_id={{result.devid}}">基本信息</a></li>
+                    <li class="cur"><a href="../financials/edit?dev_id={{result.devid}}">财务信息</a></li>
+                    <li><a href="../developer/dev_app?dev_id={{result.devid}}">应用信息</a></li>
+                </ul>
+            </div>
+            <div class="devInfo">
+            <form action="../financials/saveFinancial" method="POST" enctype="multipart/form-data">
+                <input type="hidden" value="{{result.devid}}" name="dev_id" />
+                <input type="hidden" value="{{result.f_id}}" name="f_id" />
+                <ul class="form">
+                    <li>
+                        <div class="fc">
+                            <span><input type="radio" <!-- if {{result.ftype}} ==1 -->checked<!-- endif --> value="1" name="ftype" class="radio" />个人账户</span>
+                            <span><input type="radio" <!-- if {{result.ftype}} ==2 -->checked<!-- endif --> value="2" name="ftype" class="radio" />公司账户</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label cname">证件姓名：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" required value="{{result.cred_name}}" name="cred_name" style="width:220px;" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">开户银行：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" required value="{{result.bank}}" name="bank" style="width:220px;" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">支行：</span>
+                        <div class="fc"><input type="text" class="iText" value="{{result.sub_branch}}" name="sub_branch" style="width:220px;" /></div>
+                    </li>
+                    <li>
+                        <span class="label">银行账号：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" required value="{{result.bank_account}}" <!-- if {{result.f_id}} --> readonly<!-- endif --> name="bank_account" style="width:220px;" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label ctype">证件类型：</span>
+                        <div class="fc">
+                            <span><input type="radio" <!-- if {{result.cred_type}} ==1 -->checked<!-- endif --> value="1" name="cred_type"  class="radio" />身份证</span>
+                            <span><input type="radio" <!-- if {{result.cred_type}} ==2 -->checked<!-- endif --> value="2" name="cred_type"  class="radio" />护照</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label cnum">证件号码：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" required value="{{result.cred_num}}" <!-- if {{result.f_id}} --> readonly<!-- endif --> name="cred_num" style="width:220px;" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label cpic">证件正面：</span>
+                        <div class="fc">
+                            <input type="file" name="cred_pic" value="选择图片" />
+                            <p><img src="{{upload_path}}" width="150px" height="80px" /></p>
+                        </div>
+                    </li>
+                    <li id="pic1_li">
+                        <span class="label cpic1">证件背面：</span>
+                        <div class="fc">
+                            <input type="file" name="cred_pic1" value="选择图片" />
+                            <p><img src="{{upload_path1}}" width="150px" height="80px" /></p>
+                        </div>
+                    </li>
+                    <li class="line"></li>
+                    <li>
+                        <div class="fc">
+                            <input type="submit" value="保存" class="submit" />
+                            <input type="button" value="跳过" class="cancel goahead" />
+                        </div>
+                    </li>
+                </ul>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$(function(){
+    $(".goahead").click(function(){
+        location.href = "../developer/index";
+    });
+    if ($("input[name='ftype']").val() == 2) {
+        $(".cname").text("公司名称");
+        $(".cnum").text("营业执照号码");
+        $(".ctype").parent('li').hide();
+        $(".cpic").text("营业执照截图");
+        $(".cpic1").text("开户许可证截图");
+        $("#pic1_li").hide();
+    }
+    $("input[name='ftype']").click(function(){
+        if ($(this).val() == 2) {
+            $(".cname").text("公司名称");
+            $(".cnum").text("营业执照号码");
+            $(".ctype").parent('li').hide();
+            $(".cpic").text("营业执照截图");
+            $(".cpic1").text("开户许可证截图");
+            $("#pic1_li").hide();
+        }else{
+            $(".cname").text("证件姓名");
+            $(".cnum").text("证件号码");
+            $(".ctype").parent('li').show();
+            $(".cpic").text("证件正面");
+            $(".cpic1").text("证件背面");
+            $("#pic1_li").show();
+        }
+    });
+})
+</script>

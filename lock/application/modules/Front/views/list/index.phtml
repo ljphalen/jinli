@@ -1,0 +1,56 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+</script>
+	<div id="page">
+		<article class="ac">
+			<div class="item-list J_itemList clearfix" data-haxnext="<?php echo $hasnext; ?>" data-ajaxUrl="<?php echo $more_url;?>">
+				<ul>
+					<?php 
+						$i = 1;
+						foreach($list as $key=>$value){
+						$pre = $next = 1;
+						if ($i == 1) $pre = 0;
+						if ($file_total == $i) $next = 0;
+						if ($i%$perpage == 0 && ($file_total - ($page * $perpage) == 0) ) $next = 0;
+						
+						if($value['channel_id'] == 1) {
+							$out_id = $data[$value['file_id']]['out_id'];
+							$icon = $data[$value['file_id']]['icon'];
+							$link = sprintf("%s/detail?id=%d&out_id=%d&channel=%d&pre=%d&next=%d&updatetime=%d&orderby=%s&refer=%s&version=%d",$webroot, $value['id'], $out_id, $channel, $pre, $next, $data[$value['file_id']]['update_time'], $orderby, 'list', $kernel_list[$out_id]['res_version']);
+						} else {
+							$icon = $attachPath.$data[$value['file_id']]['icon'];
+							$link = sprintf("%s/detail?id=%d&channel=%d&pre=%d&next=%d&updatetime=%d&orderby=%s&refer=%s",$webroot, $value['id'], $channel, $pre, $next, $data[$value['file_id']]['update_time'], $orderby, 'list');
+						}
+						$link = $tid ? $link.'&tid='.$tid : $link;
+						?>
+					<li>
+						<a data-inftheme="<?php echo $value['title']?>,<?php echo $link;?>,<?php echo $webroot.$downloadUrl.'?id='.$value['id'];?>">
+							<div class="pic"><img class="lazy" src="<?php echo $staticResPath;?>/pic/pic_nopreview.jpg" data-lazyload="true" data-src="<?php echo $icon;?>" /></div>							
+							<div class="desc">
+								<h3><?php echo $value['title'];?></h3>
+							</div>
+						</a>
+					</li>
+					<?php 
+					$i++;
+					}
+					?>
+				</ul>
+				<div class="ui-refresh-down"></div>
+			</div>
+		</article>
+	</div>
+	<script id="J_itemView" type="text/template">
+	{each data.list}
+	<li>
+		<a data-infTheme="{$value.title},{$value.link},{$value.down}">
+			<div class="pic"><img class="lazy" src="<?php echo $staticResPath;?>/pic/pic_nopreview.jpg" data-lazyload="true" data-src="{$value.img}" ></div>
+			<div class="desc">	
+				<h3>{$value.title}</h3>
+			</div>
+		</a>
+	</li>
+	{/each}
+	</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<?php $this->title='游戏详情';$this->hasSearch='true';?>
+	<meta charset="UTF-8">
+	<title>金立游戏大厅</title>
+	<?php echo $this->render("layout/cssInc.phtml");?>
+</head>
+<body>
+	<?php echo $this->render("layout/header.phtml");?>
+	<div id="container"></div>
+	<?php echo $this->render("layout/footer.phtml");?>
+<div class="wx-title" name="wx">
+		<img src="<?php echo $appImg?>/wxMsgHand.png" class="wx-msg-hand" >
+		<img src="<?php echo $appImg?>/wxMsg.png" class="wx-msg" />
+	</div>
+	<div class="wx-title-bg"  name="wx">
+
+	</div>
+</body>
+
+<?php echo $this->render("layout/scriptInc.phtml"); ?>
+	<script type="text/javascript">
+                  function isWeiXin(){
+		var ua = window.navigator.userAgent.toLowerCase();
+		if(ua.match(/MicroMessenger/i) == 'micromessenger'){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	window.onload = function(){
+		if(isWeiXin()){
+			$('[name="wx"]').show();
+		}
+	}
+	var gameData = {
+		name:'<?php echo $info['name'];?>',
+		stars:'<?php echo $info['web_star'];?>',
+		size:'<?php echo $info['size'];?>M',
+		typeName:'<?php echo $from == 'baidu' ? $info['category'] : $info['category_title'];?>',
+		activity:<?php echo $activities ? $activities : json_encode(array())?>,
+		introduction:{
+			imgUrl:[<?php echo $viewPicListJs;?>],
+			gossip:<?php echo json_encode(html_entity_decode($info['tgcontent']));?>,
+			introduction:<?php echo json_encode(html_entity_decode($info['descrip']));?>
+        }
+		,edition:{
+			edition:'<?php echo $info['version'];?>',
+			date:'<?php echo $info['update_time'] ? date('Y-m-d',$info['update_time']) : '';?>',
+			source:'<?php echo $info['developer'];?>'
+		},
+		menu:{
+			introduction:true
+			<?php if($from == 'baidu') {?>
+			,package:false
+			,strategy:false
+			<?php } else { ?>
+			,package:<?=$hasGift?>
+			,strategy:<?=$hasStrategy?>
+			<?php } ?>
+		},
+                clientDownUrl: '<?php echo  Common::tjurl($tjUrl, $gameClient['id'], ($gameClient['id'] == 117 ? 'GAME': $intersrc), $gameClient['link'] ,'');?>&t_bi=<?php echo $sources;?>',
+		packageAjaxUrl:'<?php echo $ajaxUrl?>giftList/?gameid=<?=$info['id']?>',
+		strategyAjaxUrl:'<?php echo $ajaxUrl?>strategyList/?gameid=<?=$info['id']?>',
+		href:'<?php echo  Common::tjurl($tjUrl, $info['id'], ($info['id'] == 117 ? 'GAME': $intersrc), $info['link'] ,'');?>&t_bi=<?php echo $sources;?>',
+		imgUrl:'<?php echo $info['big_img'] ? $info['big_img']: ($info['mid_img'] ? $info['mid_img'] : $info['img']);?>'
+	};
+	
+	var probablyLikeData = {
+		data:<?php echo $playgames ? $playgames : json_encode(array());?>
+	};
+	gameData.picturePath = '<?php echo $appImg?>';
+	gameData.probablyLike = probablyLikeData.data;
+	
+	React.render(
+		React.createElement(GameDetails, {items: gameData})
+	  , document.getElementById('container')
+	);
+	
+	(function(){
+		if(!gameData.activity.length)
+			return;
+		var activity=document.getElementById("activity")
+			,Roll=document.getElementById("activityRoll")
+			,RollCopy=document.getElementById("activityRollCopy")
+			,validate
+		;
+		RollCopy.innerHTML = Roll.innerHTML;
+		
+		setInterval(function(){
+			if(RollCopy.offsetTop-activity.scrollTop<=0
+				||validate==activity.scrollTop){
+				activity.scrollTop-=Roll.offsetHeight+10;
+			}else{
+				validate =activity.scrollTop;
+				activity.scrollTop++;
+				
+			}
+		},80) 
+	
+	}());
+</script>
+<?php echo $this->render("layout/lastscriptInc.phtml"); ?>
+</html>

@@ -1,0 +1,47 @@
+<?php echo $this->render("layout/header2.phtml");?>
+	<div id="page">
+		<div id="iscrollWrap">
+			<div class="mainWrap">
+				<?php if ($hasheader) {?>
+				<header class="hdWrap">
+					<div class="hd-l"><a href="<?php echo $webroot;?>" class="l-arrow">back</a></div>
+					<div class="hd-r"><h1>积分换购专区</h1></div>	
+				</header>
+				<?php }?>		
+				<!-- 内容区域 START-->
+					<section class="pscore">
+							<div class="content">
+								<?php foreach($goods as $key=>$value) {?>
+								<div class="date-time">开始时间：<?php echo date("m月d日H:i", $key);?></div>
+								<?php foreach($value as $k=>$v) {?>
+								<section>
+									<a href="<?php echo $webroot,'/goods/detail/?id='.$v['id'];?>&refer=after">
+										<div class="mod-pic-list">
+											<div class="pic"><img src="<?php echo $attachPath, $v['img'];?>" /></div>
+											<div class="txt">
+												<div><?php echo $v['title'];?></div>
+												<div>
+													￥<span class="zt-red"><?php echo $v['price'];?></span>
+													<span class="zt-orange fr"> 可用<?php echo $v['silver_coin']?>元银币抵现</span>
+												</div>
+											</div>
+										</div>
+									</a>
+								</section>
+								<?php }?>
+								<?php }?>
+								<!-- 积分换购活动 -->
+								<div class="link-rule"><a href="<?php echo $webroot,'/activity/coin'?>">积分换购活动</a></div>
+							</div>
+					</section>
+				<!-- 内容区域 END-->
+				<!-- 底部区域 START -->
+				<?php echo $this->render("layout/footer.phtml");?>
+				<!-- 底部区域 END -->
+			</div>
+
+		</div>
+	</div>
+<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

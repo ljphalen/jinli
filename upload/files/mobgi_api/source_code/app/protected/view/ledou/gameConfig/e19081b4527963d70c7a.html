@@ -1,0 +1,234 @@
+<link rel="stylesheet" href="{{rootUrl}}/css/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/Categorywidget_sdk.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/float.js"></script>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">应用配置</p>
+    </div>
+    <div class="main">
+        <div class="toolbar">
+            <a href="/apps/adManager?appkey={{result.appkey}}&config_name=''" class="fr add btn">添加配置</a>
+        </div>
+        <div class="app-detail">
+            <h3>配置列表</h3>
+            <ul class="form">
+                <li>
+                    <table width="100%" style="margin-left: 40px;text-align:center;">
+                    <thead>
+                        <tr>
+                            <th>配置项名称</th>
+                            <th>渠道</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                        <tbody>
+                            <!-- if {{list}} -->
+                                <!-- loop list -->
+                                <tr>
+                                    <td>{{list' value.config_name}}</td>
+                                    <td>{{list' value.channel_name}}</td>
+                                    <td><a href="/apps/adManager?appkey={{result.appkey}}&config_name={{list' value.config_name}}">编辑</a> <a href="/apps/delGameConfig?appkey={{result.appkey}}&config_name={{list' value.config_name}}">删除</a></td>
+                                </tr>
+                                <!-- endloop -->
+                            <!-- endif -->
+                        </tbody>
+                    </table>
+                </li>
+            </ul>
+        <form action="/apps/adManagersave" method="POST" >
+            <input type="hidden" name="appkey" value='{{result.appkey}}' />
+            <input type="hidden" name="id" value='{{result.id}}' />
+            <h3>基础配置</h3>
+            <ul class="form">
+                <li>
+                    <span class="label">渠道名称：</span>
+                    <div class="fc">
+                        <input type="text" <!-- if {{result.id}} -->readonly<!-- endif --> class="iText" name="config_name" value="{{result.config_name}}" />
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">渠道：</span>
+                    <div class="fc addChannel">
+                        <div class="clearfix config" id="channels_box"></div>
+                        <script>
+                            function channel_id(){
+                                <!-- if {{result.channel_id}} -->
+                                    <!-- loop result.channel_id -->
+                                        $("#channel_id").append("<option selected value='{{result.channel_id' value.identifier}}'>{{result.channel_id' value.realname}}</option>")
+                                    <!-- endloop -->
+                                <!-- endif -->
+                            }
+                            
+                        </script>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">游戏結束显示广告比率：</span>
+                    <div class="fc">
+                        <input type="text" class="iText enable" name="data[game_over_gg]" value="{{result.config_detail.game_over_gg}}" />
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">首页显示更多游戏比率：</span>
+                    <div class="fc">
+                        <input type="text" name="data[more_game_gg]" class="iText max_count" value="{{result.config_detail.more_game_gg}}"  />
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">暂停游戏显示广告比率：</span>
+                    <div class="fc">
+                        <input type="text" name="data[pause_gg]" class="iText pause_gg" value="{{result.config_detail.pause_gg}}"  />
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li class="line"></li>
+                <h3>启动应用配置</h3>
+                <li>
+                    <span class="label">全屏广告概率：</span>
+                    <div class="fc">
+                        <input type="text" name="data[init_gg][full_gg]" class="iText ad_full_init" value="{{result.config_detail.init_gg.full_gg}}"  />
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">半屏广告概率：</span>
+                    <div class="fc">
+                        <input type="text" name="data[init_gg][half_gg]" class="iText ad_half_init" value="{{result.config_detail.init_gg.half_gg}}"  />
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">无广告概率：</span>
+                    <div class="fc">
+                        <input type="text" name="data[init_gg][no_gg]" class="iText ad_no_init" value="{{result.config_detail.init_gg.no_gg}}"  />
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li class="line"></li>
+            </ul>
+            <h3>回到首页</h3>
+            <ul class="form">
+                <li>
+                    <span class="label">全屏广告比例：</span>
+                    <div class="fc">
+                        <input type="text" name="data[home_gg][full_gg]" class="iText ad_full" value="{{result.config_detail.home_gg.full_gg}}"  />
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">半屏广告比率：</span>
+                    <div class="fc">
+                        <input type="text" name="data[home_gg][half_gg]" class="iText ad_half" value="{{result.config_detail.home_gg.half_gg}}"  />
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">无广告比率：</span>
+                    <div class="fc">
+                        <input type="text" name="data[home_gg][no_gg]" class="iText ad_no" value="{{result.config_detail.home_gg.no_gg}}"  />
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li class="line"></li>
+                <li>
+                    <div class="fc">
+                        <input type="submit" value="保存" class="submit" />
+                    </div>
+                </li>
+            </ul>
+        </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        //渠道
+        var Cs = new Categorywidget_sdk({
+            interfaceName: 'Cs',
+            boxId: 'channels_box',
+            ComboId: 'channels_list',
+            ComboName: 'n1',
+            ComboSaveId: 'channel_id',
+            ComboSaveName: 'channel_id[]',
+            DataConfig: {text: 'realname', value: 'identifier'},
+            DataSourceConfig: {
+                CategoryListCombo: 'http://backend.idreamsky.com/sys_groups/getCategoryListCombo',
+                CategoryDataUrl: 'http://backend.idreamsky.com/channels_in_groups/GetLinkChannels',
+                DataType: 'channels'
+            }
+        });
+        $("form").submit(function(){
+            if (!isNumber($(".enable").val()) || $(".enable").val() > 1){
+                alert("显示广告比例-请输入小于1的数字");
+                $(".enable").focus();
+                return false;
+            }
+            if (!isNumber($('.max_count').val()) || $('.max_count').val()>1) {
+                alert("首页显示更多游戏比率-请输入小于1的数字");
+                $(".max_count").focus();
+                return false;
+            }
+            if (!isNumber($('.pause_gg').val()) || $('.pause_gg').val()>1) {
+                alert("暂停游戏显示广告比率-请输入小于1的数字");
+                $(".pause_gg").focus();
+                return false;
+            }
+            
+            if (!isNumber($('.ad_full_init').val()) || $(".ad_full_init").val() > 1) {
+                alert("启动应用配置-全屏广告比率-请输入小于1的数字");
+                $(".ad_full_init").focus();
+                return false;
+            }
+            if (!isNumber($('.ad_half_init').val()) || $(".ad_half_init").val() > 1) {
+                alert("启动应用配置-半屏广告比率-请输入小于1的数字");
+                $(".ad_half_init").focus();
+                return false;
+            }
+            if (!isNumber($('.ad_no_init').val()) || $(".ad_no_init").val() > 1) {
+                alert("启动应用配置-无广告比率-请输入小于1的数字");
+                $(".ad_no_init").focus();
+                return false;
+            }
+            if (FloatAdd(FloatAdd($('.ad_full_init').val(),$('.ad_half_init').val()),$('.ad_no_init').val()) != 1){
+                alert("启动应用配置-全屏广告比率+半屏广告比率+无广告比率和不为1");
+                $(".ad_full_init").focus();
+                return false;
+            }
+            
+            if (!isNumber($('.ad_full').val()) || $(".ad_full").val() > 1) {
+                alert("回到首页-全屏广告比例-请输入小于1的数字");
+                $(".ad_full").focus();
+                return false;
+            }
+            if (!isNumber($('.ad_half').val()) || $(".ad_half").val() > 1) {
+                alert("回到首页-半屏广告比率-请输入小于1的数字");
+                $(".ad_half").focus();
+                return false;
+            }
+            if (!isNumber($('.ad_no').val()) || $(".ad_no").val() > 1) {
+                alert("回到首页-无广告比率-请输入小于1的数字");
+                $(".ad_no").focus();
+                return false;
+            }
+            if (FloatAdd(FloatAdd($('.ad_full').val(),$('.ad_half').val()),$('.ad_no').val()) != 1){
+                alert("回到首页-全屏广告比率+列表广告比率+无广告比率和不为1");
+                $(".ad_full").focus();
+                return false;
+            }
+            
+            $("#channel_id > option").each(function(){
+                $(this).attr("selected","selected");
+            });
+        });
+        channel_id();
+    });
+    function isNumber(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+</script>

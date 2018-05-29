@@ -1,0 +1,52 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">用户收藏列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post" id="searchForm" >
+<input name="token" type="hidden" value="<?php echo $token;?>"/>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<td class="td">产品id</td>
+			<td class="td"><input class="input" type="text" name="item_id" value="<?php echo $params['item_id'];?>">
+			</td>
+			<td class="td">uid</td>
+			<td class="td"><input class="input wb" type="text" name="uid" value="<?php echo $params['uid'];?>">
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span><span style="float:left;">当前总条数：<?php echo $total;?></span></div>
+
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="10%">产品id</td>
+			<td width="20%">uid</td>
+			<td width="10%">分类</td>
+			<td width="32%">标题</td>
+		</tr>
+<?php foreach($list as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['item_id'];?></td>
+			<td><?php echo $value['uid'];?></td>
+			<td><?php echo $types[$value['type']];?></td>
+			<td><?php if(empty($value['data'])){
+                    echo $storys[$value['item_id']]['title'];
+                }else{
+                    $tmp =json_decode($value['data'],1);
+                    echo $tmp['title'];
+                }?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+
+<?php echo $this->render("layout/footer.phtml");?>

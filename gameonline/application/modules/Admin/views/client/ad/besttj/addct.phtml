@@ -1,0 +1,104 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>?id=<?php echo $id;?>&opc=<?php echo $opc;?>">精品推荐列表</a></li>
+		<li class="current"><a href="">添加推荐</a></li>
+	</ul>
+</div>
+<form action="<?php echo $addCtUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="id" id="id" type="hidden" value="<?php echo $id;?>" />
+<input name="opc" type="hidden" value="<?php echo $opc ? $opc : $s['opc'];?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input wb" name="name" value="<?php echo $s['name'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<input name="id" id="id" type="hidden" value="<?php echo $id;?>" />
+<?php if(count($besttj_games)){?>
+<div class="h_a">
+    <?php foreach($besttj_games as $k=>$v){?>
+	<span><a href="javascript:" onclick="deleteOne('<?php echo $deleteIdUrl;?>/?game_id=<?php echo $v;?>&id=<?php echo $id;?>', '', event);"><?php echo $all_games[$v]['name'];?></a><a style="background: url(<?php echo $staticPath;?>/img/layout/tab.png);width: 7px;height: 7px;display: inline-block;background-position: -20px 20px;"></a></span>&nbsp;&nbsp;
+	<?php }?>
+</div>
+<?php }?>
+<?php if(count($besttj_games)){?>
+<div class="h_a">
+<span class="btn2" style="margin-left:55px;"><span><button onclick="check(<?php echo $id;?>)" type="button">下一步</button></span></span>
+</div>
+<?php }?>
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('add');" type="submit">添加</button></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+	<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已添加共<?php echo count($besttj_games);?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td>ID</td>
+			<td>标题</td>
+			<td>图标</td>
+			<td>分类</td>
+			<td>大小</td>
+			<td>状态</td>
+		</tr>
+<?php if($games) {?>
+<?php foreach($games as $key => $value) {?>
+		<tr class="ct">
+		    <td>
+		    <?php if (!in_array($value['game_id'], $besttj_games)) {?>
+		    <input class="checkbox" name="ids[]" value="<?php echo $value['game_id'];?>" type="checkbox">
+		    <?php }else{?>
+		    <font color="green">√</font>
+		    <?php }?>
+		    </td>
+			<td><?php echo $value['game_id'];?></td>
+			<td><?php echo $all_games[$value['game_id']]['name'];?></td>
+			<td><img src="<?php echo $all_games[$value['game_id']]['img'];?>" style="width:7.2em;height:7.2em"/></td>
+        	<td><?php echo $value['size'];?>M</td>
+        	<td><?php echo $value['version'];?></td>
+        	<td><?php echo $value['status'] ? '已上线' : '已下线';?></td>
+		</tr>
+<?php }} ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script>
+$(document).ready(function(){
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Client_Ad_Besttj/addCt?id=<?php echo $id;?>&opc=<?php echo $opc;?>');
+	});
+})
+function check(id){
+	$.ajax({
+		url : baseurl + "/Admin/Client_Ad_Besttj/check",
+		type : 'POST',
+		dataType : 'json',
+		data : 'token='+'<?php echo $token;?>'+'&id='+id,
+		success : function(ret) {
+			 if (ret.success) {
+				showMsg('', ret.msg);
+				setTimeout(function() {
+					location.href = baseurl + "/Admin/Client_Ad_Besttj/editCt?id=<?php echo $id;?>&opc=<?php echo $opc;?>";
+			    }, 500);
+			} else {
+				showError('', ret.msg);
+			}
+			
+		}
+	});
+}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

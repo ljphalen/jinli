@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>一个游戏大厅玩家的春节自白！——金立游戏大厅</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="format-detection" content="email=no" />
+	<link rel="stylesheet" href="<?php echo $staticroot; ?>/apps/game/events/newYear/assets/css/main.css?v=<?php echo $version;?>" />
+	<link rel="shortcut icon" href="<?php echo $staticroot; ?>/apps/game/web/images/favicon.ico?v=<?php echo $version;?>" type="image/x-icon">
+</head>
+<body>
+	<div class="header"><img src="<?php echo $staticroot; ?>/apps/game/events/newYear/pic/head-bg.png" alt=""/></div>
+	<div class="main">
+		<div class="section">
+			<!--data-infpage: title,url,gameid,downurl,packagename,filesize,sdkinfo,resolution -->
+			<!-- data-prize-href:抽奖页面的地址 -->
+			<a  data-infpage="<?php echo $infoPage; ?>" data-pos="xc1" data-prize-href="<?php echo $prizeUrl; ?>" >
+				<img src="<?php echo $staticroot; ?>/apps/game/events/newYear/pic/1.png" alt=""/>
+				<div class="btn-container">
+					<div class="toLeft"></div>
+					<div class="toRight"></div>
+				</div>
+			</a>
+		</div>
+		<div class="section">
+			<!-- title,url -->
+			<a  data-infpage="活动详情,<?php echo $hdUrl; ?>" data-pos="xc2" >
+				<img src="<?php echo $staticroot; ?>/apps/game/events/newYear/pic/2.png" alt=""/>
+				<div class="btn-container">
+					<div class="toLeft left2"></div>
+					<div class="toRight"></div>
+				</div>
+			</a>
+		</div>
+		<div class="section">
+			<!-- title,url -->
+			<a  data-infpage="游戏论坛,<?php echo $bbsUrl; ?>" data-pos="xc3" >
+				<img src="<?php echo $staticroot; ?>/apps/game/events/newYear/pic/3.png" alt=""/>
+				<div class="btn-container">
+					<div class="toLeft left3"></div>
+					<div class="toRight"></div>
+				</div>
+			</a>
+			
+		</div>
+	</div>
+	<script src="<?php echo $staticroot; ?>/sys/lib/zepto/zepto.js" ></script>
+	<script src="<?php echo $staticroot; ?>/apps/game/events/newYear/assets/js/main.source.js"></script>
+	<script>
+	//统计的js，拼接url
+	$(function(){
+		$("body").delegate('a[data-infpage]','click',function(){
+			var pos=$(this).attr('data-pos');
+			tourl = '<?php echo $webroot.'/game/festival_newyear/tjj?action=click&t_bi='.$source;?>' + '&pos=' + pos;
+			$.ajax({url:tourl,
+				    async:false,
+			});
+		});
+	})
+	
+	</script>
+</body>
+</html>

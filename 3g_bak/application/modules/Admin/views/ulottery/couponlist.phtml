@@ -1,0 +1,60 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $couponListUrl; ?>">书券列表</a></li>
+			<li><a href="<?php echo $conponUrl; ?>">数据导入</a></li>
+			<li><a href="<?php echo $manualUrl; ?>">人工赠送书券</a></li>
+		</ul>
+	</div>
+	<div class="table_full">
+		<form action="<?php echo $couponListUrl; ?>" method="POST" id="form">
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<table width="100%" cellspacing="0" cellpadding="0">
+				<tr class="tr">
+					<th class="th">选择状态：</th>
+					<td class="td">
+						<select name="status" id="status">
+							<option value="0">请选择</option>
+							<?php foreach ($statusList as $k => $v) { ?>
+								<option <?php echo ($k == $params['status']) ? 'selected="selected"' : ''; ?>  value="<?php echo $k; ?>"><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">卡号：</th>
+					<td class="td">
+						<input name="card_num" value="<?php echo $params['card_num'] ?>">
+					</td>
+				</tr>
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+		</form>
+	</div>
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+				<th class="th">卡号</th>
+				<th class="th">用户ID</th>
+				<th class="th">发放时间</th>
+				<th class="th">添加卡号时间</th>
+			</tr>
+			<?php foreach ($dataList as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['id'];?></td>
+					<td class="td" align="left"><?=$v['card_num'];?></td>
+					<td class="td" align="left"><?=$v['uid'] ? $v['uid'] : '暂未发放';?></td>
+					<td class="td"><?php echo $v['get_time'] ? date('Y-m-d H:i:s', $v['get_time']) : '---'; ?></td>
+					<td class="td"><?php echo date('Y-m-d H:i:s', $v['add_time']); ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

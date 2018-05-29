@@ -1,0 +1,13 @@
+{"success":true,"msg":"","data":[{
+"img":"http://game.3gtest.gionee.com/attachs/game/ad/201309/153344.png",
+"icon":"http://assets.3gtest.gionee.com/apps/game/apk/pic/1.png",
+"title":"\u6700\u65b0",
+"data-infpage":"\u6700\u65b0,http:\/\/game.3gtest.gionee.com\/client\/rank\/index?flag=1&intersrc=ad21_newon&t_bi=_2286939825"},{"img":"http:\/\/game.3gtest.gionee.com\/attachs\/ad\/201309\/152224.png",
+"icon":"http://assets.3gtest.gionee.com/apps/game/apk/pic/2.png",
+"title":"\u7f51\u6e38",
+"data-infpage":"\u7f51\u6e38,http:\/\/game.3gtest.gionee.com\/client\/web\/index?intersrc=ad22_web&t_bi=_2286939825"},
+{"img":"http:\/\/game.3gtest.gionee.com\/attachs\/ad\/201309\/150023.png",
+"icon":"http://assets.3gtest.gionee.com/apps/game/apk/pic/3.png",
+"title":"\u5fc5\u5907","data-infpage":"\u5fc5\u5907,http:\/\/game.3gtest.gionee.com\/client\/installe\/index?intersrc=ad23_ness&t_bi=_2286939825"},
+{"img":"http:\/\/game.3gtest.gionee.com\/attachs\/ad\/201309\/152312.png",
+"icon":"http://assets.3gtest.gionee.com/apps/game/apk/pic/4.png","title":"\u5355\u673a","data-infpage":"\u5355\u673a,http:\/\/game.3gtest.gionee.com\/client\/single\/index?intersrc=ad24_single&t_bi=_2286939825"}]}

@@ -1,0 +1,78 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $chatDay; ?>">日报表</a></li>
+			<li class="current"><a href="<?php echo $chatMonth; ?>">月报表</a></li>
+			<li><a href="<?php echo $veDetailUrl; ?>">兑换时长明细表</a>
+			<li><a href="<?php echo $vcenterUrl; ?>">畅聊页统计</a>
+		</ul>
+	</div>
+	<form method="post" action="<?php echo $baseUrl; ?>" id="addFrom">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">时间</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo date('Y-m-d', strtotime($params['sdate'])); ?>">至
+						<input class="input" type="text" maxlength="30" id="edate" name="edate" value="<?php echo date('Y-m-d', strtotime($params['edate'])); ?>">
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+		<input type="hidden" id="hidden_export" name="export" value="0"/>
+	</form>
+
+	<div class="h_a">
+		&nbsp; <span id="total" style="color: red;font-size:14px"></span>
+		<span style="float:right;"><input type="button" value="导出" id="downLoad"></span>
+	</div>
+
+	<div class="table_list">
+		<table width="100%">
+			<tr class="ct">
+				<td class="td2">日期</td>
+				<td class="td2" width="80px">持有通话时长用户数</td>
+				<td class="td2">总兑换用户数</td>
+				<td class="td2">累计总兑换时长</td>
+				<td class="td2">人均兑换时长</td>
+				<td class="td2">人均兑换消耗金币</td>
+				<td class="td2">全部用户总持有通话时长</td>
+				<td class="td2">人均持有通话时长</td>
+			</tr>
+			<?php
+			foreach ($data as $k => $v) { ?>
+				<tr class="ct">
+					<td><?php echo $k; ?></td>
+					<td class="td2"><?php echo $v['v__total_user']; ?></td>
+					<td class="td2"><?php echo $v['v_exchange_total_user'] ? $v['v_exchange_total_user'] : 0; ?></td>
+					<td class="td2"><?php echo $v['v_exchange_total_seconds'] ? $v['v_exchange_total_seconds'] : 0; ?></td>
+					<td class="td2"><?php echo $v['v_exchange_total_user'] ? bcdiv($v['v_exchange_total_seconds'], $v['v_exchange_total_user'], 2) : 0; ?></td>
+					<td class="td2"><?php echo $v['v_exchange_total_user'] ? bcdiv(abs($v['v_exchange_cost_scores']), $v['v_exchange_total_user'], 2) : 0; ?></td>
+					<td class="td2"><?php echo $v['v_total_seconds'] ? $v['v_total_seconds'] : 0; ?></td>
+					<td class="td2"><?php echo $v['v__total_user'] ? bcdiv($v['v_total_seconds'], $v['v__total_user'], 2) : 0; ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#sdate").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#edate").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#downLoad").bind('click', function () {
+				$("#hidden_export").val(1);
+				$("#addFrom").submit();
+				$("#hidden_export").val(0);
+			});
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

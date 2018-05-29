@@ -1,0 +1,37 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body id="phlist" data-pagerole="body">
+	<div class="module">
+		<div id="iHeader" class="hd">
+			<div class="title-back">
+				<h1>邀请好友成功排行榜</h1>
+				<div class="back"><a href="<?php echo $webroot;?>/activity/share"></a></div>
+			</div>
+		</div>
+		<div id="iScroll" class="phlist-wrap">
+			<div class="list">
+				<table>
+					<tr>
+						<th>排行榜</th>
+						<th class="mid">手机号码</th>
+						<th>邀请好友成功数</th>
+					</tr>
+<?php 
+$i = 1;
+foreach ($top_list as $key=>$value) {
+?>
+					<tr>
+						<td><span class="<?php echo $i < 4 ? 'o' : 'g';?>"><?php echo $i;?></span></td>
+						<td><?php echo substr_replace($value['phone'], '****', 3, 4);?></td>
+						<td class="r"><?php echo $value['hits'];?></td>
+					</tr>
+<?php
+$i++;
+}
+?>
+				</table>
+			</div>
+		</div>
+	</div>
+<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

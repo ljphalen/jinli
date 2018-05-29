@@ -1,0 +1,38 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>?channel_id=<?php echo $info['channel_id'];?>">店铺列表</a></li>
+    <li class="current"><a href="javascript:;">编辑店铺</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑店铺</div>
+<form method="post" action="<?php echo $copyPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<input name="channel_id" value="<?php echo $info['channel_id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">店铺名称</th>
+			<td class="td"><input type="text" class="input wc" name="shop_title" value="<?php echo $info['shop_title'];?>"></td>
+		</tr>
+        <?php foreach ($channel as $channel_id=>$channel_name): ?>
+		<tr class="tr">
+			<th class="th"><b><?php echo $channel_name; ?></b> 店铺链接</th>
+			<td class="td"><textarea  class="input wc" name="url[<?php echo $channel_id; ?>]"><?php echo  $channel_id==$info['channel_id']?$info['shop_url']:$info['url'][$channel_id];?></textarea></td>
+		</tr>
+        <?php endforeach; ?>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, '<?php echo Util_Http::getServer("HTTP_REFERER"); ?>');
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

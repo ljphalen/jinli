@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html >
+<head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<link rel="shortcut icon" href="{{rootUrl}}/favicon.ico" />
+<!-- include '{{inc}}' -->
+</head>
+<body >
+<div class="colMain">
+        <div class="content">
+                 <font color="red" >单击看大图,双击选图</font>
+                <div class="toolbar">
+                	<div class="search " style="float:right; padding-right:33.3px">
+                		<form action="/imgManage/slists" method="GET">
+                			<span>
+                				<input type="hidden" value="{{input_id}}" name="name" />
+                				<input type="hidden" value="{{params.category}}" name="category" />
+                    			<input type="text" class="iText" name='check_name' value='{{params.check_name}}' /><input type="submit" class="submit" value="" />
+                    			<span class="sign">图片名查询</span>
+                			</span>
+                		</form>
+           			 </div>
+    				<div class="tabs" style="margin-top:45px;">
+       					 	<ul>
+           					 	<li class='cur'><a href="{{siteUrl}}imgManage/slists?name={{input_id}}&category=0&check_name={{params.check_name}}"><font <!-- if {{params.category}}=="0" --> color="red" <!-- endif --> >所有</font></a></li>
+            					<li class='cur'><a href="{{siteUrl}}imgManage/slists?name={{input_id}}&category=imgmanage_a&check_name={{params.check_name}}"><font <!-- if {{params.category}}=="imgmanage_a" --> color="red" <!-- endif --> >{{category.imgmanage_a}}</font></a></li>
+            					<li class='cur'><a href="{{siteUrl}}imgManage/slists?name={{input_id}}&category=imgmanage_b&check_name={{params.check_name}}"><font <!-- if {{params.category}}=="imgmanage_b" --> color="red" <!-- endif --> >{{category.imgmanage_b}}</font></a></li>
+           						<li class='cur'><a href="{{siteUrl}}imgManage/slists?name={{input_id}}&category=imgmanage_c&check_name={{params.check_name}}"><font <!-- if {{params.category}}=="imgmanage_c" --> color="red" <!-- endif --> >{{category.imgmanage_c}}</font></a></li>
+           						<li class='cur'><a href="{{siteUrl}}imgManage/slists?name={{input_id}}&category=imgmanage_d&check_name={{params.check_name}}"><font <!-- if {{params.category}}=="imgmanage_d" --> color="red" <!-- endif --> >{{category.imgmanage_d}}</font></a></li>
+       						 </ul>
+   					</div>
+   				</div>
+   			<div class="grid" style="margin-top:40px">
+   				<table>
+   					<!-- if count({{img}})>0 -->
+   					<!-- loop img -->
+                	<!-- if {{i}}%4 == 0 -->
+					<tr>
+                	<!-- endif -->		
+                	<td style="padding-top:20px"><span ><img name="{{img' value.url}}" class="pic" mydata="{{img' value.name}}" src="{{img' value.bre_url}}" title="{{img' value.content}}"  height="80px" /></span><p>{{img' value.name}}</p></td>
+                	<!-- if ({{i}}++)%4 == 3 -->
+                	</tr>
+                	<!-- endif -->
+                	<!-- endloop -->
+                	<!-- if {{i}}%4 != 3 -->
+                	</tr>
+                	<!-- endif -->
+                	<!-- else -->
+                	<tr><ul><td>没有图片</td></ul></tr>
+                	<!-- endif -->
+                </table>
+            </div>
+		</div>
+            <div style="margin: 20px auto; text-align: center;width:290px;">{{pager.pages}}</div>
+</div>          
+
+</body>
+<script>
+var TimeFn = null;
+var wind = null;
+$(function(){
+$(".pic").click(function(){
+	var url = this.name;
+	clearTimeout(TimeFn);
+	TimeFn = setTimeout(function(){
+		wind = window.open(url,"newwindow1","toolbar=no,menubar=no,resizable=no,location=no,status=no");
+		},300);
+		
+});
+$(".pic").dblclick(function(){
+	var url = this.name;
+	clearTimeout(TimeFn);
+	window.opener.document.getElementById("{{input_id}}").value=url;
+	if(window.opener.document.getElementById("ad_title"))
+		window.opener.document.getElementById("ad_title").value = $(this).attr("mydata");
+	if(window.opener.document.getElementById("ad_desc"))
+		window.opener.document.getElementById("ad_desc").value = $(this).attr("title");
+	window.close();
+});
+});
+function windowonblur()
+{
+	setTimeout(function(){
+			if(wind != null && !wind.closed)
+				return false;
+			else
+			{
+				window.close();
+				return true;
+			}
+			},400);
+}
+</script>
+</html>

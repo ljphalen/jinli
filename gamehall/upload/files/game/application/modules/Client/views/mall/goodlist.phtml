@@ -1,0 +1,170 @@
+<!DOCTYPE HTML>
+<html >
+<head>
+	<meta charset="UTF-8">
+	<title><?php echo $title ? $title: '金立游戏大厅';?></title> 
+	<meta name="keyword" content="金立, 金立游戏, 游戏大厅" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="email=no" />
+    <link rel="stylesheet" href="<?php echo $staticroot; ?>/apps/game/apkv1/assets/css/points.css?v=<?php echo $version;?>"/>
+    <script>
+    var token = '<?php echo $token;?>';
+    var isLogin = '<?php echo $isLogin ? 'true': 'false';?>';
+    </script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/jquery.js"></script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/lazyload-jquery.js"></script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/Common.js"></script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/Form.js"></script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/Model.js"></script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/points/init.js"></script>
+    <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/fastclick.js"></script>
+    <meta charset="UTF-8">
+</head>
+<script>
+var token = '<?php echo $token;?>';
+var isLogin = '<?php echo $isLogin ? 'true': 'false';?>';
+</script>
+<body id="mall" >
+	<div class="myinfo-container">
+		<div class="avatorContainer" id="account">
+			<img class="avator" src="<?php echo $staticResPath; ?>/pic/blankAvator.gif" data-src="<?php echo $attachPath. $userInfo['avatar'];?>" alt="">
+		</div>
+		<div class="info">
+			<span class="name omit" name="mypoint"><?php echo $userInfo['nickname']; ?></span>
+			<span class="points" name="mypoint"><?php echo intval($userInfo['points']); ?></span>
+			<div class="get-money" id="getInte">
+				<i class="icon icon-money"></i>
+				领积分
+			</div>
+			<div class="my-trophy" id="prize">
+				<i class="icon icon-trophy"></i>
+				我的奖品
+			</div>
+		</div>
+	</div>
+	<div class="block">
+		<div class="content many">
+			<ul id="points" class="cases">
+				<?php foreach($goods as $key=>$value){?>
+			    <?php
+			      $parmes['goodId'] = $value['id'];
+			      $parmes['uuid'] = $parmes['puuid'];
+			      list($isCanExchange, $buttonCode, $buttonTitle) = Mall_Service_ExchangeGoods::exchangeInfo($parmes, $value);
+				  list($detailUrl, $discountPoint, $discountArr) = Mall_Service_Goods::assembleGoodInfo($value, $parmes);
+				  $goodType = ($value['type'] == Mall_Service_Goods::ACOUPON ||  $value['type'] == Mall_Service_Goods::GIFT || $value['type'] == Mall_Service_Goods::DISCOUNT_COUPON ? 'virtual' : 'entity');
+				  $entityType = ($value['type'] == Mall_Service_Goods::PHONE_RECHARGE_CARD ? 'true' : 'false');
+				  
+				  $listDiscountCss = $listIsDiscountCss = '';
+				  if($value['discountArr'] && $discountArr['discount_start_time'] <= Common::getTime() && $discountArr['discount_end_time'] > Common::getTime()){
+				      $listDiscountCss = 'discount';
+				      $listIsDiscountCss = Mall_Service_Goods::getGoodDiscountCss($discountPoint);
+				  }
+				  
+				  ?>
+				<li>
+					    <a href="<?php echo $detailUrl;?>">
+						 <img data-src="<?php echo $attachPath. $value['img'];?>" src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="">
+						</a>
+						<div class="info">
+							<h1 class="omit"><?php echo $value['title']; ?></h1>
+							<div>剩余：<span id="remaindNum" class="font-orange"><?php echo $value['remaind_num']; ?></span>个</div>
+							<div>积分：<span class="font-orange <?php echo $listDiscountCss;?>"><?php echo Mall_Service_Goods::convertPointVal($value['consume_point']); ?></span>
+							<?php if($listDiscountCss){?>
+							&nbsp;&nbsp;&nbsp;<?php echo $listIsDiscountCss; ?>
+						    <?php } ?>
+						    </div>
+						</div>
+					
+					<input class="exchange <?php echo $isCanExchange;?>" name="buy" data-type=<?php echo $goodType;?> entity-type=<?php echo $entityType;?> data-id=<?php echo $value['id'];?> type="button" value="<?php echo $buttonTitle;?>"></input>
+				</li>
+				<?php }?>
+			</ul>
+		</div>
+		<div class="operation-container" id="entity">
+			<div class="addressinfo-container">
+				<span class="address-tips">收货信息</span>
+				<table>
+					<tr class="ad-info">
+						<td>
+							<em>收货人:</em>
+						</td>
+						<td>
+							<input name="receiver" class="btn-input" type="text" placeholder="姓名" value='<?php echo $userInfo['receiver'];?>'/>
+						</td>
+					</tr>
+					<tr class="ad-info">
+						<td>
+							<em>联系电话:</em>
+						</td>
+						<td>
+							<input name="receiverphone" class="btn-input" type="text" placeholder="手机或固话" value='<?php echo $userInfo['receiverphone'];?>'/>
+						</td>
+					</tr>
+					<tr class="ad-info">
+						<td>
+							<em>收货地址:</em>
+						</td>
+						<td>
+							<textarea name="address" class="btn-input btn-textarea" rows="3"  placeholder="所在省市详细街道信息"><?php echo $userInfo['address'];?></textarea>
+						</td>
+					</tr>
+					<tr class="ad-info">
+						<td>
+							<em>QQ:</em>
+						</td>
+						<td>
+							<input name="qq" class="btn-input" type="text" placeholder="请输入QQ" value='<?php echo $userInfo['qq'];?>'/>
+						</td>
+					</tr>
+				</table>
+				<div class="ad-info">
+					<em class="title">温馨提示:</em>
+					<p class="msg">请亲认真填写收货信息，工作MM将根据收货信息 进行派送，若信息不完整，物品将会被老板没收</p>
+				</div>
+			</div>
+			<?php 
+			 $adressUrl = $webroot.'/client/Mall/exchangeAdressPost/?goodId='.$good['id'].'&puuid='.$userInfo['uuid'].'&uname='.$userInfo['uname'].'&sp='.$parmes['sp'];
+			 $ajaxUrl = $webroot.'/client/Mall/exchangeEntityPost/?goodId='.$good['id'].'&puuid='.$userInfo['uuid'].'&uname='.$userInfo['uname'].'&sp='.$parmes['sp'];
+			 ?>
+			<div id="exEntityBtn" class="btn-container" data-adressUrl="<?php echo $adressUrl;?>" data-ajaxUrl="<?php echo $ajaxUrl;?>" >
+				<a class="btn-orange font-orange">确定</a>
+			</div>
+		</div>
+		<div class="operation-container" id="virtual">
+			<div class="addressinfo-container">
+				<span class="address-tips">收货信息</span>
+				<p class="code-msg">激码已保存到我的奖品</p>
+				<div class="ad-info">
+					<em>激活码:</em>
+					<p class="code">1234567asjiagtyfoikjhyuiopftgy65584989</p>
+				</div>
+				<div class="ad-info">
+					<em>温馨提示:</em>
+					<p class="msg">请亲及时兑换哦~~</p>
+				</div>
+			</div>
+			<div id="cobyBtn" class="btn-container" data-ajaxUrl="<?php echo $webroot; ?>/client/Mall/exchangeAcouponPost/?goodId=<?php echo $good['id'].'&puuid='.$userInfo['uuid'].'&uname='.$userInfo['uname'].'&sp='.$parmes['sp'].'&imei='.$imei.'&serverId='.$parmes['serverId'];?>">
+				<a class="btn-orange font-orange">关闭</a>
+			</div>
+		</div>
+		
+		<div class="J_dialog dialog">	
+		</div>
+		<div class="J_loading loading-container">
+			<i class="icon-loading"></i>
+		</div>
+		
+	</div>
+    	<script>
+        	var pointsData = {
+        		hasnext:<?php echo $hasnext ? 'true' : 'false'; ?>
+        		,ajaxUrl:'<?php echo $webroot.'/client/mall/more?isLogin='.$isLogin.'&categoryId='.$categoryId.'&puuid='.$parmes['puuid'].'&uname='.$parmes['uname'].'&sp='.$parmes['sp'].'&serverId='.$parmes['serverId'];?>'
+        		,imgUrl:'<?php echo $staticResPath;?>/pic/blank.gif'
+        	};
+        </script>
+        <script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/points/many.js"></script>
+</body>
+</html>

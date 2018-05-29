@@ -1,0 +1,70 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>当前经验值</title>
+<link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/call/css/style.min.css?ver=<?php echo $version;?>" />
+</head>
+
+<body class="ui-app">
+
+<div class="ui-top-bar">
+	<a class="ui-pos icon-back" href="<?php echo $webroot;?>/user/experience/index"></a>
+	<span class="ui-top-txt">当前经验值</span>
+	<!-- <a class="ui-pos icon-menu" href="#"></a> -->
+</div>
+
+<div class="ui-page page1 js-active">
+	<div class="ui-page-content">
+		<div class="ui-box">
+			<ul class="ui-box-info">
+				<li><span class="span-jifen curr_exp"><b>当前经验值</b><b><?php echo $scoreData['experience_points']?$scoreData['experience_points']:0;?></b></span></li>
+			</ul>
+		</div>
+		<div class="ui-box">
+			<div class="ui-caption">经验明细</div>
+		</div>
+		<!-- 看图任务列表 START-->
+		<div class="ui-box">
+			<div id="page1-tab1" class="ui-tab js-active" role="tabpanel">
+				<ul class="ui-log-list">
+				<?php 
+				if(!empty($list)){
+					foreach($list as $k=>$v){?>
+						<li>
+							<span><?php echo $types[$v['type']];?></span>
+							<span><?php echo $v['points'];?></span>
+							<span><?php echo  date('m月d日',$v['add_time']);?></span>
+						</li>
+				<?php } }else{?>
+					<li>
+						<span>暂无信息</span>
+					</li>
+				<?php }?>
+				</ul>
+				<?php if($more){?>
+				<div class="ui-loading">上拉加载</div>
+				<?php }?>
+			</div>
+		</div>
+		<!-- 看图任务列表 END-->
+	</div>
+</div>
+
+<script data-main="main" src="<?php echo $staticResPath;?>/call/vendor/requirejs/require.js"></script>
+<script type="text/javascript">
+	var token = "<?php echo $token;?>";
+	require.config({
+	    baseUrl: '<?php echo $staticResPath;?>/call/js/',
+	    paths: {
+	        main: 'main.min.js?ver=<?php echo $version?>'
+	    }
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+<meta charset="utf-8" />
+<title><%= title %></title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<meta content="" name="description" />
+<meta content="" name="author" />
+<link href="/admin/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<link href="/admin/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+<link href="/admin/css/style.css" rel="stylesheet" />
+<link href="/admin/css/style_responsive.css" rel="stylesheet" />
+<link href="/admin/css/style_<%= skins %>.css" rel="stylesheet" id="style_color" />
+</head>
+
+<body id="lock-body">
+<div class="lock-header">
+    <a href="index.html" id="logo" class="center">
+      <!-- <img src="/admin/img/logo.png" alt="logo" class="center" /> -->
+    </a>
+</div>
+
+<div id="lock">
+    <form id="lockform" method="post" class="form-vertical no-padding no-margin" action="/admin/do/lockscreen">
+        <%- message %>
+        <div class="lock-title">
+          <i class="icon-lock"></i>
+          <h3>已锁定屏幕</h3>
+        </div>
+        <div class="lock-avatar-row">
+          <div class="lock-round">
+              <img src="https://1.gravatar.com/avatar/3c727687ac031937714cadcce7c9418d?s=160" alt="">
+          </div>
+        </div>
+        <div class="control-wrap lock-identity">
+            <h3><%= user.realname %></h3>
+            <span><%= user.email %></span>
+            <div class="lock-form-row">
+              <form action="index.html" class="form-search">
+                    <div class="input-append">
+                      <input type="password" name="password" placeholder="输入密码解锁" class="m-wrap">
+                      <button class="btn tarquoise" type="submit"><i class=" icon-arrow-right"></i></button>
+                    </div>
+                    <div class="relogin">
+                      <a href="/admin/login?account=other">使用其他帐号登录？</a>
+                    </div>
+              </form>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- BEGIN COPYRIGHT -->
+<div id="login-copyright">
+  2013 © GiONEE Power by H5 team.
+</div>
+<script src="/admin/js/jquery-1.8.3.min.js"></script>
+<script src="/admin/assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="/admin/js/jquery.blockui.js"></script>
+<script src="/admin/js/scripts.js"></script>
+<script>
+    jQuery(document).ready(function() {     
+        App.initLOCK();
+    });
+</script>
+</body>
+</html>

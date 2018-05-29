@@ -1,0 +1,131 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $indexUrl;?>">热门活动</a></li>
+        <li><a href="<?php echo $listUrl;?>">长期活动</a></li>
+		<li class="current"><a href="<?php echo $addUrl;?>">添加活动</a></li>
+	</ul>
+</div>
+<div class="h_a">添加活动</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+		 	<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input wa" name="sort" value="0"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">活动名称</th>
+				<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">跳转链接</th>
+				<td class="td"><textarea class="input wc" name="link"></textarea></td>
+			</tr>
+            <tr class="tr">
+                <th class="th">类型</th>
+                <td class="td">
+                    <select name="type" class="wb type">
+                        <?php foreach ($type as $k => $v) { ?>
+                            <option value="<?php echo $k; ?>"><?php echo $v; ?></option>
+                        <?php } ?>
+                    </select>
+                </td>
+            </tr>
+
+            <tr class="tr change_by_type">
+				<th class="th">活动起止时间</th>
+				<td class="td">
+					<div>
+						<input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="" /> 至 
+						<input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="" />
+					</div>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td">
+					<select name="status" class="wb">
+	                	<option value="1">开启</option>
+	                	<option value="0">关闭</option>
+	            	</select>
+	            </td>
+			</tr>
+			<tr class="tr">
+				<th class="th">商品图片</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="AdImg">
+							<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+							<input type="hidden" name="img" value="">
+						</li>
+					</ul>			
+					<p style="clear:both;">
+		                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" 
+		                  	style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tr>
+			<tr class="tr" id="descrip">
+				<th class="th">内容</th>
+				<td class="td">
+					<textarea style="width: 800px; height: 500px" class="textarea" name="content"></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+$(function(){
+    var time_tpl= '<th class="th">活动起止时间</th><td class="td"><div>'
+          +'<input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="" /> 至'
+          +'<input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="" />'
+        +'</div></td>';
+    var tags = <?php echo json_encode($tags); ?>;
+    var tag_tpl= '<th class="th">标签</th><td class="td"><div><select name="tag_id">';
+
+    $.each(tags,function(k,v){
+        tag_tpl += '<option value="'+ v.id+'">'+ v.name+'</option>';
+    });
+    tag_tpl += +'</select></div></td>';
+    $("select.type").change(function(){
+        if($(this).val()==1){
+            $('tr.change_by_type').html(tag_tpl);
+        }else{
+            $('tr.change_by_type').html(time_tpl);
+            $('#start_time').datetimepicker();
+            $('#end_time').datetimepicker();
+        }
+    });
+});
+
+var editor;
+KindEditor.ready(function(K) {
+	K.token = token;
+    editor = K.create('textarea[name="content"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $adminroot.$uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+//商品表单数据提交
+$(document).ready(function(){
+    $('#start_time').datetimepicker();
+    $('#end_time').datetimepicker();
+	ajaxForm('addForm',function(ret){
+        var x = $("select.type").val();
+        var  uri = '<?php echo $indexUrl;?>';
+        if(x==1){
+            uri = '<?php echo $listUrl;?>';
+        }
+		ajaxRedirect(ret, baseurl+uri);
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

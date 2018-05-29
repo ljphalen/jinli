@@ -1,0 +1,107 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="table_full">
+	<form action="<?php echo $baseUrl; ?>" method="POST">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+		<table width="100%" cellspacing="0" cellpadding="0">
+			<tr class="tr1">
+				<td class="td1">
+					类型:
+					<select name="type">
+						<?php foreach ($types as $value) { ?>
+							<option <?php echo ($value == $type) ? 'selected="selected"' : ''; ?> value="<?php echo $value; ?>"><?php echo $value; ?></option>
+						<?php } ?>
+					</select>
+					日期：
+					<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $sdate; ?>"> 至
+					<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $edate; ?>">
+					url关键字:<input class="input" type="text" id="url_val" maxlength="100" name="url_val" value="<?php echo $url_val; ?>">
+					参数t:<input class="input" type="text" id="url_key" maxlength="100" name="url_key" value="<?php echo $url_key; ?>">
+					<input type="submit" value="查询"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+<style type="text/css">
+	table {
+		empty-cells: show;
+		border-collapse: collapse;
+	}
+
+	table th {
+		white-space: nowrap;
+	}
+
+</style>
+
+<div class="h_a"><span>当前页总访问量: </span>&nbsp;&nbsp;<span id="amount" style="color: red"></span>
+	<input type="button" value="导出数据" id="checkout">
+</div>
+<div class="table_list">
+	<table cellspacing="0" cellpadding="0" width="100%">
+		<tbody>
+		<tr class="ct">
+			<th class="td2" style="width: 300px;">链接(http://3g.gionee.com/index/tj?t=xxxxxxxx)
+			</td>
+			<th class="td2" style="width: 70px;">hash(xxxxxxxx)
+			</td>
+			<?php foreach ($date as $d): ?>
+					<th class="td2" style="width: 100px;"><?php echo $d; ?></td>
+				<?php endforeach; ?>
+			<th class="td2" style="width: 70px;">总和
+			</td>
+		</tr>
+		<?php
+		$sum = 0;
+		foreach ($lineData as $k => $v) {
+			?>
+			<tr class="ct">
+				<td><?php echo $hashVal[$k]; ?></td>
+				<td class="td2"><?php echo $k; ?></td>
+				<?php
+				$total = 0;
+				foreach ($date as $d):
+					?>
+					<td class="td2"><?php echo $v[$d]; ?></td>
+					<?php
+					$total += $v[$d];
+					$sum += $v[$d];
+				endforeach;
+				?>
+				<td class="td2"><?php echo $total; ?></td>
+			</tr>
+		<?php } ?>
+		</tbody>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+
+<script src="<?php echo $staticPath; ?>/js/admin/highcharts.js"></script>
+<script src="<?php echo $staticPath; ?>/js/admin/exporting.js"></script>
+<script src="<?php echo $staticPath; ?>/js/admin/stat.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		$("#sdate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+		$("#edate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>
+<script>
+	$("#amount").text('<?php echo $sum?>');
+
+	$("#checkout").bind('click', function () {
+		var sdate = $("#sdate").val();
+		var edate = $("#edate").val();
+		var uval = $("#url_val").val();
+		location.href = '<?php echo $baseUrl;?>' + "?sdate=" + sdate + "&edate=" + edate + "&url_val=" + uval + "&export=1";
+	})
+</script>

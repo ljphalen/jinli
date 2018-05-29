@@ -1,0 +1,39 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $indexUrl;?>">渠道列表</a></li>
+	    <li class="current"><a href="javascript:;">添加渠道</a></li>
+	</ul>
+</div>
+<div class="h_a">添加渠道</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">渠道</th>
+				<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td">
+					<select class="wa" name="status">
+						<option value="1">开启</option>
+						<option value="0">关闭</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+
+<script type="text/javascript">
+//商品表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $addUrl;?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

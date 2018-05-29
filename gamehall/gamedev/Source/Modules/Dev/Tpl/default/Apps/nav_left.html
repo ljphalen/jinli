@@ -1,0 +1,19 @@
+<div class="lnav fl">
+ 	<dl>
+ 		<dt>我的应用</dt>
+ 		<dd>
+ 			<div class="input-lna">
+	            <form methon="get">
+	            <input class="span2" id="appendedInputButton" type="text" placeholder="搜索应用" name="app_name" value="{$app_name}">
+	            <button type="submit">&nbsp</button>
+	            </form>
+            </div>
+ 		</dd>
+		<dd><a href="{:U('apps/index')}" <if condition="!isset($_GET[status])">class="on"</if>>所有应用</a></li>
+		<foreach item="statu" name="apk_status">
+			
+			<php>if($key == 4) continue;</php>
+			<dd><a href="{:U('apps/index', array('status'=>$key))}" <if condition="isset($_GET[status]) && $_GET[status] == $key">class="on"</if>>{$statu}<span class="badge">({$apknum['status'][$key]|intval})</span></a></dd>
+		</foreach>
+	</dl>
+</div>

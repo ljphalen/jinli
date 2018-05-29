@@ -1,0 +1,82 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $listUrl; ?>">新闻列表</a></li>
+	</ul>
+</div>
+
+<form action="/Admin/Outnews/index" method="post">
+	<input name="token" type="hidden" value="<?php echo $token; ?>">
+
+	<div class="table_full">
+		<table width="100%">
+			<tbody>
+			<tr class="tr">
+				<th class="th">标题</th>
+				<td class="td">
+					<input class="input" name="title" value="<?php echo $search['title']; ?>"/>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">分类</th>
+				<td class="td">
+					<select name="source_id">
+						<option value="0">所有</option>
+						<?php foreach ($sources as $key => $value) { ?>
+							<option <?php if ($search['source_id'] == $key) echo 'selected'; ?> value="<?php echo $key; ?>"><?php echo $value['name'] . "({$value['num']})"; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button type="submit">搜 索</button></span></span>
+	</div>
+</form>
+
+<form id="batchForm" action="/Admin/Outnews/batch" method="post">
+	<input name="token" type="hidden" value="<?php echo $token; ?>">
+	<input name="action" id="action" type="hidden" value="">
+
+	<div class="h_a">
+		<span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">开启</button></span></span>
+		<span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">关闭</button></span></span>
+		<span class="btn2"><span><button onclick="$('#action').val('delete');" type="submit">删除</button></span></span>
+		<span> 共<?php echo $total; ?>条结果</span>
+	</div>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+				<td>ID</td>
+				<td>标题</td>
+				<td>时间</td>
+				<td>来源</td>
+				<td>状态</td>
+			</tr>
+			<?php foreach ($result as $key => $value) { ?>
+				<tr class="ct">
+					<td><input class="checkbox" name="ids[]" value="<?php echo $value['id']; ?>" type="checkbox"></td>
+					<td><?php echo $value['id']; ?></td>
+					<td><?php echo $value['title']; ?></td>
+					<td><?php echo date('Y-m-d H:i:s', $value['timestamp']); ?></td>
+					<td><?php echo $value['from']; ?></td>
+					<td><?php echo $value['status'] == 1 ? '开启' : '关闭'; ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+</form>
+<script>
+	$(document).ready(function () {
+		ajaxForm('batchForm', function (data) {
+			ajaxRedirect(data, baseurl + '/Admin/Outnews/index?s=1');
+		});
+	})
+</script>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

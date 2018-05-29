@@ -1,0 +1,38 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div id="page">
+		<header class="hd">
+			<h1>资源详情</h1>
+			<div class="back">
+				<a href="<?php echo $webroot.$indexUrl?>"><span class="left-arrow"><i></i></span></a>
+			</div>
+		</header>
+		
+		<article class="ac resource-detail">
+			<div class="inform">
+				<div class="pic"><img src="<?php echo $attachPath.$info['icon'];?>" alt="" /></div>
+				<div class="desc">
+					<h2>名称：<?php echo $info['name'];?></h2>
+					<p>公司：<?php echo $info['company'];?><br />大小：<?php echo $info['size'];?></p>
+				</div>
+				<div class="extra"><a href="<?php echo Common::clickUrl($info['id'], 'DOWN', $info['down_url'], $t_bi).$extraUrl;?>" class="btn">下载</a></div>
+			</div>
+			<div class="intro">
+				<h3>详情介绍：</h3>
+				<div class="desc">
+					<p id="J_box_collapse"><?php echo Util_String::substr($info['description'], 0, 80);?>...</p>
+					<p id="J_box_expand"><?php echo html_entity_decode($info['description']);?></p>
+					<div id="J_load_more" class="open-more"><span>展开<i>&gt;&gt;</i></span></div>
+				</div>
+			</div>
+			
+			<div class="pic-show">
+				<div class="wrap clearfix">
+					<ul class="list">
+					<?php foreach ($images as $key=>$value){?><li><img src="<?php echo $attachPath.$value['img'];?>" alt="" /></li><?php }?>
+					</ul>
+				</div>
+			</div>
+		</article>
+	</div>
+<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/footer.phtml");?>

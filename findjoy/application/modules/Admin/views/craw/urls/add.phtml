@@ -1,0 +1,47 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">链接列表</a></li>
+    <li class="current"><a href="javascript:;">添加链接</a></li>
+	</ul>
+</div>
+<div class="h_a">添加链接</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+        <tr class="tr">
+            <th class="th">分类</th>
+            <td class="td">
+                <select name="category_id"  id="select">
+                    <?php foreach($categorys as $key=>$value) { ?>
+                        <option value="<?php echo $value['id'];?>"><?php echo $value['title'];?></option>
+                    <?php }?>
+                </select>
+            </td>
+        </tr>
+		<tr class="tr">
+			<th class="th">链接</th>
+			<td class="td"><textarea class="textarea wc" name="link"></textarea></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status">
+                	<option value="1">开启</option>
+                	<option value="0">关闭</option>
+            </select></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        ajaxForm('addFrom', function (ret) {
+            ajaxRedirect(ret, baseurl + '/Admin/Craw_Urls/index?s=1');
+        });
+    })
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

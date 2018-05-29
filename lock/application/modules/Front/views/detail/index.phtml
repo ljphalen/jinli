@@ -1,0 +1,18 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body>
+	<div id="page">
+		<article class="ac">
+			<section class="theme-detail">
+				<div class="main-banner">
+					<div class="pic"><img src="<?php echo $file_data['icon'];?>" /></div>
+					<div class="txt"><span>大小：<?php echo Util_File::size($file_data['size']);?></span><span>下载量：<?php echo $file_data['down'];?></span></div>
+				</div>
+				<div class="info">
+					<h2 class="title">简介</h2>
+					<p><?php echo html_entity_decode($file_data['description']);?></p>
+					<?php if($file_data['author']) {?><div class="designer">设计师:<span><?php echo $file_data['author'];?></span></div><?php }?>
+				</div>
+			</section>
+		</article>
+	</div>
+<?php echo $this->render("layout/footer.phtml");?>

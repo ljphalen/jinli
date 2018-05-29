@@ -1,0 +1,46 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $newUrl;?>">最新发布</a></li>
+	    <li class="current"><a href="<?php echo $listUrl;?>">下载最多</a></li>
+	    <li><a href="<?php echo $monthUrl;?>">月榜</a></li>
+        <li><a href="<?php echo $setUrl;?>">排行榜设置</a></li>
+        <li><a href="<?php echo $manUrl;?>">排行榜管理</a></li>
+        <li><a href="<?php echo $weekUrl;?>">周榜管理</a></li>
+	</ul>
+</div>
+<div class="h_a">
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">排序</td>
+			<td width="100">游戏ID</td>
+			<td>标题</td>
+			<td>图标</td>
+			<td>大小</td>
+			<td>版本号</td>
+			<td width="120">下载量</td>
+			<td width="120">上线时间</td>
+			<td>状态</td>
+		</tr>
+<?php foreach($games as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['name'];?></td>
+			<td><img src="<?php echo $value['img'];?>" style="width:7.2em;height:7.2em"/></td>
+        	<td><?php echo $value['size'];?>M</td>
+        	<td><?php echo $value['version'];?></td>
+        	<td><?php echo $value['downloads'];?></td>
+        	<td><?php echo date('Y-m-d H:i:s', $value['online_time']);?></td>
+        	<td><?php echo $value['status'] ? '已上线' : '已下线';?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

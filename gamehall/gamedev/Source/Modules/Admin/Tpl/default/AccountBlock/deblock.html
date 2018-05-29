@@ -1,0 +1,40 @@
+<div class="page">
+	<div class="pageContent">
+	
+		<form method="post" action="__URL__/doBlockSave/navTabId/__MODULE__/callbackType/closeCurrent" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone)">
+			<input type="hidden" name="user_id" value="<?php echo $_SESSION[C('USER_AUTH_KEY')] ?>"/>
+			<input type="hidden" name="id" value="{$account.id}" />
+			<input type="hidden" name="status" value="{:BlocklogModel::STATUS_DEBLOCK}" />
+			<div class="pageFormContent" layoutH="58">
+
+			<div class="unit">
+				<label>封停帐号：</label>
+				{$account.email}
+			</div>
+
+			<div class="unit">
+				<label>封停日期：</label>
+				{:date('Y-m-d H:i:s',$account['deblock_time'])}
+			</div>
+			
+			<div class="unit">
+				<label>封停原因：</label>
+				{$block_log.remarks}
+			</div>
+
+			<div class="unit">
+				<label>解封备注：</label>
+				<textarea name="remarks" rows="3" cols="57"></textarea>
+			</div>
+			</div>
+			
+			<div class="formBar">
+				<ul>
+					<li><div class="buttonActive"><div class="buttonContent"><button type="submit">提交</button></div></div></li>
+					<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+				</ul>
+			</div>
+		</form>
+	
+	</div>
+</div>

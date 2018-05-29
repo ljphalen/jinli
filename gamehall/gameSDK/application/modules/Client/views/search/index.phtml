@@ -1,0 +1,71 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+</script>
+<body>
+	<div id="list-page">
+		<section class="wrap">
+			<?php if(!count($games) || empty($games)){?>
+		    <div class="search-tips">
+				<p><h2>对不起，没有找到你想要的结果！</h2></p>
+				<p><img src="<?php echo $staticResPath; ?>/pic/unsearch.png" /></p>
+			</div>
+			<?php }?>
+			<?php if($from == 'baidu' && count($games)){?>
+			<div class="search-tips-title">共<?php echo $total;?>条结果来自百度应用：</div>
+			<div class="baiduSearch-tips">百度应用的游戏可能不适配您的手机</div>
+			<?php } else if($from == 'gn'){?>
+			<div class="search-tips-title">共搜索到<?php echo $total;?>条结果：</div>
+			<?php } ?>
+			<div class="item-list J_gameItem">
+				<ul>
+				    <?php if(count($games)){?>
+					<?php $i=0; 
+					     if (!$intersrc) $intersrc = 'SEARCH';
+					     foreach($games as $key=>$value){ 
+					     $href = $webroot.'/client/search/detail/?from='.$value['from'].'&id='.$value['id'].'&gname='.html_entity_decode($value['name']).'&keyword='.$keyword.'&pc=1&intersrc='.$intersrc.'&t_bi='.$source;
+
+					     $evaluateStr = '';
+					     if ($value['pc_info']){
+					     	$evaluateStr = ',评测,' . $webroot.'/client/evaluation/detail/?id='.$value['pc_info'].'&pc=3&intersrc='.$intersrc.'&t_bi='.$source;
+					     }
+					     if ($checkver >= 2) {
+							$data_info = '游戏详情,'.$href.','.$value['id'] . $evaluateStr;
+						} else {
+							$data_info = $value['name'].','.$href.','.$value['id'].','.$value['link'].','.$value['package'].','.$value['size'].','.'Android'.$value['version'].','.$value['min_resolution'].'-'.$value['max_resolution'];
+  						}
+					?>
+					<li>
+						<a <?php if ($checkver >= 2) {?> data-type = '1'  <?php }?> data-infpage = "<?php echo $data_info;?>">
+							<span class="icon"><img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $value['img'];?>"></span>
+							<span class="desc">
+								<em><?php echo $value['name']; ?></em>
+								<p>
+									<em>大小：<?php echo $value['size'].'M';?></em>
+									<em class="tips"> 
+									<?php if ($checkver >= 2) {?> 
+										<?php if ($value['pc_info']) {?><span class="comment">评</span> <?php }?>
+										<?php if ($value['gift_info']) {?> <span class="gift">礼</span> <?php } ?>
+										<?php if ($value['device']) {?> <span class="grip"></span> <?php } ?>
+									<?php }?>
+							 		</em>
+								</p>
+								<b><?php echo html_entity_decode($value['resume'], ENT_QUOTES); ?></b>
+							</span>
+						</a>
+					</li>
+					<?php $i++;} } else {?>
+					
+					<?php }?>
+				</ul>
+			</div>	
+		</section>
+		<?php if($hasnext){ ?>
+			<div class="loading J_loadMore" data-ajaxUrl="<?php echo $webroot.'/client/search/more/?keyword='.$keyword.'&intersrc='.$intersrc.'&from='.$from.'&t_bi='.$source.'&sp='.$sp;?>" data-hasnext="<?php echo $hasnext;?>" data-curpage="<?php echo $page;?>">
+				<span class="load"></span>
+            </div>
+	   <?php } ?>
+	</div>
+   <?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

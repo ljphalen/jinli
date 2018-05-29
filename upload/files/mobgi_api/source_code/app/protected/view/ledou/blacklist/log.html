@@ -1,0 +1,45 @@
+{{pagerCss}}
+<div class="colMain">
+    <div class="title"><p class="fl">作弊日志</p></div>
+    <div class="main">
+        <div class="toolbar">
+            <div class="search fl">
+                <form action="/blacklist/showlog" method="GET">
+                <span>
+                    <input type="text" class="iText" name='check' value='{{params.check}}' /><input type="submit" class="submit" value=" " />
+                    <span class="sign">可以按uuid,udid或appkey来查询</span>
+                </span>
+                </form>
+            </div>
+        </div>
+        <div class="content">
+            <div class="grid">
+                <table>
+                    <thead>
+                        <tr>
+                        	<th>ID序号</th>
+                            <th>uuid</th>
+                            <th>udid</th>
+                            <th>AppKey</th>
+                            <th>count</th>
+                            <th>创建时间</th>                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- loop result -->
+                        <tr>
+                            <td><span class="blue">{{result' value.id}}</span></td>
+                            <td>{{result' value.uuid}}</td>
+                            <td>{{result' value.udid}}</td>
+                            <td>{{result' value.appkey}}</td>
+                            <td>{{result' value.count}}
+                            <td>{{date('Y-m-d H:i:s',result' value.created)}}</td>
+                        </tr> 
+                        <!-- endloop -->
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin: 20px auto; text-align: center;width:290px;">{{pager.pages}}</div>
+        </div>
+    </div>
+</div>

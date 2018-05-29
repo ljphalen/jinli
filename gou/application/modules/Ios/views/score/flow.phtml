@@ -1,0 +1,49 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+    <div class="module credit-record">
+        <div class="header-userinfo">
+            <div class="user"><?php echo $name; ?></div>
+            <div class="credit">累计分数：<em><?php echo $sum_score; ?>分</em></div>
+        </div>
+        <section class="iScroll">
+            <div class="record-list J_proDetail" data-ajaxurl="/api/ios_score/flow">
+                <div class="wrap"></div>
+            </div>
+        </section>
+        <script id="J_dtemplate" type="text/icat-template">
+        <%if(Object.keys(data.list).length){%>
+            <%for(var key in data.list){%>
+                <%for(var i=0, len=data.list[key].list.length; i<len; i++){%>
+                    <ul>
+                        <li class="count">
+                            <%if(i==0){%>
+                            <%=data.list[key].date%>
+                            <span class="circle circle-yellow"></span>
+                            <%} else {%>
+                            <span class="circle circle-gray"></span>
+                            <%}%>
+                        </li>
+                        <li class="flex">
+                            <div class="item">
+                                <span class="score"><%=data.list[key].list[i].score%>分</span>
+                                <p class="txt"><%=data.list[key].list[i].title%></p>
+                            </div>
+                        </li>
+                    </ul>
+                <%}%>
+            <%}%>
+        <%} else if(data.curpage == 1) {%>
+            <ul>
+                <li class="count">
+                    <span class="circle circle-gray"></span>
+                </li>
+                <li class="flex">
+                    <p class="txt">购物大厅活动上线，开始赚积分啦！</p>
+                </li>
+            </ul>
+        <%}%>
+        </script>
+    </div>
+
+<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/newfooter.phtml");?>

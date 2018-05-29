@@ -1,0 +1,69 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="wrap">
+   <!-- main content s-->
+	<div class="content">
+	    <!-- main s-->
+		<div class="main">
+			<div class="mod_box category_mod">
+				<ul class="category_list clearfix">
+				<?php foreach($categorys as $key=>$val) {?>  
+					<li><a class="<?php if ($category_id == $val['id']) echo 'cur'; ?>" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', 'category'.$val['id'], $tj_object.$val['id'], $webroot.'/Front/Category/index/?category='.$val['id']);?>"><?php echo $val['title'];?></a></li>
+				 <?php }?>	
+				</ul>
+			</div>
+			<!-- 分类 s-->
+			<div class="mod_box game_box">
+				<div class="hd"><i class="hd_ico"></i>
+					<h2 class="title"><?php echo $categorys[$category_id]['title']?(($categorys[$category_id]['title']=='最新游戏')?'全部游戏':$categorys[$category_id]['title']):'全部游戏';?>
+					</h2>
+					<span class="sum">
+						<a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $tj_object.$category_id, $tj_intersrc.$category_id.'_new', $webroot.'/Front/Category/index/?category='.$category_id.'&flag=0');?>" class="<?php if($flag == 0) echo 'cur' ;?>">最新游戏</a>|     					
+	                    <a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $tj_object.$category_id, $tj_intersrc.$category_id.'_hot', $webroot.'/Front/Category/index/?category='.$category_id.'&flag=1');?>" class="<?php if($flag == 1) echo 'cur' ;?>">最热游戏</a>
+					</span>
+				</div>
+				<div class="bd">
+					<ul class="game_list clearfix">
+						<?php 
+						 $flag_str = $flag?'hot':'new';
+						foreach($gamelist as $key=>$val) {?>  
+						<li>
+							<a class="thumb" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', 'gamedetail'.$val['id'], ('category'.$category_id.'_'.$flag_str.'_gid'.$val['id']), $webroot.'/Front/Game/detail/?id='.$val['id']);?>" title="<?php echo $val['name'];?>"><img  class="lazy" data-original="<?php echo $val['img'];?>" src="<?php echo $staticResPath; ?>/images/default_icon.png?v=<?php echo $version;?>" alt="<?php echo $val['name'];?>" /></a>
+							<h4><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', 'gamedetail'.$val['id'], ('category'.$category_id.'_'.$flag_str.'_gid'.$val['id']), $webroot.'/Front/Game/detail/?id='.$val['id']);?>" title="<?php echo $val['name'];?>"><?php echo $val['name']?></a></h4>
+							<p class="type"><?php echo $val['category_title'];?></p>
+							<a class="download_btn" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'startdl', 'gamedetail'.$val['id'], ('category'.$category_id.'_'.$flag_str.'_gid'.$val['id']), $val['link']);?>" title="下载">下载</a>
+						</li>
+						<?php } ?>
+					</ul>
+					<?php echo $pager;?>
+					<!--
+					<div class="pagination">
+						<!--<!-- 若首末页按钮不能点时 请将a标签自行换成span标签-->
+						<!--<a href="javascript:void(0)" class="page-star">首页</a>
+						<span class="page-cur">1</span>
+						<a href="javascript:void(0)">2</a>
+						<a href="javascript:void(0)">3</a>
+						<a href="javascript:void(0)">14</a>
+						<span class="page-break">...</span>
+						<a class="page-end" href="javascript:void(0)">末页</a>
+					</div>  -->
+				</div>
+			</div>
+			<!-- 分类 e-->
+		</div>
+		 <!-- main e-->
+		<div class="aside">
+		   <!-- 本周排行 s-->
+	          <?php echo $this->render("layout/download.phtml");?> 
+	        <!-- 本周排行 e-->  
+			<!-- 艾米客户端下载 s-->
+			 <?php echo $this->render("layout/client.phtml");?> 
+			<!-- 艾米客户端下载 e-->
+		</div>
+	    <!-- 右侧的悬浮框 -->
+	    <?php echo $this->render("layout/right.phtml");?>
+	</div>
+	 <!-- main content-->
+</div>
+<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

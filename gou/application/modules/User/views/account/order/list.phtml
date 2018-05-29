@@ -1,0 +1,55 @@
+<?php echo $this->render("layout/newheader.phtml");?>
+<body class="person" data-pagerole="body">
+	<?php echo $this->render("layout/top.phtml");?>	
+
+	<div id="iScroll">
+		<article class="ac">
+			<?php echo $this->render("layout/face.phtml");?>
+
+			<section class="tab-wrap">
+				<?php echo $this->render("layout/nav.phtml");?>
+				<div class="main img-text-list J_unfoldWrap">
+					<script  id="templete" type="text/icat-template">
+						<%for(var i=0, len=data.list.length; i<len; i++){%>
+						<li>
+							<div class="img-text">
+								<a href="<%=data.list[i].href%>">
+									<span class="pic"><img src="<%=data.list[i].img%>" /></span>
+									<span class="text">
+										<em><%=data.list[i].title%></em>
+										<em>成交时间：<%=data.list[i].created%></em>
+										<em>订单状态：<strong><%=data.list[i].status%></strong></em>
+									</span>
+								</a>
+								<div class="pay">实际支付：<b><%=data.list[i].totalprice%>元</b>（使用<strong><%=data.list[i].silver%></strong>元银币）</div>
+							</div>
+						</li>
+						<%}%>
+					</script>
+					<h2 class="arrow-rect down" <?php if($total_2) { ?>data-ajaxUrl="<?php echo $webroot.$orderlistUrl;?>?tid=2"<?php }?>>积分换购-实物订单（<?php echo $total_2;?>）</h2>
+					<?php if($total_2) { ?>
+					<div class="desc hidden"><ul></ul></div>
+					<?php } else { ?>
+					<div class="desc no-order hidden">亲，您还没有订单哦~</div>
+					<?php }?>
+
+					<h2 class="arrow-rect down" <?php if($total_1) { ?>data-ajaxUrl="<?php echo $webroot.$orderlistUrl;?>?tid=1"<?php }?>>积分换购-话费订单（<?php echo $total_1;?>）</h2>
+					<?php if($total_1) { ?>
+					<div class="desc hidden"><ul></ul></div>
+					<?php } else { ?>
+					<div class="desc no-order hidden">亲，您还没有订单哦~</div>
+					<?php }?>
+
+					<h2 class="arrow-rect down" <?php if($total_3) { ?>data-ajaxUrl="<?php echo $webroot.$orderlistUrl;?>?tid=3"<?php }?>>积分换购-阅读币订单（<?php echo $total_3;?>）</h2>
+					<?php if($total_3) { ?>
+					<div class="desc hidden"><ul></ul></div>
+					<?php } else { ?>
+					<div class="desc no-order hidden">亲，您还没有订单哦~</div>
+					<?php }?>
+
+				</div>
+			</section>
+		</article>
+	</div>
+</body>
+</html>

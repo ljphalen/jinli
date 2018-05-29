@@ -1,0 +1,48 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">活动列表</a></li>
+    <li class="current"><a href="javascript:;">添加活动</a></li>
+	</ul>
+</div>
+<div class="h_a">添加活动</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">活动名称</th>
+			<td class="td"><input type="text" class="input wa" name="name" value=""></td>
+		</tr>
+		<tr class="tr" id="link">
+			<th class="th">返利比率</th>
+			<td class="td"><input type="text" name="rate" class="input wa">%</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">开始结束时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status">
+                	<option value="1">开启</option>
+                	<option value="0">关闭</option>
+            </select></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//活动表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Activity_Fanli/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

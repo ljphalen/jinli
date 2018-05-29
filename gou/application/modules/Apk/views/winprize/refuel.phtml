@@ -1,0 +1,42 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+	<body>
+	<div class="module">
+		<section class="layout-center">
+			<a onclick="GOU.addBaiduStatic('CUTGAME_REFUEL_DOWNLOAD')" href="http://a.app.qq.com/o/simple.jsp?pkgname=com.gionee.client" class="game-share-banner">
+				<img src="<?php echo $staticResPath;?>/assets/img/game-share-banner.png" alt="你游戏我买单">
+			</a>
+		</section>
+		<section class="layout-center">
+			<div class="game-share-content">
+				<h1>我在购物大厅玩【拼速度，赢大礼】游戏，帮我加个油，让我登顶速度之王吧！</h1>
+				<div class="game-share-list">
+					<div class="title">
+						<span class="period">第 <?php echo $goods['no']; ?> 期</span>
+						<h2><?php echo $goods['title']; ?></h2>
+					</div>
+
+					<div class="price-wrap">
+						淘宝价：<em>￥<?php echo $goods['price']; ?></em><?php if($is_current): ?> 有 <?php echo $goods['join_count']; ?>人参加<?php endif; ?>
+					</div>
+
+					<div class="game-prize">
+						<div class="main">
+							<div class="notice <?php echo $is_current?'current':'next';?> "></div>
+							<div class="pic J_lazyload_img">
+								<img src="<?php echo $staticResPath;?>/pic/blank.gif" data-src="<?php echo  $goods['image']; ?>">
+							</div>
+							<div class="time">
+								<i class="icon-timer"></i><?php echo $goods['time_str']; ?>
+							</div>
+						</div>
+						<div data-status-ajaxurl="/api/Apk_Winprize/getrefuelStatus?goods_id=<?php echo $goods['id']; ?>&uid=<?php echo $uid; ?>" 
+							data-ajaxurl="/api/Apk_Winprize/refuel?goods_id=<?php echo $goods['id']; ?>&uid=<?php echo $uid; ?>" id="J_refuel" class="side ">
+							<div class="text"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/newfooter.phtml");?>

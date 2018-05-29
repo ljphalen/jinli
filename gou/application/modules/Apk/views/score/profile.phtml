@@ -1,0 +1,44 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+    <div class="module credit-mine" style="background: transparent !important">
+        <div class="user-info">
+            <a class="user" href="<?php echo $available?$webroot . $edit_url:'javascript:void(0);'; ?>" onclick="GOU.baiduStatic('android积分入口','android积分入口-编辑用户信息')"><?php echo $name; ?>
+                <i class="icon-edit"></i>
+            </a>
+            <!--
+            <div class="user"><?php echo $name; ?>
+                <?php if($available):?>
+                    <a href="<?php echo $webroot . $edit_url; ?>" class="icon-edit" onclick="GOU.baiduStatic('android积分入口','android积分入口-编辑用户信息')"></a>
+                <?php endif;?>
+            </div>
+            -->
+            <div class="credit"><i class="icon-cup"></i><?php echo $sum_score; ?>分</div>
+        </div>
+        <span class="activity-date">
+            <?php echo $available?sprintf('活动时间：%s-%s', $score_sdate, $score_edate):sprintf('活动时间：%s-%s (活动结束)', $score_sdate, $score_edate);?>
+        </span>
+        <a href="<?php echo $webroot . $ruleUrl; ?>" class="legend">分数用来干嘛？</a>
+        <div class="footer">
+            <a href="<?php echo $webroot . $rankUrl; ?>" class="item" onclick="GOU.baiduStatic('android积分入口','android积分入口-分数排行榜')">
+                <i class="icon-column"></i><?php echo $over; ?>
+                <i class="icon-arrow-right"></i>
+            </a>
+
+            <a href="<?php echo $available?$webroot . $taskUrl:'javascript:void(0);'; ?>" class="item"  id="J_todo" onclick="GOU.baiduStatic('android积分入口','android积分入口-每日任务')">
+                <i class="icon-cup-white" <?php echo $available?'':'style="opacity: 0.4;"'; ?>></i>
+                <?php echo $available?'':'<span style="opacity: 0.4;">';?>
+                做任务&nbsp;赚分数
+                <?php echo $available?'':'</span>';?>
+                <?php if($available):?>
+                <i class="icon-arrow-right"></i>
+                <?php endif;?>
+                <?php if($available && $task_tip):?>
+                    <span class="focus"></span>
+                <?php endif; ?>
+            </a>
+        </div>
+    </div>
+
+
+<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/newfooter.phtml");?>

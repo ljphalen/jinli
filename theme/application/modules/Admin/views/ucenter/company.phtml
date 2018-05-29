@@ -1,0 +1,166 @@
+<form name="companyInfo" id="companyInfo">
+    <div class="com_tb_wrap">
+        <div class="com_tb">
+            <label class="tb_cell tb_title">*联系人姓名</label>
+            <div class="tb_cont tb_cell">
+                <input name="company_real_name" class="rd_1 w300"  value="<?php echo $userDetail['real_name'];?>" type="text">
+            </div>
+        </div>
+    </div><!--com_tb_wrap end-->
+    <div class="com_tb_wrap">
+        <div class="com_tb">
+            <label class="tb_cell tb_title">*手机号</label>
+            <div class="tb_cont tb_cell">
+                <input name="company_tel" type="text" class="rd_1 w300" value="<?php echo $userDetail['tel'];?>" >
+            </div>
+        </div>
+    </div><!--com_tb_wrap end-->
+    <div class="com_tb_wrap">
+        <div class="com_tb">
+            <label class="tb_cell tb_title">*邮箱</label>
+            <div class="tb_cont tb_cell">
+                <input type="text" name="company_email" class="rd_1 w300" value="<?php echo $userDetail['email'];?>">
+            </div>
+        </div>
+    </div><!--com_tb_wrap end-->
+    <div class="com_tb_wrap">
+        <div class="com_tb">
+            <label class="tb_cell tb_title">*QQ</label>
+            <div class="tb_cont tb_cell">
+                <input type="text" name="company_qq" class="rd_1 w300" value="<?php echo $userDetail['qq'];?>">
+            </div>
+        </div>
+    </div><!--com_tb_wrap end-->
+    <div class="com_tb_wrap">
+        <div class="com_tb">
+            <label class="tb_cell tb_title">*真实公司名称</label>
+            <div class="tb_cont tb_cell">
+                <input type="text" id="company_name" name="company_name" class="rd_1 w300" value="<?php echo $userDetail['company_name'];?>" holder="与银行卡账户名一致,提交后不可更改">
+            </div>
+        </div>
+    </div><!--com_tb_wrap end-->
+    <div class="com_tb_wrap">
+        <div class="com_tb">
+            <label class="tb_cell tb_title">*营业执照注册号</label>
+            <div class="tb_cont tb_cell">
+                <input type="text" name="license" class="rd_1 w300" value="<?php echo $userDetail['license'];?>">
+            </div>
+        </div>
+    </div><!--com_tb_wrap end-->
+    <div class="com_tb_wrap">
+        <div class="com_tb">
+            <label class="tb_cell tb_title">*营业执照扫描件</label>
+            <div class="tb_cont tb_cell">
+                <button class="btn_s3" id="uploadLicensePic_btn">点击上传</button>
+                <input id="uploadLicensePic_input" style="display: none" type="file" name="uploadLicensePic_input">
+                <span class="prompt_txt">营业执照扫描件限制为4M</span>
+                <input type="hidden" value="<?php echo $userDetail['license_pic'];?>" name="uploadLicensePic" />
+                <?php if($userDetail['license_pic']){ ?>
+                    <p class="prompt_txt clear-fix special_txt" id="uploadLicensePic_demo"><a target="_blank" href="<?php echo $iconUrl. '/licenseIcon/' . $userDetail['license_pic'];?>">营业执照.jpg</a></p>
+                <?php } else { ?>
+                    <p class="prompt_txt clear-fix special_txt" style="display:none" id="uploadLicensePic_demo"><a target="_blank" href="#">营业执照.jpg</a></p>
+                <?php } ?>
+            </div>
+        </div>
+    </div><!--com_tb_wrap end-->
+    <div class="com_tb_wrap">
+        <div class="com_tb">
+            <label class="tb_cell tb_title">*税务登记证号</label>
+            <div class="tb_cont tb_cell">
+                <input type="text" name="tax_number" class="rd_1 w300" value="<?php echo $userDetail['tax_number'];?>">
+            </div>
+        </div>
+    </div><!--com_tb_wrap-->
+    <div class="com_tb_wrap">
+        <div class="com_tb">
+            <label class="tb_cell tb_title">*税务登记执照扫描件</label>
+            <div class="tb_cont tb_cell">
+                <button class="btn_s3" id="uploadTaxPic_btn">点击上传</button>
+                <input id="uploadTaxPic_input" style="display: none" type="file" name="uploadTaxPic_input">
+                <span class="prompt_txt">税务登记执照扫描件限制为4M</span>
+                <input type="hidden" value="<?php echo $userDetail['tax_pic'];?>" name="uploadTaxPic" />
+                <?php if($userDetail['tax_pic']){ ?>
+                    <p class="prompt_txt clear-fix special_txt" id="uploadTaxPic_demo"><a target="_blank" href="<?php echo $iconUrl. '/taxIcon/' . $userDetail['tax_pic'];?>">税务登记证.jpg</a></p>
+                <?php } else { ?>
+                    <p class="prompt_txt clear-fix special_txt" style="display:none" id="uploadTaxPic_demo"><a target="_blank" href="#">税务登记证.jpg</a></p>
+                <?php } ?>
+            </div>
+        </div>
+    </div><!--com_tb_wrap end-->
+    <div class="com_tb_wrap">
+        <div class="com_tb">
+            <label class="tb_cell tb_title">*公司详细地址</label>
+            <div class="tb_cont tb_cell">
+                <input type="text" id="company_addr" name="company_addr" class="rd_1 w300" value="<?php echo $userDetail['company_addr'];?>" holder="联系地址不超过两百字">
+            </div>
+        </div>
+    </div><!--com_tb_wrap end-->
+    <div class="com_tb_wrap">
+        <div class="com_tb">
+            <label class="tb_cell tb_title">*开户银行名称 :</label>
+            <div class="tb_cont tb_cell">
+                <div class="select_box" id="company_bank" style="width:150px;">
+                    <label class="select_val check_data" style="background-position: 7.25rem" val="<?php echo $userDetail['bank']; ?>">
+                        <?php if(!empty($userDetail[ 'bank'])){ echo $banks[$userDetail[ 'bank']]; } else { echo '请选择'; } ?>
+                    </label>
+                    <ul class="select_option" style="width:150px;">
+                        <?php foreach ($banks as $k=> $v) { ?>
+                        <li val="<?php echo $k; ?>">
+                            <?php echo $v; ?>
+                        </li>
+                        <?php } ?>
+                    </ul>
+                </div>
+                <input type="hidden" name="company_bank" value="<?php echo $userDetail['bank'];?>" />
+            </div>
+        </div>
+    </div>
+    <div class="com_tb_wrap">
+        <div class="com_tb">
+            <label class="tb_cell tb_title">*开户名称</label>
+            <div class="tb_cont tb_cell">
+                <input type="text" id="company_account_name" name="company_account_name" class="rd_1 w300" value="<?php echo $userDetail['account_name'];?>" holder="开户名称必须和真实公司名称一致">
+            </div>
+        </div>
+    </div><!--com_tb_wrap end-->
+    <div class="com_tb_wrap">
+        <div class="com_tb">
+            <label class="tb_cell tb_title">*开户省份</label>
+            <div class="tb_cont tb_cell">
+                <input type="text" id="bank_province" class="rd_1 w300" value="<?php echo $userDetail['bank_province'];?>" name="company_bank_province" holder="如不清楚请联系银行">
+            </div>
+        </div>
+    </div><!--com_tb_wrap end-->
+    <div class="com_tb_wrap">
+        <div class="com_tb">
+            <label class="tb_cell tb_title">*开户行城市</label>
+            <div class="tb_cont tb_cell">
+                <input type="text" id="bank_city" name="company_bank_city" class="rd_1 w300" value="<?php echo $userDetail['bank_city'];?>" holder="如不清楚请联系银行">
+            </div>
+        </div>
+    </div><!--com_tb_wrap end-->
+    <div class="com_tb_wrap">
+        <div class="com_tb">
+            <label class="tb_cell tb_title">*开户支行</label>
+            <div class="tb_cont tb_cell">
+                <input type="text" id="company_branch" name="company_branch" class="rd_1 w300" value="<?php echo $userDetail['branch'];?>" holder="如不清楚请联系银行">
+            </div>
+        </div>
+    </div><!--com_tb_wrap end-->
+    <div class="com_tb_wrap">
+        <div class="com_tb">
+            <label class="tb_cell tb_title">*银行卡号</label>
+            <div class="tb_cont tb_cell">
+                <input type="text" id="company_card_number" name="company_card_number" class="rd_1 w300" value="<?php echo $userDetail['card_number'];?>">
+            </div>
+        </div>
+    </div><!--com_tb_wrap end-->
+    <div class="com_tb_wrap">
+        <div class="com_tb">
+            <label class="tb_cell tb_title">*再次输入银行卡号</label>
+            <div class="tb_cont tb_cell">
+                <input type="text" name="company_check_card_number" class="rd_1 w300" value="">
+            </div>
+        </div>
+    </div>
+</form>

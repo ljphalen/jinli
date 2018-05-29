@@ -1,0 +1,70 @@
+<div class="addAD">
+    <div class="grid">
+            <form action="/order/saveorder" method="post" name="form" id="product">
+            <div class="main">
+                <div class="app-detail">
+                    <ul class="form">
+                        <li>
+                            <span class="label">是否可配置：</span>
+                            <div class="fc">
+                                <input type="hidden" id="index" name="index" value="{{index}}" class="iText" />
+                                <input type="hidden" id="status" name="status" <!-- if {{blockkey}} -->value="{{status}}"<!-- else -->value="1" <!-- endif -->class="iText" />
+                                <select name="inapp" class="required" required id="inapp">
+                                    <option value="" <!-- if {{inapp}}!== 0 && {{inapp}}!==1 -->selected<!-- endif -->></option>
+                                    <option value="1" <!-- if {{inapp}}===1 -->selected<!-- endif -->>不可配置</option>
+                                    <option value="0" <!-- if {{inapp}}===0 -->selected<!-- endif -->>可配置</option>
+                                </select><span class="red">*</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">广告类型ID：</span>
+                            <div class="fc">
+                                <input type="text" id="blockkey" name="blockkey" value="{{blockkey}}" class="iText required" <!-- if {{blockkey}} -->disabled<!-- endif --> /><span class="red">*</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">广告类型名称：</span>
+                            <div class="fc">
+                                <input type="text" name="blockname"  id="blockname" value="{{blockname}}" class="iText"/><span class="red">*</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">素材类型：</span>
+                            <div class="fc">
+                                <select name="source_type" class="required" required id="source_type">
+                                    <option value="" <!-- if {{source_type}}== '' -->selected<!-- endif -->></option>
+                                    <option value="1" <!-- if {{source_type}}== 1 -->selected<!-- endif -->>图片</option>
+                                    <option value="2" <!-- if {{source_type}}== 2 -->selected<!-- endif -->>文案</option>
+                                    <option value="3" <!-- if {{source_type}}== 3 -->selected<!-- endif -->>图片+文案</option>
+                                    <option value="4" <!-- if {{source_type}}== 4 -->selected<!-- endif -->>其它</option>
+                                </select><span class="red">*</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+        <div style="text-align:center;padding:10px 0;">
+            <a href="javascript:void(0)" class="btn" id="ok">确定</a>
+            <a href="javascript:void(0)" class="cancel" id="cancel">取消</a>
+        </div>
+    </div>
+</div>
+<script>
+    $(function() {
+        <!-- if {{blockkey}} -->
+        
+        <!-- else -->
+            //新增订单自动生成订单号
+            ajaxGET("/implantable/createBlockKey", "", function(data) {
+                if (data.result == 0) {
+                    $("#blockkey").val(data.key);
+                } else {
+                    alert("生成订单号失败,请重试")
+                }
+            });
+        <!-- endif -->
+        $("#source_type").val({{source_type}})
+        $("#inapp").val({{inapp}})
+    });
+</script>

@@ -1,0 +1,104 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">精品推荐列表</a></li>
+    <li class="current"><a href="javascript:;">添加精品推荐</a></li>
+	</ul>
+</div>
+<div class="step mb10">
+		<ul class="cc">
+			<li class="current">创建推荐</li>
+			<li class="line"></li>
+			<li><span class="fl"><em></em></span>添加游戏</li>
+		</ul>
+</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	  <tr class="tr">
+			<th class="th">网络类型</th>
+			<td class="td">
+			   <select name="ntype">
+					<?php foreach($ntype as $key=>$value) {?>
+    			    <option value="<?php echo $key;?>"><?php echo $value;?></option>
+    			    <?php }?>
+			   </select>
+			 </td>
+		</tr>
+		<tr class="tr">
+			<th class="th">推荐方式</th>
+			<td class="td">
+			  <select name="btype" id="btype">
+					<?php foreach($btype as $key=>$value) {?>
+    			    <option value="<?php echo $key;?>" <?php if (2 == $key) echo 'selected="selected"';?>><?php echo $value;?></option>
+    			    <?php }?>
+			   </select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">导语</th>
+			<td class="td"><input type="text" class="input wc" name="guide" value=""></td>
+		</tr>
+		<tr>
+		   <th class="th">机组</th>
+			<td class="td">
+			 <select name="gtype">
+					<?php foreach($groups as $key=>$value) {?>
+    			    <option value="<?php echo $value['id'];?>" <?php if ($search['gtype'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['title'];?></option>
+    			    <?php }?>
+			  </select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">生效时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status">
+                	<option value="1">开启</option>
+                	<option value="0">关闭</option>
+            </select></td>
+		</tr>
+		<tr class="tr" id="tup">
+			<th class="th">图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="img" value="">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">下一步</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+	$("#tup").css('display','none'); 
+	$('#btype').change(function(){  
+		   if($(this).children('option:selected').val() == 1){
+			   $("#tup").css('display',''); 
+		   } else {
+			   $("#tup").css('display','none'); 
+		   } 
+	 });
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Ad_Besttj/addCt?id='+ret.data+'&opc=add');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

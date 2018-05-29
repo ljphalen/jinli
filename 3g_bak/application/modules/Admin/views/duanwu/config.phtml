@@ -1,0 +1,97 @@
+<?php echo $this->render("layout/header2.phtml"); ?>
+	<section class="main-content">
+		<form method="post" action="<?=$this->baseUrl?>" id="editForm">
+			<input name="token" value="<?=$token?>" type="hidden"/>
+			<header class="header navbar bg-default">
+				<ul class="nav navbar-nav">
+					<li class="active">
+						<a href="javascript:;">端午配置管理</a>
+					</li>
+				</ul>
+				<div class="btn-group pull-right mg-r-sm">
+					<button type="submit" name="sub" class="btn btn-sm btn-primary navbar-btn">
+						立即保存
+					</button>
+				</div>
+			</header>
+
+			<div class="content-wrap">
+				<div class="row">
+					<div class="col-lg-12">
+						<!-- table content start -->
+						<section class="panel">
+							<table class="table table-bordered table-striped no-margin">
+								<tr>
+									<td>每天活动次数</td>
+									<td>
+										<input name="duanwu_times" style="width: 50px;" type="text" class="form-control" value="<?php echo $configs['duanwu_times']; ?>">
+									</td>
+								</tr>
+								<tr>
+									<td>活动时间</td>
+									<td>
+										开始时间<input id="st" name="duanwu_open[start]" style="width: 200px;" type="text" class="form-control" value="<?php echo $configs['duanwu_open']['start']; ?>">
+										结束时间<input id="et" name="duanwu_open[end]" style="width: 200px;" type="text" class="form-control" value="<?php echo $configs['duanwu_open']['end']; ?>">
+									</td>
+								</tr>
+								<tr>
+									<td>实物奖励物品ID</td>
+									<td>
+										<?php for ($i = 1; $i <= 4; $i++): ?>
+											<?=$i?>等奖
+											<select name="duanwu_goods[<?=$i?>]" style="width: 200px;" class="form-control">
+												<option value="">请选择</option>
+												<?php
+												$v = $configs['duanwu_goods'][$i];
+												foreach ($goodsList as $val):
+													$checked = $v == $val['id'] ? 'selected=selected' : '';
+													?>
+													<option <?=$checked?> value="<?=$val['id']?>"><?=$val['name']?></option>
+												<?php endforeach; ?>
+											</select>
+										<?php endfor; ?>
+									</td>
+								</tr>
+								<tr>
+									<td>实物奖励物品位置</td>
+									<td>
+										起始值<input name="duanwu_kind[s]" style="width: 100px;" type="text" class="form-control" value="<?php echo $configs['duanwu_kind']['s']; ?>">
+										间隔值<input name="duanwu_kind[n]" style="width: 100px;" type="text" class="form-control" value="<?php echo $configs['duanwu_kind']['n']; ?>">
+										填写奖励等级(用,分割)<br><textarea name="duanwu_kind[rate]" style="width: 200px; height: 100px;"><?php echo $configs['duanwu_kind']['rate']; ?></textarea><br>
+
+										<?php
+										$str = array();
+										foreach ($rankKinds as $k => $v) {
+											$str[] = $k . ',' . $v;
+										} ?>
+										<textarea style="width: 200px; height: 100px;"><?=implode("\n", $str)?></textarea>
+
+									</td>
+								</tr>
+								<tr>
+									<td>金币奖励概率<br>(一行一个列:金币数,概率)</td>
+									<td>
+										<textarea name="duanwu_coin_rate" style="width: 200px; height: 100px;"><?php echo $configs['duanwu_coin_rate']; ?></textarea>
+									</td>
+								</tr>
+
+
+							</table>
+						</section>
+					</div>
+				</div>
+
+			</div>
+		</form>
+	</section>
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+	<script type="text/javascript">
+		$('#et').datetimepicker();
+		$('#st').datetimepicker();
+		$(document).ready(function () {
+			ajaxForm('editForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '<?=$this->configUrl?>');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

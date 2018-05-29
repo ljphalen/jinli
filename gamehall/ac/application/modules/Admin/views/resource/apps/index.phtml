@@ -1,0 +1,98 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">全部应用</a></li>
+    <li><a href="<?php echo $addUrl;?>">添加应用</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>"/>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">关键字</th>
+			<td class="td">
+			<input type="text" class="input " name="name" value="<?php echo $search['name'];?>">
+		    </td>
+		</tr>
+		<tr class="tr">
+		    <th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="select wa">
+			    <option value="0">全部</option>
+				<option <?php if($search['status'] == 2) echo 'selected';?> value="2">已上线</option>
+				<option <?php if($search['status'] == 1) echo 'selected';?> value="1">未上线</option>
+			</select>
+			</td>
+	    </tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="80">ID</td>
+			<td>图标</td>
+			<td>名称</td>
+			<td>应用归属</td>
+			<td>包名</td>
+			<td>版本</td>
+			<td>大小</td>
+			<td>状态</td>
+			<td>操作时间</td>
+			<td>上线/下线</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($apps as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><img src="<?php echo $attachPath,$value['icon'];?>" style="width:7.2em;height:7.2em"/></td>
+			<td><?php echo $value['name']; ?></td>
+			<td><?php echo $belong[$value['belong']]; ?></td>
+			<td><?php echo $value['package'];?></td>
+			<td><?php echo $value['version'];?></td>
+			<td><?php echo $value['size'];?>M</td>
+			<td><?php echo $value['status'] ? '<span style="color:green;">已上线</span>' : '<span style="color:red;">未上线</span>'?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+			<td>
+			<a href="javascript:upstatus('<?php echo $value['id']?>','<?php echo ($value['status']) ? 0 : 1;?>');" class="mr10"><?php echo ($value['status']) ? '<span style="color:red;">应用下线</span>' : '<span style="color:green;">应用上线</span>';?></a>
+			</td>
+			<td>
+			<a href="<?php echo $versionUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">版本管理</a>
+			<br/>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑应用</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script type="text/javascript">
+//上下线应用
+function upstatus(appid,status){
+	showConfirm('确定要对应用上下线操作吗？', function() {
+		$.ajax({
+			url : baseurl + "/Admin/Resource_Apps/status",
+			type : 'GET',
+			dataType : 'json',
+			data : 'id='+appid+'&status='+status,
+			success : function(ret) {
+			 	if (ret.success) {
+				 	showMsg('', ret.msg);
+				 	setTimeout(function(){location.reload();}, 500);
+				} else {
+					showError('', ret.msg);
+				}
+			}
+		});
+		return false;
+	});
+}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

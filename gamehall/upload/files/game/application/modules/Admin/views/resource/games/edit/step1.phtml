@@ -1,0 +1,304 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl.'?type='.$type;?>">游戏列表</a></li>
+		<li class="current"><a>编辑游戏</a></li>
+	</ul>
+</div>
+<style type="text/css">
+	.container{
+		position: relative;
+	}
+	.show span,.hidden span{
+		max-width: 90px;
+		overflow: hidden;
+		display: inline-block;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.show{
+		display: inline-block;
+	}
+	.hidden{
+		display: none;
+	}
+	.controller{
+		position: absolute;
+		right: 0;
+		color: blue;
+	}
+	
+</style>
+<div class="h_a">编辑游戏</div>
+<form method="post" action="<?php echo $step1editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<input name="type" value="<?php echo $type;?>" type="hidden" />
+<input name='status' value="<?php echo $info['status'];?>" type="hidden" />
+<input name='packagecrc' value="<?php echo $info['packagecrc'];?>" type="hidden" />
+<input name='packagesource' value="<?php echo $info['package'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr" style="display:none;">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">名称</th>
+			<td class="td"><input type="text" class="input wc" name="name" value="<?php echo $info['name'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">简述</th>
+			<td class="td"><input type="text" class="input wc" name="resume" value="<?php echo $info['resume'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">热词</th>
+			<td class="td"><input type="text" class="input wc" name="label" value="<?php echo $info['label'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏分类</th>
+			<td class="td">
+			<?php foreach($categorys as $key=>$value) {?>
+			<?php if($value['editable'] != 1) {?>
+			<label class="mr20"><input type="checkbox" <?php if (in_array($value['id'], $category_ids)) echo 'checked';?> name="category[]" value="<?php echo $value['id'];?>"><?php echo $value['title'];?></label>
+			<?php }}?>			
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏属性</th>
+			<td class="td">
+			<?php foreach($hots as $key=>$value) {?>
+			<label class="mr20"><input type="radio" <?php if ($value['id'] == $info['hot']) echo 'checked';?> name="hot" value="<?php echo $value['id'];?>"><?php echo $value['title'];?></label>
+			<?php }?>	
+			<label class="mr20"><input type="radio"<?php if (!$info['hot']) echo 'checked';?>  name="hot" value="0">无</label>		
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">支持设备</th>
+			<td class="td">
+			<?php foreach($devices as $key=>$value) {?>
+			<label class="mr20"><input type="checkbox" <?php if (in_array($value['id'], $device_ids)) echo 'checked';?> name="device[]" value="<?php echo $value['id'];?>"><?php echo $value['title'];?></label>
+			<?php }?>		
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">合作方式</th>
+			<td class="td">
+			<?php foreach($cooperates as $key=>$value) {?>
+			<label class="mr20"><input type="radio" <?php if ($key == $info['cooperate']) echo 'checked';?> name="cooperate" value="<?php echo $key;?>"><?php echo $value;?></label>
+			<?php }?>	
+			<label class="mr20"><input type="radio"<?php if (!$info['cooperate']) echo 'checked';?>  name="cooperate" value="0">无</label>		
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">开发者</th>
+			<td class="td"><input type="text" name="developer" class="input wc" value="<?php echo $info['developer'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">语言</th>
+			<td class="td"><input type="text" name="language" class="input" value="<?php echo $info['language'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">资费</th>
+			<td class="td">
+			   <select name="price">
+				<?php foreach($price as $key=>$value) { ?>
+				<option value="<?php echo $value['id'];?>"<?php if($info['price'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['title'];?></option>
+				<?php }?>
+				</select>
+			</td>
+		</tr>
+		<?php if($lab_categorys){?>
+		<?php foreach($lab_categorys as $key=>$value){?>
+		  <tr class="tr">
+			<th class="th"><?php echo $value['title'];?></th>
+			<td class="td">
+			   <?php foreach($btype as $k=>$v){?>
+			   <?php if($value['id'] == $k) {?>
+			   
+			   <div class="container">
+			     <?php if(count($btype[$value['id']]) <= 10) {?>
+			     <div class="show">
+			        <?php foreach($v as $k1=>$v1){?>
+	                 <span class=" "><input type="checkbox" <?php if(in_array($v1['id'], $game_labels)) echo 'checked';?> name="labels[]" value="<?php echo $value['id']."|".$v1['id'];?>"><?php echo $v1['title'];?></span>
+					<?php } ?>
+				 </div>
+				 <!-- <span class="controller">展开</span> -->
+			    <?php } else {?>
+			    
+			     <?php foreach($v as $k1=>$v1){?>
+			     <?php if($k1 == 0) {?>
+			     <div class="show">
+			     <?php } ?>
+			     
+			        <?php if(($k1 + 1) <= 10) {?>
+	                 <span class=" "><input type="checkbox" <?php if(in_array($v1['id'], $game_labels)) echo 'checked';?> name="labels[]" value="<?php echo $value['id']."|".$v1['id'];?>"><?php echo $v1['title'];?></span>
+	                <?php } ?>
+	               
+				
+				 <?php } ?>
+				 
+				 <?php if((count($v)) > 10) {?>
+				 <div class="hidden">
+				     <?php foreach($v as $k2=>$v2){?>
+				     <?php  if(($k2+1) > 10) {?>
+					  <span class=" "><input type="checkbox" <?php if(in_array($v2['id'], $game_labels)) echo 'checked';?> name="labels[]" value="<?php echo $value['id']."|".$v2['id'];?>"><?php echo $v2['title'];?></span>
+					  <?php  if(($k2+1) % 10 == 0) {?>
+					  <br/>
+					  <?php } ?>
+					  <?php } ?>
+			         <?php } ?>
+			     </div>
+			     
+			     <?php if(count($v) == count($btype[$value['id']]) ) {?>
+				 </div>
+				 <?php } ?>
+				 
+				 <span class="controller">展开</span>
+			     <?php } ?>
+			     
+			     <?php } ?>
+			   </div>
+			   
+			   <?php }?>
+			   <?php }?>
+			</td>
+		 </tr>
+		<?php }?>
+		<?php }?>
+		<tr class="tr">
+			<th class="th">来源</th>
+			<td class="td"><input type="text" name="company" class="input wc" value="<?php echo $info['company'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">包名</th>
+			<td class="td"><input type="text" name="package" class="input wc" value="<?php echo $info['package'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图标</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="Img">
+						<img src="<?php echo $attachPath.$info['img'];?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏预览</th>
+			<td class="td">
+						<?php foreach($gimgs as $key=>$value) {
+							$file = explode(".", $value['img']);
+							$img = $attachPath . $value['img'] . '_240x400.' . $file[1];
+						?>
+						<div id="upimg<?php echo $value['id'];?>">
+							<ul class="uploadImg">
+								<li id="upImg<?php echo $value['id'];?>">
+									<img src="<?php echo $img;?>"/>
+									<input type="hidden" name="upImg[<?php echo $value['id'];?>]" value="<?php echo $value['img'];?>">
+								</li>
+								<li><a href="javascript:void(0)" onclick="deleteImg('<?php echo $deleteImgUrl;?>?id=<?php echo $value['id'];?>', 'upimg<?php echo $value['id'];?>', event);">删　除</a></li>
+							</ul>
+							<p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?mkthumb=1&imgId=upImg',$value['id'];?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>
+						</div>
+					<?php }?>
+				<div id="imgs"></div>
+				<div class="mb10"><button onclick="addupload();" onfocus="blur();" type="button"　class="btn">＋添加预览图片</button></div>				 
+			</td>
+		</tr>
+		<tr class="tr">
+				<th class="th">推广</th>
+				<td class="td"><textarea style="width: 800px; height: 200px" class="textarea" name="tgcontent"><?php echo $info['tgcontent'];?></textarea>
+				</td>
+		</tr>
+		<tr class="tr">
+				<th class="th">内容</th>
+				<td class="td"><textarea style="width: 800px; height: 500px" class="textarea" name="descrip"><?php echo $info['descrip'];?></textarea>
+				</td>
+			</tr>             
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">完成</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+$(function(){
+	$(".controller").click(function(){
+		if($(this).text().trim()=='收起'){
+			$(this).text('展开');
+			//$(this).siblings('div.show').css('display','inline-block');
+			$(this).siblings('div.show').children('.hidden').css('display','none');
+			
+		}
+		else{
+			$(this).text('收起');
+			//$(this).siblings('div.show').css('display','none');
+			$(this).siblings('div.show').children('.hidden').css('display','block');
+			
+			
+		}
+	});
+})
+</script>
+<script type="text/javascript">
+//游戏表单数据提交
+var editor;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor = K.create('textarea[name="tgcontent"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+var editor1;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor1 = K.create('textarea[name="descrip"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Resource_Games/index?type=<?php echo $type;?>');
+	},function(){
+		editor.sync();
+		editor1.sync();
+	});
+
+	var imgc = 0;
+	addupload  = function() {
+		var al = $('<ul class="uploadImg"><li id="Img'+imgc+'"><img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/><input type="hidden" name="simg['+imgc+']" value=""></li></ul><p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>'+imgc+'&mkthumb=1" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>');
+		$('#imgs').append(al);
+		imgc++;
+	}
+	deleteImg = function(url, elid, e) {
+		showConfirm("确认删除该条信息？", function() {
+			$.ajax({
+						url : url,
+						type : 'POST',
+						dataType : 'json',
+						data : 'token='+token,
+						success : function(ret) {
+							if (ret.success) {
+								$('#'+elid).remove();
+							} else {
+								showError('', ret.msg);
+							}
+						}
+					});
+		}, e);
+	}
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,64 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body>
+	<div class="module dhm-home">
+		<a id="J_shoppingCat" href="<?php echo $webroot;?>/cart/index" class="icon-shopping-cat">
+			<span style="display:none" id="J_shoppingNum" data-cartnum-ajaxurl="<?php echo $webroot;?>/api/cart/cartNum?id=<?php echo $id;?>" data-ajaxurl="<?php echo $webroot;?>/cart/add"></span>
+		</a>
+		<!-- <div class="banner"> -->
+		<div id="J_carouselWrap" data-ajaxUrl="<?php echo $webroot;?>/api/index/ad">
+		</div>
+		<section class="iScroll">
+			<ul id="J_goodsList" class="goods-list" data-ajaxurl="<?php echo $webroot;?>/api/index/goods"></ul>
+		</section>
+	</div>
+
+	<script type="text/template" id="J_carouselTemplate">
+		<div class="carousel-wrap">
+			<ul class="carousel">
+				<%for(var i=0, len=data.length; i<len; i++){%>
+				<li>
+					<a href="javascript:;" data-href="<%=data[i].link%>">
+						<img data-src="<%=data[i].img%>" src="<?php echo $staticPath;?>/assets/img/blank.gif">
+					</a>
+				</li>
+				<%}%>
+			</ul>
+			<ol class="carousel-indicators">
+				<%for(var j=0, len=data.length; j<len; j++){%>
+					<li class="<%=j===0?'active':''%>"></li>
+				<%}%>
+			</ol>
+		</div>
+	</script>
+	
+	<script type="text/template" id="J_goodsListTemplate">
+		<% for(var i=0, len=data.length; i<len; i++){ %>
+		<li>
+			<a href="<%= data[i].detail_url %>">
+				<div class="pic" href="<%= data[i].detail_url %>">
+					<img src="<?php echo $staticPath;?>/assets/img/blank.gif" data-src="<%=data[i].img%>">
+				</div>
+				<div class="wrap">
+					<div class="title"><%=data[i].title%></div>
+					<div class="buy-wrap">
+						<div class="price">
+							<p class="cur">到手价:<em>￥<%=data[i].price%></em></p>
+							<span>香港专柜价:$<%=data[i].hk_price%></span>
+						</div>
+						<div data-goodsid="<%=data[i].id%>" class="buy J_addToCat">
+							<i class="icon-shopping-cat-gray"></i>
+						</div>
+					</div>
+				</div>
+			</a>
+		</li>
+		<%}%>
+	</script>
+
+	<?php echo $this->render("layout/footer.phtml");?>
+	
+	<script>
+		require(['index']);
+	</script>
+</body>
+</html>

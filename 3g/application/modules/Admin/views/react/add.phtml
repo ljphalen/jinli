@@ -1,0 +1,55 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $listUrl; ?>">反馈列表</a></li>
+			<li class="current"><a href="<?php echo $optionsUrl; ?>">添加选项</a></li>
+		</ul>
+	</div>
+	<div class="h_a">添加选项信息</div>
+	<form method="post" action="<?php echo $addPostUrl; ?>" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">选择类别</th>
+					<td class="td"><select name="parent_id">
+							<option value="0">请选择</option>
+							<?php foreach ($types as $v) { ?>
+								<option value="<?php echo $v['id'] ?>"><?php echo $v['name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">名称</th>
+					<td class="td"><input type="text" name="name" class="input"></td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">排序</th>
+					<td class="td"><input type="text" name="sort" value="1" class="input"></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">状态</th>
+					<td class="td">
+						<input type="radio" name="status" value="1" checked="checked" class="input">开启<input class="input" type="radio" name="status" value="0">关闭
+					</td>
+				</tr>
+
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+
+	<script type="text/javascript">
+		//表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/react/options');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

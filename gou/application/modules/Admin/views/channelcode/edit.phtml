@@ -1,0 +1,58 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">渠道号列表</a></li>
+		<li class="current"><a href="javascript:;">编辑渠道号</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑渠道号</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">渠道</th>
+				<td class="td"><select name="cid" id="select">
+				<?php foreach ($channel_names as $key=>$value) { ?>
+						<option value="<?php echo $value['id'];?>" <?php if($info['cid'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['name'];?></option>
+				<?php } ?>
+				</select></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">模块</th>
+				<td class="td"><select name="module_id" id="select">
+				<?php foreach ($channel_modules as $key=>$value) { ?>
+						<option value="<?php echo $value['id'];?>" <?php if($info['module_id'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['name'];?></option>
+				<?php } ?>
+				</select></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">渠道</th>
+				<td class="td"><select name="channel_id" id="select">
+				<?php foreach ($channel_ids as $key=>$value) { ?>
+						<option value="<?php echo $key;?>" <?php if($info['channel_id'] == $key) echo 'selected="selected"';?>><?php echo $value;?></option>
+				<?php } ?>
+				</select></td>
+			</tr>
+			<tr class="tr" id="category">
+				<th class="th">渠道号或链接</th>
+				<td class="td"><input type="text" class="input wc" name="channel_code"	value="<?php echo $info['channel_code'];?>"></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script	src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Channelcode/index?s=1');
+	});
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

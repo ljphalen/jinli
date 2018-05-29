@@ -1,0 +1,42 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+
+<div class="mainw clearfix">
+	<include file="nav_left" />
+	<div class="rmain fl">
+		<div class="panel">
+			<h2 class="yyname">税务信息</h2>
+			<div class="panel-body">
+				<form class="form-horizontal taxfixinfo" id="editform" method="post" action="{:U("save_tax")}" enctype="multipart/form-data" role="form">
+					<div class="row">
+					    <div class="col-sm-12">
+					    	<h4>企业税务登记信息<small><b>&nbsp;&nbsp;您的税务信息已经通过审核，不能修改</b> 如果需要更改，请联系我们</small></h4>
+					    </div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-sm-3 col-md-3 control-label">税务登记证号：</label>
+						<div class="col-sm-6">
+							<span class="help-block">{$info.tax_number}</span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 col-md-3 control-label">税务登记证扫描件：</label>
+						<div class="col-sm-9">
+							<span><notempty name="info.tax_passport">
+								<a href="{:Helper('Apk')->get_url('user')}{$info['tax_passport']}" target="_blank">
+									<img src="{:Helper('Apk')->get_url('user')}{$info['tax_passport']}" onload="javascript:resizeimg(this,330,200);" width="330" height="200" class="img-thumbnail" />
+								</a>
+							</notempty></span>
+						</div>
+					</div>
+						<div class="btnw taxfix">
+						<a class="btnwbotg" href="{:U("User/info")}">详细资料</a>
+						</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<include file="Public:footer" />

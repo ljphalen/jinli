@@ -1,0 +1,93 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title><?php echo $catInfo['name'];?></title>
+<link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/call/css/style.min.css?ver=<?php echo $version;?>" />
+</head>
+
+<body id="page-picture" class="ui-app">
+
+<div class="ui-top-bar">
+	<a class="ui-pos icon-back" href="<?php echo $webroot;?>/user/index/index"></a>
+	<span class="ui-top-txt"><?php echo $catInfo['name'];?></span>
+	<!-- <a class="ui-pos icon-menu" href="#"></a> -->
+</div>
+
+<div class="ui-page page1 js-active">
+	<div class="ui-page-content">
+		<div class="ui-box">
+			<div class="ui-award-info">
+				<a class="s s2" href="<?php echo $webroot;?>/user/center/score">
+					<span class="span-jifen">当前金币：<b><?php echo !empty($userScores['remained_score'])?$userScores['remained_score']:0;?></b><em class="icon-gold"></em></span>
+				</a>
+			</div>
+		</div>
+		<!-- 看图任务列表 START-->
+		<div class="ui-box">
+			<?php if(!empty($wordAds)){?>
+			<div class="ui-picture-tips">
+				<?php foreach($wordAds as $k=>$v){
+						echo htmlspecialchars_decode(sprintf($v['words'],$eLevel,$privilegeNum));
+				}?>
+				<span></span>	
+			</div>
+			<?php }?>
+			<ul id="js-picture-list" data-url="<?php echo $webroot;?>/user/goods/produces?cat_id=<?php echo $cat_id;?>" data-earn="<?php echo $webroot;?>/user/goods/earn?group_id=2" class="ui-list ui-picture-list">
+			<?php foreach($list as $k=>$v){?>
+				<li class="ui-item">
+				<?php if($v['get']){?>
+						<div class="inner done" data-id="<?php echo $v['id'];?>">
+							<a class="link" href="<?php echo $v['link'];?>">
+								<img src="<?php echo $attachPath.$v['image'];?>">
+							</a>
+							<span class="ui-picture-mask">已领取</span>
+						</div>
+				<?php }else{?>
+						<div class="inner" data-id="<?php echo $v['id'];?>"  data-type="<?php echo $catInfo['score_type'];?>">
+							<a class="link"><img src="<?php echo $attachPath.$v['image'];?>" alt="<?php echo $v['name'];?>"></a>
+						</div>
+				<?php }?>
+				</li>
+			<?php }?>
+			
+		<?php if($wmstatus == 1){?>
+			<li class="ui-item">
+			<?php if(empty($wmflag)){?>
+				<div class="inner" data-id="-1"  data-type="<?php echo $catInfo['score_type'];?>"  data-cat ='<?php echo $cat_id;?>'>
+					<script type="text/javascript" src="http://js.snmi.cn/jshow.aspx?lid=3DEF2DA79A9F41B2B2CF14F453284C87"></script>
+				</div>
+			<?php }else{?>
+			<div class="inner done" >
+					<script type="text/javascript" src="http://js.snmi.cn/jshow.aspx?lid=3DEF2DA79A9F41B2B2CF14F453284C87"></script>
+					<span class="ui-picture-mask">已领取</span>
+				</div>
+			<?php }?>
+			</li>
+		<?php }?>
+			</ul>
+		</div>
+		<!-- 看图任务列表 END-->
+		<?php if($more){?>
+		<div class="ui-loading">上拉加载</div>
+		<?php }?>
+	</div>
+</div>
+
+<script type="text/javascript">
+	var token = "<?php echo $token;?>", version = "<?php echo $version;?>";
+	var linkUrl = "<?php echo $webroot.'/user/goods/earn?id=';?>";
+</script>
+<script id="main" data-baseurl="<?php echo $staticResPath;?>/call/js" data-version="<?php echo $version;?>" src="<?php echo $staticResPath;?>/call/js/lib/require.js?v=<?php echo $version;?>"></script>
+<script>
+    require(['<?php echo $staticResPath;?>/call/js/common.js?v=<?php echo $version;?>'],function(){
+        require(['page/picture']);
+    });
+</script>
+</body>
+</html>

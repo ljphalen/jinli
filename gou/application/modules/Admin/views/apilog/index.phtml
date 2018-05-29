@@ -1,0 +1,54 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">日志列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="get">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+			<th class="th">标识</th>
+			<td class="td"><input class="input wb" type="text" name="mark" value="<?php echo $param['mark'];?>">(如订单号)</td>
+			<th class="th">日志类型</th>
+			<td class="td">
+			<select name="api_type" class="wa">
+			<option value="">所有类型</option>
+				<option <?php echo ($param['api_type'] == 'pay') ? 'selected="selected"' :''; ?> value="pay">pay</option>
+				<option <?php echo ($param['api_type'] == 'recharge') ? 'selected="selected"' :''; ?> value="recharge">recharge</option>
+				<option <?php echo ($param['api_type'] == 'alipay') ? 'selected="selected"' :''; ?> value="alipay">alipay</option>
+			</select>
+			</td>
+		</tr>		
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="40">ID</td>
+			<td width="150">mark</td>
+			<td width="150">url</td>
+			<td>request</td>
+			<td width="140">response</td>
+			<td width="120">time</td>
+		</tr>
+<?php foreach($logs as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['mark'];?></td>
+			<td><?php echo $value['url'];?></td>
+			<td><?php echo $value['request'];?></td>
+			<td><?php echo $value['response'];?></td>			
+           <td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

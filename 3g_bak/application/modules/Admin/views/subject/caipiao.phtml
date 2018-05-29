@@ -1,0 +1,114 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="javascript:;">彩票活动管理</a></li>
+			<li class=""><a href="/Admin/subject/userList">用户列表</a>
+		</ul>
+	</div>
+	<div class="h_a">修改信息</div>
+	<form method="post" action="/Admin/Subject/modify" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">时间段</th>
+					<td class="td">
+						<table>
+							<tbody>
+							<?php for ($i = 1;
+							$i <= 3;
+							$i++){ ?>
+							<tr>
+								<td>
+									开始时间：
+									<input type="text" style="width:100px;" name="lottery[<?php echo $i ?>][begin]" value="<?php echo $data['lottery'][$i]['begin']; ?>">
+									结束时间：
+									<input type="text" style="width:100px;" name="lottery[<?php echo $i ?>][end]" value="<?php echo $data['lottery'][$i]['end']; ?>">&nbsp;&nbsp;
+									张数：
+									<input type="text" style="width:100px;" name="lottery[<?php echo $i ?>][number]" value="<?php echo $data['lottery'][$i]['number']; ?>">
+									面值金额：
+									<input type="text" style="width:100px;" name="lottery[<?php echo $i ?>][money]" value="<?php echo $data['lottery'][$i]['money']; ?>">&nbsp;元
+								</td>
+							<tr>
+								<?php } ?>
+							</tbody>
+						</table>
+					</td>
+
+				</tr>
+
+				<tr class="tr">
+					<th class="th">图片</th>
+					<td class="td">
+						<ul class="uploadImg">
+							<li id="LotteryImg">
+								<?php if ($data['img']) { ?>
+									<img src="<?php echo $attachPath . $data['img']; ?>">
+								<?php } else { ?>
+									<img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+								<?php } ?>
+								<input type="hidden" name="img" value="<?php echo $data['img']; ?>">
+							</li>
+						</ul>
+						<p style="clear: both;">
+							<iframe name="upload"
+							        src="<?php echo $uploadUrl . '/?imgId=LotteryImg'; ?>"
+							        style="height: 50px; width: 100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">状态</th>
+					<td class="td"><select name="status">
+							<?php foreach ($status as $k => $v) { ?>
+								<option value="<?php echo $k ?>" <?php if ($k == $data['status']) echo 'selected' ?>><?php echo $v ?></option>
+							<?php } ?>
+						</select></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">开始/结束时间</th>
+					<td class="td"><input type="text" class="input" id="start_time"
+					                      name="start_time" value="<?php echo $data['start_time']; ?>"> -
+						<input type="text" class="input" id="end_time"
+						       name="end_time" value="<?php echo $data['end_time']; ?>"></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">说明</th>
+					<td class="td"><textarea id="desc"
+					                         style="width: 800px; height: 400px" class="textarea"
+					                         name="desc"><?php echo $data['desc']; ?></textarea></td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+	<script src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js"></script>
+
+	<script type="text/javascript">
+		$('#end_time').datetimepicker();
+		$('#start_time').datetimepicker();
+
+		//表单数据提交
+		$(document).ready(function () {
+			var editor;
+			KindEditor.ready(function (K) {
+				K.token = "<?php echo $token;?>";
+				editor = K.create('textarea[name="how"]', {
+					resizeType: 1,
+					allowPreviewEmoticons: false,
+					allowImageUpload: true,
+					uploadJson: '<?php echo $uploadImgUrl;?>',
+					items: EDITOR_ITEMS
+				});
+			});
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Subject/caipiao');
+			}, function () {
+				editor.sync();
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

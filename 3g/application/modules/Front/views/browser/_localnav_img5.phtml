@@ -1,0 +1,10 @@
+<?php
+$str = '<div class="mito-imgs-wrap ui-tapimg-wrap"><ul class="mito-pic-box">';
+foreach ($list as $val) {
+    $str .= sprintf('<li><a href="%s"><img class="pic" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" data-src="%s" width="86" height="118"></a></li>', $val['link'], $val['img']);
+}
+$url = Common::clickUrl('nav_pic:more', 'LABEL', Common::getCurHost() . '/nav/pic/index');
+$str .= sprintf('</ul></div><div class="ui-gd-2 ui-border-tb"><div class="btn-wrap"><p id="js-mito-btn" data-mid="%s" data-pos="1"><span><i class="icon-switch"></i>换美女</span></p><p><a href="%s" onclick="local.navtive.event.log(\'card_checkmoreTheH5\',%s)"><i class="icon-more"></i>更多美图</a></p></div></div><div class="ui-gd-shadown"></div>', $columnId, $url, $columnId);
+echo $str;
+
+

@@ -1,0 +1,116 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $indexUrl; ?>">商品列表</a></li>
+			<li><a href="<?php echo $addUrl; ?>">添加商品</a></li>
+			<li class="current"><a href="<?php echo $importUrl; ?>">批量导入虚拟商品</a></li>
+		</ul>
+	</div>
+	<div class="h_a">数据导入</div>
+	<form method="post" action="<?php echo $importUrl; ?>" id="addFrom" enctype="multipart/form-data">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">选择文件</th>
+					<td class="td"><input type="file" class="input" name="data" value=""></td>
+					<td class="td"><a href="<?php echo $exportUrl; ?>">导出</a></td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+
+	<div class="h_a">虚拟商品列表</div>
+	<form method="post" action="<?php echo $importUrl; ?>" id="addFrom" enctype="multipart/form-data">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">请选择组别</th>
+					<td class="td"><select name="group_type" id="group_type">
+							<option value="0">请选择</option>
+							<?php foreach ($config as $k => $v) { ?>
+								<option value="<?php echo $k; ?>"  <?php if ($k == $params['group_type']) echo 'selected'; ?>><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<tbody style="display:<?php echo empty($params['type_id']) ? 'none' : ' ' ?>" id="t_body">
+				<tr class="tr">
+					<th class="th">请选择分类</th>
+					<td class="td">
+						<select name="type_id" id="type_id">
+							<option value="0">请选择</option>
+							<?php foreach ($types as $k => $v) { ?>
+								<option value="<?php echo $v['type_id']; ?>" <?php if ($v['type_id'] == $params['type_id']) echo 'selected'; ?>><?php echo $v['type_name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">查询</button></span></span>
+		</div>
+	</form>
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+				<th class="th">分组名</th>
+				<th class="th">类型名</th>
+				<th class="th">卡名</th>
+				<th class="th">面值</th>
+			</tr>
+			<?php foreach ($dataList as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['id'];?></td>
+					<td class="td"><?php echo $config[$v['group_type']] ?></td>
+					<td class="td"><?php echo $v['type_name']; ?></td>
+					<td class="td"><?php echo $v['card_name']; ?></td>
+					<td class="td"><?php echo $v['card_value']; ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+
+	<script type="text/javascript">
+		//广告表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Commodities/import');
+			});
+		})
+
+		$("#group_type").bind('change', function () {
+			var group_type = $("#group_type option:selected").val();
+			if (group_type != '0') {
+				$.ajax({
+					'type': 'post',
+					'dataType': 'json',
+					'url': '/Admin/Commodities/AjaxGetCardMsg',
+					'data': {'token': '<?php echo $token;?>', 'group_type': group_type},
+					'success': function (e) {
+						var html = '<option value="0">请选择</option>';
+						$.each(e.data, function (i, m) {
+							html += '<option value="' + m.type_id + '">' + m.type_name + '</option>';
+						})
+						$("#type_id").html(html);
+						$("#t_body").show();
+					}
+				});
+			} else {
+				$("t_body").hide();
+			}
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

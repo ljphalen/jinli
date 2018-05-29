@@ -1,0 +1,133 @@
+一，基本环境要求
+	Linux，Nginx，PHP5.3+，php-mysql，GD2，readline等常见组件
+
+二，文件上传组件
+	支持大文件上传，需要在php.ini调整上传文件大小限制
+	upload_max_filesize = 500M;
+	post_max_size = 500M;
+	max_execution_time = 100;
+	max_input_time = 100;
+	memory_limit = 500M; #值应当适当大于post_max_size的值 
+	
+	如果配合Nignx使用，请同时修改Nignx参数
+	client_max_body_size 500m;
+	request_terminate_timeout = 100;
+
+三，环境相关
+	yum install bsdiff
+	yum install php-cli
+	yum install php-posix
+	yum install php-process
+	yum install php-readline
+
+四，定时脚本相关
+	1，目前有以下定时任务需要执行
+		1，遍历apk进行签名，生成差分包，需要配置定时任务执行
+		2，封号用户解封，需要配置定时任务执行
+		3，站内消息发送及通知邮件发送
+		4，同步远程接口的游戏分类、标签、收费类型、分辨率，建议手工执行一次
+	2，计划任务编写
+		*/10 * * * * cd /wwwroot/xxxx/ && /usr/bin/php ./cli.php Apk
+		*/10 * * * * cd /wwwroot/xxxx/ && /usr/bin/php ./cli.php Block deblock
+		*/10 * * * * cd /wwwroot/xxxx/ && /usr/bin/php ./cli.php Message send
+		*/10 * * * * cd /wwwroot/xxxx/ && /usr/bin/php ./cli.php Sync get
+		*/10 * * * * cd /wwwroot/xxxx/ && /usr/bin/php ./cli.php Online index
+		*/10 * * * * cd /wwwroot/xxxx/ && /usr/bin/php ./cli.php smtp everyDayReport
+
+五，ftp用户权限添加
+	1，安装pure-ftpd
+		软件安装方法：http://tecadmin.net/setup-pure-ftpd-with-mysql-on-centos-redhat/
+		文件类型权限：http://hellosa.blog.51cto.com/2698675/540020
+		官方英文文档：http://download.pureftpd.org/pure-ftpd/doc/README.MySQL
+		配置选项解释：http://wiki.ubuntu.org.cn/Pure-ftpd
+	2，添加用户及用户组
+		groupadd -g 2001 ftpgroup
+		useradd -u 2001 -s /bin/false -d /bin/null -c "pureftpd user" -g ftpgroup ftpuser
+	3，添加ftp权限数据库：pureftpd，并添加管理用户权限
+	4，添加ftp上传目录，并给予可读写权限
+	5，为了解决ftp多线程的问题，需要打开PassivePortRange端口，否则会出现：FileZilla读取目录列表失败的解决方法
+
+六，项目配置
+	1，配置文件路径：Data/Config
+	2，配置文件功能
+		api.php        金立相关接口路径，上线以后请更换为正式环境下的接口地址
+		database.php   Mysql数据库
+		module.php     二级域名绑定设置
+		upload.php     文件上传目录及相关设置
+		apk.php        apk文件解析及相关设置
+		email.php      SMTP邮件发送相关账号
+		router.php     可选，路由相关绑定
+		url.php        静态文件路径设置，上线以后可以更换为CDNURL链接
+		config.php     配置文件入口
+		ftp.php        用户FTP账号生成相关配置
+		system.php     全局设置，包括Cookie、SESSION及后台设置
+
+七，WebServer相关设置
+	1，域名上线部署状态，修改入口文件index.php中 define('APP_DEBUG',0);
+	2，Nignx或者Apache伪静态设置，请见http://doc.thinkphp.cn/manual/hidden_index.html
+	3，线上调试，请使用Cli模式访问repl.php，如/bin/php repl.php，可执行所有项目相关的接口，方法和模型功能
+	4，线上日志生成目录，Data/Runtime/admin|dev.gionee.com/Logs
+	5，CDN绑定目录 http://s.dev.gionee.com 绑定到 /wwwroot/gionee_v1.1/Public
+	6，项目上线时，请移除 document，Databases，todolist三个目录，可以删除DataDict和TestAction
+	7，除Data目录需要可读写权限且不能访问以外，其它目录请给予只读权限且不能直接访问，整个目录只有index.php为web可访问资源
+	8，添加.patch扩展名的mime类型:application/octet-stream  patch;
+	
+八，shell相关权限设置
+	1，apk包解析工具 aapt 安装到/usr/bin/aapt，并给予可读可执行权限，下载地址：https://code.google.com/p/android-apktool/downloads/list
+	2，差分包解析工具 bsdiff 安装以 /usr/bin/bsdiff，并给予可读可执行权限，安装命令 yum install bsdiff
+	3，应用签名相关权限，包括/bin/sh和/usr/bin/java，并给予可读可执行权限，签名相关的证书请放置到 Data/Bin/Signature，安装命令：yum install java-1.7.0-openjdk
+	4，需要/usr/bin/unzip /bin/cp的执行命令
+	5，需要在Data/Attachments/目录下rm和cp命令的执行权限
+
+九，架构文档
+	1，所以参与集群的业务均需要部署php和nfs环境，nfs安装方法：http://www.zhukun.net/archives/7096
+	2，Data/目录为附件、Session文件，需要进行nfs绑定达到文件共享，有且只有Data目录需要启用nfs
+	3，Public目录为cdn资源目录，任意一台机器和可以访问的域名都可以做回源
+	4，所以前端访问的服务，均需要配置上传权限
+	
+十，其它相关
+	1，短信发送需要绑定服务器白名单
+	2，用户ftp上传需要将上传目录同步至项目附件目录，减少远程下载大文件的过程
+	
+十一，产品更换域名需要修改安全检测回调地址
+	1.当从临时域名或测试域名，切换到正式域名时，要修改安全接口回调地址，包括百度，腾讯安全检测商
+	2.安全接口回调地址：
+		百度：http://dev.gionee.com/SafeApi/callback/site/baidu
+		腾讯：http://dev.gionee.com/SafeApi/callback/site/tencent
+		根据不同的的测试环境，修改对应的域名
+
+十二，2.0升级文档
+	1.添加配置文件Config/signature.php，并在Config/config.php添加一行signature，用于自动发送平台工作邮件，自动发送签名预警邮件
+	'DAY_REPORT_EMAIL'			=>array("yxdt@gionee.com"),
+	'APKSIGN_FAIL_NOTE'			=>array("yxdtspm@gionee.com", "guohb@gionee.com"),
+	'UNIONAPK_FINGERPRINT'		=>'B4:97:92:A5:68:7B:64:14:92:E1:0A:29:15:2F:74:54',
+	2.执行Databases/2.1.xy.upgrade.sql
+	3.执行Databases/2.2.xy.upgrade.sql
+	4.删除废弃的分辨率: delete from reso where reso_name="720*1184";
+	5.管理后台添加相关单机合作和商务合作的文档
+	6.添加计划任务
+		*/10 * * * * cd /wwwroot/xxxx/ && /usr/bin/php ./cli.php Online index
+		0   18 * * * cd /wwwroot/xxxx/ && /usr/bin/php ./cli.php smtp everyDayReport
+	7.复制document/Data/Bin/Signature/printcert.sh 到 Data/Bin/Signature/printcert.sh，并给777权限
+	
+十三，2.2升级文档
+	1.Data/Config/apk.php中添加api下载文件的域名'GAMEDL_API_PATH_URL' => 'http://s.dev.gionee.com/', 修改 'GAMEDL_PATH_URL'=>'http://p-gamedl.gionee.com/',
+	2.Data/Config/email.php中添加系统错误报警邮件接收的邮箱，'SYSERR_REPORT_TO'=>'kfzpt@gionee.com'
+	3.添加系统错误的邮件发送计划任务，*/5 * * * * cd /wwwroot/xxxx/ && /usr/bin/php ./cli.php Syserr
+	4.cp document/Data/Bin/Signature/printcert.sh Data/Bin/Signature/printcert.sh
+	
+十四，2.4升级文档
+	1.cp document/Data/Bin/cwebp_linux Data/Bin/cwebp_linux
+	2.新增计划任务 */3 * * * * cd /wwwroot/xxxx/ && /usr/bin/php ./cli.php WebTools make
+	3.导入Databases/v2.4.upgrade.sql
+	
+十五，3.0升级文档
+	1.添加菜单 合同申请: action :contract/index  args : orderField=id    orderDirection=desc
+	2.添加菜单 合同审核: action :contract/check  args : orderField=id    orderDirection=desc
+	3.添加菜单 联系人编辑: action :contract/contact
+	4.添加菜单 合同查看: action :contract/manage  args : orderField=id    orderDirection=desc
+	5.添加菜单 礼包管理: action :gift/index  args : orderField=id    orderDirection=desc
+	6.导入Databases/v3.0.upgrade.sql
+	
+十六，３.1升级文档
+	1.提价菜单 开发者平台管理/商务联系方式: action :BusinessContact/contact

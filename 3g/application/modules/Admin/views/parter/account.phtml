@@ -1,0 +1,61 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $accountUrl; ?>">合作商列表</a></li>
+			<li><a href="<?php echo $accountEditUrl; ?>">添加合作商</a></li>
+		</ul>
+	</div>
+	<div class="table_full">
+		<form action="/Admin/Parter/account" method="POST" id="form">
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<table width="100%" cellspacing="0" cellpadding="0">
+				<tr class="tr">
+					<th class="th">选择合作商：</th>
+					<td class="td">
+						<select name="pid" id="pid">
+							<option value="0">请选择</option>
+							<?php foreach ($parters as $k => $v) { ?>
+								<option <?php echo ($v['id'] == $pid) ? 'selected="selected"' : ''; ?> value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+			<input type="hidden" id="hidden_export" name="export" value="0"/>
+		</form>
+	</div>
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<td>ID</td>
+				<td>合作商</td>
+				<td>帐号</td>
+				<td>密码</td>
+				<td>创建时间</td>
+				<td>合作状态</td>
+				<td>编辑</td>
+				<td>查看</td>
+			</tr>
+			<?php foreach ($list as $v) { ?>
+				<tr class="ct">
+					<td class="td"><?=$v['id'];?></td>
+					<td class="td"><?=$v['name'];?></td>
+					<td class="td"><?php echo $v['account']; ?></td>
+					<td class="td"><?php echo $v['password']; ?></td>
+					<td class="td"><?php echo date('Y-m-d H:i:s', $v['created_time']); ?></td>
+					<td class="td"><?php echo $v['status'] == 1 ? '合作中' : '暂停合作'; ?></td>
+					<td class="td"><a href="/Admin/Parter/accountedit?id=<?php echo $v['id']; ?>">编辑 &nbsp;|
+							<a href="javascript:void(0);" onclick="deleteOne('<?php echo $deAccountUrl; ?>/?id=<?php echo $v['id']; ?>', '', event);">删除</a>
+					</td>
+					<td class="td"><a href="/Admin/Parter/business/?pid=<?php echo $v['id']; ?>">查看</a></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

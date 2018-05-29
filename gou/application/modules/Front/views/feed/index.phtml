@@ -1,0 +1,56 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<div data-role="page" data-theme="no" id="page" class="feed">
+	<?php if ($hasheader) {?>
+		<header id="header" class="hd">
+			<h1><strong>我有话要说</strong></h1>
+			<p><a href="/index/index"><img src="<?php echo $staticResPath;?>/pic/btn_backhome.png" alt="" /></a></p>
+		</header>
+	<?php }?>
+		<div id="content" class="ct">
+			<section>
+				<form class="form-box" method="post" action="<?php echo $feedPostUrl;?>">
+					<input type="hidden" name="token" value="<?php echo $token?>"/>
+					<div class="tip">
+						<p></p>
+					</div>
+					<ul>
+						<li><label for=""><em>手机号：</em></label><input data-setNull="true" type="text" name="mobile" class="l" required="required" data-null="手机号码不能为空" pattern="^1[3458]\d{9}$" data-error="手机号码格式不正确" value="" /></li>
+						<li><label for=""><em>验证码：</em></label><input data-setNull="true" type="text" name="code" class="n" required="required" data-null="验证码不能为空" />
+							<a href="javascript:void(0);" class="check-code"><img onclick="this.src='<?php echo $secoderUrl;?>'" src="<?php echo $secoderUrl;?>" alt="" /></a></li>
+						<li><textarea data-setNull="true" name="react" id="" cols="30" rows="10" required="required" maxlength="124" data-null="内容不能为空"></textarea>
+							<button id="J_submitForm" data-role="none" class="s-btn"><span>发布</span></button></li>
+						
+					</ul>
+				</form>
+				
+				<div class="show-order">
+					<ul>
+						<?php foreach($reacts as $key=>$value){?>
+						<li>
+							<div class="msg">
+								<p>
+									<span><?php echo $value['react'];?><?php echo substr_replace($value['mobile'], '******', 3, 6);?><s><?php echo date('Y-m-d H:i:s', $value['create_time']);?></s></span>
+								</p>
+							</div>
+							<div class="reply"><p><?php echo $value['reply'];?></p></div>
+						</li>
+						<?php }?>
+					</ul>
+					<div class="more"><a href="" dt-ajaxUrl="/feed/list" class="J_showMore <?php if($react_total < 5) echo 'disable';?>"><span>查看更多</span></a></div>
+				</div>
+			</section>
+		</div>
+		
+		<div id="J_dialogBox" class="dialog-box">
+			<p><span></span></p> 
+			<div class="btn">
+				<a><span>确定</span></a>
+			</div>
+		</div>
+		<div class="dialog-mask"></div>
+	</div>
+		
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

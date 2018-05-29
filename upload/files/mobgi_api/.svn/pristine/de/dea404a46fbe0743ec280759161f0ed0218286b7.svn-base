@@ -1,0 +1,177 @@
+<script type="text/javascript" charset="utf-8" src="{{rootUrl}}/js/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{rootUrl}}/js/ueditor.all.min.js"> </script>
+<script type="text/javascript" charset="utf-8" src="{{rootUrl}}/js/zh-cn/zh-cn.js"> </script>
+<style>
+.muti .iText{ width:190px;}
+.muti select { width:199px; height: 180px;}
+</style>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">{{title}}-站内信</p>
+    </div>
+    <div class="main">
+        <div class="app-detail">
+            <form action="../SiteMsg/save" method="POST" >
+                <input type="hidden" name="id" value='{{result.id}}' />
+                <ul class="form">
+                    <li>
+                        <span class="label">标题：</span>
+                        <div class="fc">
+                            <input type="text" onchange="javascript:$('.view').attr('data-view',0)" class="iText required" required name="title" style="width:220px;" value="{{result.title}}" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">发送时间：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required datepicker " onchange="javascript:$('.view').attr('data-view',0)" required name="senddate" style="width:90px;" value="{{senddate}}" />
+                            <input type="text" class="iText" name="hour" style="width:30px;" value="{{hour}}" /> 时
+                            <input type="text" class="iText" name="second" style="width:30px;" value="{{second}}" /> 分
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">发送对象：</span>
+                        <table class="muti">
+                            <tr>
+                                <td><input type="text" class="iText muti_input" to="left" /></td>
+                                <td width="150px"></td>
+                                <td><input type="text" class="iText muti_input" to="right" /></td>
+                            </tr>
+                            <tr>
+                                <td><select class="muti_left" multiple="multiple"></select></td>
+                                <td align="center">
+                                    <input type="button" class="btn muti_add" to="right" value="添加->"/><br />
+                                    <input type="button" class="btn muti_add all" to="right" value="添加所有->"/><br />
+                                    <input type="button" class="cancel muti_add" to="left" value="<-删除"/><br />
+                                    <input type="button" class="cancel muti_add all" to="left" value="<-删除所有"/>
+                                </td>
+                                <td><select class="muti_right" multiple="multiple"></select></td>
+                            </tr>
+                        </table>
+                        <input type="hidden" name="dev_id" class="muti_data" value="{{result.dev_id}}" />
+                    </li>
+                    <li>
+                        <span class="label">发送内容：</span>
+                        
+                        <div class="fc" onchange="javascript:$('.view').attr('data-view',0)">
+                            <script id="msg" type="text/plain" style="width:800px; height:400px;">{{result.msg}}</script>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="fc">
+                            
+                            <input type="button" value="预览" class="cancel view" data-view='0' />
+                            <input type="button"  value="确定" class="submit" />
+                            <input type="button" value="取消" class="cancel" onclick="window.location.href='/SiteMsg/index'" />
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+var mutiSel = function(target){
+    var input = $("."+target+"_input");
+    var lmuti = $("."+target+"_left"), rmuti = $("."+target+"_right");
+    var btn = $("."+target+"_add"), data = $("."+target+"_data");
+    // fill data to select
+    if ({{left}}){
+        $.each({{left}},function(dev_id, email){
+            lmuti.append("<option value='"+dev_id+"'>"+email+"</option>");
+        });
+    }
+    if ({{right}}){
+        $.each({{right}},function(dev_id, email){
+            rmuti.append("<option value='"+dev_id+"'>"+email+"</option>");
+        });
+    }
+    // live button action
+    btn.live("click", function(){
+        var to = $(this).attr('to');
+        if ($(this).hasClass('all')){
+            var opt = "option";
+        }else{
+            var opt = "option:selected";
+        }
+        if (to == 'left'){
+            rmuti.find(opt).each(function(){
+                lmuti.append($(this));
+            });
+        }else{
+            lmuti.find(opt).each(function(){
+                rmuti.append($(this));
+            });
+        }
+        var dataStr = "";
+        rmuti.find('option').each(function(){
+            dataStr += $(this).val()+",";
+        });
+        data.val(dataStr.replace(/\,$/g, ""));
+    });
+    // live input search action
+    input.live("keyup", function(){
+        var search = $(this).val();
+        var to = $(this).attr('to');
+        $("."+target+"_"+to).find("option").each(function(){
+            if ( $(this).text().indexOf(search) >= 0 ){ // 有匹配
+                $("."+target+"_"+to).prepend($(this));
+            }
+        });
+    });
+}
+$(function(){
+    mutiSel('muti');
+    var editor = UE.getEditor('msg');
+    $(".submit").click(function(){
+        if (!$(".muti_data").val()){
+            alert("请选择开发者");
+            return false;
+        }
+        if (!editor.hasContents()){
+            alert("请输入内容");
+            return false;
+        }
+        if($(".view").attr("data-view")!=1){
+            alert("请先预览,所发站内信是否有误")
+            return false;
+        }
+        $("form").submit();
+    });
+    
+    $('.datepicker').datepicker({
+        changeMonth:true,
+        changeYear:true,
+        minDate:new Date(),
+        dateFormat : "yy-mm-dd",
+        minDate: "2013-01-01"
+    });
+});
+
+$(".view").click(function(){
+        var title=$("input[name='title']").val();
+        var senddate=$("input[name='senddate']").val();
+        var msg=UE.getEditor('msg').getContent();
+        if(title=="" || senddate=="" || msg==""){
+            alert("请先输入完整的信息");
+            return false;
+        }
+        $(this).attr("data-view",1)
+        var html = "<div style='margin:20px;'>";
+                    html += "<div style='font-size:24px;font-weight:bold;text-align:center;line-height:35px;'>"+title+"</div>";
+                    html += "<div style='width:80%;text-align:right;margin:0px auto;'><i>发送时间："+senddate+"</i></div>";
+                    html += "<hr style='width:80%; margin:10px auto;' />";
+                    html += "<div style='line-height:25px;height:300px; width:80%;margin:0px auto;'>"+msg+"</div>";
+                    html += "<div style='text-align:center;margin:0px 20px;'><input type=button value='关闭' class='btn clo' /></li>";
+                    html += "</div>";
+                    popg = jDialog({
+                        content: html,
+                        width:650,
+                        height:450
+                    });
+    });
+$(".clo").live('click', function(){
+        popg.close();
+    
+    });
+</script>

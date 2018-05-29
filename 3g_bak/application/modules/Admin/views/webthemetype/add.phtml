@@ -1,0 +1,63 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $listUrl; ?>">应用分类列表</a></li>
+			<li class="current"><a href="javascript:;">添加应用分类</a></li>
+		</ul>
+	</div>
+	<div class="h_a">添加应用分类</div>
+	<form method="post" action="<?php echo $addPostUrl; ?>" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">名称</th>
+					<td class="td"><input type="text" class="input wc" name="name" value=""></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">图标</th>
+					<td class="td">
+						<ul class="uploadImg">
+							<li id="Icon">
+								<img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+								<input type="hidden" name="icon" value="">
+							</li>
+						</ul>
+						<p style="clear:both;">
+							<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=Icon'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">图片</th>
+					<td class="td">
+						<ul class="uploadImg">
+							<li id="Img">
+								<img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+								<input type="hidden" name="img" value="">
+							</li>
+						</ul>
+						<p style="clear:both;">
+							<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=Img'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">排序</th>
+					<td class="td"><input type="text" class="input" name="sort" value="0">（填写一个数字，数字越大越靠前）</td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script type="text/javascript">
+		//表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Webthemetype/index');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,92 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+     <li><a href="<?php echo $listUrl;?>">运营消息</a></li>
+	 <li class="current"><a href="<?php echo $listPushUrl;?>">通知栏消息</a></li>
+	 <li><a href="<?php echo $sysMsgUrl;?>">系统消息</a></li>
+	 <li><a href="<?php echo $settingUrl;?>?type=100">消息设置</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑消息</div>
+<form method="post" action="<?php echo $editPushPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">消息标题</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">消息内容</th>
+			<td class="td">
+				<textarea name="msg" style="height:180px;width:100%;"><?php echo $info['msg'];?></textarea>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">消息类型</th>
+			<td class="td">
+				<select name="type" onchange='showtd()'>
+					<?php foreach($msgType as $key=>$val) {?>   
+					<option value="<?php echo $key;?>" <?php if($info['type'] == $key) echo 'selected';?>><?php echo $val['txt'];?></option>					
+					<?php }?> 
+				</select>
+			</td>
+		</tr>	
+		<tr class="tr">
+			<th class="th" id="th_link"><?php 
+		if($info['type'] == 201)  $str = '游戏内容ID';
+			if($info['type'] == 202)  $str = '专题ID';
+			if($info['type'] == 203)  $str = '分类ID';
+			if($info['type'] == 204)  $str = '活动ID';
+			if($info['type'] == 205)  $str = '链接';
+			echo $str;
+			?></th>
+			<td class="td">
+				<input type="text" name="contentId" class="input wc" value="<?php echo $info['contentId'];?>" />
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">生效时间</th>
+			<td class="td"><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $info['start_time'])?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s', $info['end_time'])?>" /></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="select wa">
+				<option <?php if ($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+				<option <?php if ($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+function showtd(){
+	var value=$("select[name=type]").val();
+	if (value == 201) {
+		 $("#th_link").html('游戏内容ID');
+	} else if(value == 203){
+		 $("#th_link").html('分类ID');
+	} else if(value == 202){
+		 $("#th_link").html('专题ID');
+	} else if(value == 204){
+		 $("#th_link").html('活动ID');
+	} else if(value == 205){
+		 $("#th_link").html('链接');
+	}
+}
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Msg/indexPush');
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

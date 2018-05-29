@@ -1,0 +1,120 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">活动列表</a></li>
+    <li class="current"><a href="javascript:;">编辑活动</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑活动</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr" style="display: none;">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动名称</th>
+			<td class="td"><input type="text" class="input wc" name="name" value="<?php echo $info['name'];?>"></td>
+		</tr>
+		<tr class="tr" style="display: none;">
+			<th class="th">活动上线下线时间</th>
+			<td class="td"><div><input class="input" type="text" style="width:143px;" id="online_start_time" name="online_start_time" value="<?php echo date('Y-m-d H:i:s', $info['online_start_time']);?>" /> 至 <input class="input" type="text" style="width:143px;" id="online_end_time" name="online_end_time" value="<?php echo date('Y-m-d H:i:s', $info['online_end_time']);?>" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">抽奖开始时间</th>
+			<td class="td"><div><input class="input" type="text" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $info['start_time']);?>" /></div>
+			</td>
+		</tr>
+		<tr class="tr" style="display: none;">
+			<th class="th">兑奖截止时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="award_time" name="award_time" value="<?php echo date('Y-m-d H:i:s', $info['award_time']);?>" /> </div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="simg">
+						<img src="<?php echo $attachPath,$info['img'];?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=simg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">最低版本</th>
+			<td class="td"><input type="text" name="min_version" class="input" value="<?php echo $info['min_version'];?>"><span>不填写，默认大于等于1.5.0版本皆可参与</span></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">抽奖次数</th>
+			<td class="td"><input type="text" name="number" class="input" value="<?php echo $info['number'];?>""><span>每个用户每天的抽奖机会</span></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动说明</th>
+			<td class="td"><textarea style="width: 800px; height: 500px" class="textarea" name="descrip"><?php echo $info['descrip'];?></textarea>
+		    </td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status" min-width="100px">
+                	<option <?php if($info['status'] == 1) echo 'selected="selected"';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 0) echo 'selected="selected"';?>value="0">关闭</option>
+            </select></td>
+		</tr>
+		<tr class="tr">
+				<th class="th">客户端是否弹出窗口</th>
+				<td class="td">
+					<label class="mr20"><input onclick ="showContent(1)" <?php if($info['popup_status']) echo 'checked';?> name="popup_status" value="1" type="radio">开启</label>
+					<label class="mr20"><input onclick ="showContent(0)" <?php if(!$info['popup_status']) echo 'checked';?> name="popup_status" value="0" type="radio">关闭</label>
+				</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">客户端弹出窗口信息</th>
+			<td class="td"><textarea style="width: 500px; height: 200px" class="textarea" name="message" <?php if(!$info['popup_status']) echo 'disabled="disabled"';?> id="message"><?php echo $info['message'];?></textarea>
+		    </td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+showContent = function(flag) {
+	if (flag) {
+	 $("#message").removeAttr("disabled");
+	} else {
+	 $("#message").attr('disabled',true);
+	}
+}
+var editor;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor = K.create('textarea[name="descrip"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+ });
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+    $('#award_time').datetimepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Activity/index');
+	},function(){
+		editor.sync();
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

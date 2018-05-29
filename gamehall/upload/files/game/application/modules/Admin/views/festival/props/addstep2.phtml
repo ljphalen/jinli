@@ -1,0 +1,255 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<style>
+    .step2 li{
+        width: 23%;
+    }
+    .step2 li.line{
+        position: static;
+    }
+    .medal-container {
+        overflow: hidden;
+    }
+    .medal-lists {
+        margin-top: 20px;
+    }
+    .medal-lists li {
+        float: left;
+        width: 48%;
+        min-width:430px;
+        border: 1px solid #eee;
+        padding: 6px;
+        background: #fff;
+    }
+    .add-medal {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+    .medal-list {
+        position: relative;
+
+    }
+    .medal-lists li:nth-child(1){
+        margin-right: 1%
+    }
+    .medal-list iframe{
+        width: 257px;
+        height:90px;
+    }
+    .input-container {
+        display: inline-block;
+        margin-left: 10px;
+        width:100%;
+    }
+    .medal-container input{
+        width:220px;
+    }
+    .input-container p {
+        margin-bottom: 10px;
+    }
+    .uploadImg {
+        height: 100px;
+        width: 100px;
+        display: inline-block;
+    }
+    .uploadImg img {
+        width: 90px;
+        height: 90px;
+    }
+    iframe {
+        width: 100%;
+        height: 80px;
+    }
+    .red {
+        color: red;
+    }
+    .title{
+        float: left;
+        text-align: left;
+        width: 52px;
+        margin: 50px 0px 0px 12px;
+    }
+</style>
+<div class="nav">
+	<ul class="cc">
+	   <li ><a href="<?php echo $indexUrl;?>">道具兑换</a></li>
+       <li class="current"><a href="javascript:;">添加兑换活动</a></li>
+	</ul>
+</div>
+<div class="step step2 mb10">
+		<ul class="cc">
+			<li ><span class="fl"><em></em></span>添加活动</li>
+			<li class="line"></li>
+			<li class="current">添加道具</li>
+			<li class="line"></li>
+			<li><span class="fl"><em></em></span>添加游戏</li>
+			<li class="line"></li>
+			<li><span class="fl"><em></em></span>添加奖品</li>
+		</ul>
+</div>
+<div style="clear: both;"></div>
+<form method="post" action="<?php echo $addStep2PostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr" >
+				<th class="th">道具名称</th>
+				<td class="td"><input type="text" class="input" name="propsName"  value=""><span>&nbsp;&nbsp;例如:"粽子","月饼"</span></td>
+			</tr>
+			<tr class="tr J_seriesContainer">
+				<th class="th">系列<br>(180*180)<span class="J_index">1</span></th>
+				<td class="td medal-container">
+					<div style="position:relative">
+						<span>系列1 名称&nbsp;&nbsp;</span><input type="text" class="input" name="props[1][groupName]"  value=""><span class="red">&nbsp;&nbsp;最多支持4个道具</span>
+						<div class="add-medal"><span class="btn"><span><button class="J_addMedal" type="button">新增道具</button></span></span></div>
+					</div>
+					<ul class="J_medalLists medal-lists ">
+						<li>
+                            <div class="medal-list">
+                                <div class="input-container">
+                                    <p><span>系列1 第 1个道具元素</span></p>
+                                    <p><span>道具名称&nbsp;&nbsp;</span><input type="text" class="input" name="props[1][items][1][propName]" value=""></p>
+                                    <p><span>发放概率&nbsp;&nbsp;</span><input type="text" class="input" name="props[1][items][1][probability]" value=""></p>
+                                    <p><span>间隔时间&nbsp;&nbsp;</span><input type="text" class="input" name="props[1][items][1][interval]" value=""></p>
+                                </div>
+                                <div>
+                                    <h1 class="title">彩色</h1>
+                                    <div class="uploadImg">
+                                        <div class="J_img" id="simg11">
+                                            <img src="<?php echo $staticPath;?>/img/content/nopic.jpg">
+                                            <input type="hidden" name="props[1][items][1][propImg]" value="">
+                                        </div>
+                                    </div>
+                                    <iframe src="<?php echo $uploadUrl.'/?imgId=simg11';?>"  frameborder="0" scrolling="no"></iframe>
+                                </div>
+                                <div>
+                                    <h1 class="title">灰色</h1>
+                                    <div class="uploadImg">
+                                        <div class="J_img" id="simg12">
+                                            <img src="<?php echo $staticPath;?>/img/content/nopic.jpg">
+                                            <input type="hidden" name="props[1][items][1][propGrayImg]" value="">
+                                        </div>
+                                    </div>
+                                    <iframe src="<?php echo $uploadUrl.'/?imgId=simg12';?>"  frameborder="0" scrolling="no"></iframe>
+                                </div>
+                            </div>
+						</li>
+					</ul>
+				</td>
+			</tr>
+			<tr class="J_addSeries tr">
+				<th class="th"></th>
+				<td class="td"><span class="btn"><span><button id="addSeries"  type="button">添加一个系列</button></td>
+			</tr>
+		</table>
+    </div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">下一步</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+var propsData = 'props';
+var propsName ='propsName';//道具名称
+var groupName='groupName';//道具系列名称
+var propName="propName";//单个道具名称
+var probability="probability";//发放概率
+var interval="interval";//间隔时间
+var propImg="propImg";//道具彩色图片
+var propGrayImg="propGrayImg";//道具灰色图片
+var iframeSrc="<?php echo $uploadUrl.'/?imgId=simg';?>";
+var nopicImgSrc="<?php echo $staticPath;?>/img/content/nopic.jpg";
+$(function(){
+	//添加一个系列
+	$("#addSeries").click(function(event) {
+		//先检查页面上有几个序列
+		var seriesLength=$(".J_seriesContainer").length+1;
+		var seriesHtml=addSeries(seriesLength);
+		$(".J_addSeries").before(seriesHtml);
+	});
+	
+	//新增道具
+	$("body").on('click','.J_addMedal',function(event) {
+		var containerStr='tr.J_seriesContainer';
+		var parentsContainer=$(this).parents(containerStr);
+		var seriesIndex=parentsContainer.prevAll(containerStr).length+1;
+		var medalContainer=parentsContainer.find('.J_medalLists');
+		var medalIndex=medalContainer.children('li').length+1;
+		if(medalIndex>4) return;// 最多支持4个勋章
+		var medalHtml=addMedal(seriesIndex,medalIndex);
+		medalContainer.append(medalHtml);
+	});
+
+	//删除一个系列
+	$("body").on('click','.J_delSeries',function(event){
+		var obj = $(this).parent().parent().parent().parent().parent().parent();
+		obj.remove();
+	});
+	
+	//删除道具
+	$("body").on('click','.J_delmedal',function(event) {
+		var obj = $(this).parent().parent().parent().parent().parent().parent();
+		obj.remove();
+	});
+	
+});
+
+function addSeries(seriesNumber){
+	var medalHtml=addMedal(seriesNumber,1);
+	var seriesHtml='<tr class="tr J_seriesContainer">\
+			<th class="th">系列<span class="J_index">'+seriesNumber+'</span></th>\
+			<td class="td medal-container">\
+				<div style="position:relative">\
+					<span>系列'+seriesNumber+' 名称&nbsp;&nbsp;</span><input type="text" class="input" name="'+propsData+'['+seriesNumber+']['+groupName+']"  value=""><span class="red">&nbsp;&nbsp;最多支持4个道具</span>\
+					<div class="add-medal"><span class="btn"><span><button class="J_delSeries" type="button">删除系列</button></span></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="btn"><span><button class="J_addMedal"  type="button">新增道具</button></span></span></div>\
+				</div>\
+				<ul class="J_medalLists medal-lists">'+medalHtml+'\
+				</ul>\
+			</td>\
+		</tr>';
+	return seriesHtml;
+}
+function addMedal(parentIndex,selfIndex){
+	var imgIndex=$(".medal-list").length+1;
+	var iframeUrl1=iframeSrc+imgIndex+'1';
+    var iframeUrl2=iframeSrc+imgIndex+'2';
+	var medalHtml='<li>\
+			<div class="medal-list">\
+			    <div class="input-container">\
+				    <p><span>系列'+parentIndex+' 第'+selfIndex+'个道具元素</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="btn"><span><button class="J_delmedal" type="button">删除道具</button></span></span></p>\
+					<p><span>道具名称&nbsp;&nbsp;</span><input type="text" class="input" name="'+propsData+'['+parentIndex+'][items]['+selfIndex+']['+propName+']"  value=""></p>\
+					<p><span>发放概率&nbsp;&nbsp;</span><input type="text" class="input" name="'+propsData+'['+parentIndex+'][items]['+selfIndex+']['+probability+']"  value=""><span>(使用1-100之间的数字)</span></p>\
+					<p><span>间隔时间&nbsp;&nbsp;</span><input type="text" class="input" name="'+propsData+'['+parentIndex+'][items]['+selfIndex+']['+interval+']"  value="">(单位为秒)</p>\
+				</div>\
+				<div>\
+                    <h1 class="title">彩色</h1>\
+				    <div class="uploadImg">\
+					    <div class="J_img" id="simg'+imgIndex+'1">\
+						    <img src="'+nopicImgSrc+'">\
+						    <input type="hidden" name="'+propsData+'['+parentIndex+'][items]['+selfIndex+']['+propImg+']" value="">\
+					    </div>\
+                    </div>\
+                    <iframe src='+iframeUrl1+'  frameborder="0" scrolling="no"></iframe>\
+				</div>\
+                <div>\
+                    <h1 class="title">彩色</h1>\
+				    <div class="uploadImg">\
+					    <div class="J_img" id="simg'+imgIndex+'2">\
+						    <img src="'+nopicImgSrc+'">\
+						    <input type="hidden" name="'+propsData+'['+parentIndex+'][items]['+selfIndex+']['+propGrayImg+']" value="">\
+					    </div>\
+                    </div>\
+                    <iframe src='+iframeUrl2+'  frameborder="0" scrolling="no"></iframe>\
+				</div>\
+			</div>\
+		</li>';
+	return medalHtml;
+}
+
+//广告表单数据提交
+$(document).ready(function(){
+	 ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $addStep3Url;?>');
+	 });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

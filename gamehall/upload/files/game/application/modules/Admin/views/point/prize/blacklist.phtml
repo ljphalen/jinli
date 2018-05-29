@@ -1,0 +1,51 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $pointShopIndexUrl;?>">积分商城</a></li>
+        <li><a href="<?php echo $pointPrizeIndexUrl;?>" >积分抽奖</a></li>
+        <li><a href="<?php echo $presendIndexUrl;?>">人工发放</a></li>
+        <li class="current"><a href="javascript:void();">黑名单</a></li>
+	</ul>
+</div>
+<form action="<?php echo $blackListUrl;?>" method="post" >
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">	
+	   <tr class="tr">
+			<th class="th">UUID</th>
+			<td class="td"><input type="text" class="input" name="uuid" value="<?php echo $search['uuid'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+	<span class="btn2"><span><button><a href="<?php echo $addBlackListUrl;?>" class="mr10" style="color:white;">添加黑名单</a></button></span></span>
+    <span style="float: right">共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="100">ID</td>
+			<td width="200">UUID</td>
+			<td width="200">添加时间</td>
+			<td width="200">操作人员</td>
+			<td width="150">操作</td>
+		</tr>
+		<?php foreach ($data as $item):?>
+			<tr class = "ct">
+		    	<td> <?php echo $item['id'];?> </td>
+				<td> <?php echo $item['uuid'];?> </td>
+				<td> <?php echo date('Y-m-d  H:i:s', $item["create_time"]);?> </td>
+				<td> <?php echo $item["operator"];?> </td>
+				<td>
+                    <a href="javascript:" onclick="deleteOne('<?php echo $delBlackListUrl;?>/?id=<?php echo $item['id'];?>', '', event);">删除</a>
+				</td>
+			</tr>
+		<?php endforeach;?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,86 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $newUrl;?>">最新发布</a></li>
+	    <li><a href="<?php echo $listUrl;?>">下载最多</a></li>
+	    <li><a href="<?php echo $monthUrl;?>">月榜</a></li>
+        <li><a href="<?php echo $setUrl;?>">排行榜设置</a></li>
+	    <li class="current"><a href="<?php echo $manUrl;?>">排行榜管理</a></li>
+	    <li><a href="<?php echo $weekUrl;?>">周榜管理</a></li>
+     </ul>
+</div>
+<form method="post" action="<?php echo $maneditUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+  <div class="h_a">客户端排行榜</div>
+	<div class="table_full">
+		<table width="100%" id= "client">
+		<!-- 客户端 -->
+		<?php foreach ($client as $key => $value) {?>
+		    <tr class="tr">
+		    	<input name="client[key][]" value="<?php echo $value['key'];?>" type="hidden" />
+		    	<th class="th"><?php echo $value['name'];?></th>
+				<td class="td">
+				   排序:<input name="client[sort][<?php echo $value['key'];?>]" class="input" value="<?php echo $value['sort'];?>"/>
+				</td>
+				<th class="th">状态: </th>
+				   <td class="td">
+					<label class="mr20"><input <?php if($value['status']) echo 'checked';?> name="client[status][<?php echo $value['key'];?>]" value="1" type="radio">开启</label>
+					<label class="mr20"><input <?php if(!$value['status']) echo 'checked';?> name="client[status][<?php echo $value['key'];?>]" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+		   <?php }?>
+		</table>
+	</div>
+	<div class="h_a">H5排行榜管理</div>
+	<div class="table_full">
+		<table width="100%" id= "h5" >
+		   <!-- h5 -->
+		   <?php foreach ($h5 as $key => $value) {?>
+		    <tr class="tr">
+		    	<input name="h5[key][]" value="<?php echo $value['key'];?>" type="hidden" />
+		    	<th class="th"><?php echo $value['name'];?></th>
+				<td class="td">
+				   排序:<input name="h5[sort][<?php echo $value['key'];?>]" class="input" value="<?php echo $value['sort'];?>"/>
+				</td>
+				<th class="th">状态: </th>
+				   <td class="td">
+					<label class="mr20"><input <?php if($value['status']) echo 'checked';?> name="h5[status][<?php echo $value['key'];?>]" value="1" type="radio">开启</label>
+					<label class="mr20"><input <?php if(!$value['status']) echo 'checked';?> name="h5[status][<?php echo $value['key'];?>]" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+		   <?php }?>
+		</table>
+	</div>
+
+	<div class="h_a">WEB排行榜</div>
+	<div class="table_full">
+		<table width="100%" id = 'web'>
+		<!-- web -->
+		<?php foreach ($web as $key => $value) {?>
+		    <tr class="tr">
+		    	<input name="web[key][]" value="<?php echo $value['key'];?>" type="hidden" />
+		    	<th class="th"><?php echo $value['name'];?></th>
+				<td class="td">
+				   排序:<input name="web[sort][<?php echo $value['key'];?>]" class="input" value="<?php echo $value['sort'];?>"/>
+				</td>
+				<th class="th">状态: </th>
+				   <td class="td">
+					<label class="mr20"><input <?php if($value['status']) echo 'checked';?> name="web[status][<?php echo $value['key'];?>]" value="1" type="radio">开启</label>
+					<label class="mr20"><input <?php if(!$value['status']) echo 'checked';?> name="web[status][<?php echo $value['key'];?>]" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+		   <?php }?>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Rank/man');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

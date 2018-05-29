@@ -1,0 +1,126 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $scoreUrl; ?>">积分总表</a></li>
+			<li class=""><a href="<?php echo $addUrl; ?>">添加积分</a></li>
+		</ul>
+	</div>
+
+	<form id="search" action="/Admin/logs/score" method="post">
+		<div>查询条件：</div>
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<td class="th">类型:</td>
+					<td class="td">
+						<select name="group_id" id="group_id">
+							<option value="0">请选择</option>
+							<?php foreach ($groups as $k => $v) { ?>
+								<option value="<?php echo $k; ?>" <?php if ($postData['group_id'] == $k) echo 'selected'; ?>><?php echo $v['val']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr">
+					<td class="th">动作:</td>
+					<td class="td">
+						<select name="score_type" id="score_type">
+							<option value="0">请选择</option>
+							<?php foreach ($scoreTypes as $k => $v) { ?>
+								<option value="<?php echo $k ?>" <?php if ($k == $postData['score_type']) echo 'selected'; ?>><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr">
+					<td class="th">开始时间:</td>
+					<td class="td">
+						<input type="text" class="input" id="start_time" name="start_time" width="80px;" value="<?php echo $sdate; ?>">
+						至
+						<input type="text" class="input" id="end_time" name="end_time" width="80px;" value="<?php echo $edate; ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<td class="th">手机号：</td>
+					<td class="td">
+						<input id="tel" name="tel" class="input" type="text" width="100px;" value="<?php echo $postData['tel']; ?>">
+					</td>
+				</tr>
+				<input type="hidden" name="token" value="<?php echo $token; ?>">
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit" id="submitBt">提交</button></span></span>
+			</div>
+			<input type="hidden" name="export" id="export" value="0">
+		</div>
+
+		<div class="h_a">
+			&nbsp; <span id="total" style="color: red;font-size:14px"></span>
+			<span style="float:left;"><input type="button" value="导出" id="downLoad"></span>
+		</div>
+	</form>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="10%">序号</td>
+				<td width="10%">用户手机号</td>
+				<td width="10%">活动类别</td>
+				<td width="10%">动作</td>
+				<td width="10%">变动前积分数</td>
+				<td width="10%">变动后积分数</td>
+				<td width="10%">受影响积分数</td>
+				<td width="10%">物品ID</td>
+				<td width="20%">时间</td>
+			</tr>
+			<?php foreach ($data as $key => $value) {
+				?>
+				<tr class="ct">
+					<td><?php echo $value['id']; ?></td>
+					<td><?php echo $value['user_phone']; ?></td>
+					<td><?php echo $groups[$value['group_id']]['val']; ?>
+					<td><?php echo $scoreTypes[$value['score_type']]; ?></td>
+					<td><?php echo $value['before_score']; ?></td>
+					<td><?php echo $value['after_score']; ?></td>
+					<td><?php echo $value['affected_score']; ?></td>
+					<td><?php echo $value['fk_earn_id'];?></td>
+					<td><?php echo date('Y-m-d H:i:s', $value['add_time']); ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?></div>
+
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#start_time').datetimepicker();
+			$('#end_time').datetimepicker();
+		});
+
+
+		$("#group_id").bind('change', function () {
+			var group_id = $("#group_id option:selected").val();
+			if (group_id == '2' || group_id == '3') {
+				$.ajax({
+					'type': 'post',
+					'dataType': 'json',
+					'url': '/Admin/logs/ajaxGetScoreActionByGroupId',
+					'data': {'group_id': group_id, 'token': '<?php echo $token;?>'},
+					'success': function (e) {
+						var html = '<option value="0">请选择</option>';
+						$.each(e.data, function (i, m) {
+							html += "<option value='" + i + "'>" + m + '</option>';
+						});
+						$("#score_type").html(html);
+					}
+				});
+			}
+		});
+
+		$("#downLoad").bind('click', function () {
+			$("#export").val(1);
+			$('#search').submit();
+			$("#export").val(0);
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

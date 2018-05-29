@@ -1,0 +1,1 @@
+(function(a){GOU.Model=a.Model.extend({propTest:"公用属性",fnTest:function(){alert("公用方法")}});GOU.setting={}})(ICAT);

@@ -1,0 +1,124 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="javascript:;">评分管理</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post" id ='searchForm'>
+<input name="token" type="hidden" value="<?php echo $token;?>"/>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">分类</th>
+			<td class="td">
+				<select name="gcategory" class="select wa">
+					<option value="0">全部</option>
+					<?php foreach ($categorys as $value):?>
+					    <option <?php if($search['gcategory'] == $value['id']) echo 'selected';?> value="<?php echo $value['id']?>"><?php echo $value['title'] ?></option>
+					<?php endforeach;?>
+				</select>
+			</td>
+			<th class="th">合作方式</th>
+			<td class="td">
+				<select name="gcoop" class="select wa">
+			    	<option value="0">全部</option>
+			    	<option <?php if($search['gcoop'] == 1) echo 'selected';?> value="1">联运</option>
+					<option <?php if($search['gcoop'] == 2) echo 'selected';?> value="2">普通</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				<select name="gstatus" class="select wa">
+			    	<option value="0">全部</option>
+					<option <?php if($search['gstatus'] == 2) echo 'selected';?> value="2">已上线</option>
+					<option <?php if($search['gstatus'] == 1) echo 'selected';?> value="1">已下线</option>
+				</select>
+			</td>
+			<th class="th">名称</th>
+			<td class="td"><input type="text" class="input" name="gname" value="<?php echo $search['gname'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">分数</th>
+			<td class="td">
+				<input type="text" class="input" name="lscore" value="<?php echo $search['lscore'];?>">
+				至
+				<input type="text" class="input" name="rscore" value="<?php echo $search['rscore'];?>">
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+	<span class="btn2"><span><a class="exbtn" href="<?php echo $exscore;?>">导出excel</a></span></span> <span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="80">游戏ID</td>
+			<td>图标</td>
+			<td>名称</td>
+			<td>评分人数</td>
+			<td>分数</td>
+			<td>更新时间</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($data as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['gid'];?></td>
+			<td><img src="<?php echo $value['icon'];?>" style="width:80px; heigh:80px;"/></td>
+			<td><?php echo $value['name'];?></td>
+			<td><?php echo $value['number'];?></td>
+			<td>
+				<div class="rank-<?php echo (intval($value['score']) > 10) ? 10 : $value['score'];?>">
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+				<span class="rankValue"><?php echo (intval($value['score']) > 10) ? 10 : $value['score'];?></span>
+			</td>
+        	<td><?php echo $value['uptime'];?></td>
+        	<td><?php echo $value['status'] ? '上线' : '下线';?></td>
+			<td>
+			<a href="<?php echo $logsUrl;?>/?id=<?php echo $value['gid'];?>" class="mr10">用户评分</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<style>
+.exbtn {
+	color: #ffffff;height: 21px;margin: 0 -9px;padding: 0 10px;line-height: 21px;padding-bottom: 2px;
+}
+</style>
+<script>
+$(document).ready(function(){
+	$("#searchForm").submit(function(e){
+		var lscore = parseInt($("input[name='lscore']").val());
+		var rscore = parseInt($("input[name='rscore']").val());
+		if(lscore < 0 ||lscore > 10){
+			showError('', '请填写1-10的数字。');
+			return false;
+		}
+		if(rscore < 0 || rscore > 10){
+			showError('', '请填写1-10的数字。');
+			return false;
+		}
+		if (lscore.length!=0 && rscore.length!=0) {
+			if(rscore < lscore) {
+				showError('', '分数范围填写错误。');
+				return false;
+			}
+		}
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

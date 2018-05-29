@@ -1,0 +1,105 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+		<li class="current"><a href="<?php echo $configUrl?>">转盘抽奖配置</a>
+	</ul>
+</div>
+<div class="h_a">基本配置：</div>
+<form method="post" action="<?php echo $configUrl;?>" id="addFrom">
+<input name="token" id="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">	
+		<tr class="tr">
+			<th class="th">单次消除赠送金币数</th>
+			<td class="td"><input  type="text"  value="<?php echo max(0,$data['user_link_per_scores']);?>"  name="user_link_per_scores"  class="input"></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">全部消除参与奖赠送金币数</th>
+			<td class="td"><input  type="text"  value="<?php echo max(0,$data['user_link_takepart_scores']);?>"  name="user_link_takepart_scores"  class="input"></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">奖品过期时间</th>
+			<td class="td"><input  type="text"  value="<?php echo max(0,$data['user_link_expire_minus']);?>"  name="user_link_expire_minus"  class="input">分钟</td>
+		</tr>
+			<tr class="tr">
+					<th class="th">时间范围</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="user_link_sdate" value="<?php echo $data['user_link_sdate']; ?>"> 至
+						<input class="input" type="text" id="edate" maxlength="30" name="user_link_edate" value="<?php echo $data['user_link_edate']; ?>">
+					</td>
+				</tr>
+			<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="user_link_status" >
+			<option value="1"   <?php if($data['user_link_status'] == 1) echo 'selected';?>>开启</option>
+			<option value="0"    <?php if($data['user_link_status'] == 0) echo 'selected';?>>关闭</option>
+			</select>
+			</td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">商品列表</th>
+			<td class="td">
+				<?php foreach($prizeList as $k=>$v){?>
+				<div style="padding-top:10px" >
+					<span><?php echo $v;?>: </span>
+					<span>
+						<select name="user_link_prize_level[<?php echo $k;?>]">
+						<option value="0">请选择</option>
+						<?php foreach($goods as $m=>$n){?>
+							<option value="<?php echo $n['id'];?>"  <?php if($prizeLevels[$k] == $n['id']) echo 'selected';?>><?php  echo $n['name'];  ?></option>
+						<?php }?>
+						</select>
+					</span>
+					<!-- <span style="padding-left:20px;">中奖概率:</span>
+					<span  style="padding-left:20px;">
+						<input class="input"   value="<?php echo $prizeRatios[$k];?>"   name="user_link_prize_ratio[<?php echo $k;?>]" >
+					</span> -->
+				</div>
+				<?php }?>
+			</td>
+		
+		<tr class="tr">
+			<th class="th">初始值</th>
+			<td class="td">
+			<span>起始值 : <input type="text" class="input"  name="user_link_init_value"   value="<?php echo $data['user_link_init_value'];?>"></span>
+			<span>间隔: <input type="text" class="input" name="user_link_step"  value="<?php echo $data['user_link_step'];?>"></span>
+			<td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">奖品位置</th>
+			<td class="td">
+			<span>等级奖品位置:<textarea rows="3" cols="5"  style="width:100px;height:120px" name="user_link_prize_position"><?php  echo $data['user_link_prize_position']?></textarea></span><br/><br/>
+			<?php 
+				$arr = array();
+				foreach($rankData as $k=>$v){
+						$arr[] = $k.",".$v;	
+				}
+			?>
+			
+			<span>等级奖品值:    <textarea rows="3" cols="5"  style="width:100px;height:120px"  >
+			<?php echo implode("\n",$arr);?></textarea>
+			</span>
+			</td>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+		$("#sdate").datepicker({dateFormat: 'yy-mm-dd'});
+		$("#edate").datepicker({dateFormat: 'yy-mm-dd'});
+		ajaxForm('addFrom',function(ret){
+			ajaxRedirect(ret, baseurl+'/Admin/Ulottery/config');
+		},function(){
+	  		editor.sync();
+	  	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

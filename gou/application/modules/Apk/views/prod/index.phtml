@@ -1,0 +1,85 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body" data-uid="<?php echo $uid; ?>">
+	<section id="iScroll">
+		<div class="gotop">
+			<span>返回顶部</span>
+		</div>
+		<div class="J_proDetail" data-ajaxurl="<?php echo $webroot?>/api/apk_prod/index?uid=<?php echo $uid; ?>">
+			<div class="wrap"></div>
+		</div>
+	</section>
+
+	<div class="modal" id="J_shareModal" style="display:none;">
+		<div class="ff-share fixed">
+			<div class="inner">
+				<header>
+					<em>分享到</em>
+					<i class="ico-exit modal-cancel J_modalCancel"></i>
+				</header>
+				<div class="links"
+					data-title=""
+					data-url=""
+					data-pic="">
+					<span class="J_shareToSns" data-type="qq"
+						onclick="GOU.addBaiduStatic('GOODPRODUCT-SHARE-QQ')">
+						<img src="<?php echo "$staticResPath";?>/pic/ff_ico_qq.png" alt="">
+						<em>QQ好友</em>
+					</span>
+					<span class="J_shareToSns" data-type="qzone"
+						onclick="GOU.addBaiduStatic('GOODPRODUCT-SHARE-QZONE')">
+						<img src="<?php echo "$staticResPath";?>/pic/ff_ico_qzone.png" alt="">
+						<em>QQ空间</em>
+					</span>
+					<!-- <span class="J_shareToSns" data-type="weibo" 
+						onclick="GOU.addBaiduStatic('GOODPRODUCT-SHARE-WEIBO')">
+						<img src="<?php echo "$staticResPath";?>/pic/ff_ico_weibo.png" alt="">
+						<em>新浪微博</em>
+					</span> -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script id="J_dtemplate" type="text/icat-template">
+		<ul class="good-product-list" data-share-url="<?php echo $webroot?>/prod/detail" data-uid="<?php echo $uid; ?>">
+			<%for(var i=0, uid='<?php echo $uid; ?>', len=data.list.length; i<len; i++){%>
+			<li class="good-product" data-item-id="<%=data.list[i].item_id%>">
+				<a class="pic J_static" href="<%= data.list[i].url %>" onclick="GOU.addBaiduStatic(\'GOODPRODUCT-GOODS\', <%=data.list[i].item_id%>)">
+					<img src="<%= blankPic %>" data-src="<%= data.list[i].img %>" alt="<%= data.list[i].title %>"/>
+					<%if(!uid){%>
+					<i class="J_shareSns icon-share-old"></i>
+					<%}%>
+				</a>
+				<%if (uid) {%>
+				<a class="title J_static" href="<%= data.list[i].url %>" onclick="GOU.addBaiduStatic(\'GOODPRODUCT-GOODS\', <%=data.list[i].item_id%>)"><%=data.list[i].title%></a>
+				<div class="operation-bar">
+					<div class="flex align-right">
+						<div class="share J_shareSns">
+						   <i class="icon-share-big"></i>
+						   <span>分享<span>
+						</div>
+					</div>
+					<div class="flex align-left">
+						<div class="collect J_collect" 
+							data-fav-id="<%=data.list[i].fav_id%>"
+							data-item-id="<%=data.list[i].item_id%>">
+							<%if (data.list[i].is_favorite){%>
+							<i class="icon-collect active"></i>
+							<%} else {%>
+							<i class="icon-collect" ></i>
+							<%}%>
+							<span>收藏</span>
+						</div>
+					</div>
+				</div>
+				<%} else {%>
+				<a class="title old J_static" href="<%= data.list[i].url %>" onclick="GOU.addBaiduStatic(\'GOODPRODUCT-GOODS\', <%=data.list[i].item_id%>)"><%=data.list[i].title%></a>
+				<%}%>
+			</li>
+			<%}%>
+		</ul>
+	</script>
+
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

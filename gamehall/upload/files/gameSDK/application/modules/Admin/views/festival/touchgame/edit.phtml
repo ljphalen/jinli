@@ -1,0 +1,332 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<link href="<?php echo "$staticPath/game/assets/css/finger-games.css?v=$version"; ?>" rel="stylesheet" />
+<script type="text/javascript" src="<?php echo "$staticPath/game/assets/js/Form.js?v=$version"; ?>"></script>
+<script type="text/javascript" src="<?php echo "$staticPath/game/assets/js/validate.js?v=$version"; ?>"></script>
+<script type="text/javascript" src="<?php echo "$staticPath/game/assets/js/fingerGames.js?v=$version"; ?>"></script>
+<script type="text/javascript" src="<?php echo "$staticPath/game/assets/js/template/fingerGames.js?v=$version"; ?>"></script>
+<div class="nav">
+    <ul class="cc">
+        <li><a href="<?php echo $indexUrl;?>">划屏游戏列表</a></li>
+        <li class="current"><a href="javascript:void();">编辑活动</a></li>
+    </ul>
+</div>
+
+<div id="prizeForm">
+    <table class="holiday-task-border prize-task">
+        <tr>
+            <td class="space-left" style="min-width: 105px;">
+                活动名称
+            </td>
+            <td class="space-left" colspan="6">
+                <input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+                <input name="name" type="text" value="<?php echo $info['name'];?>"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="space-left">
+                预热时间
+            </td>
+            <td  class="space-left" colspan="6">
+                <input name="preheat_time" id="preheat_time" class="time" value="<?php echo date('Y-m-d H:i:s',$info['preheat_time']);?>" />
+            </td>
+        </tr>
+        <tr>
+            <td class="space-left">
+                活动有效时间
+            </td>
+            <td  class="space-left" colspan="6">
+                <input id="start_time" name="start_time" class="time" value="<?php echo date('Y-m-d H:i:s',$info['start_time']);?>"/>
+                至
+                <input id="end_time" name="end_time" class="time" value="<?php echo date('Y-m-d H:i:s',$info['end_time']);?>"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="space-left">
+                游戏记分时间
+            </td>
+            <td  class="space-left" colspan="6">
+                <input id="game_start_time" name="game_start_time" class="time" value="<?php echo date('Y-m-d H:i:s',$info['game_start_time']);?>" />
+                至
+                <input id="game_end_time" name="game_end_time" class="time"  value="<?php echo date('Y-m-d H:i:s',$info['game_end_time']);?>"/>
+                <span style="color: red">&nbsp;&nbsp;这个时间段游戏能够获得分数与积分</span>
+            </td>
+        </tr>
+        <tr>
+            <td  class="space-left" >
+                登录描述
+            </td>
+            <td class="space-left" colspan="6">
+                <input  type="text" name="login_desc" style="width:500px;" value="<?php echo $info['login_desc']?>"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="space-left">
+                预热图片
+            </td>
+            <td  class="space-left" colspan="2">
+                <h6>背景图</h6>
+                <?php $preheatConfig = json_decode($info['preheat_config'], true);?>
+                <ul class="uploadImg">
+                    <li id="preHeatImg1">
+                        <img class="js_form" src="<?php echo $attachPath. $preheatConfig['img1'];?>" />
+                        <input type="hidden" name="preheat_img1" value="<?php echo $preheatConfig['img1']?>" />
+                    </li>
+                </ul>
+                <p style="clear:both;">
+                    <iframe name="upload" src="<?php echo $uploadUrl."/?imgId=preHeatImg1";?>" style="height:80px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                </p>
+            </td>
+            <td  class="space-left" colspan="2">
+                <h6>素材1</h6>
+                <ul class="uploadImg">
+                    <li id="preHeatImg2">
+                        <img class="js_form" src="<?php echo $attachPath. $preheatConfig['img2'];?>" />
+                        <input type="hidden" name="preheat_img2" value="<?php echo $preheatConfig['img2']?>" />
+                    </li>
+                </ul>
+                <p style="clear:both;">
+                    <iframe name="upload" src="<?php echo $uploadUrl."/?imgId=preHeatImg2";?>" style="height:80px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                </p>
+            </td>
+            <td  class="space-left" colspan="2">
+                <h6>素材2</h6>
+                <ul class="uploadImg">
+                    <li id="preHeatImg3">
+                        <img class="js_form" src="<?php echo $attachPath. $preheatConfig['img3'];?>" />
+                        <input type="hidden" name="preheat_img3" value="<?php echo $preheatConfig['img3']?>" />
+                    </li>
+                </ul>
+                <p style="clear:both;">
+                    <iframe name="upload" src="<?php echo $uploadUrl."/?imgId=preHeatImg3";?>" style="height:80px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td  class="space-left" >
+                活动说明
+            </td>
+            <td colspan="6">
+                <textarea  name="descript" class="ke-edit-textarea" hidefocus="true" style="width: 100%; height: 308px; "><?php echo $info['descript']; ?></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="space-left">
+                活动素材图片
+            </td>
+            <td class="space-left">
+                <h6>背景图</h6>
+                <?php $imgConfig = json_decode($info['img_config'], true);?>
+                <ul class="uploadImg">
+                    <li id="imgConfig1">
+                        <img class="js_form" src="<?php echo $attachPath . $imgConfig['background'];?>" />
+                        <input type="hidden" name="img_config_background" value="<?php echo $imgConfig['background']; ?>" />
+                    </li>
+                </ul>
+                <p style="clear:both;">
+                    <iframe name="upload" src="<?php echo $uploadUrl."/?imgId=imgConfig1";?>" style="height:80px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                </p>
+            </td>
+            <td class="space-left">
+                <h6>记分道具</h6>
+                <?php $imgConfig = json_decode($info['img_config'], true);?>
+                <ul class="uploadImg">
+                    <li id="imgConfig6">
+                        <img class="js_form" src="<?php echo $attachPath . $imgConfig['store'];?>" />
+                        <input type="hidden" name="img_config_store" value="<?php echo $imgConfig['store'];?>" />
+                    </li>
+                </ul>
+                <p style="clear:both;">
+                    <iframe name="upload" src="<?php echo $uploadUrl."/?imgId=imgConfig6";?>" style="height:80px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                </p>
+            </td>
+            <td class="space-left">
+                <h6>排行榜</h6>
+                <ul class="uploadImg">
+                    <li id="imgConfig2">
+                        <img class="js_form" src="<?php echo $attachPath . $imgConfig['rank'];?>" />
+                        <input type="hidden" name="img_config_rank" value="<?php echo $imgConfig['rank'];?>" />
+                    </li>
+                </ul>
+                <p style="clear:both;">
+                    <iframe name="upload" src="<?php echo $uploadUrl."/?imgId=imgConfig2";?>" style="height:80px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                </p>
+            </td>
+            <td class="space-left">
+                <h6>积分商城</h6>
+                <ul class="uploadImg">
+                    <li id="imgConfig3">
+                        <img class="js_form" src="<?php echo $attachPath . $imgConfig['mall'];?>" />
+                        <input type="hidden" name="img_config_mall" value="<?php echo $imgConfig['mall'];?>" />
+                    </li>
+                </ul>
+                <p style="clear:both;">
+                    <iframe name="upload" src="<?php echo $uploadUrl."/?imgId=imgConfig3";?>" style="height:80px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                </p>
+            </td>
+            <td class="space-left">
+                <h6>积分抽奖</h6>
+                <ul class="uploadImg">
+                    <li id="imgConfig4">
+                        <img class="js_form" src="<?php echo $attachPath . $imgConfig['prize'];?>" />
+                        <input type="hidden" name="img_config_prize" value="<?php echo $imgConfig['prize'];?>" />
+                    </li>
+                </ul>
+                <p style="clear:both;">
+                    <iframe name="upload" src="<?php echo $uploadUrl."/?imgId=imgConfig4";?>" style="height:80px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                </p>
+            </td>
+            <td class="space-left">
+                <h6>分享</h6>
+                <ul class="uploadImg">
+                    <li id="imgConfig5">
+                        <img class="js_form" src="<?php echo $attachPath . $imgConfig['share'];?>" />
+                        <input type="hidden" name="img_config_share" value="<?php echo $imgConfig['share'];?>" />
+                    </li>
+                </ul>
+                <p style="clear:both;">
+                    <iframe name="upload" src="<?php echo $uploadUrl."/?imgId=imgConfig5";?>" style="height:80px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td  class="space-left">
+                道具设置
+            </td>
+            <td class="space-left" name="news-prize" colspan="6">
+                <div class="add-news-prize">
+                    <input name="add" type="button" class="but-yellow but-blue" value="添加新道具" />
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="space-left">
+                活动阈值
+            </td>
+            <td class="space-left" colspan="6">
+                <?php $waringConfig = json_decode($info['waring_config'], true);?>
+                <div style="padding-bottom:10px">
+                    <input type="text" name="waring_score" value="<?php echo $waringConfig['score'] ?>"/>  超过此分数，自动无效，不计入排行榜
+                </div>
+                <div>
+                    <input type="text" name="waring_point" value="<?php echo $waringConfig['point'] ?>"/>  每人每天可获得积分数量
+                </div>
+            </td>
+        </tr>
+        <tr class="tr">
+            <td class="space-left">
+                状态
+            </td>
+            <td class="space-left" colspan="6">
+                <select id="status">
+                    <option value="1" <?php echo ($info['status']==1) ? 'selected' : '';?> >开启</option>
+                    <option value="0" <?php echo ($info['status']==0) ? 'selected' : '';?> >关闭</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <div class="ok">
+        <input value="完成" id="submit" type="button" class="but-yellow" />
+    </div>
+</div>
+<?php $propsConfig = json_decode($info['props_config'], true);
+foreach($propsConfig as $key=>$item):;
+?>
+<div js="layer" id="prizeConfig<?php echo $key; ?>" style="width: auto; min-height: 95px; max-height: none; height: auto;" class="ui-dialog-content ui-widget-content">
+    <div title="配置道具" class="prize-allocation">
+        <table>
+            <tbody>
+            <tr>
+                <td>类型</td>
+                <td>
+                    <select name="type"  disabled="disabled">
+                        <option value="1" <?php echo ($item['type']==1) ? 'selected' : '';?>>增加积分</option>
+                        <option value="0" <?php echo ($item['type']==0) ? 'selected' : '';?>>游戏结束</option>
+                    </select>
+                    <font style="color: red">&nbsp;&nbsp;游戏结束的道具在游戏中，必定出现1次以上</font>
+                </td>
+            </tr>
+            <tr>
+                <td>名称</td>
+                <td>
+                    <input name="propName" type="text" value="<?php echo $item['propName'] ?>">
+                    <font style="color: red">&nbsp;&nbsp;长度不要超过6个中文汉字</font>
+                </td>
+            </tr>
+            <tr>
+                <td>图片</td>
+                <td>
+                    <ul class="uploadImg">
+                        <li id="AdImg<?php echo $key?>">
+                            <img class="js_form" src="<?php echo $attachPath . $item['propImg']?>">
+                            <input type="hidden" name="propImg" value="<?php echo $item['propImg']?>">
+                        </li>
+                    </ul>
+                    <p style="clear:both;">
+                        <iframe name="upload" src="<?php echo $uploadUrl."/?imgId=AdImg$key";?>" style="height:80px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>概率</td>
+                <td>
+                    <input type="text" name="probability" value="<?php echo $item['probability']?>"><font style="color: red">&nbsp;&nbsp;概率范围0-100</font>
+                </td>
+            </tr>
+            <tr data-name="score" style="display: table-row;">
+                <td>分数</td>
+                <td>
+                    <input type="text" name="score" value="<?php echo $item['score']?>">
+                </td>
+            </tr>
+            <tr data-name="point" style="display: table-row;">
+                <td>积分</td>
+                <td>
+                    <input type="text" name="point" value="<?php echo $item['point']?>">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <input name="ok" type="button" value="完成" class="but-yellow ok">
+    </div>
+</div>
+<?php endforeach;?>
+
+<div id="alert">
+    <p name="msg"></p>
+</div>
+<div id="progressbar">
+    <div id="loadIng" style="margin-top:20px">
+        <div class="progress-label"></div>
+    </div>
+</div>
+
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+    var imgPath = "<?php echo $attachPath; ?>";
+    $(document).ready(function() {
+        $('#preheat_time').datetimepicker();
+        $('#start_time').datetimepicker();
+        $('#end_time').datetimepicker();
+        $('#game_start_time').datetimepicker();
+        $('#game_end_time').datetimepicker();
+    });
+
+    var holidayTaskData = {"propsConfig":<?php echo $info['props_config']?>}
+        ,ajaxUrl = '<?php echo $editPostUrl;?>'
+        ,backUrl = '<?php echo $indexUrl;?>'
+        ,token = '<?php echo $token;?>'
+        ;
+    var editor;
+    KindEditor.ready(function(K) {
+        K.token = '<?php echo $token;?>';
+        editor = K.create('textarea[name="descript"]', {
+            resizeType : 1,
+            allowPreviewEmoticons : false,
+            allowImageUpload : true,
+            uploadJson : '<?php echo $uploadImgUrl;?>',
+            items : EDITOR_ITEMS
+        });
+    });
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,104 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl . '?show_type=' . $show_type;?>">商品列表</a></li>
+		<li><a href="<?php echo $addUrl . '?show_type=' . $show_type;?>">添加商品</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<td class="td">时间</td>
+			<td class="td">
+				<select name="doing" class="wa">
+					<option <?php if ($doing == 0) echo 'selected';?> value="0">所有商品</option>
+					<option <?php if ($doing == 1) echo 'selected';?> value="1">正在进行</option>
+					<option <?php if ($doing == 2) echo 'selected';?> value="2">即将开始</option>
+					<option <?php if ($doing == 3) echo 'selected';?> value="3">已结束</option>
+				</select>
+			</td>
+			<td class="td">状态</td>
+			<td class="td">
+				<select name="status" class="wa">
+					<option <?php if ($status == 0) echo 'selected';?>  value="0">所有状态</option>
+					<option <?php if ($status == 1) echo 'selected';?>  value="1">关闭</option>
+					<option <?php if ($status == 2) echo 'selected';?>  value="2">开启</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<td class="td">商品名称</td>
+			<td class="td">
+				<input class="input wb" type="text" name="title" value="<?php echo $params['title'];?>">
+			</td>
+			<td class="td">商品类型</td>
+			<td class="td">
+				<select name="goods_type" class="wa">
+						<option <?php if (!$search['goods_type']) echo 'selected';?>  value="">所有类型</option>
+					<?php foreach ($goods_types as $key=>$value) {?>
+						<option <?php if ($search['goods_type'] == $key) echo 'selected = selected';?>  value="<?php echo $key;?>"><?php echo $value;?></option>
+					<?php }?>
+				</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="30">排序</td>
+			<td width="40">商品ID</td>
+			<td>商品名称</td>
+			<td>售价</td>
+			<?php if(!empty($show_type)):?>
+			<td>银币使用上限</td>
+			<?php endif;?>
+			<td>供应商</td>
+			<td>开始时间/结束时间</td>
+			<td>是否货到付款</td>
+			<td>库存</td>
+			<td>限购数</td>			
+            <td>状态</td>
+            <td>商品类型</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($localgoods as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $value['price'];?></td>
+			<?php if(!empty($show_type)):?>
+			<td><?php echo $value['silver_coin'];?></td>
+			<?php endif;?>
+			<td><?php echo $suppliers[$value['supplier']]['name'];?></td>
+			<td><?php echo date('Y-m-d H:i:s',$value['start_time']);?><br/><?php echo date('Y-m-d H:i:s',$value['end_time']);?></td>
+			<td><?php echo $value['iscash'] == 1 ? '是' : '否';?></td>
+			<td><?php echo $value['stock_num'];?></td>
+			<td><?php echo $value['limit_num'];?></td>
+			<td><?php echo $value['status'] == 1 ? '开启' : '关闭';?></td>
+			<td><?php echo $goods_types[$value['goods_type']];?></td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//导购表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

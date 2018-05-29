@@ -1,0 +1,94 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">    
+        <li ><a href="<?php echo $listUrl;?>">意见反馈</a></li>
+        <li ><a href="<?php echo $gameFeedbackUrl;?>">游戏反馈</a></li>
+        <li ><a href="<?php echo $rlistUrl;?>">H5反馈</a></li>
+        <li class="current"><a href="javascript:;">查看回复</a></li>
+	</ul>
+</div>
+<div class="h_a">
+<?php echo  "IMEI:".$info['imei'];?>/<?php echo '账号：'.$info['uname'];?>/<?php echo $info['model'];?>/<?php echo "游戏大厅" ;?>/<?php echo $info['client_version'];?>/<?php echo $info['sys_version'];?>
+</div>
+<form method="post" action="<?php echo $replyPosttUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">编号</th>
+			<td class="td">
+			    <?php echo $info['id']?>
+			</td>
+		</tr>
+	
+		<tr class="tr">
+			<th class="th">反馈时间</th>
+			<td class="td">
+				<?php echo date('Y-m-d H:i:s',$info['create_time'])?>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				 <?php echo $feedbackStatus[$info['status']]; ?>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">标签</th>
+		    <td>
+				 <?php echo $info['label_name'] == 0?'无':$info['label_name'];?>
+			</td>
+	    </tr>
+	    <tr class="tr">
+			<th class="th">反馈内容</th>
+			<td class="td">
+			   <?php echo $info['content']?>
+			</td>
+		</tr>
+		 <tr class="tr">
+			<th class="th">联系方式</th>
+			<td class="td">
+			     <?php echo $info['contact']?>
+			</td>
+		</tr>
+		</tr>
+		<tr class="tr">
+			<th class="th">附件</th>
+			<td class="td">
+			   <?php if($info['attach']){?>
+			   <img width="150px" height="150px" src="<?php echo $attachPath.'/'.$info['attach'];?>" />
+			   <?php }else{?>
+			   无
+			   <?php }?>
+			</td>
+		</tr>
+		 <tr class="tr">
+			<th class="th">回复人</th>
+			<td class="td">
+				  <?php echo $info['reply_name']?$info['reply_name']:'暂无'; ?>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">回复内容</th>
+			<td class="td">
+              <?php echo $info['reply_content']?$info['reply_content']:'暂无';?>
+			</td>
+		</tr>
+
+	</table>
+</div>
+<!-- 
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+ -->
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+     //提交表单
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Feedback/index');
+	});
+
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

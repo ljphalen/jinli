@@ -1,0 +1,105 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">网点列表</a></li>
+		<li class="current"><a href="javascript:;">编辑网点</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑机型</div>
+<form method="post" action="<?php echo $editPostUrl; ?>" id="editAddressForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">省份</th>
+				<td class="td"><select name="province" onchange="setcity(this.value, 0)">
+						<?php foreach ($province as $key => $value) { ?>
+							<option value="<?php echo $value['id']; ?>" <?php if ($info['province'] == $value['id']) echo 'selected="selected"'; ?>><?php echo $value['name']; ?></option>
+						<?php } ?>
+					</select></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">城市</th>
+				<td class="td">
+					<select name="city"></select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">网点类型</th>
+				<td class="td"><select name="address_type" onchange="showservice(this.value);">
+						<?php foreach ($address_type as $key => $value) { ?>
+							<option value="<?php echo $key; ?>" <?php if ($info['address_type'] == $key) echo 'selected="selected"'; ?>><?php echo $value; ?></option>
+						<?php } ?>
+					</select></td>
+			</tr>
+			<tr class="tr" id="service_type">
+				<th class="th">服务类型</th>
+				<td class="td"><select name="service_type">
+						<?php foreach ($service_type as $key => $value) { ?>
+							<option value="<?php echo $key; ?>" <?php if ($info['service_type'] == $key) echo 'selected="selected"'; ?>><?php echo $value; ?></option>
+						<?php } ?>
+					</select></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">网点名称</th>
+				<td class="td"><input type="text" class="input wc" name="name" value="<?php echo $info['name']; ?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">详细地址</th>
+				<td class="td">
+					<input type="text" class="input wc" name="address" value="<?php echo $info['address']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">电话</th>
+				<td class="td"><input type="text" class="input  wc" name="tel" value="<?php echo $info['tel']; ?>"></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	$(document).ready(function () {
+		ajaxForm('editAddressForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Address/index');
+		});
+
+		var citys = <?php echo json_encode($city);?>;
+		setcity = function (province, chval) {
+			var options = '';
+			$.each(citys, function (index, data) {
+				var s = '';
+				if (data.parent_id == province) {
+					if (data.id == chval) s = 'selected';
+					options += '<option value="' + data.id + '" ' + s + '>' + data.name + '</option>';
+				}
+			});
+			$("select[name='city']").html(options);
+		}
+		setcity(<?php echo $info['province'] ? $info['province'] : 0;?>, <?php echo $info['city'] ? $info['city'] : 0;?>);
+
+		showservice = function (flag) {
+			if (flag == 2) {
+				$("#service_type").show();
+			} else {
+				$("#service_type").hide();
+				$("select[name='service_type'] option:selected").val(0);
+			}
+		}
+		<?php if($info['address_type'] && $info['address_type'] == 2) { ?>
+		$("#service_type").show();
+		<?php } else { ?>
+		$("#service_type").hide();
+		$("select[name='service_type'] option:selected").val(0);
+		<?php }?>
+	})
+
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

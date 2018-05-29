@@ -1,0 +1,674 @@
+<script type="text/html" id="DLgridPopUp">
+<table>
+    <thead>
+        <tr>
+            <th>规则名</th>
+            <th>内容</th>
+            <th>数值</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="height:100px;" rowspan="2">
+                <select class="select">
+                <!-- loop ad_limit_item -->
+                    <option id="{{ad_limit_item' key}}" value="{{ad_limit_item' key}}">{{ad_limit_item' key}}</option>
+                <!-- endloop -->
+                </select>
+            </td>
+            <td>每天</td>
+            <td><input name="day_limit" type="text" class="iText number" /></td>
+        </tr>
+        <tr>
+            <td>总数</td>
+            <td><input name="total_limit" type="text" class="iText number" /></td>
+        </tr>
+    </tbody>
+</table>
+<div style="text-align:center;padding:10px 0;">
+    <a href="javascript:void(0)" class="btn" id="ok">确定</a>
+    <a href="javascript:void(0)" class="cancel">取消</a>
+</div>
+</script>
+<script type="text/html" id="DLJHgridPopUp">
+<div class="gridPopUp">
+<ul class="form">
+    <li style="margin-bottom:10px;">
+          <span class="label">开始时间：</span>
+          <div class="fc">
+                <input type="text" name="start_time" class="iText datepicker" />
+          </div>
+    </li>
+    <li style="margin-bottom:10px;">
+         <span class="label">结束时间：</span>
+         <div class="fc">
+              <input type="text" name="end_time"  class="iText datepicker" />
+         </div>
+    </li>
+</ul>
+</div>
+<div style="text-align:center;padding:10px 0;">
+    <a href="javascript:void(0)" class="btn" id="ok">确定</a>
+    <a href="javascript:void(0)" class="cancel">取消</a>
+</div>
+</script>
+</body>
+<script>
+$(function(){
+    //产品目标点击类型
+    var param = {};
+    function initParam(_v){
+        var _v = _v || $("#clickType").val();
+        if(_v == 1){
+            param = {};
+            param.inner_install_manage = {};
+        }
+        if(_v == 2){
+            param = {};
+            param.start_app = {};
+        }
+        if(_v == 3){
+            param = {};
+            param.direct_url = {};
+        }
+        if(_v == 4){
+            param = {};
+            param.inner_url = {};
+        }
+        if(_v == 5){
+            param = {};
+            param.ad_list = {};
+        }
+        if(_v == 6){
+            param = {};
+            param.user_action = {};
+        }
+         $.each($("#clickType_" + _v).find("input"),function(){
+            if($(this).hasClass("submit")){
+                return true;//跳过“自动获取”按钮的当次循环
+            }
+            if(_v == 1){
+                 param.inner_install_manage[$(this).attr("name")] = $(this).val();
+            }
+             if(_v == 2){
+                 param.start_app[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 3){
+                 param.direct_url[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 4){
+                 param.inner_url[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 5){
+                 param.ad_list[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 6){
+                 param.user_action[$(this).attr("name")] = $(this).val();
+             }
+        });
+         if(_v == 0){
+            $("input[name='clictypeobj']").val("").change();
+         }else{
+            $("input[name='clictypeobj']").val(obj2str(param)).change();
+        }
+    }
+    $("#clickType").change(function(){
+        var _v = $(this).val();
+        if(_v != 0){
+                if(_v!=3 && _v!=4 && _v!=5 ){
+                    $("#clickTypeBox").show();
+                    $("#clickType_" + _v).show().siblings().hide();
+                }else{
+                    $("#clickTypeBox").hide();
+                }
+        }else{
+            param = {'no_action':''};
+            $("#clickTypeBox").hide();
+        }
+        initParam(_v);
+    });
+    $("#clickTypeBox").find("input:text").change(function(){
+        initParam($("#clickType").val());
+    });
+    //导量限制
+    function showPopUpGridDL(id,tr){
+        var data = $.parseJSON($("input[name='stat_limit']").val()) || {};
+        var $content = $('<div class="grid"></div>').append($("#DLgridPopUp").html());
+        var PopUp = jDialog({
+            width:400,
+            height:200,
+            content:$content
+        });
+        var k,day_limit,total_limit;
+        if(tr){
+            $content.find("select").val(id);
+            $content.find("input[name='day_limit']").val(tr.children(":eq(2)").text());
+            $content.find("input[name='total_limit']").val(tr.children(":eq(4)").text());
+        }
+        $content.find("#ok").click(function(){
+            k = $content.find("select").children("option[selected]").text();
+            var flag =  $content.find("select").children("option[selected]").val();
+            var check = true;
+            day_limit =  $content.find("input[name='day_limit']").val();
+            total_limit = $content.find("input[name='total_limit']").val();
+            if(day_limit=="" || total_limit==''){
+                alert("数值不能为空");
+                return false;
+            }
+            if(Number(day_limit)>999999999 ||Number(total_limit)>999999999){
+                alert("最大数值不得超过999999999");
+                return false;
+            }
+            if(Number(day_limit)>Number(total_limit)){
+                alert("每天的数值不能大于总数");
+                return false;
+            }
+            $("#DLGrid").find("tr").each(function(){
+                if($(this).children(":eq(0)").text() == k){
+                    check = false;
+                    return false;
+                }
+            });
+            if(!check){
+                alert("已有相同规则名！");
+                if(PopUp){PopUp.close();}
+                return false;
+            }
+            if(tr){
+                tr.children(":eq(0)").text(k);
+                tr.children(":eq(0)").attr("id", k);
+                tr.children(":eq(2)").text(day_limit);
+                tr.children(":eq(4)").text(total_limit);
+            }else{
+                var str = '<tr>'+
+                        '<td id="'+ flag +'">' + k + '</td>'+
+                        '<td>每天</td>'+
+                        '<td>' + day_limit + '</td>'+
+                        '<td>总数</td>'+
+                        '<td>' + total_limit + '</td>'+
+                        '<td>'+
+                            '<a title="编辑" class="edit" href="javascript:void(0)"></a> | <a title="删除" class="del" href="javascript:void(0)"></a>'+
+                        '</td>'+
+                    '</tr>';
+                $("#DLGrid").find("tbody").append(str);
+            }
+            if(PopUp){PopUp.close();}
+            initDLGridData();
+        });
+        $content.find(".cancel").click(function(){
+            if(PopUp){PopUp.close();}
+        });
+    }
+    $("#addDL").click(function(){
+        showPopUpGridDL();
+    });
+    $("#DLGrid").find(".edit").live("click",function(){
+        var tr = $(this).parents("tr");
+        showPopUpGridDL(tr.children(":eq(0)").attr("id"),tr);
+    });
+    $("#DLGrid").find(".del").live("click",function(){
+        $(this).parents("tr").remove();
+        initDLGridData();
+    });
+    function initDLGridData(){
+        var data = {};
+        $("#DLGrid").find("tbody").children().each(function(){
+            var id = $(this).children(":eq(0)").attr("id");
+            data[id] = {
+                "day_limit":$(this).children(":eq(2)").text(),
+                "total_limit":$(this).children(":eq(4)").text()
+            };
+        });
+        if($.isEmptyObject(data)){
+            $("input[name='stat_limit']").val("").change();
+        }else{
+            $("input[name='stat_limit']").val(obj2str(data)).change();
+        }
+    }
+    //导量计划
+    function showPopUpGridDLJH(id,tr){
+        var data = $.parseJSON($("input[name='stat_plan']").val()) || {};
+        var $content = $('<div class="grid"></div>').append($("#DLJHgridPopUp").html());
+        var PopUp = jDialog({
+            width:400,
+            height:200,
+            content:$content
+        });
+        $('.datepicker').datepicker({
+            changeMonth:true,
+            changeYear:true,
+            minDate:new Date()
+        });
+        $('.datepicker').datepicker('option','dateFormat','yy-mm-dd');
+        $("input[name='start_time']").change(function(){
+            var now = $(this).val();
+             $("input[name='end_time']").datepicker('option','minDate',new Date(now));
+        })
+        if(tr){
+            $content.find("input[name='start_time']").val(tr.children(":eq(1)").text());
+            $content.find("input[name='end_time']").val(tr.children(":eq(2)").text());
+        }
+        $content.find("#ok").click(function(){
+            var start_time =  $content.find("input[name='start_time']").val() || "Now";
+            var end_time =  $content.find("input[name='end_time']").val() || "Never";
+            if(id){
+                tr.children(":eq(1)").text(start_time);
+                tr.children(":eq(2)").text(end_time);
+            }else{
+                var num = $("#DLJHGrid").find("tbody").children().size();
+                var str = '<tr>'+
+                                '<td>'+(num+1)+'</td>'+
+                                '<td>'+start_time+'</td>'+
+                                '<td>'+end_time+'</td>'+
+                                '<td>'+
+                                    '<a title="更新" class="edit" href="javascript:void(0)"></a> | <a title="删除" class="del" href="javascript:void(0)"></a>'+
+                                '</td>'+
+                            '</tr>';
+                $("#DLJHGrid").find("tbody").append(str);
+            }
+            initStatPlanData();
+            if(PopUp){PopUp.close();}
+        });
+        $content.find(".cancel").click(function(){
+            if(PopUp){PopUp.close();}
+        });
+    };
+    $("#addDLJH").click(function(){
+        showPopUpGridDLJH();
+    });
+    $("#DLJHGrid").find(".edit").live("click",function(){
+        var tr = $(this).parents("tr");
+        showPopUpGridDLJH(tr.children(":eq(0)").text(),tr);
+    });
+    $("#DLJHGrid").find(".del").live("click",function(){
+        $(this).parents("tr").remove();
+        initStatPlanData();
+    });
+    function initStatPlanData(){
+        var data = {"stat_plan":[]};
+        $("#DLJHGrid").find("tbody").children().each(function(){
+            var obj = {}
+            obj = {
+              "start_time":$(this).children(":eq(1)").text(),
+               "end_time":$(this).children(":eq(2)").text()
+            };
+            data.stat_plan.push(obj);
+        });
+        if(data.stat_plan.length == 0){
+            $("input[name='stat_plan']").val("").change();
+        }else{
+            $("input[name='stat_plan']").val(obj2str(data)).change();
+        }
+    }
+    //全部平均
+    $(".averaged").live("click",function(){
+       var rateinput =  $(this).parent(".gridTtitle").next("table").find("input:text");
+       var num=$(this).parent(".gridTtitle").next("table").find("input[type='hidden'][name*='state'][value='1']");
+       var numlength=num.length;
+       if(numlength>0){
+            var i=1;
+            var totalrate_num=0;
+            $.each(rateinput,function(){
+                 rate_num=Number((1000/numlength).toFixed(0));
+                 if(i==numlength){
+                     rate_num=1000 - totalrate_num;
+                 }else{
+                     totalrate_num=totalrate_num+rate_num;
+                 }
+                 if($(this).parent().prev("td").find("input[type='hidden']").attr("value")==1){
+                    $(this).val((rate_num/1000)).change();
+                 }
+                 i++;
+            });
+       }else{
+                alert("至少需要一个广告状态为打开的广告");
+            }
+    });
+    //广告内容分配比例提交验证
+    $("input:submit").click(function(){
+        var ok = true; 
+        $("#adList").find(".tablebox").each(function(){
+            var num = 0;
+            $(this).find("input[name*=rate]").each(function(){
+                num = num + (+$(this).val());
+            });
+            if(num != 1 ){
+                jAlert("分配比例总和必须等于1");
+                ok = false;
+                return false;
+            }
+        });
+        if(!ok){
+            return false;
+        }
+    });
+     /*
+   *
+   *
+   *
+   *新增广告内容
+   *
+   *
+   */
+    function addNewAD(tr,adid,adinfoid,adtype){
+        var adid= adid || "";
+        var adinfoid= adinfoid || "";
+        var adtype= adtype || "";
+        if(adid==""){
+            url="{{ad_add_pop}}";
+        }else{
+            url="{{ad_edit_pop}}?adid="+adid+"&adinfoid="+adinfoid+"&type="+adtype;
+        }
+        
+        var $content = $('<div class="addNewAD"></div>');
+        var PopUp = jDialog({
+            width:800,
+            height:600,
+            content:$content
+        });
+        $content.load(url,{},function(){
+            $content.find(".cancel").click(function(){
+                if(PopUp){PopUp.close();}
+            });
+            $content.find("#ok").click(function(){
+                if(!submitad()){
+                    return false;
+                }
+                var param = {};
+                param["productID"] = $content.find("input[name=productID]").val();
+                $.each($content.find("input:text"),function(){
+                    param[$(this).attr("name")] = $(this).val();
+                });
+                $.each($content.find("input:hidden"),function(){
+                    param[$(this).attr("name")] = $(this).val();
+                });
+                $.each($content.find("select"),function(){
+                    param[$(this).attr("name")] = $(this).val();
+                });
+                $.each($content.find( "input:radio[checked]"),function(){
+                    param[$(this).attr("name")] = $(this).val();
+                });
+                $.ajax({
+                      type: "POST",
+                      url: "/ad/upd",
+                      data: param,
+                      dataType:"json",
+                      success: function(data){
+                           //var data = {"type":1,"typename":"类型名","subtype":0,"subtypename":"子类型名","ad_id":3,"ad_state":1,"ad_name":"标题","ad_rate":""};
+                           if(data){
+                                if(data.error == -1) {
+                                    jAlert(data.msg);
+                                    return false;
+                                }
+                               if(data.ad_state=="1"){
+                                   stateon="checked";
+                               }else{
+                                   stateon="";
+                               }
+                               if(data.ad_state=="0"){
+                                   stateoff="checked";
+                               }else{
+                                   stateoff="";
+                               }
+                               if(tr){//如果为编辑
+                                    tr.children(":eq(1)").text(data.ad_name);
+                                    tr.find("input:radio[value='"+data.ad_state+"']").attr("checked",true);
+                                    tr.find("input[name*=rate]").val(data.ad_rate);
+                               }else{
+                                   var str = '<tr>'+
+                                       '<td><input type="hidden" class="iText" name="ad_id[]" value="'+data.ad_id+'"/>'+
+                                       '<input type="hidden" class="iText" name="ad_info_id[]" value="'+data.ad_info_id+'"/>'+
+                                       '<input type="hidden" class="iText" name="ad_type[]" value="'+data.type+'"/>'+data.ad_info_id+
+                                       '<td>'+data.ad_name+'</td>'+
+                                       '<td><input type="hidden" class="iText" name="state[]" id="istate'+data.type+data.ad_id+'" value="'+data.ad_state+'"/>'+
+                                           ' <span><input type="radio" '+stateon+' onclick="javascript:$(\'#istate'+data.type+data.ad_id+'\').val(this.value)" name="state'+data.type+data.ad_info_id+'" value="1" class="radio"><lable>on</lable></span>'+
+                                            '<span><input type="radio" '+stateoff+' onclick="javascript:$(\'#istate'+data.type+data.ad_id+'\').val(this.value)" name="state'+data.type+data.ad_info_id+'" value="0" class="radio"><lable>off</lable></span>'+
+                                        '</td>'+
+                                      ' <td><input type="text" class="iText required" name="rate[]" value="'+data.ad_rate+'" ></td>'+
+                                       '<td>'+
+                                           '<a title="更新" class="edit" href="javascript:void(0)"></a> | <a title="删除" class="del" href="javascript:void(0)"></a>'+
+                                       '</td>'+
+                                   '</tr>';
+                                   if($("#ad_title"+data.type+data.subtype).size() == 0){
+                                           var $table = $('<div id="ad_title'+data.type+data.subtype+'" class="tablebox"><div class="gridTtitle"><span class="fl">'+data.subtypename+'</span><a class="btn fr averaged" href="javascript:void(0)">全部平均</a></div>'+'<table><thead><tr><th>广告ID</th><th>标题</th><th>广告状态</th><th>分配比例</th><th>操作</th></tr></thead><tbody></tbody></table></div>');
+                                           $table.find("tbody").append(str);
+                                            $("#adList").append($table);
+                                   }else{
+                                        $("#ad_title"+data.type+data.subtype).find("tbody").append(str);
+                                   }
+                                   
+                               }
+                           }
+                       } 
+               });
+               if(PopUp){PopUp.close();}
+            });
+        });
+   }
+    $("#addNewAD").click(function(){
+        addNewAD();
+    });
+    $("#adList").find(".edit").live("click",function(){
+        var tr = $(this).parents("tr");
+        addNewAD(tr,tr.children(":eq(0)").children(":eq(0)").val(),tr.children(":eq(0)").children(":eq(1)").val(),tr.children(":eq(0)").children(":eq(2)").val());
+    });
+    $("#adList").find(".del").live("click",function(){
+        var tr = $(this).parents("tr");
+        if(tr.siblings().size() == 0){
+            tr.parents(".tablebox").remove();
+        }else{
+            tr.remove();
+        }
+        ajaxGET("/product/addel","ad_info_id="+tr.children(":eq(0)").children(":eq(1)").val()+"&type="+tr.children(":eq(0)").children(":eq(2)").val()+"&subtype="+tr.children(":eq(0)").children(":eq(3)").val()+"&screen_type="+tr.children(":eq(0)").children(":eq(4)").val());
+        return false;
+    });
+    iniClickType();
+});
+function str2json(str){ 
+    var json = (new Function("return " + str))(); 
+    return json; 
+} 
+function iniClickType(){
+        var clickobj=$("#clictypeobj").val();
+        if(clickobj!=''){
+            $("#clickTypeBox").show();
+            $("#clickType_1").hide();
+            clickobj=str2json(clickobj);
+            if(typeof clickobj.inner_install_manage!="undefined"){
+                $("#clickType").val(1);
+                $("#clickType_1").show();
+                $("#package_name").val(clickobj.inner_install_manage.product_package);
+                $("#package_size").val(clickobj.inner_install_manage.package_size);
+                $("#file_md5").val(clickobj.inner_install_manage.file_md5);
+            }
+            if(typeof clickobj.start_app!="undefined"){
+                $("#clickType").val(2);
+                $("#clickType_2").show();
+                $("#package_name_start_app").val(clickobj.start_app.package_name);
+                $("#activity_start_app").val(clickobj.start_app.activity);
+            }
+            if(typeof clickobj.direct_url!="undefined"){
+                $("#clickType").val(3);
+            }
+            if(typeof clickobj.inner_url!="undefined"){
+                $("#clickType").val(4);
+            }
+            if(typeof clickobj.ad_list!="undefined"){
+                $("#clickType").val(5);
+            }
+            if(typeof clickobj.user_action!="undefined"){
+                $("#clickType").val(6);
+                $("#clickType_6").show();
+                $("#user_action_value").val(clickobj.user_action.user_action_value);
+            }
+            if(typeof clickobj.no_action!="undefined"){
+                $("#clickType").val(0);
+                $("#clickType_0").show();
+            }
+        }
+    };
+function packageSize(){
+    var url=$("#purl").val();
+        $("#package_size").val("");
+    if(url==""){
+        jAlert("请先填写产品目标");
+        $("#purl").focus();
+        return false;
+    }
+    if(!CheckUrl(url)){
+        jAlert("产品目标所填写URL非法");
+        $("#purl").focus();
+        return false;
+    }
+    $.ajax({
+            type: "GET",
+            url: "/product/packageSize",
+            data: "url="+url,
+            dataType:"json",
+            success: function(data){
+                $("#package_size").val(data.packagesize).change();
+                $("#adpackage_size").val(data.packagesize).change();
+            }
+            })
+}
+
+function submitad(){//提交广告
+    
+    var ad_tile=$("#ad_title").val();
+    var ad_desc=$("#ad_desc").val();
+    var ad_type=$("#adType").val();
+    var ad_pic_url=$("#ad_pic_url").val();
+    
+    var show_time=$("#show_time").val();
+    
+    var screen_type=$("input:radio[name='screen_type']:checked").val();
+    var screen_ratio=$("#screen_ratio").val();
+    
+    var ad_name=$("#ad_name").val();
+    var ad_subdesc=$("#ad_subdesc").val();
+    var ad_pos=$("#ad_pos").val();
+    
+    if(ad_tile==""){
+            alert("请填写标题");
+            $("#ad_title").focus();
+            return false;
+    }
+    if(ad_desc==""){
+            alert("请填写描述");
+            $("#ad_desc").focus();
+            return false;
+    }
+    if(screen_ratio==""){
+            alert("请填写屏幕比例");
+            $("#screen_ratio").focus();
+            return false;
+    }
+    if(isNaN(screen_ratio) || screen_ratio>1){
+            alert("屏幕比例只能为数字且不能大于1");
+            $("#screen_ratio").focus();
+            return false;
+    }
+    if(ad_pic_url==""){
+            alert("请填写广告图标地址");
+            $("#ad_pic_url").focus();
+            return false;
+    }
+    if(ad_pos==null){
+            alert("该类下暂无自定义广告类型,请在左边菜单'自定义广告类型'中添加自定义广告类型后再操作");
+            $("#ad_pos").focus();
+            return false;
+    }
+    if(ad_pos=="0" || ad_pos==null){
+            alert("请选择自定义广告类型");
+            $("#ad_pos").focus();
+            return false;
+    }
+    if($("#adclickType").val()==3 || $("#adclickType").val()==4){
+        if($("#ad_target").val()==""){
+            alert("请填写广告目标")
+            $("#ad_target").focus()
+            return false;
+        }
+    }
+    
+    if(ad_type==1 || ad_type==2){
+        if(ad_name==""){
+            alert("请填写标题");
+            $("#ad_name").focus();
+            return false;
+        }
+        if(ad_subdesc==""){
+            alert("请填写描述");
+            $("#ad_subdesc").focus();
+            return false;
+        }
+    }else{
+       if(show_time==""){
+            alert("请填写显示时长");
+            $("#show_time").focus();
+            return false;
+        }
+        if(typeof screen_type=="undefined"){
+            alert("请选择屏幕支持方向");
+            $("#screen_type").focus();
+            return false;
+        } 
+    }
+    title=$("#ad_title").val();
+    if(ad_type==0){
+        if($("input[name=screen_type]").get(0).checked && title.search("横屏")==-1){//横屏
+            alert("标题与屏幕支持类型不相符");
+            return false
+        }
+        if($("input[name=screen_type]").get(1).checked && title.search("竖屏")==-1){//横屏
+            alert("标题与屏幕支持类型不相符");
+            return false
+        }
+    }
+    
+    return true;
+}
+function getAdPos(type,subtype,defaults){
+    var url="/adpostion/getpos";
+    var arg="type="+type+"&subtype="+subtype;
+    var defaults=defaults || "";
+    $.ajax({
+            type: "GET",
+            url: url,
+            data: arg,
+            dataType:"json",
+            success: function(data){
+                if(data.msg==1){
+                    option='<option value="0">请选择自定义广告类型</option>';
+                    for(var i=0;i<data.result.length;i++){
+                        if(defaults==data.result[i].pos_key){
+                            option+='<option value="'+data.result[i].pos_key+'" selected>'+data.result[i].pos_name+'</option>';
+                        }else{
+                            option+='<option value="'+data.result[i].pos_key+'">'+data.result[i].pos_name+'</option>';
+                        }
+                    }
+                    $("#ad_pos").show();
+                    $("#ad_pos").html(option);
+                }else{
+                    $("#ad_pos").hide();
+                    $("#ad_pos").html('');
+                }
+            }
+            })
+}
+//隐藏off状态广告
+function hidde_off_ad(tableid,thiss){
+    
+    $("#"+tableid).find("tbody").children().each(function(){
+        if($(thiss).text()=="隐藏"){
+            if($(this).find("input[name*=state]").val()==0){
+                $(this).hide();
+            }
+        }
+        if($(thiss).text()=="所有"){
+            $(this).show();
+        }
+    })
+    $(thiss).text($(thiss).text()=="隐藏"?"所有":"隐藏");
+}
+</script>

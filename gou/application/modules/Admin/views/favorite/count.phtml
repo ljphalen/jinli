@@ -1,0 +1,60 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">用户收藏列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="get" id="searchForm" >
+<input name="token" type="hidden" value="<?php echo $token;?>"/>
+<div class="table_full">
+	<table width="100%">
+        <tr class="tr">
+            <th class="th">标题</th>
+            <td class="td"><input type="text" class="input wc" name="title" value="<?php echo $params['title'];?>"></td>
+            <th class="th">产品ID</th>
+            <td class="td"><input type="text" class="input wc" name="item_id"	value="<?php echo $params['item_id'];?>"></td>
+        </tr>
+        <tr class="tr">
+            <th class="th">ID</th>
+            <td class="td"><input type="text" class="input wc" name="id"	value="<?php echo $params['id'];?>"></td>
+            <th class="th">UID</th>
+            <td class="td"><input type="text" class="input wc" name="uid"	value="<?php echo $params['uid'];?>"></td>
+        </tr>
+    </table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span><span style="float:left;">当前总条数：<?php echo $total;?></span></div>
+
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="18%">ID</td>
+		    <td width="8%"></td>
+            <td width="10%">人数</td>
+            <td width="4%">平均</td>
+            <td width="4%">日期</td>
+		</tr>
+<?php foreach($data as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $key;?></td>
+			<td><?php echo $value['count'];?></td>
+            <td><?php echo $value['num']; ?></td>
+            <td><?php echo round($value['count']/$value['num']);?></td>
+            <td><?php echo $value['day'];?></td>
+		</tr>
+<?php } ?>
+        <tr class="hd">
+            <td width="18%">合计</td>
+            <td width="8%"><?php echo $sum['count']; ?></td>
+            <td width="10%"><?php echo $sum['num']; ?></td>
+            <td width="4%"><?php echo round($sum['count']/$sum['num']); ?></td>
+            <td width="4%">日期</td>
+        </tr>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+
+<?php echo $this->render("layout/footer.phtml");?>

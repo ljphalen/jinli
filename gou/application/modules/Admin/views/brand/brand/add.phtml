@@ -1,0 +1,115 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $indexUrl;?>?cate_id=<?php echo $cate_id;?>">品牌列表</a></li>
+	    <li class="current"><a href="javascript:;">添加品牌</a></li>
+	</ul>
+</div>
+<div class="h_a">添加品牌</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input" name="sort" value="0"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">名称</th>
+				<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">分类</th>
+				<td class="td">
+					<?php foreach ($category as $key=>$val):?>
+					<input type="checkbox" name="cate_id[]" id="cate_id_<?php echo $val['id'];?>" value="<?php echo $val['id'];?>">
+					<label for="cate_id_<?php echo $val['id'];?>" style="margin-right: 15px;"><?php echo $val['title'];?></label>
+					<?php endforeach; ?>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">品牌Banner</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="banner_img">
+							<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+							<input type="hidden" name="banner_img" value="">
+						</li>
+					</ul>			
+					<p style="clear:both;">
+						<iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=banner_img';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">品牌列表图</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="brand_img">
+							<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+							<input type="hidden" name="brand_img" value="">
+						</li>
+					</ul>			
+					<p style="clear:both;">
+						<iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=brand_img';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">品牌Logo</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="logo_img">
+							<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+							<input type="hidden" name="logo_img" value="">
+						</li>
+					</ul>			
+					<p style="clear:both;">
+						<iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=logo_img';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">品牌描述</th>
+				<td class="td"><textarea class="input wc" name="brand_desc" rows="5"></textarea></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">开始结束时间</th>
+				<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="" /></div>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">推荐</th>
+				<td class="td">
+					<select class="wa" name="is_top">
+						<option value="1">是</option>
+						<option value="2" selected="selected">否</option>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td">
+					<select class="wa" name="status">
+						<option value="1" selected="selected">开启</option>
+						<option value="2">关闭</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//商品表单数据提交
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+	$('#end_time').datetimepicker();
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $addUrl;?>?cate_id=<?php echo $cate_id;?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,181 @@
+<include file="Public:header" />
+
+<div class="mainw mainw2 clearfix">
+<style>
+	.panel{width: 92%;}
+</style>
+		<div class="panel panel-primary msgzn">
+
+			<div class="farea subxq znx">
+				<h2 class="yyname">站内信</h2>
+		        <div class="datac ">
+		       	<div style="padding:10px 0 0 0;"><span>共{$count}条信息</span></div>
+					<table class="tab">
+						<thead>
+							<tr>
+								<th class="ci">
+									<span><input type="checkbox" id="checkall" value="1"></span>
+								</th>
+								<th width="558">
+									<label><a href="{:U('Message/index')}"> 全部</a></label>
+									<label>
+										<a href="{:U('Message/index',array('state' => AccountMessageModel::READ_STATE_INIT))}">未读</a>
+									</label>
+									<label>
+										<a href="{:U('Message/index',array('state' => AccountMessageModel::READ_STATE_SUC))}">已读</a>
+									</label>
+								</th>
+								<th></th>
+								<th id="js_btn_del" style="cursor: pointer">删除</th>
+							</tr>
+						</thead>
+				<empty name="count">
+		        	<!-- <div style="padding:10px 0 0 0;">暂无消息</div> -->
+				<else/>
+						<tbody>
+							<volist name="list" id="vo">
+							<tr p_id="{$vo['id']}" read_state="{$vo['read_state']}" >
+								<td class="ci"><input type="checkbox" value="{$vo['id']}" class="msglist" name="p_id" />
+									<if condition="$vo['read_state'] eq 1">
+										<span id="row_iocn_{$vo['id']}" class="xf-yd" title="已读"></span>
+									<else />
+										<span id="row_iocn_{$vo['id']}" class="xf-wd" title="未读"></span>
+									</if>
+								</td>
+								<td><a p_id="{$vo['id']}" class="read_content" href="javascript:void(0)">{$vo['message_info']['title']}</a></td>
+								<td class="ci2">{:date('Y-m-d H:i:s',$vo['add_time'])}</td>
+								<td class="ci"><a class="mes_del" href="javascript:void(0)">删除</a></td>
+							</tr>
+							<tr style="display: none; background: #f0f0f0;">
+								<td colspan="4" class="messageshow">{$vo['message_info']['content']}</td>
+							</tr>
+							</volist>
+							<tr>
+								<td width="84"></td>
+								<td colspan="3">{$page}</td>
+							</tr>
+						</tbody>
+					</empty>
+					</table>
+				
+			</div>
+
+			</div>
+		</div>
+		
+		
+	</div>
+</div>
+<script type="text/javascript">
+	$(function() {
+		//内容读取
+		$(".read_content").click(function() {
+			this_row = $(this).parents("tr");
+			read_state = this_row.attr('read_state');
+			var pid = this_row.attr('p_id');
+			if (read_state == 0) {
+				$.ajax({
+					type : 'post',
+					async : true,
+					url : "{:u('Message/read')}",
+					data : 'id=' + pid,
+					success : function(res) {
+						this_row.attr('read_state', 1);
+						$("#row_iocn_"+pid).attr('class','xf-yd');
+					}
+				});
+			}
+			next_row = $(this).parents("tr").next();
+			if (next_row.css('display') == 'none') {
+				next_row.css('display', '');
+			} else {
+				next_row.css('display', 'none');
+			}
+
+		});
+
+		//消息删除
+		$(".mes_del").click(function() {
+			this_row = $(this).parents("tr");
+			pid = this_row.attr('p_id');
+			$.ajax({
+				type : 'post',
+				async : true,
+				url : "{:u('Message/del')}",
+				data : 'id=' + pid,
+				success : function(res) {
+					this_row.next('tr').remove();
+					this_row.remove();
+				}
+			});
+		});
+
+		$("#checkall").click(function() {
+			$('input[name="p_id"]').attr("checked", this.checked);
+		});
+
+		$("#readed").bind(
+				'click',
+				function() {
+
+					//alert($(this).closest('table').find('tbody').find('tr').length);
+					var This = this;
+
+					$(this).closest('table').find('tbody').find('tr').each(
+							function(i, v) {
+
+								if ($(this).attr('read_state') == 1) {
+
+									//console.log(this);
+
+									$(this).find('input[name="p_id"]').attr(
+											"checked", This.checked);
+
+								}
+							});
+
+				});
+
+		$("#unreaded").bind(
+				'click',
+				function() {
+					//alert($(this).closest('table').find('tbody').find('tr').length);
+					var This = this;
+
+					$(this).closest('table').find('tbody').find('tr').each(
+							function(i, v) {
+
+								if ($(this).attr('read_state') == 0) {
+
+									//console.log(this);
+
+									$(this).find('input[name="p_id"]').attr(
+											"checked", This.checked);
+
+								}
+							});
+				});
+
+		$("#js_btn_del").bind('click', function() {
+
+			var p_id = [];
+			$('input[name="p_id"]:checked').each(function() {
+				p_id.push(this.value);
+			});
+
+			$.ajax({
+				type : 'post',
+				async : true,
+				url : "{:u('Message/del')}",
+				data : 'id=' + p_id,
+				success : function(res) {
+					window.location.reload();
+				}
+			});
+
+		});
+
+	});
+</script>
+<include file="Public:footer" />
+

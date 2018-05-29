@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<?php if($cache) {?>
+<html manifest="/cache?cn=<?php echo $cn;?>">
+<?php } else {?>
+<html>
+<?php }?>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="stylesheet" href="<?php echo $staticResPath;?>/news/assets/css/3g.news.css?v=<?php echo $version;?>" />
+
+<title><?php echo $news['title'];?></title>
+</head>
+
+<body>
+<section class="wrapper">
+	<header>
+		<div class="ui-toolbar">
+			<div class="ui-toolbar-wrap">
+				<div class="ui-toolbar-left"></div>
+				<h2 class="ui-toolbar-title"><?php echo $name;?></h2>
+				<div class="ui-toolbar-right J_news_more">
+					<span class="icon-label">更多</span>
+					<span class="icon-arrow">
+						<i class="up">▲</i>
+						<i class="down">▼</i>
+					</span>
+				</div><!--▼-->
+			</div>
+		</div>
+		<div class="news-menu-wrap news-menu-cate-wrap ishide">
+			<nav class="news-menu">
+				<ul class="news-menu-ul">
+					<?php foreach($types as $key=>$value){?>
+					<li class="item"><a href="<?php echo $webroot.'/news/list?id='.$value['id'].'&tj_detailtype='.$value['source_id'];?>"><?php echo $value['name'];?></a></li>
+					<?php }?>
+				</ul>
+			</nav>
+		</div>
+	</header>
+	<section id="content">
+		<!-- your code in here -->
+		<div class="news-detail">
+			<div class="news-detail-head">
+				<h1 class="news-detail-title"><?php echo $news['title'];?></h1>
+				<p class="news-detail-date"><?php echo $news['from'].'&nbsp;&nbsp;&nbsp;&nbsp'.date('m-d  h:i',$news['timestamp']);?></p>
+			</div>
+			<div class="news-detail-content">
+				<?php $content = json_decode($news['content'],true);?>
+				<?php foreach($content as $k=>$v) {
+					if ($v['type'] == 2) {
+						if (!$v['origin']) $v['origin'] = $v['value'];
+						echo '<div style="text-align:center;"><img src="'.($v['thumb'] ? $v['thumb'] : $v['value']).'" onerror="javascript:this.src=\''.$v['value'].'\';"/></div>';
+					} else {
+						echo '<p>'.$v['value'].'</p>';
+					}
+				}
+					?>
+				<div class="news-detail-source"><a href="<?php echo $news['url'];?>">查看原文</a></div>
+			</div>
+		</div>
+	</section>
+	<a href="javascript:window.scrollTo(0,1);" class="ui-gotop"></a>
+</section>
+<script src="<?php echo $staticPath;?>/??/sys/icat/1.1.4/icat.js,/apps/3g/news/assets/js/news.js?v=<?php echo $version;?>"></script>
+<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

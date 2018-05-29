@@ -1,0 +1,62 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+	</div>
+	<div class="table_full">
+		<form action="<?php echo $apiUrl; ?>" method="POST" id="form">
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<table width="100%" cellspacing="0" cellpadding="0">
+					<tr class="tr">
+					<th class="th">时间范围</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $params['sdate']; ?>"> 至
+						<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $params['edate']; ?>">
+					</td>
+				</tr>
+					<tr class="tr">
+					<th class="th">订单号</th>
+					<td class="td">
+						<input type="text"  name="order_sn"  class="input"   value="<?php echo $params['order_sn'];?>"></td>
+				</tr>
+				
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+		</form>
+	</div>
+
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th" style="width:50px">ID</th>
+				<th class="th"  style="width:150px;">订单号</th>
+				<th class="th" style="width:130px">Api类型</th>
+				<th class="th" style="width:150px">添加时间</th>
+				<th class="th">信息</th>
+			</tr>
+			<?php foreach ($dataList as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?php  echo $v['id'];?></td>
+					<td class="td"><?php  echo $v['order_sn']; ?></td>
+					<td class="td"><?php echo $v['type'];?></td>
+					<td class="td"><?php echo $v['add_time'] ;?></td>
+					<td class="td"><?php echo $v['msg']; ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+	
+		<script type="text/javascript">
+		$(document).ready(function () {
+			$("#sdate").datepicker({
+				dateFormat: 'yy-mm-dd'
+			});
+			$("#edate").datepicker({
+				dateFormat: 'yy-mm-dd'
+			});
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

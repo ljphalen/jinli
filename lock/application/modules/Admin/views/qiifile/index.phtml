@@ -1,0 +1,44 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">文件列表</a></li>
+	</ul>
+</div>
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td  width="80">id号</td>
+			<td  width="100">场景名称</td>
+			<td  width="100">icon</td>
+			<td  width="100"></td>
+			<td  width="100">添加时间</td>
+			<td  >描述</td>
+			<td width="100">操作</td>
+			</tr>
+<?php foreach($files as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['out_id'];?></td>
+			<td><?php echo $value['zh_title'];?></td>
+			<td  width="100"><img src="<?php echo $value['icon'];?>" width="100" /></td>
+            <td><?php echo date('Y-m-d', $value['create_time']);?></td>
+            <td><?php echo $value['update_time'] ? date('Y-m-d', $value['update_time'])  : '' ;?></td>
+            <td><?php echo html_entity_decode($value['summary']);?></td>
+            <td>
+				<a href="<?php echo $detailUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">详情</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	submitForm = function() {
+		$("#searchForm").submit();
+	};
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

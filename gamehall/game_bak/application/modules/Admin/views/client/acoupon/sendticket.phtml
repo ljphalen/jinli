@@ -1,0 +1,98 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li ><a href="<?php echo $listUrl;?>">发放活动</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加活动</a></li>
+		<li><a href="<?php echo $ticketDetailUrl;?>">A券明细列表</a></li>
+		<li><a href="<?php echo $moneyDetailUrl;?>">A币交易明细</a></li>
+		<li><a href="<?php echo $detailUrl;?>">A券说明</a></li>
+		<li class="current"><a href="<?php echo $sendTicketUrl;?>">A券手动赠送</a></li>
+	</ul>
+</div>
+<div class="table_full">
+<form method="post" action="<?php echo $sendTicketPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<table width="100%">	
+		<tr class="tr">
+			<th class="th">赠送对象</th>
+			<td>
+				<span>
+					<label>
+						<input type="radio" name="userObject" value="1" checked>选择csv文件
+						<input type="radio" name="userObject" value="2" >单个用户
+					</label>
+				</span>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">用户类型</th>
+			<td>
+				<span>
+					<label>
+						<input type="radio" name="userType" value="1" checked>用户名
+						<input type="radio" name="userType" value="2" >UUID
+					</label>
+				</span>
+			</td>
+		</tr>
+		<tr class="tr" id="csv">
+			<th class="th">导入的csv文件</th>
+			<td class="td"><input type="file" class="input" name="csv" value=""></td>
+		</tr>
+		<tr class="tr" id="uname" style="display:none;">
+			<th class="th" id="unameTitle" >用户名</th>
+			<td class="td">
+				<input type="text" class="input wc" name="uname" value="">
+			</td>
+		</tr>
+		<tr class="tr" id="denomination" style="display:none;">
+			<th class="th">A券面额(A券面额赠送为大于等于1的整数)</th>
+			<td class="td"><input type="text" class="input" name="denomination" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">A券开始结束时间</th>
+			<td class="td">
+			<input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="" />
+			至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="" /></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><span class="btn2"><span><button type="submit">提交</button></span></span></td>
+		</tr>			
+	</table>
+ </form>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script>
+$(document).ready(function(){
+	ajaxForm('addFrom', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Client_Acoupon/sendTicket');
+	});
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+
+     $('[name="userObject"]').click(function(){
+    	 userObject = $(this).val();
+          if(userObject == 1){
+  				$('#csv').show();
+  				$('#uname').hide();
+  				$('#denomination').hide();
+          }else if(userObject == 2){
+        	    $('#csv').hide();
+				$('#uname').show();
+				$('#denomination').show();
+          }
+      });
+
+     $('[name="userType"]').click(function(){ 
+    	 userType = $(this).val();
+         if(userType == 1){
+        	 $('#unameTitle').html('用户名');
+         }else{
+        	 $('#unameTitle').html('UUID');
+         }
+       });
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

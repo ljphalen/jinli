@@ -1,0 +1,117 @@
+<script type="text/javascript" src="{{rootUrl}}/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/float.js"></script>
+<div class="colMain">
+    <div class="title">
+        <p class="fl"><a href="planview?config_id={{plan.config_id}}{{config_id}}&config_name={{config_name}}">{{config_name}}</a>->导量计划{{plan.id}}</p>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="app-detail" style="">
+                <form method="POST" action="/push/plan_save" style="">
+                    <ul class="form" style="">
+                        <li>
+                            <input type="hidden" name="id" value="{{plan.id}}">
+                            <input type="hidden" name="copy" value="{{copy}}">
+                            <input type="hidden" name="config_name" value="{{config_name}}">
+                            <!-- if !{{plan.id}} --><input type="hidden" name="config_id" value="{{config_id}}"><!-- endif -->
+                            <!-- if {{copy}} --><input type="hidden" name="config_id" value="{{plan.config_id}}"><!-- endif -->
+                            <span class="label">有效次数：</span>
+                            <div class="fc">
+                                <input type="radio" class="radio required" name="go_method" value="1" <!-- if {{plan.go_method}} == 1 || empty({{plan.go_method}})  -->checked<!-- endif -->>一次性导量
+                                <input type="radio" class="radio required" name="go_method" value="2" <!-- if {{plan.go_method}} == 2  -->checked<!-- endif -->>周期性导量
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">导量时间：</span>
+                            <div class="fc">
+                                <input type="text" name="start_time" id="start_time" value="<!-- if {{plan.id}} -->{{plan.stime}}<!-- else -->{{stime}}<!-- endif -->" class="iText required"/> 到 <input type="text" name="end_time" id="end_time" value="<!-- if {{plan.id}} -->{{plan.etime}}<!-- else -->{{etime}}<!-- endif -->" class="iText required"/>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">导量类型：</span>
+                            <div class="fc">
+                                <select name="type" class="required">
+                                    <!-- loop push_plan_type -->
+                                        <option value="{{push_plan_type' key}}" <!-- if {{plan.type}} == {{push_plan_type' key}}  -->selected<!-- endif -->>{{push_plan_type' value}}</option>
+                                    <!-- endloop -->
+                                </select>
+                            </div>
+                        </li>
+                        <li class="line"></li>
+                        <li>
+                            <div class="fc">
+                                <input type="button" class="submit" value="确定" onclick="checksubmit()">
+                                <input type="button" onclick="window.location.href = '/push/planview?config_id={{plan.config_id}}{{config_id}}&config_name={{config_name}}'" class="cancel" value="取消">
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function checksubmit(){
+    <!-- if {{plan.runstatus}}==3 -->
+        jAlert("该计划已经导量完毕,不允许修改！");
+        return false;
+    <!-- endif -->
+    $('form').submit();
+}
+$(function(){
+    var startDateTextBox = $('#start_time');
+    var endDateTextBox = $('#end_time');
+    startDateTextBox.datetimepicker({
+            dateFormat: 'yy-mm-dd', 
+            timeFormat: 'HH:mm:ss',
+            stepHour: 1,
+            stepMinute: 1,
+            stepSecond: 1,
+            //numberOfMonths: 2,
+            minDate: -1,
+            onClose: function(dateText, inst) {
+		if (endDateTextBox.val() != '') {
+			var testStartDate = startDateTextBox.datetimepicker('getDate');
+			var testEndDate = endDateTextBox.datetimepicker('getDate');
+			if (testStartDate > testEndDate)
+				endDateTextBox.datetimepicker('setDate', testStartDate);
+		}
+		else {
+			endDateTextBox.val(dateText);
+		}
+            },
+            onSelect: function (selectedDateTime){
+                    endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
+            }
+    });
+    endDateTextBox.datetimepicker({
+            dateFormat: 'yy-mm-dd', 
+            timeFormat: 'HH:mm:ss',
+            stepHour: 1,
+            stepMinute: 1,
+            stepSecond: 1,
+            //numberOfMonths: 2,
+            minDate: 0,
+            onClose: function(dateText, inst) {
+		if (startDateTextBox.val() != '') {
+			var testStartDate = startDateTextBox.datetimepicker('getDate');
+			var testEndDate = endDateTextBox.datetimepicker('getDate');
+			if (testStartDate > testEndDate)
+				startDateTextBox.datetimepicker('setDate', testEndDate);
+		}
+		else {
+			startDateTextBox.val(dateText);
+                }
+            },
+            onSelect: function (selectedDateTime){
+                    startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
+            }
+    });
+    <!-- if {{plan.runstatus}}==3 -->
+        <!-- if !{{copy}} -->$("input,select").attr("disabled",true);<!-- endif -->
+        $("input[type='button']").attr("disabled",false);
+        $("#limit_type_htmlbox a").bind("click",function(){jAlert("不允许删除");return false;});
+    <!-- endif -->
+})
+</script>

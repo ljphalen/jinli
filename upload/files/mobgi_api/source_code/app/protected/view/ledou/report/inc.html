@@ -1,0 +1,195 @@
+<link media="screen" rel="stylesheet" type="text/css" href="{{rootUrl}}/css/gri.controls.css"></link>
+<link media="screen" rel="stylesheet" type="text/css" href="{{rootUrl}}/css/chosen.css" ></link>
+<script type="text/javascript" src="{{rootUrl}}/js/gri.dateRange.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/highcharts.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/gri.charts.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>
+<script type="text/javascript">
+/**
+ * 处理chart数据格式为图表控件所用，传入从Mysql查出来的结果
+ */
+function makeChartData (data, index, field){
+    var chartData = {}, categories = [], series = [];
+    $.each(index, function(i, conf){
+        var ydata = [];
+        $.each(data, function(j, value){
+            if (i == 0) {
+                categories.push(value[field]);
+            }
+            if (value[conf.field] == null){
+                value[conf.field] = 0;
+            }
+            ydata.push({name:value[field], y:parseFloat(value[conf.field])});
+        });
+        series.push({name:conf.name, data:ydata});
+    });
+    chartData.categories = categories;
+    chartData.series = series;
+    return chartData;
+}
+
+// 图表2
+function makeChartMutli(chart_data, config){
+    var categories = [];
+    var series = [];
+    var tmp_series_data = {};
+    $.each(chart_data, function(i, value){
+        if ($.inArray(value.date, categories) == -1){
+            categories.push(value.date);
+        }
+        if (typeof(tmp_series_data[value[config.name]]) == 'undefined') {
+            tmp_series_data[value[config.name]] = [];
+        }
+        tmp_series_data[value[config.name]].push(parseFloat(value[config.field]));
+    });
+    $.each(tmp_series_data, function(name, val){
+        series.push({ name : name, data : val });
+    });
+    $('#'+config.container).highcharts({
+        chart: { type: config.type || 'column' },
+        title: { text: config.title },
+        xAxis: { categories: categories },
+        yAxis: { title: { text: config.yTitle || '数量' } },
+        legend: {
+            layout: config.legendLayout || 'vertical',
+            align: config.legendAlign || 'right',
+            x: -100,
+            verticalAlign: config.legendVerticalAlign || 'top',
+            y: 20,
+        },
+        tooltip: {
+            formatter: function() {
+                return '<b>'+ this.x +'</b><br/>'+ this.series.name +': '+ this.y +'<br/>'+ '总共: '+ this.point.stackTotal;
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: config.plotOptionsColumn || 'normal',
+                dataLabels: { enabled: false }
+            }
+        },
+        series: series
+    });
+}
+
+/**
+ * 请求服务器端数据
+ */
+function request(newParams, oldParams, url){
+    // 将新参数覆盖旧参数的值
+    var urlData = {};
+    var params = $.extend({}, oldParams, newParams);
+    $.each(params, function(key, value){
+        if ( value === 0 || value ) {
+            urlData[key] = value;
+        }
+    });
+    var paramsStr = $.param(urlData);
+    // 跳转提交
+    window.location.href=url+"?"+paramsStr;
+}
+
+function choosenPanel(choose, channel, version, product){
+    var panelHtml = "<div class='filter-panel'><div class='ta_calendar_footer tright'>";
+        panelHtml += "<input type='button' class='ta_btn ta_btn_primary panel-sub' value='确定' />";
+        panelHtml += "<input type='button' class='ta_btn panel-canel' value='取消' /></div></div>";
+    $('body').append(panelHtml);
+    // 筛选
+    var optionHtml = "", channelHtml="", versionHtml="", productHtml="";
+    $.each(data.appkey, function(appkey, appinfo){
+        if (data.url.appkey == appkey){
+            optionHtml += "<option selected value='"+appkey+"'>"+appinfo.app_name+"</option>";
+            if (product && appinfo.product) {
+                $(".filter-panel").prepend("<div class='panel-main' id='panel-product'><i><b>产品</b></i><div class='panel-data'></div></div>");
+                $.each(appinfo.product, function(pid, pname){
+                    if (data.url.pid.indexOf(pid) >= 0){
+                        productHtml += "<span class='p-item index-sel' id='"+pid+"'>"+pname+"</span>"
+                    }else{
+                        productHtml += "<span class='p-item' id='"+pid+"'>"+pname+"</span>"
+                    }
+                });
+                $("#"+product).find('.panel-data').html(productHtml);
+            }
+            if (version && appinfo.app_version) {
+                $(".filter-panel").prepend("<div class='panel-main' id='panel-version'><i><b>版本</b></i><div class='panel-data'></div></div>");
+                $.each(appinfo.app_version, function(i, v){
+                    if (data.url.version.indexOf(v) >= 0){
+                        versionHtml += "<span class='p-item index-sel' id='"+v+"'>"+v+"</span>"
+                    }else{
+                        versionHtml += "<span class='p-item' id='"+v+"'>"+v+"</span>"
+                    }
+                });
+                $("#"+version).find('.panel-data').html(versionHtml);
+            }
+            if (channel && appinfo.channel) {
+                $(".filter-panel").prepend("<div class='panel-main' id='panel-channel'><i><b>渠道</b></i><div class='panel-data'></div></div>");
+                $.each(appinfo.channel, function(cname, cid){
+                    if (data.url.cid.indexOf(cid) >= 0){
+                        channelHtml += "<span class='p-item index-sel' id='"+cid+"'>"+cname+"</span>"
+                    }else{
+                        channelHtml += "<span class='p-item' id='"+cid+"'>"+cname+"</span>"
+                    }
+                });
+                $("#"+channel).find('.panel-data').html(channelHtml);
+            }
+        }else{
+            optionHtml += "<option value='"+appkey+"'>"+appinfo.app_name+"</option>";
+        }
+    });
+    $("."+choose).html(optionHtml).chosen().live("change", function(){
+        var appkey = { 
+                appkey : $(this).val(),
+                cid : '',
+                version : '',
+                pid : '',
+        };
+        request(appkey, data.url, url); // 请求服务器
+    });
+    $(".p-item").live('click', function(){
+        if ($(this).hasClass('index-sel')){
+            $(this).removeClass('index-sel');
+        }else{
+            $(this).addClass('index-sel');
+        }
+    });
+    $(".panel-sub").live('click', function(){
+        var panelData = {cid:'', version:'', pid:''};
+        if (channel) {
+            $("#"+channel).find(".index-sel").each(function(){
+                panelData.cid += $(this).attr('id')+',';
+            });
+            panelData.cid = panelData.cid.replace(/,$/gi, '');
+        }
+        if (version){
+            $("#"+version).find(".index-sel").each(function(){
+                panelData.version += $(this).attr('id')+',';
+            });
+            panelData.version = panelData.version.replace(/,$/gi, '');
+        }
+        if (product){
+            $("#"+product).find(".index-sel").each(function(){
+                panelData.pid += $(this).attr('id')+',';
+            });
+            panelData.pid = panelData.pid.replace(/,$/gi, '');
+        }
+        request(panelData, data.url, url);
+        $('.filter-panel').hide();
+    });
+    $(".panel-canel").live('click', function(){
+        $('.filter-panel').hide();
+    });
+}
+$(function(){
+    var offset = $("#desc").offset();
+    var top = offset.top+32;
+    var left = offset.left-320;
+    $("#desc-content").css({ "top":top +"px", "left":left+"px" });
+    $("#desc").live("click", function(){
+        if ($("#desc-content").is(":hidden")) {
+            $("#desc-content").show();
+        }else{
+            $("#desc-content").hide();
+        }
+    });
+});
+</script>

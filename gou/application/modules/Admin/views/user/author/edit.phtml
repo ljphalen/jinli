@@ -1,0 +1,50 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">知物列表</a></li>
+		<li class="current"><a href="javascript:;">编辑知物</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑知物</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+            <tr class="tr">
+                <th class="th">昵称</th>
+                <td class="td"><input type="text" placeholder="显示昵称" class="input wc" name="nickname"	 value="<?php echo $info['nickname'] ?>"></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">用户名</th>
+                <td class="td"><input type="text" class="input wc" name="username" value="<?php echo $info['username'] ?>" ></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">头像</th>
+                <td class="td">
+                    <ul class="uploadImg">
+                        <li id="UserAuthorImg">
+                            <img src="<?php echo empty($info['avatar']) ? $staticPath . '/img/content/nopic.jpg' : $attachPath.$info['avatar']; ?>"/>
+                            <input type="hidden" name="avatar" value="<?php echo $info['avatar'];?>">
+                        </li>
+                    </ul>
+                    <p style="clear:both;">
+                        <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=UserAuthorImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                    </p></td>
+            </tr>
+        </table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+    //用户表单数据提交
+    $(document).ready(function(){
+        ajaxForm('addForm',function(ret){
+            ajaxRedirect(ret, baseurl+'/Admin/User_Author/index?s=1');
+        });
+    });
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

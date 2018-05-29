@@ -1,0 +1,380 @@
+<script src="{{rootUrl}}/js/core.js" type="text/javascript"></script>
+<script src="{{rootUrl}}/js/app-type.js" type="text/javascript"></script>
+<script src="{{rootUrl}}/js/games.js?ver={{staticVer}}" type="text/javascript"></script>
+<link media="screen" href="{{rootUrl}}/css/table.css" rel="stylesheet" type="text/css">
+<style>
+#gamelist{width:30%;background:#fff;border:1px solid #dedede;padding:5px;}
+#gamelist li{width:100%;height:25px;line-height:25px;text-indent:15px;
+             border-bottom:1px dashed #ccc;color:#666;cursor:pointer;}
+</style>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">{{title}}-应用信息</p>
+    </div>
+    <div class="main">
+        <div class="app-detail">
+            <form action="../implantable/appsave" method="POST" >
+                <input type="hidden" name="id" value='{{app.id}}' />
+                <input type="hidden" name="appkey" value='{{app.appkey}}' />
+                <input type="hidden" name="id" value='{{app.id}}' />
+                <ul class="form">
+                    <li>
+                        <span class="label">平台类型：</span>
+                        <div class="fc">
+                            <select id="platform"  name="platform">
+                                <option value="1" <!-- if {{app.platform}}==1 --> selected <!-- endif -->>Android</option>
+                                <option value="2" <!-- if {{app.platform}}==2 --> selected <!-- endif -->>IOS</option>
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">应用名：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" required name="appname" <!-- if {{app.appname}} --> readonly<!-- else --> onkeyup="getGameinfo('type','appname')" onfocus="getGameinfo('type','appname')" <!-- endif --> style="width:220px;" value="{{app.appname}}" />
+                            <span class="red">*</span>
+                            <ul id="gamelist" style="display:none;" onmouseout="javascript:$('#gamelist').toggle()"></ul>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">Appkey：</span>
+                        <div class="fc Menu2">
+                            <input type="text" id="appkey" class="iText required"  <!-- if {{app.appkey}}!='' -->readonly<!-- endif -->  required style="width:220px;" name="appkey" value="{{app.appkey}}" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">包名：</span>
+                        <div class="fc Menu2">
+                            <input type="text" id="packname" class="iText required" <!-- if {{app.packname}}!='' -->readonly<!-- endif -->  required style="width:220px;" name="packname" value="{{app.packname}}" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">广告类型：</span>
+                        <div class="fc">
+                            <div class="content">
+                                <div class="grid">
+                                    <div class="gridToolbar">
+                                        <p class="fr">
+                                            <a href="javascript:void(0)" id="addBlock" class="btn">新增</a>
+                                        </p>
+                                    </div>
+                                    <table id="blocklist">
+                                        <thead>
+                                            <tr>
+                                                <th>是否可配置</th>
+                                                <th>广告类型ID</th>
+                                                <th>广告类型名称</th>
+                                                <th>素材类型</th>
+                                                <th>状态</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- loop blocks -->
+                                                    <tr blockkey="{{blocks' value.blockkey}}">
+                                                        <td index="{{blocks' value.index}}"><input type="hidden" name="inapp[]" value="{{blocks' value.inapp}}"/>
+                                                            <input type="hidden" name="blockid[]" value="{{blocks' value.id}}"/>
+                                                            <!-- if {{blocks' value.inapp}}==1 -->不可配置<!-- else -->可配置<!-- endif -->
+                                                        </td>
+                                                        <td><input type="hidden" name="blockkey[]" value="{{blocks' value.blockkey}}"/>{{blocks' value.blockkey}}</td>
+                                                        <td><input type="hidden" name="blockname[]" value="{{blocks' value.blockname}}"/>{{blocks' value.blockname}}</td>
+                                                        <td>
+                                                            <input type="hidden" name="source_type[]" value="{{blocks' value.source_type}}"/>
+                                                            <!-- if {{blocks' value.source_type}}==1 -->
+                                                            图片
+                                                            <!-- elseif {{blocks' value.source_type}}==2 -->
+                                                            文案
+                                                            <!-- elseif {{blocks' value.source_type}}==3  -->
+                                                            图片+文案
+                                                            <!-- else -->
+                                                            其它
+                                                            <!-- endif -->
+                                                        </td>
+                                                        <td>
+                                                            <input type="hidden" name="status[]" value="{{blocks' value.status}}"/>
+                                                            <!-- if {{blocks' value.inapp}} == 1 -->
+                                                            
+                                                            <!-- else -->
+                                                                <p class="onfbk" style="width:80px;">
+                                                                    <a class="aon setAppstateOn <!-- if {{blocks' value.status}} == 1 -->cur<!-- else --><!-- endif -->" block_id="{{blocks' value.id}}">ON</a>
+                                                                    <a class="aoff setAppstateOFF <!-- if {{blocks' value.status}} == 0 -->cur<!-- else --><!-- endif -->" block_id="{{blocks' value.id}}">OFF</a>
+                                                                </p>
+                                                            <!-- endif -->
+                                                        </td>
+                                                        <td>
+                                                            <a href="javascript:void(0)" class="edit editBlock" title="编辑" 
+                                                               index="{{blocks' value.index}}" 
+                                                               blockkey="{{blocks' value.blockkey}}" inapp="{{blocks' value.inapp}}" blockname="{{blocks' value.blockname}}" 
+                                                               blockid="{{blocks' value.id}}"
+                                                               source_type="{{blocks' value.source_type}}"  status="{{blocks' value.status}}" 
+                                                               ></a>
+                                                             |
+                                                            <a class="del" title="删除" href="../implantable/blockdelete?id={{blocks' value.id}}"></a>
+                                                            
+                                                        </td>
+                                                    </tr>
+                                            <!-- endloop -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="pagination">{{pager.pages}}</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="fc">
+                            <input type="button" onclick="confirmSubmit();" value="确定" class="submit" />
+                            <input type="button" value="取消" class="cancel" onclick="window.location.href='/implantable/applist'" />
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+
+    /**
+     * 获取新行的索引
+     * @returns {Number|newIndex}
+     */
+    function getTrIndex(){
+        if($("#blocklist tbody tr").length == 0){
+            return 1;
+        }
+        maxIndex = $("#blocklist tbody tr:last td:eq(0)").attr("index");
+        newIndex = parseInt(maxIndex) + 1;
+        return newIndex;
+    }
+    
+    
+         //新增广告 
+    function addBlock(index, inapp, blockkey, blockname, source_type, status, blockid) {
+        var id = id || "";
+        var $content = $('<div class="grid"></div>');
+        var PopUp = jDialog({
+            width: 800,
+            height: 450,
+            content: $content
+        });
+        $content.load("/implantable/showBlockPop", {index: index,inapp: inapp,blockkey: blockkey,blockname: blockname,source_type: source_type, status:status, blockid:blockid}, function() {
+            newIndexFlag = false;
+            if(typeof(index) == 'undefined'){
+                newIndexFlag =true;
+                index = getTrIndex();
+            }
+            
+            if(typeof(status) == 'undefined'){
+                status = 1;
+            }
+            
+            if(typeof(blockid) == 'undefined'){
+                blockid = '';
+            }
+            
+            $content.find("#cancel").click(function() {
+                if (PopUp) {
+                    PopUp.close();
+                }
+            });
+            
+            $content.find("#blockkey").click(function() {
+                ajaxGET("/order/createOrderKey", "", function(data) {
+                    if (data.result == 0) {
+                        $("#blockkey").val(data.key);
+                    } else {
+                        alert("生成订单号失败,请重试")
+                    }
+                });
+            });
+            
+            $content.find("#ok").click(function() {
+                if($("#inapp").val()==""){
+                    jAlert("请选择是否可配置");
+                    return false;
+                }
+                
+                if($("#blockkey").val()==''){
+                    jAlert('订单号不能为空');
+                    return false;
+                }
+                
+                if($("#blockname").val() == ""){
+                    jAlert('请输入广告类型名称');
+                    return false;
+                }
+                
+                if($("#source_type").val() == ""){
+                    jAlert('请选择素材类型');
+                    return false;
+                }
+
+                if($("#inapp").val() == 0){
+                    status_str = '';
+                    status_str +='<p class="onfbk" style="width:80px;">';
+                    if(status == 1){
+                        status_str += '<a class="aon setAppstateOn cur" block_id="'+blockid+'">ON</a>';
+                        status_str += '<a class="aoff setAppstateOFF " block_id="'+blockid+'">OFF</a>';
+                    }else{
+                        status_str += '<a class="aon setAppstateOn " block_id="'+blockid+'">ON</a>';
+                        status_str += '<a class="aoff setAppstateOFF cur" block_id="'+blockid+'">OFF</a>';
+                    }
+                    status_str += '</p>';
+                }else{
+                    status_str = '';
+                }
+
+                if(!newIndexFlag){
+                    _str = '';
+                    _str += '<td index="'+index+'">' + '<input type="hidden" name="inapp[]" value="'+$("#inapp").val()+'"/>' + '<input type="hidden" name="blockid[]" value="'+blockid+'"/>' +$("#inapp").find("option:selected").text() + '</td>' +
+                            '<td><input type="hidden" name="blockkey[]" value="'+$("#blockkey").val()+'"/>' +$("#blockkey").val() + '</td>' +
+                            '<td><input type="hidden" name="blockname[]" value="'+$("#blockname").val()+'"/>' + $("#blockname").val() + '</td>' +
+                            '<td><input type="hidden" name="source_type[]" value="'+$("#source_type").val()+'"/>'  +$("#source_type").find("option:selected").text() + '</td>' +
+                            '<td><input type="hidden" name="status[]" value="'+status+'"/>'  +status_str + '</td>' +
+                            '<td>' +
+                            '<a href="javascript:void(0)" class="edit editBlock" title="编辑" index="'+index+'" blockkey="'+$("#blockkey").val()+'" inapp="'+$("#inapp").val()+'" blockname="' + $("#blockname").val() + '" source_type="'+$("#source_type").val()+'" status="'+status+'" blockid="'+blockid+'"></a>'+
+                            ' | '+
+                            '<a class="del" title="删除" href="../implantable/blockdelete?id='+blockid+'"></a>' +
+                            '</td>';
+                    $("#blocklist").find("tr[blockkey="+$("#blockkey").val()+"]").html(_str);
+                }else{
+                    _str = '';
+                    _str += '<tr blockkey="'+$("#blockkey").val()+'">' +
+                            '<td index="'+index+'">' + '<input type="hidden" name="inapp[]" value="'+$("#inapp").val()+'"/>' + '<input type="hidden" name="blockid[]" value="'+blockid+'"/>'+$("#inapp").find("option:selected").text() + '</td>' +
+                            '<td><input type="hidden" name="blockkey[]" value="'+$("#blockkey").val()+'"/>' +$("#blockkey").val() + '</td>' +
+                            '<td><input type="hidden" name="blockname[]" value="'+$("#blockname").val()+'"/>' + $("#blockname").val() + '</td>' +
+                            '<td><input type="hidden" name="source_type[]" value="'+$("#source_type").val()+'"/>'  +$("#source_type").find("option:selected").text() + '</td>' +
+                            '<td><input type="hidden" name="status[]" value="'+status+'"/>'  +status_str + '</td>' +
+                            '<td>' +
+                            '<a href="javascript:void(0)" class="edit editBlock" title="编辑" index="'+index+'" blockkey="'+$("#blockkey").val()+'" inapp="'+$("#inapp").val()+'" blockname="' + $("#blockname").val() + '" source_type="'+$("#source_type").val()+'" status="'+status+'" blockid="'+blockid+'"></a>'+
+                            ' | '+
+                            '<a class="del" title="删除" href="../implantable/blockdelete?id='+blockid+'"></a>' +        
+                            '</td>' +
+                            '</tr>';
+                    $("#blocklist").find("tbody").append(_str);
+                }
+                
+                if (PopUp) {
+                    PopUp.close();
+                }
+                //重新绑定事件
+                $(".editBlock").unbind("click").click(function(){
+                    index = $(this).attr('index');
+                    inapp = $(this).attr('inapp');
+                    blockkey = $(this).attr('blockkey');
+                    blockname = $(this).attr('blockname');
+                    source_type = $(this).attr('source_type');
+                    status = $(this).attr('status');
+                    blockid = $(this).attr('blockid');
+                    addBlock(index, inapp, blockkey, blockname, source_type, status, blockid);
+                });
+                $(".setAppstateOn").click(function(){
+                    if($(this).hasClass('cur')){
+                        return;
+                    }
+
+                    if(!confirm("您确认要打开吗？")){
+                        return;
+                    }
+                    $(this).parent().find('input').val(1);
+                    $(this).addClass("cur");
+                    $(this).parent().find(".aoff").removeClass('cur');
+                    set_blockstate($(this).attr("block_id"), 1);
+                    $("a[blockid="+$(this).attr("block_id")+"]").attr('status', 1);
+                    $(this).parent('.onfbk').siblings('input').val(1);
+                });
+
+                $(".setAppstateOFF").click(function(){
+                    if($(this).hasClass('cur')){
+                        return;
+                    }
+                    if(!confirm("您确认要关闭吗？")){
+                        return;
+                    }
+                    $(this).parent().find('input').val(0);
+                    $(this).addClass("cur");
+                    $(this).parent().find(".aon").removeClass('cur');
+                    set_blockstate($(this).attr("block_id"), 0);
+                    $("a[blockid="+$(this).attr("block_id")+"]").attr('status', 0);
+                    $(this).parent('.onfbk').siblings('input').val(0);
+                });
+                // 删除按钮 全局搞定
+                $(".del").click(function() {
+                    var opt = $(this);
+                    var url = opt.attr("href");
+                    opt.attr("href", "#");
+                    jConfirm("是否确定要删除？", function() {
+                        window.location.href = url;
+                    }, function() {
+                        opt.attr("href", url);
+                    });
+                });
+            });
+        });
+    }
+    $("#addBlock").click(function() {
+        addBlock();
+    });
+    
+    $(".editBlock").click(function(){
+        index = $(this).attr('index');
+        inapp = $(this).attr('inapp');
+        blockkey = $(this).attr('blockkey');
+        blockname = $(this).attr('blockname');
+        source_type = $(this).attr('source_type');
+        status = $(this).attr('status');
+        blockid = $(this).attr('blockid');
+        addBlock(index, inapp, blockkey, blockname, source_type,status, blockid);
+    });
+    
+    function confirmSubmit()
+    {
+        $("form").submit();
+    }
+    
+    $(function(){
+        $(".setAppstateOn").click(function(){
+                if($(this).hasClass('cur')){
+                    return;
+                }
+                if(!confirm("您确认要打开吗？")){
+                    return;
+                }
+                $(this).parent().find('input').val(1);
+                $(this).addClass("cur");
+                $(this).parent().find(".aoff").removeClass('cur');
+                set_blockstate($(this).attr("block_id"), 1);
+                $("a[blockid="+$(this).attr("block_id")+"]").attr('status', 1);
+                $(this).parent('.onfbk').siblings('input').val(1);
+            });
+
+        $(".setAppstateOFF").click(function(){
+            if($(this).hasClass('cur')){
+                return;
+            }
+            if(!confirm("您确认要关闭吗？")){
+                return;
+            }
+            $(this).parent().find('input').val(0);
+            $(this).addClass("cur");
+            $(this).parent().find(".aon").removeClass('cur');
+            set_blockstate($(this).attr("block_id"), 0);
+            $("a[blockid="+$(this).attr("block_id")+"]").attr('status', 0);
+            $(this).parent('.onfbk').siblings('input').val(0);
+        });
+    });
+
+    function set_blockstate(blockid, status)
+    {
+        ajaxGET("/implantable/setBlockState", "blockid=" + blockid + "&status=" + status, function(data) {
+            if (data.code == 0) {
+                //jAlert(data.result)
+            } else {
+                alert(data.msg)
+            }
+        })
+    }
+    
+
+</script>

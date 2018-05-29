@@ -1,0 +1,41 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="wrap">
+	<div class="content">
+		<div class="main">
+			<!-- 新闻 s-->
+			<div class="mod_box notice_box">
+				<div class="hd">
+					<ul class="hd_tab">
+						<li  class="<?php echo $ntype == 0?'cur':'';?>"><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $tj_object, $tj_intersrc, $webroot.'/Front/News/index/?ntype=0');?>">全部</a></li>
+						<li  class="<?php echo $ntype == 1?'cur':'';?>"><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $tj_object, $tj_intersrc, $webroot.'/Front/News/index/?ntype=1');?>">资讯</a></li>
+						<li  class="<?php echo $ntype == 3?'cur':'';?>"><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $tj_object, $tj_intersrc, $webroot.'/Front/News/index/?ntype=3');?>">公告</a></li>
+					</ul>
+				</div>
+				<div class="bd">
+					<div class="tabCon_box">
+						<ul class="notice_list">
+						  <?php foreach($news_all as $key=>$val) {?>  
+							<li><h3><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', 'newsdetail'.$val['id'], $tj_intersrc.($val['ntype']==1?'_zx':'_hd').$val['id'], $webroot.'/Front/News/detail/?id='.$val['id']);?>">【<?php echo $news_type[$val['ntype']]; ?>】<?php echo $val['title']; ?></a></h3>
+								<p class="time_area"><?php echo date('Y-m-d',$val['end_time']); ?></p>
+								<p><?php echo Util_String::substr(Common::replaceHtmlAndJs(html_entity_decode($val['content'])), 0,160,'UTF8',true); ?></p>
+							</li>
+						   <?php }?>		
+						</ul>
+						<div style="clear:both;"></div>
+						<?php echo $paper_all;?>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="aside">
+			<!-- 本周排行 s-->
+	          <?php echo $this->render("layout/download.phtml");?> 
+	        <!-- 本周排行 e-->  
+		</div>
+		 <!-- 右侧的悬浮框 -->
+	    <?php echo $this->render("layout/right.phtml");?>
+	</div>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $listUrl; ?>">栏目列表</a></li>
+		<li><a href="<?php echo $addUrl; ?>">添加栏目</a></li>
+	</ul>
+</div>
+<form id="batchForm" action="/Admin/Column/batch" method="post">
+	<input name="token" type="hidden" value="<?php echo $token; ?>">
+	<input name="action" id="action" type="hidden" value="">
+
+	<div class="h_a">
+		<span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">开启</button></span></span>
+		<span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">关闭</button></span></span>
+		<span class="btn2"><span><button onclick="$('#action').val('sort');" type="submit">重新排序</button></span></span>
+		<span class="btn2"><span><button onclick="$('#action').val('delete');" type="submit">删除</button></span></span>
+		<span> 共<?php echo $total; ?>条结果</span>
+	</div>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+				<td>排序</td>
+				<td>标题</td>
+				<td>颜色</td>
+				<td>分类</td>
+				<td>来源ID</td>
+				<td>图片</td>
+				<td>状态</td>
+				<td>操作</td>
+			</tr>
+			<?php foreach ($result as $key => $value) { ?>
+				<tr class="ct">
+					<td><input class="checkbox" name="ids[]" value="<?php echo $value['id']; ?>" type="checkbox"></td>
+					<td>
+						<input type="text" class="input" style="width:30px" name="sort[<?php echo $value['id']; ?>]" value="<?php echo $value['sort']; ?>">
+					</td>
+					<td><?php echo $value['title']; ?></td>
+					<td>
+						<div style="height:20px;width:50px;background-color:<?php echo $value['color']; ?>;"></div>
+					</td>
+					<td><?php echo $value['pptype'] == 1 ? $sources[$value['source_id']]['name'] : '<a target="blank" href="' . $value['link'] . '">外链</a>'; ?></td>
+					<td><?php echo $value['source_id']; ?></td>
+					<td><img src="<?php echo $attachPath . $value['img']; ?>" style="width:200px"/></td>
+					<td><?php echo $value['status'] == 1 ? '开启' : '关闭'; ?></td>
+					<td>
+						<a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+						<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+</form>
+<script>
+	$(document).ready(function () {
+		ajaxForm('batchForm', function (data) {
+			ajaxRedirect(data, baseurl + '/Admin/Column/index?s=1');
+		});
+	})
+</script>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

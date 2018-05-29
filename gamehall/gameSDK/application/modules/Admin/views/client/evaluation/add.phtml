@@ -1,0 +1,64 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">评测列表</a></li>
+    <li class="current"><a href="javascript:;">添加评测</a></li>
+	</ul>
+</div>
+<form action="<?php echo $addUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th" >关键字</th>
+			<td class="td"><input type="text" class="input" name="title" value="<?php echo $search['title'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('add');" type="submit">添加</button></span></span>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><a class="current" href="<?php echo $addCtUrl;?>">自发布</a></span>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>共<?php echo count($news);?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="500">评测名称</td>
+			<td width="120">日期</td>
+			<td>描述</td>
+		</tr>
+<?php foreach($news as $key => $value) {?>
+		<tr class="ct">
+		    <td>
+		    <?php if (!in_array($value['id'], $new_ids)) {?>
+		    <input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox">
+		    <?php }else{?>
+		    <font color="green">√</font>
+		    <?php }?>
+		    </td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $value['time'];?></td>
+			<td><?php echo $value['resume'];?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Evaluation/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

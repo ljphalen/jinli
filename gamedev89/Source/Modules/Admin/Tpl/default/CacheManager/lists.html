@@ -1,0 +1,24 @@
+<div class="page">
+	<div class="pageContent">
+		<table class="list" width="100%" layoutH="138">
+			<thead>
+			<tr>
+				<th>key</th>
+				<th>状态</th>
+				<th>详情</th>
+				<th>操作</th>
+			</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="list">
+				<tr target="select_id" rel="{$vo['id']}">
+					<td>{$key}</td>
+					<td><eq name="vo" value="0"><strong style="color:red">过期</strong><else/>正常</eq></td>
+					<td><a href="__URL__/show/key/{$key}" target="dialog" width="900" height="540" title="{$key}" mask="true">查看</a></td>
+					<td><a href="__URL__/delete/model/{$model}/key/{$key}" target="ajaxTodo" title="您确定么，亲">删除</a></td>
+				</tr>
+			</volist>
+			</tbody>
+		</table>
+	</div>
+</div>

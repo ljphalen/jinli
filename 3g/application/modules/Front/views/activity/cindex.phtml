@@ -1,0 +1,206 @@
+<?php
+$pageData = array(
+	'last_url'        => '/front/activity/clist',
+	'call_url'        => '/front/activity/cindex',
+	'contact_url'     => '/front/activity/contact',
+	'tips_url'        => '/front/activity/tips',
+	'me_url'          => '/front/activity/me',
+	'center_url'      => '/user/index/index',
+	'call_css_url'    => sprintf('%s/call/css/call.min.css?v=%s', $staticResPath, $version),
+	'call_js_url'     => sprintf('%s/call/js/call.min.js?v=%s', $staticResPath, $version),
+	'localsdk_js_url' => sprintf('%s/call/js/localsdk.min.js?v=%s', $staticResPath, $version),
+	'require_js_url'  => sprintf('%s/call/js/lib/require.js?v=%s', $staticResPath, $version),
+    'req_call_url' => '/front/activity/call',
+);
+$total_sec = $voipUserInfo['m_sys_sec'] + $voipUserInfo['exchange_sec'];
+$total_min = Gionee_Service_VoIPUser::formatSec2Min($total_sec);
+$err = '';
+$tiplt10 = '';
+if (empty($total_min)) {
+	$err = '啊哦！您的本月分钟数已用完<br>快去个人中心赚话费吧！';
+} else if ($total_min <= 10) {
+	$tiplt10 = sprintf('温馨提示：您的本月分钟数低于10分钟，去个人中心赚分钟 <a href="%s">点击查看<em>&gt;&gt;</em></a>',$pageData['center_url']);
+}
+
+?>
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<title>畅聊免费打电话</title>
+	<link rel="stylesheet" type="text/css" href="<?=$pageData['call_css_url']?>" />
+	<script src="<?=$pageData['localsdk_js_url']?>"></script>
+	<script type="text/javascript">
+
+		// 初始化注册调用云之讯服务
+		window.onload = function(){
+			localSDK.localapi().initService();
+		}
+		// var network = window.prompt("gn://base/getnetworkState",""); // 0 无网络 1 wifi 2 移动网
+		// alert(network);
+		// var contacts = window.prompt("gn://changliao/getcontacts","");
+		// alert(contacts);
+		// var supportSDK = window.prompt("gn://changliao/hassdk",""); // 0 不支持 1 支持
+		// alert(supportSDK);
+		// var account = {
+		// 	devaccount:"3gadmin",//开发者账号
+		// 	devpw:"123123",//开发者密码
+		// 	clientasscount:"test",//Client账号
+		// 	clientpw:"test",//Client密码
+		// 	id: 1,
+		// 	name:"hankewins",
+		// 	number: "18520872388",
+		// 	city:"shenzhen"
+		// };
+		// var res = window.prompt("gn://changliao/dial", JSON.stringify(account)); //
+		// alert(res);
+	</script>
+	
+</head>
+
+<body class="ui-app" style="background:#f5f5f5;">
+<!-- <div class="ui-top-bar">
+	<a class="ui-pos link-back" href="index.html"></a>
+	<span class="ui-top-txt">畅聊</span>
+</div> -->
+<script type="text/javascript">
+	//document.write("<scr"+"ipt src=\"assets/js/localsdk.source.js\"></scr"+"ipt>");
+</script>
+<div class="ui-page page1 js-active">
+	<div class="ui-page-content">
+		<div class="call-panel-box">
+			<input id="js-input-cname" type="hidden" name="cname" value="<?php echo $cname;?>" />
+			<!--<?php if ($tiplt10):?>
+				<div class="call-tips"><?=$tiplt10?></div>
+			<?php else:?>
+				<script type="text/javascript">
+					var str = '';
+					if(localSDK.support().code == 1){
+						str = '<a href="<?=$pageData['tips_url']?>">点击查看<em>&gt;&gt;</em></a>';
+					}
+					document.write('<div class="call-tips">温馨提示：不扣除本机话费，全部通话费用由<?=Lang::_('PRODUCT_TEAM_NAME')?>承担，请放心使用。'+str+'</div>');
+				</script>
+			<?php endif;?>-->
+			<div class="call-tips">温馨提示：<?=Lang::_('PRODUCT_TEAM_NAME')?>免费电话，将采用回拨方式，不扣除本机话费，接听/拨打免费，请放心使用。</div>
+
+			<div class="call-input-box">
+				<!-- <div class="call-input-text" data-code="0">固话前请加拨区号</div> -->
+				<!-- <input type="text" maxLength="16" class="call-input-text call-input-actived" data-code="1" value="18520872388" /> -->
+				<input type="tel" maxLength="16" class="call-input-text" data-code="0" value="<?=$tel?>" placeholder="请输入或粘贴手机/座机号" />
+				<div class="call-input-tips"></div>
+				<div class="call-input-btn"></div>
+			</div>
+			<ul class="button-panel">
+				<li class="ui-border-t">
+					<span>1</span>
+					<span>2</span>
+					<span>3</span>
+				</li>
+				<li class="ui-border-t">
+					<span>4</span>
+					<span>5</span>
+					<span>6</span>
+				</li>
+				<li class="ui-border-t">
+					<span>7</span>
+					<span>8</span>
+					<span>9</span>
+				</li>
+				<li class="ui-border-t">
+					<span>*</span>
+					<span>0</span>
+					<span>#</span>
+				</li>
+			</ul>
+			<div class="ui-panel ui-border-t">
+				<button class="ui-button ui-block ui-normal" id="js-call-calling" data-url="<?=$pageData['req_call_url'];?>"><i class="icon-call-white"></i>拨号</button>
+				<button class="ui-button ui-block ui-button-blue none">呼叫中</button>
+				<!--<script type="text/javascript">
+					if(localSDK.support().code == 1 && localSDK.network().code == 1){
+						document.write('<div class="call-network-tips">当前为WIFI/4G网络，将用直拨</div>');
+					} else if(localSDK.support().code == 1 && localSDK.network().code != 1){
+						document.write('<div class="call-network-tips">当前为2G/3G网络，将用回拨</div>');
+					}
+				</script>-->
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="ui-bottom-bar call-bottom-bar ui-border-t">
+	<a href="<?=$pageData['last_url']?>" class="s1"><i></i>最近通话</a>
+	<a href="<?=$pageData['call_url']?>" class="s2 active"><i></i>拔号</a>
+	<script type="text/javascript">
+		if(localSDK.support().code == 1){
+			document.write('<a href="<?=$pageData['contact_url']?>" class="s5"><i></i>联系人</a>');
+		}
+	</script>
+	<a class="s4" href="<?=$pageData['me_url']?>"><i></i>我</a>
+</div>
+
+<?php
+$tip = '';
+if (!empty($voipUserInfo['firstMin'])) {
+	$tip = sprintf('恭喜！<br>本月首次登陆，赠送%s分钟话费',$voipUserInfo['firstMin']);
+} else if (!empty($voipUserInfo['perMin'])) {
+	$tip = sprintf('恭喜！<br>每日登陆免费电话，赠送%s分钟话费',$voipUserInfo['perMin']);
+} else if (!empty($voipUserInfo['maxMin'])) {
+	$tip = sprintf('恭喜！<br>本月已赠送%s分钟话费，祝您使用愉快',$voipUserInfo['maxMin']);
+}
+if ($tip):
+	?>
+	<div class="popup-wrap">
+		<div class="title"></div>
+		<div class="content">
+			<?=$tip?>
+		</div>
+		<div class="buttons">
+			<a class="btn ok" onclick="popup_hide()" href="javascript:;">知道了</a>
+			<!-- <a class="btn link" href="#">个人中心</a> -->
+		</div>
+	</div>
+	<div class="popup-mask"></div>
+<?php endif;?>
+
+<?php
+if (!empty($err)):
+?>
+<!-- 弹窗提示 -->
+<div class="popup-wrap">
+	<div class="title"></div>
+	<div class="content">
+		<?=$err?>
+	</div>
+	<div class="buttons">
+		<a class="btn ok" onclick="popup_hide()" href="javascript:;">知道了</a>
+		<a class="btn link" onclick="popup_hide(this)" href="<?=$pageData['center_url']?>">个人中心</a>
+	</div>
+</div>
+<div class="popup-mask"></div>
+<!-- /弹窗提示 -->
+<?php endif;?>
+<script data-main="<?=$pageData['call_js_url']?>" src="<?=$pageData['require_js_url']?>"></script>
+<script type="text/javascript">
+	var token = "<?php echo $token;?>";
+	var login_url = "http://3g.gionee.com/index/tj?t=036d66";
+	var _CONFIG_ = {
+		isLogin: '<?php echo $login;?>',
+		telphone: '<?php echo $mobile;?>',
+		telarea: '<?php echo $area;?>'
+	};
+</script>
+
+<script type="text/javascript">
+	function popup_hide(){
+		var wrap = document.querySelector('.popup-wrap');
+		var mask = document.querySelector('.popup-mask');
+		wrap.style.display = 'none';
+		mask.style.display = 'none';
+	}
+</script>
+</body>
+</html>

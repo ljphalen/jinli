@@ -1,0 +1,128 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $indexUrl;?>?s=1">订单列表</a></li>
+    <li class="current"><a href="javascript:;">查看订单</a></li>
+	</ul>
+</div>
+<div class="h_a">订单信息</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">订单编号</th>
+			<td class="td" style="width:30%"><?php echo $order['trade_no'];?></td>
+			<th class="th">欧飞订单号</th>
+			<td class="td" style="width:30%"><?php echo $order['rec_order_id'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">金立订单号</th>
+			<td class="td" style="width:30%"><?php echo $order['gionee_order_no'];?></td>
+			<th class="th">支付订单号</th>
+			<td class="td" style="width:30%"><?php echo $order['out_trade_no'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">充值面额</th>
+			<td class="td" style="width:30%"><?php echo $order['rec_cardnum'];?></td>
+			<th class="th">成本金额</th>
+			<td class="td" style="width:30%"><?php echo $order['rec_price'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">订单状态</th>
+			<td class="td" style="width:30%"><?php echo Gou_Service_Order::orderStatus($order['status']);?></td>
+			<th class="th">充值状态</th>
+			<td class="td" style="width:30%"><?php echo $rec_status[$order['rec_status']];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">生成时间</th>
+			<td class="td" style="width:30%"><?php echo date('Y-m-d H:i:s', $order['create_time']);?></td>
+			<th class="th">充值时间</th>
+			<td class="td" style="width:30%"><?php echo $order['rec_order_time'] ? date('Y-m-d H:i:s', $order['rec_order_time']) : '';?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">支付时间</th>
+			<td class="td" style="width:30%"><?php echo $order['pay_time'] ? date('Y-m-d H:i:s', $order['pay_time']) : '';?></td>
+			<th class="th"></th>
+			<td class="td" style="width:30%"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">支付渠道</th>
+			<td class="td" style="width:30%"><?php echo $pay_channel_array[$order['pay_channel']];?></td>
+			<th class="th">支付渠道的流水号</th>
+			<td class="td" style="width:30%"><?php echo $order['pay_channel_billno'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">欧飞消息</th>
+			<td class="td" colspan="3"><?php echo $order['rec_msg'];?></td>			
+		</tr>
+		<?php if($order_refund) {?>
+		<tr class="tr">
+			<th class="th">退款订单号</th>
+			<td class="td" style="width:30%"><?php echo $order_refund['refund_no'];?></td>
+			<th class="th">支付退款订单号</th>
+			<td class="td edit_data" style="width:30%" form-name="number"><?php echo $order_refund['out_refund_no'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">退款状态</th>
+			<td class="td" style="width:30%"><?php echo Gou_Service_OrderRefund::refundStatus($order_refund['status']);?></td>
+			<th class="th">描述</th>
+			<td class="td edit_data" style="width:30%" form-name="number"><?php echo $order_refund['description'];?></td>
+		</tr>
+		<?php }?>
+	</table>
+</div>
+
+<div class="h_a">操作</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" id="order_id" value="<?php echo $order['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th" style="width:20%">订单状态</th>
+			<td class="td">
+				<select name="status">
+					<?php foreach ($orderStatus as $key=>$value) {?>
+					<option <?php if($order['status'] == $key) echo 'selected';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+					<?php }?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">备注</th>
+			<td class="td">
+				<textarea rows="5" cols="100" name="remark"><?php echo $order['remark'];?></textarea>
+			</td>
+		</tr>
+	</table>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+</div>
+
+<div class="h_a">订单操作日志</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>操作人</td>
+			<td>时间</td>
+			<td>操作内容</td>
+		</tr>
+		<?php foreach($log as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo !empty($value['uid']) ? Admin_Service_User::getUserNameByUID($value['uid']) : '系统';?></td>
+			<td><?php echo $value['create_time']?date('Y-m-d H:i:s',$value['create_time']) : '';?></td>
+			<td><?php echo Gou_Service_Order::formatLog($value['update_data']); ?></td>
+		</tr>
+		<?php } ?>
+	</table>
+</div>
+
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $indexUrl;?>');
+	});
+})
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

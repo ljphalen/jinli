@@ -1,0 +1,76 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+<style>
+	.mainw2{*z-index: 20}
+	.mainzindex{*z-index: 10;}
+</style>
+<script>$("#union_tab1").addClass("this");</script>
+<div class="mainw mainw2  clearfix">
+    <div class="rmain fl col-md-11 mainwk">
+        <div class="panel">
+            <h2 class="yyname"><a href="{:U('Contract/mindex')}">我的合同</a> » {$v.app_name} » 合同管理</h2>
+            <div class="panel-body">
+                <div class="row ">
+                	<div class="col-md-6">
+                		<h2>合同管理</h2>
+                        <if condition="($v.status eq '-2') AND ($v.hide neq '1')">
+                	        <p style="color: red;">审核不通过原因：{$v.notpass_reason}</p>
+                        </if>
+                	</div>
+					<div class="col-md-4 pull-right" style="margin-top: 48px;">
+                        <if condition="(($v.status eq '2') OR ($v.status eq '-2')) AND ($v.hide neq '1')">
+                        	<a class="btn btn-primary" href="{:U('contract/reapply', array('id'=>$v['id']))}" target="_blank">合同回传</a>
+                        </if>
+                        <if condition="$v.type eq '0'">
+                            <a class="btn btn-info btn-small" href="{:U('contract/show', array('id'=>$v['id']))}" target="_blank">合同下载</a>
+                        <else/>
+                            <a class="btn btn-info btn-small" href="{:U('contract/reshow', array('id'=>$v['id']))}" target="_blank">合同下载</a>
+                        </if>
+					</div>
+                    <div class="col-md-12">
+                        <div class="">
+							<table class="table">
+						      <thead>
+						        <tr>
+                                    <th>合同编号</th>
+                                    <th>合同名称</th>
+                                    <th>合同类型</th>
+                                    <th>创建时间</th>
+                                    <th>合同有效期</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+						        </tr>
+						      </thead>
+						      <tbody>
+						        <volist name="contracts" id="vo">
+						        <tr>
+						          <th scope="row">{$vo.number}</th>
+						          <td>{$vo.name}</td>
+						          <td>{$vo.type|ContractModel::getContractType}</td>
+						          <td>{$vo.ctime|date="Y/m/d",###}</td>
+						          <td>{$vo.vtime|date="Y/m/d",###} <br/>
+                                      {$vo.etime|date="Y/m/d",###}
+                                  </td>
+						          <td>{$vo.status|ContractModel::getStatus}</td>
+								  <td>
+                                      <a href="{:U('Contract/show','','')}/id/{$vo.id}">下载</a>
+                                      <if condition="$vo.status eq '5' or $vo.status eq '-3'">
+                                          <a href="{:U('Contract/reconfirm','','')}/id/{$vo.id}">续签</a>
+                                      <elseif condition="$vo.status eq '4'"/>
+                                          <!--暂时去掉 公司主体发生变化这一特殊情况-->
+                                          <!--<a href="{:U('Contract/edit','','')}/id/{$vo.id}/add/1">修改</a>-->
+                                      </if>
+								  </td>
+						        </tr>
+								</volist>
+						      </tbody>
+						    </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<include file="Public:footer" />

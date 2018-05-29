@@ -1,0 +1,110 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+    <div class="module credit-task">
+        <div class="header-userinfo">
+            <div class="user"><?php echo $name; ?></div>
+            <div class="credit">累计分数：<em><?php echo $sum_score; ?>分</em></div>
+            <div class="footer">
+                <a href="<?php echo $webroot . $flowUrl; ?>" class="item"
+                    onclick="GOU.baiduStatic('android每日任务','android每日任务-分数获取记录')">
+                    <i class="icon-column-red"></i>分数获取记录
+                </a>
+                <a href="<?php echo $webroot . $summaryUrl . '?euid='.$uid_encrypt; ?>" class="item" onclick="GOU.baiduStatic('android每日任务','android每日任务-我的累积奖励')">
+                    <i class="icon-medal"></i>我的累计奖励
+                </a>
+            </div>
+        </div>
+        <div class="credit-list">
+            <div class="list-top">
+                今日获取分数：<em><?php echo $today_score; ?>分</em>
+            </div>
+            <div class="list">
+                <ul>
+                    <li class="pic"><i class="icon-face"></i></li>
+                    <li class="flex">
+                        <p class="title"><?php echo $task[1]['title']; ?></p>
+                        <p class="desc"><?php echo $task[1]['subtitle']; ?></p>
+                    </li>
+                    <li class="score">
+                        <em><?php echo '+' . $task[1]['score']; ?></em>（<?php echo $task[1]['count']; ?>/<?php echo $task[1]['limit']; ?>）
+                    </li>
+                    <li class="arrow"></li>
+                </ul>
+            </div>
+            <a href="javascript:window.share&&window.share.gotoCutPriceInterface&&window.share.gotoCutPriceInterface()" class="list" onclick="GOU.baiduStatic('android每日任务','android每日任务-砍价')">
+                <ul>
+                    <li class="pic"><i class="icon-cut"></i></li>
+                    <li class="flex">
+                        <p class="title"><?php echo $task[2]['title']; ?></p>
+                        <p class="desc"><?php echo $task[2]['subtitle']; ?></p>
+                    </li>
+                    <li class="score">
+                        <em><?php echo '+' . $task[2]['score']; ?></em>（<?php echo $task[2]['count']; ?>/<?php echo $task[2]['limit']; ?>）
+                    </li>
+                    <li class="arrow"><i class="icon-arrow-right"></i></li>
+                </ul>
+            </a>
+            <a href="javascript:window.share&&window.share.gotoCutPriceInterface&&window.share.gotoCutPriceInterface()" class="list" onclick="GOU.baiduStatic('android每日任务','android每日任务-分享砍价信息')">
+                <ul>
+                    <li class="pic"><i class="icon-turn"></i></li>
+                    <li class="flex">
+                        <p class="title"><?php echo $task[3]['title']; ?></p>
+                        <p class="desc"><?php echo $task[3]['subtitle']; ?></p>
+                    </li>
+                    <li class="score">
+                        <em><?php echo '+' . $task[3]['score']; ?></em>（<?php echo $task[3]['count']; ?>/<?php echo $task[3]['limit']; ?>）
+                    </li>
+                    <li class="arrow"><i class="icon-arrow-right"></i></li>
+                </ul>
+            </a>
+            <div class="list">
+                <ul>
+                    <li class="pic"><i class="icon-help"></i></li>
+                    <li class="flex">
+                        <p class="title"><?php echo $task[4]['title']; ?></p>
+                        <p class="desc"><?php echo $task[4]['subtitle']; ?></p>
+                    </li>
+                    <li class="score">
+                        <em><?php echo '+' . $task[4]['score']; ?></em>（<?php echo $task[4]['count']; ?>/<?php echo $task[4]['limit']; ?>）
+                    </li>
+                    <li class="arrow"></li>
+                </ul>
+            </div>
+            <div class="list J_callClientShare" onclick="GOU.baiduStatic('android每日任务','android每日任务-分享购物大厅给好友')">
+                <ul>
+                    <li class="pic"><i class="icon-share"></i></li>
+                    <li class="flex">
+                        <p class="title"><?php echo $task[5]['title']; ?></p>
+                        <p class="desc"><?php echo $task[5]['subtitle']; ?></p>
+                    </li>
+                    <li class="score">
+                        <em><?php echo '+' . $task[5]['score']; ?></em>（<?php echo $task[5]['count']; ?>/<?php echo $task[5]['limit']; ?>）
+                    </li>
+                    <li class="arrow"><i class="icon-arrow-right"></i></li>
+                </ul>
+            </div>
+            <div class="list">
+                <ul>
+                    <li class="pic"><i class="icon-clothes"></i></li>
+                    <li class="flex">
+                        <p class="title"><?php echo $task[6]['title']; ?></p>
+                        <p class="desc"><?php echo $task[6]['subtitle']; ?></p>
+                    </li>
+                    <li class="score">
+                        <em><?php echo '+' . $task[6]['score']; ?></em>（<?php echo $task[6]['count']; ?>/<?php echo $task[6]['limit']; ?>）
+                    </li>
+                    <li class="arrow"></li>
+                </ul>
+            </div>
+        </div>
+        <?php if($need_edit):?>
+        <div class="to-edit-bar">
+            <i class="icon-close" id="J_closeToEdit"></i>
+            <span>为了参与活动，请完善个人信息</span>
+            <a href="<?php echo $webroot . $edit_url . '?backurl=' . $curPageURL; ?>" class="to-edit" onclick="GOU.baiduStatic('android每日任务','android每日任务-去填写')">去填写</a>
+        </div>
+        <?php endif; ?>
+    </div>
+
+<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/newfooter.phtml");?>

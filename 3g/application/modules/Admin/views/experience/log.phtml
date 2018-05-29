@@ -1,0 +1,86 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $logUrl; ?>">日志列表</a></li>
+		</ul>
+	</div>
+	<div class="table_full">
+		<form action="<?php echo $logUrl; ?>" method="POST" id="form">
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<table width="100%" cellspacing="0" cellpadding="0">
+				<tr class="tr">
+					<th class="th">获取经验值类型：</th>
+					<td class="td">
+						<select name="type" id="type">
+							<option value="0">请选择</option>
+							<?php foreach ($types as $k => $v) { ?>
+								<option <?php echo ($k == $params['type']) ? 'selected="selected"' : ''; ?>  value="<?php echo $k; ?>"><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">时间范围</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="sdate"
+						       value="<?php echo $params['sdate']; ?>"> 至
+						<input class="input" type="text" id="edate" maxlength="30" name="edate"
+						       value="<?php echo $params['edate']; ?>">
+
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">用户手机号:</th>
+					<td class="td2">
+						<input type="text" class="input" value="<?php echo $params['username']; ?>" name="username">
+					</td>
+				</tr>
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+		</form>
+	</div>
+
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+				<th class="th">用户ID</th>
+				<th class="th">用户名</th>
+				<th class="th">活动类型</th>
+				<th class="th">经验值</th>
+				<th class="th">时间</th>
+			</tr>
+			<?php foreach ($dataList as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['id'];?></td>
+					<td class="td" align="left"><?=$v['uid'];?></td>
+					<td class="td"><?php echo $v['username']; ?></td>
+					<td class="td"><?php echo $types[$v['type']]; ?></td>
+					<td class="td"><?php echo $v['points'] ?></td>
+					<td class="td"><?php echo date('Y-m-d H:i:s', $v['add_time']); ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#sdate").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#edate").datepicker({dateFormat: 'yy-mm-dd'});
+
+			$("#downLoad").bind('click', function () {
+				$("#hidden_export").val(1);
+				$("#addFrom").submit();
+				$("#hidden_export").val(0);
+			});
+		});
+	</script>
+
+<?php echo $this->render("layout/footer.phtml"); ?>

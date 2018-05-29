@@ -1,0 +1,76 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">标签列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加标签</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	   <tr class="tr">
+			<th class="th">标签类型</th>
+			<td class="td">
+			 <select name="btype">
+					<option selected="" value="0">所有类型</option>
+					<?php foreach($categorys as $key=>$value) {?>
+    			    <option value="<?php echo $value['id'];?>" <?php if ($s['btype'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['title'];?></option>
+    			    <?php }?>
+			 </select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			    <option  value="0">全部</option>
+				<option <?php if($s['status'] == 2) echo 'selected';?> value="2">开启</option>
+				<option <?php if($s['status'] == 1) echo 'selected';?> value="1">关闭</option>
+			</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">关键字</th>
+			<td class="td"><input type="text" class="input" name="title" value="<?php echo $s['title'];?>"></td>
+		</tr>	
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">ID</td>
+			<td>名称</td>
+			<td>标签类型</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $categorys[$value['btype']]['title'];?></td>
+			<td><?php echo $value['status'] ? '开启' : '关闭';?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script>
+$(document).ready(function(){
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Resource_Label/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

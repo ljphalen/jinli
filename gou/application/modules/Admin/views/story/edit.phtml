@@ -1,0 +1,140 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $indexUrl;?>">知物列表</a></li>
+		<li><a href="<?php echo $listUrl;?>">稿源列表</a></li>
+		<li class="current"><a href="javascript:;">编辑知物</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑知物</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+    <input name="channel" value="<?php echo $info['channel'];?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">标题</th>
+				<td class="td"><input type="text" class="input wc" name="title"	value="<?php echo $info['title'];?>"></td>
+			</tr>
+            <tr class="tr">
+                <th class="th">排序</th>
+                <td class="td"><input type="text" placeholder="数值越大越靠前" class="input wc" name="sort" value="<?php echo $info['sort'];?>"	></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">栏目</th>
+                <td class="td">
+                    <select name="category_id">
+                        <option value="0" selected="selected">请选择栏目</option>
+                        <?php foreach($cats as $c): ?>
+                            <option value="<?php echo $c['id'] ?>" <?php if($info['category_id']==$c['id']) echo 'selected="selected"'; ?>><?php echo $c['title'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+				<th class="th">作者</th>
+				<td class="td">
+                    <?php if($info['channel'] == 0):?>
+                    <select name="author_id">
+                        <?php foreach($authors as $a): ?>
+                            <option value="<?php echo $a['id'] ?>" <?php if($info['author_id']==$a['id']) echo 'select="selected"'; ?>><?php echo $a['nickname'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php else:?>
+                    <input name="author_id" value="<?php echo $info['author_id'];?>" type="hidden" />
+                    <?php echo $author['nickname']; ?>
+                    <?php endif;?>
+                </td>
+			</tr>
+            <tr class="tr">
+                <th class="th">摘要</th>
+                <td class="td"><textarea name="summary" id="summary" cols="112" rows="3"><?php echo $info['summary'];?></textarea></td>
+            </tr>
+            <tr class="tr" id="content">
+                <th class="th">内容</th>
+                <td class="td">
+                <script id="editor" type="text/plain" style="width:100%;height:500px;"><?php echo html_entity_decode($info['content']);?></script>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">状态</th>
+                <td class="td">
+                    <?php if($info['status']==1):?>
+                    <input type="radio" name="status"  value="0" />保存
+                    <input type="radio" name="status"  value="1" <?php if($info['start_time']<=time()) echo 'checked="checked"'; ?>/>已发布
+                    <input type="radio" name="status"  value="2" <?php if($info['start_time']>time()) echo 'checked="checked"'; ?>/>待发布
+                    <?php else: ?>
+                        <?php foreach($status as $sk=>$sv): if($info['status']==1 && $sk>2) break;?>
+                            <input type="radio" name="status"  value="<?php echo $sk ?>" <?php if($info['status']==$sk) echo 'checked="checked"'; ?>/><?php echo $sv ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">原因(晒单审核未通过)</th>
+                <td class="td"><input type="text" class="input wc" name="reason" value="<?php echo $info['reason'];?>"></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">发布时间</th>
+                <td class="td">
+                    <input type="text" class="input" id="start_time" name="start_time" value="<?php if(!empty($info['start_time'])): echo date('Y-m-d H:i:s', $info['start_time']); else: echo date('Y-m-d H:i:s'); endif;?>">
+                </td>
+            </tr>
+        </table>
+	</div>
+	<div class="mb10 tac">
+        <span class="btn"><span><button onfocus="blur();" type="button" id="btn_preview">预览</button></span></span>
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<style>div#edui1 {z-index: 0 !important;}</style>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+    var ue = UE.getEditor('editor', {'textarea':'content'});
+    $(function(){
+        $('#btn_preview').click(function(){
+            var formdata = $('form#addForm').serializeArray();
+            var data={};
+            $(formdata).each(function(k,v){
+                data[v.name]= v.value
+            });
+            data.status=-5;
+            data.content=editor.html();
+            $.ajax({
+                url:'<?php echo $addPostUrl;?>',
+                type:'post',
+                data:data,
+                dataType:'json',
+                success:function(ret){
+                    if(ret.success==true){
+                        var tmp = '<input name="pre_id[]" value="'+ret.data+'" type="hidden" />'
+                        $('form#addForm').prepend(tmp);
+                        var url = '<?php echo $webroot.$previewUrl; ?>'+'?preview=1&id='+ret.data;
+                        window.open(url,'_newtab');
+                    }else{
+                        $("#err_content").html(ret.msg);
+                        $("#error_msg_box").dialog();
+                    }
+                }
+            });
+        });
+    });
+    //用户表单数据提交
+    $('#pub_time').datetimepicker();
+    $('#start_time').datetimepicker();
+    $(document).ready(function(){
+        ajaxForm('addForm',function(ret){
+                ajaxRedirect(ret, baseurl+'/Admin/Story/<?php echo $backurl; ?>?s=1');
+        });
+        $('#select').change(function(){
+            option = $(this).children('option:selected').val();
+            if(option == '1'){
+                $('#category').show();
+            }else{
+                $('#category').hide();
+            }
+        });
+    });
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

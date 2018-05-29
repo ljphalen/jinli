@@ -1,0 +1,80 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current">
+			<a href="<?php echo $listUrl;?>">广告列表</a>
+		</li>
+		<li>
+			<a href="<?php echo $addUrl;?>">添加广告</a>
+		</li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="get">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">分类</th>
+			<td class="td">
+				<select name="ad_type">
+					<option value="">全部</option>
+					<?php foreach($ad_types as $key=>$value) {?>
+					<option <?php echo ($search['ad_type'] == $key) ? 'selected="selected"' :'';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+					<?php }?>
+				</select>
+            </td>
+            <th class="th">开始日期</th>
+            <td class="td">
+                <input class="input" type="text" maxlength="30" id="start_time" name="start_time" value="<?php echo $search['start_time'];?>">
+            </td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>排序</td>
+			<td width="15%">标题</td>
+			<td>分类</td>
+			<td>图片</td>
+			<td>开始时间</td>
+			<td>结束时间</td>
+			<td>状态</td>
+			<td>点击量</td>
+			<td>操作</td>
+		</tr>
+		<?php
+			foreach($ads as $key => $value) {
+				list($module_id, $channel_id) = explode("_", $value['module_channel']);
+		?>
+		<tr class="ct">
+			<td><?php echo $value['sort'];?></td>
+			<td><a href="<?php echo $value['link'];?>" target="_blank"><?php echo $value['title'];?></a></td>
+			<td><?php echo $ad_types[$value['ad_type']];?></td>
+			<td><img src="<?php echo $attachPath.$value['img'];?>" width="100" /></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['start_time']);?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['end_time']);?></td>
+			<td><?php echo $value['status'] == 1 ? '开启' : '关闭';?></td>
+			<td><?php echo $value['hits'];?></td>
+            <td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#start_time").datepicker({
+            dateFormat : 'yy-mm-dd'
+        });
+    });
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

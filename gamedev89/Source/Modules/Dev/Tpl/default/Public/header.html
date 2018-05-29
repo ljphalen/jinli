@@ -1,0 +1,47 @@
+<include file="Public:header_min" />
+
+<php>if(strtolower(ACTION_NAME) != "perfect"):</php>
+	<div class="head clearfix">
+		<div class="w">
+	    	<h1 class="fl logo"><a href="{:U('/')}" title="{:C('SITENAME')}" >{:C("SITENAME")}</a></h1>
+	        <div class="nav fr">
+				<a href="{:U('help/index')}" target="_help">帮助</a>
+				<empty name="uid">
+				<a href="{:U('login/reg')}">注册</a>
+				<a href="{:U('login/login')}">登录</a>
+				<else />
+				<a href="{:U('user/info')}">个人中心</a>
+				<a href="{:U('message/index')}">消息<if condition="$message_count GT 0" ><b style="color:red;">({$message_count})</b></if></a>
+				<a href="{:U('login/logout')}">退出</a>
+				</empty>
+	        </div>
+	    </div>
+	</div>
+<php>else:</php>
+	<div class="head clearfix">
+		<div class="w">
+	    	<h1 class="fl logo">{:C("SITENAME")}</h1>
+	        <div class="nav fr">
+	        	<notmpty name="uid">
+				<a href="{:U('login/logout')}">退出</a>
+				</notmpty>
+	        </div>
+	    </div>
+	</div>
+<php>endif;</php>
+
+<?php if($uid > 0 && in_array(strtolower(MODULE_NAME), array("user", "apps", "union", "chart", "message", "help"))): ?>
+	<div class="sec-nav">
+		<div class="shadow"></div>
+		<div class="w">
+			<a href="{:U('Apps/index')}" id="apps_tab1"><span>我的应用</span><em></em></a><ins>|</ins>
+			<a href="{:U('Union/index')}" id="union_tab1"><span>游戏联运</span><em></em></a><ins>|</ins>
+			<a href="{:U('Chart/index')}" id="chart_tab1"><span>数据统计</span><em></em></a><ins>|</ins>
+			<a href="{:U('Help/sdk')}" id="sdk_tab1"><span>sdk下载</span><em></em></a>
+	  	</div>
+	</div>
+	<script>$("#<?php echo strtolower(MODULE_NAME);?>_tab1").addClass("on");</script>
+<?php endif; ?>
+
+<div id="wrap">
+	<div class="container">

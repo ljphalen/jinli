@@ -1,0 +1,56 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="/Admin/Game_Webgame/index">网游推荐日程</a></li>
+        <li><a href="/Admin/Game_Gameopen/index">开服信息</a></li>
+        <li><a href="<?php echo $listUrl;?>">旧版推荐</a></li>
+		<li><a href="<?php echo $columnListUrl;?>">网游频道</a></li>
+		<li class="current"><a href="javascript:void(0);">添加网游频道</a></li>
+	</ul>
+</div>
+<div class="h_a">添加频道</div>
+<form method="post" action="<?php echo $addColumnPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	   <tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="0"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">名称</th>
+			<td class="td"><input type="text" class="input" name="name" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">链接地址</th>
+			<td class="td"><input type="text" class="input wc" name="link" value=""></td>
+		</tr>	
+		<tr class="tr">
+			<th class="th">生效时间</th>
+			<td class="td"><input type="text" class="input" name="start_time" value="" id="start_time"></td>
+		</tr>
+		<tr class="tr" >
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="select">
+				<option selected value="1">开启</option>
+				<option  value="0">关闭</option>
+			</select>
+			</td>
+		</tr>		
+</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+	 ajaxForm('addFrom',function(ret){
+		 ajaxRedirect(ret, baseurl+'/Admin/Client_Web/columnList');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

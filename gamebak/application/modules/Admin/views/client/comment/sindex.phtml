@@ -1,0 +1,121 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">评论审核</a></li>
+		<li><a href="<?php echo $manageUrl;?>">评论管理</a></li>
+        <li><a href="<?php echo $logUrl;?>">审核记录</a></li>
+        <li class="current"><a href="<?php echo $slistUrl;?>">敏感词库</a></li>
+        <li><a href="<?php echo $plistUrl;?>">词库管理</a></li>
+        <li><a href="<?php echo $blistUrl;?>">黑名单</a></li>
+	</ul>
+</div>
+<form action="<?php echo $slistUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr">
+			<th class="th">敏感词</th>
+			<td class="td"><input type="text" class="input" name="title" value="<?php echo $s['title'];?>"></td>
+			<th class="th">ID</th>
+			<td class="td"><input type="text" class="input" name="id" value="<?php echo $s['id'];?>"></td>
+			</td>
+			<th class="th">维护人</th>
+			<td class="td"><input type="text" class="input" name="uname" value="<?php echo $s['uname'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">词组</th>
+			<td class="td">
+			 <select name="stype" class="select wa">
+			      <option  value="0">全部</option>
+				  <?php foreach($phrases as $key=>$value) {?>
+    			  <option value="<?php echo $value['id'];?>" <?php if($s['stype'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['title'];?></option>
+    			<?php }?>
+			 </select>
+			</td>
+			</td>
+			<th class="th">状态</th>
+			<td class="td" colspan="1">
+			<select name="status" class="select wa">
+			    <option  value="0">全部</option>
+				<option <?php if($s['status'] == 2) echo 'selected';?> value="2">开启</option>
+				<option <?php if($s['status'] == 1) echo 'selected';?> value="1">关闭</option>
+			</select>
+			</td>
+		</tr>
+	    <tr class="tr">
+			<th class="th">添加时间</th>
+			<td class="td" colspan="2"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo $s['start_time'];?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo $s['end_time'];?>" /></div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchdelUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+    <span class="btn2"><span><button onclick="$('#action').val('del');" type="submit">删除</button></span></span>
+    <span class="btn2"><span><button type="button" id="exportBtn">导出excel</button></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;共<?php echo $total;?>条结果</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   </div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+		    <td>ID</td>
+		    <td>敏感词</td>
+			<td>词组</td>
+			<td>添加时间</td>
+			<td>状态</td>
+			<td>维护人</td>
+			<td>过滤次数</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+		    <td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $phrases[$value['stype']]['title'];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+			<td><?php echo $value['status'] ? '开启' : '关闭';?></td>		
+			<td><?php echo $value['uname'];?></td>
+			<td><?php echo $value['num'];?></td>
+			<td>
+			<a href="<?php echo $seditUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<div class="mr10 cc">
+	<form action="<?php echo $sexportUrl;?>" method="post" id="exportForm">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<input type="hidden" name="title" value="<?php echo $s['title'];?>">
+	<input type="hidden" name="id" value="<?php echo $s['id'];?>">
+	<input type="hidden" name="uname" value="<?php echo $s['uname'];?>">
+	<input type="hidden" name="stype" value="<?php echo $s['stype'];?>">
+	<input type="hidden" name="status" value="<?php echo $s['status'];?>">
+	<input type="hidden" name="start_time" value="<?php echo $s['start_time'];?>">
+	<input type="hidden" name="end_time" value="<?php echo $s['end_time'];?>">
+	</form>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script>
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+    $('#end_time').datetimepicker();
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Client_Comment/sindex');
+	});
+	$("#exportBtn").click(function(){
+		$("#exportForm").submit();
+    });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

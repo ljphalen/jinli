@@ -1,0 +1,68 @@
+<?php echo $this->render("layout/header2.phtml"); ?>
+	<section class="main-content">
+		<form method="post" action="<?=$this->baseUrl?>" id="editForm">
+			<input name="token" value="<?=$token?>" type="hidden"/>
+			<header class="header navbar bg-default">
+				<ul class="nav navbar-nav">
+					<li class="active">
+						<a href="javascript:;">配置管理</a>
+					</li>
+				</ul>
+				<div class="btn-group pull-right mg-r-sm">
+					<button type="submit" name="sub" class="btn btn-sm btn-primary navbar-btn">
+						立即保存
+					</button>
+				</div>
+			</header>
+
+			<div class="content-wrap">
+				<div class="row">
+					<div class="col-lg-12">
+						<!-- table content start -->
+						<section class="panel">
+							<table class="table table-bordered table-striped no-margin">
+								<tr>
+									<td>wk_main_switch</td>
+									<td>
+										<label><input type="radio" <?php if ($configs['wk_main_switch'] == 1) echo 'checked'; ?> name="wk_main_switch" value="1"> 开启</label>
+										<label><input type="radio" <?php if ($configs['wk_main_switch'] == 0) echo 'checked'; ?> name="wk_main_switch" value="0"> 关闭</label>
+									</td>
+								</tr>
+								<tr>
+									<td>wk_searchEngines_switch</td>
+									<td>
+										<label><input type="radio" <?php if ($configs['wk_searchEngines_switch'] == 1) echo 'checked'; ?> name="wk_searchEngines_switch" value="1"> 开启</label>
+										<label><input type="radio" <?php if ($configs['wk_searchEngines_switch'] == 0) echo 'checked'; ?> name="wk_searchEngines_switch" value="0"> 关闭</label>
+									</td>
+								</tr>
+								<tr>
+									<td>wk_hotKeyword_switch</td>
+									<td>
+										<label><input type="radio" <?php if ($configs['wk_hotKeyword_switch'] == 1) echo 'checked'; ?> name="wk_hotKeyword_switch" value="1"> 开启</label>
+										<label><input type="radio" <?php if ($configs['wk_hotKeyword_switch'] == 0) echo 'checked'; ?> name="wk_hotKeyword_switch" value="0"> 关闭</label>
+									</td>
+								</tr>
+								<tr>
+									<td>wk_suggested_switch</td>
+									<td>
+										<label><input type="radio" <?php if ($configs['wk_suggested_switch'] == 1) echo 'checked'; ?> name="wk_suggested_switch" value="1"> 开启</label>
+										<label><input type="radio" <?php if ($configs['wk_suggested_switch'] == 0) echo 'checked'; ?> name="wk_suggested_switch" value="0"> 关闭</label>
+									</td>
+								</tr>
+							</table>
+						</section>
+					</div>
+				</div>
+
+			</div>
+		</form>
+	</section>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			ajaxForm('editForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Config/wanka');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

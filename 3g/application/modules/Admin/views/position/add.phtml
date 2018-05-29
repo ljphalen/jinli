@@ -1,0 +1,60 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $indexUrl; ?>">广告位列表</a></li>
+		<li class="current"><a href="<?php echo $addUrl; ?>">添加广告位</a></li>
+	</ul>
+</div>
+<div class="h_a">添加广告位</div>
+<form method="post" action="<?php echo $addPostUrl; ?>" id="addForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">名称</th>
+				<td class="td"><input type="text" class="input" name="name" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">选择页面</th>
+				<td class="td">
+					<select name="pos_prefix" id="pos_prefix">
+						<option value="0">请选择</option>
+						<?php foreach ($config['pos_identifiers'] as $k => $v) { ?>
+							<option value="<?php echo $v['prefix']; ?>"><?php echo $v['name']; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">类别</th>
+				<td class="td"><select name="type">
+						<?php foreach ($config['ads_type'] as $key => $value) { ?>
+							<option value="<?php echo $key; ?>"><?php echo $value['name']; ?></option>
+						<?php } ?>
+					</select></td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td"><select name="status" class="select">
+						<option value="1">开启</option>
+						<option value="0">关闭</option>
+					</select></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	//用户表单数据提交
+	$(document).ready(function () {
+		ajaxForm('addForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Position/index');
+		});
+	})
+
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

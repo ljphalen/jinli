@@ -1,0 +1,107 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>?s=1">订单列表</a></li>
+    <li class="current"><a href="javascript:;">查看订单</a></li>
+	</ul>
+</div>
+<div class="h_a">订单信息</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">订单编号</th>
+			<td class="td" style="width:30%"><?php echo $order['trade_no'];?></td>
+			<th class="th">订单状态</th>
+			<td class="td" style="width:30%"><?php echo Fj_Service_Order::orderStatus($order['status']);?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">外部订单号</th>
+			<td class="td" style="width:30%"><?php echo $order['out_trade_no'];?></td>
+			<th class="th">商品价格</th>
+			<td class="td" style="width:30%"><?php echo $order['deal_price'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">生成时间</th>
+			<td class="td" style="width:30%"><?php echo date('Y-m-d H:i:s', $order['create_time']);?></td>
+			<th class="th">付款时间</th>
+			<td class="td" style="width:30%"><?php echo $order['pay_time'] ? date('Y-m-d H:i:s', $order['pay_time']) : '';?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">确认收货时间</th>
+			<td class="td" style="width:30%"><?php echo $order['take_time'] ? date('Y-m-d H:i:s', $order['take_time']) : '';?></td>
+			<th class="th">实付款</th>
+			<td class="td" style="width:30%"><?php echo $order['real_price'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">手机号码</th>
+			<td class="td" colspan="3"><?php echo $order['phone'];?></td>			
+		</tr>
+	</table>
+</div>
+
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="5%">商品id</td>
+			<td width="10%">商品名称</td>
+			<td width="5%">数量</td>
+			<td width="5%">价格</td>
+			<td>备注</td>
+		</tr>
+		<?php foreach($details as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['goods_id'];?></td>
+			<td><?php echo $goods[$value['goods_id']]['title'];?></td>
+			<td><?php echo $value['goods_num'];?></td>
+			<td><?php echo $value['deal_price'];?></td>
+			<td><?php echo $value['descrip'];?></td>
+		</tr>
+		<?php } ?>
+	</table>
+</div>
+
+<div class="h_a">提货信息</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">收货人</th>
+			<td class="td" style="width:20%"><?php echo $order['buyer_name'];?></td>
+			<th class="th">手机号码</th>
+			<td class="td" style="width:20%"><?php echo $order['phone'];?></td>
+			<th class="th">收货地址</th>
+			<td class="td" style="width:20%"><?php echo $address['detail_address'];?></td>
+		</tr>
+	</table>
+</div>
+
+<div class="h_a">操作</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $order['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">订单状态</th>
+			<td class="td" style="width:30%">
+				<select name="status">
+				<?php foreach ($orderStatus as $key=>$value) {?>
+					<option <?php if($order['status'] == $key) echo 'selected';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+				<?php }?>
+				</select>
+			</td>
+		</tr>
+	</table>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+</div>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/admin/Order/index?s=1');
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>
+

@@ -1,0 +1,54 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $indexUrl;?>">教程列表</a></li>
+		<li class="current"><a href="javascript:;">编辑教程</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑教程</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">标题</th>
+				<td class="td"><input type="text" class="input wc" name="title"	value="<?php echo $info['title'];?>"></td>
+			</tr>
+            <tr class="tr" id="content">
+                <th class="th">内容</th>
+                <td class="td"><textarea
+                        style="width: 800px; height: 500px" class="textarea"
+                        name="content"><?php echo $info['content'];?></textarea>
+                </td>
+            </tr>
+        </table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+    var editor;
+    var n=0;
+    KindEditor.ready(function(K) {
+        K.token = token;
+        editor = K.create('textarea[name="content"]', {
+            resizeType : 1,
+            allowPreviewEmoticons : false,
+            allowImageUpload : true,
+            uploadJson : '<?php echo $adminroot.$uploadImgUrl;?>',
+            items : EDITOR_ITEMS
+        });
+   //     showContent('<?php echo $info['content']?>');
+    });
+    //用户表单数据提交
+    $(document).ready(function(){
+        ajaxForm('addForm', function (ret) {
+            ajaxRedirect(ret, baseurl + '<?php echo $indexUrl;?>');
+        });
+    });
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,84 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+    <ul class="cc">
+        <li class="current"><a href="<?php echo $indexUrl; ?>">问题列表</a></li>
+        <li><a href="<?php echo $addUrl; ?>">添加问题</a></li>
+    </ul>
+</div>
+<form action="<?php echo $indexUrl; ?>" method="get">
+    <input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">分类</th>
+                <td class="td">
+                    <select name="cat_id">
+                        <option value="0">不限</option>
+                        <?php foreach ($cats as $cat): ?>
+                            <option
+                                value="<?php echo $cat['id']; ?>" <?php if ($search['cat_id'] == $cat['id']) echo 'selected="selected"'; ?>><?php echo $cat['name']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+                <th class="th">是否有效</th>
+                <td class="td">
+                    <select name="status">
+                        <option value=-1 <?php echo $search['status']==-1?'selected=selected':''; ?>>不限</option>
+                        <option value=0  <?php echo $search['status']==0? 'selected=selected':''; ?>>否</option>
+                        <option value=1  <?php echo $search['status']==1? 'selected=selected':''; ?>>是</option>
+                    </select>
+                </td></tr>
+                <tr class="tr">
+                <th class="th">问题</th>
+                <td class="td">
+                    <input class="input" type="text" name="question" value="<?php echo $search['question']; ?>">
+                </td>
+                <th class="th">答案</th>
+                <td class="td">
+                    <input class="input" type="text" name="answer" value="<?php echo $search['answer']; ?>">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac">
+		<span class="btn">
+			<span>
+				<button type="submit">搜 索</button>
+			</span>
+		</span>
+    </div>
+</form>
+<div class="table_list">
+    <table width="100%">
+        <tr class="hd">
+            <td width="40">排序</td>
+            <td width="40">ID</td>
+            <td width="">分类</td>
+            <td>是否有效</td>
+            <td width="">问题</td>
+            <td width="">操作</td>
+        </tr>
+        <?php foreach ($data as $key => $value) { ?>
+            <tr class="ct <?php if ($value['status']) echo 'blue'; ?>">
+                <td><?php echo $value['sort']; ?></td>
+                <td><?php echo $value['id']; ?></td>
+                <td><?php echo $cats[$value['cat_id']]['name'] ?></td>
+                <td><?php echo $value['status']?'是':'否'; ?></td>
+                <td><?php echo $value['question'] ?></td>
+                <td>
+                    <a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+                    <a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+                </td>
+                </td>
+            </tr>
+        <?php } ?>
+    </table>
+</div>
+
+<div class="mr10 cc">
+    <?php echo $pager; ?>
+</div>
+
+<?php echo $this->render("layout/footer.phtml"); ?>
+

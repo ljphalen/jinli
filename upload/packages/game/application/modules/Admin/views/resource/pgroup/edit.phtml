@@ -1,0 +1,57 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">机组列表</a></li>
+    <li class="current"><a href="javascript:;">管理机组</a></li>
+	</ul>
+</div>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<input name="id"  type="hidden" value="<?php echo $info['id'];?>" />
+<input name="id"  type="hidden" value="<?php echo $info['id'];?>" />
+<input name="p_title"  type="hidden" value="<?php echo $info['p_title'];?>" />
+<input name="p_id"  type="hidden" value="<?php echo $info['p_id'];?>" />
+<?php
+$tmp = array();
+$tmp = explode(',',$info['p_id']); 
+?>
+<div class="h_a">
+    <span class="btn2"><span><button onclick="$('#action').val('edit_title');" type="submit">保存</button></span></span>
+    <span class="btn2"><span><button onclick="$('#action').val('delete');" type="submit">删除</button></span></span>
+	<span>机组名称&nbsp;&nbsp;&nbsp;&nbsp;</span><input type="text" class="input wc" name="title" value="<?php echo $info['title'];?>">
+	<span>共<?php echo !$info['p_id'] ? '0' :count($tmp);?>条结果</span> 	
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td>机型</td>
+			<td>分辨率</td>
+			<td>运营商</td>
+		</tr>
+		<?php if($tmp && $info['p_id']) {	?>
+        <?php foreach($tmp as $key => $value) {	?>
+		<tr class="ct">
+		    <td>
+		    <input class="checkbox" name="ids[]" value="<?php echo $value;?>" type="checkbox">
+		    </td>
+			<td><?php echo $modes[$value]['title'];?></td>
+			<td><?php echo $resolution[$modes[$value]['resolution']]['title'];?></td>
+			<td><?php echo $modes[$value]['operators'] == 0 ? '所有运营商': $operators[$modes[$value]['operators']]['title'];?></td>
+		</tr>
+    <?php }} ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Resource_Pgroup/edit?id=<?php echo $info['id']?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

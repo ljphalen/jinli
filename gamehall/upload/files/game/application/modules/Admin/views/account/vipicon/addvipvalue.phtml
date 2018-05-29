@@ -1,0 +1,35 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li class="current"><a href="javascript:;">添加活动成长值</a></li>
+	</ul>
+</div>
+<form method="post" action="/Admin/Account_VipIcon/addVipValue" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">用户uuid(<span style="color: red">*</span>)</th>
+			<td class="td"><input type="text" class="input wc" name="uuid" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">VIP成长值(<span style="color: red">*</span>)</th>
+			<td class="td"><input type="text" class="input wc" name="expr" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动类型(<span style="color: red">*</span>)</th>
+			<td class="td"><input type="text" class="input wc" name="type" value="0"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Account_VipIcon/addVipValue');
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

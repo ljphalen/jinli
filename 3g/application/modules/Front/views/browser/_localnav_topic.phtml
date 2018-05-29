@@ -1,0 +1,72 @@
+<ul class="ui-topic-list">
+	<?php
+	$i=0;
+	foreach($list as $val):
+		$img = '';
+		if (!empty($val['img'])) {
+			$img = Common::getImgPath().$val['img'];
+		}
+		$typeimg = '';
+		if (!empty($val['typeimg'])) {
+			$typeimg = Common::getImgPath().$val['typeimg'];
+		}
+		if ($i==0):
+	?>
+		<li>
+			<a href="<?=$val['url']?>">
+
+				<?php if (count($val['option'])==2):
+					foreach($val['option'] as $k => $v) {
+						$txt = explode('，',$v);
+						$opTxtb[$k] = implode('<br>',$txt);
+						$opTxtt[$k] = $txt[0];
+					}
+					?>
+					<div class="ui-topic-vote">
+						<div class="tit">
+							<p><?=$val['name']?></p>
+							<p><?=$val['desc']?></p>
+						</div>
+						<div class="txt">
+							<p><i class="icon-zan"></i><?=$opTxtb[0]?></p>
+							<p>VS</p>
+							<p><i class="icon-zan"></i><?=$opTxtb[1]?></p>
+						</div>
+					</div>
+				<?php else:?>
+					<div class="ui-topic-hot">
+						<div class="pic">
+							<span><img src="<?=$img?>" /></span>
+						</div>
+						<div class="txt">
+							<p><?=$val['name']?></p>
+							<p><?=$val['desc']?></p>
+							<p>点击参与</p>
+						</div>
+					</div>
+
+				<?php endif;?>
+			</a>
+		</li>
+	<?php else: ?>
+		<li>
+			<a href="<?=$val['url']?>">
+				<div class="ui-topic-item">
+					<div class="pic">
+						<span><img src="<?=$typeimg?>" /></span>
+					</div>
+					<div class="txt">
+						<p><?=$val['name']?></p>
+						<p><?=$val['desc']?></p>
+					</div>
+				</div>
+			</a>
+		</li>
+
+		<?php
+
+		endif;
+		$i++;
+	endforeach;
+	?>
+</ul>

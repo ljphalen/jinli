@@ -1,0 +1,70 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $goodsListUrl; ?>">商品列表</a></li>
+		</ul>
+	</div>
+	<div class="table_full">
+		<form action="<?php echo $goodsDetailUrl; ?>" method="POST" id="form">
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<table width="100%" cellspacing="0" cellpadding="0">
+				<tr class="tr">
+					<th class="th">选择活动名：</th>
+					<td class="td">
+						<select name="activity_id" id="activity_id">
+							<option value="0">请选择</option>
+							<?php foreach ($activityList as $k => $v) { ?>
+								<option <?php echo ($v['id'] == $params['activity_id']) ? 'selected="selected"' : ''; ?>  value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">选择状态：</th>
+					<td class="td">
+						<select name="prize_status"  id="prize_status">
+							<option value="-2">请选择</option>
+							<?php foreach ($statusList as $k => $v) { ?>
+								<option <?php echo  ($k == $params['prize_status']) ? 'selected="selected"' : ''; ?> value="<?php echo $k; ?>"><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+		</form>
+	</div>
+
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+				<th class="th">活动名称</th>
+				<th class="th">商品名</th>
+				<th class="th">用户手机号</th>
+				<th class="th">中奖时间</th>
+				<th class="th">获取时间</th>
+				<th class="th">过期时间</th>
+				<th class="th">状态</th>
+			</tr>
+			<?php foreach ($data as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['id'];?></td>
+					<td class="td" align="left"><?=$v['type_name'];?></td>
+					<td class="td"><?php echo $goods['name'];?></td>
+					<td class="td" style="color: blue"><?php echo $v['username']; ?></td>
+					<td class="td" style="color: blue"><?php echo date("Y-m-d H:i:s",$v['add_time']); ?></td>
+					<td class="td" style="color: blue"><?php echo date("Y-m-d H:i:s",$v['get_time']); ?></td>
+					<td class="td"  style="color: blue"><?php echo date("Y-m-d H:i:s",$v['expire_time']); ?></td>
+					<td class="th" style="color: blue"><?php echo $statusList[$v['prize_status']];?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

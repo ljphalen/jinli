@@ -1,0 +1,84 @@
+<?php
+error_reporting(E_ALL && ~E_NOTICE);
+
+class Command {
+    
+    private $client;
+    private static $_instance;
+    
+    private static function getInstance() {
+        if(! self::$_instance) {
+            self::$_instance = new Command();
+        }
+        return self::$_instance;
+    }
+    
+    public static function execute($command) {
+        $instance = self::getInstance();
+        if($instance->isConnected()) {
+            echo $instance->send($command) . PHP_EOL;
+        }else{
+            echo "无法连接" . PHP_EOL;
+        }
+    }
+    
+    public function __construct() {
+        if (! extension_loaded('swoole')) {
+            echo "加载swoole失败" . PHP_EOL;
+            return ;
+        }
+        $this->client = new swoole_client(SWOOLE_SOCK_TCP);
+        $this->initConnect();
+    }
+    
+    private function initConnect() {
+        $this->client->connect("127.0.0.1", 8088);
+    }
+    
+    private function isConnected() {
+        return $this->client && $this->client->isConnected();
+    }
+    
+    private function send($command) {
+        try {
+            $message = array();
+            if($this->isConnected()) {
+                $data = $this->getData($command);
+                $message = $this->pack($data);
+                $this->client->send($message);
+                $message = $this->client->recv();
+                $message = $this->unpack($message);
+            }
+            return $message && $message['data'];
+        } catch (Exception $e) {
+            echo ((string)$e) . PHP_EOL;
+        }
+        return false;
+    }
+
+    private function unpack($data) {
+        if(!$data) return false;
+        $pack = unpack("N", $data);
+        $length = $pack[1];
+        $msg = substr($data, - $length);
+        return json_decode($msg, true);
+    }
+    
+    private function pack($data) {
+        $message = json_encode($data);
+        return pack("N" , strlen($message) ). $message;
+    }
+    
+    private function getData($command) {
+        $tmp = array('op' => $command);
+        $data = array('op' => 'COMMAND', 'data' => $tmp);
+        return $data;
+    }
+}
+
+if ($argc < 2) {
+    die('input a command...' . PHP_EOL);
+}
+array_shift($argv);
+Command::execute($argv[0]);
+

@@ -1,0 +1,6 @@
+(function(a){var c="",b="div.module";GameApk.controller=a.Controller.extend({config:{View:GameApk.view,Model:GameApk.model},routes:{home:"homeInit",category:"categoryInit",subject:"subjectInit",rank:"rankInit","new":"newInit",event:"eventInit",gift:"giftInit"},homeInit:function(){var d=this;
+d.init({baseBed:"body",adjustLayout:b,modules:GameApk.ApiVersion=="v1"?"slidePic,recItem,recommend":"slidePic,recItem,activity,recommend"});},categoryInit:function(){var d=this;
+d.init({baseBed:"body",adjustLayout:"div.module",modules:"category"});},subjectInit:function(){var d=this;d.init({baseBed:"body",adjustLayout:"div.module",modules:"subject"});
+},rankInit:function(){var d=this;d.init({baseBed:"body",adjustLayout:b,modules:"commonItem",});},newInit:function(){var d=this;d.init({baseBed:".timeline",adjustLayout:b,modules:"newItem",});
+},eventInit:function(){var d=this;d.init({baseBed:"body",adjustLayout:"div.module",modules:"eventSection"});},giftInit:function(){var d=this;d.init({baseBed:"body",adjustLayout:"div.module",modules:"gift"});
+},});})(ICAT);

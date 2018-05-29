@@ -1,0 +1,119 @@
+<div class="addAD">
+    <div class="grid">
+        <div class="gridToolbar">
+            <p class="fl">
+                <input type="text" class="iText" id="search_value" /><a href="javascript:void(0)" id="search" class="btn">搜索</a>
+            </p>
+            <p class="fr">
+                <a href="javascript:void(0)"  class="cancel" id="checkAll">全选</a>
+                <a href="javascript:void(0)"  class="cancel" id="invertSelect">全不选</a>
+            </p>
+        </div>
+        <div style="height:390px;overflow-y:auto" id="pzListPopUp">
+            <table>
+                <thead>
+                    <tr>
+                        <th>配置项名称</th>
+                        <th>应用</th>
+                        <th>渠道</th>
+                        <th>产品</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="pztbody">
+                    <!-- loop result -->
+                    <tr>
+                        <td>{{result' value.name}}</td>
+                        <td>
+                            <!-- if {{result' value.app}} -->
+                                <!-- loop result' value.app -->
+                                    <p>{{result' app' value.app_name}}</p>
+                                <!-- endloop -->
+                            <!-- endif -->
+                        </td>
+                        <td>
+                            <!-- if {{result' value.channel}} -->
+                                    <p id="channel_{{result' value.id}}">{{result' value.channel}}</p>
+                            <!-- endif -->
+                        </td>
+                        <td>
+                            <!-- if {{result' value.prodcuct}} -->
+                            <!-- loop result' value.prodcuct -->
+                            <input type="hidden" name="product_comb{{result' prodcuct' value.id}}" value="{{result' value.product_comb}}">
+                            <p id="{{result' prodcuct' value.id}}" percent="{{result' prodcuct' value.percent}}">{{result' prodcuct' value.product_name}}</p>
+                            <!-- endloop -->
+                            <!-- endif -->
+                        </td>
+                        <td>
+                            <input type="radio" name='productid' value="{{result' prodcuct' value.id}}" />
+                            <input type="checkbox" name="config_id" config_level="{{result' value.config_detail_type}}" config_type="{{result' value.type}}" value="{{result' value.id}}" />
+                        </td>
+                    </tr>
+                    <!-- endloop -->
+
+                </tbody>
+            </table>
+        </div>
+        <div style="text-align:center;padding:10px 0;">
+            <a href="javascript:void(0)" class="btn" id="ok">确定</a>
+            <a href="javascript:void(0)" class="cancel" id="cancel">取消</a>
+        </div>
+    </div>
+</div>
+<script>
+$(function() {
+    //全选反选操作
+    var _checkbox = $("#pzListPopUp").find("input:checkbox");
+    $("#checkAll").click(function() {
+    	_checkbox.attr("checked", true);
+    });
+    $("#invertSelect").click(function() {
+    	_checkbox.attr("checked", false);
+    });
+    $("#search").click(function(){
+        var val = $("#search_value").val();
+        $("#pztbody").find("tr").each(function(){
+            var firstTd = $(this).find('td').eq(0);
+            if (firstTd.html().indexOf(val) >= 0){
+                $("#pztbody").prepend($(this));
+            }
+        })
+    });
+});
+    function jqchk(){  //jquery获取复选框值
+        var chk_value =[];
+        $('input[name="config_id"]:checked').each(function(){
+        chk_value.push($(this).val());
+        });
+        if(chk_value.length==0){
+            alert('请选择至少一个产品！');
+            return false;
+        }
+        return chk_value;
+    }
+    
+    function jqchk_configlevel(){  //jquery获取复选框值
+        var configlevel_value =[];
+        $('input[name="config_id"]:checked').each(function(){
+        configlevel_value.push($(this).attr("config_level"));
+        });
+        if(configlevel_value.length==0){
+            alert('请选择至少一个产品！');
+            return false;
+        }
+        return configlevel_value;
+    }
+    
+    function jqchk_configtype(){  //jquery获取复选框值
+        var configtype_value =[];
+        $('input[name="config_id"]:checked').each(function(){
+        configtype_value.push($(this).attr("config_type"));
+        });
+        if(configtype_value.length==0){
+            alert('请选择至少一个产品！');
+            return false;
+        }
+        return configtype_value;
+    }
+    
+</script>

@@ -1,0 +1,76 @@
+<?php echo $this->render("layout/admin_header.phtml");?>
+	<div class="body">
+	<h1 class="page-title" >礼包管理</h1>
+		<?php echo $this->render("layout/side.phtml");?>
+		<div class="col-main">
+			<div class="gift-body">
+				<div class="search-bar">
+					<form action="<?php echo $listUrl?>" method="get">
+						<label>名称：</label><input class="input" name="keyword" value="<?php echo $inputVars['keyword']?>"/>
+						<label>状态：</label>
+						<select name="status" class="select">
+						    <option  value="0">全部</option>
+							<option <?php if($inputVars['status'] == 1) echo 'selected';?> value="1">有效</option>
+							<option <?php if($inputVars['status'] == 2) echo 'selected';?> value="2">无效</option>
+						</select>
+						<button type="submit" class="btn">查询</button>
+						<span class="result">当前共有<em id="result"><?php echo $total?></em>条结果</span>
+					</form>
+					<!-- 礼包添加页面的地址 -->
+					<a href="<?php echo $addUrl?>" class="btn btn-add">添加礼包</a>
+				</div>
+				<table class="J_table table" data-ajaxUrl="<?php echo $deletePortUrl?>">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>礼包名称</th>
+							<th>状态</th>
+							<th>活动有效期</th>
+							<th>兑换有效期</th>
+							<th>类型</th>
+							<th>礼包数量(已发放/总)</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php 
+						$format = 'Y/m/d H:i:s';
+						foreach ($list as $giftBag){
+                        ?>
+						<tr>
+							<td><?php echo $giftBag['id'];?></td>
+							<td><?php echo $giftBag['title'];?></td>
+							<td><?php echo $giftBag['status'] == 1 ? '有效' : '无效';?></td>
+							<td>
+								<div><?php echo date($format, $giftBag['activity_start_time']);?></div>
+								<div><?php echo date($format, $giftBag['activity_end_time']);?></div>
+							</td>
+							<td>
+								<div><?php echo date($format, $giftBag['exchange_start_time']);?></div>
+								<div><?php echo date($format, $giftBag['exchange_end_time']);?></div>
+							</td>
+							<td><?php echo $giftBag['code_type'] == Admin_Service_Gift::CODE_TYPE_MULTI ? '多个' : '1个';?></td>
+							<td><span><?php echo $giftBag['send_count'];?></span> / <span><?php echo $giftBag['total'];?></span></td>
+							<td>
+								<a href="<?php echo $editUrl.'?'.'id='.$giftBag['id']?>" class="edit">编辑</a><!-- 编辑跳转的地址 -->
+								<a  href="javascript:void(0);" class="J_giftDel delete" data-giftStatus="<?php echo $giftBag['status'];?>" data-giftId="<?php echo $giftBag['id'];?>">删除</a>
+							</td>
+						</tr>
+						<?php }?>
+					</tbody>
+				</table>
+                    <?php echo $pager;?>
+				</div>
+        </div>
+	</div>
+	<div class="J_dialog mask  hidden">
+		<div class="dialog-error-container">
+			<h1>提示</h1>
+			<p><i class="icon-info"></i>本活动正在有效期内，是否删除？</p>
+			<input id="gifDelConfirm" class="btn-ok btn-small" type="button" value="是" />
+			<input id="operateCancel" class="btn-ok btn-small" type="button" value="否" />
+		</div>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

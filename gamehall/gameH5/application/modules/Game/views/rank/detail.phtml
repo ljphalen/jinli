@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<?php $this->hasSearch="true"; ?>
+	<meta charset="UTF-8">
+	<title>游戏大厅</title>
+	<?php echo $this->render("layout/cssInc.phtml");?>
+</head>
+<body>
+	<?php echo $this->render("layout/header.phtml");?>
+	<div id="container">
+		
+    </div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+<?php echo $this->render("layout/scriptInc.phtml");?>
+<script type="text/javascript">
+	var rankingData = <?php echo $rankData;?>;
+	rankingData.now = true;
+	rankingData.LoadMoreName = '加载更多';
+	
+	
+	React.render(
+		React.createElement(Ranking, {items: rankingData})
+	  , document.getElementById('container')
+	);
+
+</script>
+<script src="<?php echo "$appJs/loadImg.js$timestamp";?>" type="text/javascript"></script>
+</html>

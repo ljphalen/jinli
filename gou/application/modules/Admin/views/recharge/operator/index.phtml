@@ -1,0 +1,56 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li <?php if ($opid == 1):?>class="current"<?php endif;?>><a href="<?php echo $indexUrl;?>?opid=1">移动</a></li>
+		<li <?php if ($opid == 2):?>class="current"<?php endif;?>><a href="<?php echo $indexUrl;?>?opid=2">联通</a></li>
+		<li <?php if ($opid == 3):?>class="current"<?php endif;?>><a href="<?php echo $indexUrl;?>?opid=3">电信</a></li>
+	</ul>
+</div>
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="20%">ID</td>
+			<td width="40%">价格</td>
+			<td width="40%">价格偏移量</td>
+		</tr>
+		<?php if(!empty($list)): foreach ($list as $val):?>
+		<tr class="ct">
+			<td><?php echo $val['id'];?></td>
+			<td><?php echo $price[$val['pid']]['price'];?></td>
+			<td class="price_edit" priceid="<?php echo $val['id'];?>" id="<?php echo $val['id'];?>"><?php echo $val['offset'];?></td>
+		</tr>
+		<?php endforeach; endif;?>
+	</table>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.price_edit').mouseover(function(){
+		$(this).css('background-color','#e6e6e6');
+	}).mouseout(function(){
+		$(this).css('background-color','');
+	}).dblclick(function(){
+		var priceid = $(this).attr('priceid');
+		var offset = $(this).text();
+		$(this).html('<input type="text" class="input wb" name="price" value="'+ offset +'">');
+		$('.price_edit>input').focus().blur(function(){
+			var newValue = $(this).val();
+			$.ajax({
+				url:'<?php echo $editPostUrl; ?>',
+				type:'post',
+				data:'id='+priceid+'&value='+newValue+'&token=<?php echo $token;?>',
+				success:function(msg){
+					if (msg == 1){
+						$('.price_edit>input').remove();
+						$('#'+priceid).text(newValue);
+					}
+				}
+			}); // end ajax
+		});	
+	});
+	
+});
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

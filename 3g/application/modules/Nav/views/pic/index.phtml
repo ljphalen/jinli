@@ -1,0 +1,71 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>美图精选</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="sige-full-screen" content="true" />
+    <link rel="stylesheet" href="<?=$staticResPath?>/mito/css/style.min.css?v=<?=$version?>" />
+</head>
+<body class="ui-pg-app">
+
+<!-- 分类栏目Tab -->
+<div class="mod-card-tab">
+    <div class="mod-card-nav">
+        <div id="J_scroll_tap" class="wrapper">
+            <div class="scroller">
+                <ul class="nav">
+                    <?php
+                    foreach($columns as $k => $val):
+                        $class = $val['appId'] == $appId? 'class="active"':'';
+                    ?>
+                    <li data-appid="<?=$val['appId']?>" <?=$class?>><a href="/nav/pic/index?appId=<?=$val['appId']?>"><?=$val['appName']?></a></li>
+                    <?php  endforeach;?>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="mod-card-wrap">
+        <div id="container" class="mod-card-list">
+
+        </div>
+    </div>
+</div>
+<!-- 弹窗的栏目分类 -->
+<div id="J_pop_mask" class="ui-pg-mask" style="display:none;"></div>
+<!-- 正在加载中 -->
+<div id="J_net_loading" class="G-animate-load-wrap layout-fixed" style="display:none;">
+    <div>
+        <span class="loading"></span>
+        <span class="txt">正在加载…</span>
+    </div>
+</div>
+<!-- 无网络连接 -->
+<div id="J_net_error" class="net-pg-df" style="display: none;">
+    <img src="assets/pic/unnetwork.png" />
+    <p>数据获取失败，请检查网络连接并重试</p>
+</div>
+<script type="text/x-handlebars-template" id="waterfall-tpl">
+    {{#data.list}}
+    <div class="item">
+        <a href="{{url}}" title="{{title}}"><img width="{{width}}" height="{{height}}" alt="{{title}}" src="{{image}}" /></a>
+    </div>
+    {{/data.list}}
+</script>
+<!-- load script -->
+<script>
+    var require = {
+        urlArgs: 'v=<?=$version?>' // 修改这里的版本号
+    };
+</script>
+<script data-main="<?=$staticResPath?>/mito/js/main.min" src="<?=$staticResPath?>/mito/js/require.min.js?v=<?=$version?>"></script>
+<!-- /load script -->
+</body>
+</html>

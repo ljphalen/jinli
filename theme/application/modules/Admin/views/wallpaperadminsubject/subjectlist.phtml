@@ -1,0 +1,214 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<script type="text/javascript"
+src="<?php echo $staticroot . '/jssdk/jquery-1.9.1.js' ?>"></script>
+<script type="text/javascript"
+src="<?php echo $staticroot . '/jssdk/layer/layer.min.js' ?>"></script>
+
+<style type="text/css">
+    .all_images {
+        cursor: pointer;
+        color: #09f;
+    }
+</style>
+<div class="nav">
+    <ul class="cc">
+        <li class="current"><a href="<?php echo $listUrl; ?>">壁纸专题列表</a></li>
+    </ul>
+</div>
+<div class="h_a">壁纸专题列表</div>
+
+<style type="text/css">
+    .chk_style{
+        background-color:aqua;
+    }
+</style>
+
+<form action="<?php echo $listUrl; ?>" method="post" id="searchForm">
+    <input name="token" type="hidden" value="<?php echo $token; ?>" />
+    <div class="table_full">
+
+
+        <div class="table_list">
+            <table width="100%">
+                <tr class="hd">
+                    <td  width="4%">id号</td>
+                    <td >标题</td>
+
+                    <td width="8%">类别</td>
+                    <td  width="15%">创建时间</td>
+
+                    <td  width="15%">发布时间</td>
+
+                    <td  width="8%">屏序</td>
+                    <td  width="8%">操作</td>
+                    <td width="5%">状态</td>
+                    <td width="8%">添加</td>
+                    <td width="5%">缩略图</td>
+
+                </tr>
+                <input type="hidden" name="setid" value="<?php echo $setid; ?>"/>
+                <?php foreach ($subjectinfo as $key => $value) { ?>
+                    <tr class="ct" >
+                        <td ><?php echo $value['w_subject_id']; ?></td>
+
+                        <td><input class="subject_name" value="<?php echo $value['w_subject_name']; ?>"/></td>
+
+                        <td><?php
+                            if ($value['w_subject_sub_type'] == 9) echo"广告理专题";
+                            else echo "普通专题";
+                            ?></td>
+                        <td><?php echo date('Y-m-d H:i:s', $value['w_subjet_create_time']) ?></td>
+                        <td><?php echo date('Y-m-d H:i:s', $value['w_subject_pushlish_time']); ?></td>
+                        <td><?php
+                            if ($value['w_subject_type'] > 10) {
+                                echo '历史屏序' . $value['w_subject_type'] % 10;
+                            } else {
+                                echo $value['w_subject_type'];
+                            }
+                            ?></td>
+
+                        <td><a class ="subject_del" href="javascript:;"val="<?php echo $value['w_subject_id'] ?>">删除</a></td>
+                        <td><a class ="subject_status" href="javascript:;"val="<?php echo $value['w_subject_id'] ?>"><?php echo $status[$value['w_subject_status']]; ?></a></td>
+
+
+                        <?php if ($value['w_subject_sub_type'] == 9) { ?>
+                            <td  class = "all_advimages" vals="<?php echo $value['w_subject_id']; ?>">
+                                查看广告
+                                <div id="divs" style="display:none"><?php echo $imgurl . $value["wallpaper_path"]; ?>"></div>
+                            </td>
+                        <?php } else { ?>
+                            <td  class = "all_images" vals="<?php echo $value['w_subject_id']; ?>">
+                                添加壁纸
+                                <div id="divs" style="display:none"><?php echo $imgurl . $value["wallpaper_path"]; ?>"></div>
+                            </td>
+                        <?php } ?>
+
+                        <td  class = "all_images" vals="<?php echo $value['w_subject_id']; ?>">预览
+                            <div id="divs" style="display:none"><?php echo $imgurl . $value["wallpaper_path"]; ?>"></div>
+                        </td>
+
+                    </tr>
+                <?php } ?>
+            </table>
+
+
+
+        </div>
+</form>
+<div class="mr10 cc">
+    <?php echo $pager; ?>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var webroot = "<?php echo $webroot ?>";
+
+        $(".subject_name").focusout(function() {
+            var name = $(this).val();
+            var sid = $(this).parent().prev().html();
+            var url = webroot + "/Admin/wallpaperadsubject/update_title";
+            var data = "sid=" + sid + "&title=" + name + "&token=" + token;
+            $.post(url, data, function(msg) {
+                if (msg) {
+                    location.reload();
+                }
+            });
+
+        })
+
+
+
+        $(".all_images").click(function() {
+            var sid = $(this).attr("vals");
+            var submit = webroot + "/Admin/wallpaperadsubject/poplist_post";
+            //var submit = "./addImgToSubject";
+            var html = webroot + "/Admin/wallpaperadlist/poplist?setid=" + sid + "&submit=" + submit;
+
+            $.layer({
+                type: 2,
+                maxmin: true,
+                shadeClose: true,
+                title: 'layer授权',
+                shade: [0.1, '#fff'],
+                offset: ['10px', ''],
+                area: ['1000px', ($(window).height() - 50) + 'px'],
+                iframe: {src: html}
+            });
+        });
+        /****************************************************8*****/
+        $(".subject_status").click(function() {
+
+            var msgs = '';
+            var sid = $(this).attr("val");
+            var strs = $(this).html();
+            var status_id = '';
+
+            if (strs == "预览") {
+                msgs = "发布";
+                status_id = 2;
+            } else {
+                msgs = "预览";
+                status_id = 1;
+            }
+            $.layer({
+                shade: [1],
+                area: ['auto', 'auto'],
+                dialog: {
+                    msg: '您确定要' + msgs + '？',
+                    btns: 2,
+                    type: 4,
+                    btn: ['确定', '不用了'],
+                    yes: function() {
+                        var url = webroot + "/Admin/wallpaperadsubject/update_setStatus";
+                        var data = "sid=" + sid + "&status=" + status_id + "&token=" + token;
+
+                        $.post(url, data);
+                        layer.msg('成功', 1, 1, function() {
+                            location.reload();
+                        });
+                    }, no: function() {
+                        layer.msg('我XO', 1, 13);
+                    }
+                }
+            });
+
+        });
+
+        //////////////////////////////////////////////////////////////////////////
+
+        $(".subject_del").click(function() {
+            var sid = $(this).attr("val");
+            $.layer({
+                shade: [1],
+                area: ['auto', 'auto'],
+                dialog: {
+                    msg: '您确定要删除该专题？',
+                    btns: 2,
+                    type: 4,
+                    btn: ['确定', '不用了'],
+                    yes: function() {
+                        var url = webroot + "/Admin/wallpaperadsubject/delsubject";
+                        var data = "sid=" + sid + "&token=" + token;
+
+                        $.post(url, data);
+                        layer.msg('成功', 1, 1, function() {
+                            location.reload();
+                        });
+                    }, no: function() {
+                        layer.msg('我XO', 1, 13);
+                    }
+                }
+            });
+        });
+
+
+    })
+
+
+
+
+</script>
+
+
+
+<?php echo $this->render("layout/footer.phtml"); ?>

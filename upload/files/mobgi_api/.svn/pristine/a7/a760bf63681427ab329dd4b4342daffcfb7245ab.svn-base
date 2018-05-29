@@ -1,0 +1,170 @@
+<link media="screen" href="{{rootUrl}}/css/gri.controls.css" rel="stylesheet" type="text/css">
+<div class="colMain">
+    <div class="title"></div>
+    <div class="main">
+        <div class="toolbar">
+            <div class="search fl">
+                <span>
+                    <form name="form" method="GET" action="planveiw">
+                        <input type="hidden" id="config_id" name="config_id" value="{{config_id}}"/>
+                        <input type="hidden" id="config_name" name="config_name" value="{{config_name}}"/>
+                        <input type="text" id="dtime" name="dtime" value="{{dtime}}" class="iText datepicker" title="输入关键字可搜索配置名" style="width:160px;"/>
+                        <input type="hidden" name="screatedate"  id="screatedate" value="<?php echo $_GET['screatedate'];?>">
+                        <input type="hidden" name="ecreatedate" id="ecreatedate" value="<?php echo $_GET['ecreatedate'];?>">
+                        <input type="submit" class="submit" value="" title="输入关键字可搜索配置名" onclick="confirmSubmit();"/>
+                    </form>
+                </span>
+            </div>
+            <a href="/implantable/planedit_view?config_id={{config_id}}"  style="width:85px" class="fr add">新建推广计划</a>
+        </div>
+        <div class="content">
+            <div class="grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>配置项名称</th>
+                            <th>条件配置</th>
+                            <th>计划时间</th>
+                            <th>素材组</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- loop result -->
+                        <tr>
+                            <td>{{result' value.config_name}}</td>
+                            <td>{{result' value.appname}}</td>
+                            <td><?php echo date("Y-m-d H:i:s",$v1['start_time']); ?>~<?php echo date("Y-m-d H:i:s",$v1['end_time']); ?></td>
+                            <td>
+                                <table>
+                                            <tr>
+                                                <?php foreach($v1['blocktype'] as $k2=>$v2): ?>
+                                                    <td><?php echo $v2['blockname']; ?></td>
+                                                <?php endforeach; ?>
+                                            </tr>
+                                            <tr>
+                                                <?php foreach($v1['block'] as $k3=>$v3): ?>
+                                                    <?php if( $v3 ): ?>
+                                                    <td><?php echo $v3['product_name']; ?></td>
+                                                    <?php else: ?>
+                                                    <td>空</td>
+                                                    <?php endif; ?>
+                                                <?php endforeach; ?>
+                                            </tr>
+                                </table>
+                            </td>
+                            <td>
+                                <a href="planedit_view?config_id={{config_id}}&plan_id={{result' value.plan_id}}" class="edit" title="编辑"></a>
+                                |
+                                <a  id='t{{result' value.plan_id}}' href="javascript:void(0)" onclick="set_plan_state({{result' value.plan_id}},this)" class="run" <!-- if {{result' value.runstatus}}==3 -->disabled<!-- endif -->  states="<!-- if {{result' value.state}}==1 -->2<!-- else -->1<!-- endif -->" title="改变导量计划状态" style="color:<!-- if {{result' value.state}}==2 -->red<!-- else -->blue<!-- endif -->"><!-- if {{result' value.state}}==2 -->停止<!-- else -->运行<!-- endif --></a>
+                                |
+                                <a href="plan_del?plan_id={{result' value.plan_id}}&config_id={{config_id}}" class="del" title="删除"></a>
+                            </td>
+                        </tr>
+                        <!-- endloop -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">{{pager.pages}}</div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="{{rootUrl}}/js/thickbox.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/gri.dateRange.js"></script>
+<link rel="stylesheet" href="{{rootUrl}}/css/thickbox.css" type="text/css" />
+<script language="javascript">
+function set_plan_state(id,thiss) {
+    if($(thiss).attr("states")==2){
+        var tipsmsg="你确定停止此计划吗？";
+    }else{
+       var tipsmsg="你确定运行此计划吗？";
+    }
+    jConfirm(tipsmsg, function() {
+            ajaxGET("plan_set_state", "plan_id=" + id + "&state=" + $(thiss).attr("states"), function(data) {
+                if (data.error == 0) {
+                    //alert(data.result)
+                    if($(thiss).attr("states")==2){
+                        $(thiss).text("运行");
+                        $(thiss).attr("states",2);    
+                    }else{
+                        $(thiss).text("停止");
+                        $(thiss).attr("states",1);
+                    }
+                    location.reload();
+                } else {
+                    jAlert(data.msg)
+                }
+            })
+        }, function() {
+            
+        });
+}
+
+var nc = false;
+    var dateRange = new pickerDateRange("dtime",{
+        theme : 'ta', // 日期选择器TA主题
+        isTodayValid : 1,
+        startDate : "<?php echo $_GET['screatedate'];?>",
+        endDate : "<?php echo $_GET['ecreatedate'];?>",
+        minValidDate : 0,
+        needCompare : 1,
+        stopToday:false,
+        success : function (dateObj){
+            $("#dtime").attr("sdate", dateObj.startDate);
+            $("#dtime").attr("edate", dateObj.endDate);
+            if(dateObj.needCompare == 1)
+            {
+            	$("#dtime").attr("csdate", dateObj.startCompareDate);
+                $("#dtime").attr("cedate", dateObj.endCompareDate);
+                nc = true;
+            }else
+            {
+            	$("#dtime").attr("csdate", "");
+                $("#dtime").attr("cedate", "");
+                nc = false;
+            }
+        }
+    });
+    var screatedate = "<?php echo $_GET['screatedate'];?>";
+    var ecreatedate = "<?php echo $_GET['ecreatedate'];?>";
+    if(screatedate!=''&ecreatedate!=''){
+        $("#dtime").val("<?php echo $_GET['screatedate'].' 至 '.$_GET['ecreatedate'];?>")
+    }
+    function confirmSubmit()
+    {
+        sdate = $("#dtime").attr("sdate");
+        edate = $("#dtime").attr("edate");
+        $("#screatedate").attr("value",sdate);
+        $("#ecreatedate").attr("value",edate);
+        return true;
+    }
+    function get_state(configid){
+        ajaxGET("plan_get_state", "config_id=" + configid, function(data) {
+            if (data.error == 0) {
+                   for(var i=0;i<data.msg.length;i++){
+                        colorStr = "color = 'black'";
+                        if(data.msg[i].state == 1){
+                            if(data.msg[i].runstatus == 1){
+                                data.msg[i].status = "<font color='orange'>" + data.msg[i].status + "</font>";
+                            }
+                            else if(data.msg[i].runstatus == 2){
+                                data.msg[i].status = "<font color='green'>" + data.msg[i].status + "</font>";
+                            }
+                        }else if(data.msg[i].state == 2){
+                            data.msg[i].status = '<font color="red">手动停止</font>';
+                        }
+                        else {
+                            data.msg[i].status = '<font color="red">异常状态</font>';
+                        }
+                        $("#t"+data.msg[i].id).html(data.msg[i].status);
+                }
+            }else{
+                jAlert("更新状态失败");
+            }
+        })
+    }
+$(function(){
+    window.setInterval("get_state({{config_id}})",5000);
+})
+</script>

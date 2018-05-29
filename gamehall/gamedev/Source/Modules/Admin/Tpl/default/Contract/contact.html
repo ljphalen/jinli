@@ -1,0 +1,130 @@
+<form id="pagerForm" action="__URL__" method="post">
+    <input type="hidden" name="pid" value="{$_REQUEST.pid}"/>
+    <input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+    <input type="hidden" name="numPerPage" value="{$_REQUEST.numPerPage}"/>
+    <input type="hidden" name="orderField" value="{$_REQUEST.orderField}"/>
+    <input type="hidden" name="orderDirection" value="{$_REQUEST.orderDirection}"/>
+</form>
+<style>
+    .add-btn{
+        width: 128px;
+        border: 1px solid #3AB7F7;
+        display: block;
+        position: absolute;
+        right: 107px;
+        top: 7px;
+        border-radius: 2px;
+        padding: 2px;
+        text-align: center;
+        text-decoration: none;
+        height: 15px;
+        line-height: 15px;
+    }
+</style>
+<div class="page">
+    <div class="pageHeader" style="height: 23px;">
+        <a href="{:U('addcontact')}" class="add-btn" target="dialog" width="580" height="250" mask="true">新增</a>
+    </div>
+    <!--发票类型-->
+    <div class="pageContent" id="contract_1">
+        <table class="list listW" width="100%" layoutH="138">
+            <thead>
+            <tr>
+                <foreach name="contactHead" item="v">
+                    <th>{$v}</th>
+                </foreach>
+            </tr>
+            </thead>
+            <tbody>
+            <volist id="vo" name="contacts">
+                <tr target="sid_node" rel="{$vo['id']}">
+
+                    <td>{$vo['id']}</td>
+                    <td>{$vo['name']}</td>
+                    <td>{$vo['phone']}</td>
+                    <td>{$vo['email']}</td>
+                    <td>{$vo['area']}</td>
+                    <td> <if condition="$vo['status'] eq 1">有效  <else/>  无效 </if> </td>
+                    <td class="time">{$vo['ctime']|date="Y-m-d",###}</td>
+                    <td class="tc5">{$vo['adder']}</td>
+                    <td>
+                        <a href="{:U('editcontact', array('id'=>$vo['id']))}" target="dialog" width="600" height="350" mask="true">
+                        	<b style="color:red;">编辑</b>
+						</a>
+                    </td>
+                </tr>
+            </volist>
+            </tbody>
+        </table>
+    </div>
+
+    <!--分成比例-->
+    <div class="pageContent" style="display: none" id="contract_2">
+        <table class="list listW" width="100%" layoutH="138">
+            <thead>
+            <tr>
+                <foreach name="RatioHead" item="v">
+                    <th> {$v}</th>
+                </foreach>
+            </tr>
+            </thead>
+            <tbody>
+
+            <volist id="vo" name="Ratio">
+                <tr target="sid_node" rel="{$vo['id']}">
+                    <td>{$vo['id']}</td>
+                    <td>{$vo['name']}</td>
+                    <td>甲:乙={$vo['ratio1']}:{$vo['ratio2']}</td>
+                    <td>
+                        <if condition="$vo['status'] eq 1">有效
+                            <else/>
+                            无效
+                        </if>
+                    </td>
+                    <td class="time">{$vo['ctime']|date="Y-m-d",###}</td>
+                    <td class="tc5">{$vo['adder']}</td>
+                    <td>
+                        <a href="{:U('authorize', array(" id"=>$vo['id']))}" target="dialog" width="800" height="580"
+                        mask="true"><b style="color:red;">编辑</b></a>
+                    </td>
+                </tr>
+            </volist>
+            </tbody>
+        </table>
+    </div>
+
+    <!--金立对接人-->
+    <div class="pageContent" style="display: none" id="contract_3">
+        <table class="list listW" width="100%" layoutH="138">
+            <thead>
+            <tr>
+                <foreach name="ContactHead" item="v">
+                    <th> {$v}</th>
+                </foreach>
+            </tr>
+            </thead>
+            <tbody>
+            <volist id="vo" name="Contact">
+                <tr target="sid_node" rel="{$vo['id']}">
+                    <td>{$vo['id']}</td>
+                    <td>{$vo['name']}</td>
+                    <td>{$vo['phone']}</td>
+                    <td>{$vo['email']}</td>
+                    <td>
+                        <if condition="$vo['status'] eq 1">有效
+                            <else/>
+                            无效
+                        </if>
+                    </td>
+                    <td class="time">{$vo['ctime']|date="Y-m-d",###}</td>
+                    <td class="tc5">{$vo['adder']}</td>
+                    <td>
+                        <a href="{:U('authorize', array(" id"=>$vo['id']))}" target="dialog" width="800" height="580"
+                        mask="true"><b style="color:red;">编辑</b></a>
+                    </td>
+                </tr>
+            </volist>
+            </tbody>
+        </table>
+    </div>
+</div>

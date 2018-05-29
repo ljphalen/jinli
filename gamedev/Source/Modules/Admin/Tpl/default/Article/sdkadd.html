@@ -1,0 +1,68 @@
+<div class="page">
+	<div class="pageContent">
+	<form id="article_form" method="post" action="__URL__/addSave/navTabId/__MODULE__/callbackType/closeCurrent"
+		class="pageForm required-validate" enctype="multipart/form-data"
+		role="form" onsubmit="return iframeCallback(this, navTabAjaxDone);" >
+		<input type="hidden" name="id" value="{$info.id}" />
+		<input type="hidden" name="status" value="{$info.status}" />
+		<input type="hidden" name="mold" value="{:ArticleModel::MOLD_DOWNLOAND}" />
+		<div class="pageFormContent" layoutH="58">
+			<div class="unit">
+				<label>版本：</label>
+				<input type="text" name="title" id="title" size="100" maxlength="200" value="{$info.title}" class="required"/>
+			</div>
+			<div class="unit">
+				<label>更新日志：</label>
+				<textarea rows="5" cols="100" name="info" id="info" class="required">{$info.info}</textarea>
+			</div>
+            <div class="unit">
+                <label>附件：</label>
+                <input type="file" class="form-control" id="file_path" tabindex="1" name="file_path">
+                <if condition="$info['file_path']">
+                    <a href="{:Helper("Apk")->get_url('doc')}{$info['file_path']}" target="_blank">
+            		{:Helper("Apk")->get_url('doc')}{$info['file_path']}
+             		</a>
+                </if>
+            </div>
+			<div class="unit">
+				<label>内容：</label>
+				<textarea class="editor" name="content" style="width:80%;min-height:300px;"
+					tools="mfull"
+					upImgUrl="{:U('Upload/save','type=image')}"
+					upImgExt="jpg,jpeg,gif,png"
+					tools="simple">{$info.content|safe}</textarea>
+			</div>
+			<div class="unit">
+				<label>发布者：</label>
+				<input type="text" name="author" id="author" size="30" maxlength="100" value="{$info.author|default=$admin[nickname]}" class="required"/>
+			</div>
+			<div class="unit">
+				<label>发布时间：</label>
+				<php>$time = date("Y-m-d H:i:00");</php>
+				<input type="text" readonly="true" value="{$info.pubdate|default=$time}" datefmt="yyyy-MM-dd HH:mm:ss" size="25" class="date textInput readonly valid" name="pubdate">
+			</div>
+			
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="button" class="sub_act" onclick="return sub_act({:ArticleModel::STATUS_SUC});" tstatus="{:ArticleModel::STATUS_SUC}" >保存并上线</button></div></div></li>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="button" class="sub_act" onclick="return sub_act({:ArticleModel::STATUS_SAVE});" status="{:ArticleModel::STATUS_SAVE}" >保存不上线</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+	
+	</div>
+</div>
+
+<script type="text/javascript">
+function sub_act(status)
+{
+	$("input[name='status']").val(status);
+	$("#article_form").submit();
+}
+if ($ != jQuery) {
+    $ = jQuery.noConflict();
+}
+
+</script>

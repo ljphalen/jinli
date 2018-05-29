@@ -1,0 +1,23 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+    // 这个函数将来会被iframe用到
+    function getIframeVal(val)
+    {
+        alert(val);
+        $(input[name=up_img]).val(val);
+        $(input[name=up_img]).append('<img src="'+val+'" alt=""/>')
+    }
+    $("#sub_btn").click($("#form").submit())
+</script>
+<form action="/test/x" method="post" id="form" name="img">
+    <input type="text" name="up_img" hidden="hidden" /><img src="" alt=""/>
+<!-- 我把upload.com指向了127.0.0.1 -->
+
+</form>
+    <form method="post" target="if" enctype="multipart/form-data" action="http://kwd.milo.com/upload.php?cb=http://apk.gou.com/test/up">
+        <input type="file" name="file" />
+        <input type="SUBMIT" value="upload" />
+    </form>
+<IFRAME id="if" name="if" src="about:blank" frameborder='0' hidden="hidden"></IFRAME>
+    <input type="button" id="sub_btn" value="提交" />
+<?php echo $this->render("layout/footer.phtml");?>

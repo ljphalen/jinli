@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width = device-width, user-scalable = no">
+<title>reader</title>
+<style id="font-style">
+body {
+	background-color: #f7f7f7;
+	font-size: 20px;
+	line-height: 28px;
+	margin: 0px;
+	text-indent: 2em;
+}
+
+img {
+	display: block;
+	max-width: 100%;
+	margin: 25px auto;
+}
+
+p img {
+	text-indent: 0px;
+}
+
+h3 {
+	font-size: 24px;
+	line-height: 34px;
+	text-indent: 0px;
+}
+
+p {
+	margin: 0px;
+}
+
+section {
+	padding: 25px 16px 47px;
+	background: -webkit-gradient(linear, left top, left bottom, from(#828894),
+		to(#828894), color-stop(0.2, #9CA2AE), color-stop(0.8, #9CA2AE));
+	background-size: 100% 15px;
+	background-repeat: no-repeat;
+}
+
+section:first-child {
+	background: none;
+	padding-top: 0;
+}
+
+h4 {
+	color: #8F8F8F;
+	font-size: 10px;
+	text-align: right;
+	margin: -2px 0 24px;
+}
+
+a img {
+	border: none;
+}
+</style>
+</head>
+<body>
+
+
+	<script>
+function setFontSize(fontSize) {
+ 	var body = document.querySelector('body');
+	body.style.fontSize = fontSize;
+	
+}
+
+function addPageTouch(pageNum) {
+	addPage(pageNum);
+	window.setTimeout(function () {
+           readermode.pageDown();
+       }, 200);
+}
+// Gionee <shaozj><2013-10-17> modify for CR00924372 begin
+function getHtmlBody() {
+	var result = window.prompt('gn://GNReaderHtml/getHtmlBody','');
+	var jsObject = eval('(' + result + ')');
+	return jsObject.data;
+}
+// Gionee <shaozj><2013-10-17> modify for CR00924372 end
+function addPage(pageNum) {
+    var last = document.querySelector('#com_maxthon_read_mode_night_mode');
+    var	newPage = document.createElement('section');
+    if(pageNum == 1){	
+        newPage.style.paddingTop="0px";
+        newPage.style.background="none";
+        // Gionee <shaozj><2013-10-17> modify for CR00924372 begin
+        newPage.innerHTML = getHtmlBody();
+        // Gionee <shaozj><2013-10-17> modify for CR00924372 end
+    } else {
+        pageNum = pageNum || '';
+        // Gionee <shaozj><2013-10-17> modify for CR00924372 begin
+        newPage.innerHTML = '<h4>' + pageNum + '</h4>' + getHtmlBody();
+        // Gionee <shaozj><2013-10-17> modify for CR00924372 end
+    }
+    var body = document.querySelector('body');
+    body.insertBefore(newPage, last);
+    var fs = getComputedStyle(body).fontSize;
+    if (fs) {
+        fs = parseInt(fs, 10);
+    }
+    body.style.fontSize =  fs + 'px';
+}
+    
+function delPage(num) {
+    var firstChild;
+    for (var i = 0;i < num; i++) {
+        firstChild = document.querySelector('section');
+        if (firstChild) {
+            document.querySelector('body').removeChild(firstChild);
+        }
+        else {
+            return;
+        }
+    }
+}
+
+function changeColorMode(mode) {
+    if (mode == 0) {
+        mxNightModeTool.applyNightMode();
+    }
+    else {
+        mxNightModeTool.removeNightMode();
+    }
+    readermode.changeColorMode();
+}
+
+function zoomOut() {
+    var body = document.querySelector('body');
+    var fs = getComputedStyle(body).fontSize;
+    if (fs) {
+        fs = parseInt(fs, 10);
+        fs = fs >= 30 ? 30 : fs + 2;
+    }
+    body.style.fontSize =  fs + 'px';
+    notifyFontSizeChanged(fs);
+}
+
+function zoomIn() {
+    var body = document.querySelector('body');
+    var fs = getComputedStyle(body).fontSize;
+    if (fs) {
+        fs = parseInt(fs, 10);
+        fs = fs <= 16 ? 16 : fs - 2;
+    }
+    body.style.fontSize =  fs + 'px';
+    notifyFontSizeChanged(fs);
+}
+
+
+
+function notifyFontSizeChanged(fontSize) {   
+    if(fontSize >= 30){
+       // Gionee <shaozj><2013-10-17> modify for CR00924372 begin
+       window.prompt('gn://GNReaderHtml/notifyFontSizeChanged','{"fontMax":"true","fontMin":"false"}');
+       // Gionee <shaozj><2013-10-17> modify for CR00924372 end
+    }else if(fontSize <= 16){
+       // Gionee <shaozj><2013-10-17> modify for CR00924372 begin
+       window.prompt('gn://GNReaderHtml/notifyFontSizeChanged','{"fontMax":"false","fontMin":"true"}');
+       // Gionee <shaozj><2013-10-17> modify for CR00924372 end
+    }else{
+       //readermode.notifyFontSizeChanged(false, false);
+       window.prompt('gn://GNReaderHtml/notifyFontSizeChanged','{"fontMax":"false","fontMin":"false"}');
+       // Gionee <shaozj><2013-10-17> modify for CR00924372 end
+    }
+}
+
+
+</script>
+	<script type="text/javascript" src="readernight.js"></script>
+</body>
+</html>

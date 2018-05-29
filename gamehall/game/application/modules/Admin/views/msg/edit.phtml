@@ -1,0 +1,198 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">消息列表</a></li>
+    <li class="current"><a href="javascript:;"><?php echo empty($info['id']) ? '添加' : '编辑';?>消息</a></li>
+	</ul>
+</div>
+<div class="h_a"><?php echo empty($info['id']) ? '添加' : '编辑';?>消息</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<input name="type" value="<?php echo $info['type'];?>" type="hidden" />
+<input name="sendInput" value="<?php echo $info['sendInput'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">消息标题</th>
+			<td class="td">
+				<input type="text" name="title" class="input wc" value="<?php echo $info['title'];?>"/>
+			</td>
+		</tr>	
+		<tr class="tr">
+			<th class="th">消息内容</th>
+			<td class="td">
+				<textarea name="msg" style="height:180px;width:800px"><?php echo $info['msg'];?></textarea>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">消息类型</th>
+			<td class="td">
+				<select name="type" onchange='showtd()'>
+					<?php foreach($msgType as $key=>$val) {?>   
+					<option value="<?php echo $key;?>" <?php if($info['type']==$key)echo 'selected';?>><?php echo $val['txt'];?></option>					
+					<?php }?> 
+				</select>
+				<span style="color: red">(选择分类时，分类ID输入框填写游戏主分类的ID)</span>
+			</td>
+		</tr>	
+		<tr class="tr">
+			<th class="th" id="th_link"><?php 
+			if($info['type'] == 201 || !$info['type'])  $str = '游戏内容ID';
+			if($info['type'] == 202)  $str = '专题ID';
+			if($info['type'] == 203)  $str = '分类ID';
+			if($info['type'] == 204)  $str = '活动ID';
+			if($info['type'] == 205)  $str = '链接';
+			if($info['type'] == 206)  $str = '礼包ID';
+			if($info['type'] == 207)  $str = '文本信息';
+			echo $str;
+			?></th>
+			<td class="td">
+				<input type="text" name="contentId" class="input wc" value="<?php echo $info['contentId'];?>" style="width:800px;"/>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">发送方式</th>
+			<td class="td">
+				<?php if(empty($info['id'])) {?><select name="totype">
+					<?php foreach($reciver as $k=>$v) {?>
+					<option value="<?php echo $k;?>" <?php if(!empty($info['id']) && $info['totype']==$k) echo 'selected';?>><?php echo $v;?></option>					
+					<?php }?>
+				</select><?php }else{ 
+				 echo Game_Service_Msg::$reciver[$info['totype']];
+				}
+				 ?>			
+			</td>
+		</tr>
+		
+		<?php if(empty($info['id'])){?>
+		<tr class="tr" id="tr-reciver" >
+			<th class="th">接收对象</th>
+			<td class="td">
+			<div style="float:right;">
+					<iframe src="/Admin/Msg/import" style="border:none;width:275px;height:50px;"></iframe>
+				</div>
+				<textarea id="sendInputTxt" name="sendInput" class="textarea wc" style="height:200px; width:800px"><?php echo $info['sendInput'];?></textarea>
+				<br/>
+			    <br/>
+			<span style="color:red">输入用户请用英文“,”区隔。</span>
+			</td>
+		</tr>
+		<tr class="tr" id="tr-object" style="display:none;">
+		<th class="th">接收对象</th>
+			<td class="td">
+			<label class="mr20"><input  type="checkbox" name="install_attention[]"  value="2" onclick ="disableContent()">安装此游戏的用户</label>
+			<label class="mr20"><input  type="checkbox" name="install_attention[]"  value="1" onclick ="disableContent()">关注此游戏的用户</label>
+		   </td>
+		</tr>	
+		<?php } else if($info['id'] && $info['totype'] == 1) {?>
+		<tr class="tr" id="tr-reciver" >
+			<th class="th">接收对象</th>
+			<td class="td">	
+		      <textarea id="sendInputTxt" disabled="disabled" name="sendInput" class="textarea wc" style="height:200px; width:800px"><?php echo $info['sendInput'];?></textarea>
+		    </td>
+		</tr>
+		<?php } ?>
+		
+		<tr class="tr">
+			<th class="th">生效时间</th>
+			<td class="td">
+				<div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s',$info['start_time']);?>" /> 
+				至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s',$info['end_time']);?>" />
+				</div>
+			</td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				<select name="operate_status">
+					<?php foreach(Game_Service_Msg::$status as $k=>$v) {?>
+					<option value="<?php echo $k;?>" <?php if(!empty($info['id']) && $info['operate_status']==$k)echo 'selected';?>><?php echo $v;?></option>					
+					<?php }?>
+				</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//表单数据提交
+$(document).ready(function(){
+	$("select[name=totype] option[value='3']").hide();
+	ajaxForm('addFrom',function(ret){
+		 var value=$("select[name=totype]").val();
+		 var ckvalue =	 $("input[name='install_attention[]']:checked").length;
+	     if(value == 2 || ckvalue > 0){
+	    	 var url = 'indexPush';
+	     } else {
+	    	 var url = 'index';
+	     }
+		ajaxRedirect(ret, baseurl+'/Admin/Msg/'+url);
+	});
+})
+$('#start_time').datetimepicker();
+$('#end_time').datetimepicker();
+//广告表单数据提交
+function showtd(){
+	var value=$("select[name=type]").val();
+	if (value == 201) {
+		 $("#th_link").html('游戏内容ID');
+		 $("select[name=totype] option[value='3']").remove(); 
+		 $("#tr-object").hide();
+	} else if(value == 203){
+		 $("#th_link").html('分类ID');
+		 $("select[name=totype] option[value='3']").remove();
+		 $("#tr-object").hide();
+	} else if(value == 202){
+		 $("#th_link").html('专题ID');
+		 $("select[name=totype] option[value='3']").remove();
+		 $("#tr-object").hide();
+	} else if(value == 204){
+		 $("#th_link").html('活动ID');
+		 $("select[name=totype] option[value='3']").remove();
+		 $("select[name=totype]").append("<option value='3'>其他</option>");
+	} else if(value == 205){
+		 $("#th_link").html('链接');
+		 $("select[name=totype] option[value='3']").remove();
+		 $("#tr-object").hide();
+	} else if(value == 206){
+		 $("#th_link").html('礼包ID');
+		 $("select[name=totype] option[value='3']").remove();
+		 $("select[name=totype]").append("<option value='3'>其他</option>");
+	} else if(value == 207){
+		 $("#th_link").html('文本信息');
+		 $("select[name=totype] option[value='3']").remove();
+		 $("#tr-object").hide();
+	}
+}
+$("select[name=totype]").change(function(){
+	var v = $(this).val();
+	switch(v) {	
+		case '0':
+			$("#tr-reciver").hide();
+			$("#tr-object").hide();
+			break;
+		case '1':
+			$("#tr-reciver").show();
+			$("#tr-object").hide();
+			break;
+		case '2':
+			$("#tr-reciver").hide();
+			$("#tr-object").hide();
+			break;
+		case '3':
+			$("#tr-reciver").hide();
+			$("#tr-object").show();
+			break;
+		default:
+			$("#tr-reciver").hide();
+		    $("#tr-object").hide();
+			break;
+	} 
+});
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

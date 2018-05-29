@@ -1,0 +1,367 @@
+<div class="box">
+<input type="hidden" name="productID" />
+            <ul class="form">
+                <li>
+                    <span class="label">广告标题：</span>
+                    <div class="fc">
+                        <input type="text" name="ad_title" id="ad_title" class="iText" value=""/>
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">广告描述：</span>
+                    <div class="fc">
+                        <input type="text" class="iText" name="ad_desc" id="ad_desc" value=""/>
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">广告状态：</span>
+                    <div class="fc">
+                        <ul class="in-list">
+                            <li><input type="radio" class="checkbox"  name="ad_state" checked value="1"><label for="state1">开启</label></li>
+                            <li><input type="radio" class="checkbox"  name="ad_state" value="0"><label for="state2">关闭</label></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">显示产品详情：</span>
+                    <div class="fc">
+                        <ul class="in-list">
+                            <li><input type="radio" class="checkbox"  name="p_desc_show" value="1"><label for="state1">开启</label></li>
+                            <li><input type="radio" class="checkbox"  name="p_desc_show" checked value="0"><label for="state2">关闭</label></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                                <span class="label">屏幕显示比例：</span>
+                                <div class="fc">
+                                    <input type="text" class="iText" name="screen_ratio" id="screen_ratio" value="" />
+                                    <span class="red">*</span>
+                                </div>
+                            </li>
+                        <li>
+                    <span class="label">广告图标：</span>
+                    <div class="fc">
+                               <input type="text" class="iText" name="ad_pic_url" id="ad_pic_url" value="" style="width:418px" />
+                               <input type="button" value="选择图片" class="submit pickimg" id="pickimg"/>
+                               <span class="red">*</span>
+                    </div>
+                </li>
+                <li>
+                    
+                    <span class="label">广告类型：</span>
+                    <div class="fc">
+                        <select name="ad_type" id="adType">
+                            <option value="0">抢占式</option>
+                            <option value="1">嵌入式</option>
+                            <option value="2">PUSH</option>
+                        </select>
+                        <select id="pm" name="ad_nembdsubtype" onchange="getAdPos($('#adType').val(),$('#pm').val())">
+                            <option value="0">半屏</option>
+                            <option value="1" >全屏</option>
+                        </select>
+                        <select id="gglx" name="ad_embdsubtype" onchange="getAdPos($('#adType').val(),$('#gglx').val())" style="display: none">
+                            <option value="0">Banner横幅图片广告</option>
+                            <option value="1">Banner横幅文字广告</option>
+                            <option value="2">插页广告</option>
+                            <option value="3">浮窗广告</option>
+                        </select>
+                        <select id="push_select" name="ad_push" onchange="getAdPos($('#adType').val(),$('#push_select').val())" style="display: none">
+                            <option value="0">消息</option>
+                            <option value="1">APP</option>
+                            <option value="2">快捷方式</option>
+                        </select>
+                        <select id="ad_pos" name="ad_pos" style="display: none">
+                            
+                        </select>
+                    </div>
+                </li>
+                <li>
+                            <span class="label">广告目标点击类型：</span>
+                            <div class="fc">
+                                <p>
+                                    <select name="" id="adclickType">
+                                        <option value="1">内建下载安装</option>
+                                        <option value="2">启动应用</option>
+                                        <option value="3">使用浏览器打开URL</option>
+                                        <option value="4">使用内建浏览器打开URL</option>
+                                        <option value="5">打开列表广告</option>
+                                        <option value="6">自定义动作</option>
+                                        <option value="0" selected>无动作</option>
+                                    </select>
+                                    <input type="hidden" style="width:800px;" class="iText" name="clictypeobj" id="adclictypeobj" value='' />
+                                </p>
+                                <div id="adclickTypeBox" style="display:none">
+                                    <div style="display:none" id="adclickType_1">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">包名：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="text" readonly class="iText" id="adpackage_name" name="product_package" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <span class="adclicktypelebel">安装包大小：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="text" readonly name="package_size" id="adpackage_size" class="iText" />
+                                                    <input type="hidden" value="自动获取" onclick="javascript:packageSize()" class="submit" />
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <span class="adclicktypelebel">文件泛MD5：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="text" readonly name="file_md5" id="adfile_md5" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="adclickType_2">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">包名：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="text" class="iText" name="package_name" id="adpackage_name_start_app" style="width:200px;" />
+                                                    <input type="text" class="iText" name="activity" id="adpactivity_start_app" style="width:211px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="adclickType_3">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">使用浏览器打开URL：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="hidden" name="direct_url_open" id="addirect_url" value="1" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="adclickType_4">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">使用内建浏览器打开URL：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="hidden" name="inner_url_open" id="adinner_url" value="1" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="adclickType_5">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">打开列表广告：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="hidden" name="ad_list_open" id="adad_list" value="1" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="adclickType_6">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">自定义动作：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="text" name="user_action_value" id="aduser_action_value" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        
+                <li>
+                    <span class="label">广告目标：</span>
+                    <div class="fc">
+                        <input type="text" style="width:500px;" value="" name="ad_target" id="ad_target" class="iText">
+                    </div>
+                </li>
+                <li class="line"></li>
+                <li id="adTypeOption">
+                        <ul>
+                            <li>
+                                <span class="label">显示时长：</span>
+                                <div class="fc">
+                                    <input type="text" class="iText" name="show_time" id="show_time" value="" />
+                                    <span class="red">*</span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="label">屏幕支持方向：</span>
+                                <div class="fc">
+                                    <ul class="in-list">
+                                        <li><input type="radio" class="checkbox" name="screen_type" value="0" ><label>横屏</label></li>
+                                        <li><input type="radio" class="checkbox" name="screen_type" value="1" ><label>竖屏</label></li>
+                                        <li><input type="radio" class="checkbox" name="screen_type" value="2" ><label>都支持</label></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul  style="display: none;">
+                            <li>
+                                <span class="label">标题：</span>
+                                <div class="fc">
+                                    <input type="text" class="iText" name="ad_name" id="ad_name" value="" />
+                                    <span class="red">*</span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="label">描述：</span>
+                                <div class="fc">
+                                    <input type="text" class="iText" name="ad_subdesc" id="ad_subdesc" value="" />
+                                    <span class="red">*</span>
+                                </div>
+                            </li>
+                        </ul>
+                </li>
+            </ul>
+</div>
+<div style="text-align:center;padding:10px 0;">
+    <a id="ok" class="btn" href="javascript:void(0)">确定</a>
+    <a class="cancel" href="javascript:void(0)">取消</a>
+</div>
+<script>
+$(function(){
+	$(".pickimg").click(function(){
+		var name = $(this).prev().attr("id");
+	    window.open("/imgManage/slists?name="+name,"newwindow","toolbar=no,menubar=no,resizable=no,location=no,status=no");
+	 })
+    getAdPos($('#adType').val(),$('#pm').val());
+    $("#adType").change(function(){
+        var _v = $(this).val();
+        if(_v == 1){
+            $("#gglx").show();
+            $("#pm").hide();
+            $("#push_select").hide();
+            $("#adTypeOption").children(":eq(1)").show().siblings().hide();
+            getAdPos($('#adType').val(),$('#gglx').val());
+        }
+        if(_v == 0){
+            $("#gglx").hide();
+            $("#push_select").hide();
+            $("#pm").show();
+            $("#adTypeOption").children(":eq(0)").show().siblings().hide();
+            getAdPos($('#adType').val(),$('#pm').val());
+        }
+        if(_v == 2){
+            $("#gglx").hide();
+            $("#pm").hide();
+            $("#push_select").show();
+            $("#adTypeOption").children(":eq(1)").show().siblings().hide();
+            getAdPos($('#adType').val(),$('#push_select').val());
+        }
+    });
+    //产品目标点击类型
+    var adparam = {};
+    function initadparamad(_v){
+        var _v = _v || $("#adclickType").val();
+        if(_v == 2){
+            adparam = {};
+            adparam.start_app = {};
+        }
+        if(_v == 3){
+            adparam = {};
+            adparam.direct_url = {};
+        }
+        if(_v == 4){
+            adparam = {};
+            adparam.inner_url = {};
+        }
+        if(_v == 5){
+            adparam = {};
+            adparam.ad_list = {};
+        }
+        if(_v == 6){
+            adparam = {};
+            adparam.user_action = {};
+        }
+         $.each($("#adclickType_" + _v).find("input"),function(){
+            if($(this).hasClass("submit")){
+                return true;//跳过“自动获取”按钮的当次循环
+            }
+             if(_v == 2){
+                 adparam.start_app[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 3){
+                 adparam.direct_url[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 4){
+                 adparam.inner_url[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 5){
+                 adparam.ad_list[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 6){
+                 adparam.user_action[$(this).attr("name")] = $(this).val();
+             }
+        });
+         if(_v == 0){
+            $("input[id='adclictypeobj']").val("{\"no_action\":\"\"}").change();
+        }else if(_v==1){
+            $("input[id='adclictypeobj']").val('').change();
+         }else{
+            $("input[id='adclictypeobj']").val(obj2str(adparam)).change();
+        }
+    }
+    $("#adclickType").change(function(){
+        var _v = $(this).val();
+        if(_v != 0){
+                if(_v!=3 && _v!=4 && _v!=5 && _v!=1 ){
+                    $("#adclickTypeBox").show();
+                    $("#adclickType_" + _v).show().siblings().hide();
+                }else{
+                    $("#adclickTypeBox").hide();
+                }
+        }else{
+            $("#adclickTypeBox").hide();
+        }
+        console.log(adparam)
+        initadparamad(_v);
+    });
+    $("#adclickTypeBox").find("input:text").change(function(){
+        initadparamad($("#adclickType").val());
+    });
+    function iniClickType(){
+        var clickobj=$("#adclictypeobj").val();
+        if(clickobj!=''){
+            $("#adclickTypeBox").show();
+            $("#adclickType_1").hide();
+            clickobj=str2json(clickobj);
+            if(typeof clickobj.start_app!="undefined"){
+                $("#adclickType").val(2);
+                $("#adclickType_2").show();
+                $("#adpackage_name_start_app").val(clickobj.start_app.package_name);
+                $("#adactivity_start_app").val(clickobj.start_app.activity);
+            }
+            if(typeof clickobj.direct_url!="undefined"){
+                $("#adclickType").val(3);
+            }
+            if(typeof clickobj.inner_url!="undefined"){
+                $("#adclickType").val(4);
+            }
+            if(typeof clickobj.ad_list!="undefined"){
+                $("#adclickType").val(5);
+            }
+            if(typeof clickobj.user_action!="undefined"){
+                $("#adclickType").val(6);
+                $("#adclickType_6").show();
+                $("#aduser_action_value").val(clickobj.user_action.user_action_value);
+            }
+            if(typeof clickobj.no_action!="undefined"){
+                $("#adclickType").val(0);
+                $("#adclickType_0").show();
+            }
+        }
+    };
+    if($("#clictypeobj").val()==""){
+        pd_clicktypeobj='{"no_action":""}';
+    }else{
+        pd_clicktypeobj=$("#clictypeobj").val()
+    }
+    if ($("#clickType").val()!=1){
+        $("#adclictypeobj").val(pd_clicktypeobj)//初始化为产品的目标点击类型
+    }
+    iniClickType()
+});
+</script>

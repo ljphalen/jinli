@@ -1,0 +1,260 @@
+<script type="text/javascript" src="{{rootUrl}}/js/swfupload/swfupload.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/swfupload/handlers.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>
+<link media="screen" href="{{rootUrl}}/css/chosen.css" rel="stylesheet" type="text/css">
+<script type="text/javascript">
+var swfu;
+
+window.onload = function() {
+    swfu = new SWFUpload({
+        // Backend settings
+        upload_url: "/resource/upload_video",
+        file_post_name: "video_file",
+        //post_params: {"appkey": "<?php echo $appinfo["appkey"]; ?>"},
+        // Flash file settings
+        //file_size_limit: "200 MB",
+        file_types: "*.mp4", // or you could use something like: "*.doc;*.wpd;*.pdf",
+        file_types_description: "Video Files",
+        file_upload_limit: "0",
+        file_queue_limit: "1",
+        // Event handler settings
+        swfupload_loaded_handler: swfUploadLoaded,
+        file_dialog_start_handler: fileDialogStart,
+        file_queued_handler: fileQueued,
+        file_queue_error_handler: fileQueueError,
+        file_dialog_complete_handler: fileDialogComplete,
+        //upload_start_handler : uploadStart,	// I could do some client/JavaScript validation here, but I don't need to.
+        upload_progress_handler: uploadProgress,
+        upload_error_handler: uploadError,
+        upload_success_handler: uploadVideoSuccess,
+        upload_complete_handler: uploadVideoComplete,
+        // Button Settings
+        button_image_url: "/misc/ledou/images/shipin.png",
+        button_placeholder_id: "spanButtonPlaceholder",
+        button_width: 81,
+        button_height: 22,
+        // Flash Settings
+        flash_url: "{{rootUrl}}/js/swfupload/swfupload.swf",
+        custom_settings: {
+            progress_target: "fsUploadProgress",
+            upload_successful: false
+        },
+        // Debug settings
+        debug: false
+    });
+
+};
+</script>
+<style type="text/css">
+    .progressWrapper {
+        width: 357px;
+        overflow: hidden;
+        margin-left: 170px;
+        margin-top: 5px;
+    }
+
+    .progressContainer {
+    }
+    /* Message */
+    .message {
+        margin: 1em 0;
+        padding: 10px 20px;
+        border: solid 1px #FFDD99;
+        background-color: #FFFFCC;
+        overflow: hidden;
+    }
+    /* Error */
+    .red {
+        border: solid 1px #B50000;
+        background-color: #FFEBEB;
+    }
+
+    /* Current */
+    .green {
+        border: solid 1px #DDF0DD;
+        background-color: #EBFFEB;
+    }
+
+    /* Complete */
+    .blue {
+        border: solid 1px #CEE2F2;
+        background-color: #F0F5FF;
+    }
+
+    .progressName {
+        font-size: 14px;
+        color: #555;
+        width: 323px;
+        height: 28px;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        margin-top:20px;
+    }
+
+    .progressBarInProgress,
+    .progressBarComplete,
+    .progressBarError {
+        font-size: 0;
+        width: 0%;
+        height: 10px;
+        background-color: #44b150;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .progressBarComplete {
+        width: 100%;
+        background-color: green;
+        visibility: hidden;
+    }
+
+    .progressBarError {
+        width: 100%;
+        background-color: red;
+        visibility: hidden;
+    }
+
+    .progressBarStatus {
+        margin-top: 2px;
+        width: 337px;
+        font-size: 7pt;
+        font-family: Arial;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    a.progressCancel {
+        font-size: 0;
+        display: block;
+        height: 14px;
+        width: 14px;
+        background-image: url(/misc/ledou/images/cancel.png);
+        background-repeat: no-repeat;
+        background-position: -14px 0px;
+        float: right;
+    }
+
+    a.progressCancel:hover {
+        background-position: 0px 0px;
+    }
+
+
+    /* -- SWFUpload Object Styles ------------------------------- */
+    .swfupload {
+        vertical-align: top;
+        position:relative;
+        top:7px;
+        left:5px;
+    }
+</style>
+
+<div class="colMain">
+    <div class="title">
+        <p class="fl">图片素材管理</p>
+    </div>
+    <div class="main" data-tabs-name="video">
+        <div class="content">
+            <!-- include 'menu' -->
+            <div class="devInfo">
+                <form action="../resource/video_save" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" value="{{result.id}}" name="id" />
+                    <input type="hidden" value="{{result.product_name}}" name="product_name" id="product_name" />
+                    <ul class="form">
+                        <li>
+                            <span class="label">平台类型：</span>
+                            <div class="fc">
+                                <select name="platform" id="platform"  onchange="autoPlatform()">
+                                    <option value="">所有(默认)</option>
+                                    <option value="1">Android</option>
+                                    <option value="2">IOS</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">视频名称：</span>
+                            <div class="fc">
+                                <input type="text" class="iText required" required name="video_name" value="{{result.video_name}}" style="width:220px;float:left;" />
+                                <select style="float:left;margin:0 5px;" name="ad_type" id="ad_type" <!-- if {{result.id}} -->disabled<!-- endif -->>
+                                    <option value="0" >插屏</option>
+                                </select>
+                                <select name="product_id[]" class="required" required id="product_id" <!-- if {{result.id}} -->disabled<!-- endif -->>
+                                    <!-- loop product -->
+                                        <option value="{{product' value.id}}" >{{product' value.product_name}}</option>
+                                    <!-- endloop -->
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">选择视频：</span>
+                            <div class="fc">
+                                <input type="text" id="txtFileName" class="iText" disabled="true" style="border:1px solid #a7b0b7; background-color: #FFFFFF;" />
+                                <span id="spanButtonPlaceholder"></span>
+                                <input type="button" value="上传" class="btnstyle" id="btnSubmit" />
+                                <span class="red">*</span>
+                            </div>
+                            <div class="flash" id="fsUploadProgress">
+                                <!-- This is where the file progress gets shown.  SWFUpload doesn't update the UI directly.
+                                                        The Handlers (in handlers.js) process the upload events and make the UI updates -->
+                            </div>
+                            <input type="hidden" name="hidFileID" id="hidFileID" value="{{result.video_url}}" />
+                            <!-- This is where the file ID is stored after SWFUpload uploads the file and gets the ID back from upload.php -->
+                            <input type="hidden" name="video_url" class="required" required id="video_url" value="{{result.video_url}}" />
+                        </li>
+
+                        <li class="line"></li>
+                        <li>
+                            <div class="fc">
+                                <input type="submit" value="保存" class="submit" />
+                                <input type="button" value="取消" class="cancel" onclick="window.location.href = '/resource/apk'" />
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script language="javascript">
+    $(function(){
+        $("#product_id").val("{{result.ad_product_id}}");
+        $("#product_name").val("{{result.product_name}}");
+        $("#product_id").change(function(){
+            var product_name = '';
+            if($("#product_id").children("option[selected]").length == 0){
+                product_name = $("#product_id").children("option").eq(0).text().replace("(T)", "").replace("(A)", "").replace("(I)", "");
+            }else{
+                product_name =$("#product_id").children("option[selected]").eq(0).text().replace("(T)", "").replace("(A)", "").replace("(I)", "");
+            }
+                            $("#product_name").val(product_name);
+        });
+        autoPlatform();
+    })
+    function autoPlatform() {
+            if($("#platform").val() == '')
+            {
+                $("#product_id").attr("multiple", "multiple");
+                $("#product_id").css("height","100px");
+            }
+            else
+            {
+                $("#product_id").removeAttr("multiple");
+                $("#product_id").css("height","");
+            }
+            ajaxPOST("/reproduct/autoPlatform", {"platform": $("#platform").val()}, function(data) {
+                var length = data.length;
+                str = '';
+                for (i=0; i<length; i++)
+                {
+                    str += '<option value="'+data[i].id+'">'+data[i].platform_product_name+'</option>'
+                }
+                $("#product_id").html(str);
+                $("#product_id").change();
+                //重新绑定select的选择组件
+                $("#product_id").removeClass("chzn-done");
+                $("#product_id_chzn").remove();
+                $("#product_id").chosen({});
+            })
+        }
+</script>

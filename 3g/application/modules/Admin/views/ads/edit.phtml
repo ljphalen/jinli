@@ -1,0 +1,148 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<style>
+	.iform {
+		width: 200px;
+	}
+</style>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $indexUrl; ?>">广告列表</a></li>
+		<li class="current"><a href="<?php echo $editUrl . '/?id=' . $data['id']; ?>">修改广告</a></li>
+	</ul>
+</div>
+<div class="h_a">添加广告位</div>
+<form method="post" action="<?php echo $editPostUrl; ?>" id="addForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">名称</th>
+				<td class="td"><input type="text" class="input" name="name" value="<?php echo $data['name']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">广告位</th>
+				<td class="td">
+					<select name='position_id' id="position_id">
+						<option value="0">请选择广告位</option>
+						<?php foreach ($position as $v) { ?>
+							<option value="<?php echo $v['id']; ?>" type="<?php echo $v['type']; ?>" <?php if ($data['position_id'] == $v['id']) echo 'selected'; ?>><?php echo $types[$v['type']] . ' - ' . $v['name'] ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">开始时间</th>
+				<td class="td">
+					<input name="start_time" id="start_time" class="input" type="text" value="<?php echo date('Y-m-d H:i:s', $data['start_time']); ?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">结束时间</th>
+				<td class="td">
+					<input name="end_time" id="end_time" class="input" type="text" value="<?php echo date('Y-m-d H:i:s', $data['end_time']); ?>">
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td">
+					<input type="text" name="sort" id="sort" class="input" value="<?php echo $data['sort']; ?>"></td>
+			<tr>
+			<tr class="tr">
+				<th class="th">链接</th>
+				<td class="td">
+					<input type="text" name="link" id="link" class="input" value="<?php echo $data['link']; ?>"></td>
+			</tr>
+			<tbody id="words" style="display: ">
+			<tr class="tr">
+				<th class="th">文字广告</th>
+				<td class="td">
+					<textarea rows="5" cols="5" name="words" style="width: 500px;height:300px"><?php echo $data['words']; ?></textarea>
+				</td>
+			</tr>
+			</tbody>
+
+			<tbody id="image" style="display:none">
+			<tr class="tr">
+				<th class="th">图片广告</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="adsImage">
+							<img src="<?php echo $attachPath . $data['image']; ?>"/>
+							<input type="hidden" name="image" value="<?php echo $data['image']; ?>">
+						</li>
+					</ul>
+					<p style="clear:both;">
+						<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=adsImage'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tbody>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td"><select name="status" class="select">
+						<option value="1">开启</option>
+						<option value="0">关闭</option>
+					</select></td>
+			</tr>
+		</table>
+		<input id="id" name="id" value="<?php echo $data['id']; ?>" type="hidden">
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+	//用户表单数据提交
+	$(document).ready(function () {
+		$('#start_time').datetimepicker();
+		$('#end_time').datetimepicker();
+		var val = $("#position_id").find('option:selected').attr('type');
+		if (val == '1') {
+			$("#words").hide();
+			$("#image").show();
+		} else if (val == '2') {
+			$("#words").show();
+			$("#iamge").hide();
+		} else {
+			$("#words").show();
+			$("#image").show();
+		}
+		$("#position_id").attr('disabled', 'disabled');
+
+		var editor;
+		KindEditor.ready(function (K) {
+			K.token = $('#token').val();
+			editor = K.create('textarea[name="words"]', {
+				resizeType: 1,
+				allowPreviewEmoticons: false,
+				allowImageUpload: true,
+				uploadJson: '<?php echo  $uploadUrl;?>',
+				items: EDITOR_ITEMS
+			});
+		});
+		ajaxForm('addForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/ads/index');
+		}, function () {
+			editor.sync();
+		});
+	})
+
+	$("#position_id").bind('change', function () {
+		var val = $("#position_id").find('option:selected').attr('type');
+		if (val == '1') {
+			$("#words").show();
+			$("#image").hide();
+		} else if (val == '2') {
+			$("#image").show();
+			$("#words").hide();
+		} else {
+			$("#image").show();
+			$("#words").show();
+		}
+
+	});
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

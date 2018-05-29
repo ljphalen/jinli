@@ -1,0 +1,238 @@
+{{pagerCss}}
+<link media="screen" href="{{rootUrl}}/css/gri.controls.css" rel="stylesheet" type="text/css">
+<div class="colMain">
+    <div class="title"><p class="fl">素材审核</p></div>
+    <div class="main">
+        <div class="toolbar">
+            <div class="search fl">
+                <form action="/resource/checklist" method="GET">
+                <span>
+                    <select id="platform" name="platform">
+                        <option value="">所有平台(默认)</option>
+                        <option value="1">Android</option>
+                        <option value="2">IOS</option>
+                    </select>   
+                </span>
+
+                    <span>
+                        <select id="mki_select_1" name="source" class="" style="width:120px">
+                            <option value="0" selected="">全部素材类型</option>
+                            <option value="1" <!-- if {{conditions.source}}==1 -->selected<!-- endif -->>图片</option>
+                            <option value="2" <!-- if {{conditions.source}}==2 -->selected<!-- endif -->>文案</option>
+                            <option value="3" <!-- if {{conditions.source}}==3 -->selected<!-- endif -->>安装包</option>
+                            <option value="4" <!-- if {{conditions.source}}==4 -->selected<!-- endif -->>产品素材</option>
+                            <option value="5" <!-- if {{conditions.source}}==5 -->selected<!-- endif -->>网页</option>
+                            <option value="6" <!-- if {{conditions.source}}==6 -->selected<!-- endif -->>视频</option>
+                        </select>
+                        
+                    </span>
+                <span>
+                    产品名称：<input type="text" class="iText" name='source_name' value='{{conditions.source_name}}' />
+                    <input type="hidden" class="iText" name='ischeck' value='2' />
+                    <input type="hidden" name="screatedate"  id="screatedate" value="<?php echo $_GET['screatedate'];?>">
+                    <input type="hidden" name="ecreatedate" id="ecreatedate" value="<?php echo $_GET['ecreatedate'];?>">
+                    提交时间：<input type="text" class="iText datepicker" name="date_range" id="date_range" value="{{conditions.source_date}}" style="width:160px;"/>
+                    <input type="submit" class="submit" value="" onclick="confirmSubmit();"/>
+                    <span class="sign">可输入应用名称查询</span>
+                </span>
+                
+                </form>
+            </div>
+        </div>
+        <div class="content">
+            <div class="grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>平台类型</th>
+                            <th>素材类型</th>
+                            <th>产品名称</th>
+                            <th>审核状态</th>
+                            <th>提交人</th>
+                            <th>提交时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- loop result.apk -->
+                        <tr>
+                            <td>
+                                <!-- if {{result.apk' value.platform}}==0 -->通用<!-- endif -->
+                                <!-- if {{result.apk' value.platform}}==1 -->Android<!-- endif -->
+                                <!-- if {{result.apk' value.platform}}==2 -->IOS<!-- endif -->
+                            </td>
+                            <td><a href="/resource/apk_check?id={{result.apk' value.id}}" style="color:blue;">安装包</a></td>
+                            <td>{{result.apk' value.simple_platform}}{{result.apk' value.product_name}}</td>
+                            <td>
+                                <!-- if {{result.apk' value.ischeck}}==0 -->待审核<!-- endif -->
+                                <!-- if {{result.apk' value.ischeck}}==1 -->审核通过<!-- endif -->
+                                <!-- if {{result.apk' value.ischeck}}==2 -->审核驳回<!-- endif -->
+                            </td>
+                            <td>
+                            {{result.apk' value.owner}}
+                            </td>
+                            <td>
+                            <?php echo format_time($v1['createtime']); ?>
+                            </td>
+                        </tr> 
+                        <!-- endloop -->
+                        <!-- loop result.pic -->
+                        <tr>
+                            <td>
+                                <!-- if {{result.pic' value.platform}}==0 -->通用<!-- endif -->
+                                <!-- if {{result.pic' value.platform}}==1 -->Android<!-- endif -->
+                                <!-- if {{result.pic' value.platform}}==2 -->IOS<!-- endif -->
+                            </td>
+                            <td><a href="pic_check?id={{result.pic' value.id}}" style="color:blue;">图片</a></td>
+                            <td>{{result.apk' value.simple_platform}}{{result.pic' value.product_name}}</td>
+                            <td>
+                                <!-- if {{result.pic' value.ischeck}}==0 -->待审核<!-- endif -->
+                                <!-- if {{result.pic' value.ischeck}}==1 -->审核通过<!-- endif -->
+                                <!-- if {{result.pic' value.ischeck}}==2 -->审核驳回<!-- endif -->
+                            </td>
+                            <td>
+                            {{result.pic' value.owner}}
+                            </td>
+                            <td>
+                            <?php echo format_time($v1['creattime']); ?>
+                            </td>
+                        </tr> 
+                        <!-- endloop -->
+                        <!-- loop result.text -->
+                        <tr>
+                            <td>
+                                <!-- if {{result.text' value.platform}}==0 -->通用<!-- endif -->
+                                <!-- if {{result.text' value.platform}}==1 -->Android<!-- endif -->
+                                <!-- if {{result.text' value.platform}}==2 -->IOS<!-- endif -->
+                            </td>
+                            <td><a href="/resource/text_check?id={{result.text' value.id}}" style="color:blue;">文案</a></td>
+                            <td>{{result.apk' value.simple_platform}}{{result.text' value.product_name}}</td>
+                            <td>
+                                <!-- if {{result.text' value.ischeck}}==0 -->待审核<!-- endif -->
+                                <!-- if {{result.text' value.ischeck}}==1 -->审核通过<!-- endif -->
+                                <!-- if {{result.text' value.ischeck}}==2 -->审核驳回<!-- endif -->
+                            </td>
+                            <td>
+                            {{result.text' value.owner}}
+                            </td>
+                            <td>
+                            <?php echo format_time($v1['createtime']); ?>
+                            </td>
+                        </tr> 
+                        <!-- endloop -->
+                        <!-- loop result.products -->
+                        <tr>
+                            <td>
+                                <!-- if {{result.products' value.platform}}==0 -->通用<!-- endif -->
+                                <!-- if {{result.products' value.platform}}==1 -->Android<!-- endif -->
+                                <!-- if {{result.products' value.platform}}==2 -->IOS<!-- endif -->
+                            </td>
+                            <td><a href="/reproduct/product_check?id={{result.products' value.id}}" style="color:blue;">产品</a></td>
+                            <td>{{result.apk' value.simple_platform}}{{result.products' value.product_name}}</td>
+                            <td>
+                                <!-- if {{result.products' value.ischeck}}==0 -->待审核<!-- endif -->
+                                <!-- if {{result.products' value.ischeck}}==1 -->审核通过<!-- endif -->
+                                <!-- if {{result.products' value.ischeck}}==2 -->审核驳回<!-- endif -->
+                            </td>
+                            <td>
+                            {{result.products' value.owner}}
+                            </td>
+                            <td>
+                            <?php echo format_time($v1['created']); ?>
+                            </td>
+                        </tr> 
+                        <!-- endloop -->
+                        <!-- loop result.html -->
+                        <tr>
+                            <td>
+                                <!-- if {{result.products' value.platform}}==0 -->通用<!-- endif -->
+                                <!-- if {{result.products' value.platform}}==1 -->Android<!-- endif -->
+                                <!-- if {{result.products' value.platform}}==2 -->IOS<!-- endif -->
+                            </td>
+                            <td><a href="/resource/html_check?id={{result.products' value.id}}" style="color:blue;">网页</a></td>
+                            <td>{{result.html' value.simple_platform}}{{result.products' value.product_name}}</td>
+                            <td>
+                                <!-- if {{result.products' value.ischeck}}==0 -->待审核<!-- endif -->
+                                <!-- if {{result.products' value.ischeck}}==1 -->审核通过<!-- endif -->
+                                <!-- if {{result.products' value.ischeck}}==2 -->审核驳回<!-- endif -->
+                            </td>
+                            <td>
+                            {{result.html' value.owner}}
+                            </td>
+                            <td>
+                            <?php echo format_time($v1['creattime']); ?>
+                            </td>
+                        </tr> 
+                        <!-- endloop -->
+                        <!-- loop result.video -->
+                        <tr>
+                            <td>
+                                <!-- if {{result.products' value.platform}}==0 -->通用<!-- endif -->
+                                <!-- if {{result.products' value.platform}}==1 -->Android<!-- endif -->
+                                <!-- if {{result.products' value.platform}}==2 -->IOS<!-- endif -->
+                            </td>
+                            <td><a href="/resource/incentive_video_check?id={{result.products' value.id}}" style="color:blue;">视频</a></td>
+                            <td>{{result.video' value.simple_platform}}{{result.products' value.product_name}}</td>
+                            <td>
+                                <!-- if {{result.products' value.ischeck}}==0 -->待审核<!-- endif -->
+                                <!-- if {{result.products' value.ischeck}}==1 -->审核通过<!-- endif -->
+                                <!-- if {{result.products' value.ischeck}}==2 -->审核驳回<!-- endif -->
+                            </td>
+                            <td>
+                            {{result.video' value.owner}}
+                            </td>
+                            <td>
+                            <?php echo format_time($v1['creattime']); ?>
+                            </td>
+                        </tr> 
+                        <!-- endloop -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">{{pager.pages}}</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{{rootUrl}}/js/gri.dateRange.js"></script>
+<script type="text/javascript">
+    $("#platform").val("{{conditions.platform}}");
+    var nc = false;
+    var dateRange = new pickerDateRange("date_range", {
+        theme : 'ta', // 日期选择器TA主题
+        isTodayValid : 1,
+        startDate : "<?php echo $_GET['screatedate'];?>",
+        endDate : "<?php echo $_GET['ecreatedate'];?>",
+        minValidDate : 1379174400,
+        needCompare : 1,
+        success : function (dateObj){
+            $("#date_range").attr("sdate", dateObj.startDate);
+            $("#date_range").attr("edate", dateObj.endDate);
+            if(dateObj.needCompare == 1)
+            {
+            	$("#date_range").attr("csdate", dateObj.startCompareDate);
+                $("#date_range").attr("cedate", dateObj.endCompareDate);
+                nc = true;
+            }else
+            {
+            	$("#date_range").attr("csdate", "");
+                $("#date_range").attr("cedate", "");
+                nc = false;
+            }
+        }
+    });
+    var screatedate = "<?php echo $_GET['screatedate'];?>";
+    var ecreatedate = "<?php echo $_GET['ecreatedate'];?>";
+    if(screatedate!=''&ecreatedate!=''){
+        $("#date_range").val("<?php echo $_GET['screatedate'].' 至 '.$_GET['ecreatedate'];?>")
+    }
+    function confirmSubmit()
+    {
+        sdate = $("#startDate").val()
+        edate = $("#endDate").val()
+        if(sdate !='' & edate !='')
+        {
+            $("#screatedate").attr("value",sdate);
+            $("#ecreatedate").attr("value",edate);
+        }
+        return true;
+    }
+</script>

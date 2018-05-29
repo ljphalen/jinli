@@ -1,0 +1,94 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">广告列表</a></li>
+    <li class="current"><a href="javascript:;">添加广告</a></li>
+	</ul>
+</div>
+<div class="h_a">添加广告</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="0"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">链接类型</th>
+			<td class="td">
+				<select name="ad_ptype" onchange='showtd()'>
+<?php foreach($ad_ptype as $key=>$value) {?>				
+					<option value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php }?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th" id="th_link">内容ID</th>
+			<td class="td"><input type="text" name="link" class="input" id="link"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="img" value="">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">开始结束时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status">
+                	<option value="1">开启</option>
+                	<option value="0">关闭</option>
+            </select></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+function showtd(){
+	var value=$("select[name=ad_ptype]").val();
+	if (value == 1) {
+		 $("#th_link").html('内容ID');
+		 $("#link").removeClass('wc');
+	} else if(value == 2){
+		 $("#th_link").html('分类ID');
+		 $("#link").removeClass('wc');
+	} else if(value == 3){
+		 $("#th_link").html('专题ID');
+		 $("#link").removeClass('wc');
+	} else if(value == 5){
+		 $("#th_link").html('活动ID');
+		 $("#link").addClass('wc');
+	} else if(value == 4){
+		 $("#th_link").html('链接');
+		 $("#link").addClass('wc');
+	}
+}
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Ad_Magneticon/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

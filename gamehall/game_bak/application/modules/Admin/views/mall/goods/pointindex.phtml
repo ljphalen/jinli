@@ -1,0 +1,53 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li style="display:none;"><a href="<?php echo $listUrl;?>">积分概况</a></li>
+        <li><a href="<?php echo $pointShopIndexUrl;?>">积分商城</a></li>
+        <li><a href="<?php echo $pointCJIndexUrl;?>">积分抽奖</a></li>
+        <li><a href="<?php echo $presendIndexUrl;?>">人工发放</a></li>
+        <li class="current"><a href="<?php echo $pointDescIndexUrl;?>">积分说明管理</a></li>
+	</ul>
+</div>
+<form action="<?php echo $pointDescPostUrl;?>" method="post" id="addFrom">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<div class="h_a">积分说明管理</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">积分说明</th>
+				<td class="td">
+				 	<textarea name="gamePointsDesc" class="textarea" style="height:500px; width:800px"><?php echo $gamePointsDesc;?></textarea>
+				</td>
+			</tr>
+		
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//游戏表单数据提交
+var editor;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor = K.create('textarea[name="gamePointsDesc"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Mall_Goods/pointIndex');
+	},function(){
+		editor.sync();
+	});
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

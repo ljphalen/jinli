@@ -1,0 +1,115 @@
+<?php echo $this->render("layout/header.phtml");?>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="javascript:;">艾米Web配置</a></li>
+    <li ><a href="<?php echo $andoridImgUrl?>">安卓页图片管理</a></li>
+	</ul>
+</div>
+<div class="h_a">全局配置</div>
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+				<th class="th">艾米客户端pc的游戏url</th>
+				<td class="td">
+				  <textarea name="ami_web_url" class="textarea wc"><?php echo $ami_web_url;?></textarea>
+				</td>
+			</tr>
+	</table>
+</div>
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+				<th class="th">艾米客户端安卓的游戏url</th>
+				<td class="td">
+				  <textarea name="ami_android_url" class="textarea wc"><?php echo $ami_android_url;?></textarea>
+				</td>
+			</tr>
+	</table>
+</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+		     <th class="th">艾米微信图片</th>   
+			 <td class="td">
+	                <div id="imgs">
+	                <ul class="uploadImg">
+	                <li id="Img1">
+	               	<img src="<?php echo $attachPath.$ami_web_weixin;?>"/ width="89px" height="89px" >
+					<input type="hidden" name="ami_web_weixin" value="<?php echo $ami_web_weixin;?>">
+	                </li></ul>
+	                <p style="clear:both;">
+	                 <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img1';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+	        </td>
+	     </tr>       
+	</table>
+</div>
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+				<th class="th">艾米bbs的地址</th>
+				<td class="td">
+				  <textarea name="ami_web_bbs" class="textarea wc"><?php echo $ami_web_bbs;?></textarea>
+				</td>
+			</tr>
+	</table>
+</div>
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+				<th class="th">新浪微博地址</th>
+				<td class="td">
+				  <textarea name="ami_sina_weibo" class="textarea wc"><?php echo $ami_sina_weibo;?></textarea>
+				</td>
+			</tr>
+	</table>
+</div>
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+				<th class="th">游戏分享内容设置</th>
+				<td class="td">
+				  <textarea name="ami_web_game_share_text" class="textarea wc"><?php echo $ami_web_game_share_text;?></textarea>
+				</td>
+			</tr>
+	</table>
+</div>	
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+				<th class="th">新闻分享内容设置</th>
+				<td class="td">
+				  <textarea name="ami_web_new_share_text" class="textarea wc"><?php echo $ami_web_new_share_text;?></textarea>
+				</td>
+			</tr>
+	</table>
+</div>	
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+				<th class="th">页面顶部分享内容设置</th>
+				<td class="td">
+				  <textarea name="ami_web_index_share_text" class="textarea wc"><?php echo $ami_web_index_share_text;?></textarea>
+				</td>
+			</tr>
+	</table>
+</div>	
+
+
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Web_Config/add');
+	});
+	
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

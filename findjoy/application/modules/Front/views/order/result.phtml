@@ -1,0 +1,40 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body>
+	<div class="module dhm-pay-success">
+		<div class="pay-succ layout-center">
+			<div class="status">
+				<i class="icon-selected-big"></i>
+				<p>支付成功</p>
+			</div>
+			<p class="orders-num">订单号：<em class="hint"><?php echo $order['trade_no'];?></em></p>
+			<p class="orders-num">提货码：<em class="hint"><?php echo $order['get_token']?></em></p>
+			<!-- <p class="txt">为方便提货，请牢记订单号！</p> -->
+		</div>
+		<div class="orders-list layout-center">
+			<ul>
+				<li>
+					<div class="remind">请于<em><?php echo $order['get_date'].' '.$get_time[$order['get_time_id']];?></em>凭借订单号到<em><?php echo $address['detail_address'];?></em>提取</div>
+				</li>
+				<?php foreach ($details as $key=>$value) {?>
+				<li>
+					<p><?php echo $goods[$value['goods_id']]['title'];?></p>
+					<span class="num">x<?php echo $value['goods_num'];?></span>
+				</li>
+				<?php }?>
+			</ul>
+		</div>
+		<div class="redirect-bar layout-center">
+			<a href="<?php echo $webroot;?>" class="btn btn-submit-white float-left">返回大红帽</a>
+			<a href="<?php echo $webroot;?>/order/detail?id=<?php echo $order['id'];?>" class="btn btn-submit float-right">查看订单详情</a>
+		</div>
+	</div>
+<?php echo $this->render("layout/footer.phtml");?>
+
+	<script>
+		(function(){
+			require(['paySuccess']); 
+		}())
+	</script>		
+
+</body>
+</html>

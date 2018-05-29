@@ -1,0 +1,73 @@
+<?php echo $this->render("layoutold/header2.phtml");?>
+<body>
+	<div class="hd">注册</div>
+	
+	<!-- step1 进行图形验证 -->
+	<div class="J_step1 content">
+		<i class="icon-amigo"></i>
+		<div class="input phone">
+			<span >账号</span><input id="phone"  maxlength=11 placeholder="请输入手机号码" />
+		</div>
+		<div class="J_code code ">
+			<input id="code"  maxlength="4" placeholder="请输入验证码" data-vid="" data-vty="" />
+			<span class="J_loading ">
+				<img  src="" data-ajaxUrl="<?php echo $webroot.$refreshgvcUrl; ?>">
+				<i class="icon-loading hidden"></i>
+			</span>
+			<span class="refresh-tips">点击图片刷新</span>
+
+			<span class="J_tips error-tips invisible">请先输入验证码</span>
+			<!-- 验证图形验证码是否通过 -->
+			<a class="J_next btn" data-ajaxUrl="<?php echo $webroot.$registerbygvcUrl; ?>">下一步</a>
+		</div>
+	</div>
+
+	<!-- step2 短信验证 -->
+	<div class="J_step2 content hidden">
+		<i class="icon-amigo"></i>
+		<div class="input phone">
+			<span >账号</span><input id="phone"  maxlength=11 readonly="true" />
+		</div>
+		<div class="codeContainer">
+			<div class="input verifyCode">
+				<span class="">验证码</span><input id="code" maxlength="6"  placeholder="请输入验证码" />
+			</div>
+			<!-- 获取手机验证码 -->
+			<button class="J_getCode getCode" data-ajaxUrl="<?php echo $webroot . $getsmsUrl; ?>">获取验证码</button>
+		</div>
+		<span class="J_tips error-tips invisible">请先输入手机号码</span>
+		<!-- 验证手机验证码是否通过 -->
+		<a class="J_next btn" data-ajaxUrl="<?php echo $webroot . $regsmsUrl; ?>">下一步</a>
+	</div>
+
+	
+
+	<!--step2 设置密码 -->
+	<div class="J_step3 content hidden">
+		<i class="icon-amigo"></i>
+		<div class="input password">
+			<span class="">密码</span><input id="password" maxlength=16 type="password" placeholder="密码必须为4-16位字母或数字" />
+		</div>
+		<div class="input password">
+			<span class="">重复</span><input id="repassword" maxlength=16 type="password" placeholder="两次输入的密码必须一致" />
+		</div>
+		<span class="J_tips error-tips invisible">请先输入手机号码</span>
+		<!-- 完成注册 -->
+		<a class="J_complete btn" data-ajaxUrl="<?php echo $webroot . $regpassUrl; ?>">完成</a>
+	</div>
+
+	<!-- 提交成功弱提示 -->
+	<div class="J_mask mask hidden">
+		<div class="submit-mask">
+			<span class="icon-loading"></span>
+			<div>正在提交，请稍等...</div>
+		</div>
+	</div>
+	<div class="J_tipBox tip-box hidden">
+		<p></p>
+		<div class="boxBg"></div>
+	</div>
+	<script src="<?php echo $staticResPath; ?>/assets/js/jquery.js?v=<?php echo $version;?>" ></script>
+	<script src="<?php echo $staticResPath; ?>/assets/js/versign.source.js?v=<?php echo $version;?>" ></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title><?=$info['title']?></title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-touch-fullscreen" content="yes" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<link rel="stylesheet" href="<?php echo $staticResPath;?>/weather/css/style.min.css?v=<?=$version?>" />
+</head>
+<body class="ui-pg-app">
+
+<div class="ui-pg-detail">
+	<div class="title">
+		<h1><?=$info['title']?></h1>
+		<p><?=$info['from']?>  <?=$info['formatTime']?></p>
+	</div>
+	<div class=""></div>
+	<div class="content">
+		<?php
+		$out = '';
+		foreach($info['content'] as $val) {
+			if ($val['type'] == 2) {
+				$out .= sprintf('<img src="%s" />',trim($val['value']));
+			} else {
+				$value = str_ireplace(' ','',trim($val['value']));
+				$out .= sprintf('<p>%s</p>',$value);
+			}
+		}
+		echo $out;
+		?>
+
+		<div class="source"><a href="<?=$info['link']?>">查看原文 &gt;</a></div>
+	</div>
+
+	<?php if (!empty($info['lastList']) || !emtpy($reclink)): ?>
+		<div class="mod-recommand-box">
+			<h2>热文推荐</h2>
+			<ul>
+				<?php foreach($reclink as $val):?>
+					<li><a href="<?=$val['url']?>"><?=$val['title']?></a></li>
+				<?php endforeach;?>
+
+				<?php foreach($info['lastList'] as $val):?>
+					<li><a href="<?=$val['link']?>"><?=$val['title']?></a></li>
+				<?php endforeach;?>
+			</ul>
+		</div>
+	<?php endif;?>
+
+	<?php if (!empty($banner)): ?>
+		<div class="mod-banner-wrap">
+			<?php foreach($banner as $val):?>
+				<a href="<?=$val['url']?>" target="_balnk"><img border="0" src="<?=$val['img']?>"></a>
+			<?php endforeach;?>
+			<span id="btn-close" class="close"></span>
+		</div>
+	<?php endif;?>
+</div>
+<!-- load script -->
+<script>
+	var require = {
+		urlArgs: 'v=<?=$version?>' // 异步加载文件的版本号
+	};
+</script>
+<script data-main="<?php echo $staticResPath?>/weather/js/main.min" src="<?php echo $staticResPath?>/weather/js/require.min.js?v=<?=$version?>"></script>
+<!-- /load script -->
+</body>
+</html>

@@ -1,0 +1,70 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">商品列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加商品</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<td class="td">状态</td>
+			<td class="td">
+				<select name="status" class="wa">
+					<option <?php if ($search['status'] == 0) echo 'selected';?>  value="0">所有状态</option>
+					<option <?php if ($search['status'] == 1) echo 'selected';?>  value="1">关闭</option>
+					<option <?php if ($search['status'] == 2) echo 'selected';?>  value="2">开启</option>
+				</select>
+			</td>
+			<td class="td">商品名称</td>
+			<td class="td">
+				<input class="input wb" type="text" name="title" value="<?php echo $search['title'];?>">
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="5%">排序</td>
+			<td width="5%">商品ID</td>
+			<td width="20%">商品名称</td>
+			<td width="10%">售价</td>
+			<td width="10%">香港价</td>
+			<td width="15%">开始时间/结束时间</td>
+			<td width="5%">库存</td>
+			<td width="5%">限购数</td>
+			<td width="10%">点击次数</td>
+			<td width="5%">状态</td>
+			<td width="5%">HOT</td>
+			<td width="10%">操作</td>
+		</tr>
+<?php foreach($goods as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $value['price'];?></td>
+			<td><?php echo $value['hk_price'];?></td>
+			<td><?php echo date('Y-m-d H:i:s',$value['start_time']);?><br/><?php echo date('Y-m-d H:i:s',$value['end_time']);?></td>
+			<td><?php echo $value['stock_num'];?></td>
+			<td><?php echo $value['limit_num'];?></td>
+			<td><?php echo $value['hits'];?></td>
+			<td><?php echo $value['status'] == 1 ? '开启' : '关闭';?></td>
+			<td><?php echo $value['ishot'] == 1 ? '是' : '否';?></td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

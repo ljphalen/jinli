@@ -1,0 +1,128 @@
+<?php echo $this->render("layout/header2.phtml");?>
+
+
+
+
+<div id="page">
+		<div class="papps wrapper" id="J_scrollWrap">
+			<div class="mainWrap">
+				<!-- 内容区域 START-->
+				<header class="hd">
+					<div class="slide banner">
+						<img src="<?php echo $staticResPath;?>/pic/apps_banner.jpg" alt="在线应用" />
+					</div>
+				</header>
+
+				<div class="module">
+					<section class="tag-box mainTag">
+						<div class="navTag">
+							<ul id="app-tabs">
+								<li data-tab="app-reco" id="default-tab" class="actived" data-ajaxUrl="<?php echo $webroot.$recommendMoreUrl;?>">推荐</li>
+								<li data-tab="app-cate">分类</li>
+								<li data-tab="app-rank">排行</li>
+								<li data-tab="app-news" data-ajaxUrl="<?php echo $webroot.$newMoreUrl;?>">新品</li>
+							</ul>
+						</div>
+						<div id="app-cont">
+							<!-- 推荐 -->
+							<div data-tab="app-reco" id="app-recoWrap">
+								<div class="app-list">
+									<!-- 列表 -->
+									<?php foreach ($recommend as $key=>$value) {?>
+										<div class="app-item-list">
+											<div class="app-item-img">
+												<img src="<?php echo $attachPath.$value['img'];?>" />
+											</div>
+											<div class="app-item-info">
+													<div class="app-item-title"><?php echo $value['name'];?></div>
+													<div class="star star<?php echo $value['star'];?>"></div>
+													<div class="app-item-text"><?php echo html_entity_decode($value['descrip']);?> | <?php echo $app_type[$value['type_id']]['name'];?></div>
+											</div>
+											<div class="app-item-bton button"><a href="<?php echo Common::clickUrl( $value['id'], 'APP', $value['link'], $t_bi);?>" class="btn open-btn">打开</a></div>
+										</div>
+									<?php }?>
+								</div>
+								<div id="pullUp">
+									<span class="pullUpIcon"></span>
+									<span class="pullUpLabel">上拉加载更多应用</span>
+								</div>
+							</div>
+							<!-- 分类 -->
+							<div data-tab="app-cate" id="app-cateWrap" class="app-cate ishide">
+								<ul>
+								<?php foreach ($app_type as $key=>$value) {?>
+									<li><a href="<?php echo $webroot.$listUrl;?>?type_id=<?php echo $value['id'];?>">
+											<div><?php echo $value['name'];?></div>
+											<div><?php echo $value['descrip'];?></div>
+										</a>
+									</li>
+								<?php }?>
+								</ul>
+							</div>
+							<!-- 排行 -->
+							<div data-tab="app-rank" id="app-rankWrap" class="ishide">
+								<div class="app-list">
+									<!-- 列表 -->
+									<?php foreach ($rank as $key=>$value) {?>
+										<div class="app-item-list">
+											<div class="app-item-img">
+												<img src="<?php echo $attachPath.$value['img'];?>" />
+											</div>
+											<div class="app-item-info">
+												<div class="app-item-title"><?php echo $value['name'];?></div>
+												<div class="star star<?php echo $value['star'];?>"></div>
+												<div class="app-item-text"><?php echo html_entity_decode($value['descrip']);?> | <?php echo $app_type[$value['type_id']]['name'];?></div>
+											</div>
+											<div class="app-item-bton button"><a href="<?php echo Common::clickUrl( $value['id'], 'APP', $value['link'], $t_bi);?>"  class="btn open-btn">打开</a></div>
+										</div>
+									<?php }?>
+								</div>
+							</div>
+							<!-- 新品 -->
+							<div data-tab="app-news" id="app-newsWrap" class="ishide">
+								<div class="app-list">
+									<!-- 列表 -->
+									<?php foreach ($new as $key=>$value) {?>
+											<div class="app-item-list">
+												<div class="app-item-img">
+													<img src="<?php echo $attachPath.$value['img'];?>" />
+												</div>
+												<div class="app-item-info">
+													<div class="app-item-title"><?php echo $value['name'];?></div>
+													<div class="star star<?php echo $value['star'];?>"></div>
+													<div class="app-item-text"><?php echo html_entity_decode($value['descrip']);?> | <?php echo $app_type[$value['type_id']]['name'];?></div>
+												</div>
+												<div class="app-item-bton button"><a href="<?php echo Common::clickUrl( $value['id'], 'APP', $value['link'], $t_bi);?>"  class="btn open-btn">打开</a></div>
+											</div>
+									<?php }?>
+								</div>
+								<div id="pullUp">
+									<span class="pullUpIcon"></span>
+									<span class="pullUpLabel">上拉加载更多应用</span>
+								</div>
+							</div>
+						</div>
+					</section>
+				</div>
+				<!-- 内容区域 END-->
+<!-- 推荐区域模板 START -->
+<script id="J_itemView" type="template">
+	{each data.list}
+		<div class="app-item-list">
+			<div class="app-item-img">
+				<img src="{$value.img}" />
+			</div>
+			<div class="app-item-info">
+				<div class="app-item-title">{$value.title}</div>
+				<div class="star star{$value.star}"></div>
+				<div class="app-item-text">{$value.appInfo} | {$value.appType}</div>
+			</div>
+			<div class="app-item-bton button"><a href="{$value.link}" data-addUrl="{$value.addUrl}"  class="btn open-btn">打开</a></div>
+		</div>
+	{/each}
+</script>
+			</div>
+	</div>
+</div>
+<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/footer2.phtml");?>

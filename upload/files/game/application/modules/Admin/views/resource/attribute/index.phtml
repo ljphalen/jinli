@@ -1,0 +1,35 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	<?php foreach($at_ptypes as $key=>$value)  {?>
+        <li  <?php if($key == $sid) {?>  class="current" <?php } ?> ><a href="<?php echo $listUrl.'?sid='.$key;?>"><?php echo $value;?></a></li>
+	<?php } ?>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">ID</td>
+			<td>名称</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $value['status'] ? '开启' : '关闭';?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'].'&sid='.$value['at_type'];?>" class="mr10">编辑</a>
+			<?php if($true){?>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>&sid=<?php echo $sid;?>', '', event);">删除</a>
+			<?php } ?>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

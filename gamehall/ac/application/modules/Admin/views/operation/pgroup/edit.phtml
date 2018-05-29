@@ -1,0 +1,67 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">机组列表</a></li>
+    <li class="current"><a href="javascript:;">应用管理</a></li>
+    <li><a href="<?php echo $sortUrl;?>?id=<?php echo $pgroup_id;?>&title=<?php echo $title;?>">应用排序</a></li>
+	</ul>
+</div>
+<form id="editForm" action="<?php echo $editPostUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="id"  type="hidden" value="<?php echo $pgroup_id;?>" />
+<input name="idx_app"  type="hidden" value="<?php echo implode(',', $app_id);?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">机组名称</th>
+			<td class="td"><?php echo $title;?></td>
+		</tr>
+	</table>
+</div>
+<?php if($apps) {?>
+<div class="h_a">
+	<span>选择应用</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+		    <td>ID</td>
+		    <td>图标</td>
+			<td>名称</td>
+			<td>应用归属</td>
+			<td>包名</td>
+			<td>版本</td>
+			<td>大小</td>
+			<td>状态</td>
+		</tr>
+        <?php foreach($apps as $key => $value) {	?>
+		 <tr class="ct">
+		    <td>
+		     <input class="checkbox"  <?php echo in_array($value['id'], $app_id) ? 'checked' : ''; ?> name="ids[]" value="<?php echo $value['id'];?>" type="checkbox">
+		    </td>
+		    <td><?php echo $value['id']; ?></td>
+			<td><img src="<?php echo $attachPath,$value['icon'];?>" style="width:7.2em;height:7.2em"/></td>
+			<td><?php echo $value['name']; ?></td>
+			<td><?php echo $belong[$value['belong']]; ?></td>
+			<td><?php echo $value['package'];?></td>
+			<td><?php echo $value['version'];?></td>
+			<td><?php echo $value['size'];?>M</td>
+			<td><?php echo $value['status'] ? '已上线' : '未上线';?></td>
+		</tr>
+    <?php } ?>
+	</table>
+</div>
+   <div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">保存</button></span></span></div>
+<?php }else{?>
+      <div class="mb10 tac"><span>请先添加应用</span></div>
+<?php }?>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Operation_Pgroup/edit/?id=<?php echo $pgroup_id;?>&title=<?php echo $title;?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

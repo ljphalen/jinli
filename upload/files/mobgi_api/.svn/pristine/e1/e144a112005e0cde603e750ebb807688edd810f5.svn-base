@@ -1,0 +1,212 @@
+<link media="screen" href="{{rootUrl}}/css/chosen.css" rel="stylesheet" type="text/css">
+<div class="colMain">
+    <div class="title">
+        <p class="fl">图片素材管理</p>
+    </div>
+    <div class="main" data-tabs-name="view">
+        <div class="content">
+            <!-- include 'menu' -->
+            <div class="devInfo" data-tabs-name="text">
+             <!-- include 'meterial_menu' -->
+                <form action="../resource/material_text" method="GET" enctype="multipart/form-data" style="margin-top:20px;">
+                    <input type="hidden" value="{{result.dev_id}}" name="dev_id" />
+                    <ul class="form">
+                        <li>
+                            <span class="label">平台类型：</span>
+                            <div class="fc">
+                                <select name="platform" id="platform"  onchange="autoPlatform()">
+                                    <option value="">所有(默认)</option>
+                                    <option value="1">Android</option>
+                                    <option value="2">IOS</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">所属产品：</span>
+                            <div class="fc">
+                                <select name="product_name" id="product_name">
+                                 <option value="">全部产品</option>
+                                    <!-- loop product -->
+                                    <option value="{{product' value.product_name}}">{{product' value.platform_product_name}}</option>
+                                    <!-- endloop -->
+                                </select>
+               
+                            </div>
+                            
+                        </li>
+                        
+                         <li>
+                            <span class="label">文案类型：</span>
+                            <div class="fc">
+                                <select name="type" id="type">
+                                	<option value="">全部</option>
+                                    <option value="介绍">介绍</option>
+                                    <option value="诱惑">诱惑</option>
+                                    <option value="热点">热点</option>
+                                    <option value="其它">其它</option>
+                                </select>
+                           
+                            </div>
+                            
+                        </li>
+                                                                   
+                         <li>
+                            <span class="label">上传时间：</span>
+                            <div class="fc">
+                                <input typt="text" class="iText datepicker" name='sdate' id='sdate' value='{{date('Y-m-d',sdate)}}' /> -
+                    			<input typt="text" class="iText datepicker" name='edate' id='edate' value='{{date('Y-m-d',edate)}}' />
+                            </div>
+                            
+                        </li>
+                        
+                        <li>
+                            <span class="label">关键字：</span>
+                            <div class="fc">
+                            <input type="text" value="{{result.key_word}}" name="key_word" class="iText" />
+                            <span style="margin-left:100px;">
+							</span>
+							<input type="submit" value="查询" class="submit"/>
+							</div>
+                        </li>
+                        </ul>
+                </form>
+                <div class="grid">
+   				<table>
+   				<!-- loop text -->
+                                <tr style="cursor: pointer" ondblclick="selectText({{text' value.id}},2)">
+                                    <td style="padding-top:20px;padding-bottom:20px;line-height:2px;">
+                                        <div style="display:flex;">
+                                            <div id="bk_{{text' value.id}}" style="display:flex;">
+                                                <div align="left" style="margin:auto;">
+                                                    <img alt="" src="{{text' value.pic_url}}" style="width:100px;height:100px;">
+                                                </div>
+                                                <div style="width:180px;margin-left:20px;margin-top:25px;">
+                                                    <p><span style="font-size:20px;" id="tt_{{text' value.id}}">{{text' value.product_name}}</span></p>
+                                                    <p><span id="tx_{{text' value.id}}">{{text' value.content}}</span></p>
+                                                </div>
+                                                <div style="border-left:thin solid green;margin-left:20px;">
+                                                    <img style="width:50px;height:50px; margin-left:20px; margin-top:10px;" src="{{text' value.pic_url}}">
+                                                    <p style="margin-left:20px;margin-top:1px;" id="wb_{{text' value.id}}">免费下载</p>
+                                                </div>
+
+                                                <div style="width:200px;">
+                                                </div>
+                                            </div>
+                                            <div style="width:500px;">
+                                                <p><span style="line-height:38px;font-size:15px;">平台类型:<!-- if {{text' value.platform}}==1 -->Android<!-- elseif {{text' value.platform}}==2 -->IOS<!-- else -->通用<!-- endif --></span></p>
+                                                <p><span style="line-height:38px;font-size:15px;">素材名称:{{text' value.product_name}}-{{text' value.type}}-{{date("Y-m-d H:i:s",text' value.updatetime)}}</span></p>
+                                                <p style="font-size:20px;"><span>综合点击率:</span></p>
+                                                <p style="font-size:20px;"><span>50%</span></p>
+                                            </div>
+                                            <div style="width:100px;">
+                                            </div>
+                                            <div align="center" style="margin:auto 0px;">
+                                                <!-- if {{pic' value.ischeck}}!=1 -->
+                                                <a class="btnstyle" href="/resource/text?id={{pic' value.id}}" title="编辑素材">编辑素材</a>
+                                                <!-- endif -->
+                                            </div>
+                                            <div style="width:100px;">
+                                            </div>
+                                            <div align="center" style="margin:auto 0px;">
+                                                <a class="btnstyle btndel" href="/resource/delete?op=text&id={{pic' value.id}}" title="删除素材">删除素材</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+					<script>
+					if('{{text' value.style}}')
+					{
+						var style = eval('(' + '{{text' value.style}}' + ')');
+						$("#bk_{{text' value.id}}").css("background-color",style.background_color);
+						$("#tt_{{text' value.id}}").css("color",style.title_color);
+						$("#tx_{{text' value.id}}").css("color",style.text_color);
+						$("#web_{{text' value.id}}").css("color",style.web_color);
+					}
+					</script>
+               <!-- endloop -->
+                </table>
+                    <div class="pagination">{{pager.pages}}</div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+var now= new Date();
+
+var year=now.getFullYear();
+
+var month=now.getMonth()+1;
+
+var date=now.getDate();
+        $(function(){
+        	$('.datepicker').datepicker({
+    	        changeMonth:true,
+    	        changeYear:true,
+    	        minDate:new Date(),
+    	        dateFormat : "yy-mm-dd",
+    	        minDate: "2014-01-01",
+    	        maxDate:year+"-"+month+"-"+date
+    	    });
+    	    $('#sdate').change(function(){
+    		    	var time = $(this).val();
+    				var date1 = new Date($('#sdate').val()).getTime();
+    				var date2 = new Date($('#edate').val()).getTime();
+    				if(date2 < date1)
+    				{
+    					alert("错误，结束日期不能比开始日期早");
+    				}
+    		    });
+    	    $('#edate').change(function(){
+    			var date1 = new Date($('#sdate').val()).getTime();
+    			var date2 = new Date($('#edate').val()).getTime();
+    			if(date2 < date1)
+    			{
+    				alert("错误，结束日期不能比开始日期早");
+    				return false;
+    			}
+    	    });
+			$("#product_name").val("{{result.product_name}}");
+			$("#type").val("{{result.type}}");
+            $("#platform").val("{{result.platform}}");
+
+            })
+            function selectText(id){
+            window.opener.select_resource(id,2)
+            window.close();
+        }
+        
+ $(function(){
+    $("#platform").val("{{result.platform}}");
+    autoPlatform("{{result.product_name}}");
+})
+function autoPlatform(productname) {
+    ajaxPOST("/reproduct/autoPlatform", {"platform": $("#platform").val()}, function(data) {
+        var length = data.length;
+        str = '';
+        if(productname == '')
+        {
+             str ='<option value="" selected="selected">所有产品</option>';
+        }else{
+            str ='<option value="">所有产品</option>';
+        }
+        
+        for (i=0; i<length; i++)
+        {
+            if_selecte = ""
+            if(productname == data[i].product_name)
+            {
+                if_selecte =  'selected="selected"';
+            }   
+            str += '<option value="'+data[i].product_name+'" '+ if_selecte + '>'+data[i].platform_product_name+'</option>'
+        }
+        $("#product_name").html(str);
+        //重新绑定select的选择组件
+        $("#product_name").removeClass("chzn-done");
+        $("#product_name_chzn").remove();
+        $("#product_name").chosen({});
+    })
+}       
+        
+</script>
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>

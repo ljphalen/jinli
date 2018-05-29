@@ -1,0 +1,1 @@
+(function(a){a.fn.end=function(){return this.prevObject||a()};a.fn.andSelf=function(){return this.add(this.prevObject||a())};"filter,add,not,eq,first,last,find,closest,parents,parent,children,siblings".split(",").forEach(function(c){var b=a.fn[c];a.fn[c]=function(){var d=b.apply(this,arguments);d.prevObject=this;return d}})})(Zepto);

@@ -1,0 +1,53 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">渠道列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加渠道</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">排序</td>
+			<td width="100">渠道ID</td>
+			<td>渠道名称</td>
+			<td width="120">密钥</td>
+			<td width="120">操作</td>
+		</tr>
+<?php foreach($channels as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['name'];?></td>
+			<td><?php echo str_replace('=', '', Common::encrypt($value['id']));?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+		<?php foreach($value['items'] as $k => $val) {?>
+		<tr class="ct">
+			<td><?php echo $val['sort'];?></td>
+			<td><?php echo $value['id'];?></td>
+			<td>|—<?php echo $val['name'];?></td>
+			<td><?php echo str_replace('=', '', Common::encrypt($val['id']));?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $val['id'];?>" class="mr10">编辑</a>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $val['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+		<?php foreach($val['items'] as $keys => $v) {?>
+		<tr class="ct">
+			<td><?php echo $v['sort'];?></td>
+			<td><?php echo $value['id'];?></td>
+			<td>|— —<?php echo $v['name'];?></td>
+			<td><?php echo str_replace('=', '', Common::encrypt($v['id']));?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $v['id'];?>" class="mr10">编辑</a>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $v['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php }}} ?>
+	</table>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,39 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+     <li><a href="<?php echo $listUrl;?>">推荐图片列表</a></li>
+	 <li><a href="<?php echo $addUrl;?>">添加推荐图片</a></li>
+	 <li class="current"><a href="<?php echo $setUrl;?>">设置</a></li>
+	</ul>
+</div>
+<form method="post" action="<?php echo $setPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	
+	<div class="h_a">设置</div>
+	<div class="table_full">
+		<table width="100%">
+		    <tr class="tr">
+				<th class="th">内容间隔</th>
+				<td class="td"><input type="text" class="input" name="client_picture_space" value="<?php echo $space;?>"></td>
+			</tr>
+			<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="client_picture_status" min-width="100px">
+                	<option <?php if($status == 1) echo 'selected="selected"';?> value="1">开启</option>
+                	<option <?php if($status == 0) echo 'selected="selected"';?>value="0">关闭</option>
+            </select></td>
+		    </tr>
+		</table>
+		</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Ad_Recpic/set');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

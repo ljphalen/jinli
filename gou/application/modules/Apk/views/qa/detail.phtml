@@ -1,0 +1,65 @@
+<?php echo $this->render("layout/singleheader.phtml");?>
+<body id="answer" data-pagerole="body">
+    <div class="module answer-wrap">
+        <section class="banner">
+            <img src="<?php echo $staticResPath;?>/assets/img/answer-banner.jpg" alt="">
+        </section>
+        <ul class="count-wrap">
+            <li class="first">
+                <div class="pic">
+                    <img src="<?php echo $qus['author_avatar'];?>" alt="">
+                </div>
+            </li>
+            <li class="center"><?php echo $qus['author_nickname'];?></li>
+            <li class="last"><?php echo $qus['ans_total'];?>回答</li>
+        </ul>
+        <section class="content">
+            <p><?php echo $qus['title'];?></p>
+            <p><?php echo $qus['content'];?></p>
+            <p>
+                <?php
+                    foreach($qus['images'] as $img){
+                        printf('<img src="%s" alt=""/>', $img);
+                    }
+                ?>
+            </p>
+        </section>
+        <section class="box-wrap">
+        <?php foreach($aus_list as $item):?>
+            <div class="praise-wrap">
+                <ul>
+                    <li class="first">
+                        <div class="pic">
+                            <img src="<?php echo $item['a_author_avatar']; ?>" alt="">
+                        </div>
+                    </li>
+                    <li class="center">
+                        <?php echo $item['a_author_nickname']; ?>
+                        <div class="date"><?php echo $item['ans_time']; ?></div>
+                    </li>
+                    <li class="last"><?php echo $item['ans_praise']; ?>赞</li>
+                </ul>
+                <div class="praise-content">
+                    <?php echo $item['from']?'<em>'.$item['from'].'</em>':'';?><?php echo $item['ans_content']; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+        </section>
+        <div class="download">
+            <a href="<?php echo $download_url;?>" class="wrap" onclick="GOU.baiduStatic('问答分享','问答分享-下载购物大厅点击量')">
+                <div class="pic">
+                    <div class="logo"></div>
+                </div>
+                <div class="cont">
+                    <h3>购物大厅</h3>
+                    <p>购物大厅邀请你来参与讨论</p>
+                </div>
+                <div class="btn-wrap">
+                    <div class="btn">下载APP</div>
+                </div>
+            </a>
+        </div>
+    </div>
+<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

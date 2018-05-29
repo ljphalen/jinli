@@ -1,0 +1,83 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">点评列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加点评</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr">
+			<th class="th">评测来源</th>
+			<td class="td">
+			<select name="ctype">
+					<option selected="" value="0">全部</option>
+					<?php foreach($ctype as $key=>$value) {?>
+    			    <option value="<?php echo $key;?>" <?php if ($search['ctype'] == $key) echo 'selected="selected"';?>><?php echo $value;?></option>
+    			    <?php }?>
+			    </select>
+			</td>
+			<th class="th">关键字</th>
+			<td class="td"><input type="text" class="input" name="title" value="<?php echo $search['title'];?>"></td>
+		</tr>	
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('sort');" type="submit">重新排序</button></span></span>
+    <span class="btn2" style="display:none;"><span><button onclick="$('#action').val('open');" type="submit">上线</button></span></span>
+    <span class="btn2" style="display:none;"><span><button onclick="$('#action').val('close');" type="submit">下线</button></span></span>
+    <span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td>排序</td>
+			<td width="100">评测名称</td>
+			<td>关联游戏</td>
+			<td>评测来源</td>
+			<td>开始时间</td>
+			<td>结束时间</td>
+			<td>广告状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($tjnews as $key => $value) {?>
+		<?php if($news[$value['n_id']]) {?>
+		<tr class="ct">
+			<td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><input type="text" class="input" style="width:30px" name="sort[<?php echo $value['id'];?>]" value="<?php echo $value['sort'];?>"></td>
+			<td><?php echo $news[$value['n_id']]['title'];?></td>
+			<td><?php echo $news[$value['n_id']]['name'];?></td>
+			<td><?php echo $ctype[$news[$value['n_id']]['ctype']];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['start_time']);?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['end_time']);?></td>
+			<td><?php echo $value['status'] ? '开启' : '关闭';?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<a href="<?php echo $frontroot.'/game/evaluation/detail?id='.$value['n_id'];?>" class="mr10" target="_blank">预览</a>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+	<?php } ?>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script>
+$(document).ready(function(){
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Ad_Tuijian/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,146 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">产品列表</a></li>
+		<li class="current"><a href="javascript:;">编辑产品</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑产品</div>
+<form method="post" action="<?php echo $editPostUrl; ?>" id="editFrom">
+	<input name="token" id="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">机型名称</th>
+				<td class="td"><input type="text" class="input" name="name" value="<?php echo $info['name']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td"><select name="status" min-width="100px">
+						<option <?php if ($info['status'] == 1) echo 'selected="selected"'; ?> value="1">开启</option>
+						<option <?php if ($info['status'] == 0) echo 'selected="selected"'; ?>value="0">关闭</option>
+					</select></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">产品主图</th>
+				<td class="td">
+					<?php foreach ($pimgs as $key => $value) { ?>
+						<div id="upimg<?php echo $value['id']; ?>">
+							<ul class="uploadImg">
+								<li id="upImg<?php echo $value['id']; ?>">
+									<img src="<?php echo $attachPath . $value['img']; ?>"/>
+									<input type="hidden" name="upImg[<?php echo $value['id']; ?>]" value="">
+								</li>
+								<li>
+									<a href="javascript:void(0)" onclick="deleteImg('<?php echo $deleteImgUrl; ?>?id=<?php echo $value['id']; ?>', 'upimg<?php echo $value['id']; ?>', event);">删除</a>
+								</li>
+							</ul>
+							<p style="clear:both;">
+								<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=upImg', $value['id']; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+							</p>
+						</div>
+					<?php } ?>
+					<div id="imgs"></div>
+					<div class="mb10">
+						<button onclick="addupload();" onfocus="blur();" type="button" 　class="btn">＋添加预览图片</button>
+					</div>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">功能</th>
+				<td class="td">
+					<textarea name="function" style="width: 800px; height: 400px;"><?php echo $info['function']; ?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">外观</th>
+				<td class="td">
+					<textarea name="outward" style="width: 800px; height: 400px;"><?php echo $info['outward']; ?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">参数</th>
+				<td class="td">
+					<textarea name="parameter" style="width: 800px; height: 400px;"><?php echo $info['parameter']; ?></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+	//专题表单数据提交
+	$(document).ready(function () {
+		var editor1, editor2, editor3;
+		KindEditor.ready(function (K) {
+			K.token = $('#token').val();
+			editor1 = K.create('textarea[name="function"]', {
+				resizeType: 1,
+				allowPreviewEmoticons: false,
+				allowImageUpload: true,
+				uploadJson: '<?php echo $uploadImgUrl;?>',
+				items: EDITOR_ITEMS
+			});
+			K.token = $('#token').val();
+			editor2 = K.create('textarea[name="outward"]', {
+				resizeType: 1,
+				allowPreviewEmoticons: false,
+				allowImageUpload: true,
+				uploadJson: '<?php echo $uploadImgUrl;?>',
+				items: EDITOR_ITEMS
+			});
+			K.token = $('#token').val();
+			editor3 = K.create('textarea[name="parameter"]', {
+				resizeType: 1,
+				allowPreviewEmoticons: false,
+				allowImageUpload: true,
+				uploadJson: '<?php echo $uploadImgUrl;?>',
+				items: EDITOR_ITEMS
+			});
+		});
+
+		ajaxForm('editFrom', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Elifeserver/index');
+		}, function () {
+			editor1.sync();
+			editor2.sync();
+			editor3.sync();
+		});
+
+		var imgc = 0;
+		addupload = function () {
+			var al = $('<ul class="uploadImg"><li id="Img' + imgc + '"><img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/><input type="hidden" name="simg[' + imgc + ']" value=""></li></ul><p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>' + imgc + '" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>');
+			$('#imgs').append(al);
+			imgc++;
+		}
+
+		deleteImg = function (url, elid, e) {
+			showConfirm("确认删除该条信息？", function () {
+				$.ajax({
+					url: url,
+					type: 'POST',
+					dataType: 'json',
+					data: 'token=' + token,
+					success: function (ret) {
+						if (ret.success) {
+							$('#' + elid).remove();
+						} else {
+							showError('', ret.msg);
+						}
+					}
+				});
+			}, e);
+		}
+	})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml"); ?>

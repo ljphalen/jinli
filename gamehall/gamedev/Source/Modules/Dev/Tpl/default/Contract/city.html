@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QQ JS省市区三级联动</title>
+    <script src="{:cdn('PUBLIC')}/common/js/city.js?{:C('JS_VERSION')}"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body onload="setup();promptinfo();">
+<form>
+    <select class="select" name="area" id="s0">
+        <option></option>
+    </select>
+    <select class="select" name="province" id="s1">
+        <option></option>
+    </select>
+    <select class="select" name="city" id="s2">
+        <option></option>
+    </select>
+    <input id="address" name="address" type="hidden" value="" />
+    <input onclick="alert(document.getElementById('address').value); return false;" type="submit" value="提交" />
+</form>
+<script>
+    //这个函数是必须的，因为在geo.js里每次更改地址时会调用此函数
+    function promptinfo()
+    {
+        var address = document.getElementById('address');
+        var s0 = document.getElementById('s0');
+        var s1 = document.getElementById('s1');
+        var s2 = document.getElementById('s2');
+        address.value = s0.value + s1.value + s2.value ;
+    }
+</script>
+</body>
+</html> 

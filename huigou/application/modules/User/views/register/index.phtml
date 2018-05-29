@@ -1,0 +1,42 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div id="page">
+		<header class="hd">
+			<h2>登录注册</h2>
+			<div class="back-page">
+				<a href="<?php echo $webroot;?>"><img src="<?php echo $staticResPath;?>/pic/btn_backPage.png" alt="" /></a>
+			</div>
+		</header>
+		
+		<article class="ac">
+			<div class="banner">
+				<a href=""><img src="<?php echo $staticResPath;?>/pic/pic_bnLogin.jpg" alt="" /></a>
+			</div>
+			
+			<div class="form-box">
+				<form class="form-box" method="post" action="<?php echo $webroot.$postUrl; ?>">
+				<input type="hidden" name="token" value="<?php echo $token?>"/>
+					<ul>
+						<li>
+							<label for="">账号：</label>
+							<input type="text" name="username" placeholder="请输入手机号" value="" pattern="^((\+86)|86|0)?(13\d|15[012356789]|18[0236789]|14[57])\d{8}$" required="required" data-null="手机号不能为空" data-error="手机号错误"/>
+						</li>
+						<li>
+							<label for="">密码：</label>
+							<input type="password" name="password" placeholder="至少6位" value="" />
+							<input type="text" value="" class="JS-showPwd" />
+						</li>
+						<li class="extra J_showPwd"><input type="checkbox" name="" /> 显示密码</li>
+						<li class="btn"><button>注册</button></li>
+						<li class="extra">已有账号？ <a href="<?php echo $webroot;?>/user/login/index?refer=<?php echo $refer;?>">立即登录</a></li>
+					</ul>
+				</form>
+			</div>
+		</article>
+	</div>
+	<div class="JS-dbMask"></div>
+    <div class="dialog-box J_dialogBox">
+    	<p></p>
+    	<div class="btn"><span>确定</span></div>
+    </div>
+</body>
+</html>

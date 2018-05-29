@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8">
+		<script type="text/javascript" src="Public/default/common/js/jquery-1.10.2.js"></script>
+		<script type="text/javascript" src="Public/default/common/js/jquery-migrate-1.2.1.js"></script>
+		<script type="text/javascript" src="Public/default/common/js/upload/fileShard.js"></script>
+		<script type="text/javascript">
+		$(function(){
+			$('#upload_btn').click(function(){
+				var i = 0;
+				var file = new FileShard({
+					file: $("#upload_file")[0].files[0]
+				});
+				file.send();
+			});
+		})
+		</script>
+	</head>
+	<body>
+		<canvas id="Canvas" style="display:none">
+			<div style="text-align:center;">
+				该浏览器不支持大文件上传,请使用Chrome Firefox Safari IE9
+			</div>
+		</canvas>
+		<input id="upload_file" type="file" size="30">
+		<div id="msg"></div>
+		<br><br><br><br>
+		<input id="upload_btn" type="button" value="Upload" />
+	</body>
+	
+</html>

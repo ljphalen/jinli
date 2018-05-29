@@ -1,0 +1,62 @@
+<?php echo $this->render("../../Front/views/layout/header.phtml");?>
+<div id="">
+	<header id="header"><!-- HEADER --></header>
+	<!-- 主体内容 -->
+	<section id="content">
+		<section class="pnavigator">
+			<section class="top-nav">
+				<ul>
+				   <?php $img = array('0'=>'icon-card.png','1'=>'icon-caipiao.png','2'=>'icon-hotel.png','3'=>'icon-move.png');foreach($tool as $key=>$value){?>
+					<li class="<?php echo $value['hot'] == 1? 'hot':'';?>">
+						<a href="<?php echo $value['link'];?>">
+							<div class="pic"><img src="<?php echo $staticResPath;?>/pic/<?php echo $img[$key];?>" alt="" /></div>
+							<div class="txt"><?php echo $value['name'];?></div>
+						</a>
+					</li>
+					<?php }?>
+				</ul>
+			</section>
+			<!-- 图片滚动展示模块 -->
+			<div class="mod-slide mindex">
+				<div class="wrap">
+				  <div class="pic">
+					<?php foreach($ads as $key=>$value) { ?>	
+					<a href="<?php echo $value['link'];?>"><img src="<?php echo $attachPath . $value['img'];?>" alt="<?php echo $value['title'];?>" /></a>
+					<?php }?>
+					</div>
+				</div>
+				<div class="mask"></div>
+				<div class="handle">
+					<?php foreach($ads as $key=>$value) { ?>
+					<span class="<?php echo $key == 0 ? 'on':'';?>"></span>
+					<?php } ?>
+				</div>
+			</div>
+			<!-- /图片滚动展示模块 -->
+			<!-- 首页主题模块 -->
+			<section class="btm-list">
+				<?php foreach($guideTypes as $key=>$value){ ?>
+				<h3><?php echo $value['title'];?></h3>
+				<ul class="mod-item-list">
+				    <?php foreach($guideList[$value['id']] as $key=>$item) {?>	
+				    <?php 
+					    if($item['status'] == 1 && ($item['end_time'] - strtotime(date('Y-m-d H:i:s',time())) > 0) ){?>
+					<li>
+						<a href="<?php echo $item['link'];?>">
+							<div class="pic"><img src="<?php echo $attachPath . $item['img'];?>" alt="" /></div>
+							<div class="txt"><?php echo $item['title'];?></div>
+						</a>
+					</li>
+					<?php } ?>
+					<?php }?>
+				</ul>
+				<?php }?>
+			</section>
+			<!-- /首页主题模块 -->
+		</section>
+	</section>
+	<!--  /主体内容 -->
+	<footer id="footer"><!-- FOOTER --></footer>
+</section>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<?php echo $this->render("layout/singleheader.phtml");?>
+<body id="subject_goods" data-pagerole="body">
+	<div class="mainWrap">
+	<?php if ($hasheader) {?>
+		<header id="iHeader" class="hd">
+			<div class="top-wrap">
+				<div class="title">
+					<a href="<?php echo $refer;?>" class="back"></a>
+					<h1><?php echo $subject['title'];?></h1>
+				</div>
+			</div>
+		</header>
+	<?php }?>
+	</div>
+	<?php if($subject['img']) {?>		
+	<article class="ac">		
+			<div class="banner">
+				<a href="javascript:void(0);"><img src="<?php echo $attachPath,$subject['img'];?>" alt="" /></a>
+			</div>		
+	</article>
+	<?php }?>
+	<div class="wrap">
+		<div id="waterfall" data-ajaxurl="<?php echo $webroot;?>/subject/subject_goods/?id=<?php echo $id;?>"></div>
+	</div>
+	 <?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

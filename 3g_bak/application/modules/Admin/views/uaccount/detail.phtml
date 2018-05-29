@@ -1,0 +1,67 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<form method="post" action="<?php echo $detailUrl; ?>" id="addFrom">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+		<input type="hidden" id="hidden_export" name="export" value="0"/>
+	</form>
+	<div class="h_a">
+		<a href="/Admin/Uaccount/month?date=<?php echo $params['date']; ?>&group_type=<?php echo $params['group_type']; ?>&num=<?php echo $params['num']; ?>">返回上一级</a>
+		<!-- <span style="float:right;"><input type="button" value="导出" id="downLoad"></span> -->
+	</div>
+	<style type="text/css">
+		table {
+			empty-cells: show;
+			border-collapse: collapse;
+		}
+
+		table th {
+			white-space: nowrap;
+		}
+
+		table td {
+			white-space: nowrap;
+		}
+	</style>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="ct">
+				<td class="td2">订单ID</td>
+				<td class="td2">订单号</td>
+				<th class=td2">充值用户ID</th>
+				<th class="td2">充值用户名</th>
+				<td class="td2">订单状态</td>
+				<td class="td2">订单提交时间</td>
+				<td class="td2">消费金币数</td>
+				<td class="td2">外部订单号</td>
+				<td class="td2">IP地址</td>
+			</tr>
+			<?php foreach ($list as $m => $n) { ?>
+				<tr class="ct">
+					<td class="td2"><?php echo $n['id']; ?></td>
+					<td class="td2"><?php echo $n['order_sn']; ?></td>
+					<td class="td2"><?php echo $n['uid']; ?></td>
+					<td class="td2"><?php echo $n['username'];?></td>
+					<td class="td2"><?php echo $orderStatus[$n['order_status']]; ?></td>
+					<td class="td2"><?php echo date('Y-m-d H:i:s', $n['add_time']) ?></td>
+					<td class="td2"><?php echo $n['total_cost_scores']; ?></td>
+					<td class="td2"><?php echo $n['rec_order_id']; ?></td>
+					<td class="td2"><?php echo $n['user_ip']; ?></td>
+				</tr>
+			<?php }; ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#date").datepicker({dateFormat: 'yy-mm'});
+
+
+			$("#downLoad").bind('click', function () {
+				$("#hidden_export").val(1);
+				$("#addFrom").submit();
+				$("#hidden_export").val(0);
+			});
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

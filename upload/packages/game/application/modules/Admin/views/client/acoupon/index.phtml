@@ -1,0 +1,96 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $listUrl;?>">发放活动</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加活动</a></li>
+		<li><a href="<?php echo $ticketDetailUrl;?>">A券明细列表</a></li>
+		<li><a href="<?php echo $moneyDetailUrl;?>">A币交易明细</a></li>
+		<li><a href="<?php echo $detailUrl;?>">A券说明</a></li>
+		<li><a href="<?php echo $sendTicketUrl;?>">A券手动赠送</a></li>
+	</ul>
+</div>
+<div class="table_full">
+	<form action="<?=$listUrl?>" method="get">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">名称</th>
+				<td class="td">
+					<input type="text" class="input" name="title" value="<?=$s['title'];?>">
+				</td>
+				<th class="th">类型</th>
+				<td class="td">
+					<select name="htype" class="wa">
+						<option value="0">全部</option>
+						<?php foreach ($htype as $key => $value) { ?>
+							<option value="<?=$key?>"<?php if ($key == $s['htype']): ?> selected<?php endif ?>><?=$value?></option>
+						<?php } ?>
+					</select>
+				</td>
+				<th class="th">活动时间</th>
+				<td class="td">
+					<input type="text" class="input time" name="hd_start_time" value="<?=$s['hd_start_time']?>">
+				</td>
+				<th class="th">至</th>
+				<td class="td">
+					<input type="text" class="input time" name="hd_end_time" value="<?=$s['hd_end_time']?>">
+				</td>
+			</tr>
+		</table>
+		<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+	</form>
+</div>
+<div class="h_a">
+    <span class="btn2"><span><button><a href="<?php echo $detailUrl;?>" class="mr10" style="color:white;">A券说明</a></button></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td>活动ID</td>
+			<td>活动名称</td>
+			<td>状态</td>
+			<td>专题ID</td>
+			<td>活动时间</td>
+			<td>活动类型</td>
+			<td>操作</td>
+		</tr>
+		<?php foreach ($list as $key => $value) { ?>
+			<tr class="ct">
+			    <td><?=$value['id']?></td>
+				<td><?=$value['title']?></td>
+				<td><?php echo $value['status']?'<font color="red">开启</font>':'关闭'; ?></td>
+				<td><?php echo $value['subject_id']?$value['subject_id']:'全部';?></td>
+				<td>
+					<div><?=date('Y-m-d H:i', $value['hd_start_time'])?></div>
+					<div><?=date('Y-m-d H:i', $value['hd_end_time'])?></div>
+				</td>
+				<td><?=$htype[$value['htype']]?></td>
+				<td><a href="<?=$editUrl?>?id=<?=$value['id']?>">编辑</a>　
+					<a style="display:none;" href="<?=$deleteUrl?>?id=<?=$value['id']?>" class="delete">删除</a>
+					<a href="<?=$activityDetailUrl?>?task_id=<?=$value['id']?>">活动明细</a>　
+				</td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script>
+$('input.time').datetimepicker();
+$('.delete').click(function() {
+	if (!confirm('是否确认删除')) {
+		return false;
+	}
+	$.get(this.href, function(res) {
+		if (res.success) {
+			alert('删除成功');
+			location.reload();
+		} else {
+			alert(res.msg);
+		}
+	})
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,138 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li class="current"><a href="<?php echo $listUrl;?>">免流量活动</a></li>
+		<li><a href="<?php echo $ulistUrl;?>">用户统计</a></li>
+        <li><a href="<?php echo $flistUrl;?>">流量统计</a></li>
+        <li><a href="<?php echo $blistUrl;?>">黑名单</a></li>
+	</ul>
+</div>
+<div class="step mb10" id='setcont'>
+		<ul class="cc">
+			<li class="current" style="width:33.3%">创建活动</li>
+			<li class="line" style="left:33%"></li>
+			<li style="width:33.3%" ><span ass="fl"><em></em></span>内容配置</li>
+			<li class="line" style="left:66%"></li>
+			<li style="width:33.3%"><span class="fl"><em></em></span>预警设置</li>
+		</ul>
+</div>
+<div class="step mb10" id='setcontline'>
+		<ul class="cc">
+			<li class="current" >创建活动</li>
+			<li class="line" ></li>
+			<li><span class="fl"><em></em></span>预警设置</li>
+		</ul>
+</div>
+<div class="h_a">添加活动</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="htype" id = "htype" type="hidden" value="2" />
+<div class="table_full">
+	<table width="100%">
+	   <tr class="tr">
+			<th class="th">活动方式</th>
+			<td class="td">
+				<?php /*?><select name="htype" onchange='showtd()'>
+<?php foreach($htype as $key=>$value) {?>				
+					<option value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php }?>
+				</select><?php */?>
+				全站免流量
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动简介</th>
+			<td class="td"><input type="text" class="input wc" name="explain" value=""> <span style="color:red">活动简介不能超过50个字符。</span></td>
+		     
+		</tr>
+		<tr class="tr">
+			<th class="th">生效时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="img" value="">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr" id="zqpic" style="display: none;">
+			<th class="th">免流量专区图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="fimg">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="f_img" value="">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=fimg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+				<th class="th">活动说明</th>
+				<td class="td"><textarea style="width: 600px; height: 300px" class="textarea"
+						name="content"></textarea>
+				</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">下一步</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//广告表单数据提交
+function showtd(){
+	var value=$("select[name=htype]").val();
+	if(value == 2) {
+		$('#setcont').hide();
+		$('#setcontline').show();
+		$('#zqpic').hide();
+	} else {
+		$('#setcont').show();
+		$('#setcontline').hide();
+		$('#zqpic').show();
+	}
+}
+var editor;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor = K.create('textarea[name="content"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+$(document).ready(function(){
+	 $('#setcont').hide();
+	 $('#setcontline').show();
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	 ajaxForm('addFrom',function(ret){
+		 var value=$("input[name=htype]").val();
+	     if(value == 2){
+	    	 var url = 'addwarn';
+	     } else {
+	    	 var url = 'addgame';
+	     }
+		ajaxRedirect(ret, baseurl+'/Admin/Freedl_Hd/'+url+'?activity_id='+ret.data+'&act=add&step=1');
+	},function(){
+		editor.sync();
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

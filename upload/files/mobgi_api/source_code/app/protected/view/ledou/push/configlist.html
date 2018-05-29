@@ -1,0 +1,119 @@
+{{pagerCss}}
+<div class="colMain">
+    <div class="title"><p class="fl">配置项列表</p></div>
+    <div class="main">
+        <div class="toolbar">
+            <div class="search fl">
+                <span>
+                    <form name="form" method="GET" action="config">
+                        <input typt="text" id="keyword" name="keyword" value="{{keyword}}" class="iText" title="输入关键字可搜索:配置id,配置名,产品名"/>
+                        <select id="platform" name="platform">
+                            <option value="0" <!-- if {{platform}}==0 --> selected <!-- endif --> >全部导量平台</option>
+                            <option value="1" <!-- if {{platform}}==1 --> selected <!-- endif --> >Android</option>
+                            <option value="2" <!-- if {{platform}}==2 --> selected <!-- endif --> > IOS</option>
+                        </select>
+                        <select id="state" name="state">
+                            <option value="0" <!-- if {{state}}==0 --> selected <!-- endif --> >全部导量状态</option>
+                            <option value="1" <!-- if {{state}}==1 --> selected <!-- endif --> >导量中</option>
+                            <option value="2" <!-- if {{state}}==2 --> selected <!-- endif --> > 未导量</option>
+                        </select>
+                        <input type="submit" class="submit" value="" title="输入关键字可搜索配置名"/>
+                    </form>
+                </span>
+            </div>
+            <a href="/push/addconfig" class="fr add" style="width:100px;">新建导量配置</a>
+        </div>
+        <div class="content">
+            <div class="grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>配置ID</th>
+                            <th>导量平台</th>
+                            <th>配置名称</th>
+                            <th>导量产品</th>
+                            <th>展示量</th>
+                            <th>点击数</th>
+                            <th>点击率</th>
+                            <th>导量状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- loop result -->
+                        <tr config_id="{{result' value.id}}">
+                            <td>{{result' value.id}}</td>
+                            <td>{{result' value.platformStr}}</td>
+                            <td><a href="/push/planview?config_id={{result' value.id}}&config_name={{result' value.config_name}}" style="text-decoration: underline;color:green">{{result' value.config_name}}</a></td>
+                            <td>{{result' value.product_name}}</td>
+                            <td class="total_statimp">0</td>
+                            <td class="total_statclick">0</td>
+                            <td class="click_percent">0%</td>
+                            <td><!-- if {{result' value.state}}==1 --><font color="green">导量中</font><!-- else --><font color="red">未导量</font><!-- endif --></td>
+                            <td>
+                                <a href="/push/editconfig?configid={{result' value.id}}" class="edit" title="编辑" intime="{{result' value.intime}}"></a>
+                                |
+                                <a href="/push/copyconfig?configid={{result' value.id}}" class="copy" title="复制">复制</a>
+                                |
+                                <a href="planedit_view?config_id={{result' value.id}}&config_name={{result' value.config_name}}" class="paste" title="新建导量计划">新建</a>
+                                |
+                                <a href="/push/delconfig?configid={{result' value.id}}" class="del" title="删除" intime="{{result' value.intime}}"></a>
+                            </td>
+                        </tr>
+                        <!-- endloop -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">{{pager.pages}}</div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="{{rootUrl}}/js/thickbox.js"></script>
+<link rel="stylesheet" href="{{rootUrl}}/css/thickbox.css" type="text/css" />
+<script language="javascript">
+    var config_ids = "<!-- loop result -->{{result' value.id}},<!-- endloop -->";
+    autoRefreshPlanData()
+    function autoRefreshPlanData(){
+        ajaxPOST("/push/getPushPlanRefreshData", {"config_ids":config_ids}, function(data) {
+            var length = data.length;
+            for (i=0; i<length; i++)
+            {
+                $("tr[config_id="+data[i]['config_id']+"] td.total_statimp").html(data[i]['total_imp']);
+                $("tr[config_id="+data[i]['config_id']+"] td.total_statclick").html(data[i]['total_click']);
+                $("tr[config_id="+data[i]['config_id']+"] td.click_percent").html(data[i]['click_percent']);
+            }
+        })
+    }
+    
+    window.setInterval("autoRefreshPlanData()",30000);
+    
+$(function(){
+    //取消列表页不可编辑的弹出提示
+    $("a.edit").click(function(){
+//        if($(this).attr("intime") == "1"){
+//            jAlert("生效时间的开始时间前5min到生效时间结束的时间段内不可编辑");
+//            return false;
+//        }
+    });
+    
+    //先取消公共JS绑定的click事件再绑定click事件
+    $("a.del").unbind("click").click(function(){
+        if($(this).attr("intime") == "1"){
+            jAlert("生效时间的开始时间前5min到生效时间结束的时间段内不可删除");
+//            $(this).unbind("click").unbind("click");
+            return false;
+        }else{
+            var opt = $(this);
+            var url = opt.attr("href");
+            opt.attr("href", "#");
+            jConfirm("是否确定要删除？", function() {
+                window.location.href = url;
+            }, function() {
+                opt.attr("href", url);
+            });
+        }
+    });
+})
+    
+</script>

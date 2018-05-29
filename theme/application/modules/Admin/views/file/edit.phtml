@@ -1,0 +1,90 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">文件列表</a></li>
+    <?php if($groupid == 1) {?><li class="current"><a href="javascript:;">上传文件</a></li><?php }?>
+	</ul>
+</div>
+<div class="h_a">编辑文件</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+			<th class="th">编辑上传</th>
+			<td class="td">
+				<ul class="uploadFile">
+					<li id="File">
+					<input type="hidden" name="file" value="<?php echo $info['file'];?>">
+					<input type="hidden" name="title" value="<?php echo $info['title'];?>">
+					<input type="hidden" name="designer" value="<?php echo $info['designer'];?>">
+					<input type="hidden" name="resulution" value="<?php echo $info['resulution'];?>">
+					<input type="hidden" name="min_version" value="<?php echo $info['min_version'];?>">
+					<input type="hidden" name="max_version" value="<?php echo $info['max_version'];?>">
+					<input type="hidden" name="font_size" value="<?php echo $info['font_size'];?>">
+					<input type="hidden" name="android_version" value="<?php echo $info['android_version'];?>">
+					<input type="hidden" name="rom_version" value="<?php echo $info['rom_version'];?>">
+					<input type="hidden" name="channel" value="<?php echo $info['channel'];?>">
+					<input type="hidden" name="lock_style" value="<?php echo $info['lock_style'];?>">
+					<input type="hidden" name="file_size" value="<?php echo $info['file_size'];?>">
+					<input type="hidden" name="since" value="<?php echo $info['since'];?>">
+					<input type="hidden" name="packge_time" value="<?php echo $info['packge_time'];?>">
+					<input type="hidden" name="imgs" value="<?php echo $info['imgs'];?>">
+					</li>
+				</ul>
+				<p style="clear: both;">
+					<iframe name="upload"
+						src="<?php echo $uploadUrl;?>"
+						style="height: 50px; width: 100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">分类</th>
+			<td class="td">
+			<?php foreach ($file_type as $key=>$value) { ?>
+						<input type="checkbox" name="file_type[]" value="<?php echo $value['id'];?>" <?php if($file_types[$value['id']]) echo 'checked="ckecked"';?> ><?php echo $value['name'];?>
+			<?php }?>
+			</td>
+		</tr>		
+		<tr class="tr">
+			<th class="th">描述</th>
+			<td class="td">
+				<textarea name="descript" style="width: 800px; height: 100px;"><?php echo $info['descript'];?></textarea>(最多200字)
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/File/index?s=1');
+	});
+})
+function showData(data) {
+	var file_data = data.file_data;
+	var img_data = (data.img_data||[]).join(',');
+	
+	var str = '';
+	str += '<input type="hidden" name="file" value="'+file_data.file+'">';
+	str += '<input type="hidden" name="title" value="'+file_data.title+'">';
+	str += '<input type="hidden" name="designer" value="'+file_data.designer+'">';
+	str += '<input type="hidden" name="resulution" value="'+file_data.resulution+'">';
+	str += '<input type="hidden" name="min_version" value="'+file_data.min_version+'">';
+	str += '<input type="hidden" name="max_version" value="'+file_data.max_version+'">';
+	str += '<input type="hidden" name="font_size" value="'+file_data.font_size+'">';
+	str += '<input type="hidden" name="android_version" value="'+file_data.android_version+'">';
+	str += '<input type="hidden" name="rom_version" value="'+file_data.rom_version+'">';
+	str += '<input type="hidden" name="channel" value="'+file_data.channel+'">';
+	str += '<input type="hidden" name="lock_style" value="'+file_data.lock_style+'">';
+	str += '<input type="hidden" name="file_size" value="'+file_data.file_size+'">';
+	str += '<input type="hidden" name="since" value="'+file_data.since+'">';
+	str += '<input type="hidden" name="packge_time" value="'+file_data.packge_time+'">';
+	str += '<input type="hidden" name="imgs" value="'+img_data+'">';
+	$("#File").html(str);
+}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

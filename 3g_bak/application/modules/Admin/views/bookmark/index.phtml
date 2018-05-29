@@ -1,0 +1,81 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li>
+				<a href="<?php echo $listUrl; ?>">应用列表</a>
+			</li>
+			<?php foreach (Gionee_Service_Bookmark::$ver as $k => $v): ?>
+				<li><a href="<?php echo $listUrl . '?ver=' . $k; ?>"><?php echo $v; ?></a></li>
+			<?php endforeach; ?>
+			<li><a href="<?php echo $editUrl; ?>">添加应用</a></li>
+		</ul>
+	</div>
+
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="50">排序</td>
+				<td width="50">ID</td>
+				<td width="100">名称</td>
+				<td width="80">图标</td>
+				<td width="80">背景颜色</td>
+				<td width="200">地址</td>
+				<td width="50">可删除</td>
+				<td width="200">版本</td>
+				<?php if (($ver & 6) > 0): ?>
+					<td width="100">运营商</td>
+				<?php endif; ?>
+				<td width="80">状态</td>
+				<td width="100">操作</td>
+			</tr>
+			<?php foreach ($bookmarks as $key => $value) { ?>
+				<tr class="ct">
+					<td><?php echo $value['sort']; ?></td>
+					<td><?php echo $value['id']; ?></td>
+					<td><?php echo $value['name']; ?></td>
+					<td><img src="<?php echo $value['icon'] ? $attachPath . $value['icon'] : ''; ?>" width="30"/></td>
+					<td>
+						<div style="height:32px;width:32px;background-color:<?php echo $value['backgroud']; ?>;"></div>
+					</td>
+					<td><?php echo $value['url']; ?></td>
+					<td><?php echo $value['is_delete'] ? '<font color="green">是</font>' : '否'; ?></td>
+					<td>
+						<?php
+						$tmp = array();
+						foreach (Gionee_Service_Bookmark::$ver as $key => $val) {
+							if ($key & $value['ver']) {
+								$tmp[] = $val;
+							}
+						}
+						echo implode(',', $tmp);
+
+						?>
+					</td>
+					<?php
+					if (($ver & 6) > 0):
+						$name = array();
+						foreach (Gionee_Service_Bookmark::$opName as $k => $v) {
+							$flag = (intval($value['op_type']) & intval($k));
+							if ($flag > 0) {
+								$name[] = $v;
+							}
+						}
+						?>
+						<td><?php echo implode(',', $name)?></td>
+					<?php endif; ?>
+
+					<td><?php
+						$operations = array(0 => '正常', 1 => '下线', 2 => '上线');
+						echo $operations[$value['operation']];
+						?></td>
+					<td>
+						<a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

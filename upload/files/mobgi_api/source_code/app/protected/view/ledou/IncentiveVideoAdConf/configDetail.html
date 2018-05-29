@@ -1,0 +1,126 @@
+ <!-- include "configDetail_inc" -->
+<div class="colMain">
+    <div class="title"><p class="fl">配置项</p><!-- if {{result.id}} --><a href="del?adid={{result.id}}&addetailid={{result.config_detail_id}}" class="del">删除</a><!-- endif --></div>
+    <form action="/IncentiveVideoAdConf/upd" method="post" name="form" id="adconfig">
+    <div class="main">
+        <div class="app-detail">
+            <ul class="form">
+                <li>
+                    <span class="label">名称：</span>
+                    <div class="fc">
+                        <input type="hidden" class="iText" id="config_type" name="config_type" value="<!-- if {{result.type}} -->{{result.type}}<!-- else -->video<!-- endif -->" />
+                        <input type="hidden" class="iText" id="config_id" name="config_id" value="{{result.id}}" />
+                        <input type="text" class="iText required" id="config_name" name="config_name" value="{{result.name}}" />
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">描述：</span>
+                    <div class="fc">
+                        <input type="text" class="iText required" id="config_desc" name="config_desc" value="{{result.config_desc}}"/>
+                        <span class="red">*</span>
+                    </div>
+                </li>
+                <li>
+                        <span class="label">平台类型：</span>
+                        <div class="fc">
+                                <select name="platform" id="platform">
+                                    <option value="1" <!-- if {{result.platform}}==1 -->selected<!-- endif -->>Android</option>
+                                    <option value="2" <!-- if {{result.platform}}==2 -->selected<!-- endif -->>IOS</option>
+                                </select>
+                        </div>
+                </li>
+                <li class="line"></li>
+                <li>
+                    <span class="label">应用：</span>
+                    <div class="fc">
+                        <script>
+                            function appkey(){
+                                <!-- if {{result.configtag.appkey}} -->
+                                    <!-- loop result.configtag.appkey -->
+                                        $("#appkey").append("<option selected value='{{result.configtag.appkey' value.appkey}}'>{{result.appkey' value.app_name}}</option>");
+                                    <!-- endloop -->
+                                <!-- endif -->
+                            }
+                        </script>
+                        <div class="clearfix config" id="games_box"></div>
+                    </div>
+                </li>
+                <li>
+                    <span class="label">渠道：</span> 
+                    <div class="fc">
+                        <div class="clearfix config" id="channels_box"></div>
+                    </div>
+                </li>
+                <li class="line"></li>
+                
+                
+                <li>
+                            <span class="label">广告产品：</span>
+                            <span class="label" style="display: none">广告概率：</span>
+                            <div class="fc">
+                                <div class="grid">
+                                    <div class="gridToolbar">
+                                        <p class="fl">
+                                            <a href="javascript:void(0)" class="cancel dzad" type="dz">从其他配置导入</a>
+                                            <a href="javascript:void(0)" class="cancel dzad" type="gx">更新到其他配置</a>
+                                            <input type="hidden" name="products" value='{{result.product_combjson}}' />
+                                        </p>
+                                        <p class="fr">
+                                            <a href="javascript:void(0)" id="averaged" class="cancel">全部平均</a>
+                                            <a href="javascript:void(0)" id="addAD" class="btn">新增</a>
+                                        </p>
+                                    </div>
+                                    <table id="adList">
+                                        <tbody>
+                                            <!-- if {{result.product_comb}} -->
+                                                <!-- loop result.product_comb -->
+                                                    <tr name="1">
+                                                        <td>{{result.product_comb' value.id}}</td>
+                                                        <td>{{result.product_comb' value.product_name}}</td>
+                                                        <td><input type="text" class="iText required" value="{{result.product_comb' value.percent}}"></td>
+                                                        <td>
+                                                            <a href="javascript:void(0)" class="del" title="删除"></a>
+                                                        </td>
+                                                    </tr>
+                                                <!-- endloop -->
+                                            <!-- endif -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </li>
+                
+                <li class="line"></li> 
+                    <!-- include 'configLevel' -->        
+                <li>
+                    <div class="fc">
+                        <input type="submit" value="确定" class="submit" />
+                        <input type="button" onclick="javascript:location.href='/IncentiveVideoAdConf/index'" value="取消" class="cancel" />
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</form>
+</div>
+   <!-- include "inc" -->
+<script>    
+    var warp = document.createDocumentFragment();
+    //var channel_html=[
+    <!-- if {{result.configtag.channel_id}} -->
+        <!-- loop result.configtag.channel_id -->
+            //"<option selected value='{{result.configtag.channel_id' key}}'>{{result.channel_id' value}}</option>",
+                    var option = document.createElement("option");
+              option.value = "{{result.channel_id' key}}";
+              option.text = "{{result.configtag.channel_id' value}}";
+              warp.appendChild(option);
+        <!-- endloop -->
+    <!-- endif -->//]
+    $(function(){
+        //$('<select id="channel_id" style="text-align:left;width:200px;height:150px;" multiple="multiple" name="channel_id[]">' + channel_html.join('') + '</select>').replaceAll("#channel_id");
+        appkey();
+        //$("#channel_id").replaceWith('<select id="channel_id" style="text-align:left;width:200px;height:150px;" multiple="multiple" name="channel_id[]">' + channel_html.join('') + '</select>')
+        $("#channel_id").append(warp);
+    })
+</script>

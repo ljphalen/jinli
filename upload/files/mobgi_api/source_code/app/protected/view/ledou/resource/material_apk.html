@@ -1,0 +1,176 @@
+<link media="screen" href="{{rootUrl}}/css/chosen.css" rel="stylesheet" type="text/css">
+<div class="colMain">
+    <div class="title">
+        <p class="fl">图片素材管理</p>
+    </div>
+    <div class="main" data-tabs-name="view">
+        <div class="content">
+            <!-- include 'menu' -->
+            <div class="devInfo" data-tabs-name="apk">
+             <!-- include 'meterial_menu' -->
+                <form action="../resource/material_apk" method="GET" enctype="multipart/form-data" style="margin-top:20px;">
+                    <input type="hidden" value="{{result.dev_id}}" name="dev_id" />
+                    <ul class="form">
+                        <li>
+                            <span class="label">平台类型：</span>
+                            <div class="fc">
+                                <select name="platform" id="platform"  onchange="autoPlatform()">
+                                    <option value="">所有(默认)</option>
+                                    <option value="1">Android</option>
+                                    <option value="2">IOS</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">所属产品：</span>
+                            <div class="fc">
+                                <select name="product_name" id="product_name">
+                                 <option value="">全部产品</option>
+                                    <!-- loop product -->
+                                    <option value="{{product' value.product_name}}">{{product' value.product_name}}</option>
+                                    <!-- endloop -->
+                                </select>
+               
+                            </div>
+                            
+                        </li>
+                        
+                         <li>
+                            <span class="label">产品版本：</span>
+                            <div class="fc">
+                               <input type="text" name="apk_version" class="iText" id="apk_version" value="{{result.apk_version}}"/>
+                           
+                            </div>
+                            
+                        </li>
+                                                                   
+                         <li>
+                            <span class="label">包名：</span>
+                            <div class="fc">
+                                <input type="text" value="{{result.package_name}}" name="package_name" class="iText" />
+                            </div>
+                            
+                        </li>
+                        
+                        <li>
+                             <span class="label">上传时间：</span>
+                            <div class="fc">
+                               <input typt="text" class="iText datepicker" name='sdate' id='sdate' value='{{date('Y-m-d',sdate)}}' /> -
+                    			<input typt="text" class="iText datepicker" name='edate' id='edate' value='{{date('Y-m-d',edate)}}' />     	
+                                 <span style="margin-left:100px;">
+								</span>
+							<input type="submit" value="查询" class="submit"/>
+							</div>
+                        </li>
+                        </ul>
+                </form>
+                <div class="grid">
+   				<table>
+   				<!-- loop apk -->
+   				<!-- if {{i}}%5==0 -->
+					<tr>
+					<!-- endif -->
+					<td style="padding-top:20px;padding-bottom:20px;line-height:2px;">
+						<div style="margin-left:10px; display:block;">
+						<p><span style="width:80px;text-align:right;">平台类型:</span><!-- if {{apk' value.platform}}==1 -->Android<!-- elseif {{apk' value.platform}}==2 -->IOS<!-- else -->通用<!-- endif --></p>
+                        <p><span style="width:80px;text-align:right;">所属产品:</span>{{apk' value.product_name}}</p>
+						<p><span style="width:80px;text-align:right;">产品版本:</span>{{apk' value.apk_version}}</p>
+						<p><span style="width:80px;text-align:right;">包名:</span>{{apk' value.package_name}}</p>
+						<p><span style="width:80px;text-align:right;">渠道:</span>{{apk' value.channel_id}}</p>
+						<p><span style="width:80px;text-align:right;">大小:</span>{{apk' value.size}}</p>
+						<p><span style="width:80px;text-align:right;">上传时间:</span>{{date("Y-m-d H:i:s",apk' value.updatetime)}}</p>
+						<p><span style="width:80px;text-align:right;">文件路径:</span><a href="{{apk' value.apk_url}}">{{apk' value.apk_url}}</a></p>
+						<p>
+                                                <!-- if {{pic' value.ischeck}}!=1 -->
+                                                    <a class="btnstyle" title="编辑素材" href="/resource/apk?id={{apk' value.id}}">编辑素材</a>
+                                                <!-- endif -->
+                		<span style="margin-left:80px;"></span>
+                		<a class="btnstyle btndel" href="/resource/delete?op=apk&id={{pic' value.id}}" title="删除素材">删除素材</a>
+                		</p>
+						</div>
+					</td>
+					<!-- if ({{i}}++)%5==4  -->
+					</tr>
+					<!-- endif -->
+              <!-- endloop -->  
+              <!-- if {{i}}%5!=4 -->
+              </tr>
+              <!-- endif -->	     	
+                </table>
+                    <div class="pagination">{{pager.pages}}</div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+var now= new Date();
+
+var year=now.getFullYear();
+
+var month=now.getMonth()+1;
+
+var date=now.getDate();
+$(function(){
+	 $('.datepicker').datepicker({
+	        changeMonth:true,
+	        changeYear:true,
+	        minDate:new Date(),
+	        dateFormat : "yy-mm-dd",
+	        minDate: "2014-01-01",
+	        maxDate:year+"-"+month+"-"+date
+	    });
+	    $('#sdate').change(function(){
+		    	var time = $(this).val();
+				var date1 = new Date($('#sdate').val()).getTime();
+				var date2 = new Date($('#edate').val()).getTime();
+				if(date2 < date1)
+				{
+					alert("错误，结束日期不能比开始日期早");
+				}
+		    });
+	    $('#edate').change(function(){
+			var date1 = new Date($('#sdate').val()).getTime();
+			var date2 = new Date($('#edate').val()).getTime();
+			if(date2 < date1)
+			{
+				alert("错误，结束日期不能比开始日期早");
+				return false;
+			}
+	    });
+	    $("#product_name").val("{{result.product_name}}");
+        $("#platform").val("{{result.platform}}");
+	
+})
+
+$(function(){
+    autoPlatform("{{result.product_name}}");
+})
+function autoPlatform(productname) {
+    ajaxPOST("/reproduct/autoPlatform", {"platform": $("#platform").val()}, function(data) {
+        var length = data.length;
+        str = '';
+        if(productname == '')
+        {
+             str ='<option value="" selected="selected">所有产品</option>';
+        }else{
+            str ='<option value="">所有产品</option>';
+        }
+        for (i=0; i<length; i++)
+        {
+            if_selecte = ""
+            if(productname == data[i].product_name)
+            {
+                if_selecte =  'selected="selected"';
+            }
+            str += '<option value="'+data[i].product_name+'"'+if_selecte+'>'+data[i].platform_product_name+'</option>'
+        }
+        $("#product_name").html(str);
+        //重新绑定select的选择组件
+        $("#product_name").removeClass("chzn-done");
+        $("#product_name_chzn").remove();
+        $("#product_name").chosen({});
+    })
+}
+</script>
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>

@@ -1,0 +1,274 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl.'?type='.$type;?>">游戏列表</a></li>
+		<li class="current"><a>版本管理</a></li>
+	</ul>
+</div>
+<div class="h_a">
+    <a href="<?php echo $step2editUrl.'?id='.$gameId.'&type='.$type;?>">
+    <input type="button" value="游戏版本信息"/>
+    </a>
+</div>
+<style type="text/css">
+	.container{
+		position: relative;
+	}
+	.show span,.hidden span{
+		max-width: 90px;
+		overflow: hidden;
+		display: inline-block;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.show{
+		display: inline-block;
+	}
+	.hidden{
+		display: none;
+	}
+	.controller{
+		position: absolute;
+		right: 0;
+		color: blue;
+	}
+	
+</style>
+<div class="h_a">
+    应用信息
+</div>
+<div class="table_full">
+<table width="100%">
+	    <tr class="tr">
+			<th class="th">游戏名称:</th>
+			<td class="td">
+			   <?php echo $apk_info['base_attribute']['name'];?>
+			</td>
+			<th class="th">游戏包名:</th>
+			<td class="td"><?php echo $apk_info['base_attribute']['package'];?></td>
+	    </tr>
+		<tr class="tr">
+			<th class="th">APPID:</th>
+			<td class="td"><?php echo $apk_info['base_attribute']['appid'];?></td>
+			<th class="th">API-Key:</th>
+			<td class="td"><?php echo $apk_info['base_attribute']['api_key'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">合作方式:</th>
+			<td class="td"><?php echo $cooperates[$apk_info['base_attribute']['cooperate']];?></td>
+			<th class="th">Secret Key:</th>
+			<td class="td"><?php echo $apk_info['base_attribute']['secret_key'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">开发者:</th>
+			<td class="td"><?php echo $apk_info['base_attribute']['developer'];?></td>
+			<th class="th">代理商:</th>
+			<td class="td"><?php echo $apk_info['base_attribute']['agent'];?></td>
+		</tr>
+</table>
+</div>
+<div class="h_a">
+    版本信息
+</div>
+<div class="table_full">
+<dl style="display:-webkit-box">
+	<dt style="width:64px;height:64px; " >
+	<img style="height: 100%;width:auto;" src="<?php echo $gameInfo['img'];?>" alt="" >
+	</dt>
+	<dd style="padding-left: 64px">
+		<p><span class="name">游戏版本:<?php echo $apk_info['version'][0]['version'];?></span></p>
+		<p><span class="id">游戏ID:<?php echo $gameId;?></span></p>
+		<p><span class="type">主分类:<?php echo $mainCategory['parent']['title'];?> - <?php echo $mainCategory['sub']['title'];?></span></p>
+		<?php if($lessCategory):?>
+		<p><span class="type">次分类:<?php echo $lessCategory['parent']['title'];?> - <?php echo $lessCategory['sub']['title'];?></span></p>
+		<?php endif;?>
+		<p><span class="min_sys_version">最低系统版本要求:<?php echo 'Android'.$apk_info['version'][0]['min_sys_version'];?></span></p>
+		<p><span class="certificate">安全认证信息:<?php echo $apk_info['base_attribute']['certificate'];?></span></p>
+	</dd>
+</dl>
+</div>
+
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr">
+			<th class="th">下载地址</th>
+			<td class="td">
+			  <?php echo $apk_info['version'][0]['link'];?>
+			</td>
+	    </tr>
+		 <tr class="tr">
+			<th class="th">Version Code</th>
+			<td class="td"><?php echo $apk_info['version'][0]['version_code'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">版本号</th>
+			<td class="td"><?php echo $apk_info['version'][0]['version'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">MD5校验值</th>
+			<td class="td"><?php echo $apk_info['version'][0]['md5_code'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">大小</th>
+			<td class="td"><?php echo $apk_info['version'][0]['size'];?>M</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">系统最低版本要求</th>
+			<td class="td">
+				<?php echo 'Android'.$apk_info['version'][0]['min_sys_version'];?>
+			</td>
+		</tr> 
+		 <tr class="tr">
+			<th class="th">分辨率</th>
+			<td class="td">
+			 <?php echo $apk_info['resolution'];?>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			 <?php echo $apk_info['base_attribute']['status'] ? '已上线' : '已下线';?>
+			</td>
+		</tr>  
+	</table>
+</div>
+<div class="h_a">
+   可编辑信息
+</div>
+<div class="table_full">
+	<table width="100%">
+	  <tr class="tr">
+			<th class="th">游戏名称</th>
+			<td class="td"><?php echo $apk_info['base_attribute']['name'];?></td>
+	  </tr>
+	  <tr class="tr">
+			<th class="th">计费模式</th>
+			<td class="td">
+			  <?php echo $apk_info['base_attribute']['price'];?>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">语言</th>
+			<td class="td"><?php echo $apk_info['base_attribute']['language'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">来源</th>
+			<td class="td"><?php echo $apk_info['base_attribute']['developer'];?></td>
+		</tr>
+	    <tr class="tr">
+			<th class="th">游戏主分类</th>
+			<td class="td">
+			  <p><span class="type"><?php echo $apk_info['mainCategory']['parent']['title'];?> - <?php echo $apk_info['mainCategory']['sub']['title'];?></span></p>
+			</td>
+		</tr>
+		 <tr class="tr">
+			<th class="th">游戏次分类</th>
+			<td class="td">
+			  <?php if($lessCategory):?>
+			  <p><span class="type"><?php echo $apk_info['lessCategory']['parent']['title'];?> - <?php echo $apk_info['lessCategory']['sub']['title'];?></span></p>
+			  <?php endif;?>		
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">简述</th>
+			<td class="td"><?php echo html_entity_decode($apk_info['base_attribute']['resume']);?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">热词</th>
+			<td class="td"><?php echo html_entity_decode($apk_info['base_attribute']['label']);?></td>
+		</tr>
+		<tr class="tr">
+				<th class="th">小编八卦</th>
+				<td class="td"><?php echo html_entity_decode($apk_info['base_attribute']['tgcontent']);?>
+				</td>
+		</tr>
+		<tr class="tr">
+				<th class="th">联网类型</th>
+				<td class="td"><?php echo $apk_info['network_type'];?>
+				</td>
+		</tr>
+	    <tr class="tr">
+				<th class="th">游戏特色</th>
+				<td class="td"><?php echo $apk_info['character'];?>
+				</td>
+		</tr>
+
+		<tr class="tr">
+				<th class="th">详细分类</th>
+				<td class="td"><?php echo $apk_info['detail_category'];?>
+				</td>
+			</tr>     
+			<tr class="tr">
+				<th class="th">游戏评级</th>
+				<td class="td"><?php echo $apk_info['level'];?>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">内容题材</th>
+				<td class="td"><?php echo $apk_info['about'];?>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">画面风格</th>
+				<td class="td"><?php echo $apk_info['style'];?>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">应用介绍</th>
+				<td class="td"><?php echo html_entity_decode($apk_info['base_attribute']['descrip']);?>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">版本更新日志</th>
+				<td class="td"><?php echo html_entity_decode($apk_info['version'][0]['changes']);?>
+				</td>
+			</tr>  
+			        
+	</table>
+</div>
+</form>
+<div class="h_a">
+    不可编辑信息
+</div>
+<div class="table_full">
+	<table width="100%">
+       <tr class="tr">
+			<th class="th">应用图标</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="Img">
+						<img src="<?php echo $apk_info['base_attribute']['img'];?>"/>
+					</li>
+					<?php if($gameInfo['mid_img']){?>
+					<li id="Img">
+						<img src="<?php echo $apk_info['base_attribute']['mid_img'];?>"/>
+					</li>
+					<?php }?>
+					<?php if($gameInfo['big_img']){?>
+					<li id="Img">
+						<img src="<?php echo $apk_info['base_attribute']['big_img'];?>"/>
+					</li>
+					<?php }?>
+				</ul>			
+		</tr>
+		<tr class="tr">
+			<th class="th">应用截图</th>
+			<td class="td">
+			            <div>
+						<ul class="uploadImg">
+						<?php foreach($apk_info['simg'] as $key=>$value) {
+							$file = explode(".", basename($value));
+							$img = $value . '_240x400.' . $file[1];
+						?>
+						<li>
+							<img src="<?php echo $img;?>"/>
+						</li>
+					<?php }?>
+					</ul>
+				    </div>
+			</td>
+		</tr>
+		
+	</table>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

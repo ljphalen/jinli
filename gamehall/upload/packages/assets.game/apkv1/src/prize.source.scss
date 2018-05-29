@@ -1,0 +1,383 @@
+/*
+ * 积分抽奖及抽奖规则说明
+ * User: snowdrop
+ * Date: 2015-1-7
+ * Contact: dongandhuang@gmail.com
+ */
+@charset "utf-8";
+@import "compass/css3";
+@import "_reset";
+$px:0.05rem;
+::-webkit-scrollbar{width:0px; height:0px;}
+body{font-size:.6rem;background:#fff; }
+body#prize-rule-container{background:#ffc587;}
+
+//抽奖宣传图
+.banner-container{
+	width:100%;
+	height:160px;
+	position: relative;
+	img{width:100%;height:100%;}
+	.btn-rule{
+		position: absolute;
+		left:0;top:13px;
+		//$w,$h,$fontsize,$color,$bgColor,$radius,$activeColor
+		@include btn(76px,26px,14px,#fff,#ffb400,2px,#eda700);
+		@include border-top-left-radius(0px);@include border-bottom-left-radius(0px);
+	}
+	.btn-rolling{
+		position: absolute;
+		color:#fff;font-size:13px;
+		background:inline-image("../img/prize/billboard-bg.png");
+		background-size:100% 100%;
+		bottom:10px;text-align:center;height:33px;overflow: hidden;
+		line-height: 33px;left:12px;right:12px;
+		.roll{height:32px;}
+	}
+}
+
+//积分使用情况
+.points-container{
+	margin:25px 10px 24px; 
+	background:#fff;position: relative;padding:6px 0 14px 16px;
+	background:url("../img/prize/dial-points-bg.png");
+	background-size:100% 100%;
+	
+	.pointLeft{
+		span{display: block;font-size:14px;color:#a25400;margin-top:8px;}
+		#prize-totalPoints,#prize-consumePoints{color: #ff6b1a;font-weight:bold;}
+	}
+	.btn-points{
+		// $w,$h,$fontsize,$color,$bgColor,$radius,$activeColor
+		@include btn(108px,36px,17px,#fff,#ee7047,2px,#f26417);
+		position: absolute;right:11px;top:13px;
+		border:0;
+	}
+}
+
+// 九宫格抽奖
+.prize-container{
+	background:#ffc587;
+	padding:23px 14px 0px 14px;
+	.prize-wrap{
+		background:#a47543;padding:6px;
+		border:6px solid #ffc587;overflow: hidden;
+	}
+	.box-wrap{
+		display: -webkit-box;
+	}
+	.lastLine{
+		li{margin-bottom:0px;}
+	}
+	li{
+		-webkit-box-flex:1;margin-right:6px;
+		margin-bottom:6px;
+		background:#fefbf8;
+		border:1px solid #dca166;
+		box-sizing:border-box;
+	}
+	li:nth-child(3n+3){float:right;margin-right:0;}
+	.active{
+		background:#ff4d4d;border:1px solid #ff4d4d;
+	}
+	#prize-btn{
+		border:1px solid #ed3734;background:#ed3734;
+		&:active{
+			.content1{
+				background:inline-image("../img/prize/prize-btn-active.png");
+				background-size:100% 100%;
+			}
+		}
+	}
+	#prize-btn.prize-btn-active{
+		.content1{
+			background:inline-image("../img/prize/prize-btn-active.png");
+			background-size:100% 100%;
+		}
+	}
+}
+
+//中奖规则
+.rule-time-container,.rule-info-container,.rule-desc-container,.rule-phone-container{
+	padding:15px;font-size:13px;
+	h1.rule-title{ 
+		font-weight: bold;font-size:16px;margin-bottom:10px;
+	}
+	.ui-editor{
+		line-height: 16px;
+	}
+	.phone,.qq{display: block;margin-bottom:6px;}
+}
+.rule-desc-container{
+	overflow:hidden;
+	padding-bottom:0px;
+	li{
+		float: left;width:30%;text-align:center;margin-right:5%;
+		.name{
+			display:block;margin:8px 0;overflow: hidden;
+			white-space: nowrap;text-overflow: ellipsis;
+			height:14px;line-height:14px;
+		}
+	}
+	li:nth-child(3n+3){float:right;margin-right:0;}
+	.box{
+		background:#fefbf8;box-sizing:border-box;
+		border:1px solid #dca166;
+	}
+}
+.line{
+	border:1px solid #edb579;margin:0;padding:0;border-bottom:0px;
+}
+
+//正方形box
+.box{
+	position:  relative;
+	&:before{content: "";display: block;padding-top: 100%;}
+}
+.content{
+	/* Positioning */
+	position:  absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	/* Styling */
+	background:inline-image("../img/prize/prize-unit-bg.png");
+	margin:4px;
+	text-align: center;
+	background-size:100% 100%;
+}
+.content1{
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	/* Styling */
+	background:inline-image("../img/prize/prize-btn.png");
+	background-size:100% 100%;
+}
+
+
+//弹框
+.dialog{
+	// display:none;
+	position: fixed;top:0;width:100%;z-index:99;
+	height:100%;background:rgba(0,0,0,.5);
+}
+.img-container{
+	background:#fff;
+	// padding:15px 0 10px 0;
+	text-align:center;
+	/* @include border-top-left-radius(2px);
+	@include border-top-right-radius(2px); */
+	.img-wrapper{
+		width: 100%;
+		height: 144px;
+	}
+	.tips{
+		padding:12px 0;
+	}
+}
+.tips-container{
+	padding:12px 15px;background:#fff;
+	span{
+		display: block;color:#535353;font-size:12px;
+	}
+	span+span{margin-top:10px;}
+}
+.btn-container{
+	/* @include border-bottom-left-radius(2px);
+	@include border-bottom-right-radius(2px); */
+	background:#fff;padding:0;
+	text-align:center;
+	overflow: hidden;
+	a{
+		float: left;
+		width:50%;
+		text-align:center;
+		height:46px;
+		line-height:46px;
+		color:#666;
+		font-size:16px;
+	}
+	
+	a#close,a#continue,a#submit,#acoin{
+		&:active{color:#fff;background:#85be3b;}
+	}
+}
+//未中奖
+.no-prize-container,.points-prize-container,.acoin-prize-container,.entity-prize-container{
+	left:0;right:0;position: fixed;z-index:999;
+	.box{
+		width:100px;margin:0 auto;box-sizing:border-box;
+		border:1px solid #dca166;background:#fefbf8;
+	}
+	.tips{display:block;color:#525252;font-size:12px;margin-top:10px;}
+	background-color:#fff;
+	.tline{
+		-webkit-border-image: 0;
+		border-width:0px;
+	}
+}
+.points-prize-container,.acoin-prize-container,.entity-prize-container{
+	.tips{
+		color:#ff6b1b;
+		em{font-weight:bold;}
+	}
+}
+.entity-prize-container{
+	#submit{width:100%!important;}
+	.icon-loading{margin-right:15px;}
+	.loading-btn{width:100%!important;}
+	.addressinfo-container{
+		// border-top:1px solid #e0e0e0;
+		overflow: hidden;
+		color:#525252;font-size:15px;background:#fff;padding:8px 14px 20px 14px;
+		.address-tips{margin-bottom:8px;display:block;}
+		.ad-info{
+			em{display:inline-block;width:3.2rem;text-align:left;}
+			margin-bottom:5px;display:-webkit-box;-webkit-box-align:center;
+		}
+		.btn-input{
+			font-weight: normal;-webkit-box-flex:1;width:100%;display:block;
+			padding:6px;color:#525252;
+			margin:0 5px;background:#fff;
+			@include box-shadow(0 0 1px 0 #ababab);
+		}
+		.btn-textarea{
+			height: auto;resize:none;
+		}
+	}
+}
+.icon-loading{
+	background:inline-image("../img/ac/loading.gif");display: inline-block;
+	width:20px;height:20px;background-size:100% 100%;vertical-align:sub;
+}
+
+
+.rule-state{
+	width:130px;
+	text-align:center;
+	font-size:16px;
+	font-weight:bold;
+	margin:0 auto;
+	padding:4px 0;
+	position: relative;
+	color:#fff;
+	background:#a25400;
+}
+.title-arrowLeft,.title-arrowRight{
+	position: absolute;
+	width:18px;
+	height: 22px;
+	bottom: 0;
+	background:#894700;
+	&:after{
+		width: 0;
+		height: 0;
+		position: absolute;
+		content: '';
+		background-color:#894700;
+		border-bottom:10px solid transparent;
+		border-top:12px solid transparent;
+	}
+}
+.title-arrowLeft{
+	left:-18px;
+	&:after{
+		border-left:12px solid #ffc587;
+		left:-12px;
+	}
+}
+.title-arrowRight{
+	right: -18px;
+	&:after{
+		border-right:12px solid #ffc587;
+		right:-12px;
+	}
+	
+}
+
+//dial diff
+.dial-lottery-container{
+	$dialColor:#ee7047;
+	background:$dialColor;
+	.title-arrowRight{
+		&:after{
+			border-right-color:$dialColor;
+		}
+	}
+	.title-arrowLeft,.title-arrowRight{
+		background: #f2d99c;
+		&:after{
+			background-color: #f2d99c;
+		}
+	}
+	.title-arrowLeft{
+		&:after{
+			border-left-color:$dialColor;
+		}
+	}
+	.rule-container{
+		color:#f9e4af;
+		.rule-state{
+			color:$dialColor;
+			background:#f9f5cf;
+		}
+		.line{
+			border-color:#f9e4af;
+		}
+	}
+}
+//sudoku diff
+.sudoku-lottery-container{
+	$sudokuColor:#ffc587;
+	background:$sudokuColor;
+	.rule-container{
+		color:#a25400;
+		.line{
+			border-color:#edb579;
+		}
+	}
+	.btn-points{
+		background:#ff6b1a;
+	}
+
+}
+
+
+.dial-container{
+	display: block;
+	width: 92%;
+	margin:26px auto 0;
+	.turnplate{
+		display: block;
+		width: 100%;
+		position: relative;
+		background-image:url("../img/prize/turnplate-bg.png");
+		@include border-radius(50%);
+		background-size:100% 100%;
+	}
+	.item{width: 100%;}
+	.pointer{
+		position: absolute;
+		width: 31.5%;
+		height: 42.5%;
+		left:34.2%;
+		top:23%;
+		background-color:transparent;
+		background-image:url("../img/prize/turnplate-pointer.png");
+		background-size:100% 100%;
+		&:active,&:hover{
+			
+		}
+	}
+	.pointer.prize-btn-active{
+		background-image:url("../img/prize/turnplate-pointer-active.png");
+		background-size:100% 100%;
+	}
+	.imgs{
+		display:none
+	}
+}

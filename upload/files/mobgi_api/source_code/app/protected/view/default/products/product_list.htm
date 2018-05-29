@@ -1,0 +1,60 @@
+<!-- inlcude 'hearder' -->
+<script language="JavaScript" src="{{rotoUrl}}/js/common.js"></script>
+
+<form action="products/list" method="get" name="form" id="form">
+  <table width="100%"  border="0" cellpadding="3" cellspacing="1" class="tableOutborder">
+    <tr class="tableHeader">
+      <td colspan="9">产品列表</td>
+    </tr>
+    <tr class="bg_0">
+      <td width="4%" nowrap="nowrap"></td>
+      <td width="4%" nowrap="nowrap"><input name="username" type="text" id="username" value="{{keyword}}" size="20" maxlength="30" /></td>
+      <td width="12%">
+          <input type="submit" name="Submit" value=" 搜索 " accesskey="s" /></td>
+    </tr>
+  </table>
+</form>
+<!-- IF results -->
+<table width="100%" border="0" cellspacing="1" cellpadding="3" class="pageNav">
+  <tr>
+    <td>共 <strong>{total}</strong>, 显示 <strong>{from} - {to}</strong></td>
+    <td align="right">{pagenav}</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="1" cellpadding="3" class="tableOutborder">
+  <tr class="tableHeader">
+    <td width="3%">产品编号</td>
+    <td>产品名</td>
+    <td>导量规则</td>
+    <td>广告内容</td>
+    <td align="center">操作</td>
+  </tr>
+  <!-- BEGIN results -->
+  <tr class="bg_{ROWBIT}">
+    <td>{adminid}</td>
+    <td>{username}</td>
+    <td>{realname}</td>
+    <td><a href="admin.php?action=view&amp;role_id={role_id}">{role}</a></td>
+    <td align="center" nowrap>{e_name}</td>
+    <td align="center" nowrap width="15%">{date_create}</td>
+    <td align="center" nowrap width="15%">{date_update}</td>
+    <td align="center" nowrap width="15%">{date_login}</td>
+    <td align="center" nowrap><a href="admin.php?action=edit&adminid={adminid}">编辑</a> <a href="javascript:confirm_redirect('admin.php?action=remove&adminid={adminid}','确实要删除该用户？');">删除</a></td>
+  </tr>
+  <!-- END -->
+</table>
+<table width="100%" border="0" cellspacing="1" cellpadding="3" class="pageNav">
+  <tr>
+    <td>共 <strong>{total}</strong>, 显示 <strong>{from} - {to}</strong></td>
+    <td align="right">{pagenav}</td>
+  </tr>
+</table>
+<!-- ELSE -->
+<br />
+
+没找到任何相匹配的结果!
+<!-- ENDIF -->
+<script>
+    initSelected(document.form.role_id,'{role_id}');
+</script>
+<!-- inlcude 'footer' -->

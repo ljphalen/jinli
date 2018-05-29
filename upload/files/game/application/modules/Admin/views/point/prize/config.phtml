@@ -1,0 +1,44 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $pointShopIndexUrl;?>">积分商城</a></li>
+        <li><a href="<?php echo $pointCJIndexUrl;?>">积分抽奖</a></li>
+        <li><a href="<?php echo $presendIndexUrl;?>">人工发放</a></li>
+        <li class="current"><a href="javascript:void();">抽奖配置</a></li>
+	</ul>
+</div>
+<form action="<?php echo $configPostUrl;?>" method="post" id="configForm">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">	
+		<tr class="tr">
+		    <th class="th">默认配置</th>
+			<td class="td" colspan="2">
+			<span>抽奖活动关闭期间显示下图</span><br/>
+			<ul class="uploadImg">
+					<li id="AdImg">
+						<?php if($closeImg){?>
+							<img src = "<?php echo $attachPath . $closeImg;?>" />
+						<?php }else{?>
+							<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<?php }?>
+						<input type="hidden" name="closeImg" value="<?php echo $closeImg?>">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</td>
+		</tr>
+		</table>
+  </div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">保存</button></span></span></div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('configForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Point_Prize/index');
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,127 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<link href="<?php echo $staticroot ?>/jssdk/date/lyz.calendar.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo $staticroot ?>/jssdk/color/farbtastic.css" rel="stylesheet" type="text/css" />
+<script src="<?php echo $staticPath; ?>/js/common/jquery-ui.js?v=<?php echo $version; ?>"></script>
+
+<script src="<?php echo $staticroot ?>/jssdk/date/lyz.calendar.min.js"></script>
+
+<script src="<?php echo $staticroot ?>/jssdk/color/farbtastic.js"></script>
+
+<style type="text/css">
+    .select-box{width:600px; overflow:hidden;}
+    .select-box div{float:left; width:300px;}
+    .select-box ul{width:206px; height:300px; overflow-y:auto; overflow-x:hidden; border:1px solid; border-color: #999999 #e1e1e1 #e1e1e1 #999999;background:#fff; font-size:1em;color:#000;}
+    .select-box li{height:26px; line-height:26px; padding:0 10px;}
+    .select-box li:active{background-color:#09f;}
+    .select-box input[type=text]{display:block; width:200px; padding:5px 10px;border:1px solid; border-color: #999999 #e1e1e1 #e1e1e1 #999999;padding:3px;background:#fff; font-size:1em;color:#000;}
+
+    .uploadAdv{
+        width: 26%;float: left;
+        border: 1px solid #cca;
+        margin-left: 28px;
+    }
+    .uploadImgAdv .img{
+        width: 300px;
+        height: 300px;
+    }
+</style>
+
+<div class="nav">
+    <ul class="cc">
+        <li class=""><a href="<?php echo $listUrl; ?>">套图列表</a></li>
+        <li class="current"><a href="<?php echo $listimage; ?>">新建套图</a></li>
+
+    </ul>
+</div>
+
+
+<form method="post" action="<?php echo $addPostUrl; ?>" id="addFrom">
+    <input name="token" value="<?php echo $token; ?>" type="hidden" />
+
+
+    <div class="table_full">
+        <table width="100%">
+
+            <tr class="tr">
+                <th class="th">排序</th>
+                <td class="td">
+                    <div class="form-item">
+                        <label for="color">Color:</label>
+                        <input type="text" id="color" name="color" value="#123456" />
+                    </div>
+                    <div id="picker"></div>
+
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">标题</th>
+                <td class="td"><input type="text" class="input wc" name="title" value=""></td>
+            </tr>
+
+           <!-- <tr class="tr" id="descrip">
+                <th class="th">简介</th>
+                <td class="td"><textarea
+                        style="width: 800px; height: 200px" class="textarea" 	name="descrip"></textarea>
+                </td>
+            </tr>-->
+            <tr>
+                <th class="th">发布时间</th>
+                <td class="td"><input id = "pubdate" type="text" name="pre_publish"/></td>
+            </tr>
+        </table>
+    </div>
+
+
+    <div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+
+<script src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+        //专题表单数据提交
+        $(document).ready(function () {
+
+
+            $('#demo').hide();
+            $('#picker').farbtastic('#color');
+
+
+
+            ajaxForm('addFrom', function (ret) {
+                ajaxRedirect(ret, baseurl + '/Admin/wallpaperadsubject/createimages');
+            }, function () {
+                editor.sync();
+            });
+        })
+
+        $(function () {
+            $(".sub_type_id").change(function () {
+                var val = $('input:radio[name="sub_type_id"]:checked').val();
+
+                if (val == 9) {
+                    $("#sub_images").hide();
+                    $("#sub_adv_files").show();
+                }
+                if (val == -1) {
+                    $("#sub_images").show()
+                    $("#sub_adv_files").hide();
+                    $(".J_receive .ui-sortable").html("");
+                }
+            })
+
+
+            $("#pubdate").calendar({
+                controlId: "divDate", // 弹出的日期控件ID，默认: $(this).attr("id") + "Calendar"
+                speed: 200, // 三种预定速度之一的字符串("slow", "normal", or "fast")或表示动画时长的毫秒数值(如：1000),默认：200
+                complement: true, // 是否显示日期或年空白处的前后月的补充,默认：true
+                readonly: 0, // 目标对象是否设为只读，默认：true
+                upperLimit: new Date("2019/01/01"), // 日期上限，默认：NaN(不限制)
+                lowerLimit: new Date("2011/01/01"), // 日期下限，默认：NaN(不限制)
+                callback: function () {                                     // 点击选择日期后的回调函数
+
+                }
+            });
+
+
+        })
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

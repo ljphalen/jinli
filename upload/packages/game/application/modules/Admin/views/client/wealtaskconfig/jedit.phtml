@@ -1,0 +1,124 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $listUrl;?>">福利任务</a></li>
+		<li><a href="<?php echo $dlistUrl;?>">连续登录</a></li>
+		<li ><a href="<?php echo $dailyTaskUrl;?>">每日任务</a></li>
+		<li><a href="<?php echo $taskInfoConfigUrl;?>">任务说明</a></li>
+		<li class="current"><a href="<?php echo $jeditUrl;?>">奖励配置</a></li>
+	</ul>
+</div>
+<div class="h_a">奖励配置</div>
+<form method="post" action="<?php echo $jPostUrl;?>" id="editFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">弹出框提示语</th>
+			<td class="td"><input type="text" class="input wc" name="tips" value="<?php echo $info['tips'];?>"></td>
+		</tr>
+		<?php foreach($award_json as $key=>$value){?>
+		<tr class="tr">
+				<th class="th">第<?php echo $key+1;?>天奖励</th>
+			    <td class="td">
+			          <div>			   
+			            <div>
+			             	<input type="radio"  name="send_object<?php echo $key+1;?>" value="1" <?php echo ($value['send_object'] == 1)?'checked':'';?> >积分
+			            	<input class="input" id='awardPOint1' name="awardPOint[]" value="<?php echo ($value['send_object'] == 1)?$value['denomination']:'';?>"  />  			            
+			            </div>
+			            <div>
+			            	<input type="radio" name="send_object<?php echo $key+1;?>" value="2" <?php echo ($value['send_object'] == 2)?'checked':'';?>>A券
+			            	<input class="input"  name="awardTicket[]" value="<?php echo ($value['send_object'] == 2)?$value['denomination']:'';?>" /> 元   有效期 <input type="text" class="input" name="date[]" value="<?php echo $value['deadline'];?>"> 天 
+			             </div>
+			             <input  type="hidden" class="input"  name="send_object[]" value="<?php echo $value['send_object'];?>"  />
+			  		 </div>
+			    </td>
+		</tr>
+		<?php }?>
+		<tr class="tr" >
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="select wa">
+				<option <?php if ($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+				<option <?php if ($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Wealtaskconfig/dindex');
+	});
+
+    //赠送对象 第一天
+    $('[name="send_object1"]').click(function(){
+    	send_object = $(this).val();
+        if(send_object == 1){
+            $(this).parents().siblings('[name="send_object[]"]').val('1');
+        }else if(send_object == 2){
+       	 	$(this).parents().siblings('[name="send_object[]"]').val('2');
+        }
+    });
+    //赠送对象 第2天
+    $('[name="send_object2"]').click(function(){
+    	send_object = $(this).val();
+        if(send_object == 1){
+            $(this).parents().siblings('[name="send_object[]"]').val('1');
+        }else if(send_object == 2){
+       	 	$(this).parents().siblings('[name="send_object[]"]').val('2');
+        }
+    });
+    //赠送对象 第3天
+    $('[name="send_object3"]').click(function(){
+    	send_object = $(this).val();
+        if(send_object == 1){
+            $(this).parents().siblings('[name="send_object[]"]').val('1');
+        }else if(send_object == 2){
+       	 	$(this).parents().siblings('[name="send_object[]"]').val('2');
+        }
+    });
+    //赠送对象 第4天
+    $('[name="send_object4"]').click(function(){
+    	send_object = $(this).val();
+        if(send_object == 1){
+            $(this).parents().siblings('[name="send_object[]"]').val('1');
+        }else if(send_object == 2){
+       	 	$(this).parents().siblings('[name="send_object[]"]').val('2');
+        }
+    });
+    //赠送对象 第5天
+    $('[name="send_object5"]').click(function(){
+    	send_object = $(this).val();
+        if(send_object == 1){
+            $(this).parents().siblings('[name="send_object[]"]').val('1');
+        }else if(send_object == 2){
+       	 	$(this).parents().siblings('[name="send_object[]"]').val('2');
+        }
+    });
+    //赠送对象 第6天
+    $('[name="send_object6"]').click(function(){
+    	send_object = $(this).val();
+        if(send_object == 1){
+            $(this).parents().siblings('[name="send_object[]"]').val('1');
+        }else if(send_object == 2){
+       		$(this).parents().siblings('[name="send_object[]"]').val('2');
+        }
+    });
+    //赠送对象 第7天
+    $('[name="send_object7"]').click(function(){
+    	send_object = $(this).val();
+        if(send_object == 1){
+            $(this).parents().siblings('[name="send_object[]"]').val('1');
+        }else if(send_object == 2){
+       	 	$(this).parents().siblings('[name="send_object[]"]').val('2');
+        }
+    });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

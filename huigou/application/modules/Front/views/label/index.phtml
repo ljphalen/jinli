@@ -1,0 +1,54 @@
+<?php echo $this->render("layout/header.phtml");?>
+<section id="page">
+	<!-- 主体内容 -->
+	<section id="content">
+		<section class="goods">
+			<section class="cate-detail">
+				<nav>
+				    <span class="prevBtn"><i></i></span>
+					<span class="nextBtn"><i></i></span>
+					<div class="wrap">
+						<ul class="top-tags">
+						<?php foreach($labels as $key=>$value){?>
+							<li <?php $key == 0 ? 'class="actived"':'';?>><a href="<?php echo $webroot,'/label/?pid=',$pid,'&id=',$value['id'];?>" <?php if($id == $value['id']) echo 'class="actived"';?>><?php echo $value['name'];?></a></li>
+						<?php }?>
+						</ul>
+					</div>
+				</nav>
+				<section class="mod-show-list" id="J_publWrap" data-ajaxUrl="<?php echo $webroot,'/label/more?pid=',$pid,'&id=',$id;?>">
+					<div class="l-wrap">
+						<ul class="mod-item-list">
+							<?php 
+							    if(count($labels)){
+								foreach($goods as $key=>$value) {
+								if(strpos($value['img'], 'http://') === false) {
+									$img = $attachPath.$good['img'];
+								}else{
+									$img = $value['img'].'_200x200.'.end(explode(".",  $value['img']));
+								};
+							?>
+							<li>
+								<a href="<?php echo $webroot,'/goods/detail/?id=',$value['id'];?>">
+									<div class="pic"><img src="<?php echo $img;?>" alt="" /></div>
+									<div class="txt"><?php echo $value['want'] + $value['default_want'];?>人想要     ￥<?php echo $value['price'];?></div>
+								</a>
+							</li>
+							<?php } }?>
+						</ul>
+					</div>
+				</section>
+			</section>
+		</section>
+	</section>
+	<!--  /主体内容 -->
+</section>
+<script type="template" id="J_itemView">
+	<li>
+		<a href="{list.link}">
+			<div class="pic"><img src="{list.img}" alt="" /></div>
+			<div class="txt">{list.want}人想要  ￥{list.price}</div>
+		</a>
+	</li>
+</script>
+</body>
+</html>

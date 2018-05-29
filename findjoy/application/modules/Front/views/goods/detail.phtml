@@ -1,0 +1,48 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body>
+	<div class="module webapp">
+		<a id="J_shoppingCat" href="<?php echo $webroot;?>/cart/index" class="icon-shopping-cat">
+			<span style="display:none" id="J_shoppingNum" data-cartnum-ajaxurl="<?php echo $webroot;?>/api/cart/cartNum?id=<?php echo $id;?>"></span>
+		</a>
+
+		<section class="iScroll dhm-detail">
+			<div class="goods-pic">
+				<div class="pic">
+					<img src="<?php echo $staticPath;?>/assets/img/blank.gif" data-src="<?php echo Common::getAttachPath() . $goods['img']?>">
+				</div>
+			</div>
+			<div class="goods-info">
+				<h1><?php echo html_entity_decode($goods['title']); ?></h1>
+				<p class="price">到手价:<em>￥<?php echo $goods['price'] ?></em></p>
+				<ul class="info">
+					<li>香港门店价:$<?php echo $goods['hk_price'] ?></li>
+					<li>已售:<?php echo $goods['sale_num'] ?></li>
+					<li>评价:<?php echo $goods['comment_num'] ?></li>
+				</ul>
+			</div>
+			<ul class="goods-legend">
+				<li><span>%</span></li>
+				<li>代买汇率：<?php echo $hk_exrate; ?></li>
+			</ul>
+			<div class="goods-detail">
+				<h2>商品详情</h2>
+				<div><?php echo html_entity_decode($goods['descrip']);?></div>
+			</div>
+		</section>
+		<div class="add-to-cat">
+			<ul class="add-minus-num float-left">
+				<li class="J_minus dis" data-goodsid="<?php echo $goods['id'] ?>">-</li>
+				<li id="J_count" class="J_count">1</li>
+				<li class="J_add" data-goodsid="<?php echo $goods['id'] ?>">+</li>
+			</ul>
+			<div id="J_addToCat" data-ajaxurl="<?php echo $webroot;?>/cart/add" data-goodsid="<?php echo $goods['id'] ?>" class="btn btn-submit float-right">加入购物车</div>
+		</div>
+	</div>
+
+	<?php echo $this->render("layout/footer.phtml");?>
+
+	<script>
+		require(['goodsDetail']);
+	</script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<form id="pagerForm" action="__URL__" method="post">
+	<input type="hidden" name="pid" value="{$_REQUEST.pid}"/>
+	<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+	<input type="hidden" name="numPerPage" value="{$_REQUEST.numPerPage}" />
+	<input type="hidden" name="orderField" value="{$_REQUEST.orderField}" />
+	<input type="hidden" name="orderDirection" value="{$_REQUEST.orderDirection}" />
+	<input type="hidden" name="_search[status]" value="{$_REQUEST[status]}"/>
+	<volist name="_search" key="name" id="field">
+		<input type="hidden" name="_search[{$key}]" value="{$field|safe}"/>
+	</volist>
+</form>
+
+<div class="page">
+	<div class="pageHeader">
+		<form onsubmit="return navTabSearch(this);" action="__URL__" method="post" name="union_myform" id='union_myform'>
+		<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+		<div class="searchBar">
+			<ul class="searchContent" style="overflow: inherit; height: auto;">
+				<li>
+					<label>审核状态：</label>
+					<select class="combox" name="_search[status]">
+					<option value="">所有</option>
+					<option value="0">审核中</option>
+					<option value="1">审核通过</option>
+					<option value="-1">审核未通过</option>
+					</select>
+				</li>
+				<li>
+					<label>渠道：</label>
+					<select class="combox" name="_search[channel]">
+					<option value="">所有</option><option value="游戏大厅">游戏大厅</option><option value="notall">其它渠道</option>
+					</select>
+				</li>
+				<li>
+					<label>类型：</label>
+					<select class="combox" name="_search[type]">
+					<option value="">所有</option><option value="1">网游</option><option value="0">单机</option>
+					</select>
+					<script type="text/javascript">
+						$("select[name='_search[type]']").val('{:$_search[type]}');
+						$("select[name='_search[status]']").val('{:$_search[status]}');
+						$("select[name='_search[channel]']").val('{:$_search[channel]}');
+					
+						<if condition="isset($_GET['status'])">
+							$("select[name='_search[status]']").val('{:$_GET['status']}');
+							$("select[name='_search[status]']").parent().hide();
+						</if>
+					</script>
+				</li>
+				<li>
+					<label>AppID：</label>
+					<input type="text" name="_search[appid]" value="{$_search[appid]}" class="medium" >
+				</li>
+				<li>
+					<label>登陆帐号：</label>
+					<input type="text" name="_search[author]" value="{$_search[author]}" class="medium" >
+				</li>
+				<li>
+					<label>公司名称：</label>
+					<input type="text" name="_search[company_name]" value="{$_search[company_name]}" class="medium" >
+				</li>
+				<li>
+					<label>应用名称：</label>
+					<input type="text" name="_search[name]" value="{$_search[name]}" class="medium" >
+				</li>
+				<li>
+					<label>包名：</label>
+					<input type="text" name="_search[package]" value="{$_search[package]}" class="medium" >
+				</li>
+				<li>
+					<label>申请时间：</label>
+					<input type="text" name="_search[startDay]" value="{$_search[startDay]}" class="date" size="12" readonly/>
+					到<input type="text" name="_search[endDay]" value="{$_search[endDay]}" class="date" size="12" readonly/></a>
+				</li>
+				<div class="buttonActive"><div class="buttonContent"><button type="button" id="union_sub" >查询</button></div></div>
+                <div class="buttonActive"><div class="buttonContent"><button type="button" id="union_export" >导出</button></div></div>
+				 <script type="text/javascript">
+				$("#union_export").click(function(){
+					$("#union_myform").attr('action',"{:U('union/export')}");
+					$("#union_myform").attr('onsubmit','');
+					$("#union_myform").submit();
+				})
+				
+				$("#union_sub").click(function(){
+					$("#union_myform").attr('action',"");
+					$("#union_myform").attr('onsubmit','return navTabSearch(this);');
+					$("#union_myform").submit();
+				})
+				</script>
+			</ul>
+		</div>
+		</form>
+	</div>
+	
+	<div class="pageContent">
+		<table class="list listW" width="100%" layoutH="138">
+			<thead>
+				<tr>
+					<th width="50" orderField="id" class="{:orderField('id','desc')}">编号</th>
+					<th width="50">APPID</th>
+	                <th>申请时间</th>
+	                <th>渠道</th>
+	                <th>注册帐号</th>
+					<th>包名称</th>
+					<th>应用名称</th>
+	                <th>类型</th>
+					<th>审核状态</th>
+					<th>税务信息</th>
+					<th width="100">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php
+			$m = D("Union");
+			$s = $m->_status;
+			$Account = D("Dev://Accountinfo");
+			$Accountinfo = D("Dev://AccountTax");
+			?>
+			<volist id="vo" name="list">
+				<tr target="sid_node" rel="{$vo['id']}">
+					<php>
+						$audi = $Account->where(array('status'=>2, 'account_id'=>$vo['author_id']))->count();
+						$taxOK = $Accountinfo->status_to_string($vo["author_id"]);
+					</php>
+					<td>{$vo['id']}</td>
+					<td>{$vo['appid']}</td>
+					<td class="time"><notempty name="vo.updated_at">{$vo['updated_at']|date="Y-m-d H:i:s",###}<else/>{$vo['created_at']|date="Y-m-d H:i:s",###}</notempty></td>
+					<td class="tc5">{$vo['channel']}</td>
+					<td class="email">{:AccountsModel::listTxt($vo['author_id'])}</td>
+					<td class="package">{$vo['package']}</td>
+					<td class="app">{$vo['name']}</td>
+					<td class="tc4">{:$vo['type'] ? '网游' : '单机'}</td>
+					<td class="tc5">{:$s[$vo['status']]}</td>
+					<td class="tc4">{$taxOK|default='未审核'}</td>
+					<td>
+						<a href="{:U('authorize_log', array("id"=>$vo['id']))}" target="navTab" mask="true">记录</a> |
+						<if condition="$vo[status]==0 && $audi">
+							<a href="{:U('authorize', array("id"=>$vo['id']))}" target="dialog" width="800" height="580" mask="true"><b style="color:red;">审核</b></a>
+						</if>
+						<neq name="vo.status" value="0">
+							<a href="{:U('Union/details', array("id"=>$vo['id'], "account_id"=>$vo["author_id"]))}" target="dialog" width="700" height="550" max="true">资料</a>
+						</neq>
+					</td>
+				</tr>
+			</volist>
+			</tbody>
+		</table>
+
+		<div class="panelBar">
+			<div class="pages">
+				<span>显示</span>
+				<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+					<option value="10" <eq name="numPerPage" value="10">selected</eq>>10</option>
+					<option value="20" <eq name="numPerPage" value="20">selected</eq>>20</option>
+					<option value="50" <eq name="numPerPage" value="50">selected</eq>>50</option>
+					<option value="100" <eq name="numPerPage" value="100">selected</eq>>100</option>
+					<option value="200" <eq name="numPerPage" value="200">selected</eq>>200</option>
+				</select>
+				<span>共{$totalCount}条</span>
+			</div>
+			<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="10" currentPage="{$currentPage}"></div>
+		</div>
+	</div>
+</div>

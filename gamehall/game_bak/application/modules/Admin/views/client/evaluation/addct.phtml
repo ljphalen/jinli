@@ -1,0 +1,122 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">评测列表</a></li>
+    <li class="current"><a href="javascript:;">添加评测</a></li>
+	</ul>
+</div>
+<div class="h_a">
+	<span>添加自发布评测</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<span><a class="current" href="<?php echo $addUrl.'';?>">添加疯玩网评测</a></span>
+</div>
+
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="ctype" value="2" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input wc" name="sort" value="0"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">评测名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">简述</th>
+			<td class="td"><input type="text" class="input wc" name="resume" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">来源</th>
+			<td class="td"><input type="text" class="input wc" name="fromto" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="simg">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="img" value="">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=simg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏ID</th>
+			<td class="td"><input type="text" class="input wc" name="game_id" value="<?php echo !$info['game_id'] ? '':$info['game_id']; ?>" id="game_id"><button type="button" id="test" style="margin-left:20px;">获取</button><br>
+			<input type="checkbox" name="hot" <?php echo $info['hot'] ? 'checked="checked"':''; ?>/>在H5游戏详情页显示该信息
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏名称</th>
+			<td class="td"><input type="text" class="input wc" name="name" value="" id="name"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">发布时间</th>
+			<td class="td"><input type="text" class="input" name="create_time" value="" id="create_time"></td>
+		</tr>
+		<tr class="tr">
+				<th class="th">评测内容</th>
+				<td class="td"><textarea style="width: 800px; height: 500px" class="textarea" name="content" value=""></textarea>
+				</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="select wa">
+				<option selected value="1">开启</option>
+				<option value="0">关闭</option>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var editor;
+	KindEditor.ready(function(K) {
+		K.token = '<?php echo $token;?>';
+	    editor = K.create('textarea[name="content"]', {
+	        resizeType : 1,
+	        allowPreviewEmoticons : false,
+	        allowImageUpload : true,
+	        uploadJson : '<?php echo $uploadImgUrl;?>',
+	        items : EDITOR_ITEMS
+	    });
+	});
+	$('#create_time').datetimepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Evaluation/index');
+	},function(){
+		editor.sync();
+	});
+})
+$('#test').click(function(){
+		    $('#game_id,#name').html("");
+			$.ajax({
+				url : baseurl + "/Admin/Client_Evaluation/get_name",
+				type : 'POST',
+				dataType : 'json',
+				data : 'token='+'<?php echo $token;?>'+'&game_id='+$("#game_id").val(),
+				success : function(ret) {
+					 if (ret.success) {
+						var list = ret.data.list;
+						$('#name').val(list.name) ;
+					} else {
+						showError('', ret.msg);
+					}
+				}
+			});
+			return false;
+	})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,88 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body module-id="postDetail">
+<div class="module gray-background">
+    <section class="layout-center">
+        <div class="post-detail-header">
+            <div class="pic">
+                <img src="<?php echo $info["category_img"];?>">
+            </div>
+            <div class="content">
+                <h1><?php echo $info["title"];?></h1>
+                <ul>
+                    <li class="first"><i class="icon-address"></i><?php echo $info["area"];?></li>
+                    <li class="cont"><i class="icon-gender"></i><?php echo $info["sex"];?></li>
+                    <li class="flex"><i class="icon-time"></i><?php echo $info["dayfmt"];?></li>
+                </ul>
+                <ul>
+                    <li class="price first"><em><?php echo $info["money"];?></em>元/<?php echo $info["money_type"];?></li>
+                    <li class="flex"><?php echo $info["check_type"];?></li>
+                </ul>
+                <ul>
+                    <li class="first"><?php echo $info["job_type"];?></li>
+                    <li class="flex"><?php echo $info["company_name"];?></li>
+                </ul>
+            </div>
+        </div>
+        <div class="detail-wrap">
+            <div class="post-desc">
+                <h2>职位描述</h2>
+                <div class="detail">
+                    <?php echo $info["description"];?>
+                </div>
+            </div>
+            <div class="address-wrap">
+                <h2>详细地址</h2>
+                <div class="address"><?php echo $info["address"] ? $info["address"] : '无';?></div>
+            </div>
+        </div>
+        <div class="contact-wrap">
+            <div class="contact">
+                <p><span>负责人：</span><?php echo $info["author"];?></p>
+                <p><span>联系方式：</span><?php echo $info["phone"];?></p>
+            </div>
+            <div class="call-wrap">
+                <?php if($userInfo) {?>
+                <a href="tel:<?php echo $info["phone"];?>" class="call">
+                    <i class="icon-call"></i>
+                    <p>咨询</p>
+                </a>
+                <?php } else {?>
+                <a href="javascript:;" id="J_call" data-ajax="<?php echo $webroot;?>/front/user/login" class="call">
+                    <i class="icon-call"></i>
+                    <p>咨询</p>
+                </a>
+                <?php }?>
+            </div>
+        </div>
+        <div class="reminder-tip">
+            <div class="title">温馨提示</div>
+            <p>梦想天上掉馅饼的童鞋醒一醒！刷信誉，淘宝刷钻，YY网络兼职，加YY联系的职位是骗纸!!收取费用或押金都有欺诈嫌疑，请警惕！</p>
+        </div>
+    </section>
+    <div class="post-footer">
+        <div class="footer-wrap layout-center">
+            <div class="side">
+                <div class="report" id="J_report" data-ajax="<?php echo $webroot;?>/api/job/report?id=<?php echo $info["id"];?>">
+                    <i class="icon-bell <?php if($reported) echo 'active';?>"></i>
+                    <span>举报</span>
+                </div>
+                <div class="collect" id="J_collect" data-ajax="<?php echo $webroot;?>/api/job/favorite?id=<?php echo $info["id"];?>">
+                    <i class="icon-star-white <?php if($favorited) echo 'active';?>"></i>
+                    <span>收藏</span>
+                </div>
+            </div>
+            <?php if($signup || $info['status'] != 1) {?>
+            <div id="J_noSignup" class="registe gray">在线报名</div>
+             <?php } else {?>
+            <?php if ($user["user_type"] == 1) {?>
+                <a href="tel:<?php echo $info["phone"];?>" class="registe">电话报名</a>
+            <?php } else {?>
+                <a href="<?php echo $webroot, $signupUrl."?id=".$info["id"];?>" class="registe">在线报名</a>
+            <?php }?>
+            <?php }?>
+            <!-- <div class="registe" id="J_cancelSignup">取消报名</div> -->
+            <!-- <div class="registe gray" id="J_signup">在线报名</div> -->
+        </div>
+    </div>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

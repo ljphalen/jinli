@@ -1,0 +1,94 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">机型列表</a></li>
+    <li class="current"><a href="javascript:;">添加机型</a></li>
+	</ul>
+</div>
+<div class="h_a">添加机型</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addProductForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value=""></td>
+		</tr>
+		<tr class="tr">
+				<th class="th">是否新品</th>
+				<td class="td">
+				<input type="hidden" name="is_new" id="is_new" value="0"/>
+				<input type="checkbox" onclick="if(this.checked){$('#is_new').val(1);}else{$('#is_new').val(0);}">(选中表示设置为新品)
+				</td>
+			</tr>
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input" name="title" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">价格</th>
+			<td class="td"><input type="text" class="input" name="price" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">机型</th>
+			<td class="td"><input type="text" class="input" name="mark" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">系列</th>
+			<td class="td"><select name="type">
+<?php foreach($types as $key => $value) {?>
+                <option value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php }?>
+            </select></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">参数</th>
+			<td class="td">
+				<textarea name="param" style="width: 800px; height: 400px;"></textarea>
+			</td>
+		</tr>
+
+		<tr class="tr">
+			<th class="th">描述</th>
+			<td class="td">
+				<textarea name="descrip" style="width: 800px; height: 400px;"></textarea>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+	K.token = $('#token').val();
+    editor = K.create('textarea[name="param"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : false,
+        items : EDITOR_ITEMS
+    });
+});
+
+var editor1;
+KindEditor.ready(function(K) {
+	K.token = $('#token').val();
+    editor1 = K.create('textarea[name="descrip"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : false,
+        items : EDITOR_ITEMS
+    });
+});
+
+$(document).ready(function(){
+	ajaxForm('addProductForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Product/index');
+	}, function() {
+		editor.sync();
+		editor1.sync();
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

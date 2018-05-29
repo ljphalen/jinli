@@ -1,0 +1,51 @@
+<include file="Public:header_min" />
+
+<div class="head indexh clearfix">
+	<div class="w">
+    	<h1 class="fl logo"><a href="{:U('/')}" title="{:C('SMTP.SMTP_NAME')}" >{:C("SMTP.SMTP_NAME")}</a></h1>
+        <div class="rega fr">还不是我们的用户？<a href="{:U('login/reg')}">立即注册</a> <a href="{:U('help/index')}">帮助</a> </div>
+    </div>
+</div>
+<div class="banner" <notempty name="slideimage">style="background: #f4f4f4 url({$slideimage}) center 14px no-repeat;"</notempty>>
+	<div class="loginw">
+		<div class="login">
+	        <h2></h2>
+	        <div class="loginc">
+	        <form class="form-horizontal" method="post" id="loginForm" onsubmit="return false;" autocomplete="off" onsubmit="if(event.keyCode==13||event.which==13){return false;}">
+	            <p><input type="text" id="email" name="email" placeholder="邮箱" class="int mail inton" tabindex="1" /></p>
+	            <p><input type="password" id="password" name="password" placeholder="登录密码" class="int pass" tabindex="2" /></p>
+	            <p><input type="text" id="authcode" name="authcode" placeholder="验证码" class="int yzm" tabindex="3" /><img id="verifyImg" src="{:U("Auth/verify")}"
+	onClick="gioneeLogin.fleshVerify();$('#authcode').val('');" border="0" alt="点击刷新验证码"
+	style="cursor: pointer" align="absmiddle" alt="" class="checkimg fl" /><a href="javascript:void(0)" onClick="gioneeLogin.fleshVerify();$('#authcode').val('');" class="nosee fl"><em>看不清？</em>换一张</a></p>
+	            <p class="checks">
+	                <span class="fl"><a href="{:U("Login/reg")}" class="forget">新用户注册</a></span>
+	                <span class="fl"><a href="{:U("Auth/index")}" class="forget">忘记密码？</a></span>
+	            </p>
+	            <p><input type="submit" value="立即登录" class="loginbtn" id="Sub" tabindex="4" /></p>
+	        </form>
+	        <div class="wrong" style="display:hidden;" id="errorMsg"></div>
+	        <script>$("#errorMsg").hide();</script>
+	        </div>
+		</div>
+	</div>
+	<load href="{:cdn('PUBLIC')}/app/validate/formValidator-4.1.1.js?{:C('JS_VERSION')}" />
+	<load href="{:cdn('PUBLIC')}/app/validate/themes/Default/js/theme.js?{:C('JS_VERSION')}" />
+	<load href="{:cdn('PUBLIC')}/app/validate/themes/Default/style/style.css?{:C('JS_VERSION')}" />
+	<load href="{:cdn('PUBLIC')}/app/validate/formValidatorRegex.js?{:C('JS_VERSION')}" />
+	<load href="{:cdn('PUBLIC')}/common/js/form/login.js?{:C('JS_VERSION')}" />
+</div>
+<div class="tool clearfix">
+	<div class="toolc">
+	<php>
+	$info1 = D('Article')->where(array("category"=>1, "status"=>1))->find();
+	$info2 = D('Article')->where(array("category"=>2, "status"=>1))->find();
+	$info3 = D('Article')->where(array("category"=>3, "status"=>1))->find();
+	$info4 = D('Article')->where(array("category"=>4, "status"=>1))->find();
+	</php>
+    	<a href="{:U('help/page', array('id'=>$info1['id']))}" class="ico1"><em></em>注册申请</a>
+        <a href="{:U('help/page', array('id'=>$info2['id']))}" class="ico2"><em ></em>应用发布</a>
+        <a href="{:U('help/page', array('id'=>$info3['id']))}" class="ico3"><em></em>游戏联运</a>
+        <a href="{:U('help/page', array('id'=>$info4['id']))}" class="ico4"><em></em>其它文档</a>
+    </div> 
+</div>
+<include file="Public:footer" />

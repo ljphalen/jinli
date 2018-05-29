@@ -1,0 +1,74 @@
+<?php echo $this->render("layout/header2.phtml"); ?>
+	<section class="main-content">
+		<form method="post" action="<?=$this->baseUrl?>" id="editForm">
+			<input name="token" value="<?=$token?>" type="hidden"/>
+			<header class="header navbar bg-default">
+				<ul class="nav navbar-nav">
+					<li class="active">
+						<a href="javascript:;">配置管理</a>
+					</li>
+				</ul>
+				<div class="btn-group pull-right mg-r-sm">
+					<button type="submit" name="sub" class="btn btn-sm btn-primary navbar-btn">
+						立即保存
+					</button>
+				</div>
+			</header>
+
+			<div class="content-wrap">
+				<div class="row">
+					<div class="col-lg-12">
+						<!-- table content start -->
+						<section class="panel">
+							<table class="table table-bordered table-striped no-margin">
+								<tr>
+									<td>畅言APP ID</td>
+									<td>
+										<input name="changyan_app_id" type="text" class="form-control" value="<?php echo $configs['changyan_app_id']; ?>">
+									</td>
+								</tr>
+								<tr>
+									<td>畅言APP KEY</td>
+									<td>
+										<input name="changyan_app_key" type="text" class="form-control" value="<?php echo $configs['changyan_app_key']; ?>">
+									</td>
+								</tr>
+								<tr>
+									<td>畅言评论参数值</td>
+									<td>
+										<input name="changyan_comment_val" type="text" class="form-control" value="<?php echo $configs['changyan_comment_val']; ?>">
+									</td>
+								</tr>
+
+							</table>
+						</section>
+					</div>
+				</div>
+
+			</div>
+		</form>
+	</section>
+
+	<script src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			var editor;
+			KindEditor.ready(function (K) {
+				K.token = $('#token').val();
+				editor = K.create('textarea[name="nav_bottom"]', {
+					resizeType: 1,
+					allowPreviewEmoticons: false,
+					allowImageUpload: true,
+					items: ['fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+						'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+						'insertunorderedlist', 'link']
+				});
+			});
+			ajaxForm('editForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '<?=$changyanUrl?>');
+			}, function () {
+				editor.sync();
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

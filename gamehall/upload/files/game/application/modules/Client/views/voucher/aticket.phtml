@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <title>我的A券</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="email=no" />
+    <link rel="stylesheet" href="<?php echo "$staticroot/apps/game/apkv1/assets/css/volume.css?v=$version" ?>" />
+</head>
+<body>
+<div>
+    <div class="name">
+        A券: <?php echo $data['balance']; ?>
+    </div>
+    <div id="coinList" class="coinList-container">
+        <?php foreach($data['list'] as $item): ?>
+            <li >
+                <div class="toLeft">
+                    <span class="origion"><?php echo $item['origin']?></span>
+                    <span class="riqi"><?php echo $item['startDate']?>至<?php echo $item['endDate']?></span>
+                </div>
+                <?php if($item['status'] == 5):?>
+                    <div class="toRright">
+                        <span class="mount"><?php echo $item['chargeMount']?></span>
+                    </div>
+                    <div class="type future">
+                        <span>即将生效</span>
+                    </div>
+                <?php endif;?>
+                <?php if($item['status'] == 4):?>
+                    <div class="toRright been-used">
+                        <span class="mount"><?php echo $item['chargeMount']?></span>
+                        <span class="left-mount">可用<?php echo $item['leftMount']?></span>
+                    </div>
+
+                    <div class="type">
+                        <span>可使用</span>
+                    </div>
+                <?php endif;?>
+                <?php if($item['status'] == 3):?>
+                    <div class="toRright">
+                        <span class="mount"><?php echo $item['chargeMount']?></span>
+                    </div>
+                    <div class="type">
+                        <span>可使用</span>
+                    </div>
+                <?php endif;?>
+            </li>
+        <?php endforeach;?>
+    </div>
+</div>
+<div class="see-been-used">
+    <i id="seeBeenUsed" data-url="<?php echo "{$webroot}/client/voucher/usedaticket";?>">查看<span>无效的A券</span></i>
+</div>
+<div class="J_loading loading-container volume">
+    <i class="icon-loading"></i>
+</div>
+</body>
+
+<script>
+    var token = '<?php echo $token;?>';
+    var isLogin = <?php  echo $online ?'true':'false';?>;
+    var volumeData = {
+        ajaxurl : "<?php echo "{$webroot}/client/voucher/aticketmore"?>"
+        ,hasnext : <?php echo $data['hasnext'] ? 'true' : 'false' ;?>
+        ,curpage : <?php echo $data['curpage'] ? $data['curpage'] : 1;?>
+    }
+</script>
+<?php echo $this->render("layout/includejs.phtml");?>
+<script src="<?php echo "$staticroot/apps/game/apkv1/assets/js/ac/init.js?v=$version";?>"></script>
+<script src="<?php echo "$staticroot/apps/game/apkv1/assets/js/ac/newMain.js?v=$version";?>"></script>
+</html>

@@ -1,0 +1,44 @@
+<?php echo $this->render("layout/newheader.phtml");?>
+<body>
+<?php if($hasheader) {?>
+	<header id="iHeader" class="hd">
+			<div class="top-wrap">
+				<div class="title">
+					<a href="<?php echo $webroot.'/user/account/index';?>" class="back"></a>
+					<h1>个人基本信息</h1>
+				</div>
+			</div>
+		</header>
+<?php }?>
+	<div id="iScroll">
+		<article class="ac">
+			<section class="text-show">
+				<ul>
+					<li><em>账号：</em><?php echo $user_info['username']?></li>
+					<li><em>姓名：</em><?php echo $user_info['realname']?></li>
+					<li><em>性别：</em><?php echo $sex[$user_info['sex']];?></li>
+					<li><em>生日：</em><?php echo $user_info['birthday'];?></li>
+					<li><em>Q Q：</em><?php echo $extend['qq'];?></li>
+					<li><em>职业：</em><?php echo $tmp['job'][$extend['job']];?></li>
+					<li><em>爱好：</em><?php echo $tmp['love'][$extend['love']];?></li>
+				</ul>
+				<div class="edit"><a href="<?php echo $webroot.$editextendUrl;?>" class="btn-edit"></a></div>
+			</section>
+
+			<div class="change-acTaobao">
+				<span>第三方账号绑定<br />淘宝账号：<?php echo urldecode($user_info['taobao_nick']);?></span>
+				<a href="<?php echo $webroot;?>/user/account/getauthcode"><span class="rount-rect gray"><?php echo $user_info['taobao_nick'] ? '更换' : '绑定';?></span></a>
+			</div>
+
+			<div class="login-out">
+				<a class="rount-rect gray J_showDialog">退出登录</a>
+			</div>
+		</article>
+		<div class="JS-dbMask"></div>
+		<div class="dialog-box J_dialogBox">
+			<p>确定退出登录账号？</p>
+			<div class="btn"><a href="<?php echo $logoutUrl;?>">确定</a><span>取消</span></div>
+		</div>
+	</div>
+</body>
+</html>

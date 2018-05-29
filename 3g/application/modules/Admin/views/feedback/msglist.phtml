@@ -1,0 +1,209 @@
+<?php echo $this->render("layout/header3.phtml");
+$_listUrl = $this->msglistUrl;
+$_editUrl = $this->msgeditUrl;
+
+?>
+
+	<div data-options="region:'center',split:true,border:false" style="overflow: hidden;">
+
+		<div id="datagrid_toolbar" style="padding:5px;">
+			<div style="float: left;">
+
+				<form method="post" id="search_form" style="padding: 0px;">
+					开始:<input id="st" name="filter[start_time]" style="width: 100px" class="easyui-datebox" value="<?php echo date('Y-m-d', time() - 86400 * 7); ?>">
+					结束:<input id="et" name="filter[end_time]" style="width: 100px" class="easyui-datebox" value="<?php echo date('Y-m-d', time() + 86400); ?>">
+                    游客ID:<input name="filter[uid]" style="width: 60px" value=""/>
+                    用户名:<input name="filter[username]" style="width: 60px" value=""/>
+					关键字:<input name="filter[content]" style="width: 60px" value=""/>
+					类别:
+					<select id="type" name="filter[adm_type]">
+						<?php
+						$i = 1;
+						foreach ($admtypes as $k => $v) {
+							if ($i == 1) {
+								echo '<option value="">全部</option>';
+							}
+							echo sprintf('<option value="%s">%s</option>', $k, $v);
+							$i++;
+						}
+						?>
+					</select>
+					状态:
+					<select id="mark" name="filter[f_status]">
+						<?php
+						$f_status_list= array('' => '全部', 2 => '已完成',1 => '跟进中', 0 => '未回复');
+						foreach ($f_status_list as $k => $v) {
+							echo sprintf('<option value="%s">%s</option>', $k, $v);
+						}
+						?>
+					</select>
+					反馈类型:
+					<select id="mark" name="filter[content_type]">
+						<?php
+						$fk_status_list= array('' => '全部', 2 => '建议',1 => '投诉', 0 => '反馈');
+						foreach ($fk_status_list as $k => $v) {
+							echo sprintf('<option value="%s">%s</option>', $k, $v);
+						}
+						?>
+					</select>
+					回复类型:
+					<select id="mark" name="filter[auto_status]">
+						<?php
+						$auto_status_list= array('' => '全部', 0 => '人工回复', 1 => '自动回复');
+						foreach ($auto_status_list as $k => $v) {
+							echo sprintf('<option value="%s">%s</option>', $k, $v);
+						}
+						?>
+					</select>
+					<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+					<input name="togrid" value="1" type="hidden"/>
+
+					导出:<input name="export" value="1" type="radio"/>是<input name="export" value="0" type="radio"/>否
+					<button name="export1" type="submit">导出</button>
+					<a href="javascript:search(datagrid,'#search_form');" class="easyui-linkbutton" iconCls="icon-search" plain="true">查 询</a>
+				</form>
+			</div>
+			<div align="left">
+				<span class="toolbar-btn-separator"></span>
+				<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">查看</a>
+				<span class="toolbar-btn-separator"></span>
+				<!-- <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="chatlist()">记录</a> -->
+				<span class="toolbar-btn-separator"></span>
+				<block name="button"></block>
+				<a href="#"></a>
+			</div>
+		</div>
+		<table id="datagrid" toolbar="#datagrid_toolbar" border="false"></table>
+		<div id="pager-buttons">
+			<span style="padding:0 0 0 5px;">状态批量改为:</span>
+			<select class="js-fstatu">
+				<option value="-1" selected>请选择</option>
+				<option value="0">未回复</option>
+				<option value="1">跟进中</option>
+				<option value="2">已完成</option>
+			</select>
+			<span style="padding:0 0 0 5px;">类别批量改为:</span>
+			<select class="js-adm-type">
+				<option value="-1" selected>请选择</option>
+                <option value="1">畅聊</option>
+                <option value="2">个人中心</option>
+                <option value="3">浏览器</option>
+                <option value="4">导航</option>
+                <option value="5">网址大全</option>
+                <option value="0">垃圾信息</option>
+			</select>
+			<button onclick="changeStatu(this)">提交</button>
+		</div>
+	</div>
+
+
+	<script>
+		var token = "<?php echo $token;?>";
+		var edit_W = 400;
+		var edit_H = 500;
+		var datagrid;
+		$(function () {
+			//数据列表
+			datagrid = $("#datagrid").datagrid({
+				url: '<?php echo $_listUrl;?>',
+				queryParams: {'togrid': 1, 'token': token},
+				fit: true,
+				autoRowHeight: false, //自动行高
+				border: false,
+				pagination: true, //分页栏
+				pagePosition: 'bottom', //分页栏位置
+				rownumbers: true,//显示行数
+				striped: true,//显示条纹
+				showFooter: true, //显示统计行
+				pageSize: 20,//每页记录数
+				remoteSort: true,//是否通过远程服务器对数据排序
+				singleSelect: false,//只允许选择单行
+				// main content
+
+				sortName: 'id',//默认排序字段
+				sortOrder: 'desc',//默认排序方式 'desc' 'asc'
+				idField: 'id',
+				columns: [[
+					{field: 'ck', checkbox: true},
+					//{field: 'name', title: '游客名', sortable: true, align: 'center', width: 120},
+                    {field: 'fid', title: '游客ID', sortable: true, width: 50},
+                    {field: 'username', title: '用户名', sortable: true, align: 'center', width: 100},
+					{field: 'uid', title: '用户ID', sortable: true, width: 50},
+					{field: 'content', title: '内容', sortable: false, width: 450},
+					{field: 'adm_type', title: '类别', sortable: true, width: 50},
+					{field: 'type', title: '渠道', sortable: true, width: 50},
+                    {field: 'content_type', title: '反馈类型', sortable: false, width: 50},
+					{field: 'auto_status', title: '回复类型', sortable: false, width: 80},
+					//{field: 'mark', title: '状态', sortable: false, width: 50},
+					{field: 'f_status', title: '状态', sortable: false, width: 50},
+					{field: 'info', title: '浏览器信息', sortable: true, align: 'center', width: 150},
+					{field: 'area', title: '地区', sortable: true, align: 'center', width: 100},
+					{field: 'created_at', title: '时间', sortable: false, align: 'center', width: 140},
+				]],
+
+				onLoadSuccess: function () {
+					$(this).datagrid('clearSelections');//取消所有的已选择项
+					$(this).datagrid('unselectAll');//取消全选按钮为全选状态
+				},
+				onRowContextMenu: function (e, rowIndex, rowData) {
+					e.preventDefault();
+					$(this).datagrid('unselectAll');
+					$(this).datagrid('selectRow', rowIndex);
+					$('#datagrid_menu').menu('show', {
+						left: e.pageX,
+						top: e.pageY
+					});
+				},
+				onDblClickRow: function (rowIndex, rowData) {
+					edit(rowIndex, rowData);
+				}
+			});
+			var pager = datagrid.datagrid('getPager');	// get the pager of datagrid
+			pager.pagination({
+				buttons:$("#pager-buttons")
+			});	
+		});
+
+
+		function add() {
+			addData("添加", "#edit_form", datagrid, "<?php echo $_editUrl;?>", edit_W, edit_H);
+		}
+		function edit(rowIndex, rowData) {
+			editData(rowIndex, rowData, "编辑", '#edit_form', datagrid, "<?php echo $_editUrl;?>", edit_W, edit_H, 'id');
+		}
+		function chatlist(rowIndex, rowData) {
+			editData(rowIndex, rowData, "列表", '#edit_form', datagrid, "<?=$chatlistUrl?>", edit_W, edit_H, 'id');
+		}
+		function del() {
+			delData(datagrid, "<?php echo $_delUrl;?>");
+		}
+		function changeStatu(thisdom){
+			var rows = datagrid.datagrid('getSelections');
+			var ids = [];
+			if (rows.length > 0) {
+				for (var i = 0; i < rows.length; i++) {
+					ids.push(rows[i].id);
+				}
+			}else{
+				$.messager.alert('提示信息', "请选择要操作的对象！");
+				return;
+			}
+			params = { id: ids.join('#'), 'token': token };
+			var statuval = $(thisdom).siblings(".js-fstatu").val();
+			var adm_type = $(thisdom).siblings(".js-adm-type").val();
+			if(statuval == -1 && adm_type == -1){
+				$.messager.alert('提示信息', "请选择要修改的状态或类别！");
+				return;
+			}
+			params["f_status"] = statuval;
+			params["adm_type"] = adm_type;
+			$.messager.confirm('确认提示！', "确认修改吗？", function (r) {
+							if (r) {
+								post("<?php echo $msgoptUrl; ?>", true, datagrid, params,true);
+                                $(thisdom).siblings(".js-fstatu").val('-1');
+                                $(thisdom).siblings(".js-adm-type").val('-1');
+							}
+						});
+		}
+	</script>
+<?php echo $this->render("layout/footer3.phtml"); ?>

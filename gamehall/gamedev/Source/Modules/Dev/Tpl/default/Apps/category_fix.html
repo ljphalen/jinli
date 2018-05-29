@@ -1,0 +1,109 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+<style>
+.col-sm-10 label {
+	font-weight: normal;
+}
+
+.panel-body{*width: 92%}
+.panelws select.form-control{*height: auto!important;*padding: 4px 0;*margin-top: 0px;}
+.thumbnail{*width: auto;}
+.mainw .form-horizontal .form-control-static{padding-top: 0px;}
+.panelws .form-group input{*padding-top: 8px;*height: 22px!important;margin-bottom: 0px\9;}
+.panelws .form-group textarea{*padding-top: 8px;}
+</style>
+<div class="mainw mainw2 clearfix">
+	<div class="rmain col-md-12 rmain-inf">
+		<div class="panel panelws">
+			<h2 class="yyname">
+				<span style="color:#f90">亲爱的开发者，金立游戏开发者平台经过升级后，需要您重新调整原有游戏分类，带来不便，请见谅！</span>
+			</h2>
+			<div class="panel-body">
+				<form class="form-horizontal app-edit" id="category_edit_form" role="form" action="{:U('apps/category_fix')}" method="post">
+					<input type="hidden" name="post" value="1" />
+					<php>
+						$game = D("Category")->category_game();
+						$game_two = D("Category")->category_tree();
+					</php>
+					<script>category_json = {$game_two|json_encode};</script>
+					
+					<volist name="apps" id="vo">
+					<div class="row">
+					    <div class="col-sm-12">
+					    	<h4>{$vo.app_name}</h4>
+					    </div>
+					</div>
+					
+					<div class="game_section">
+						<div class="form-group p_category">
+							<label class="col-sm-2 control-label"><em>* </em>主分类：</label>
+							<div class="col-sm-4 category">
+								{:Helper("Form")->name("category_p".$vo[id])->class("form-control")->option($game)->value($vo[category_p])->select();}
+							</div>
+							<div class="col-sm-2">
+								{:Helper("Form")->name("son_category_p".$vo[id])->class("form-control")->option($game_two[$vo[category_p]][item])->value($vo[category_p_son])->select();}
+							</div>
+							<div class="col-sm-4"></div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-2 control-label">次分类：</label>
+							<div class="col-sm-4 category">
+								{:Helper("Form")->name("category_s".$vo[id])->class("form-control")->option($game)->value($vo[category_s])->select();}
+							</div>
+							<div class="col-sm-2">
+								{:Helper("Form")->name("son_category_s".$vo[id])->class("form-control")->option($game_two[$vo[category_s]][item])->value($vo[category_s_son])->select();}
+							</div>
+							<div class="col-sm-4"></div>
+						</div>
+					</div>
+					</volist>
+
+					<div class="form-group">
+						<div class="col-md-8">
+							<button type="submit" class="btn btn-success bo128" id="saveSubBtn" onclick="return false;">提交数据</button>
+						</div>
+					</div>
+				</form>
+				
+			</div>
+		</div>
+	</div>
+</div>
+<include file="Public:footer" />
+<include file="./Source/Tpl/Common/alertDialog.html" />
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#saveSubBtn").click(function() {
+		var ok = true;
+		$(".p_category select").each(function() {
+			if( ! parseInt( $(this).val() ) > 0 ) {
+				alertDialog("请完整选择游戏分类");
+				ok = false;
+				return false;
+			}
+		});
+		if(ok == true)
+			$("#category_edit_form").submit();
+				
+		return false;
+	});
+});
+
+//分类联动
+$(".category select").change(function(){
+	var cid = $(this).val();
+	var obj = "son_" + $(this).attr("name");
+	var html = "<option value=''>请选择</option>";
+	
+	if(category_json[cid]["item"].length == 0)
+		return $("[name="+obj+"]").html(html);
+	
+	$.each(category_json[cid]["item"], function(id, name){
+		html += "<option value="+id+">"+name+"</option>";
+	});
+	$("[name="+obj+"]").html(html);
+})
+
+</script>

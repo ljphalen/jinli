@@ -1,0 +1,47 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="javascript:;">文件排序</a></li>
+        <li><a href="<?php echo $listUrl;?>">系列列表</a></li>
+	</ul>
+</div>
+<form method="post" action="<?php echo $filesortPostUrl;?>" id="filesortForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="40">选择</td>
+			<td width="100">主题编号</td>
+			<td width="200">主题名称</td>
+			<td width="200">排序</td>
+			<td></td>
+		</tr>
+<?php foreach($idx_series as $key => $value) {?>
+		<tr class="ct">
+			<td><input type="checkbox" name="ids[<?php echo $value['id'];?>]" value="<?php echo $value['id'];?>"></td>
+			<td>
+				<?php echo $value['file_id'];?>
+			</td>
+			<td><?php echo $files[$value['file_id']]['title'];?></td>
+			<td>
+				<input type="text" name="sort[<?php echo $value['id'];?>]" class="input" value="<?php echo $value['sort'];?>" style="width:80px;">
+			</td>
+			<td></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">提 交</button></span></span></div>
+</form>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('filesortForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Series/filesort?sid=<?php echo $info['id']?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

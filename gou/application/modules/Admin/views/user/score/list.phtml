@@ -1,0 +1,70 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li><a href="<?php echo $indexUrl;?>">积分列表</a></li>
+        <li class="current"><a href="<?php echo $listUrl;?>">积分日志</a></li>
+    </ul>
+</div>
+<form action="<?php echo $scoreUrl;?>" method="post">
+    <input name="token" type="hidden" value="<?php echo $token;?>" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">积分类型</th>
+                <td class="td">
+                    <select name="type_id">
+                        <option value="">请选择积分类型</option>
+                        <?php foreach($score_type as $item): ?>
+                            <option value="<?php echo $item[id]; ?>"  <?php echo $params['type_id']==$item[id]?'selected="selected"':''; ?>><?php echo $item['title']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+                <th class="th">日期</th>
+                <td class="td">
+                    <input class="input" type="text" maxlength="30" id="date" name="date" value="<?php echo $params['date'];?>">
+                </td>
+            </tr>
+            <tr>
+                <td class="td" colspan="2">
+                    <span>当前积分日志总数：<b><?php echo $total;?></b> (条)</span>
+                </td>
+                <td class="td" colspan="2">
+                    <span class="btn"><span><button type="submit">搜 索</button></span></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+<div class="table_list">
+    <table width="100%">
+        <tr class="hd">
+            <td width="5%">ID</td>
+            <td width="5%">积分ID</td>
+            <td width="25%">[积分|限次/日]积分类型</td>
+            <td width="5%">积分</td>
+            <td width="10%">任务日期</td>
+            <td width="20%">积分操作时间</td>
+        </tr>
+        <?php foreach($list as $key => $value) {?>
+            <tr class="ct">
+                <td><?php echo $value['id'];?></td>
+                <td><?php echo $value['type_id'];?></td>
+                <td><?php echo $value['type_title'];?></td>
+                <td><?php echo $value['score'];?></td>
+                <td><?php echo $value['date'];?></td>
+                <td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+            </tr>
+        <?php } ?>
+    </table>
+</div>
+<div class="mr10 cc">
+    <?php echo $pager;?>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#date").datepicker({
+            dateFormat : 'yy-mm-dd'
+        });
+    });
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

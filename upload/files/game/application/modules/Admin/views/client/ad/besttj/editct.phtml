@@ -1,0 +1,71 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>?id=<?php echo $id;?>&opc=<?php echo $opc;?>">闪屏推荐列表</a></li>
+		<li class="current"><a href=""> 管理闪屏推荐</a></li>
+	</ul>
+</div>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<input name="id" id="id" type="hidden" value="<?php echo $id;?>" />
+<input name="opc" type="hidden" value="<?php echo $opc;?>" />
+<div class="h_a">
+    <?php if($info['btype'] !=1 ) {?>
+    <span class="btn2"><span><button name="click" onclick="$('#action').val('sort');" type='submit'><?php if($info['btype'] == 3) {?>重新排序并保存游戏小编推荐<?php } else if($info['btype'] == 2) {?>重新排序<?php }?></button></span></span>
+	<?php } ?>
+	<span class="btn2" style="display:none;"><span><button onclick="$('#action').val('delete');" type="submit">删除</button></span></span>
+	<span class="btn2"><span><button><a href="<?php echo $listUrl;?>?id=<?php echo $id;?>&opc=<?php echo $opc;?>&fulfil=end" class="mr10" style="color:white;">完成</a></button></span></span>
+	<span>共<?php echo !$total ? '0' : $total;?>条结果</span>
+</div>
+<div class="h_a">
+<?php if($info['btype'] != 1) {?>
+	<div style="color:red;font-size:15px">1.需要点击<?php if($info['btype'] == 3) {?>"重新排序并保存游戏小编推荐”，设置排序和小编推荐才能生效！<?php } else if($info['btype'] == 2) {?>“重新排序”，设置排序才能生效！<?php }?></div>
+	<div style="color:red;font-size:15px">2.需要点击“完成”保存操作，之前的操作才能生效！</div>
+	<?php } else {?>
+	<div style="color:red;font-size:15px">需要点击“完成”保存操作，之前的操作才能生效！</div>
+	<?php } ?>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		   <?php if($info['btype'] !=1 ) {?>
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="50">排序</td>
+			<?php } ?>
+			<td width="30">ID</td>
+			<td>标题</td>
+			<td>图标</td>
+			<td>大小</td>
+			<td>版本</td>
+			<td>状态</td>
+		</tr>
+<?php if($games) {?>
+<?php foreach($games as $key => $value) {?>
+		<tr class="ct">
+		    <?php if($info['btype'] !=1 ) {?>
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $value['id']?>" type="checkbox"></td>
+		    <td><input type="text" class="input" style="width:30px" name="sort[<?php echo $value['id'];?>]" value="<?php echo $besttj_games['List'][$value['id']]['sort'];?>"></td>
+			<?php } ?>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $oline_versions[$value['id']]['name'];?><?php if($info['btype'] == '3') {?><br><br>小编推荐：<input type="text" name="game_message[<?php echo $value['id'];?>]" value="<?=$besttj_games['List'][$value['id']]['game_message'] ? $besttj_games['List'][$value['id']]['game_message'] : $oline_versions[$value['id']]['resume'];?>" size="40" /><?php }?></td>
+			<td><img src="<?php echo $oline_versions[$value['id']]['img'];?>" style="width:7.2em;height:7.2em"/></td>
+        	<td><?php echo $oline_versions[$value['id']]['size'];?>M</td>
+        	<td><?php echo $oline_versions[$value['id']]['version'];?></td>
+        	<td><?php echo $value['status'] ? '已上线' : '已下线';?></td>
+		</tr>
+<?php }} ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script>
+$(document).ready(function(){
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Client_Ad_Besttj/editCt?id=<?php echo $id;?>&opc=<?php echo $opc;?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,108 @@
+<style>
+    .add-btn{
+        width: 128px;
+        border: 1px solid #3AB7F7;
+        display: block;
+        position: absolute;
+        left: 100px;
+        top: 7px;
+        border-radius: 2px;
+        padding: 2px;
+        text-align: center;
+        text-decoration: none;
+        height: 15px;
+        line-height: 15px;
+    }
+</style>
+
+<div class="page">
+	<div class="pageContent">
+		<div class="pageFormContent" layoutH="58">
+			<div class="unit">
+				<label>游戏名称：</label>
+				{$vo.app_name}
+			</div>
+			<div class="unit">
+				<label>游戏包名：</label>
+				{$vo.package}
+			</div>
+
+            <div class="unit">
+                <label>发票类型：</label>
+                <p>{$vo.receipt|default="未填写"}</p>
+            </div>
+
+            <div class="unit">
+                <label>分成比例：</label>
+                <label>{$vo.share|default="未填写"}</label>
+            </div>
+            <div class="unit">
+                <label>开户名称：</label>
+                <label>{$vo.account_name|default="未填写"}</label>
+            </div>
+
+            <div class="unit">
+                <label>银行账号：</label>
+                <label>{$vo.account_key|default="未填写"}</label>
+            </div>
+
+            <div class="unit">
+                <label>开户银行：</label>
+                <label>{$vo.account_bank|default="未填写"}</label>
+            </div>
+
+            <div class="unit">
+                <label>公司名称：</label>
+                <label>{$vo.company_name|default="未填写"}</label>
+            </div>
+
+            <div class="unit">
+                <label>联系地址：</label>
+                <p>{$vo.address|default="未填写"}</p>
+            </div>
+
+            <div class="unit">
+                <label>联系人姓名：</label>
+                <label>{$vo.contact|default="未填写"}</label>
+            </div>
+
+            <div class="unit">
+                <label>联系人邮箱：</label>
+                <label>{$vo.contact_email|default="未填写"}</label>
+            </div>
+
+            <div class="unit">
+                <label>金立商务对接人：</label>
+                <label>{$joiner.name|default="未填写"}</label>
+            </div>
+
+
+            <div class="unit">
+                <label>对接人联系邮箱：</label>
+                <label>{$joiner.email|default="未填写"}</label>
+            </div>
+
+            <div class="unit">
+                <label>审核人：</label>
+                <label>{$vo.checker|default="未填写"}</label>
+            </div>
+
+            <div class="unit">
+                <label>状态：</label>
+                <label>{$vo.status}</label>
+                <eq name="vo['status']" value="申请不通过">
+                    <span style="color: red;">不通过原因：{$vo.notpass_reason}</span>
+                </eq>
+            </div>
+
+			<div class="unit">
+				<hr>
+			</div>
+            <div class="unit">
+                <a href="{:U('details_edit')}" class="add-btn" target="dialog" width="800"
+                   height="580" mask="true">修改</a>
+            </div>
+		</div>
+	
+	</div>
+</div>

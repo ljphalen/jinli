@@ -1,0 +1,170 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body>
+	<div class="module webapp dhm-orders">
+		<div class="iScroll">
+			<form id="J_orderForm" action="/order/create" data-ajaxurl="<?php echo $webroot;?>/api/cart/info">
+				<input type="hidden" name="cart_ids" value="<?php echo implode(',',$cart_ids);?>">
+				<input type="hidden" name="token" value="<?php echo "$token"?>">
+				<dl class="dl-orders layout-center">
+					<dt>提货人信息<?php if(!$buyer_name){?><span>（必填）</span><?php } else {?><em>（可修改）</em><?php }?></dt>
+					<dd class="receiver">
+						<em>姓<i></i>名：</em>
+						<input type="text" name="buyer_name" value="<?php echo $buyer_name;?>" placeholder="请填写真实姓名以便认证">
+					</dd>
+					<dd class="receiver"> 
+						<em>手机号：</em>
+						<input type="tel" name="phone" value="<?php echo $phone;?>" placeholder="请输入手机号码">
+					</dd>
+					<dt>提货地址<span>（必选）</span></dt>
+					<dd id="J_addressWrap">
+						<em></em>
+						<i class="icon-arrow-right float-right"></i>
+						<input type="hidden" name="address_id" value="">
+					</dd>
+					<dt>提货日期<span>（必选）</span></dt>
+					<dd class="date">
+						<input type="hidden" name="date" value="">
+						<ul id="J_dateWrap"></ul>
+					</dd>
+					<dt>提货时间段<span>（必选）</span></dt>
+					<dd id="J_timeSelect" class="text-align-center">
+						<em></em><i class="icon-arrow-right float-right"></i>
+						<input type="hidden" name="time_id" value="">
+					</dd>
+					<dt>购物清单</dt>
+					<dd class="cat-list">
+						<ul class="goods-list">
+							<?php foreach($cart as $key=>$item){ ?>
+								<li>
+									<ul class="goods-item">
+										<li>
+											<img src="<?php echo $staticPath;?>/assets/img/blank.gif" data-src="<?php echo Common::getAttachPath() . $goods[$item['goods_id']]['img'];?>">
+										</li>
+										<li>
+											<p class="title"><?php echo $goods[$item['goods_id']]['title'];?></p>
+										</li>
+										<li>
+											<p class="price">￥<?php echo $item['price'];?></p>
+											<p>X<?php echo $item['goods_num'];?></p>
+										</li>
+									</ul>
+								</li>
+							<?php } ?>
+						</ul>
+					</dd>
+				</dl>
+			</form>
+		</div>
+		<div class="pay-bill-bar layout-center">
+			<span class="total float-left">合计：￥<?php echo $total_price;?></span>
+			<a id="J_paySubmit" href="javascript:;" class="btn btn-submit float-right">提交订单</a>
+		</div>
+	</div>
+
+	<div class="modal J_modal" id="J_templateModal" style="display:none;"></div>
+
+	<!-- 选择提货人 -->
+	<script type="text/template" id="J_receiverTemplate">
+		<div class="receiver-list simple-list">
+			<dl>
+				<dt>请选择提货人</dt>
+				<%for(var i=0, len=list.length; i<len; i++) {%>
+				<dd class="<%=list[i].isSelected?'selected':''%>">
+					<p>提货人：<em><%=list[i].name%></em></p>
+					<span>联系电话：<em><%=list[i].phone%></em></span>
+					<i class="icon-selected"></i>
+				</dd>
+				<%}%>
+			</dl>
+			<div class="add-receiver-bar">
+				<i class="icon-circle-add"></i>添加提货人
+			</div>
+		</div>
+	</script>
+
+	<!-- 完善收货人信息 -->
+	<script type="text/template" id="J_editReceiverTemplate">
+		<div class="add-receiver-dialog layout-center">
+			<h2>请完善收货人信息</h2>
+			<form action="">
+				<dl>
+					<dt>姓<em class="spacing"></em>名：</dt>
+					<dd><input type="text" placeholder="请填写真实姓名以便认证"></dd>
+				</dl>
+				<dl>
+					<dt>手机号：</dt>
+					<dd>
+						<input class="tel" type="text" placeholder="请输入手机号码">
+						<span class="btn btn-submit float-right">获取验证码</span>
+					</dd>
+				</dl>
+				<dl>
+					<dt>验证码：</dt>
+					<dd><input type="text" placeholder="请输入短信中的验证码"></dd>
+				</dl>
+				<div class="submit-bar layout-center">
+					<div class="btn btn-submit">提交</div>
+				</div>
+			</form>
+		</div>
+	</script>
+	<!-- 选择提货地址 -->
+	<script type="text/template" id="J_addressTemplate">
+		<div class="address-list simple-list">
+			<div class="box-wrap">
+				<dl>
+					<dt>请选择提货地址</dt>
+				</dl>
+				<dl>
+					<%for(var i=0, len=address.length; i<len; i++) {%>
+					<dd data-address="<%=address[i].detail_address%>" data-address-id="<%=address[i].id%>" class="J_selectAddress <%=address.selected==address[i].id ? 'selected': ''%>">
+						<p><%=address[i].detail_address%></p>
+						<i style="display:none;" class="icon-selected"></i>
+					</dd>
+					<%}%>
+				</dl>
+			</div>
+		</div>
+	</script>
+	<!-- 选择提货时间 -->
+	<script type="text/template" id="J_timeSelectTemplate">
+		<div class="date-list simple-list">
+			<div class="box-wrap">
+				<dl>
+					<dt>请选择提货时间
+						<span class="float-right"></span>
+					</dt>
+				</dl>
+				<dl>
+					<% var key; for(key in time) {%>
+						<% if (key!='selected'){%>
+						<dd data-timeid="<%=key%>" data-time="<%=time[key]%>" class="J_selectTime <%=time.selected==key?'selected':''%>">
+							<p class="text-align-center"><%=time[key]%></p>
+							<i style="display:none;" class="icon-selected"></i>
+						</dd>
+						<%}%>
+					<%}%>
+				</dl>
+			</div>
+		</div>
+	</script>
+	<!-- 选择提货日期 -->
+	<script type="text/template" id="J_dateSelectTemplate">
+		<%for(var i=0, len=date.length; i<len; i++) { %>
+		<li data-date="<%=date[i].value%>" class="J_dateItem <%=date.selected==date[i].value?'selected':''%>">
+			<div class="date-item">
+				<span class="week"><%=date[i].week%></span>
+				<p class="month-day"><%=date[i].date%></p>
+				<i style="display:none" class="icon-selected"></i>
+			</div>
+		</li>
+		<%}%>
+	</script>
+
+	<?php echo $this->render("layout/footer.phtml");?>
+
+	<script>
+		require(['confirmOrders']);
+	</script>
+</body>
+</html>

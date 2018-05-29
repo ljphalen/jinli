@@ -1,0 +1,81 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">第三方店铺库列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="get" id="searchForm" >
+<input name="token" type="hidden" value="<?php echo $token;?>"/>
+<div class="table_full">
+	<table width="100%">
+        <tr class="tr">
+            <th class="th">标题</th>
+            <td class="td"><input type="text" class="input wc" name="name" value="<?php echo $params['name'];?>"></td>
+            <th class="th">店铺ID</th>
+            <td class="td"><input type="text" class="input wc" name="shop_id"	value="<?php echo $params['shop_id'];?>"></td>
+        </tr>
+        <tr class="tr">
+            <th class="th">ID</th>
+            <td class="td"><input type="text" class="input wc" name="id"	value="<?php echo $params['id'];?>"></td>
+            <th class="th">平台</th>
+            <td class="td">
+            	<select name="channel_id" id="select">
+                    <option value="">请选择</option>
+                    	<?php foreach($channel as $key=>$val):?>
+                        <option value="<?php echo $key;?>" <?php if($params['channel_id']== $key) echo 'selected="selected"';?>><?php echo $val;?></option>
+                        <?php endforeach;?>
+                </select>
+            </td>
+        </tr>
+        <tr class="tr">
+           	<th class="th">设备</th>
+            <td class="td">
+            	<select name="system" id="select">
+                    <option value="">请选择</option>
+                    <option value="0" <?php if($params['system'] == '0') echo 'selected="selected"';?>>android</option>
+                    <option value="1" <?php if($params['system'] == '1') echo 'selected="selected"';?>>ios</option>
+                </select>
+            </td>
+        </tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span><span style="float:left;">当前总条数：<?php echo $total;?></span></div>
+
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="5%">ID</td>
+		    <td width="8%">店铺ID</td>
+            <td width="15%">标题</td>
+            <td width="5%">平台</td>
+            <td width="7%">商品图片</td>
+            <td width="7%">抓取次数</td>
+            <td width="7%">状态</td>
+            <td width="10%">更新时间</td>
+            <td width="10%">操作</td>
+		</tr>
+<?php foreach($list as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['shop_id'];?></td>
+            <td><?php echo $value['name']; ?></td>
+            <td><?php echo $value['channel'];?></td>
+            <td><?php if($value['logo']):?><img src="<?php if(strpos($value['logo'], 'http://') === false) {echo $attachPath.$value['logo'];}else{echo $value['logo'];};?>" width="25" height="25"/><?php endif; ?></td>
+            <td><?php echo $value['request_count'];?></td>
+            <td><?php echo $value['status'];?></td>
+            <td><?php echo date('Y-m-d H:i:s', $value['update_time']);?></td>
+            <td>
+                <a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+                <a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+            </td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+
+<?php echo $this->render("layout/footer.phtml");?>

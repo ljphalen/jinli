@@ -1,0 +1,72 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current">CP管理</li>
+	</ul>
+</div>
+<div class="h_a"></div>
+
+<form method="post" action="<?php echo $setUrl;?>" id="editForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th" style="width: 40px;">CP:</th>
+				<td>
+					<select id="id" name="id" onchange="to_cp_list(this.value)">
+						<?php
+						foreach ($cps as $key => $val){
+							$selected = '';
+							if ($key == $cpId) {
+								$selected = ' selected ';
+							}
+							echo "<option value=\"{$key}\" {$selected}>{$val[0]}</option>";
+						}
+						?>
+					</select>
+				</td>
+			</tr>
+		</table>
+
+			<table width="100%">
+
+			<tr class="tr">
+				<th class="th">跳转按钮显示</th>
+				<td class="td">
+					<input type="radio" name="is_web" id="is_web0" <?php echo $info['is_web']?'':'checked';?> value="0" />
+					是
+					<input type="radio" name="is_web" id="is_web1" <?php echo $info['is_web']?'checked':'';?> value="1" />
+					否
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">跳转按钮文本</th>
+				<td class="td"><input type="text" class="input" name="jmp_text" value="<?php echo $info['jmp_text'];?>"></td>
+			</tr>
+				<tr class="tr">
+					<th class="th">访问方式</th>
+					<td class="td">
+						<input type="radio" name="to_url" id="to_url1" <?php echo $info['to_url']?'checked':'';?> value="1" />
+						加载第三方页面
+						<input type="radio" name="to_url" id="to_url0" <?php echo $info['to_url']?'':'checked';?> value="0" />
+						跳转客户端 【请在"版本(v2.0.6)"中进行参数配置】
+					</td>
+				</tr>
+			</table>
+
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		ajaxForm('editForm',function(ret){
+			ajaxRedirect(ret, baseurl+'/Admin/W3_Cp/setting?cp_id=<?php echo $cpId;?>');
+		})
+	})
+	function to_cp_list(id) {
+		var url = "<?php echo $setUrl;?>?cp_id=" + id;
+		window.location.href=url; // 跳转
+	}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

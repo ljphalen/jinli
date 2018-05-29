@@ -1,0 +1,70 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li class=""><a href="<?php echo $userListUrl;?>">中奖用户名单</a></li>
+    	<li class="current"><a href="<?php echo $userInfoUrl . '?id=' . $info['id'];?>">更新用户信息</a></li>
+	</ul>
+</div>
+<div class="h_a">更新用户信息</div>
+<form method="post" action="<?php echo $userUpdateUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">中奖编号</th>
+				<td class="td"><b><?php echo $info['id'];?></b></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">中奖时间</th>
+				<td class="td"><?php echo date('Y-m-d H:i:s', $info['dateline']);?></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">奖品</th>
+				<td class="td"><?php echo $info['award_name'];?></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">手机IMEI号</th>
+				<td class="td"><?php echo $info['imei'];?></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">手机号码</th>
+				<td class="td"><input type="text" class="input wc" name="phone_num"	value="<?php echo $info['phone_num'];?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">微信</th>
+				<td class="td"><input type="text" class="input wc" name="weixin"	value="<?php echo $info['weixin'];?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">QQ</th>
+				<td class="td"><input type="text" class="input wc" name="qq"	value="<?php echo $info['qq'];?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">备注</th>
+				<td class="td"><textarea rows="5" cols="60" class="input wc" name="remark"><?php echo $info['remark'];?></textarea></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">奖品发放状态</th>
+				<td class="td">
+					<select name="status">
+						<option value="1" <?php if ($info['status'] == 1) echo 'selected="selected"';?>>未发放</option>
+						<option value="2" <?php if ($info['status'] == 2) echo 'selected="selected"';?>>发放中</option>
+						<option value="3" <?php if ($info['status'] == 3) echo 'selected="selected"';?>>已发放</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $userListUrl;?>');
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

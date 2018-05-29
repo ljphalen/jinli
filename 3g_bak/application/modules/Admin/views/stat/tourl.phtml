@@ -1,0 +1,97 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="table_full">
+	<form action="<?php echo $baseUrl; ?>" method="POST">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+		<table width="100%" cellspacing="0" cellpadding="0">
+			<tr class="tr1">
+				<td class="td1">
+					日期：
+					<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $sdate; ?>"> 至
+					<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $edate; ?>">
+					<input type="submit" value="查询"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+<style type="text/css">
+	table {
+		empty-cells: show;
+		border-collapse: collapse;
+	}
+
+	table th {
+		white-space: nowrap;
+	}
+
+	table td {
+		white-space: nowrap;
+	}
+</style>
+<div class="h_a"><span>总访问量: </span>&nbsp;&nbsp;<span id="amount" style="color: red"></span>
+	<a href="<?php echo "{$tourlexportUrl}?sdate={$edate}&edate={$edate}"; ?>">导出</a>
+</div>
+<div class="table_list">
+	<table cellspacing="0" cellpadding="0" width="100%">
+		<tbody>
+		<tr class="ct">
+			<td class="td2" width="200px">时间</td>
+			<td class="td2" width="70px">hash</td>
+			<?php foreach ($date as $d): ?>
+				<td class="td2" width="70px"><?php echo $d; ?></td>
+			<?php endforeach; ?>
+			<td class="td2" width="70px">总和</td>
+		</tr>
+		<?php
+		$sum = 0;
+		foreach ($lineData as $k => $v) {
+			?>
+			<tr class="ct">
+				<td class="td2"><?php echo $k; ?></td>
+				<td class="td2"><?php echo $hashTitle[$k]; ?></td>
+				<?php
+				$total = 0;
+				foreach ($date as $d):
+					?>
+					<td class="td2"><?php echo $v[$d]; ?></td>
+					<?php
+					$total += $v[$d];
+					$sum += $v[$d];
+				endforeach;
+				?>
+				<td class="td2"><?php echo $total; ?></td>
+			</tr>
+		<?php } ?>
+		</tbody>
+	</table>
+</div>
+
+
+<script src="<?php echo $staticPath; ?>/js/admin/highcharts.js"></script>
+<script src="<?php echo $staticPath; ?>/js/admin/exporting.js"></script>
+<script src="<?php echo $staticPath; ?>/js/admin/stat.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		$("#sdate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+		$("#edate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>
+<script>
+	$("#amount").text('<?php echo $sum?>');
+
+	$("#checkout").bind('click', function () {
+		var sdate = $("#sdate").val();
+		var edate = $("#edate").val();
+		var uval = $("#url_val").val();
+		location.href = '<?php echo $baseUrl;?>' + "?sdate=" + sdate + "&edate=" + edate + "&url_val=" + uval + "&export=1";
+	})
+</script>

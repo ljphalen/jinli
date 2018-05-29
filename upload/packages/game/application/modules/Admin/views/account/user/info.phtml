@@ -1,0 +1,79 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li ><a href="<?php echo $listUrl;?>">账号列表</a></li>
+    <li class="current"><a href="javascript:;">账号详情</a></li>
+	</ul>
+</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">金立UUID</th>
+			<td class="td"><?php echo $user['uuid'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">账号</th>
+			<td class="td"><?php echo $user['uname'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">昵称</th>
+			<td class="td"> <?php echo $userInfo['nickname'];?>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">性别</th>
+			<td class="td"> <?php echo $userInfo['sex'] ? (($userInfo['sex']==1)?'男':'女') : '--' ;?>
+			</td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">注册时间</th>
+			<td class="td"> <?php echo date('Y-m-d H:i:s', $user['reg_time']) . "(" . $mode[$reglog['mode']] . ")";?>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">最后登录时间</th>
+			<td class="td"> <?php echo date('Y-m-d H:i:s', $user['last_login_time']) . "(" . $mode[$lllog['mode']] . ")";?>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">积分</th>
+			<td class="td"> 累计获得 <?php echo $userInfo['gainPoints']; ?> 积分, 
+			累计消费 <?php echo $userInfo['consumePoints']; ?> 积分, 
+			当前剩余 <?php echo intval($userInfo['points']); ?> 积分 </div>
+			</td>
+		</tr>
+	</table>
+	<br>
+	<table width="100%">
+	   <tr class="tr">
+			<th class="th">喜欢的游戏分类</th>
+			<td class="td"> <?php echo $userInfo['favorType'];?> 
+			</td>
+		</tr>
+		 <tr class="tr">
+			<th class="th">关注的游戏</th>
+			<td class="td"> <?php echo $userInfo['attentionGame']; ?> 
+			</td>
+		</tr>
+	</table>
+	<br>
+	<table width="100%">
+	   <tr class="tr">
+			<th class="th">收货人</th>
+			<td class="td"> <?php echo $userInfo['receiver']; ?> 
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">联系电话</th>
+			<td class="td"> <?php echo $userInfo['receiverphone']; ?> 
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">收货地址</th>
+			<td class="td"> <?php echo $userInfo['address']; ?> 
+			</td>
+		</tr>
+	</table>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

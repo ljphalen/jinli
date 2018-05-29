@@ -1,0 +1,29 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class=""><a href="/Admin/subject/caipiao">彩票活动管理</a></li>
+		<li class="current"><a href="/Admin/subject/userList">用户列表</a>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width='25%'>日期</td>
+			<td width="25%">时段</td>
+			<td width="25%">总用户数</td>
+			<td width="25%">操作</td>
+		</tr>
+		<?php foreach ($dataList as $k => $v) {
+			foreach ($v as $m => $n) {
+				?>
+				<tr class="ct">
+					<td><?php echo $k?></td>
+					<td><?php echo $config['lottery'][$n['period']]['begin'] . ' - ' . $config['lottery'][$n['period']]['end'];?></td>
+					<td><?php echo $n['total'];?></td>
+					<td><a href="/Admin/Subject/detail?date=<?php echo $k;?>&period=<?php echo $n['period'];?>">详情</a>
+					</td>
+				</tr>
+			<?php }
+		} ?>
+	</table>
+</div>

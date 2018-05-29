@@ -1,0 +1,44 @@
+	<div class="pageContent">
+	
+		<!-- 列表开始 -->
+		<table class="list" width="100%" layoutH="138">
+			<thead>
+			<tr>
+				<th orderField="id" class="{:orderField('id','desc')}">AppID</th>
+				<th>应用名称</th>
+				<th>包名</th>
+				<th>版本</th>
+				<th>检测厂商</th>
+				<th>检测结果</th>
+				<th>详情</th>
+			</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="list">
+				<tr target="sid_user" rel="{$vo['apk_id']}">
+					<td>{$vo['apk_id']}</td>
+					<td>{$vo['app_name']}</td>
+					<td>{$vo['package']}</td>
+					<td>{$vo['version_name']}({$vo['version_code']})</td>
+					<td>{:ApkSafeModel::getSite($vo['mold'])}</td>
+					<td>{:ApkSafeModel::statusTxt($vo['status'])}</td>
+					<td>
+						<php>
+					
+						if($vo['mold'] == ApkSafeModel::MOLD_TENCENT)
+						{
+							echo SafeTencentModel::show($vo['response_res']);
+						}elseif($vo['mold'] == ApkSafeModel::MOLD_BAIDU)
+						{
+							echo SafeBaiduModel::show($vo['response_res']);
+						}
+						</php>
+					</td>
+				</tr>
+			</volist>
+			</tbody>
+		</table>
+		<!-- 列表结束 -->
+		
+		
+	</div>

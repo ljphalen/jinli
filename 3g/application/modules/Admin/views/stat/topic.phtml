@@ -1,0 +1,107 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="h_a">
+		<a href="<?php echo $topicList ?>">返回列表页</a><span style="margin-left: 920px">总点击量：<font id="amount" style="color:red"><?php echo $sum + $info['like_num']; ?></font></span>
+	</div>
+	<div class="table_list">
+		<table width="90%">
+			<tr class="ct">
+				<td class="td2">标题</td>
+				<td class="td2"><?php echo $info['title']; ?></td>
+			</tr>
+			<tr class="ct">
+				<td class="td2">专题链接点击</td>
+				<td class="td2" style="color:red"><?php echo $log['topic']; ?></td>
+			</tr>
+			<tr class="ct">
+				<td class="td2">查看往期</td>
+				<td class="td2" style="color:red"><?php echo $log['topic_list']; ?></td>
+			</tr>
+			<tr class="ct">
+				<td class="td2">点赞次数</td>
+				<td class="td2" style="color:red"><?php echo $info['like_num']; ?></td>
+			</tr>
+
+			<tr class="ct">
+				<td class="td2">内容总点击</td>
+				<td class="td2" style="color:red"><?php echo $content; ?></td>
+			</tr>
+
+			<tr class="ct">
+				<td class="td2">ID</td>
+				<td class="td2">名称</td>
+				<td class="td2">URL</td>
+				<td class="td2">内容属性</td>
+				<td class="td2">渠道商</td>
+				<td class="td2">合作商</td>
+			</tr>
+			<?php foreach ($ngData as $val) { ?>
+				<tr class="ct">
+					<td><?php echo $val['id']; ?></td>
+					<td class="td2"><?php echo $val['title']; ?></td>
+					<td class="td2"><?php echo $val['link']; ?></td>
+					<td class="td2"><?php echo $val['style'] ? $val['style'] : '---'; ?></td>
+					<td class="td2"><?php echo $val['cname']; ?></td>
+					<td class="td2"><?php echo $val['partner'] ? $val['partner'] : '普通'; ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+		<div style="width:300px;height:30px; padding-left:200px;padding-top:20px;">
+			<span style="color:blue; font-size:16px">查看点击详情</span></div>
+		<form method="post" action="<?php echo $baseUrl; ?>" id="addFrom">
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+
+			<div class="table_full">
+				<table width="100%">
+					<tr class="tr">
+						<th class="th">选择日期</th>
+						<td class="td">
+							<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $sdate; ?>"> 至
+							<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $edate; ?>">
+
+						</td>
+					</tr>
+				</table>
+				<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+				</div>
+			</div>
+		</form>
+		<table width="100%">
+			<tr class="ct">
+				<th class="td2" style="width:70px">名称</th>
+				<?php foreach ($dlist as $v) { ?>
+					<th class="td2" style="padding-left:10px"><?php echo date('Y-m-d', strtotime($v)); ?></th>
+				<?php } ?>
+
+				<th class="td2">合计</th>
+			</tr>
+
+			<?php
+			if (!empty($s)) {
+				foreach ($s as $key => $val) { ?>
+					<tr class="ct">
+						<td class="td"><?php echo $val['title'] ? $val['title'] : '';?></td>
+						<?php
+						$sum = 0;
+						foreach ($dlist as $n) {
+							$sum += $val[$n];
+							?>
+							<td class="td"><?php echo $val[$n] ? $val[$n] : 0;?></td>
+						<?php }?>
+						<td class="td"><?php echo $sum;?></td>
+					</tr>
+				<?php }
+			} ?>
+		</table>
+	</div>
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#sdate").datepicker({
+				dateFormat: 'yy-mm-dd'
+			});
+			$("#edate").datepicker({
+				dateFormat: 'yy-mm-dd'
+			});
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

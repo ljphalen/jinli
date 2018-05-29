@@ -1,0 +1,143 @@
+<?php echo $this->render("layout/header2.phtml"); ?>
+<section class="main-content">
+	<form action="<?php echo $baseUrl; ?>" method="POST">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+		<input type="hidden" id="lineData" value="<?php echo $lineData; ?>"/>
+		<header class="header navbar bg-default">
+			<ul id="myTab2" class="nav navbar-nav">
+				<li class="active">
+					<a href="#home" data-toggle="tab">数据报表</a>
+				</li>
+				<li>
+					<a href="#page" data-toggle="tab">访问量</a>
+				</li>
+
+			</ul>
+
+		</header>
+		<div class="content-wrap">
+			<div class="row">
+				<div class="col-lg-12">
+					<section class="panel">
+						<div class="panel-body">
+							<div id="myTabContent2" class="tab-content">
+								<div class="tab-pane active" id="home">
+									<!-- table content start -->
+									<section class="panel">
+										<header class="panel-heading" style="padding-left:5px;"><strong>数据报表</strong>
+										</header>
+										<table class="table table-bordered table-striped no-margin">
+											<tr class="tr1">
+												<td class="td1">
+													<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $sdate; ?>"> 至
+													<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $edate; ?>">
+													<input type="submit" value="生成报表"/>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<div id="container" style="height: 300px; margin: 0 auto"></div>
+												</td>
+											</tr>
+										</table>
+									</section>
+								</div>
+								<div class="tab-pane" id="page">
+									<!-- total data -->
+									<table class="table table-bordered table-striped no-margin">
+										<tbody>
+										<tr class="ct">
+											<td class="td2">时间</td>
+											<?php foreach ($lineData as $k => $v): ?>
+												<td class="td2"><?php echo $k; ?></td>
+											<?php endforeach; ?>
+											<td class="td2">总和</td>
+										</tr>
+										<?php
+										foreach ($date as $d) {
+											?>
+											<tr class="ct">
+												<td class="td2"><?php echo $d; ?></td>
+												<?php
+												$total = 0;
+												foreach ($lineData as $k => $v):
+													?>
+													<td class="td2"><?php echo $v[$d]; ?></td>
+													<?php
+													$total += $v[$d];
+												endforeach;
+												?>
+												<td class="td2"><?php echo $total; ?></td>
+											</tr>
+										<?php } ?>
+										</tbody>
+									</table>
+								</div>
+
+
+							</div>
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+	</form>
+</section>
+
+<script src="<?php echo $staticPath; ?>/js/admin/highcharts.js"></script>
+<script src="<?php echo $staticPath; ?>/js/admin/exporting.js"></script>
+<script src="<?php echo $staticPath; ?>/js/admin/stat.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		var yesterday = "<?php echo $yesterday;?>";
+		var weekday = "<?php echo $weekday;?>";
+		var monthday = "<?php echo $monthday;?>";
+		var threemonth = "<?php echo $threemonth;?>";
+		$("#sdate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+		$("#edate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+
+		chart1 = new Highcharts.Chart({
+			chart: {
+				renderTo: 'container',
+				type: 'line'
+			},
+			title: {
+				text: '数量',
+			},
+			xAxis: {
+				categories: <?php echo json_encode($date);?>
+			},
+			yAxis: {
+				title: {
+					text: '数量'
+				},
+			},
+			plotOptions: {
+				line: {
+					dataLabels: {
+						enabled: true
+					},
+					enableMouseTracking: false
+				}
+			},
+			series: [
+				<?php
+				foreach ($lineData as $name => $v){
+					$tmp[] = "{name: '{$name}', data: ". json_encode(array_values($v)) ."}";
+				}
+				echo implode(',',$tmp);
+				?>
+			]
+		});
+
+
+	})
+</script>
+<?php echo $this->render("layout/footer2.phtml"); ?>
+
+

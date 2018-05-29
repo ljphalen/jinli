@@ -1,0 +1,143 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	<li class="current"><a href="javascript:;">运营消息</a></li>
+	<li><a href="<?php echo $listPushUrl;?>">临时消息</a></li>
+	<li><a href="<?php echo $sysMsgUrl;?>">系统消息</a></li>
+	<li><a href="<?php echo $settingUrl;?>?type=100">消息设置</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" type="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input" name="title" value="<?php echo $searchParam['title'];?>"></td>	
+			<th class="th">类型</th>
+			<td class="td">
+			<select name="type" class="wa">
+			    <option value="0">全部</option>
+			    <?php foreach($msgType as $k => $v ) {?>
+				<option <?php if($searchParam['type'] == $k) echo 'selected';?> value="<?php echo $k;?>"><?php echo $v['txt'];?></option>
+				<?php } ?>
+			</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			    <option  value="0">全部</option>
+			    <?php foreach(Game_Service_Msg::$status as $k => $v) {?>
+				<option <?php if($searchParam['status']-1 == $k) echo 'selected';?> value="<?php echo $k+1;?>"><?php echo $v;?></option>
+				<?php } ?>
+			</select>
+			</td>
+			<th class="th">最后维护人</th>
+			<td class="td"><input type="text" class="input" name="last_author" value="<?php echo $searchParam['last_author'];?>"></td>	
+		</tr>
+		<tr>
+		    <th class="th">时间</th>
+			<td class="td">
+			<input type="text" name="start_time" value="<?php echo $searchParam['start_time'];?>" id="start_time" /> 至 
+			<input type="text" name="end_time" value="<?php echo $searchParam['end_time'];?>" id="end_time" />			
+			</td>
+			<th class="th">发送方式</th>
+			<td class="td">
+			<select name="totype" class="wa">
+			    <option value="0">全部</option>
+			    <?php foreach(Game_Service_Msg::$reciver as $k => $v) {?>
+				<option <?php if($searchParam['totype']-1 == $k) echo 'selected';?> value="<?php echo $k+1;?>"><?php echo $v;?></option>
+				<?php } ?>
+			</select>
+			</td>
+		</tr>		
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="indexForm" action="<?php echo $changeStatusBatUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">批量关闭</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">批量开启</button></span></span>
+	<span>&nbsp;&nbsp;&nbsp;&nbsp;共 <?php echo $total;?> 条结果</span>
+	<span class="btn2" style="float:right;"><span><button type="button" id="extportBtn">导出excel</button></span></span>
+	<?php if($swich){?>
+	<span class="btn2" style="float:right;"><span><button type="button"><a href="<?php echo $editUrl;?>" class="mr10" style="color:white;">添加运营消息</a></button></span></span>
+    <?php } ?>
+	</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			 <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="60">ID</td>
+			<td style="width:170px;">标题</td>
+			<td>类型</td>
+			<td style="width:250px;">内容</td>	
+			<td>生效时间</td>	
+			<td>发送方式</td>					
+			<td>状态</td>
+			<td>最后维护人</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+		    <?php if($value['top_type'] == 200){?>
+			<td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<?php } else {?>
+			<td> - </td>
+			<?php } ?>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo Game_Service_Msg::$msgType[$value['type']]['txt'];?></td>
+			<td><?php echo $value['msg'];?></td>
+			<td><?php echo date('Y-m-d H:i:s',$value['start_time']).'<br>'.date('Y-m-d H:i:s',$value['end_time']);?></td>
+			<td><?php echo Game_Service_Msg::$reciver[$value['totype']];?></td>			
+			<td><?php echo $value['top_type'] == 200 ? Game_Service_Msg::$status[$value['operate_status']] : '';?></td>
+			<td><?php echo $value['last_author'];?></td>									
+			<td>
+			<a href="<?php echo $detailUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">详细</a>
+			<?php if($value['top_type'] == 200){?>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<?php }?>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<div class="mr10 cc">
+	<form action="<?php echo $exportUrl;?>" method="post" id="exportForm">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<input type="hidden" name="title" value="<?php echo $searchParam['title'];?>">
+	<input type="hidden" name="type" value="<?php echo $searchParam['type'];?>">
+	<input type="hidden" name="status" value="<?php echo $searchParam['status'];?>">
+	<input type="hidden" name="last_author" value="<?php echo $searchParam['last_author'];?>">
+	<input type="hidden" name="start_time" value="<?php echo $searchParam['start_time'];?>">
+	<input type="hidden" name="end_time" value="<?php echo $searchParam['end_time'];?>">
+	<input type="hidden" name="toptype" value="<?php echo $searchParam['toptype'];?>">
+	<input type="hidden" name="totype" value="<?php echo $searchParam['totype'];?>">
+	</form>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script>
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+	$('#end_time').datetimepicker();
+	ajaxForm('indexForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Msg/index');
+	});
+	$("#extportBtn").click(function(){
+		$("#exportForm").submit();
+    });
+});
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

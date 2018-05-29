@@ -1,0 +1,86 @@
+{{pagerCss}}
+<div class="colMain">
+            <div class="title"><p class="fl">产品列表</p></div>
+            <div class="main">
+                <div class="toolbar">
+                    <div class="search fl">
+                        <span>
+                            <form name="form" method="GET" action="relist">
+                                客户名称:
+                                <select name="customer" id="customer">
+                                </select>
+                                平台类型:
+                                <select name="platform" id="platform">
+                                    <option value="" <!-- if {{platform}}=='' -->selected<!-- endif -->>所有</option>
+                                    <option value="0" <!-- if {{platform}}===0 -->selected<!-- endif -->>通用</option>
+                                    <option value="1" <!-- if {{platform}}==1 -->selected<!-- endif -->>Android</option>
+                                    <option value="2" <!-- if {{platform}}==2 -->selected<!-- endif -->>IOS</option>
+                                </select>
+                                <input typt="text" id="keyword" name="keyword" value="{{keyword}}" class="iText" /><input type="submit" class="submit" value="" />
+                            </form>
+                        </span>
+                    </div>
+                    <a href="readd" class="fr add">新增</a>
+                </div>
+                <div class="content">
+                    <div class="grid">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>客户名称</th>
+                                    <th>平台类型</th>
+                                    <th>产品编号</th>
+                                    <th>产品名</th>
+                                    <th>创建时间</th>
+                                    <th>最后更新时间</th>
+                                    <th>最后操作人</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- loop products -->
+                                        <tr>
+                                            <td>{{products' value.company}}</td>
+                                            <td><!-- if {{products' value.platform}}==1 -->Android<!-- elseif {{products' value.platform}}==2 -->IOS<!-- else -->通用<!-- endif --></td>
+                                            <td>{{products' value.id}}</td>
+                                            <td>{{products' value.product_name}}</td>
+                                            <td><?php echo format_time($v1['created']); ?></td>
+                                            <td><?php echo format_time($v1['updated']); ?></td>
+                                            <td>{{products' value.oprator}}</td>
+                                            <td>
+                                                <a href="reedit?productid={{products' value.id}}" class="edit" title="编辑"></a>
+<!--                                                |
+                                                <a href="redel?productid={{products' value.id}}" class="del" title="删除"></a>-->
+                                            </td>
+                                        </tr>
+                                <!-- endloop -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination">{{pager.pages}}</div>
+                </div>
+            </div>
+        </div>
+<script>
+    function autoCustomer(customerid) {
+        ajaxPOST("/customer/autoCustomer", {}, function(data) {
+            var length = data.length;
+            str = '<option value="">所有</option>';
+            for (i=0; i<length; i++)
+            {
+                if_selecte='';
+                if(customerid == data[i].id)
+                {
+                    if_selecte =  'selected="selected"';
+                }   
+                str += '<option value="'+data[i].id+'" '+if_selecte+'>'+data[i].compay+'</option>'
+            }
+            $("#customer").html(str);
+        })
+    }
+    
+    $(function(){
+        var customerid = "{{customer}}";
+        autoCustomer(customerid);
+    })
+</script>

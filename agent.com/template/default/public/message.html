@@ -1,0 +1,78 @@
+<{config_load file="site.conf"}>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title><{#siteName#}> - 系统信息</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="/public/styles/general.css" rel="stylesheet" type="text/css" />
+<link href="/public/styles/main.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+
+<h1><span class="action-span1"><a href="/index.php?act=main"><{#siteName#}></a>
+</span><span id="search_id" class="action-span1"> - 系统信息 </span>
+<div style="clear: both"></div>
+</h1>
+<div class="list-div">
+<div style="background: #FFF; padding: 20px 50px; margin: 2px;">
+<table align="center" width="400">
+	<tr>
+		<td width="50" valign="top"><img
+			src="/template/default/img//information.gif" width="32" height="32"
+			border="0" alt="information" /></td>
+		<td style="font-size: 14px; font-weight: bold"><{$msg}>。</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td id="redirectionMsg">如果您不做出选择，将在 <span id="spanSeconds">3</span>
+		秒后跳转到第一个链接地址。</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>
+		<ul style="margin: 0; padding: 0 10px" class="msg-link">
+			<{foreach from=$links item=link}>
+			<li><a href="<{$link.url}>"><{$link.text}></a></li>
+			<{/foreach}>
+		</ul>
+		</td>
+	</tr>
+</table>
+</div>
+</div>
+
+</body>
+</html>
+<script language="JavaScript">
+var seconds = 3;
+var defaultUrl = "<{$defaultUrl}>";
+
+onload = function()
+{
+  if (defaultUrl == 'javascript:history.go(-1)' && window.history.length == 0)
+  {
+    document.getElementById('redirectionMsg').innerHTML = '';
+    return;
+  }
+
+  window.setInterval(redirection, 1000);
+}
+function redirection()
+{
+  if (seconds <= 0)
+  {
+    window.clearInterval();
+    return;
+  }
+
+  seconds --;
+  document.getElementById('spanSeconds').innerHTML = seconds;
+
+  if (seconds == 0)
+  {
+    window.clearInterval();
+    location.href = defaultUrl;
+  }
+}
+</script>

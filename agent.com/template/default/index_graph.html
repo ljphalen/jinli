@@ -1,0 +1,72 @@
+<{config_load file="site.conf"}> <{include file="public/pageHead.html"}>
+<link href="/template/default/css/validate.css" rel="stylesheet"
+	type="text/css" />
+<script src="/template/default/js/jquery.validate.js" type="text/javascript"
+	language="javascript"></script>
+<script type="text/javascript">
+$(document).ready(function() {	
+
+});
+</script>
+<h1><span class="action-span"></span>
+<span class="action-span1">系統设置</span><span id="search_id"
+	class="action-span1"> - <{$actionText}></span>
+<div style="clear: both"></div>
+</h1>
+
+<div class="main-div">
+<form action="index.php?ac=<{$ac}>" method="post" enctype="multipart/form-data" name="theForm" id="theForm">
+    <input type="hidden" name="userid" value="<{$admin.userid}>" />
+<table width="100%">
+	<{if $error}>
+	<tr align="center">
+		<td colspan="2" style="color: red"><{$error}></td>
+	</tr>
+	<{/if}>
+	<tr>
+    <td colspan="3">
+    <div class="main-div">
+        <h1>
+            <div class="section_title">
+               参数设置
+            </div>
+        </h1>
+        <table id="list-table__" width="100%">
+            <tbody>
+                <tr>
+                    <td class="label_2" width="150">图标类型：</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="label_2" width="150">饼状图模块个数：</td>
+                    <td><input type="text" name="pie" value="<{$mypie}>" /></td>
+                    <td>宽：<input type="text" name="pie_w" value="<{$pie_w}>" /></td>
+                    <td>高：<input type="text" name="pie_h" value="<{$pie_h}>" /></td>
+                </tr>
+                <tr>
+                    <td class="label_2" width="150">柱状图条形个数：</td>
+                    <td><input type="text" name="bar" value="<{$mybar}>" /></td>
+                    <td>宽：<input type="text" name="bar_w" value="<{$bar_w}>" /></td>
+                    <td>高：<input type="text" name="bar_h" value="<{$bar_h}>" /></td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div>
+    </td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td><input type="submit" name="smt" id="smt" value="提交"
+            class="button" /></td>
+    </tr>
+  </tbody>
+</table>
+</form>
+</div>
+
+<{include file="public/pageFoot.html"}>
+<script src="/template/default/js/common.js" type="text/javascript"
+	language="javascript"></script>

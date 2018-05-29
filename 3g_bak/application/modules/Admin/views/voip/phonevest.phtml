@@ -1,0 +1,29 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="80">ID</td>
+				<td width="250">IMEI ID</td>
+				<td width="150">用户名</td>
+				<td width="100">手机</td>
+				<td width="100">本月剩余时间(秒)</td>
+				<td width="100">总通话时长(秒)</td>
+				<td width="100">注册时间</td>
+			</tr>
+			<?php foreach ($data as $key => $value) {
+				?>
+				<tr class="ct">
+					<td><?php echo $value['id']; ?></td>
+					<td><?php echo $value['imei_id']; ?></td>
+					<td><?php echo $value['username']; ?></td>
+					<td><?php echo $value['mobile']; ?></td>
+					<td><?php echo $value['left_time']; ?></td>
+					<td><?php echo $value['total_time']; ?></td>
+					<td><?php echo $value['register_time']; ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?></div>
+<?php echo $this->render("layout/footer.phtml"); ?>

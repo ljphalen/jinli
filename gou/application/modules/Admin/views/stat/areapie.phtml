@@ -1,0 +1,111 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li><a href="<?php echo $pieUrl;?>" >渠道分布</a></li>
+        <li class="current"><a href="">地域分布</a></li>
+    </ul>
+</div>
+    <div class="table_full">
+        <form action="<?php echo $baseUrl;?>" method="POST">
+            <input type="hidden" name="token" value="<?php echo $token;?>" />
+            <table width="100%" cellspacing="0" cellpadding="0">
+
+                <tr class="tr1">
+                    <td class="td1">版本选择</td>
+                    <td class="td1">
+                        <select name="version_id" class="select wa">
+                            <?php echo ${'version_'.$search['version_id']} = 'selected="selected"';?>
+                            <option <?php echo $version_0;?> value="0">全部</option>
+                            <option <?php echo $version_1;?> value="1">H5版</option>
+                            <option <?php echo $version_2;?> value="2">预装版</option>
+                            <option <?php echo $version_3;?> value="3">渠道版</option>
+                            <option <?php echo $version_4;?> value="4">穷购物</option>
+                            <option <?php echo $version_5;?> value="5">APP版</option>
+                        </select>
+                    </td>
+                    <td class="td1">
+                        时间:
+                    </td>
+                    <td class="td1">
+                        <input class="input" type="text" maxlength="30" id="start_time" name="start_time" value="<?php echo $search['start_time'];?>"> 至
+                        <input class="input" type="text" id="end_time" maxlength="30" name="end_time" value="<?php echo $search['end_time'];?>">
+                        <input id="search_btn" type="submit" value="生成" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div class="h_a">数据报表</div>
+    <table width="100%" cellspacing="0" cellpadding="0">
+        <tr class="tr1">
+            <td class="td2">
+                <div id="container" style="height: 600px; margin: 0 auto"></div>
+            </td>
+        </tr>
+    </table>
+    <script src="<?php echo $staticPath;?>/js/admin/highcharts.js"></script>
+    <script src="<?php echo $staticPath;?>/js/admin/exporting.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#start_time").datepicker({
+                dateFormat : 'yy-mm-dd'
+            });
+            $("#end_time").datepicker({
+                dateFormat : 'yy-mm-dd'
+            });
+
+            $("#search_btn").click(function(){
+                var start_time = $("#start_time").val();
+                var end_time = $("#end_time").val();
+                var sd = new Date(start_time);
+                var ed = new Date(end_time);
+                if (sd.getMonth() !== ed.getMonth()) {
+                    showError('提示', '开始,结束时间请选择同一个月份.');
+                    return false;
+                }
+                if (ed < sd) {
+                    showError('提示', '结束时间不能小于开始时间.');
+                    return false;
+                }
+            });
+
+            $('#container').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false
+                },
+                title: {
+                    text: '渠道分布图表'
+                },
+                subtitle: {
+                    text: '<?php echo $search['start_time'],'至',$search['end_time'];?>'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                credits : {
+                    enabled : false
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.3f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: '比例',
+                    data: <?php echo $lineData;?>
+                }]
+            });
+       })
+    </script>
+<?php echo $this->render("layout/footer.phtml");?>

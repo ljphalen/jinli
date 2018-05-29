@@ -1,0 +1,163 @@
+<div class="addAD">
+    <div class="grid">
+        <div class="gridToolbar">
+            <p class="fl">
+                <select name="product_kind" class="required" required id="product_kind" style="height: 30px;line-height: 30px;min-width: 150px;width: auto !important;">
+                    <option value="1">全部产品</option>
+                    <option value="2">有效产品</option>
+                </select>
+            </p>
+            <p class="fl">
+                <input type="text" class="iText" id="search_value" value="{{keyword}}" /><a href="javascript:void(0)" id="search" class="btn">搜索</a>
+            </p>
+            <p class="fr">
+                <a href="javascript:void(0)"  class="cancel" id="checkAll">全选</a>
+                <a href="javascript:void(0)"  class="cancel" id="invertSelect">全不选</a>
+            </p>
+        </div>
+        <div style="height:490px;overflow-y:auto" id="adListPopUp">
+            <table>
+                <thead>
+                    <tr>
+                        <th>产品编号</th>
+                        <th>产品名</th>
+                        <th class="plan_tr" style="display: none">导量规则</th>
+                        <th>广告内容</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="pztbody">
+                    <!-- loop products -->
+                    <tr>
+                        <td>{{products' value.id}}</td>
+                        <td>{{products' value.simple_platform}}{{products' value.product_name}}</td>
+                        <td class="plan_tr" style="display: none">
+                            <!-- if {{products' value.plantime}} -->
+                            <p class="product_plan_title">导量计划：</p>
+                            <!-- loop products' value.plantime -->
+                            <p class="product_plan"><?php echo $v2["start_time"]?>～<?php echo $v2["end_time"]?></p>
+                            <!-- endloop -->
+                            <!-- endif -->
+                        </td>
+                        <td>
+                            <!-- if {{products' value.adcontent.embed}} -->
+                                <!-- loop products' value.adcontent.embed -->
+                                                <p><?php echo $v2['typename']; ?>：<?php echo $v2['count']; ?>则</p>
+                                <!-- endloop -->
+                            <!-- endif -->
+                            <!-- if {{products' value.adcontent.nembed}} -->
+                                <!-- loop products' value.adcontent.nembed -->
+                                                <p><?php echo $v2['typename']; ?>：<?php echo $v2['count']; ?>则</p>
+                                <!-- endloop -->
+                            <!-- endif -->
+                            <!-- if {{products' value.adcontent.push}} -->
+                                <!-- loop products' value.adcontent.push -->
+                                                <p><?php echo $v2['typename']; ?>：<?php echo $v2['count']; ?>则</p>
+                                <!-- endloop -->
+                            <!-- endif -->
+                            <!-- if {{products' value.adcontent.custom}} -->
+                                <!-- loop products' value.adcontent.custom -->
+                                                <p><?php echo $v2['typename']; ?>：<?php echo $v2['count']; ?>则</p>
+                                <!-- endloop -->
+                            <!-- endif -->
+                        </td>
+                        <td>
+                            <input type="checkbox" name="product_id" value="{{products' value.id}}" />
+                        </td>
+                    </tr>
+                    <!-- endloop -->
+
+                </tbody>
+            </table>
+        </div>
+        <div style="text-align:center;padding:10px 0;">
+            <a href="javascript:void(0)" class="btn" id="ok">确定</a>
+            <a href="javascript:void(0)" class="cancel" id="cancel">取消</a>
+        </div>
+    </div>
+</div>
+<script>
+    $(function() {
+        //全选反选操作
+        $("#checkAll").click(function() {
+            var _checkbox = $("#adListPopUp tr:visible").find("input:checkbox");
+            _checkbox.attr("checked", true);
+        });
+        $("#invertSelect").click(function() {
+            var _checkbox = $("#adListPopUp tr:visible").find("input:checkbox");
+            _checkbox.attr("checked", false);
+        });
+        $("#search").click(function(){
+            var val = $("#search_value").val();
+            $("#pztbody").find("tr").each(function(){
+                var firstTd = $(this).find('td').eq(1);
+                if (firstTd.html().indexOf(val) >= 0){
+                    $("#pztbody").prepend($(this));
+                }
+            })
+        });
+        
+        $("#product_kind").change(function(){
+            var product_kind = $(this).val();
+            if(product_kind == 1){
+                showAllProduct();
+            }else if(product_kind == 2){
+                showEffectiveProduct();
+            }
+            
+        });
+        //默认显示有效产品,触发change操作
+        $("#product_kind").val(2).change();
+        
+        function showAllProduct(){
+            $("#pztbody tr").show();
+        }
+        
+        function showEffectiveProduct(){
+            //转成毫秒
+            var start_time = $("#start_time").val();
+            var start_time_int = Date.parse(start_time.replace(/-/g,"/"));
+            var end_time = $("#end_time").val();
+            var end_time_int = Date.parse(end_time.replace(/-/g,"/"));
+            
+            $("#pztbody tr").hide();
+            $(".product_plan").each(function(){
+                var timeStr = $(this).text();
+                var timeArr = timeStr.split("～");
+                startTime= timeArr[0] 
+                startTime_int = Date.parse(startTime.replace(/-/g,"/"));
+                endTime= timeArr[1] 
+                endTime_int = Date.parse(endTime.replace(/-/g,"/"));
+
+                if(isMixTime(start_time_int, end_time_int, startTime_int, endTime_int)){
+                    $(this).parents('tr').show();
+                }
+            });
+        }
+        
+    /*
+    *比较时间段一与时间段二是否有交集
+    */
+   function isMixTime(begintime1, endtime1, begintime2, endtime2) {
+        $status = begintime2 - begintime1;
+        if ($status > 0) {
+            $status2 = begintime2 - endtime1;
+            if ($status2 > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            $status2 = begintime1 - endtime2;
+            if ($status2 > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+        
+        
+        
+    });
+</script>

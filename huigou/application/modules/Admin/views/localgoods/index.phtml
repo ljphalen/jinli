@@ -1,0 +1,55 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">商品列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加商品</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="30">排序</td>
+			<td width="40">商品ID</td>
+			<td>商品名称</td>
+			<td>售价</td>
+			<td>银币使用上限</td>
+			<td>供应商</td>
+			<td>开始时间</td>
+			<td>结束时间</td>
+			<td>是否货到付款</td>
+			<td>库存</td>
+			<td>限购数</td>
+            <td>是否新人专供</td>
+            <td>是否推荐首页</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($localgoods as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $value['price'];?></td>
+			<td><?php echo $value['silver_coin'];?></td>
+			<td><?php echo $suppliers[$value['supplier']]['name'];?></td>
+			<td><?php echo date('Y-m-d H:i:s',$value['start_time']);?></td>
+			<td><?php echo date('Y-m-d H:i:s',$value['end_time']);?></td>
+			<td><?php echo $value['iscash'] == 1 ? '是' : '否';?></td>
+			<td><?php echo $value['stock_num'];?></td>
+			<td><?php echo $value['limit_num'];?></td>
+			<td><?php echo $value['is_new_user'] == 1 ? '是' : '否';?></td>
+			<td><?php echo $value['isrecommend'] == 1 ? '是' : '否';?></td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

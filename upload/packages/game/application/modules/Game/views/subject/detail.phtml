@@ -1,0 +1,76 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+</script>
+<div id="page">
+		<header class="hd">
+			<h1><div class="omit"><?php echo $info['title'];?></div></h1>
+			<div class="back-home"><a href="javascript:history.go(-1);">&lt;</a></div>
+		</header>
+		<article class="ac">
+			<div class="ad-topic">
+				<a >
+					<img data-src="<?php echo $attachPath.$info['img'];?>" src="<?php echo $staticResPath; ?>/pic/blank.gif">
+					<div class="content">
+						<span><?php echo html_entity_decode($info['resume']);?></span>
+							<p><?php echo  date('Y-m-d',$info['start_time']); ?></p>
+					</div>
+				</a>
+			</div>
+			
+			<div class="item-list J_gameItem">
+				<ul>
+				    <?php if(count($games)){?>
+					<?php foreach($games as $key=>$value) {?>
+					<?php 
+                         if(!$intersrc){
+	                           if($value['id'] < 10){
+								   $intersrc = 'SUBJECT0'.$value['id'];
+							   } else {
+									$intersrc = 'SUBJECT'.$value['id'];
+							   }
+					     }  
+					     $href = $webroot.'/index/detail/?id='.$value['id'].'&intersrc='.$intersrc.'&t_bi='.$source;
+					?>
+					<li>
+						<a class="detail" href="<?php echo $href;?>">
+							<div class="pic"><img data-src="<?php echo $value['img'];?>" src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="<?php echo $value['name'];?>"></div>
+							<div class="desc">
+								<h3><?php echo $value['name'];?></h3>
+								<p><?php echo $value['resume'];?></p>
+							</div>
+						</a>
+						<div class="download"><a class="btn" href="<?php echo Common::tjurl($tjUrl, $value['id'], $intersrc, $value['link']);?>&t_bi=<?php echo $source;?>">安装</a></div>
+					</li>
+					<?php }?>
+					<?php }?>
+				</ul>
+			</div>
+			<?php if($hasnext){ ?>
+			<div class="load-more J_loadMore" data-ajaxUrl="<?php echo $webroot.'/subject/moreSj/?id='.$id.'&intersrc='.$intersrc.'&t_bi='.$source;?>" data-hasnext="<?php echo $hasnext;?>" data-curpage="<?php echo $page;?>">
+				<span>加载更多</span>
+			</div>
+			<?php } ?>
+		</article>
+
+		<div class="goTop J_gotoTop">
+			<a ></a>
+		</div>
+		<footer class="ft">
+			<div class="wchat" >
+				<img src="<?php echo $attachPath.$ami_web_weixin;?>" alt="" />
+				<div>
+				<p>欢迎关注我们的微信公众帐号！</p>
+				<p>微信号：gioneegame</p>
+			    </div>
+			</div>
+			<div class="quick-links">
+				<a href="<?php echo $webroot.'/contact?t_bi='.$source;?>">联系我们</a>
+				<a href="<?php echo $webroot.'/feedback?t_bi='.$source;?>">意见反馈</a>
+				<a href="<?php echo strpos($configs['game_link'], '?') == false ? $configs['game_link'].'&t_bi='.$source :$configs['game_link'].'?t_bi='.$source;?>"><?php echo $configs['game_title'];?></a>
+			</div>
+		</footer>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<form method="post" action="<?php echo $baseUrl; ?>" id="addFrom">
+	<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">选择日期</th>
+				<td class="td">
+					<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $date['sdate']; ?>"> 至
+					<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $date['edate']; ?>">
+
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<div class="h_a">
+	<span><input type="button" value="导出" id="downLoad"></span><span style="margin-left: 920px">当前总点击量：<font id="amount" style="color:red"><?php echo $sum; ?></font></span>
+</div>
+<div class="table_list">
+	<table width="90%">
+		<tr class="ct">
+			<td class="td2">ID</td>
+			<td class="td2">专题名</td>
+			<td class="td2">开始时间</td>
+			<td class="td2">结束时间</td>
+
+			<td class="td2">点赞数</td>
+			<td class="td2">PV</td>
+			<td class="td2">内容点击</td>
+			<td class="td2">PV／内容点击</td>
+			<td class="td">操作</td>
+		</tr>
+
+		<?php foreach ($dataList as $v) { ?>
+			<tr class="ct">
+				<td class="td2"><?php echo $v['id']; ?></td>
+				<td class="td2"><?php echo $v['title']; ?></td>
+				<td class="td2"><?php echo date('Y-m-d', $v['start_time']); ?></td>
+				<td class="td2"><?php echo date('Y-m-d', $v['end_time']); ?></td>
+				<td class="td2"><?php echo $v['like_num']; ?></td>
+				<td class="td2"><?php echo $v['clickInfo']['topic'] ? $v['clickInfo']['topic'] : 0; ?></td>
+				<td class="td2"><?php echo $v['csum'] ? $v['csum'] : 0; ?></td>
+				<td class="td2"><?php echo bcdiv($v['clickInfo']['topic'], $v['csum'], 4) * 100 ?>%</td>
+				<td class="td2"><a href="<?php echo '/Admin/Stat/topic?id=' . $v['id']; ?>">查看详情</a></td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#sdate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+		$("#edate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+	});
+
+	$("#downLoad").bind('click', function () {
+		var sdate = $("#sdate").val();
+		var edate = $("#edate").val();
+		window.location.href = '<?php echo $baseUrl?>?export=1&sdate=' + sdate + '&edate=' + edate;
+	})
+</script>
+	

@@ -1,0 +1,103 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current">添加数据</li>
+		</ul>
+	</div>
+
+	<div class="table_list">
+		<form id="form1" name="form1" method="post" action="/admin/Local/addPost">
+			<input type="hidden" name="token" value="<?php echo $token; ?>">
+			<table width="100%">
+				<tr class="hd">
+					<td style="width:15%;padding-left:100px;">接口数据</td>
+					<td width="75%">
+						<table>
+							<tbody>
+							<?php if (empty($id)) { ?>
+								<tr class="hd">
+									<td> key: <input type="text" name='From[0][key]'> value:
+										<input type="text" name='From[0][value]'> type:
+										<input type="text" name='From[0][type]'></td>
+								</tr>
+
+								<tr class="hd">
+									<td> key: <input type="text" name='From[1][key]'> value:
+										<input type="text" name="From[1][value]"> type:
+										<input type="text" name="From[1][type]"></td>
+								</tr>
+								<tr class="hd">
+									<td> key: <input type="text" name="From[2][key]"> value:
+										<input type="text" name="From[2][value]"> type:
+										<input type="text" name="From[2][type]"></td>
+								</tr>
+								<tr class="hd">
+									<td> key: <input type="text" name="From[3][key]"> value:
+										<input type="text" name="From[3][value]"> type:
+										<input type="text" name="From[3][type]"></td>
+								</tr>
+								<tr class="hd">
+									<td> key: <input type="text" value="" name="From[4][key]"> value:
+										<input type="text" name="From[4][value]"> type:
+										<input type="text" name="From[4][type]"></td>
+								</tr>
+								<tr class="hd">
+									<td> key: <input type="text" value="" name="From[5][key]"> value:
+										<input type="text" name="From[5][value]"> type:
+										<input type="text" name="From[5][type]"></td>
+								</tr>
+
+								<tr class="hd">
+									<td> key: <input type="text" value="" name="From[6][key]"> value:
+										<input type="text" name="From[6][value]"> type:
+										<input type="text" name="From[6][type]"></td>
+								</tr>
+								<tr class="hd">
+									<td> key: <input type="text" value="" name="From[7][key]"> value:
+										<input type="text" name="From[7][value]"> type:
+										<input type="text" name="From[7][type]"></td>
+								</tr>
+								<tr class="hd">
+									<td> key: <input type="text" value="" name="From[8][key]"> value:
+										<input type="text" name="From[8][value]"> type:
+										<input type="text" name="From[8][type]"></td>
+								</tr>
+								<tr class="hd">
+									<td> key: <input type="text" value="" name="From[9][key]"> value:
+										<input type="text" name="From[9][value]"> type:
+										<input type="text" name="From[9][type]"></td>
+								</tr>
+							<?php } else {
+								foreach ($info as $k => $v) {
+									?>
+									<tr class="hd">
+										<td> key:
+											<input type="text" name="From[<?=$k;?>][key]" value="<?=$v->key;?>"> value:
+											<input type="text" name="From[<?=$k;?>][value]" value="<?=$v->value;?>"> type:
+											<input type="text" name="From[<?=$k;?>][type]" value="<?=$v->type;?>"></td>
+									</tr>
+								<?php }
+							} ?>
+							<input type="hidden" value="<?=$id?>" name="id">
+							<tr class="hd">
+								<td><span style="margin-left: 320px"><input type="submit" value="提交" id="submit"></span>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+
+			</table>
+		</form>
+	</div>
+
+	<script type="text/javascript">
+
+		$(document).ready(function () {
+			ajaxForm('form1', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Local/list');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

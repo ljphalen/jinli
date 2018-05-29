@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<?php echo $this->render("layout/header.phtml");?>
+</head>
+<body>
+	<div class="appMsgDialog-body iframe-Dialog">
+		<div class="search-bar">
+			<form action="<?php echo $dialogUrl;?>" class="search-form" method="get">
+				<input class="box" name="keyword" value="<?php echo $inputVars['keyword'];?>"/>
+				<button type="submit" class="btn-submit"></button>
+			</form>
+			<div class="addAppMsg-container">
+				<a href="<?php echo $addUrl . "?dataType=" . $dataTypes[0];?>" target="_blank" class="btn-upload">新建单条图文消息</a>
+				<a href="<?php echo $addUrl . "?dataType=" . $dataTypes[1];?>" target="_blank" class="btn-upload">新建多条图文消息</a>
+			</div>
+		</div>
+		<div id="waterfallContainer" class="invisible">
+			<div id="waterfall" data-ajaxUrl="<?php echo $deletePostUrl;?>">
+				<?php 
+						$format = 'Y-m-d H:i:s';
+						foreach ($list as $news) {
+							$newsItems = $itemsList[$news['id']];
+							$itemLenth = count($newsItems);
+    						if($news['type'] == 1){
+    							$newsItem = $itemLenth>0 ? $newsItems[0] : null;
+				?>
+					<!-- 单条图文 -->
+						<div data-id="<?php echo $news['id'];?>" data-title="<?php echo $newsItem['title'];?>" class="J_appmsg appmsg">
+							<div  class=" appmsg-content">
+								<h4 class="appmsg_title">
+									<a href="<?php echo $newsItem['content_url'];?>" target="_blank"><?php echo $newsItem['title']?></a>
+								</h4>
+								<div class="appmsg_info">
+					                <em class="appmsg_date"><?php echo date($format, $news['create_time']);?></em>
+					            </div>
+								<div class="appmsg_thumb_wrp">
+									<img src="<?php echo $attachroot.$newsItem['image'];?>" class="appmsg_thumb">
+								</div>
+								<p class="appmsg_desc"><?php echo $newsItem['digest']?></p>
+							</div>
+							<div class="appmsg_mask"></div>
+							<i class="icon_card_selected"></i>
+						</div>
+
+					<?php } elseif($news['type'] == 2) {
+					    $newsItem = $itemLenth>0 ? $newsItems[0] : null; ?>
+						<!-- 多条图文 -->
+						<div data-id="<?php echo $news['id'];?>" data-title="<?php echo $newsItem['title'];?>" class="J_appmsg appmsg multi">
+							<div  class=" appmsg-content">
+								<div class="appmsg_info">
+					                <em class="appmsg_date"><?php echo date($format, $news['create_time']);?></em>
+					            </div>
+								<div class="cover_appmsg_item">
+									<h4 class="appmsg_title">
+										<a href="<?php echo $newsItem['content_url'];?>" target="_blank"><?php echo $newsItem['title'];?></a>
+									</h4>
+									<div class="appmsg_thumb_wrp">
+										<img src="<?php echo $attachroot.$newsItem['image'];?>" alt="" class="appmsg_thumb">
+									</div>
+								</div>
+							</div>
+							<!-- 有几个item就显示几个item,此处还应有一个循环 -->
+							<?php 
+        						for ($j=1; $j <$itemLenth; $j++) {
+                                    $newsItem = $newsItems[$j];
+                        ?>
+								<div class="appmsg_item">
+					                <img src="<?php echo $attachroot.$newsItem['image'];?>" alt="" class="appmsg_thumb">
+					                <h4 class="appmsg_title"><a href="<?php echo $newsItem['content_url'];?>" target="_blank"><?php echo $newsItem['title'];?></a></h4>
+					            </div>
+							<?php }?>
+
+							<div class="appmsg_mask"></div>
+							<i class="icon_card_selected">已选择</i>
+						</div>
+					
+					<?php }?>
+				<?php }?>
+			</div>
+		</div>
+		<?php echo $pager;?>
+	<?php echo $this->render("layout/footer.phtml");?>
+
+</body>
+</html>

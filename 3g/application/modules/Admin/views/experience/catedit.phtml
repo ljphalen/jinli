@@ -1,0 +1,92 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<style>
+		.iform {
+			width: 200px;
+		}
+	</style>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $catUrl; ?>">商品列表</a></li>
+			<li class="current"><a href=" <?php echo $editUrl; ?>"><?php echo empty($data) ? '添加' : '编辑'; ?>商品</a></li>
+		</ul>
+	</div>
+	<div class="h_a">添加商品</div>
+	<form method="post" action="<?php echo $cateditPostUrl; ?>" id="addForm">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">类型：</th>
+					<td class="td"><select name="type" id="type">
+							<option value="0">请选择分类</option>
+							<?php foreach ($rewardTypes as $k => $v) { ?>
+								<option value="<?php echo $k; ?>" <?php if ($data['type'] == $k) echo 'selected'; ?>><?php echo $v; ?></option>
+							<?php } ?>
+						</select></td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">名称</th>
+					<td class="td"><input type="text" class="input" name="name" value="<?php echo $data['name']; ?>">
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">链接:</th>
+					<td class="td"><input type="text" class="input " name="link" value="<?php echo $data['link']; ?>">
+					</td>
+				</tr>
+
+				<tbody id="image">
+				<tr class="tr">
+					<th class="th">图片广告</th>
+					<td class="td">
+						<ul class="uploadImg">
+
+							<?php if (empty($data)) { ?>
+								<li id="comImage">
+									<img src="<?php echo $attachPath; ?>/img/content/nopic.jpg"/>
+									<input type="hidden" name="image">
+								</li>
+							<?php } else { ?>
+								<li id="comImage">
+									<img src="<?php echo $attachPath . $data['image']; ?>"/>
+									<input type="hidden" name="image" value="<?php echo $data['image']; ?>">
+								</li>
+							<?php } ?>
+						</ul>
+						<p style="clear:both;">
+							<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=comImage'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tbody>
+				<tr class="tr">
+					<th class="th">状态</th>
+					<td class="td"><select name="status" class="select">
+							<option value="1"  <?php if ($data['status'] == 1) echo 'selected'; ?>>开启</option>
+							<option value="0"  <?php if ($data['status'] == 0) echo 'selected'; ?>>关闭</option>
+						</select></td>
+				</tr>
+			</table>
+			<input type="hidden" value="<?php echo $data['id']; ?>" name="id">
+		</div>
+		<div class="mb10 tac">
+			<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js?v=<?php echo $version; ?>"></script>
+	<script type="text/javascript">
+		//用户表单数据提交
+		$(document).ready(function () {
+			$('#start_time').datetimepicker();
+			$('#end_time').datetimepicker();
+
+			ajaxForm('addForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Experience/cat');
+			});
+		})
+		})
+		;
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

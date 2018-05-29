@@ -1,0 +1,146 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">数据列表</a></li>
+		<li class="current"><a href="<?php echo $editUrl; ?>">人工添加数据</a></li>
+	</ul>
+</div>
+
+<?php
+$id = !empty($info['id']) ? intval($info['id']) : 0;
+?>
+<div class="h_a"><?php echo $id ? '编辑数据' : '添加数据'; ?></div>
+<form method="post" action="<?php echo $editPostUrl; ?>" id="editForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="id" value="<?php echo $id; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">标题</th>
+				<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title']; ?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">副标题</th>
+
+				<td class="td">
+					<input type="text" class="input wc" name="subtitle" value="<?php echo $info['subtitle']; ?>">
+				</td>
+
+			</tr>
+			<tr class="tr">
+				<th class="th">概要</th>
+				<td class="td">
+					<textarea id="desc" style="width: 450px; height: 100px" class="textarea" name="summary"><?php echo $info['summary']; ?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">内容</th>
+				<td class="td">
+					<textarea id="content" style="width: 450px; height: 100px" class="textarea" name="content"><?php echo $info['content']; ?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">客户端跳转外链</th>
+				<td class="td"><input type="text" class="input wc" name="out_link" value="<?php echo $info['out_link']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">浏览器跳转链接</th>
+				<td class="td"><input type="text" class="input wc" name="url" value="<?php echo $info['url']; ?>"></td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">图片</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="Img">
+							<?php
+							$imgUrl = $staticPath . '/img/content/nopic.jpg';
+							if (!empty($info['img'])) {
+								$imgUrl = $attachPath . "/source/" . $info['img'] . "_121x101." . pathinfo($info['img'], PATHINFO_EXTENSION);
+							}
+							?>
+							<img src="<?php echo $imgUrl; ?>"/>
+							<input type="hidden" name="img" value="<?php echo $info['img']; ?>">
+						</li>
+					</ul>
+					<p style="clear:both;">
+						<iframe name="upload" src="<?php echo $uploadUrl . "?imgId=Img"; ?>"
+						        style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">底色</th>
+				<td class="td"><input type="text" class="input" name="color" value="<?php echo $info['color']; ?>">(填写颜色值，如:#1459A3,#0F8755。不填自动取图片主色)
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">v3底色</th>
+				<td class="td"><input type="text" class="input" name="w3_color" value="<?php echo $info['w3_color']; ?>">(填写颜色值，如:#1459A3,#0F8755。不填自动取图片主色)
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td">
+					<?php
+					$select1 = $select2 = '';
+					if ($info['status'] == 1) {
+						$select1 = 'checked="checked"';
+					} else {
+						$select2 = 'checked="checked"';
+					}
+					?>
+					<label for="status1"><input name="status" id="status1" type="radio" value="1" <?php echo $select1; ?> />发布</label>
+					&nbsp;&nbsp;
+					<label for="status2"><input name="status" id="status2" type="radio"
+					                            value="0" <?php echo $select2; ?>/>关闭</label>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">内容源</th>
+				<td class="td">
+					<select name="url_id">
+						<?php foreach ($cpUrls as $k => $v) { ?>
+							<option
+								value="<?php echo $v['id'] ?>" <?php if ($info['url_id'] == $v['id']) echo 'selected'; ?>><?php echo $v['title']; ?></option>
+						<?php } ?>
+					</select>（提示语：请注意“分类”与“内容源”的正确匹配。）
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">来源</th>
+				<td class="td">
+					<select name="source" class="select">
+						<?php foreach ($cp as $key => $value) { ?>
+							<option value="<?php echo $key; ?>" <?php if ($info['source'] == $key) echo 'selected'; ?>><?php echo "{$value[0]}({$value[1]})"; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">发布时间</th>
+				<td class="td"><input type="text" class="input" id="create_time" name="create_time" value="<?php echo !empty($info['create_time']) ? date('Y-m-d H:i:s', $info['create_time']) : date('Y-m-d H:i:s'); ?>">
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+	//用户表单数据提交
+	$(document).ready(function () {
+		ajaxForm('editForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '<?php echo $editUrl.'?id='.$id;?>');
+		});
+		$('#create_time').datetimepicker();
+	})
+
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

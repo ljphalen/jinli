@@ -1,0 +1,79 @@
+<?php echo $this->render("layout/header.phtml");?>
+<form method="post" action="<?php echo $addImgPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="nav">
+	<ul class="cc">
+    <li ><a href="<?php echo $addUrl; ?>">艾米Web配置</a></li>
+    <li class="current"><a href="javascript:;">安卓页图片管理</a></li>
+	</ul>
+</div>
+<div class="h_a">艾米Android版图片</div>
+<div class="table_full">
+	<table width="100%">
+	<?php if($ami_web_imgs){ 
+	        foreach($ami_web_imgs as $key=>$value) {?>
+        <tr class="tr" id="imgs<?php echo $key; ?>">
+            <th class="th"></th>
+            <td class="td">
+                <div id="imgs<?php echo $key; ?>">
+                    <img src="<?php echo $attachPath.$value;?>" style="hight:80px;width:80px"/>
+                    <input type="hidden" name="ami_web_imgs[]" value="<?php echo $value;?>">
+                    <a href="javascript:" onclick="deleteDiv('imgs<?php echo $key; ?>');">删除</a>
+                </div>
+            </td>
+        </tr>
+       
+	<?php } } else {?>
+	  <tr class="tr">
+            <th class="th">添加图片</th>
+            <td class="td">
+                <div id="imgs">
+                <ul class="uploadImg">
+                <li id="Img1">
+                <img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+                <input type="hidden" name="ami_web_imgs[1]" value="">
+                </li></ul>
+                <p style="clear:both;">
+                 <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img1';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                </p>
+                </div>
+            </td>
+        </tr>
+	<?php }?>
+        <tr class="tr">
+            <th class="th">操作</th>
+            <td class="td">
+                <div id="imgs">
+
+                </div>
+                <div class="mb10"><button onclick="addupload();" onfocus="blur();" type="button"　class="btn">＋添加图片</button></div>
+            </td>
+        </tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Web_Config/img');
+	});
+
+
+	var imgc = 2;
+	addupload  = function() {
+		var al = $('<ul class="uploadImg"><li id="Img'+imgc+'"><img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/><input type="hidden" name="ami_web_imgs['+imgc+']" value=""></li></ul><p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>'+imgc+'&mkthumb=1" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>');
+		$('#imgs').append(al);
+		imgc++;
+	}
+	
+})
+function deleteDiv(sdiv){
+	$('#'+sdiv).remove();
+}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

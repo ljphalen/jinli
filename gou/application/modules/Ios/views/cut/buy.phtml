@@ -1,0 +1,93 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+	<div class="module">
+		<section id="iScroll" class="cut-order">
+			<div class="gotop">
+				<span>返回顶部</span>
+			</div>
+			<div class="goods-info">
+				<figure>
+					<div class="pic">
+						<img src="<?php echo $store['pic_url'];?>" alt="">
+					</div>
+					<div class="desc">
+						<dl>
+							<dt><?php echo $store['title'];?></dt>
+							<dd>￥<?php echo $goods['current_price'];?></dd>
+							<dd>￥<?php echo $goods['price'];?></dd>
+						</dl>
+					</div>
+				</figure>
+				<div class="buy-price">
+					共1件商品<span>实付：<em>￥<?php echo $goods['current_price'];?></em></span>
+				</div>
+			</div>
+			<div class="input-info">
+				<form action="<?php echo $webroot?>/cutorder/create">
+					<input type="hidden" name="goods_id" value=<?php echo $goods['id'];?>>
+					<div class="legend">
+						<h3>请填写收货信息</h3>
+						<a href="javascript:;" id="J_reset">重置</a>
+					</div>
+					<fieldset>
+						<ul>
+							<li>
+								<label>收<b></b>货<b></b>人：</label>
+								<input name="buyer_name" require maxlength="20" type="text" value="<?php echo $address['buyer_name'];?>"
+									data-msg="{'require':'请输入收货人姓名', 'maxlength':'字符个数不能大于20'}"
+									placeholder="请输入收货人姓名"/>
+							</li>
+							<li>
+								<label>手<b></b><b></b><b></b><b></b>机：</label>
+								<input name="mobile" require data-verify="\d{11}" type="tel" value="<?php echo $address['mobile'];?>"
+									data-msg="{'require':'请输入手机号码', 'verify':'格式错误，请重新填写'}"
+									placeholder="请输入手机号码"/>
+							</li>
+							<li class="J_areaWrap" old-aNode="<?php echo end(explode('|',$address['country']));?>">
+								<label>收货地区：</label>
+								<select require name="province" data-msg="{'require': '请选择省份'}"></select>
+								<select require name="city" data-msg="{'require': '请选择城市'}"></select>
+								<select require name="country" data-msg="{'require': '请选择地区'}"></select>
+							</li>
+							<li>
+								<label>街道地址：</label>
+								<input name="detail_address" require maxlength="100" type="text" value="<?php echo $address['detail_address'];?>"
+									data-msg="{'require': '请输入街道地址'}"
+									placeholder="请输入街道地址"/>
+							</li>
+							<li>
+								<label>邮政编码：</label>
+								<input name="postcode" require data-verify="\d{6}" type="tel" value="<?php echo $address['postcode'];?>"
+									data-msg="{'require': '请输入邮编'}"
+									placeholder="请输入邮编"/>
+							</li>
+							<li>
+								<input name="gbook" maxlength="150" type="text" placeholder="留言"/>
+							</li>
+						</ul>
+					</fieldset>
+					<div class="btn-wrap" >
+						<div class="web-btn">
+							<a id="J_formSubmit" data-ajaxurl="<?php echo $webroot;?>/api/ios_cut/getstatus?id=<?php echo $goods['id'];?>" href="javascript:;"></a>
+						</div>
+						<span>下单后请在15分钟内支付，超过时间订单将失效。</span>
+					</div>
+				</form>
+			</div>
+		</section>
+		<div id="J_sureModal" class="modal" style="display:none;">
+			<div class="weixin-dialog">
+				<div class="title">温馨提示</div>
+				<div class="content">请在15分钟内支付，超过时间订单将失效
+					<span class="txt">（若支付中断，可在我的砍价订单中查看）<span>
+				</div>
+				<div class="btn">
+					<div class="flex J_modalCancel">取消</div>
+					<div class="flex line" id="J_sureSubmit">确定</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/newfooter.phtml");?>

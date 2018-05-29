@@ -1,0 +1,547 @@
+ <!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>分销后台</title>
+<link href="/template/default/css/general.css" rel="stylesheet" type="text/css" />
+<link href="/template/default/css/main.css" rel="stylesheet" type="text/css" />
+
+<script src="/template/default/js/common.js" language="javascript" type="text/javascript"></script>
+<script type="text/javascript" src="/template/default/js/jquery-1.4.2-min.js"></script>
+<script type="text/javascript" src="/template/default/js/calendar.js"></script>
+
+<link href="/template/default/css/asyncbox.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="/template/default/js/AsyncBox.v1.4.5.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#form1").submit(function(){
+		$("#selectDate").val('');
+	});
+	
+	$("#find-btn").click(function(){
+		var str = $("#form1").serialize();
+		window.location.href = "/index.php/reportnew/index<{$channeltype}>/?"+str+"&graph=1";
+		//alert(111);
+		//$.post("/index.php/reportnew/index<{$channeltype}>/?graph=1",str,function(){});
+		//alert(3333);
+	});
+	
+	var $tab_list = $("#tab-list li");
+	$("#tab-list li a").click(function(){
+		$tab_list.removeClass("cur");
+		$(this).parent().addClass("cur");
+	});
+	
+	$("#btn_excel").click(function(){
+		$("#detail").val('1');
+		
+		if(btnDisabled())
+		$("#form2").submit();
+	});
+	$("#s").click(function(){
+		$("#detail").val('');
+		
+		if(btnDisabled())
+		$("#form2").submit();
+	});
+	
+});
+
+function formatdate(t)
+{	
+	if(isNaN(t)){t=0;}
+	t=parseInt(t);
+	var d=parseInt(t/(60*60*24));
+	var h=parseInt((t-d*60*60*24)/(60*60));
+	var M=parseInt((t-d*(60*60*24)-h*60*60)/60);
+	var s=parseInt(t-d*(60*60*24)-h*60*60-M*60);
+	var str="";
+	if(d>0){str=str+d+"天";}
+	if(h>0){str=str+h+"小时";}
+	if(M>0){str=str+M+"分";}
+	if(s>0){str=str+s+"秒";}
+	document.write(str);
+}
+function selectAll(obj){
+	var $checkboxs=$("#list-table input:checkbox");
+	
+	if(obj.checked===true){
+		
+		$checkboxs.attr("checked",true);
+	}else{
+		
+		$checkboxs.attr("checked",false);
+	}
+}
+function btnDisabled(){
+	var detail=$("#detail").val();
+	if(detail=='1'){
+		var t=false;
+		$("#list-table input:checkbox").each(function(){
+			if(this.checked){
+				$("#btn_excel").val("正在导出Excel...").attr("disabled",true);
+				t=true;		
+				return false;
+			}
+		});
+		
+		if(t){setTimeout('$("#btn_excel").val("导出详细Excel").attr("disabled",false);',5000);}else {alert("请选择您要导出的数据行");}
+		return t;			
+	}else{
+		var t=false;
+		$("#list-table input:checkbox").each(function(){
+			if(this.checked){
+				$("#s").val("正在导出Excel...").attr("disabled",true);
+				t=true;		
+				return false;
+			}
+		});
+		
+		if(t){setTimeout('$("#s").val("导出Excel").attr("disabled",false);',5000);}else {alert("请选择您要导出的数据行");}
+		return t;			
+	}
+}
+
+function showpaydetail(dateStart,dateEnd,name,clientid,subclientid,gameid){
+	asyncbox.open({
+	　　　url : '/index.php/reportnew/paydetail?dateStart='+dateStart+'&dateEnd='+dateEnd+'&clientid='+clientid+'&subclientid='+subclientid+'&gameid='+gameid+'&name='+name+'',
+	　　　width : 450,
+	　　　height : 600,
+		 title : '消费金额明细'
+	});	
+}
+
+</script>
+<link href="/template/default/css/calendar.css" rel="stylesheet" type="text/css" />
+
+<style>
+#list-table td,#list-table2 td{
+	text-align:center;
+}
+
+#period_count{
+	font-weight:bold;
+	line-height:150%;
+	padding-left:5px;
+}
+#tab-list {
+	position:relative;
+	z-index:10;
+}
+#tab-list ul { position:relative; overflow:hidden; position:relative; list-style:none; padding:0px; margin:0px; margin-bottom:-1px; height:30px;}
+#tab-list ul li { float:left; zoom:1; border:1px solid #BBDDE5; margin-right:1px;}
+#tab-list ul li.cur { float:left; border-bottom:1px solid #F4FAFB; background:#F4FAFB;}
+#tab-list ul li a { display:inline-block; zoom:1; _display:inline; height:28px; padding:0 20px; text-decoration:none; color:#335B64; font-weight:bold; line-height:28px;}
+
+.tab-content { background:#F4FAFB; padding-top:10px; border:1px solid #BBDDE5; padding:5px; }
+</style>
+</head>
+
+<body>
+<h1>
+<span class="action-span1">查询统计报表</span><span id="search_id"
+	class="action-span1"> - 
+    <{if $channeltype eq 1}>
+    自主渠道商统计报表
+    <{elseif $channeltype eq 2}>
+    移动渠道商统计报表
+    <{else}>
+    查询统计报表
+    <{/if}>
+    </span>
+<div style="clear: both"></div>
+</h1>
+<div id="tab-list">
+	<ul>
+	    <li <{if $gameid eq 0}>class="cur"<{/if}> ><a href="/index.php/reportnew/index<{$channeltype}>?gameid=0&keyword=<{$keyword}>&dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>" hidefocus="ture">综合统计</a></li>
+        <{foreach item=item key=key from=$games}>
+	    <li <{if $gameid eq $key}>class="cur"<{/if}> ><a href="/index.php/reportnew/index<{$channeltype}>?gameid=<{$key}>&keyword=<{$keyword}>&dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>" hidefocus="ture"><{$item}>统计</a></li>
+        <{/foreach}>
+	</ul>
+</div>
+<div class="tab-content">
+<{if $levels eq "10"}>
+<form name="form1" method="get" action=""><div class="form-div">
+  日期:从
+  <input name="dateStart" type="text" id="dateStart" value="<{$dateStart}>" size="16" maxlength="19" onClick="return showCalendar('dateStart', '%Y-%m-%d', '24', false,'dateStart');" readonly />
+  到
+  <input type="text" name="dateEnd" id="dateEnd" value="<{$dateEnd}>" size="16" maxlength="19" onClick="return showCalendar('dateEnd', '%Y-%m-%d', '24', false,'dateEnd');" readonly />
+  <input type="hidden"  name="selectDate" value="<{$smarty.request.selectDate|default:''}>" id="selectDate" />
+  <input type="submit" name="button" id="button" value="查询">
+  <input type="button" name="button2" id="button2" value="昨天" onClick="location.href='/index.php/reportnew/index/?selectDate=yesterday'">
+  <input type="button" name="button3" id="button3" value="最近7天"  onclick="location.href='/index.php/reportnew/index/?selectDate=hebdomad'">
+  <input type="button" name="button4" id="button4" value="本月"  onclick="location.href='/index.php/reportnew/index/?selectDate=month'">
+  <input type="hidden" name="gameid" value="<{$gameid}>">	
+</div>
+
+<div id="period_count">
+    注册人数总计：<span class="red"><{$period_count['registerusers']|default:0|number_format}></span><br>
+    付费人数总计：<span class="red"><{$period_count['consumeusers']|default:0|number_format}></span><br>
+    消费金额总计：<span class="red"><{$period_count['consumemoney']|default:0|number_format}></span><br>
+</div>
+<div>
+  <table width="100%" border="0">
+    <tr>
+      <td><{$dataPrompt}> </td>
+      <td width="120">
+      
+      <{if !empty($list)}>
+      <select name="pagesize" id="pagesize" onChange="this.form.submit();">
+          <option value="10">每页显示10条</option>
+          <option value="15">每页显示15条</option>
+          <option value="20">每页显示20条</option>
+          <option value="50">每页显示50条</option>
+        </select>
+        <script>document.getElementById("pagesize").value='<{$pagesize}>'</script>
+        <{/if}>
+      </td>
+    </tr>
+  </table>
+  </div>
+</form>
+
+<{if $totalrow eq 0}>
+没有数据
+<{else}>
+<form id="form2" name="form2" method="post" action="/index.php/reportnewDown"  onSubmit="return btnDisabled()">
+<input type="hidden"  name="thedates" value="<{$thedates}>" />
+<input type="hidden"  name="selectDate" value="<{$smarty.request.selectDate|default:''}>" id="selectDate" />
+  <input type="hidden" name="gameid" value="<{$gameid}>">	
+   <div class="list-div" id="listDiv">
+     <div class="list-com-name"><{$agentInfo.name}>报表</div>
+<table width="100%" cellspacing="1" cellpadding="2" id="list-table">
+    <tr>
+      <th bgcolor="#0099CC"></th>
+      <!--<th bgcolor="#0099CC">日期</th>-->
+       <th bgcolor="#0099CC">子渠道号</th>      
+      <th bgcolor="#0099CC">公司名称</th>
+      <th bgcolor="#0099CC">新注册用户数</th>
+      <th bgcolor="#0099CC">消费订单数</th> 
+      <th bgcolor="#0099CC">消费用户数</th>
+      <th bgcolor="#0099CC">消费金额</th>
+      <!--<th bgcolor="#0099CC">分成收益总金额</th>-->
+      
+    </tr>
+    <{foreach item=i from=$list}>
+    <tr>
+      <td bgcolor="#FFFFFF"><input type="checkbox" name="clientids_today[]" value="<{$i['clientids']}>|<{$i['clientid']}>" />
+      </td>
+      <!--<td bgcolor="#FFFFFF"><{$thedates}> </td>-->
+      <td bgcolor="#FFFFFF"><{$i['clientids']}></td>      
+      <td bgcolor="#FFFFFF" style="text-align:center"><a href="/index.php/reportnewcount/index/day/<{$i['clientid']}>/<{$i['clientids']}>?dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>&gameid=<{$gameid}>" target="_blank"><{$i['name']}></a></td>
+      <td bgcolor="#FFFFFF"><{$i['registerusers']}></td>
+      <td bgcolor="#FFFFFF"><{$i['consumeorders']}></td>
+      <td bgcolor="#FFFFFF"><{$i['consumeusers']}></td>
+      <td bgcolor="#FFFFFF"><{$i['consumemoney']}></td>
+      <!--<td bgcolor="#FFFFFF"><{$i['consumemoney']*$i['intoratio']/10}></td>-->
+      
+    </tr>
+    <{/foreach}>
+  </table>
+  </div>
+  <table width="100%" border="0">
+    <tr>
+      <td width="300"><input type="checkbox" name="checkbox2" id="checkbox2" onClick="selectAll(this)"/>
+        全选 <input type="submit" name="button5" id="s" value="导出Excel" /></td>
+      <td><{$pagination}></td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+</form>
+<{/if}>
+<{/if}>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<{if $levels eq "30"}>
+<form name="form1" id="form1" method="get" action=""><div class="form-div">
+  子渠道号/公司
+  <input name="keyword" type="text" id="keyword" value="<{$keyword}>">
+  日期:从
+  <input name="dateStart" type="text" id="dateStart" value="<{$dateStart}>" size="16" maxlength="19" onClick="return showCalendar('dateStart', '%Y-%m-%d', '24', false,'dateStart');" readonly />
+  到
+  <input type="text" name="dateEnd" id="dateEnd" value="<{$dateEnd}>" size="16" maxlength="19" onClick="return showCalendar('dateEnd', '%Y-%m-%d', '24', false,'dateEnd');" readonly />
+  <input type="hidden"  name="selectDate" value="<{$smarty.request.selectDate|default:''}>" id="selectDate" />
+  <input type="submit" name="button" id="button" value="查询">
+  <input type="button" name="button2" id="button2" value="昨天" onClick="location.href='/index.php/reportnew/index/?selectDate=yesterday&keyword='+this.form.keyword.value">
+  <input type="button" name="button3" id="button3" value="最近7天"  onclick="location.href='/index.php/reportnew/index/?selectDate=hebdomad&keyword='+this.form.keyword.value">
+  <input type="button" name="button4" id="button4" value="本月"  onclick="location.href='/index.php/reportnew/index/?selectDate=month&keyword='+this.form.keyword.value">
+  <input type="button" name="" id="find-btn" value="查看图表" >
+  <input type="hidden" name="gameid" value="<{$gameid}>">
+</div>
+  
+
+<div id="period_count">
+    注册人数总计：<span class="red"><{$period_count['registerusers']|default:0|number_format}></span><br>
+    付费人数总计：<span class="red"><{$period_count['consumeusers']|default:0|number_format}></span><br>
+    消费金额总计：<span class="red"><{$period_count['consumemoney']|default:0|number_format}></span><br>
+</div>
+<div>
+  <table width="100%" border="0">
+    <tr>
+      <td><{$dataPrompt}> </td>
+      <td width="120">
+      
+      <{if !empty($list)}>
+      <select name="pagesize" id="pagesize" onChange="this.form.submit();">
+          <option value="10">每页显示10条</option>
+          <option value="15">每页显示15条</option>
+          <option value="20">每页显示20条</option>
+          <option value="50">每页显示50条</option>
+        </select>
+        <script>document.getElementById("pagesize").value='<{$pagesize}>'</script>
+        <{/if}>
+      </td>
+    </tr>
+  </table>
+  </div>
+  <div class="list-div" id="listDiv">
+     <div class="list-com-name"><{$agentInfo.name}>报表</div>
+<table width="100%" cellspacing="1" cellpadding="2" id="list-table2">
+    <tr>
+      <!--<th bgcolor="#0099CC">日期</th>-->
+      <th bgcolor="#0099CC">渠道号</th>
+      <th bgcolor="#0099CC">公司名称</th>
+      <th bgcolor="#0099CC">新注册用户数</th>
+      <th bgcolor="#0099CC">消费订单数</th>
+      <th bgcolor="#0099CC">消费用户数</th>
+      <th bgcolor="#0099CC">消费金额</th>
+      <!--<th bgcolor="#0099CC">分成收益总金额</th>-->
+      
+    </tr>
+    <{foreach item=i from=$lists}>
+    <tr>
+      <!--<td bgcolor="#FFFFFF"><{$thedates}> </td>-->
+      <td bgcolor="#FFFFFF"><{$i['clientid']}></td>
+      <td bgcolor="#FFFFFF" style="text-align:center"><a href="/index.php/reportnewcount/index/day/<{$i['clientid']}>/<{$i['clientids']}>?dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>&gameid=<{$gameid}>" target="_blank"><{$i['name']}></a></td>
+      <td bgcolor="#FFFFFF"><{$i['registerusers']}></td>
+      <td bgcolor="#FFFFFF"><{$i['consumeorders']}></td>
+      <td bgcolor="#FFFFFF"><{$i['consumeusers']}></td>
+      <td bgcolor="#FFFFFF"><a href="javascript:;" onClick="showpaydetail('<{$dateStart}>','<{$dateEnd}>','<{$i['name']}>',<{$i['clientid']}>,'',<{$gameid}>);"><{$i['consumemoney']}></a></td>
+      <!--<td bgcolor="#FFFFFF"><{$i['consumemoney']*$i['intoratio']/10}></td>-->
+      
+    </tr>
+    <{/foreach}>
+  </table>
+  </div>
+</form>
+<br>
+<{if $totalrow eq 0 && $totalrows|default:1 eq 0}>
+子渠道没有数据
+<{else}>
+<form id="form2" name="form2" method="post" action="/index.php/reportnewDown" onSubmit="return btnDisabled()">
+<input type="hidden"  name="thedates" value="<{$thedates}>" />
+<input type="hidden"  name="selectDate" value="<{$smarty.request.selectDate|default:''}>" id="selectDate" />
+  <input type="hidden" name="gameid" value="<{$gameid}>">	
+   <div class="list-div" id="listDiv">
+     <div class="list-com-name">子渠道列表</div>
+<table width="100%" cellspacing="1" cellpadding="2" id="list-table">
+    <tr>
+      <th bgcolor="#0099CC">&nbsp;</th>
+      <!--<th bgcolor="#0099CC">日期</th-->
+      <th bgcolor="#0099CC">子渠道号</th>
+      <th bgcolor="#0099CC">公司名称</th>
+      <th bgcolor="#0099CC">新注册用户数</th>
+      <th bgcolor="#0099CC">消费订单数</th>
+      <th bgcolor="#0099CC">消费用户数</th>
+      <th bgcolor="#0099CC">消费金额</th>
+      <!--<th bgcolor="#0099CC">分成收益总金额</th>-->
+      
+    </tr>
+    <{if $smarty.get.page|default:1 eq 1}>
+    <{foreach item=i from=$list}>
+    <tr>
+      <td bgcolor="#FFFFFF"><input type="checkbox" name="clientids_today[]" value="0|<{$i['clientid']}>|<{$i['registerusers']}>|<{$i['consumeorders']}>|<{$i['consumeusers']}>|<{$i['consumemoney']}>|<{$i['activeusermonth']}>|<{$i['avgplaygamemonth']}>" />
+      </td>
+      <td bgcolor="#FFFFFF"><{$i['clientids']}></td>
+      <td bgcolor="#FFFFFF" style="text-align:center"><a href="/index.php/reportnewcount/index/day/<{$i['clientid']}>/<{$i['clientids']}>?dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>&gameid=<{$gameid}>" target="_blank"><{$i['name']}></a></td>
+      <td bgcolor="#FFFFFF"><{$i['registerusers']}></td>
+      <td bgcolor="#FFFFFF"><{$i['consumeorders']}></td>
+      <td bgcolor="#FFFFFF"><{$i['consumeusers']}></td>
+      <td bgcolor="#FFFFFF"><a href="javascript:;" onClick="showpaydetail('<{$dateStart}>','<{$dateEnd}>','<{$i['name']}>',<{$i['clientid']}>,<{$i['clientids']}>,<{$gameid}>);"><{$i['consumemoney']}></a></td>
+      <!--<td bgcolor="#FFFFFF"><{$i['consumemoney']*$i['intoratio']/10}></td>-->
+      
+    </tr>
+    <{/foreach}>
+    <{/if}>
+    <{foreach item=i from=$sublist}>
+    <tr>
+      <td bgcolor="#FFFFFF"><input type="checkbox" name="clientids_today[]" value="<{$i['clientids']}>|<{$i['clientid']}>" />
+      </td>
+      <!--<td bgcolor="#FFFFFF"><{$thedates}></td>-->
+      <td bgcolor="#FFFFFF"><{$i['clientids']}></td>
+      <td bgcolor="#FFFFFF" style="text-align:center"><a href="/index.php/reportnewcount/index/day/<{$i['clientid']}>/<{$i['clientids']}>?dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>&gameid=<{$gameid}>" target="_blank"><{$i['name']}></a></td>
+      <td bgcolor="#FFFFFF"><{$i['registerusers']}></td>
+      <td bgcolor="#FFFFFF"><{$i['consumeorders']}></td>
+      <td bgcolor="#FFFFFF"><{$i['consumeusers']}></td>
+      <td bgcolor="#FFFFFF"><a href="javascript:;" onClick="showpaydetail('<{$dateStart}>','<{$dateEnd}>','<{$i['name']}>',<{$i['clientid']}>,<{$i['clientids']}>,<{$gameid}>);"><{$i['consumemoney']}></a></td>
+      <!--<td bgcolor="#FFFFFF"><{$i['consumemoney']*$i['intoratio']/10}></td>-->
+     
+    </tr>
+    <{/foreach}>
+  </table>
+</div>
+  <table width="100%" border="0">
+    <tr>
+      <td width="300"><input type="checkbox" name="checkbox2" id="checkbox2" onClick="selectAll(this)"/>
+        全选 <input type="submit" name="button5" id="s" value="导出Excel" /></td>
+      <td><{$pagination}></td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+</form>
+<{/if}>
+<{/if}>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ <{if $levels eq "200"}>
+<form name="form1" id="form1" method="get" action=""><div class="form-div">
+<{if $table == 2 || $table == 3}>
+二级渠道：<select name="companys" id="companys">
+			<option>请选择</option>
+			<{foreach from=$companys key=ckey item=citem}>
+				<OPTGROUP LABEL="<{$ckey}>">
+				<{foreach from=$citem key=sckey item=scitem}>
+					<option><{$scitem}></option>;
+				<{/foreach}>
+			<{/foreach}>
+		</select>
+三级渠道：<span id="subcompanys"></span>
+<{/if}>
+  渠道号/公司
+  <input name="keyword" type="text" id="keyword" value="<{$keyword}>">
+  日期:从
+  <input name="dateStart" type="text" id="dateStart" value="<{$dateStart}>" size="16" maxlength="19" onClick="return showCalendar('dateStart', '%Y-%m-%d', '24', false,'dateStart');" readonly />
+  到
+  <input type="text" name="dateEnd" id="dateEnd" value="<{$dateEnd}>" size="16" maxlength="19" onClick="return showCalendar('dateEnd', '%Y-%m-%d', '24', false,'dateEnd');" readonly />
+  <input type="hidden"  name="selectDate" value="<{$smarty.request.selectDate|default:''}>" id="selectDate" />
+  <input type="submit" name="button" id="button" value="查询">
+  <input type="button" name="button2" id="button2" value="昨天" onClick="location.href='/index.php/reportnew/index<{$channeltype}>/?selectDate=yesterday&keyword='+this.form.keyword.value">
+  <input type="button" name="button3" id="button3" value="最近7天"  onclick="location.href='/index.php/reportnew/index<{$channeltype}>/?selectDate=hebdomad&keyword='+this.form.keyword.value">
+  <input type="button" name="button4" id="button4" value="本月"  onclick="location.href='/index.php/reportnew/index<{$channeltype}>/?selectDate=month&keyword='+this.form.keyword.value">
+  <input type="button" name="" id="find-btn" value="<{$show_graph}>" >
+  <input type="hidden" name="gameid" value="<{$gameid}>">	
+</div>
+
+<div id="period_count">
+    注册人数总计：<span class="red"><{$period_count['registerusers']|default:0|number_format}></span><br>
+    付费人数总计：<span class="red"><{$period_count['consumeusers']|default:0|number_format}></span><br>
+    消费金额总计：<span class="red"><{$period_count['consumemoney']|default:0|number_format}></span><br>
+</div>
+<div>
+  <table width="100%" border="0">
+    <tr>
+      <td><{$dataPrompt}> </td>
+      <td width="120">
+      
+      <{if !empty($list)}>
+      <select name="pagesize" id="pagesize" onChange="this.form.submit();">
+          <option value="10">每页显示10条</option>
+          <option value="15">每页显示15条</option>
+          <option value="20">每页显示20条</option>
+          <option value="50">每页显示50条</option>
+        </select>
+        <script>document.getElementById("pagesize").value='<{$pagesize}>'</script>
+        <{/if}>
+      </td>
+    </tr>
+  </table>
+  </div>
+</form>
+
+<{if $totalrow eq 0}>
+没有数据
+<{else}>
+<form id="form2" name="form2" method="post" action="/index.php/reportnewDown"  onSubmit="return btnDisabled()">
+<input type="hidden"  name="thedates" value="<{$thedates}>" />
+<input type="hidden"  name="selectDate" value="<{$smarty.request.selectDate|default:''}>" id="selectDate" />
+  <input type="hidden" name="gameid" value="<{$gameid}>">	
+  <input type="hidden" name="detail" id="detail" value="">	
+  <div class="list-div" id="listDiv">
+<table width="100%" cellspacing="1" cellpadding="2" id="list-table">
+    <tr>
+      <th bgcolor="#0099CC"></th>
+      <!--<th bgcolor="#0099CC">日期</th>-->
+      <!--<th bgcolor="#0099CC">子渠道号</th>-->
+      <th bgcolor="#0099CC">渠道号</th>
+      <th bgcolor="#0099CC">公司名称</th>
+      <th bgcolor="#0099CC">新注册用户数</th>
+      <th bgcolor="#0099CC">消费订单数</th>
+      <th bgcolor="#0099CC">消费用户数</th>
+      <th bgcolor="#0099CC">消费金额</th>
+      <!--<th bgcolor="#0099CC">分成收益总金额</th>-->
+      <{if $smarty.request.selectDate|default:'' eq 'month'}>
+      <th bgcolor="#0099CC">本月活跃登录用户数</th>
+      <th bgcolor="#0099CC">本月用户平均游戏时长</th>
+      <{/if}>
+      <th bgcolor="#0099CC">操作</th>
+    </tr>
+    <{foreach item=i from=$list}>
+    <tr>
+      <td bgcolor="#FFFFFF"><label>
+        <input type="checkbox" name="clientids_today[]" value="<{$i['clientids']}>|<{$i['clientid']}>" />
+        </label></td>
+      <!--<td bgcolor="#FFFFFF"><{$thedates}> </td>-->
+      <!--<td bgcolor="#FFFFFF"><{$i['clientids']}></td>-->
+      <td bgcolor="#FFFFFF"><{$i['clientid']}></td>
+      <td bgcolor="#FFFFFF" style="text-align:center"><a href="/index.php/reportnewcount/index/day/<{$i['clientid']}>/<{$i['clientids']}>?dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>&gameid=<{$gameid}>" target="_blank"><{$i['name']}></a></td>
+      <td bgcolor="#FFFFFF"><{$i['registerusers']}></td>
+      <td bgcolor="#FFFFFF"><{$i['consumeorders']}></td>
+      <td bgcolor="#FFFFFF"><{$i['consumeusers']}></td>
+      <td bgcolor="#FFFFFF"><a href="javascript:;" onClick="showpaydetail('<{$dateStart}>','<{$dateEnd}>','<{$i['name']}>',<{$i['clientid']}>,'',<{$gameid}>);"><{$i['consumemoney']}></a></td>
+      <!--<td bgcolor="#FFFFFF"><{$i['consumemoney']*$i['intoratio']/10}></td>-->
+      <{if $smarty.request.selectDate|default:'' eq 'month'}>
+      <td bgcolor="#FFFFFF"><{$i['activeusermonth']}></td>
+      <td bgcolor="#FFFFFF"><script>formatdate(<{$i['avgplaygamemonth']}>);</script></td>
+      <{/if}>
+      <td bgcolor="#FFFFFF">
+      <{if $i['clientids'] eq 0}>
+      <a href="/index.php/reportnew/subShow?subclientid=<{$i['clientid']}>&selectDate=<{$smarty.request.selectDate|default:''}>&dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>&gameid=<{$gameid}>">查看子渠道</a>
+      <{/if}>
+      </td>
+    </tr>
+    <{/foreach}>
+  </table>
+</div>
+  <table width="100%" border="0">
+    <tr>
+      <td width="300" nowrap><input type="checkbox" name="checkbox2" id="checkbox2"  onclick="selectAll(this)"/>
+        全选 <input type="button" name="button5" id="s" value="导出Excel" /> <input type="button" name="btn_excel" id="btn_excel" value="导出详细Excel" /></td>
+      <td><{$pagination}></td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+</form>
+<{/if}>
+<{/if}>
+<br><br>
+</div>
+<style type="text/css">
+tr.over td {
+	background: #bcd4ec; /*这个将是鼠标高亮行的背景色*/
+	cursor: pointer;
+}
+</style>
+<script language="javascript" type="text/javascript">
+$(document).ready(function(){
+	 $("#list-table tr").mouseover(function(){$(this).addClass("over");}).mouseout(function(){$(this).removeClass("over");});
+	 $("#list-table2 tr").mouseover(function(){$(this).addClass("over");}).mouseout(function(){$(this).removeClass("over");})
+	 $("#companys").change(function (){
+		$("#subcompanys").load('/index.php/reportnew/get_sub_company/'+(this.value?this.value:-1)+'/'+Math.random())
+	 });
+});
+
+
+</script>
+</body>
+</html>

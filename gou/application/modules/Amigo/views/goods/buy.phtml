@@ -1,0 +1,76 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+	<div class="module">
+<?php if($hasheader){?>
+		<header id="iHeader" class="hd">
+			<div class="top-wrap">
+				<div class="title">
+					<a href="<?php echo $webroot;?>/amigo/goods/detail?id=<?php echo $info['id'];?>" class="back"></a>
+					<h1>创建订单</h1>
+					<span class="voice"></span>
+				</div>
+			</div>
+		</header>
+<?php }?>
+		<section id="iScroll">
+			<div class="goods-inf">
+				<figure>
+					<div class="pic"><img src="<?php echo $attachPath.$info['img'];?>" alt=""></div>
+					<div class="desc">
+						<dl>
+							<dt><?php echo html_entity_decode($info['title']);?></dt>
+							<dd>单价：<em class="f-red">￥<?php echo $info['price'];?></em></dd>
+							<dd>数量：<?php echo $number;?></dd>
+							<dd>快递：￥0.0</dd>
+						</dl>
+					</div>
+				</figure>
+				<div class="buy-price">
+					<span>应支付：<em class="f-red">￥<?php echo Common::money($info['price'] * $number);?></em></span>
+				</div>
+			</div>
+
+			<div class="input-inf">
+				<form action="<?php echo $webroot;?>/amigo/order/create">
+					<div class="item">
+						<h3>请填写收货信息</h3>
+						<fieldset>
+							<ul>
+								<li><label for="">收<b></b>货<b></b>人：</label><input type="text" name="buyer_name" data-error="请填写收货人姓名"></li>
+								<li><label for="">手<i></i>机：</label><input type="text" name="mobile" data-error="请填写收货人手机号码"></li>
+								<li class="J_areaWrap">
+									<label for="">收货地区：</label><select name="province" id="J_province" data-error="收货地区未填写完整"></select>
+									<select name="city" id="J_city" data-error="收货地区未填写完整"></select>
+									<select name="country" id="J_country" data-error="收货地区未填写完整"></select>
+								</li>
+								<li><label for="">街道地址：</label><input type="text" name="detail_address"  data-error="请填写收货人街道地址"></li>
+								<li><label for="">邮编号码：</label><input type="text" name="postcode" data-error="请填写邮编"></li>
+								<li><label for="">留<i></i>言：</label><input type="text" name="gbook"></li>
+							</ul>
+						</fieldset>
+					</div>
+					<div class="item">
+						<h3>支付方式</h3>
+						<fieldset>
+							<ul class="pay-ways">
+								<li>
+									<label for="">在线支付</label>
+									<span><input type="radio" name="pay_type" value="1" checked="true"></span>
+								</li>
+								<?php if($info['iscash'] == 1){?>
+								<li>
+									<label for="">货到付款</label>
+									<span><input type="radio" name="pay_type" value="2"></span>
+								</li>
+								<?php }?>
+							</ul>
+						</fieldset>
+					</div>
+					<div class="web-btn J_formSubmit"><button type="button">下一步</button></div>
+				</form>
+			</div>
+		</section>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li class="<?php echo ($column_version == '1.5.2')?current:''; ?>" ><a href="<?php echo $listUrl.'/?column_version=1.5.2';?>">1.5.2</a></li>
+		<li class="<?php echo ($column_version == '1.5.3')?current:''; ?>" ><a href="<?php echo $listUrl.'/?column_version=1.5.3';?>">1.5.3-1.5.7</a></li>
+		<li class="<?php echo ($column_version == '1.5.8')?current:''; ?>" ><a href="<?php echo $listUrl.'/?column_version=1.5.8';?>">1.5.8</a></li>
+		<li class="<?php echo ($column_version == '1.5.9')?current:''; ?>"><a href="<?php echo $listUrl.'/?column_version=1.5.9';?>">1.5.9及以上</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="column_version"  type="hidden" value="<?php echo $column_version;?>" />
+<div class="table_full">
+	<table width="100%">
+	    <tr>
+		   <th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			    <option  value="0">全部</option>
+			    <option <?php if($search['status'] == 2) echo 'selected';?> value="2">开启</option>
+				<option <?php if($search['status'] == 1) echo 'selected';?> value="1">关闭</option>
+			</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">关键字</th>
+			<td class="td"><input type="text" class="input" name="column_name" value="<?php echo $search['column_name'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>"
+	method="post">
+	<input name="token" type="hidden" value="<?php echo $token;?>" /> 
+	<input name="action" id="action" type="hidden" value="" />
+	<div class="h_a">
+		<span class="btn2"><span>
+		<a href="<?php echo $addColumnUrl.'/?column_version='.$column_version;?>" style="text-decoration:none;color:#ffffff;">新增栏目配置</a></span></span>
+					<span>&nbsp;&nbsp;&nbsp;&nbsp;共<?php echo $total;?>条结果</span>
+	</div>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="50">ID</td>
+				<td width="100">名称</td>
+				<td>栏目数量</td>
+				<td>频道数量</td>
+				<td>维护人</td>
+				<td>生效日期</td>
+				<td>最后编辑时间</td>
+				<td>状态</td>
+				<td>操作</td>
+			</tr>
+		<?php foreach ($info as $value) {?>
+		<tr class="ct">
+		        <td><?php echo $value['id'];?></td>
+				<td><?php echo $value['column_name'];?></td>
+				<td><?php echo $value['column_num'];?></td>
+				<td><?php echo $value['channel_num'];?></td>
+				<td><?php echo $value['admin_name'];?></td>
+				<td><?php echo date('Y-m-d', $value['start_time']);?></td>
+				<td><?php echo date('Y-m-d H:i:s', $value['update_time']);?></td>
+				<td><?php echo ($value['status'] == 1) ? '开启' : '<font style="color:red">关闭</font>';?></td>
+				<td>
+				<?php if($value['is_deafault']){?>
+				<a href="<?php echo $editColumnUrl.'/?log_id='.$value['id'].'&column_version='.$value['column_version'];?>" class="mr10">编辑</a> 
+				<?php }else{?>
+				<a href="<?php echo $viewColumnUrl.'/?log_id='.$value['id'].'&column_version='.$value['column_version']; ?>" class="mr10">查看</a> 
+				<?php }?>
+				</td>
+			</tr>
+		<?php }?>
+	</table>
+	</div>
+	<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script
+	src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script>
+$(document).ready(function(){
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Client_Columnnew/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

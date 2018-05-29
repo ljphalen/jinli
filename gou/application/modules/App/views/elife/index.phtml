@@ -1,0 +1,32 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body>
+	<header id="iHeader" class="hd">
+		<div class="title-back">
+			<h1>ELIFE专区</h1>
+			<div class="back"><a href="<?php echo $webroot;?>"></a></div>
+			<div class="refresh J_refresh"><span></span></div>
+		</div>
+		<nav class="scroll-nav">
+			<div class="wrap">
+				<ul>
+					<li><?php if(!$cid) {?><span>全部</span><?php } else {?><a href="<?php echo $webroot;?>/elife">全部</a><?php }?></li>
+<?php foreach ($categorys as $key=>$value) {?>
+					<li><?php if($cid == $value['id']) {?><span><?php echo $value['title'];?></span><?php }else{?><a href="<?php echo $webroot;?>/elife?cid=<?php echo $value['id'];?>"><?php echo $value['title'];?></a><?php }?></li>
+<?php }?>
+				</ul>
+			</div>
+		</nav>
+	</header>
+	
+	<div id="iScroll">
+		<article class="ac water-fall J_waterFall" data-ajaxUrl="<?php echo $webroot;?>/api/elife/goods?cid=<?php echo $cid;?>" data-hasnext="true">
+			<ul class="">
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</article>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

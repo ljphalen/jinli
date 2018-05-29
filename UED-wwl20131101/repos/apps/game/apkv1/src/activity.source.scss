@@ -1,0 +1,549 @@
+/*
+ * 活动详情、活动分享、免流量活动说明及其它单页面
+ * User: snowdrop
+ * Date: 2014-10-27
+ * Contact: dongandhuang@gmail.com
+ */
+@charset "utf-8";
+@import "compass/css3";
+@import "_reset";
+@import "_common.scss";
+$px:0.05rem;
+::-webkit-scrollbar{width:0px; height:0px;}
+body{font-size: .6rem;background: #f2f2f2;color:#838383;}
+
+//免流量活动说明
+.freeflow-wrapper{
+	margin:5px 6px;background-color: #f9f9f9;
+	padding:15px 14px;
+	@include border-radius(4px);
+}
+//免流量一键反馈
+.feedback-section{
+	position: fixed;
+	background: #ffffff;
+	padding:10px 0 12px;
+	width:100%;z-index: 9999;
+	bottom: 0;
+	left:0;
+	.tips{
+		text-align: center;
+		font-size: 13px;
+		color:#a9a9a9;
+		margin-bottom: 9px;
+	}
+	.feedback{
+		padding:0 20px;
+	}
+}
+
+//活动介绍
+.activity-wrapper{
+	margin:5px 6px;background-color: #f9f9f9;
+	@include border-radius(4px);
+	.title-container{
+		border-bottom: 1px solid #ff7112;
+		height: 40px;line-height: 40px;
+		h1.title{
+			color:#ff7112;font-size: .8rem;display: inline-block;
+			padding-left:10px; font-weight: bold;
+		}
+		.showContainer{
+			display: inline-block;font-size: 14px;
+			float: right;margin-right: 10px;
+		}	
+	}
+	.ac-content{
+		padding:15px 14px;overflow: hidden;line-height: .8rem;
+	}
+}
+.activity-anno-wrapper{
+	margin:0px 6px 5px 6px;
+	@include border-radius(4px);
+	.placeholder{height: 5px;width:100%;background-color: #f1f0f0;}
+	.title-container{
+		line-height: 40px;
+		position: fixed;background: #f1f0f0;
+		top:0;z-index: 999;left: 6px;right: 6px;
+		h1.title{
+			color:#ff7112;font-size: .8rem;display: inline-block;
+			padding-left:10px; font-weight: bold;
+		}
+		.showContainer{
+			display: inline-block;font-size: 14px;
+			float: right;margin-right: 10px;
+		}	
+	}
+	.title-content{
+		border-bottom: 1px solid #ff7112;
+		background-color: #f9f9f9;
+		border-top-left-radius: 4px;-webkit-border-top-left-radius:4px;
+		border-top-right-radius: 4px;-webkit-border-top-right-radius:4px;
+	}
+	.ac-content{
+		padding:15px 14px;overflow: hidden;background-color: #f9f9f9;
+		padding-top: 55px;
+	}
+}
+.J_ac_anno{
+	.ac-content{height:5.6rem;line-height: .8rem}
+}
+.h-auto{height: auto!important;}
+.ac-fixed{
+	.title-container{
+		display: none;
+	}
+}
+
+
+//活动页面联系方式
+.contactInfo-wrapper{
+	margin:8px 7px 8px;
+	background-color: #f9f9f9;
+	padding:.2rem 12px ; 
+	color:#8b8b8b;
+	p{
+		font-size: 13px;
+		line-height: 1rem;
+	}
+	
+	i{
+		width:15px;height: 15px;
+		display: inline-block;
+		margin-right: 10px;
+		vertical-align: sub;
+	}
+	i.icon-phone{
+		background: inline-image("../img/ac/icon-phone.png");
+		background-size: 100% 100%;
+	}
+	i.icon-qq{
+		background: inline-image("../img/ac/icon-qq.png");
+		background-size: 100% 100%;
+	}
+	i.icon-group{
+		background: inline-image("../img/ac/icon-group.png");
+		background-size: 100% 100%;
+	}
+}
+
+//按钮
+//$w,$h,$fontsize,$color,$bgColor,$radius,$activeColor
+.btn-orange{
+	@include btn(100%,2rem,.75rem,#fff,#fc9c2b,4px,#f49729);
+	padding:0;
+	border:0;
+}
+.btn-disabled{
+	background:#c2c2c2!important;
+	&:hover{background:#c2c2c2!important};
+}
+.icon-arrow-down,.icon-arrow-up{
+	background: inline-image("../img/ac/icon-arrow-down.png");
+	width:16px;height: 16px;display: inline-block;
+	background-size: 100% 100%;vertical-align: sub;margin-left: 4px;
+}
+.icon-arrow-up{@include transform(rotate(180deg));}
+
+//活动对应游戏下载
+.download-wrapper{
+	margin:6px 7px 0;
+	padding:8px 12px; 
+	background: #f9f9f9;
+	@include border-radius(4px);
+	a{display: -webkit-box;position: relative;}
+	img{
+		width:58px;height: 58px;display: block;
+	}
+	.text{
+		display: block;
+		margin-left:6px; padding-top: 14px;
+		color:#9c9c9c;font-size: 11px;
+		p+p{margin-top: 6px;}
+	}
+	.btn-green{
+		position: absolute;
+		right:0;top:20%;
+		@include btn(4.2rem,1.6rem,.6rem,#fff,#85be3b,3px,#85be3b);
+	}
+	.icon-download-gray{
+		display: inline-block;width:16px;height: 16px;
+		background: inline-image("../img/ac/icon-download-gray.png") ;
+		background-size: 100% 100%;vertical-align: sub;margin-right: 4px;
+	}
+}
+
+//游戏大厅对应下载
+.gamehall-download-wrapper{
+	position: fixed;bottom: 0;
+	width: 100%;
+	background: inline-image("../img/ac/gamehall-bg.jpg");
+	background-size: 100% 72px;
+	height: 72px;
+	.content{
+		display: -webkit-box;
+		position: relative;
+		.icon-close{
+			position: absolute;
+			right: 6px;top:5px;
+			display: inline-block;
+			width: 14px;height: 14px;
+			background: inline-image("../img/ac/icon-close.png");
+			background-size: 100% 100%;
+		}
+		.btn-wrapper{
+			position: absolute;right:32px;top: 8px;
+			height: 59px;background-color: #d15239;
+			@include border-radius(3px);width: 90px;
+		}
+		.btn-red{
+			display: block;
+			width: 90px;height: 56px;font-size: 13px;
+			color:#fff;background-color: #f9735b;
+			@include border-radius(3px);text-align: center;
+			&:active,&:hover{background-color: #ec6d56;}
+		}
+		.icon-download-red{
+			display: inline-block;width:24px;height: 24px;margin-top: 8px;
+			background: inline-image("../img/ac/icon-download-red.png") ;
+			background-size: 100% 100%;margin-bottom: 3px;
+		}
+	}
+}
+
+//A币介绍、下载送A券活动说明、福利任务说明
+.coin-content{padding:15px 18px;font-size: .6rem;line-height: .8rem;color:#525252;}
+
+//意见反馈-常见问题说明
+body#FAQ-page{background: #f1eff0;color:#969696;}
+.FAQ-content{padding:10px 18px;font-size: .6rem;line-height: .8rem;}
+
+//我的A券
+.coinInfo-container{
+	margin:6px 8px 6px 8px;background:#fff;
+	position: relative;overflow: hidden;height: 116px;
+	@include border-radius(3px );
+	@include box-shadow(0 0 1px 0 #bebebe);
+	.toLeft{
+		float: left;margin-left:8px;color:#777;font-size: 14px;
+		.total{
+			margin-top: 46px;margin-bottom:46px;
+			.mount{color:#ff6b1a;font-size: 24px;display: inline-block;margin-right: 2px;}
+		}
+		/* .able{
+			font-size: 13px;color:#777;
+			.mount{
+				color:#85be3b;display: inline-block;margin-right: 2px;
+			}
+		} */
+		
+	}
+	.toRright{
+		float: right;margin-right: 8px;width:110px;margin-top: 35px;
+		position: absolute;right:8px;
+		.btn-orange{
+			@include border-radius(1px);
+			height: 36px;line-height:36px;
+			font-size: 16px;
+			border:0px;
+			padding:1px 0;
+		}
+		.btn-link{
+			color:#568fe4;text-decoration: underline;display: inline-block;font-size: 11px;
+			margin-top: 10px;width:100%;text-align: right;
+		}
+	}
+}
+.coinList-container{
+	margin:0 8px 0 10px;
+	li{
+		background: #fff;@include border-radius(3px );position: relative;margin-bottom: 6px;
+		@include box-shadow(0 0 1px 0 #bebebe);height: 60px;
+		.toLeft{
+			float: left;color:#525252;width:115px;height: 62px;color:#bb8068;
+			background:inline-image("../img/ac/able-bg.png");background-size:100% 100%;
+			position: absolute;left:-2px;top:-1px;
+			.mount{
+				text-align: left;display: block;
+				font-size: 20px;font-weight:bold;margin:8px auto 12px 12px;
+			}
+			.status{
+				display:block;margin-left: 12px;font-size:12px;font-weight:bold;
+			}
+		}
+		.toRright{
+			// float: right;margin-right:9px;margin-bottom:6px;
+			position: absolute;right: 10px;bottom: 5px;min-height: 60px;width: 100%;
+			.origion,.riqi{display: block;text-align: right;font-size: 12px;color:#8f8f8f;letter-spacing:1px;position: absolute;}
+			.riqi{margin-top: 7px;font-size:10px;color:#aaa;position: absolute;bottom:0;right:0;}
+			.origion{
+				  word-break: break-all;
+				  width: 9rem;
+				  position: absolute;
+				  right:0;bottom:18px;
+			}
+		}
+	}
+	li.disable{
+		.toLeft{
+			background:inline-image("../img/ac/disable-bg.png");background-size:100% 100%;color:#fff;
+		}
+	}
+}
+
+
+
+//适配部分分辨率下的不兼容问题
+@media screen and (-webkit-max-device-pixel-ratio:1.5){
+	.download-wrapper{
+		.text{font-size: 9px;}
+	}
+	body#freeflow-page{
+		padding-bottom: 88px;
+		.freeflow-wrapper{
+			min-height: 230px;
+		}
+	}
+}
+@media screen and (-webkit-min-device-pixel-ratio:1.5){
+	body#freeflow-page{
+		padding-bottom: 92px;
+		.freeflow-wrapper{
+			min-height: 380px;
+		}
+	}
+}
+
+
+//连续登录-登录进度
+.login-progress{
+	margin:6px 9px;
+	@include border-radius(4px);
+	background:#fff;
+	img{width:100%;height:90px;}
+	.progress-container{
+		padding:12px 0;color:#737373;
+		h1{
+			padding:14px 10px 0 10px;color:#525252;font-size:14px;
+			em{color:#fe6c19;padding-left:3px;}
+		}
+	}
+	.point-lists{
+		// overflow: hidden;
+		margin:0 12px;
+		li{float:left;width:22%;margin-right:4%;margin-top:14px;}
+		li:nth-child(4n+4){margin-right:0;}
+	}
+	div.list{
+		width:100%;position: relative;
+		.points{
+			display: block;height:34px;line-height:34px;font-size:12px;
+			text-align: center;@include box-shadow(0 0 1px #bebebe);@include border-radius(3px);
+		}
+		.date{
+			display: block;text-align:center;margin-top:4px;font-size:11px;
+		}
+		.festival{color:#f3413f;}
+		.circle{
+			position: absolute;display:block;
+			color:#fff;background:#f14141;width: 20px;
+			height: 20px;
+			top: -8px;
+			right: -8px;
+			line-height: 20px;
+			text-align: center;
+			border-radius: 18px;
+		}
+	}
+	li.done{
+		.points{background:#85be3b;color:#fff;}
+	}
+}
+
+//连续登录-积分获得情况
+.login-points{
+	margin:6px 9px;padding:12px 15px;
+	@include border-radius(4px);
+	background:#fff;
+	span{
+		display: block;color:#8b8b8b;font-size:13px;
+	}
+	em{color:#fe6b1b;font-weight:bold;padding:0 3px;}
+	span:first-child{
+		margin-bottom: 9px;
+	}
+}
+
+//连续登录-活动规则说明
+.login-rules{
+	margin:6px 9px;padding:12px 15px;
+	@include border-radius(4px);
+	background:#fff;
+	h1{
+		color:#fd7112;font-weight:bold;font-size:14px;margin-bottom:8px;
+	}
+	.login-rule-container{
+		color:#8b8b8b;line-height:1.4;
+	}
+}
+
+
+
+//积分商城-兑换活动-完-大广告位
+.banner-container{
+	margin:6px 9px;background:#fff;@include border-radius(4px);color:#8c8c8c;
+	padding:3px;overflow:hidden;position: relative;font-size:13px;
+	img{height:128px;}
+	.events-status{
+		float:right;font-weight:bold;
+		margin:8px 33px 8px auto;
+		i{margin-right:7px;}
+	}
+	.status-over{color:#d1d1d1;}
+	.status-ongoing{
+		color:#fd9c2b;top:130px;margin-right:0px;
+		position: absolute;right:9px;
+	}
+	.num-left{
+		display: block;margin:12px 0 4px 5px;
+	}
+	.entity-left{margin-bottom:8px;}
+	.desc{display:block;margin-left:5px;margin-bottom:6px;}
+}
+//积分商城-兑换活动-完-兑换玩家信息
+.player-container{
+	margin:6px 9px;background:#fff;@include border-radius(4px);
+	padding:12px 6px 4px 8px;
+	h1{
+		color:#a8a8a8;font-size:14px;margin-bottom:10px;
+	}
+	em{color:#fb9e27;font-weight:bold;}
+	li{
+		color:#525252;font-size:14px;height:40px;line-height:40px;
+	}
+}
+
+//积分商城-兑换A券-操作信息栏
+.operation-container{
+	margin:6px 9px;background:#fff;@include border-radius(4px);
+	padding:12px 6px; font-size:14px;
+	.total-points,.consume-points{
+		color:#a7a7a7;display:block;margin-bottom:8px;
+		em{color:#fc9c2b;font-weight:bold;}
+	}
+	.consume-points{margin-bottom:0px;}
+	//兑换数量或收货地址栏
+	.exchange-btn-container,.addressinfo-container{
+		padding-top:12px;color:#808080;font-size:15px;margin-top:8px;
+		.btn-input{
+			color:#fc9c2b;font-weight:bold;
+			width:120px;padding:4px;display:inline-block;
+			margin:0 5px; @include box-shadow(0 0 1px 0 #ababab);
+		}
+	}
+	.addressinfo-container{
+		.address-tips{margin-bottom:10px;display:block;color:#808080;}
+		.ad-info{
+			em{display:inline-block;width:72px;text-align:left;}
+			margin-bottom:5px;display:-webkit-box;-webkit-box-align:center;
+		}
+		.btn-input{
+			font-weight: normal;-webkit-box-flex:1;width:100%;display:block;
+			padding:6px 8px;color:#525252;@include box-shadow(0 0 1px 0 #cbcbcb);
+			
+		}
+		.btn-textarea{
+			height: auto;resize:none;
+		}
+	}
+}
+
+//积分商城-兑换-提交信息
+.btn-container{
+	margin:6px 9px;
+	.btn-orange{
+		@include border-radius(3px);
+	}
+}
+.border-1px{
+	@include box-shadow(0 0 1px 0 #bebebe);
+}
+.icon-clock{
+	width:18px;height:18px;
+	display:inline-block;background:inline-image("../img/ac/icon-clock.png");
+	background-size:100% 100%;vertical-align:sub;
+}
+
+.icon-loading{
+	background:inline-image("../img/ac/loading.gif");display: inline-block;
+	width:20px;height:20px;background-size:100% 100%;vertical-align:sub;
+	margin-right:15px;
+}
+
+
+//积分兑换 -弹出框
+.dialog{
+	position: fixed;top:0;width:100%;height:100%;
+	background:rgba(0,0,0,.5);z-index:999;
+	
+}
+.loading-container{
+	left:3px;right:3px;position: absolute;text-align:center;
+	background:#f3f3f3;padding:30px 0;@include border-radius(3px);
+	color:#525252;font-size:13px;z-index:9999;
+}
+
+//1.5.5之后去掉阴影
+.noShadow{
+	//我的A券页面
+	.coinInfo-container,#coinList li{
+		@include box-shadow(0 0 1px 0 #bebebe);
+	}
+}
+
+//积分商城-首页-个人信息
+.myinfo-container{
+	background:#fff;position: relative;
+	padding:11px 0 11px 14px;overflow: hidden;
+	.avatorContainer{
+		position: absolute;width: 44px;padding: 4px;background: #f6f6f6;border-radius: 44px;
+		top: 7px;
+		img.avator{
+			height:44px;border-radius:44px;
+		}
+	}
+	.info{
+		display: inline-block;font-size:15px;margin-left:60px;margin-top:6px;
+		margin-bottom:5px;
+		.name{color:#ff6a1d;font-weight:bold;display:block;min-height:13px;}
+		.points{
+			display: block;color:#8c8c8c;margin-top:6px;font-size:14px;
+		}
+	}
+	.btn-orange{
+		@include btn(100%,2rem,15px,#fff,#fc9c2b,2px,#e28c26);
+		position: absolute;right:15px;width:76px;background:#ff6b1b;height:36px;line-height:36px;
+		top:15px;
+	}
+}
+
+//积分商城-首页-商品列表
+.goods-container{
+	background:#f1eff0;padding-top:5px;overflow: hidden;
+	.goods-lists{margin:0 9px;}
+	li{
+		float: left;width:49%;margin-bottom:6px;
+	}
+	div.goods-list{
+		background:#fff;padding:4px;color:#8c8c8c;
+		@include box-shadow(0 0 1px 0 #bebebe);
+		img{height:110px;}
+		@include border-radius(4px);font-size:13px;
+		span{display:block;margin-left:5px;}
+		span.consume-points{margin-top:8px;margin-bottom:4px;}
+		span.exchange-num{margin-bottom:5px;}
+		em{color:#fc9c2b;}
+	}
+	li:nth-child(2n){float:right;}
+}
+

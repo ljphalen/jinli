@@ -1,0 +1,530 @@
+<!doctype html>
+<html>
+<head><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <meta charset="utf-8"/>
+    <title>米购官网—折扣特卖，天天特价9.9包邮秒杀</title>
+    <meta name="keywords" content="米购,特价商品,省钱打折,品牌特卖,天天特价,9.9包邮秒杀"/>
+    <meta name="description" content="米购—专注特价商品导航，汇聚全网最优质特价商品及促销活动，每日超值品牌特卖低至1折限量秒杀，天天特价，天天9.9元包邮！"/>
+    <meta name="MSSmartTagsPreventParsing" content="True"/>
+    <meta http-equiv="MSThemeCompatible" content="Yes"/>
+    <script type="text/javascript">    SITEURL = "http://www.miigou.com";
+        CURURL = "http://www.miigou.com";
+        WEBNICK = "米购";
+        URL_COOKIE = 0;
+    </script>
+    <link rel="shortcut icon" type="image/x-icon" href="/statics/img/favicon.ico" media="screen"/>
+    <link rel=stylesheet type=text/css href="/statics/css/base.css"/>
+    <link rel=stylesheet type=text/css href="/statics/css/global.css"/>
+    <link rel=stylesheet type=text/css href="/statics/css/good.css"/>
+    <link rel=stylesheet type=text/css href="/statics/css/alert.css"/>
+    <link rel=stylesheet type=text/css href="/statics/css/page.css"/>
+    <link rel=stylesheet type=text/css href="/statics/css/kefu.css"/>
+    <link rel=stylesheet type=text/css href="/statics/css/topfav.css"/>
+    <script type="text/javascript" src="/statics/js/jquery.js"></script>
+    <script type="text/javascript" src="/statics/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/statics/js/lazyload.js"></script>
+    <script type="text/javascript" src="/statics/js/fun.js"></script>
+    <script type="text/javascript" src="/statics/js/jumpbox.js"></script>
+    <script type="text/javascript" src="/statics/js/funs.js"></script>
+    <script type="text/javascript" src="/statics/js/index.js"></script>
+    <script type="text/javascript" src="/statics/js/report.js"></script>
+</head>
+<body><!-- 头部开始 -->
+<div class="f_shadow"></div>
+<div class="head">
+    <div class="logo w980"><h1><a title="米购" href="http://www.miigou.com"><img
+                    src="/statics/img/logo3.png" width="208" height="50"/></a></h1>
+
+        <div class="search_box">
+            <form method="get" action="http://ai.taobao.com/search/index.htm" target="_blank"><input x-webkit-speech
+                                                                                                     name="key"
+                                                                                                     id="keywords"
+                                                                                                     placeholder="请输入您要找的宝贝！"
+                                                                                                     value=""
+                                                                                                     class="text"/><input
+                    type="hidden" name="pid" value="mm_52049815_8184791_31267000">
+                <button type="submit" value="" class="btn2">搜折扣</button>
+            </form>
+        </div>
+        <div class="top-nav w980"><p class="top-txt fl"><a href="javascript:void(0)"
+                                                           onclick="AddFavorite(true)">加入收藏夹</a><a
+                    onclick="SetHome(window.location)" href="javascript:void(0)">设为首页</a><a
+                    href="http://wpa.qq.com/msgrd?v=3&uin=289712388&site=qq&menu=yes">在线客服</a></p>
+
+            <div id="userlogin" style="display:block"><p class="other-links fr"><span><a href="#" class="whi">登录</a> / <a
+                            href="#" class="whi">免费注册</a></span><span></p>
+                <ul class="login-union fr">
+                    <li><a href="#"><i class="icon-qq"></i><span>QQ登录</span></a></li>
+                </ul>
+            </div>
+            <script>
+                function topHtml() {/*<p class="other-links fr"><span class="{:U('bm/index')}">|</span><span><a href="/baoming/index">卖家报名</a></span></p><p class="info fr ffv"><a href="/user/msg">{$msgsrc}</a></p><p class="info fr ffv"><a href="/user/mingxi">积分：{$jifen}</a></p><div class="login-ed fr"><div class="normal"><a href="/user/index" class="nor-a" onmouseover="this.className='nor-a active'" onmouseout="this.className='nor-a'"><span class="ffv">{$name}</span><em class="cur"></em></a><div class="login-box"><ul><li><a href="/user/gift"><i class="icon-04"></i><span>我的订单</span></a></li><li><a href="/user/shaidan_no"><i class="icon-05"></i><span>中奖记录</span></a></li><li><a href="/user/index"><i class="icon-06"></i><span>账号设置</span></a></li><li><a href="/user/logout" class="exit" ><i class="icon-07"></i><span>退出</span></a></li></ul></div></div></div><p class="fr">Hi~欢迎回来</p>*/
+                    ;
+                }
+                $.ajax({
+                    url: '/ajax/userinfo',
+                    dataType: 'jsonp',
+                    jsonp: "callback",
+                    success: function (data) {
+                        if (data.s == 1) {
+                            topHtml = getTplObj(topHtml, data.user);
+                            $('#userlogin').html(topHtml).show();
+                        }
+                        else {
+                            $('#userlogin').show();
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+    <div class="nav-w100">
+        <div class="nav w980">
+            <ul class="navigation">
+                <li <?php if ($search['pos'] == 0) echo 'class="current"'; ?>><a href="/zhe/index/index">首页</a></li>
+                <li class="split <?php if ($search['pos'] == 1) echo 'current'; ?>"><a href="/zhe/index/index?pos=1">9.9包邮</a>
+                </li>
+                <li class="split <?php if ($search['pos'] == 2) echo 'current'; ?>"><a href="/zhe/index/index?pos=2">19.9包邮</a>
+                </li>
+                <li class="split <?php if ($search['pos'] == 3) echo 'current'; ?>"><a href="/zhe/index/index?pos=3">1折包邮</a>
+                </li>
+            </ul>
+            <div class="state-show">
+                、
+            </div>
+        </div>
+    </div>
+</div>
+<!--头部结束-->
+<div class="jiu-nav-main">
+    <div class="jiu-nav w980">
+        <div class="nav-item fl">
+            <div class="item-list">
+                <ul>
+                    <li><a href="/zhe/index/index?" <?php if (!$search['cid']) echo 'class="active"'; ?>>全部</a></li>
+                    <li><a href="/zhe/index/index?cid=5001" <?php if ($search['cid'] == 5001) echo 'class="active"'; ?>
+                           title="服饰">服饰</a></i>
+                    <li><a href="/zhe/index/index?cid=5002" <?php if ($search['cid'] == 5002) echo 'class="active"'; ?>
+                           title="居家">居家</a></i>
+                    <li><a href="/zhe/index/index?cid=5003" <?php if ($search['cid'] == 5003) echo 'class="active"'; ?>
+                           title="母婴">母婴</a></i>
+                    <li><a href="/zhe/index/index?cid=5004" <?php if ($search['cid'] == 5004) echo 'class="active"'; ?>
+                           title="美食">美食</a></i>
+                    <li><a href="/zhe/index/index?cid=5005" <?php if ($search['cid'] == 5005) echo 'class="active"'; ?>
+                           title="配饰">配饰</a></i>
+                    <li><a href="/zhe/index/index?cid=5006" <?php if ($search['cid'] == 5006) echo 'class="active"'; ?>
+                           title="美妆">美妆</a></i>
+                    <li><a href="/zhe/index/index?cid=5007" <?php if ($search['cid'] == 5007) echo 'class="active"'; ?>
+                           title="电器">电器</a></i>
+                    <li><a href="/zhe/index/index?cid=5008" <?php if ($search['cid'] == 5008) echo 'class="active"'; ?>
+                           title="文体">文体</a></i>
+                </ul>
+            </div>
+        </div>
+        <div class="nav-other fl">
+            <ul>
+                <!--<li><a href="/xinpin/index"><i class="today"></i><span>今日新品</span></a><em>429</em></li>
+                <li><a href="/yugao/index"><i class="tw"></i><span>明日预告</span></a><em class="l2">55</em></li>-->
+            </ul>
+        </div>
+        <div class="n_h"><span>排序：</span><a href="/" class=" active ">默认</a><a href="/index/index/sort/price"
+                                                                               class="  ">价格</a><a
+                href="/index/index/sort/hot" class="  ">最热</a></div>
+    </div>
+</div>
+</div>
+<div class="main-side-nav" style="margin-top: 10px;"></div>
+<div class="jiu-side-nav w980" style="top: 240px; margin-top: 0px;">
+    <div><a class="logo" href="http://www.miigou.com"><img src="/statics/img/side_logo.png"
+                                                           width="130"/></a>
+    </div>
+    <div class="content">
+        <div class="bd-jx"></div>
+        <div class="bd">
+            <ul>
+                <li><a href="/zhe/index/index?pos=1" <?php if ($search["pos"] == 1) echo 'class="on"'; ?>>九块九</a></li>
+                <li><a href="/zhe/index/index?pos=2" <?php if ($search["pos"] == 2) echo 'class="on"'; ?>>十九块九</a></li>
+            </ul>
+        </div>
+        <div class="hd"><!-- 2014/07/24 QL --><!-- <h3>分类筛选</h3> --></div>
+        <div class="bd">
+            <ul>
+                <li><a href="/zhe/index/index?cid=5001" title="服饰">服饰</a></li>
+                <li><a href="/zhe/index/index?cid=5002" title="居家">居家</a></li>
+                <li><a href="/zhe/index/index?cid=5003" title="母婴">母婴</a></li>
+                <li><a href="/zhe/index/index?cid=5004" title="美食">美食</a></li>
+                <li><a href="/zhe/index/index?cid=5005" title="配饰">配饰</a></li>
+                <li><a href="/zhe/index/index?cid=5006" title="美妆">美妆</a></li>
+                <li><a href="/zhe/index/index?cid=5007" title="电器">电器</a></li>
+                <li><a href="/zhe/index/index?cid=5008" title="文体">文体</a></li>
+            </ul>
+        </div>
+        <div class="bd"></div>
+        <!-- 2014/07/24 QL --><!-- <div class="bottom"></div> --></div>
+    <div class="bottom" style="display:none"></div>
+</div>
+<style type="text/css">.dingwei {
+        position: relative;
+    }
+
+    .bd-jx {
+        width: 127px;
+        height: 31px;
+        background: url(/statics/img/jingxuan.png) no-repeat;
+        background-position: 0 -82px;
+    }
+
+    .luckdraw {
+        width: 110px;
+        height: 48px;
+        background: url(/statics/img/choujiang.png) no-repeat;
+        position: absolute;
+        margin-left: 15px;
+    }
+
+    .luckdraw a {
+        width: 86px;
+        height: 30px;
+        margin-top: 15px;
+        display: block;
+    }
+</style>
+<script type="text/javascript">    $(function () {
+        $(".phone").hover(function () {
+            $(".phone").addClass("add_link_hover");
+            $(".qr_code").css("display", "block");
+        }, function () {
+            $(".phone").removeClass("add_link_hover");
+            $(".qr_code").css("display", "none");
+        })
+        $(".task").hover(function () {
+            $(".task").addClass("add_link_hover");
+        }, function () {
+            $(".task").removeClass("add_link_hover");
+        })
+    })
+</script>
+<!--List Start-->
+<div class="main w980 clear nav-fixed" id="scroll-mao">
+    <ul class="goods-list w1005">
+        <?php foreach ($result as $key => $value) {
+            if ($value["channel_id"] == 1) {
+                $url = sprintf("http://item.taobao.com/item.htm?id=%d&pid=mm_52049815_8184791_31267000", $value['item_id']);
+            } else {
+                $url = sprintf("http://detail.m.tmall.com/item.htm?id=%d&pid=mm_52049815_8184791_31267000", $value["item_id"]);
+            }
+            ?>
+            <li class="">
+                <div class="sid_  list-good   buy " id="nid_141767"><a class="my-like" lks="1" lkid='141767'
+                                                                       title="加入收藏">收藏<i
+                            class="like-ico"><span class="heart_left"></span><span class="heart_right"></span></i></a>
+
+                    <div class="good-pic"><a href="<?php echo $url; ?>" target="_blank"><img
+                                src="/statics/img/blank.gif"
+                                data-original="<?php echo $value['img']; ?>_290x290.jpg"
+                                alt="<?php echo $value['title']; ?>" class="lazy"
+                                title="<?php echo $value['title']; ?>"/></a>
+
+                        <div class="yhq"></div>
+                        <!-- <div class="zhekou">0.6折</div> --></div>
+                    <h5 class="good-title"><b class="icon tao-t" title="淘宝网"></b><a target="_blank"
+                                                                                    href="<?php echo $url; ?>"
+                                                                                    class="title"
+                                                                                    alt="<?php echo $value['title']; ?>"
+                                                                                    title="<?php echo $value['title']; ?>"><?php echo $value['title']; ?></a>
+                    </h5>
+
+                    <div class="good-price"><span><em><b>¥</b><?php echo $value['price']; ?>
+                            </em></span><span><i>¥<?php echo $value['origi_price']; ?></i>(<?php echo $value["zhe"]; ?>
+                            折)
+						<strong>
+
+                            <span class="<?php if ($value["data"]["gai"] == 1) {
+                                echo "discount_1";
+                            } else {
+                                echo "discount_3";
+                            } ?>"></span>
+                        </strong></span>
+
+                        <div class="btn-new buy"><a href="<?php echo $url; ?>" target="_blank" rel="nofollow">去抢购</a>
+                        </div>
+                    </div>
+                    <div class="pic-des">
+                        <div class="des-state"><span class="state-time fl">截止日期：04月02日 00时00分</span><a class="buy_ed fr"
+                                                                                                       znid="141767"
+                                                                                                       title="<?php echo $value['title']; ?>"
+                                                                                                       href="javascript:;">举报</a>
+                        </div>
+                    </div>
+                    <span class="newicon">今日新品</span></div>
+            </li>
+        <?php } ?>
+    </ul>
+    <style type="text/css">
+        .tx_content {
+            width: 515px;
+            height: 302px;
+            background: #FFF;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tab-left {
+            background: #F7F7F7;
+            border-right: 2px solid #E1E1E1;
+            width: 42px;
+            float: left;
+            height: 302px;
+            text-align: center;
+        }
+
+        .tab-left span {
+            display: block;
+            color: #666;
+            font: 18px/20px "微软雅黑";
+            width: 20px;
+            padding: 33px 11px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .tab-left .alert {
+            border-bottom: 1px solid #E1E1E1;
+        }
+
+        .tab-left .on {
+            color: #E02F2F;
+        }
+
+        .tab-left .on .arrow-border {
+            color: #E1E1E1;
+            left: 42px;
+            top: 60px;
+        }
+
+        .tab-left .on .arrow {
+            position: absolute;
+            width: 0px;
+            height: 0px;
+            line-height: 0px;
+            border-width: 10px 0px 10px 10px;
+            border-style: dashed dashed dashed solid;
+            border-top: 10px dashed transparent;
+            border-bottom: 10px dashed transparent;
+        }
+
+        .tab-left .on .arrow-bg {
+            border-left-color: #F7F7F7;
+            left: 40px;
+            top: 60px;
+        }
+
+        .pop-con {
+            float: left;
+            padding: 20px 40px 0px;
+            color: #333;
+        }
+
+        .pop-con .tit {
+            color: #E02F2F;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        .pop-con .alert-con {
+            display: none;
+        }
+
+        .pop-con .on {
+            display: block !important;
+        }
+
+        .pop-con .goods {
+            float: left;
+            width: 200px;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .pop-con .goods p {
+            margin-top: 12px;
+            text-align: left;
+        }
+
+        .pop-con .goods p span {
+            font-weight: bold;
+            font-family: "微软雅黑";
+        }
+
+        .pop-con .ewm {
+            float: left;
+            margin-left: 18px;
+            margin-top: 8px;
+        }
+
+        .pop-con .ewm h3 {
+            color: #666;
+            font-size: 12px;
+            padding-left: 36px;
+        }
+
+        .pop-con .ewm .get {
+            background: url(/statics/img/bg_ewm.png) no-repeat scroll 0px 0px transparent;
+            width: 147px;
+            height: 114px;
+            margin: 10px 0px;
+        }
+
+        .pop-con .ewm .get img {
+            margin: 7px 0px 0px 40px;
+            width: 100px;
+            height: 100px;
+        }
+
+        .pop-con .ewm .price {
+            padding-left: 36px;
+        }
+
+        .pop-con .ewm .price span {
+            color: #e0a579;
+            font-family: "微软雅黑";
+        }
+
+        .pop-con .how-code {
+            text-align: left;
+            color: #333;
+            margin-top: -8px;
+            margin-bottom: 4px;
+            display: none;
+        }
+
+        .pop-con .how-code p {
+            margin-bottom: 10px;
+            line-height: 14px;
+            height: 14px;
+        }
+
+        .pop-con .how-code p span {
+            color: #CCC;
+        }
+
+        .pop-con .how-code p a {
+            margin-left: 18px;
+            color: #428BCA;
+        }
+
+        .pop-con .how-code p a:hover {
+            cursor: pointer;
+        }
+
+        .pop-con .how-code .g-img {
+            background: url(/statics/img/guide.jpg) no-repeat scroll 0px 0px transparent;
+            width: 365px;
+            height: 131px;
+            margin-top: -12px;
+        }
+    </style>
+    <div class="clear"></div>
+    <?php if ($totalPage > 1) { ?>
+        <div class="page">
+            <div class="pageNav">
+                <a href='<?php
+                $tmp = $search;
+                $tmp['page'] = $tmp['page'] - 1;
+                echo $listUrl . "?" . http_build_query($tmp);
+                ?>' class='pg-prev'>上一页<em></em></a>
+                <?php
+                foreach ($pages as $key => $value) {
+                    if ($search['page'] == $value) {
+                        echo "<span>" . $value . "</span>";
+                    } else if ($value == -1) {
+                        echo "<i>...</i>";
+                    } else {
+                        $tmp = $search;
+                        $tmp['page'] = $value;
+                        echo "<a href='" . $listUrl . "?" . http_build_query($tmp) . "'>&nbsp;" . $value . "&nbsp;</a>";
+                    }
+                } ?>
+
+                <a href='<?php
+                $search['page'] = $search['page'] + 1;
+                echo $listUrl . "?" . http_build_query($search);
+                ?>' class='pg-next'>下一页<em></em></a>
+            </div>
+        </div>
+    <?php } ?>
+</div>
+<!-- 页脚 -->
+<div class="foot">
+    <div class="white_bg w980">
+        <div class="xd_info w980">
+            <div class="meguo-info fl"><h2><img src="/statics/img/foot_logo.jpg" height="38"/></h2>
+
+                <div class="attentionlist"><a class="sina" href="" target="_blank" rel="nofollow">新浪微博</a><a
+                        class="zone" href="" target="_blank" rel="nofollow">QQ空间</a><a class="tt" href=""
+                                                                                       target="_blank" rel="nofollow">腾讯微博</a>
+                </div>
+            </div>
+            <div class="fl">
+                <div class="abouts">
+                    <ul>
+                        <li class="tit">关于我们</li>
+                        <li><a href="#" target="_blank">关于我们</a></li>
+                        <li><a href="#" target="_blank">联系我们</a></li>
+                        <li><a href="#" target="_blank">广告合作</a></li>
+                    </ul>
+                </div>
+                <div class="help">
+                    <ul>
+                        <li class="tit">用户帮助</li>
+                        <li><a href="#" target="_blank">常见问题</a></li>
+                        <li><a href="#" target="_blank">抢购小技巧</a></li>
+                        <li><a href="#" target="_blank">文章中心</a></li>
+                    </ul>
+                </div>
+                <div class="user">
+                    <ul>
+                        <li class="tit">会员服务</li>
+                        <li><a href="#" target="_blank">免费注册</a></li>
+                        <li><a href="#" target="_blank">登录本站</a></li>
+                        <li><a href="#" target="_blank">找回密码</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!--  -->
+            <div class="links w980"><span>友情链接：</span>
+
+                <div class="links_list_box">
+                    <div class="links_list"><a href="" target="_blank">大红帽</a><a
+                            href="" target="_blank"></a></div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <p class="f_miibeian w980"><a href="http://www.miibeian.gov.cn/" rel="nofollow" target="_blank"></a> ©
+            Copyright @ 2010-2014 all Rights Reserved 大红帽 <a href="http://www.miigou.com/"
+                                                                            target="_blank">大红帽官网</a>
+        </p>
+    </div>
+</div>
+<!-- /页脚 --><!-- 2014-07-28 QL --><!-- 返回顶部 -->
+<div class="side_panel sign_panel signin_on affix">
+    <div class="content"><a class="trigger" id="goTops" onclick="pageScroll()"
+                            href="javascript:void(0)"><p>返回顶部</p><span><i
+                    class="icon icon-up"></i></span></a></div>
+</div>
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?c8ce3198e3e36e1608e60a486ad07d01";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+<!-- /返回顶部 -->
+<script type="text/javascript" src="/statics/js/report.js"></script>
+</body>
+</html>

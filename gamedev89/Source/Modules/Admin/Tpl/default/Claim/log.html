@@ -1,0 +1,53 @@
+<div class="page">
+
+	<!--查询开始-->
+	<div class="pageContent">
+	
+		<!-- 列表开始 -->
+		<table class="list" width="100%" layoutH="138">
+			<thead>
+			<tr>
+				<th>ID</th>
+				<th>原帐号</th>
+				<th>新帐号</th>
+				<th>原因</th>
+				<th>认领日期</th>
+				<th>管理员</th>
+			</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="list">
+				<tr target="sid_user" rel="{$vo['id']}">
+					<td>{$vo['id']}</td>
+					<td>{:D("Accounts")->where(array('id'=>$vo['old_account_id']))->getField('email');}</td>
+					<td>{:D("Accounts")->where(array('id'=>$vo['new_account_id']))->getField('email');}</td>
+					<td>{$vo['reason']}</td>
+					<td>{$vo['created_at']|date="Y-m-d H:i:s", ###}</td>
+					<td>{:D("Admin")->where(array('id'=>$vo['admin_id']))->getField('nickname');}</td>
+				</tr>
+				
+			</volist>
+			</tbody>
+		</table>
+		<!-- 列表结束 -->
+		
+		<!-- 分页开始 -->
+		<div class="panelBar">
+			<div class="pages">
+				<span>显示</span>
+				<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+					<option value="10" <eq name="numPerPage" value="10">selected</eq>>10</option>
+					<option value="20" <eq name="numPerPage" value="20">selected</eq>>20</option>
+					<option value="50" <eq name="numPerPage" value="50">selected</eq>>50</option>
+					<option value="100" <eq name="numPerPage" value="100">selected</eq>>100</option>
+					<option value="200" <eq name="numPerPage" value="200">selected</eq>>200</option>
+				</select>
+				<span>共{$totalCount}条</span>
+			</div>
+			<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="10" currentPage="{$currentPage}"></div>
+		</div>
+		<!-- 分页结束 -->
+		
+	</div>
+	
+</div>

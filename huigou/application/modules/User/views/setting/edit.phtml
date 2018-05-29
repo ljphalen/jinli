@@ -1,0 +1,43 @@
+<?php echo $this->render("../../Front/views/layout/header.phtml");?>
+<section id="page">
+	<header id="header"><!-- HEADER --></header>
+	<!-- 主体内容 -->
+	<section id="content">
+		<section class="account">
+			<div class="pinfo mod-form-list">
+				<form action="<?php echo $webroot.$editUrl.'?id=',$user_info['id'];?>" method="post" id="J_checkForm">
+					<div class="field"><label>账号 ：</label><input type="text" name="umid" value="<?php echo $user_info['username'];?>" /></div>
+					<div class="field"><label>姓名 ：</label><input type="text" name="uname" value="<?php echo $user_info['realname'];?>" /></div>
+					<div class="field">
+						<label>性别 ：</label>
+						<input <?php if($user_info['sex'] == 0) echo 'checked';?>  name="sex" value="0" type="radio"> 男
+						<input <?php if($user_info['sex'] == 1) echo 'checked';?>  name="sex" value="1" type="radio"/> 女
+					</div>
+					<div class="field">
+						<label>生日 ：</label>
+						年<select name="year">
+						<?php foreach ($year_list as $key=>$value){ ?>
+						  <option <?php if($year == $value) echo 'checked';?> ><?php echo $value;?></option>
+						<?php } ?>
+						</select>
+						月<select name="month">
+						<?php foreach ($month_list as $key=>$value){ ?>
+						   <option <?php if($month == $value) echo 'checked';?> ><?php echo $value;?></option>
+						<?php } ?>   
+						</select>
+						日<select name="date">
+						   <?php foreach ($day_list as $key=>$value){ ?>
+						   <option <?php if($day == $value) echo 'checked';?> ><?php echo $value;?></option>
+						   <?php } ?>  
+						</select>
+					</div>
+					<div class="field button"><button type="submit" class="btn orange">确认</button></div>
+				</form>
+			</div>
+		</section>
+	</section>
+	<!--  /主体内容 -->
+	<footer id="footer"><!-- FOOTER --></footer>
+</section>
+</body>
+</html>

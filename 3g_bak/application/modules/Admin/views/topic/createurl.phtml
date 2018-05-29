@@ -1,0 +1,110 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<form method="post" action="<?php echo $baseUrl; ?>" id="addFrom">
+	<input type="hidden" name="token" value="<?php echo $token; ?>" id="token"/>
+
+	<div class="table_full">
+		<table width="100%" id="table1" name="table1">
+
+			<tr class="ct">
+				<td class="td2">选择内容属性</td>
+				<td class="td2">
+					<select name="contentAttr" id="contentAttr">
+						<option value="普通">普通</option>
+						<option value="广告">广告</option>
+						<option value="导流">导流</option>
+					</select>
+				</td>
+			</tr>
+
+			<tr class="ct">
+				<td class="td2">选择渠道商</td>
+				<td class="td2">
+					<select name="channel" id="channel">
+						<?php foreach ($vendors as $v) { ?>
+							<option value="<?php echo $v['ch']; ?>"><?php echo $v['name']; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+
+			<tr class="ct">
+				<td class="td2">选择合作商家</td>
+				<td class="td2">
+					<select id="parnter" name="parnter">
+						<?php foreach ($parnters as $v) { ?>
+							<option value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+
+			<tr class="ct">
+				<td class="td2">请选择专题　　<span style="color:red">必选</span></td>
+				<td class="td2">
+					<select id="topic_id" name="topic_id">
+						<option value="0">请选择</option>
+						<?php foreach ($topics as $v) { ?>
+							<option value="<?php echo $v['id']; ?>"><?php echo $v['title']; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+
+
+			<tr class="ct">
+				<td class="td2">添加内容:</td>
+				<td><input type="text" name="content" id="content"></td>
+			</tr>
+			<tr class="ct">
+				<td class="td2">添加URL:</td>
+				<td><input type="text" name="link" id="link"></td>
+			</tr>
+
+			<tr class="ct">
+				<td class="td2"></td>
+				<td class="td2"><input type="button" name="submit" id="submit" value="提交" class="btn"></td>
+			</tr>
+		</table>
+
+		<table id="table2" style="display: none">
+			<tr class="ct">
+				<td class="td2" style="font-size: 16px;">生成的短链接：</td>
+				<td class="td2"><span id="shortUrl" style="color: red;font-size:18px;"></span></td>
+			</tr>
+		</table>
+	</div>
+</form>
+<script>
+	$("#submit").bind('click', function () {
+		var contentAttr = $("#contentAttr").val();
+		var channel = $("#channel").val();
+		var parter = $("#parnter").val();
+		var content = $("#content").val();
+		var topic_id = $("#topic_id").val();
+		var url = $("#link").val();
+		var token = $("#token").val();
+		$.ajax({
+			url: '/Admin/topic/createUrlPost',
+			type: 'post',
+			dataType: 'json',
+			data: {
+				'contentAttr': contentAttr,
+				'channel': channel,
+				'parter': parter,
+				'content': content,
+				'url': url,
+				'topic_id': topic_id,
+				'token': token
+			},
+			success: function (e) {
+				if (e.key == '1') {
+					$("#shortUrl").html(e.msg);
+					$("#table2").show();
+					$("#table1").hide();
+				} else {
+					alert(e.msg);
+				}
+			}
+		});
+	})
+</script>

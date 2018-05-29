@@ -1,0 +1,25 @@
+<php>
+$title_list = array();
+$category_list = D('Article')->getCategory();
+foreach ($category_list as $key => $val)
+{
+	$title_list[$key]['category'] = $val;
+	$map = array(
+		'category' => $key,
+		'mold'	=> ArticleModel::MOLD_ARTICLE,
+		'status' => ArticleModel::STATUS_SUC,
+	);
+	$title_list[$key]['article'] = D('Article')->where($map)->order('sort desc, id asc')->select();
+}
+</php>
+<volist name="title_list" key="kk" id="data">
+	<dl>
+		<dt>{$data.category}</dt>
+		<volist name="data.article" id="vo">
+			<dd><a href="{:U('Help/page',array('id'=>$vo['id']))}" id="help_page_{$vo.id}">{$vo.title}</a></dd>
+		</volist>
+		<eq name="kk" value="3"><dd><a href="{:U('Help/sdk')}" id="help_page_sdk">SDK下载</a></dd></eq>
+	</dl>
+	
+</volist>
+<script>$("#help_page_{$info.id}").addClass("on");</script>

@@ -1,0 +1,90 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+
+	<form method="post" action="<?php echo $baseUrl; ?>" id="addFrom">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">时间范围</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="sdate"
+						       value="<?php echo $searchParam['sdate']; ?>"> 至
+						<input class="input" type="text" id="edate" maxlength="30" name="edate"
+						       value="<?php echo $searchParam['edate']; ?>">
+
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">组名</th>
+					<td class="td">
+						<select name="cate">
+							<?php foreach ($cates as $v):
+								$name    = !empty($v['cate']) ? $v['cate'] : '全部';
+								$checked = ($searchParam['cate'] == $v['cate']) ? 'selected="selected"' : '';
+								?>
+								<option value="<?php echo $v['cate']; ?>" <?php echo $checked; ?>><?php echo $name; ?></option>
+							<?php endforeach; ?>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+		<input type="hidden" id="hidden_export" name="export" value="0"/>
+	</form>
+	<style type="text/css">
+		table {
+			empty-cells: show;
+			border-collapse: collapse;
+		}
+
+		table th {
+			white-space: nowrap;
+		}
+
+		table td {
+			white-space: nowrap;
+		}
+	</style>
+	<div class="h_a">
+		总访问量: <span id="total" style="color: red;font-size:14px"></span>
+		<span style="float:right;"><input type="button" value="导出" id="downLoad"></span>
+	</div>
+
+	<div class="table_list">
+		<table class="table table-bordered table-striped no-margin">
+			<tbody>
+			<tr class="ct">
+				<td class="td2">时间</td>
+				<?php foreach ($date as $d): ?>
+					<td class="td2"><?php echo $d; ?></td>
+				<?php endforeach; ?>
+				<td class="td2">总和</td>
+			</tr>
+			<?php foreach ($lineData as $k => $v): ?>
+				<tr class="ct">
+					<td class="td2"><?php echo $k; ?></td>
+					<?php
+					$total = 0;
+					foreach ($date as $d) :
+						$num = isset($v[$d]) ? $v[$d] : 0;
+						?>
+						<td class="td2"><?php echo $num; ?></td>
+						<?php
+						$total += $num;
+					endforeach;
+					?>
+					<td class="td2"><?php echo $total; ?></td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+
+<?php echo $this->render("layout/footer.phtml"); ?>

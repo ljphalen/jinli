@@ -1,0 +1,87 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	<?php foreach($at_ptypes as $key=>$value)  {?>
+        <li  <?php if($key == $sid) {?>  class="current" <?php } ?> ><a href="<?php echo $listUrl.'?sid='.$key;?>"><?php echo $value;?></a></li>
+	<?php } ?>
+	</ul>
+</div>
+<div class="nav">
+	<ul class="cc">
+	<?php foreach($at_ptypes as $key=>$value)  {?>
+	 <?php if($key == $sid) {?>
+        <li><a href="<?php echo $addUrl.'?sid='.$key;?>"><?php echo "编辑".$value;?></a></li>
+	<?php }} ?>
+	</ul>
+</div>
+<div class="h_a">编辑游戏分类</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<input name="sid" value="<?php echo $sid;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">类型</th>
+			<td class="td">
+			   <select name="at_type" onchange='showtd()'>
+			   <?php foreach($at_ptypes as $key=>$value) { ?>
+			   <option <?php if($info['at_type'] == $key)  echo 'selected';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+			   <?php }?>
+			</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title'];?>"></td>
+		</tr>
+		<tr class="tr" id="tdimg">
+			<th class="th">图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="simg">
+						<img src="<?php echo $info['img']?$attachPath.$info['img']:$staticPath.'/img/content/nopic.jpg';?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=simg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr" style="display:none;" id="tdstatus">
+			<th class="th">状态</th>
+			<td class="td">
+				<select name="status">
+                	<option <?php if($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+            	</select>
+            </td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//导购分类表单数据提交
+function showtd(){
+	var value=$("select[name=at_type]").val();
+	if(value == 1 || value == 7) {
+		$('#tdimg').show();
+		if(value == 1){
+			$('#tdstatus').show();
+		}
+	} else {
+		$('#tdimg').hide();
+		$('#tdstatus').hide();
+	}
+}
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Resource_Attribute/index?sid=<?php echo $sid;?>');
+	});
+	showtd();
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

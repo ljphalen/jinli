@@ -1,0 +1,113 @@
+<div class="colMain">
+    <div class="title">
+        <p class="fl">RTB黑名单</p>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="app-detail" style="">
+                <form method="POST" action="/rtb/save_blacklist" style="">
+                    <ul class="form" style="">
+                        <li>
+                            <span class="label">包名黑名单：</span>
+                            <div class="fc">
+                                <textarea name="package_blacklist" id="package_blacklist" style="height:250px;"></textarea>
+                                <span class="red">请每行输入一个包名</span>
+                            </div>
+                            <input type="hidden" id="package_mober" name="package_mober" value="AMAX"/>
+                            <input type="hidden" id="package_platform" name="package_platform" value="2"/>
+<!--                            <select name="package_mober" id="package_mober" style="display: hidden">
+                                <option value="0" selected></option>
+                                <option value="1">嵌入式</option>
+                            </select>
+                            <select name="package_platform" id="package_platform" style="display: hidden">
+                                <option value="0" selected="">0</option>
+                                <option value="1">1</option>
+                            </select>--> 
+                        </li>
+                        
+                        <li>
+                            <span class="label">IP黑名单：</span>
+                            <div class="fc">
+                                <textarea name="ip_blacklist" id="ip_blacklist"  style="height:250px;"></textarea>
+                                <span class="red">请每行输入一个IP</span>
+                            </div>
+                            <input type="hidden" id="ip_mober" name="ip_mober" value="AMAX"/>
+                            <input type="hidden" id="ip_platform" name="ip_platform" value="1"/>
+                            
+<!--                                <select name="ip_mober" id="ip_mober" style="display: hidden">
+                                    <option value="0" selected></option>
+                                    <option value="1">嵌入式</option>
+                                </select>
+                                <select name="ip_platform" id="ip_platform" style="display: hidden">
+                                    <option value="0" selected="">0</option>
+                                    <option value="1">1</option>
+                                </select>-->
+                        </li>
+                        <li>
+                            <div class="fc">
+                                <input type="button" class="submit" value="保存" onclick="checksubmit()">
+                                <input type="button" onclick="window.location.href = '/rtb/blacklist'" class="cancel" value="取消">
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /**
+     * 检测输入的IP格式是否正确
+     * @param {type} strIP
+     * @returns {Boolean}
+     */
+    
+function isIP(strIP) {
+    var re=/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/g //匹配IP地址的正则表达式
+    if(re.test(strIP))
+    {
+        if( RegExp.$1 <256 && RegExp.$2<256 && RegExp.$3<256 && RegExp.$4<256) return true;
+    }
+    return false;
+}     
+
+
+function checksubmit(){
+    //提交前验证IP是否符合格式。
+    var ips = $("#ip_blacklist").val().split(/[(\r\n)\n\r]/);
+    for(var i = 0, l = ips.length; i < l; i++) {
+        if(ips[i] != ''){
+            if(!isIP(ips[i])){
+                alert("ip格式不正确:" + ips[i] + "")
+                return false;
+            }
+        }
+    }
+    $('form').submit();
+}
+
+function get_blacklist(){
+    ajaxGET("/rtb/getRtbBlacklist", "", function(data) {
+        var ipStr = '';
+        if (data.ip.length > 0) {
+            for(var i=0;i<data.ip.length;i++){
+                 ipStr += data.ip[i] +"\r\n";
+            }
+        }
+        var packageStr = '';
+        if(data.package.length > 0){
+            for(var i=0;i<data.package.length;i++){
+                packageStr += data.package[i] +"\r\n";
+           }
+        }
+        $("#package_blacklist").val(packageStr);
+        $("#ip_blacklist").val(ipStr);
+    })
+}
+
+$(function(){
+    get_blacklist();
+})
+
+</script>

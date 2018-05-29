@@ -1,0 +1,102 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+</script>
+<div id="page">
+		<a name="top"></a>
+		<header class="hd">
+		    <div class="top-banner">
+		    <a class="search" href="<?php echo $webroot.'/search/index?stype=9&t_bi='.$source;?>"></a>
+		    </div>
+			<nav>
+				<ul>
+					<li><a href="<?php echo $webroot.'?t_bi='.$source;?>">首页</a></li>
+					<li><a href="<?php echo $webroot.'/category/?t_bi='.$source;?>">分类</a></li>
+					<li><a href="<?php echo $webroot.'/subject/?t_bi='.$source;?>">专题</a></li>
+					<li class="selected"><a href="<?php echo $webroot.'/rank/?flag='.$flag.'&t_bi='.$source;?>">排行</a></li>
+				</ul>
+			</nav>
+		</header>
+
+		<article class="ac">
+			<div class="new J_newItem">
+				<ul>
+					<?php
+					   $new_href =  'href = '.$webroot.'/rank/?flag=1&t_bi='.$source;
+					   $download_href =  'href = '.$webroot.'/rank/?flag=0&t_bi='.$source;
+					?>
+					<?php if($configs['game_client_rank'] == 1){ ?>
+						<?php if($flag==1){ ?>
+						<li class="selected"><a >最新发布</a></li>
+						<li><a <?php echo $download_href;?>>下载最多</a></li>
+					    <?php } else { ?>
+					    <li><a <?php echo $new_href;?>>最新发布</a></li>
+						<li class="selected"><a>下载最多</a></li>
+					    <?php }?>
+				    <?php } else { ?>
+				        <?php if($flag==1){ ?>
+						<li><a <?php echo $download_href;?>>下载最多</a></li>
+						<li class="selected"><a >最新发布</a></li>
+					    <?php } else { ?>
+					    <li class="selected"><a>下载最多</a></li>
+					    <li><a <?php echo $new_href;?>>最新发布</a></li>
+					    <?php }?>
+				    <?php }?>
+				</ul>
+			</div>
+			
+			<div class="item-list J_gameItem spec">
+				<ul>
+					<?php
+					 if($flag == 1){
+					 	$intersrc = 'Newrelease';
+					 } else {
+					 	$intersrc = 'Mostdownload';
+					 }
+					 foreach($games as $key=>$value){
+                         $href = $webroot.'/index/detail/?id='.$value['id'].'&flag='.$flag.'&intersrc='.$intersrc.'&t_bi='.$source;
+  ?>
+					<li>
+						<a class="detail" href="<?php echo $href;?>">
+							<div class="pic"><img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $value['img'];?>"></div>
+							<div class="desc">
+								<h3><?php echo $value['name'];?></h3>
+								<p><?php echo $value['resume'];?></p>
+							</div>
+						</a>
+						<div class="download"><a class="btn" href="<?php echo Common::tjurl($tjUrl, $value['id'], $intersrc, $value['link']);?>&t_bi=<?php echo $source;?>">安装</a></div>
+					</li>
+					<?php }?>
+				</ul>
+			</div>
+			<?php if($hasnext && $games) {?>
+			<div class="load-more J_loadMore" data-ajaxUrl="<?php echo $webroot.'/rank/more/?flag='.$flag.'&intersrc='.$intersrc.'&t_bi='.$source;?>" data-hasnext="<?php echo $hasnext;?>" data-curpage="<?php echo $page;?>" data-curClass="<?php echo $tid;?>">
+				<span>加载更多</span>
+			</div>
+			<?php }?>
+		</article>
+		<div class="goTop J_gotoTop">
+			<a ></a>
+		</div>
+		<footer class="ft">
+			<div class="wchat" >
+				<img src="<?php echo $attachPath.$ami_web_weixin;?>" alt="" />
+				<div>
+				<p>欢迎关注我们的微信公众帐号！</p>
+				<p>微信号：gioneegame</p>
+			    </div>
+			</div>
+			<div class="quick-links">
+				<a href="<?php echo $webroot.'/contact?t_bi='.$source;?>">联系我们</a>
+				<a href="<?php echo $webroot.'/feedback?t_bi='.$source;?>">意见反馈</a>
+				<a href="<?php echo strpos($configs['game_link'], '?') == false ? $configs['game_link'].'&t_bi='.$source :$configs['game_link'].'?t_bi='.$source;?>"><?php echo $configs['game_title'];?></a>
+			</div>
+		</footer>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>
+
+
+
+

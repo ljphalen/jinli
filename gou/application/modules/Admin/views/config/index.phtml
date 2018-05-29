@@ -1,0 +1,278 @@
+<?php echo $this->render("layout/header.phtml");?>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<input name="History_Config_Version" value="<?php echo Common::getTime();?>" type="hidden" />
+	<div class="h_a">配置管理</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">插件开关</th>
+				<td class="td">
+					<label class="mr20"><input <?php if($configs['gou_plugin']) echo 'checked';?> name="gou_plugin" value="1" type="radio">开启</label>
+					<label class="mr20"><input <?php if(!$configs['gou_plugin']) echo 'checked';?> name="gou_plugin" value="0" type="radio">关闭</label>
+				</td>
+			</tr>	
+			<tr class="tr">
+				<th class="th">银币百分比</th>
+				<td class="td">
+				   <input class="input" name="gou_silver_coin_rate" class="input wc" value="<?php echo $configs['gou_silver_coin_rate'];?>"/>%
+				   <span class="a_help">返利比率大于20%时为活动期间</span>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">缓存开关</th>
+				<td class="td">
+					<label class="mr20"><input <?php if($configs['gou_index_cache']) echo 'checked';?> name="gou_index_cache" value="1" type="radio">开启</label>
+					<label class="mr20"><input <?php if(!$configs['gou_index_cache']) echo 'checked';?> name="gou_index_cache" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">百度统计开关</th>
+				<td class="td">
+					<label class="mr20"><input <?php if($configs['gou_baidu_stat']) echo 'checked';?> name="gou_baidu_stat" value="1" type="radio">开启</label>
+					<label class="mr20"><input <?php if(!$configs['gou_baidu_stat']) echo 'checked';?> name="gou_baidu_stat" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">客户端默认关键字</th>
+				<td class="td">
+				   <input class="input wc"  name="gou_client_keyword" value="<?php echo $configs['gou_client_keyword'];?>"/>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">微薄活动通知</th>
+				<td class="td">
+				   <input class="input wc"  name="gou_weibo_notice" value="<?php echo $configs['gou_weibo_notice'];?>" />
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">Ami天气关键字</th>
+				<td class="td">
+				   <input class="input wc"  name="amigo_weather_keyword" value="<?php echo $configs['amigo_weather_keyword'];?>" placeholder="关键词1,关键词2,关键词3"/>
+                    多个以半角逗号(,)隔开
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">比较商品匹配规则</th>
+				<td class="td">
+				   <input class="input wc"  name="cmp_goods_url_regex" value="<?php echo $configs['cmp_goods_url_regex'];?>" placeholder="规则1 ,规则2,规则3"/>
+                    多个以半角逗号(,)隔开
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">头部搜索默认关键字</th>
+				<td class="td">
+				   <input class="input wc"  name="gou_search_default_keyword" value="<?php echo $configs['gou_search_default_keyword'];?>"/>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">货到付款默认关键字</th>
+				<td class="td">
+				   <input class="input wc"  name="gou_cod_keyword" value="<?php echo $configs['gou_cod_keyword'];?>"/>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">返利比例</th>
+				<td class="td">
+				   <input class="input wc"  name="fanli_commission_rate" value="<?php echo $configs['fanli_commission_rate'];?>"/>% 如:20
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">淘热卖引导页背景颜色</th>
+				<td class="td">
+				   <input class="input"  name="tb_hot_bgcolor" value="<?php echo $configs['tb_hot_bgcolor'];?>"/> 如：红色 #CC1E44 灰色#f6f6f6
+				</td>
+			</tr>
+		</table>
+	</div>
+    <div class="h_a">积分配置</div>
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">积分活动开关</th>
+                <td class="td">
+                    <label class="mr20"><input <?php if($configs['gou_score']) echo 'checked';?> name="gou_score" value="1" type="radio">开启</label>
+                    <label class="mr20"><input <?php if(!$configs['gou_score']) echo 'checked';?> name="gou_score" value="0" type="radio">关闭</label>
+                    <label class="mr20">开始时间: <input name="gou_score_sdate" id="score_sdate" class="input" value="<?php echo $configs['gou_score_sdate']; ?>" type="text" /></label>
+                    <label class="mr20">结束时间: <input name="gou_score_edate" id="score_edate" class="input" value="<?php echo $configs['gou_score_edate']; ?>" type="text" /></label>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="h_a">反馈配置</div>
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">自动回复配置</th>
+                <td class="td">
+                    <label class="mr20"><input <?php if($configs['feedback_auto_reply']) echo 'checked';?> name="feedback_auto_reply" value="1" type="radio">开启</label>
+                    <label class="mr20"><input <?php if(!$configs['feedback_auto_reply']) echo 'checked';?> name="feedback_auto_reply" value="0" type="radio">关闭</label>
+                </td>
+            </tr>
+            <tr>
+                <th class="th">自动回复文案</th>
+                <td>
+                    <textarea class="input wc" name="feedback_auto_reply_text"><?php echo $configs['feedback_auto_reply_text'];?></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+	<div class="h_a">淘宝好店配置</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">名称</th>
+				<td class="td">
+				   <input class="input"  name="taobao_shop_title" value="<?php echo $configs['taobao_shop_title'];?>"/>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">链接地址</th>
+				<td class="td">
+				   <textarea class="input wc" name="taobao_shop_url"><?php echo $configs['taobao_shop_url'];?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">编码</th>
+				<td class="td">
+				   <input class="input"  name="taobao_shop_url_code" value="<?php echo $configs['taobao_shop_url_code'];?>"/>如：utf-8,gbk
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">文字颜色</th>
+				<td class="td">
+				   <input class="input"  name="taobao_shop_color" value="<?php echo $configs['taobao_shop_color'];?>"/>如：#e4123e
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="h_a">Amigo商城配置</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">下单成功页文案说明</th>
+				<td class="td">
+					<textarea class="input wc" name="amigo_order_desc"><?php echo $configs['amigo_order_desc'];?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">有库存文案说明</th>
+				<td class="td">
+					<textarea class="input wc" name="has_stock_desc"><?php echo $configs['has_stock_desc'];?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">无库存文案说明</th>
+				<td class="td">
+					<textarea class="input wc" name="null_stock_desc"><?php echo $configs['null_stock_desc'];?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">退换货协议</th>
+				<td class="td">
+					<textarea class="input" cols="100" rows="10" name="amigo_order_return_protocol"><?php echo $configs['amigo_order_return_protocol'];?></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="h_a">话费充值</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">充值页面提示信息</th>
+				<td class="td">
+					<textarea class="input wc" name="recharge_notice"><?php echo $configs['recharge_notice'];?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">余额短信开关</th>
+				<td class="td">
+					<label class="mr20"><input <?php if($configs['gou_recharge_sms']) echo 'checked';?> name="gou_recharge_sms" value="1" type="radio">开启</label>
+					<label class="mr20"><input <?php if(!$configs['gou_recharge_sms']) echo 'checked';?> name="gou_recharge_sms" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+		</table>
+	</div>
+    <div class="h_a">问答配置</div>
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">标题</th>
+                <td class="td">
+                    <input class="input wc"  name="qa_title" value="<?php echo $configs['qa_title'];?>"/>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">简介</th>
+                <td class="td">
+                    <textarea class="input wc" name="qa_intro"><?php echo $configs['qa_intro'];?></textarea>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">示意图</th>
+                <td class="td">
+                    <ul class="uploadImg">
+                        <li id="qaImg">
+                            <img src="<?php echo empty($configs['qa_image']) ? $staticPath . '/img/content/nopic.jpg' : $attachPath.$configs['qa_image']; ?>"/>
+                            <input type="hidden" name="qa_image" value="<?php echo $configs['qa_image'];?>">
+                        </li>
+                    </ul>
+                    <p style="clear:both;">
+                        <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=qaImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                    </p>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">开关</th>
+                <td class="td">
+                    <label class="mr20"><input <?php if($configs['qa_switch']) echo 'checked';?> name="qa_switch" value="1" type="radio">开启</label>
+                    <label class="mr20"><input <?php if(!$configs['qa_switch']) echo 'checked';?> name="qa_switch" value="0" type="radio">关闭</label>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="h_a">拼速度羸大奖配置</div>
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">暴击概率</th>
+                <td class="td">
+                    <input class="input" type="text"  name="cut_game_probability" value="<?php echo $configs['cut_game_probability'];?>"/>% 如：1
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">暴击倍数</th>
+                <td class="td">
+                    <input class="input" type="text"  name="cut_game_times" value="<?php echo $configs['cut_game_times'];?>"/>如：3
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">游戏完成上限</th>
+                <td class="td">
+                    <input class="input" type="text"  name="cut_game_tlimit" value="<?php echo $configs['cut_game_tlimit'];?>"/>秒, 如：3
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">旧版关闭时间</th>
+                <td class="td">
+                    <label class="mr20"><input name="cut_close_time" id="cut_close_time" class="input" value="<?php echo $configs['cut_close_time']; ?>" type="text" /></label>
+                </td>
+            </tr>
+        </table>
+    </div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Config/index');
+	});
+	$("#score_sdate").datetimepicker();
+	$("#score_edate").datetimepicker();
+	$("#cut_close_time").datetimepicker();
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

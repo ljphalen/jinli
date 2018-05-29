@@ -1,0 +1,47 @@
+<?php echo $this->render("layout/header.phtml");?>
+
+	<div id="page" class="series">
+		<?php echo $this->render("layout/nav.phtml");?>
+		
+		<article class="ct">
+			<nav class="sub-nav">
+				<div class="J_navList hidden">
+					<ul>					
+					<li <?php if($type == 'tianjian') echo 'class="selected"';?>><a href="<?php echo $listUrl;?>/?type=tianjian" ><span>天鉴<br />系列</span></a></li>
+					<li <?php if($type == 'elife') echo 'class="selected"';?>><a href="<?php echo $listUrl;?>/?type=elife" ><span>E-life<br />系列</span></a></li>
+					<li <?php if($type == 'yuyingwang') echo 'class="selected"';?>><a href="<?php echo $listUrl;?>/?type=yuyingwang"><span>语音王<br />系列</span></a></li>
+					<li <?php if($type == 'puji') echo 'class="selected"';?>><a href="<?php echo $listUrl;?>/?type=puji"><span>普及<br />系列</span></a></li>
+					</ul>
+				</div>
+				<div class="handle open"><span>分类<s></s></span></div>
+			</nav>
+			
+			<div class="scroll-pro J_scrollPro isTouch">
+				<span class="handle ui-slide-prev ui-slide-prevdis"><s>&lt;</s></span>
+				<span class="handle ui-slide-next <?php $sum = count($plist); if($sum < 2) echo 'ui-slide-nextdis';?>"><s>&gt;</s></span>
+				<div class="box ui-slide-scrollbox">
+					<ul class="ui-slide-scroll oz">
+						<?php foreach ($plist as $key=>$value){?>
+						<li class="ui-slide-item">
+							<div class="title"><span><?php echo $value['mark'];?></span></div>
+							<a href="<?php echo $detailUrl . '/?type='.$value['type'].'&mark=' . $value['mark'];?>"><img src="<?php echo $attachPath.'/'. $value['img'];?>" alt="" /></a>
+						</li>
+						<?php }?>
+					</ul>
+				</div>
+				<div class="ui-slide-tabs num">
+				<?php
+				$i = 1;
+				foreach ( $plist as $key => $value ) {
+					$sel = $i == 1 ? "ui-slide-tabcur" : "";
+					?>
+				<span class="ui-slide-tab <?php echo $sel;?>"><?php echo $i;?></span>
+				<?php
+					$i ++;
+				}
+				?>
+				</div>
+			</div>
+		</article>
+	</div>
+<?php echo $this->render("layout/footer.phtml");?>

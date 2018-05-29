@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title><?php echo $gift['title'];?></title>
+	<?php echo $this->render("layout/header.phtml");?>
+</head>
+<body id="gift-page" >
+	<div class="info-container detailInfo-container">
+		<div class="J_codeContainer code ">
+			<i class="icon-gift"></i>
+			<div class="giftName-info">
+				<em ><?php echo $gift['title'];?></em>
+			</div>
+		</div>
+		<div class="gift-info">
+			<h3>激活码：</h3>
+			<div><?php echo $giftCodeStr;?></div>
+            <?php $format = 'Y年m月d日 H:i'?>
+			<h3>兑换时间：</h3>
+			<div><?php if($gift) echo date($format, $gift['exchange_start_time']).'  -  '.date($format, $gift['exchange_end_time']);?></div>
+
+			<h3>礼包信息：</h3>
+			<div class="ui-editor">
+				<?php echo html_entity_decode($gift['content']);?>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

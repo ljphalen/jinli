@@ -1,0 +1,60 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="wrap wrap_02">
+	<div class="app_wrap">
+		<div class="content">
+			<div class="app_intro">
+				<!-- <span class="app_logo">安卓第一游戏平台</span> -->
+				<h1>金立游戏大厅客户端</h1>
+				<p class="app_text">
+				<span class="title">金立游戏大厅是金立及Elife等品牌手机的官方游戏平台。</span> 
+				<span class="text">金立游戏大厅收录海量游戏，提供最新游戏下载、攻略、资讯、超值活动、新服推荐等功能，游戏内容每天更新，是您找游戏、玩游戏的最佳伴侣。</span>
+				【最新】&nbsp;每天更新上百款新游戏，抢先了解时下热点。
+				<br/>
+				【精品】&nbsp;专业编辑精挑细选，严格审核，保证款款精品。
+				<br/>
+				【安全】&nbsp;所有游戏均经过三重安全监测，无毒无插件。 
+				<br/>
+				【贴心】&nbsp;定制礼包、返现等活动天天有。
+				</p>
+				<?php 
+				$temp = Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'QR', 'amidlqr', $tj_intersrc, html_entity_decode($ami_android_url));
+				?>
+				<img src="<?php echo $webroot . '/api/qrcode/index?p='. urlencode($temp); ?>" alt="QR code" width="100" height="100" class='app_weixin' />
+				<a class="appdown_btn" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'startdl', 'com.android.amigame', $tj_intersrc, $ami_web_url);?>" title="立即下载" >立即下载</a>
+			</div>
+			<div class="mod_box app_box"  id='sliderPlay'>
+			    <div class="banner_slide" >
+				    <ul class="slide_list">
+				       <?php foreach ($imgs as $val){?>
+					    <li><img data-original="<?php echo $attachPath.$val?>" src="<?php echo $staticResPath; ?>/images/default_detail.png?v=<?php echo $version;?>" alt="" /></li>
+					   <?php }?> 
+				    </ul>
+			    </div>
+			    <!-- <div class="picsroller_num" id='btnBox'></div> -->
+		    </div>
+		
+		</div>
+	</div>
+	<div class="content">
+		<ul class="outre_list cearfix">
+			<li class="weixin_area">
+				<span>
+				<?php 
+				//$temp = Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'QR', 'amiweixin', $tj_intersrc.'_wx', $ami_web_weixin);
+				//Common::generateQRfromLocal($ami_web_weixin,89,'H',0,'app_weixin');
+				?>
+				<img src="<?php echo $attachPath.$ami_web_weixin ?>" alt="QR code" width="89" height="89" class="app_weixin">
+				</span>
+				微信公众帐号：gioneegame</li>
+			<li class="weibo_area">
+				<span><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', 'amisinaweibo', $tj_intersrc.'_sinaweibo', $ami_sina_weibo?html_entity_decode($ami_sina_weibo):'http://weibo.com/gioneegamehall');?>" alt="" target="_blank"><img src="<?php echo $staticResPath; ?>/images/weibo.png?v=<?php echo $version;?>" alt="" /></a></span>
+				微博账号：<a style="font-size: 17px;" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', 'amisinaweibo', $tj_intersrc.'_sinaweibo', $ami_sina_weibo?html_entity_decode($ami_sina_weibo):'http://weibo.com/gioneegamehall');?>" alt="" target="_blank">金立游戏大厅</a></li>
+		</ul>
+	</div>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>
+<script type="text/javascript" src="<?php echo $staticResPath; ?>/js/unslider.js?v=<?php echo $version;?>"></script>
+<script>
+ </script>
+</body>
+</html>

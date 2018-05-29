@@ -1,0 +1,268 @@
+<script type="text/javascript" src="{{rootUrl}}/js/swfupload/swfupload.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/swfupload/handlers.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>
+<link media="screen" href="{{rootUrl}}/css/chosen.css" rel="stylesheet" type="text/css">
+<script type="text/javascript">
+var swfu;
+
+window.onload = function() {
+    swfu = new SWFUpload({
+        // Backend settings
+        upload_url: "/resource/upload_apk",
+        file_post_name: "apk_file",
+        //post_params: {"appkey": "<?php echo $appinfo["appkey"]; ?>"},
+        // Flash file settings
+        //file_size_limit: "200 MB",
+        file_types: "*.apk;*.ipa", // or you could use something like: "*.doc;*.wpd;*.pdf",
+        file_types_description: "APK Files;IPA Files",
+        file_upload_limit: "0",
+        file_queue_limit: "1",
+        // Event handler settings
+        swfupload_loaded_handler: swfUploadLoaded,
+        file_dialog_start_handler: fileDialogStart,
+        file_queued_handler: fileQueued,
+        file_queue_error_handler: fileQueueError,
+        file_dialog_complete_handler: fileDialogComplete,
+        //upload_start_handler : uploadStart,	// I could do some client/JavaScript validation here, but I don't need to.
+        upload_progress_handler: uploadProgress,
+        upload_error_handler: uploadError,
+        upload_success_handler: uploadSuccess,
+        upload_complete_handler: uploadComplete,
+        // Button Settings
+        button_image_url: "/misc/ledou/images/XPButtonUploadText_61x22.png",
+        button_placeholder_id: "spanButtonPlaceholder",
+        button_width: 81,
+        button_height: 22,
+        // Flash Settings
+        flash_url: "{{rootUrl}}/js/swfupload/swfupload.swf",
+        custom_settings: {
+            progress_target: "fsUploadProgress",
+            upload_successful: false
+        },
+        // Debug settings
+        debug: false
+    });
+
+};
+</script>
+<style type="text/css">
+    .progressWrapper {
+        width: 357px;
+        overflow: hidden;
+        margin-left: 170px;
+        margin-top: 5px;
+    }
+
+    .progressContainer {
+    }
+    /* Message */
+    .message {
+        margin: 1em 0;
+        padding: 10px 20px;
+        border: solid 1px #FFDD99;
+        background-color: #FFFFCC;
+        overflow: hidden;
+    }
+    /* Error */
+    .red {
+        border: solid 1px #B50000;
+        background-color: #FFEBEB;
+    }
+
+    /* Current */
+    .green {
+        border: solid 1px #DDF0DD;
+        background-color: #EBFFEB;
+    }
+
+    /* Complete */
+    .blue {
+        border: solid 1px #CEE2F2;
+        background-color: #F0F5FF;
+    }
+
+    .progressName {
+        font-size: 14px;
+        color: #555;
+        width: 323px;
+        height: 28px;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        margin-top:20px;
+    }
+
+    .progressBarInProgress,
+    .progressBarComplete,
+    .progressBarError {
+        font-size: 0;
+        width: 0%;
+        height: 10px;
+        background-color: #44b150;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .progressBarComplete {
+        width: 100%;
+        background-color: green;
+        visibility: hidden;
+    }
+
+    .progressBarError {
+        width: 100%;
+        background-color: red;
+        visibility: hidden;
+    }
+
+    .progressBarStatus {
+        margin-top: 2px;
+        width: 337px;
+        font-size: 7pt;
+        font-family: Arial;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    a.progressCancel {
+        font-size: 0;
+        display: block;
+        height: 14px;
+        width: 14px;
+        background-image: url(/misc/ledou/images/cancel.png);
+        background-repeat: no-repeat;
+        background-position: -14px 0px;
+        float: right;
+    }
+
+    a.progressCancel:hover {
+        background-position: 0px 0px;
+    }
+
+
+    /* -- SWFUpload Object Styles ------------------------------- */
+    .swfupload {
+        vertical-align: top;
+        position:relative;
+        top:7px;
+        left:5px;
+    }
+</style>
+
+<div class="colMain">
+    <div class="title">
+        <p class="fl">图片素材管理</p>
+    </div>
+    <div class="main" data-tabs-name="apk">
+        <div class="content">
+            <!-- include 'menu' -->
+            <div class="devInfo">
+                <form action="../resource/apk_save" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" value="{{result.id}}" name="id" />
+                    <ul class="form">
+                        <li>
+                            <span class="label">选择安装包：</span>
+                            <div class="fc">
+                                <input type="text" id="txtFileName" class="iText" disabled="true" style="border:1px solid #a7b0b7; background-color: #FFFFFF;" />
+                                <span id="spanButtonPlaceholder"></span>
+                                <input type="button" value="上传应用" class="btnstyle" id="btnSubmit" />
+                                <span class="red">*</span>
+                            </div>
+                            <div class="flash" id="fsUploadProgress">
+                                <!-- This is where the file progress gets shown.  SWFUpload doesn't update the UI directly.
+                                                        The Handlers (in handlers.js) process the upload events and make the UI updates -->
+                            </div>
+                            <input type="hidden" name="hidFileID" id="hidFileID" value="{{result.apk_url}}" />
+                            <!-- This is where the file ID is stored after SWFUpload uploads the file and gets the ID back from upload.php -->
+                            <input type="hidden" name="apk_url" id="apk_url" value="{{result.apk_url}}" />
+                            <input type="hidden" name="product_name" id="product_name" value="{{result.product_name}}" />
+                        </li>
+                        <li>
+                            <span class="label">平台类型：</span>
+                            <div class="fc">
+                                <select name="platform" class="required" required id="platform"  onchange="autoPlatform()">
+                                    <option value="1">Android</option>
+                                    <option value="2">IOS</option>
+                                    <option value="" selected>自动解析</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">所属产品：</span>
+                            <div class="fc">
+                                <select name="product" class="required" required id="product_id" onchange="javascript:$('#product_name').val($('#product_id option:selected').text().replace('(T)', '').replace('(A)', '').replace('(I)', ''))">
+                                    <option value="">自动从图片名称匹配</option>
+                                    <!-- loop product -->
+                                    <option value="{{product' value.id}}" <!-- if {{product' value.product_name}}=={{result.product_name}} -->selected<!-- endif -->>{{product' value.product_name}}</option>
+                                    <!-- endloop -->
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">产品版本：</span>
+                            <div class="fc">
+                                <input type="text" name="apk_version" class="required iText" required style="width:220px;" value="{{result.apk_version}}" /><span id="apk_version"></span>
+                                <span id="ad_subtype_txt"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">包名：</span>
+                            <div class="fc">
+                                <input type="text" name="package" class="required iText" required style="width:220px;" value="{{result.package_name}}"/><span id="package"></span>
+                                <span id="ad_subtype_txt"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">渠道：</span>
+                            <div class="fc">
+                                <input type="text" name="channel" class="required iText" required style="width:220px;" value="{{result.channel_id}}"/><span id="channel"></span>
+                                <span id="ad_subtype_txt"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">大小：</span>
+                            <div class="fc">
+                                <input type="text" name="size" class="required iText" required style="width:220px;" value="{{result.size}}"/><span id="size"></span>
+                                <span id="ad_subtype_txt"></span>
+                            </div>
+                        </li>
+
+                        <li class="line"></li>
+                        <li>
+                            <div class="fc">
+                                <input type="submit" value="保存" class="submit" />
+                                <input type="button" value="取消" class="cancel" onclick="window.location.href = '/resource/apk'" />
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script language="javascript">
+    $(function(){
+        autoPlatform();
+    })
+    function autoPlatform(productname) {
+        ajaxPOST("/reproduct/autoPlatform", {"platform": $("#platform").val()}, function(data) {
+            var length = data.length;
+            str = '';
+            for (i=0; i<length; i++)
+            {
+                if_selecte='';
+                if(productname == data[i].product_name)
+                {
+                    if_selecte =  'selected="selected"';
+                }   
+                str += '<option value="'+data[i].id+'" '+if_selecte+'>'+data[i].platform_product_name+'</option>'
+            }
+            $("#product_id").html(str);
+            //重新绑定select的选择组件
+            $("#product_id").removeClass("chzn-done");
+            $("#product_id_chzn").remove();
+            $("#product_id").chosen({});
+        })
+    }
+</script>

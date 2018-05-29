@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<?php $this->title='分类';$this->hasSearch='true';?>
+	<meta charset="UTF-8">
+	<title>游戏大厅</title>
+	<?php echo $this->render("layout/cssInc.phtml");?>
+</head>
+<body>
+	<?php echo $this->render("layout/header.phtml");?>
+	<div  class="list-container">
+		<div id="hotSubjectContainer" class="hotSubject-container">
+		</div>
+		<div id="categoryContainer" class="category-contaner">
+		</div>
+		
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+	<?php echo $this->render("layout/scriptInc.phtml");?>
+	<script type="text/javascript">
+		var categoryAjaxUrl="<?php echo $listAjaxUrl;?>";
+		var hotSubjetData=<?php echo $hotSubject;?>;
+		var categoryData=<?php echo $categoryList;?>;
+	</script>
+	<script type="text/javascript">
+		React.render(
+			React.createElement(HotSubject, {data: hotSubjetData}),
+			document.getElementById('hotSubjectContainer')
+		);
+
+		React.render(
+			React.createElement(Category, {items: categoryData, ajaxUrl: categoryAjaxUrl}),
+			document.getElementById('categoryContainer')
+		);
+	</script>
+	<script src="<?php echo "$appJs/loadImg.js$timestamp";?>" type="text/javascript"></script>
+</body>
+</html>

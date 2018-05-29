@@ -1,0 +1,37 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+
+	<div class="h_a">设置</div>
+	<form method="post" action="<?php echo $cardtitleUrl; ?>" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">名称</th>
+					<td class="td">
+						<input type="text" class="input wc" name="text" value="<?php echo $info['text']; ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">颜色</th>
+					<td class="td">
+						<input type="text" class="input wc" name="textcolor" value="<?php echo $info['textcolor']; ?>">&nbsp;格式如:#87CEEB
+					</td>
+				</tr>
+
+			</table>
+		</div>
+
+
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script type="text/javascript">
+		//表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Localnav/cardtitle');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,9 @@
+CACHE MANIFEST
+# version 1.0.0
+
+CACHE:
+
+NETWORK:
+	*
+
+FALLBACK:

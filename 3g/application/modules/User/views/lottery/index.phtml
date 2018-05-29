@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>每日抽奖</title>
+<link rel="shortcut icon" href="<?php echo $staticResPath;?>/call/img/favicon.png"/>
+<link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/call/css/style.min.css?v=<?php echo $version;?>" />
+
+</head>
+<body class="ui-app" style="background:#50087a;">
+
+<div class="ui-top-bar">
+    <a class="ui-pos icon-back" href="<?php echo $webroot;?>/user/index/index"></a>
+    <span class="ui-top-txt">每日抽奖</span>
+</div>
+
+<div class="ui-page page1 js-active">
+    <div class="ui-page-content">
+        <div class="prize">
+            <div class="prize-banner"><img src="<?php echo $staticResPath;?>/call/img/prize/prize-banner.jpg" /></div>
+            <div class="prize-main">
+                <div class="prize-title-bg">&nbsp;&nbsp;</div>
+                <div class="prize-title">
+                    <span class="span-jifen">当前 <em id="prize-score"><?php echo empty($scoreMsg)?0:$scoreMsg['remained_score'];?></em> 金币<em class="icon-gold"></em></span>
+                    <span>可抽奖 <em id="prize-num"><?php echo $remainedTimes?$remainedTimes:0;?></em> 次</span>
+                </div>
+                <div class="play prize-wrap">
+                    <ul class="playtab" id="tb">
+                    <?php
+                        $arr = array(0,1,2,7,3,6,5,4);
+                        foreach($list[0] as $k=>$v){
+                    ?>
+                        <li id="prize_sel<?php echo $arr[$k];?>" data-id="<?php echo $v['id'];?>">
+                            <div>
+                                <p><img src="<?php echo $attachPath.$v['image'];?>" /></p>
+                                <p><?php echo $v['name'];?></p>
+                            <div>
+                        </li>
+				<?php }?>
+                        <li class="prize-pbtn" data-id="-1">
+                            <span id="prize-btn" class="prize-btn">点击抽奖</span>
+                        </li>
+                        
+                        <?php foreach($list[1] as $key=>$val){?>
+                        <li id="prize_sel<?php echo $arr[$key+4];?>" data-id="<?php echo $val['id'];?>">
+                            <div>
+                                <p><img src="<?php echo $attachPath.$val['image'];?>" /></p>
+                                <p><?php echo $val['name']?></p>
+                            </div>
+                        </li>
+						<?php }?>
+                    </ul>
+                </div>
+            </div>
+            <div class="prize-tips">
+             <?php echo sprintf($config['ulottery_rule_content'],$experienceLevel,$levelRewardTimes);?>
+            </div>
+            <div class="copyright">最终解释权归<?=Lang::_('PRODUCT_TEAM_NAME')?>所有</div>
+        </div>
+    </div>
+</div>
+
+<div class="poptips" style="display:none;">
+    <div class="content">您的积分不足</div>
+    <div class="button">
+        <span class="btn-ok">确定</span>
+    </div>
+</div>
+
+<script src="<?php echo $staticResPath;?>/call/js/lib/zepto.js?v=<?php echo $version;?>"></script>
+<script src="<?php echo $staticResPath;?>/call/js/prize.min.js?v=<?php echo $version;?>"></script>
+</body>
+</html>

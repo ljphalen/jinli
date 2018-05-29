@@ -1,0 +1,68 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+var isLoign = '<?php echo $isLogin ? 'true': 'false';?>';
+</script>
+<body>
+  <!-- 商品还可以兑换 -->
+  <?php if($good['remaind_num']) {?>
+   
+	<div class="banner-container border-1px">
+		<img alt="" src="<?php echo $attachPath. $good['icon'];?>">
+		<span  class="num-left">剩余：<em id="aCoinLeft"><?php echo $good['remaind_num'];?></em>A券</span>
+		<span class="desc"><?php echo $good['consume_point'];?>积分兑换1A券，每人最多兑换<?php echo $good['preson_limit_num'];?>A券</span>
+		<span class="events-status status-ongoing"><i class="icon-clock"></i>剩余<?php echo floor(($good['end_time'] - Common::getTime()) /3600/24);?>天</span>
+	</div>
+
+	<div class="operation-container border-1px">
+		<span class="total-points">当前共<em id="totalPoints"><?php echo intval($userInfo['points']);?></em>积分</span>
+		<!-- 如果兑换机会已经用完，则隐藏下列的span和div，则生成另外一个span -->
+		
+		<?php if($exchangeInfo['canExchangeNums']) {?>
+		<span class="consume-points">还可兑换<em id="canExchangeNums"><?php echo $exchangeInfo['canExchangeNums'];?></em>A券，消耗<em><?php echo $exchangeInfo['consumePoints'];?></em>积分</span>
+		<div class="exchange-btn-container tline">
+			兑换数量<input id="num" class="btn-input" max="<?php echo $exchangeInfo['canExchangeNums']?>"  name= "exchangeNums" value="<?php echo $exchangeInfo['canExchangeNums'];?>">A券
+		</div>
+		<?php } ?>
+		<?php if(is_array($exchangeInfo) && $exchangeInfo['haveExchangeNum']) {?>
+		<span class="consume-points">您已经兑换了<em id="haveExchangeNum"><?php echo $exchangeInfo['haveExchangeNum'];?></em>A券</span>
+		<?php } else if(is_array($exchangeInfo) && !$exchangeInfo['haveExchangeNum'] && !$exchangeInfo['canExchangeNums']) { ?>
+		<span class="consume-points">您的积分不足</span>
+		<?php } ?>
+	</div>
+
+	<!-- 如果兑换机会已经用完，则隐藏以下div -->
+	
+	<?php if(is_array($exchangeInfo) && $exchangeInfo['canExchangeNums']) { ?>
+	<div id="exAcoinBtn" class="btn-container J-confirm" data-ajaxUrl="<?php echo $webroot; ?>/client/Mall/exchangeAcouponPost/?goodId=<?php echo $good['id'].'&puuid='.$userInfo['uuid'].'&uname='.$userInfo['uname'].'&imei='.$imei.'&serverId='.$serverId;?>">
+		<button class="btn-orange">确定</button>
+	</div>
+	<div class="J_dialog dialog invisible">
+	</div>
+	<div class="J_loading loading-container invisible">
+		<i class="icon-loading"></i><span class="loading-tips">正在提交，请稍等...</span>
+	</div>
+	<?php } ?>
+	
+	<!-- 商品兑换完 -->
+	 <?php } else  {?>
+	<div class="banner-container border-1px">
+	    <img src="<?php echo $attachPath. $good['img'];?>">
+		<span class="events-status status-over"><i class="icon-clock"></i>已结束</span>
+	</div>
+	<div class="player-container border-1px">
+		<h1>本次共有<em><?php echo $logs[0];?></em>位玩家成功兑换了奖励，感谢各位的参与！</h1>
+		<ul id="playerList" class="player-list">
+			<?php foreach($logs[1] as $key=>$value){?>
+				<li class="tline">
+					<?php echo $value['no'] ;?>.<?php echo $value['nickname'] ;?>
+				</li>
+			<?php }?>
+		</ul>
+	</div>
+	<div class="<?php echo $loadingStyle;?> J_loadMore invisible" data-ajaxurl="<?php echo $webroot; ?>/client/Mall/exchangeOverMore?goodId=<?php echo $good['id'].'&puuid='.$userInfo['uuid'].'&uname='.$userInfo['uname'];?>" data-hasnext="<?php echo $logs[2] ? 'true' : 'false';?>" data-curpage="<?php echo $logs[3];?>">
+		<span class="load"></span>
+	</div>
+	<?php }?>
+</body>
+</html>

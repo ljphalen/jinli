@@ -1,0 +1,100 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $configUrl; ?>">基本配置</a></li>
+			<li><a href="<?php echo $indexUrl; ?>">信息列表</a></li>
+			<li><a href="<?php echo $addUrl; ?>">添加活动内容</a></li>
+			<li><a href="<?php echo $userUrl ?>">用户列表</a>
+			<li><a href="<?php echo $logUrl ?>">通话记录</a>
+			<li><a href="<?php echo $service; ?>">添加客服信息</a>
+			<li><a href="<?php echo $serviceList; ?>">客服信息列表</a>
+			<li class="current"><a href="<?php echo $tipsListUrl ?>">规则说明</a>
+
+		</ul>
+	</div>
+	<div class="h_a">规则说明：</div>
+	<form method="post" action="/Admin/VoIP/editTips" id="addFrom">
+		<input name="token" id="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">是否显示广告</th>
+					<td class="td"><select name="3g_voip_ads">
+							<option value="1"  <?php if ($voip_ads == '1') echo 'selected'; ?>>是</option>
+							<option value="0"  <?php if ($voip_ads == '0') echo 'selected'; ?>>否</option>
+						</select>
+					</td>
+				</tr>
+				
+				<tr class="tr">
+					<th class="th">公告标题</th>
+					<td class="td">
+						<input type="text" name="user_notice_title" value="<?php echo $user_notice_title;?>"> 
+					</td>
+				</tr>
+				
+				<tr class="tr">
+					<th class="th">文字内容</th>
+					<td class="td">
+						<textarea rows="6" cols="10"   name="3g_voip_tips"   style="width: 600px; height:400px;"><?php echo $content; ?></textarea>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">是否显示公告</th>
+					<td class="td"><select name="user_show_notice">
+							<option value="1"  <?php if ($show_notice == '1') echo 'selected'; ?>>是</option>
+							<option value="0"   <?php if ($show_notice == '0') echo 'selected'; ?>>否</option>
+						</select>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">文字内容</th>
+					<td class="td">
+						<textarea rows="6" cols="10" name="3g_call_notice" style="width: 600px; height:400px;"><?php echo $call_notice; ?></textarea>
+					</td>
+				</tr>
+
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+	<script src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js"></script>
+	<script type="text/javascript">
+		//广告表单数据提交
+		$(document).ready(function () {
+
+			var editor;
+			KindEditor.ready(function (K) {
+				K.token = $('#token').val();
+				editor1 = K.create('textarea[name="3g_voip_tips"]', {
+					resizeType: 1,
+					allowPreviewEmoticons: false,
+					allowImageUpload: true,
+					uploadJson: '<?php echo $uploadImgUrl;?>',
+					items: EDITOR_ITEMS
+				});
+				editor2= K.create('textarea[name="3g_call_notice"]', {
+					resizeType: 1,
+					allowPreviewEmoticons: false,
+					allowImageUpload: true,
+					uploadJson: '<?php echo $uploadImgUrl;?>',
+					items: EDITOR_ITEMS
+				});
+			});
+
+			$('#start_time').datetimepicker();
+			$('#end_time').datetimepicker();
+			$('#vilid_time').datetimepicker();
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/VoIP/tips');
+			}, function () {
+				editor.sync();
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

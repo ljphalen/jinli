@@ -1,0 +1,80 @@
+{{pagerCss}}
+<div class="colMain">
+    <div class="title"><p class="fl">应用列表</p></div>
+    <div class="main">
+        <div class="toolbar">
+            <div class="search fl">
+                <form action="/apps/index" method="GET">
+                <span>{{search}}</span>
+                <span>
+                    <input type="text" class="iText" name='app_name' value='{{params.app_name}}' />
+                    <input type="hidden" class="iText" name='ischeck' value='2' />
+                    <input type="text" class="iText datepicker" name="appdate" value="<?php echo $_GET['appdate'];?>" /><input type="submit" class="submit" value="" />
+                    <span class="sign">可输入应用名称查询</span>
+                </span>
+                
+                </form>
+            </div>
+            <a href="../apps/edit" class="fr add">新增</a> &nbsp;
+            <a href="/apps/versionList" class="fr add">应用版本</a>
+        </div>
+        <div class="content">
+            <div class="grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>应用名</th>
+                            <th>Appkey</th>
+                            <th>申请状态</th>
+                            <th>创建时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- loop result -->
+                        <tr>
+                            <td><span class="blue"><a href="/apps/appcheckedit?app_id={{result' value.app_id}}">{{result' value.app_name}}</a></span></td>
+                            <td>{{result' value.appkey}}</td>
+                            <td>
+                                <!-- if {{result' value.apk_url}} -->
+                                    待审核
+                                <!-- else -->
+                                    未上传应用
+                                <!-- endif --></td>
+                            <td>
+                            <?php echo format_time($v1['createdate']); ?>
+                            </td>
+                        </tr> 
+                        <!-- endloop -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">{{pager.pages}}</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$(function(){
+   $(".radio").click(function(){
+       var val = $(this).val();
+       var app_id = $(this).attr('name').replace("ischeck", "");
+       $.ajax({
+           type : "POST",
+           data : { ischeck : val, app_id : app_id},
+           url : "/apps/ischeck",
+           success : function(result){
+               var ret = JSON.parse(result);
+               if (ret.retCode == 1){
+                   if(val == 1){
+                       $(".states_"+app_id).html("开启");
+                   }else{
+                       $(".states_"+app_id).html("关闭");
+                   }
+                   alert('更新成功');
+               }else{
+                   alert('更新失败');
+               }
+           }
+       });
+   }); 
+});
+</script>

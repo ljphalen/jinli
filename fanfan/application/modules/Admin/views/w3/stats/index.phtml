@@ -1,0 +1,40 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="table_full">
+	<form action="<?php echo $baseUrl; ?>" method="POST">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+		<table width="100%" cellspacing="0" cellpadding="0">
+			<tr class="tr1">
+				<td class="td1">
+					<select id="type" name="type" onchange="to_list(this.value)">
+						<?php
+						foreach ($types as $key => $val){
+							$selected = '';
+							if ($key == $type) {
+								$selected = ' selected ';
+							}
+							echo "<option value=\"{$key}\" {$selected}>{$val}</option>";
+						}
+						?>
+					</select>
+					日期：
+					<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $sdate; ?>"> 至
+					<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $edate; ?>">
+					<input type="submit" value="生成报表"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			ajaxForm('editForm',function(ret){
+				ajaxRedirect(ret, baseurl+'/Admin/W3_Stats/index?type=<?php echo $type;?>');
+			})
+		})
+		function to_list(val) {
+			var url = "<?php echo $listUrl;?>?type=" + val;
+			window.location.href=url; // 跳转
+		}
+	</script>
+<?php echo $this->render("stat/log.phtml"); ?>
+<?php echo $this->render("layout/footer.phtml"); ?>

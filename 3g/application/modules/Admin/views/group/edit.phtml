@@ -1,0 +1,135 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<style>
+		.purview_list dd {
+			float: left;
+			width: 600px;
+		}
+	</style>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $listUrl; ?>">用户组列表</a></li>
+			<li><a href="<?php echo $addUrl; ?>">编辑用户组</a></li>
+		</ul>
+	</div>
+	<div class="h_a">编辑用户组</div>
+	<form method="post" action="<?php echo $editPostUrl; ?>" id='groupForm'>
+		<input type="hidden" name="groupid" value="<?php echo $groupInfo['groupid']; ?>">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">用户组名称</th>
+					<td class="td">
+						<input type="text" maxlength="30" value="<?php echo $groupInfo['name']; ?>" name="name" class="input">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">用户组描述</th>
+					<td class="td">
+						<textarea class="textarea" name="descrip"><?php echo $groupInfo['descrip']; ?></textarea></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">权限分配</th>
+					<td class="td">
+						<?php
+
+						$access = array();
+						foreach ($level as $key => $val) {
+							$items = array();
+							foreach ($val['items'] as $k => $v) {
+								$items[$v['group']][$k] = $v;
+								if (!empty($v['access'])) {
+									$access[$v['id']] = array($v['name'], $v['access']);
+								}
+							}
+							?>
+							<dl class="cc purview_list">
+								<dd>
+									<label><b><input name="<?php echo $key; ?>" onClick="checkSome('<?php echo $key; ?>');" type="checkbox" value="1" class="CheckSome_<?php echo $key; ?>"/><?php echo $val['name']; ?>
+										</b></label></dd>
+
+								<?php
+								$accessVals = json_decode($groupInfo['access_val'], true);
+								foreach ($items as $groupName => $groupVal):
+									echo "<dd><label><b>$groupName</b></dd>";
+									?>
+									<dd>
+										<?php
+
+										foreach ($groupVal as $sonKey => $sonVal) :
+											$id       = $sonVal['id'];
+											list($name, $passArr) = $access[$id];
+											$userPass = isset($accessVals[$id]) ? $accessVals[$id] : array();
+											$checked  = ($groupInfo['rvalue'][$key][$id] && $groupInfo['rvalue'][$key][$sonVal['id']] == 1) ? 'checked="checked"' : '';
+											?>
+											<label>
+												<input name="<?php echo "rvalue[" . $key . "][{$id}]";?>"  <?=$checked?> type="checkbox" value="1" class="CheckSome_<?=$key?>"/><?php echo $sonVal['name'];?>
+												<?php if (!empty($passArr)): ?>
+													<br>(
+													<?php
+													foreach ($passArr as $kk => $vv):
+														$checked = !empty($userPass[$kk]) ? 'checked="checked"' : '';
+														?>
+														<input name="<?php echo "access_val[{$id}][{$kk}]";?>" type="checkbox" <?=$checked?> value="1" class="CheckSome_<?=$key?>" /><?php echo $vv;?>
+													<?php endforeach; ?>
+													)
+												<?php endif;?>
+											</label>
+
+
+										<?php endforeach; ?>
+
+
+									</dd>
+								<?php endforeach ?>
+
+							</dl>
+						<?php
+						}
+
+						?>
+
+					</td>
+
+				</tr>
+
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button type="submit">保存</button></span></span></div>
+	</form>
+	<script type="text/javascript">
+		//表单数据提交
+		$(document).ready(function () {
+			ajaxForm('groupForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Group/index');
+			});
+		})
+		//权限选中大类的时候同时选中小类
+		function checkSome(val) {
+			var className = 'CheckSome_' + val;
+			var classObj = $('.' + className);
+			for (var i = 1; i < classObj.length; i++) {
+				var e = classObj[i];
+				if (classObj[0].checked == true) {
+					e.checked = true;
+				} else {
+					e.checked = false;
+				}
+			}
+		}
+
+		function ck_access(val) {
+			var className = 'ck_access_' + val;
+			var classObj = $('.' + className);
+			for (var i = 1; i < classObj.length; i++) {
+				var e = classObj[i];
+				if (classObj[0].checked == true) {
+					e.checked = true;
+				} else {
+					e.checked = false;
+				}
+			}
+		}
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

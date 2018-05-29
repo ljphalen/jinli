@@ -1,0 +1,70 @@
+<style>
+    .ratioInput {
+        width: 50px;
+        margin-right: 5px;
+    }
+</style>
+<div class="page">
+    <div class="pageContent">
+        <form method="post" action="{:U('contact')}"
+              enctype="multipart/form-data" class="required-validate"
+              onsubmit="return validateCallback(this, dialogAjaxDone);" novalidate="novalidate">
+        <input name="id" type="hidden" value="{$contact.id}"/>
+        <div class="pageFormContent" layouth="58">
+            <!--金立对接人-->
+            <div class="unit">
+                <label>联系人名称：</label>
+                <input name="name" value="{$contact.name}" class="require textInput valid" type="text" size="50">
+            </div>
+             <div class="unit">
+                <label>联系人QQ：</label>
+                <input name="qq" value="{$contact.name}" class="require textInput valid" type="text" size="50">
+            </div>
+            <div class="unit">
+                <label>联系电话：</label>
+                <input name="phone" value="{$contact.phone}" class="require textInput" type="text"  size="50">
+            </div>
+            <div class="unit">
+                <label>联系邮箱：</label>
+                <input type="text" value="{$contact.email}" class="form-control" id="company_passport" size="50" tabindex="1"
+                       name="email">
+            </div>
+             <div class="unit">
+	            <label>游戏类型：</label>
+					<select name="game_type">
+                    <option selected="" value="">全部</option>
+                    <option value="1" <if condition="$contact['game_type'] eq 1 "> selected </if> >单机</option>
+                    <option value="2" <if condition="$contact['game_type'] eq 2 "> selected </if> >网游</option>
+                	</select>
+	        </div>
+            <div class="unit">
+                <label>负责区域：</label>
+                <select name="area">
+                    <option selected="" value="">全部</option>
+                    <option value="华南地区" <if condition="$contact['area'] eq '华南地区' "> selected </if> >华南</option>
+                    <option value="华北地区" <if condition="$contact['area'] eq '华北地区' "> selected </if> >华北</option>
+                    <option value="华东地区" <if condition="$contact['area'] eq '华东地区' "> selected </if> >华东</option>
+                    <option value="华中地区" <if condition="$contact['area'] eq '华中地区' "> selected </if> >华中</option>
+                    <option value="西南地区" <if condition="$contact['area'] eq '西南地区' "> selected </if> >西南</option>
+                    <option value="西北地区" <if condition="$contact['area'] eq '西北地区' "> selected </if> >西北</option>
+                    <option value="东北地区" <if condition="$contact['area'] eq '东北地区' "> selected </if> >东北</option>
+                </select>
+            </div>
+            <div class="unit">
+	            <label>状态：</label>
+					<select name="is_deleted">
+                    <option value="1" <if condition="$contact['is_deleted'] eq 1 "> selected </if> >有效</option>
+                    <option value="2" <if condition="$contact['is_deleted'] eq 2 "> selected </if> >无效</option>
+                	</select>
+	        </div>
+		</div>
+		
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">提交</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+</script>
+<body>
+	<div id="list-page">
+		<section class="wrap">
+			<?php if(!count($games) || empty($games)){?>
+		    <div class="search-tips">
+				<p><h2>对不起，没有找到你想要的结果！</h2></p>
+				<p><img src="<?php echo $staticResPath; ?>/pic/unsearch.png" /></p>
+			</div>
+			<?php }?>
+			<?php if($from == 'baidu' && count($games)){?>
+			<div class="search-tips-title">共<?php echo $total;?>条结果来自百度应用：</div>
+			<div class="baiduSearch-tips">百度应用的游戏可能不适配您的手机</div>
+			<?php } else if($from == 'gn'){?>
+			<div class="search-tips-title">共搜索到<?php echo $total;?>条结果：</div>
+			<?php } ?>
+			<div class="item-list J_gameItem">
+				<ul>
+				    <?php if(count($games)){?>
+					<?php $i=0; foreach($games as $key=>$value){?>
+					<?php 
+					     if(!$intersrc){
+                            $intersrc = 'SEARCH';
+					     } 
+					     $href = $webroot.'/channel/search/detail/?from='.$value['from'].'&id='.$value['id'].'&gname='.$value['name'].'&keyword='.$keyword.'&intersrc='.$intersrc.'&t_bi='.$source;
+					?>
+					<li>
+						<a data-infpage="<?php echo $value['name'].','.$href.','.$value['id'].','.$value['link'].','.$value['package'].','.$value['size'].','.'Android'.$value['version'].','.$value['min_resolution'].'-'.$value['max_resolution'];?>">
+							<span class="icon"><img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $value['img'];?>"></span>
+							<span class="desc">
+								<em><?php echo html_entity_decode($value['name'], ENT_QUOTES);?></em>
+								<p><em>大小：<?php echo $value['size']; ?>M</em></p>
+								<b><?php echo html_entity_decode($value['resume'], ENT_QUOTES);?></b>
+							</span>
+						</a>
+					</li>
+					<?php $i++;} } else {?>
+					
+					<?php }?>
+				</ul>
+			</div>	
+		</section>
+		<?php if($hasnext){ ?>
+			<div class="loading J_loadMore" style="display:none" data-ajaxUrl="<?php echo $webroot.'/channel/search/more/?keyword='.$keyword.'&intersrc='.$intersrc.'&from='.$from.'&t_bi='.$source;?>" data-hasnext="<?php echo $hasnext;?>" data-curpage="<?php echo $page;?>">
+			<span class="load"></span>
+            </div>
+	   <?php } ?>
+	</div>
+   <?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

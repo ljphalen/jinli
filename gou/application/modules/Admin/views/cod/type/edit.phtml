@@ -1,0 +1,76 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">分类列表</a></li>
+    <li class="current"><a href="javascript:;">编辑分类</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑分类</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort']?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title']?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">模块-平台</th>
+			<td class="td">
+				<select name="module_id">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($info['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				
+				<select name="cid">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($info['cid'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr" id="link">
+			<th class="th">渠道号</th>
+			<td class="td"><input type="text" name="channel_code" class="input" value="<?php echo $info['channel_code'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">链接地址</th>
+			<td class="td"><textarea class="input wc" name="url"><?php echo $info['url'];?></textarea></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">背景颜色</th>
+			<td class="td"><input type="text" class="input" name="color" value="<?php echo $info['color'];?>">(如:女装（#f57766） 男装（#be85f8 ）数码（#4ec0e5） 手表（#f39160）潮鞋（#4bcea7） 家居（#7bcc5b） 成人（#f76591）)</td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="select wa">
+				<option <?php if ($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+				<option <?php if ($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//分类表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Cod_Type/index');
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,88 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $configUrl; ?>">基本配置</a></li>
+			<li><a href="<?php echo $indexUrl; ?>">信息列表</a></li>
+			<li><a href="<?php echo $addUrl; ?>">添加活动内容</a></li>
+			<li><a href="<?php echo $userUrl ?>">用户列表</a>
+			<li class="current"><a href="<?php echo $logUrl ?>">通话记录</a>
+			<li><a href="<?php echo $service; ?>">添加客服信息</a>
+			<li><a href="<?php echo $serviceList; ?>">客服信息列表</a>
+			<li><a href="<?php echo $tipsListUrl ?>">规则说明</a>
+		</ul>
+	</div>
+
+	<form method="post" action="<?=$baseUrl?>" id="addFrom">
+		<input name="token" value="<?=$token?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+
+				<tr class="tr">
+					<th class="th">时间范围</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $sdate; ?>"> 至
+						<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $edate; ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">导出</th>
+					<td class="td">
+						<?php
+						$arr = array(0 => '否', 1 => '是');
+						foreach ($arr as $k => $name):
+							$checked = $export == $k ? 'checked="checked"' : '';
+							?>
+							<input type="radio" name="export" class="input" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+						<?php endforeach; ?>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="50">ID</td>
+				<td width="100">呼出手机号</td>
+				<td width="100">被呼叫号码</td>
+				<td width="100">呼叫时间</td>
+				<td width="100">是否接通</td>
+				<td width="100">通话时长</td>
+				<td width="100">被叫号归属地</td>
+				<td width="100">操作</td>
+			</tr>
+			<?php foreach ($dataList as $key => $value) {
+				?>
+				<tr class="ct">
+					<td><?php echo $value['id']; ?></td>
+					<td><?php echo $value['caller_phone']; ?></td>
+					<td><?php echo $value['called_phone']; ?></td>
+					<td><?php echo date('Y-m-d H:i:s', $value['called_time']); ?></td>
+					<td><?php echo $value['connected_time'] ? '是' : '否'; ?></td>
+					<td><?php echo $value['duration'] ?></td>
+					<td><?php echo $value['area'] ? $value['area'] : '广东 深圳'; ?></td>
+					<td>
+						<a href="javascript:" onclick="deleteOne('<?php echo $deleteLogUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#sdate").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#edate").datepicker({dateFormat: 'yy-mm-dd'});
+		});
+	</script>
+
+<?php echo $this->render("layout/footer.phtml"); ?>

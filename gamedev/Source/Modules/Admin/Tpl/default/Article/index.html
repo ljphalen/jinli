@@ -1,0 +1,126 @@
+<form id="pagerForm" action="__URL__" method="post">
+	<input type="hidden" name="pid" value="{$_REQUEST.pid}"/>
+	<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+	<input type="hidden" name="numPerPage" value="{$_REQUEST.numPerPage}" />
+	<input type="hidden" name="orderField" value="{$_REQUEST.orderField}" />
+	<input type="hidden" name="orderDirection" value="{$_REQUEST.orderDirection}" />
+	<volist name="_REQUEST._search" key="name" id="field">
+		<input type="hidden" name="_search[{$key}]" value="{$field|safe}"/>
+	</volist>
+</form>
+
+<div class="page">
+	<div class="pageHeader">
+		<form onsubmit="return navTabSearch(this);" action="__URL__" method="post">
+		<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+		<div class="searchBar">
+			<ul class="searchContent">
+				<li>
+					<label>类型：</label>
+					<select name="_search[mold]" id="_search_mod">
+                            <option value="">全部</option>
+                            <volist name="mold_list" id="name">
+                            <option value="{$key}">{$name}</option>
+                            </volist>
+                    </select>
+                    <script>$("#_search_mod").val("{$_search[mold]}");</script>
+				</li>
+				<li>
+					<label>文章频道：</label>
+					<select name="_search[category]" id="_search_cat" onchange="$('#_search_mod').val(1)">
+							<option value="">全部</option>
+                            <volist name="category_list" id="name">
+                            <option value="{$key}">{$name}</option>
+                            </volist>
+                    </select>
+                    <script>$("#_search_cat").val("{$_search[category]}");</script>
+				</li>
+				<li>
+					<label>发布者：</label>
+					<input type="text" name="_search[author]" value="{$_search[author]}" class="medium" >
+				</li>
+				<li>
+					<label>发布时间：</label>
+					<input type="text" name="_search[startDay]" value="{$_search[startDay]}" class="date" size="12" readonly/>
+					~
+					<input type="text" name="_search[endDay]" value="{$_search[endDay]}" class="date" size="12" readonly/>
+				</li>
+				<div class="buttonActive"><div class="buttonContent"><button type="submit">查询</button></div></div>
+			</ul>
+		</div>
+		</form>
+	</div>
+	
+	<div class="panelBar">
+			<ul class="toolBar">
+				<li class=""><a height="400" width="600" mask="true" target="NavTab" href="__URL__/add" class="add"><span>发布文档</span></a>
+				<a height="400" width="600" mask="true" target="NavTab" href="__URL__/sdkadd" class="add"><span>SDK发布</span></a>
+				</li>
+			</ul>
+		</div>
+	<div class="pageContent">
+		<table class="list" width="100%" layoutH="138">
+			<thead>
+			<tr>
+				<th width="60" orderField="id" class="{:orderField('id','desc')}">编号</th>
+                <th>发布时间</th>
+                <th>类型</th>
+                <th>频道</th>
+                <th>状态</th>
+				<th width="40%">标题</th>
+				<th>发布者</th>
+				<th>操作</th>
+				<th>发布</th>
+				<th>删除</th>
+				<th>预览</th>
+			</tr>
+			</thead>
+			<tbody>
+			
+			<volist id="vo" name="list">
+				<tr target="sid_node" rel="{$vo['id']}">
+					<td>{$vo['id']}</td>
+					<td>{$vo['pubdate']}</td>
+					<td>{:ArticleModel::getMold($vo['mold'])}</td>
+					<td>{$category_list[$vo['category']]}</td>
+					<td>{:ArticleModel::getStatus($vo['status'])}</td>
+					<td>{$vo['title']}</td>
+					<td>{$vo['author']}</td>
+					<td><a href="{:U('Article/edit', array("id"=>$vo['id']))}" target="NavTab" >编辑</a></td>
+					<td>
+					<if condition="$vo['status'] eq ArticleModel::STATUS_SUC" >
+						<a title="是否要执行此操作？" target="ajaxTodo" href="__URL__/editStatus/id/{$vo['id']}/status/{:ArticleModel::STATUS_DOWN}">下线</a>
+					<else />
+						<a title="是否要执行此操作？" target="ajaxTodo" href="__URL__/editStatus/id/{$vo['id']}/status/{:ArticleModel::STATUS_SUC}">上线</a>
+					</if>
+					</td>
+					
+					<td><a title="你确定要删除吗？" target="ajaxTodo" href="__URL__/editStatus/id/{$vo['id']}/status/{:ArticleModel::STATUS_DEL}">删除</a></td>
+					<td><a href="{:U('@dev', array("help"=>"page", "id"=>$vo['id']))}" target="_blank">预览</a></td>
+				</tr>
+			</volist>
+			</tbody>
+		</table>
+
+		<div class="panelBar">
+			<div class="pages">
+				<span>显示</span>
+				<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+					<option value="10" <eq name="numPerPage" value="10">selected</eq>>10</option>
+					<option value="20" <eq name="numPerPage" value="20">selected</eq>>20</option>
+					<option value="50" <eq name="numPerPage" value="50">selected</eq>>50</option>
+					<option value="100" <eq name="numPerPage" value="100">selected</eq>>100</option>
+					<option value="200" <eq name="numPerPage" value="200">selected</eq>>200</option>
+				</select>
+				<span>共{$totalCount}条</span>
+			</div>
+			<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="10" currentPage="{$currentPage}"></div>
+		</div>
+	</div>
+</div>
+<script>
+function sort(id, sort)
+{
+	$.get("__URL__/sort/id/"+id+"/sort/"+sort.value);
+}
+</script>

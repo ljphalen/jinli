@@ -1,0 +1,110 @@
+<?php echo $this->render("layout/header.phtml");?>
+    <div class="nav">
+        <ul class="cc">
+            <li><a href="<?php echo $indexUrl;?>">回帖列表</a></li>
+            <li class="current"><a href="javascript:;">编辑回帖</a></li>
+        </ul>
+    </div>
+    <div class="h_a">编辑跟帖</div>
+    <form method="post" action="<?php echo $replyPostUrl;?>" id="addForm">
+        <input name="token" value="<?php echo $token;?>" type="hidden" />
+        <input name="item_id" value="<?php echo $item_id;?>" type="hidden" />
+        <input name="parent_id" value="<?php echo $id;?>" type="hidden" />
+        <div class="table_full">
+            <table width="100%">
+                <tr class="tr">
+                    <th class="th">用户</th>
+                    <td class="td">
+                        <select name="uid">
+                            <?php foreach($authors as $a): ?>
+                                <option value="<?php echo $a['uid'] ?>"><?php echo $a['nickname'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="tr">
+                    <th class="th">内容</th>
+                    <td class="td">
+                        <textarea name="content" id="content" cols="112" rows="10" placeholder="限制为10-500个字"></textarea>
+                    </td>
+                </tr>
+                <tr class="tr">
+                    <th class="th">点赞数</th>
+                    <td class="td">
+                        <input type="number" class="input" name="praise" value="0">
+                    </td>
+                </tr>
+                <tr class="tr">
+                    <th class="th">跳转链接</th>
+                    <td class="td">
+                        <input type="hidden" name="relate_item_id" value="0"/>
+                        <input type="text" class="input wb" id="questions" placeholder="请输入关键词">
+                        <input type="button" value="查询" onclick="selectQuestion();"/>
+                    </td>
+                </tr>
+                <tr class="tr">
+                    <th class="th">状态</th>
+                    <td class="td">
+                        <?php foreach($status as $sk=>$sv):?>
+                            <input type="radio" name="status" value="<?php echo $sk ?>" /><?php echo $sv ?>
+                        <?php endforeach; ?>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="mb10 tac">
+            <span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+        </div>
+    </form>
+    <style>
+        .ui-autocomplete {
+            max-height: 300px;
+            overflow-y: auto;
+            /* prevent horizontal scrollbar */
+            overflow-x: hidden;
+        }
+        /* IE 6 doesn't support max-height
+           * we use height instead, but this forces the menu to always be this tall
+           */
+        * html .ui-autocomplete {
+            height: 300px;
+        }
+    </style>
+    <script type="text/javascript">
+        //用户表单数据提交
+        $(document).ready(function(){
+            ajaxForm('addForm',function(ret){
+                ajaxRedirect(ret, '<?php echo urldecode($callback); ?>');
+            });
+
+            selectQuestion = function(){
+                var obj = $('#questions');
+                $.ajax({
+                    url: baseurl + '/Admin/Qa_Question/getAllQuestion/',
+                    dataType: 'json',
+                    data:{
+                        q: obj.val()
+                    },
+                    success: function(data){
+                        var qus = data.data;
+                        obj.autocomplete({
+                            minLength: 0,
+                            source: qus,
+                            focus: function(event, ui){
+                                obj.val(ui.item.label);
+                                return false;
+                            },
+                            select: function(event, ui){
+                                obj.val(ui.item.label);
+                                obj.prev('input').val(ui.item.value);
+//                                $(this).next('input').val(ui.item.desc);
+                                return false;
+                            }
+                        });
+                    }
+                });
+            };
+        })
+
+    </script>
+<?php echo $this->render("layout/footer.phtml");?>

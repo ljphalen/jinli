@@ -1,0 +1,258 @@
+﻿<?php echo $this->render("festival/summer/header.phtml");?>
+<body>
+	<div class="holiday-activity">
+		<div class="poster">
+			<img src="<?php echo  $attachPath.$activityInfo['img'];?>" />	
+		</div>
+		<div class="prize" id="prize">
+			<div class="title">
+				<h1><?php echo $prizeInfo['name']; ?></h1>
+				<p><?php echo $prizeInfo['info']; ?></p>
+			</div>
+			<div class="luck-draw">
+			<?php foreach($prizeInfo['list'] as $key=> $val){?>
+				<div class="frame">
+					<div class="pig">
+						<img name="pig" src="<?php echo $attachPath.$val['prizeImg']; ?>"
+										data-ajaxUrl="<?php echo $webRoot.'/client/Festival_Summer/getPrize/?prizeId='.$val['prizeId'];?>" 
+						                data-status="<?php echo $val['prizeStatus']; ?>" 
+						                data-condition="<?php echo $val['prizeCondition'];?>" 
+						                 />
+					</div>
+					<h1><?php echo $val['prizeName']; ?></h1>
+				</div>
+				<?php }?>
+					
+				<div class="info">
+				<?php foreach($prizeInfo['list'] as $val){?>
+					<p><?php echo $val['prizeName']; ?>：<?php echo $val['prizeInfo']; ?> </p>
+				<?php }?>	
+				</div>
+				<div class="but">
+					<input type="button" id="selectInfo" value="点击查看活动说明>" class="but-explain" data-url="<?php echo $webRoot.'/client/Festival_Summer/activityInfo/';?>" />
+				</div>
+			</div>
+		</div>
+		<div class="download" id="download">
+			<div class="poster-small">
+				<img src="<?php echo  $attachPath.$taskImg;?>" />
+				<h1><?php echo $taskName; ?></h1>
+			</div>
+			<div class="row">
+			    <?php foreach($taskList as $val){ 
+			          if($val['taskStatus'] == 2) continue;
+			    	?>
+				<div class="frame" name="dowFrame">
+					<div class="game-list" name="gameList" data-package="<?php echo $val['packageName']; ?>">
+						<h2><?php echo $val['taskName']; ?></h2>
+						<img src="<?php echo $val['iconUrl']; ?>" name="gameDetails" />
+						<h1><?php echo $val['gameName']; ?></h1>
+						<input  type="button" name="dow" value="下载" class="but-start" />
+					</div>
+				</div>
+				<?php }?>
+			</div>
+		</div>
+		<div class="sign" id="sign"> 
+			<div class="poster-small">
+				<img src="<?php echo $staticroot; ?>/apps/game/apkv1/pic/holiday-banner3.png" />
+				<h1>我的成就</h1>
+			</div>
+			<div class="date">
+				<ul>
+				<?php foreach ($daysList as $val){
+				   if( $val['isBeforeToday'] && $val['isFinished']  ){
+						$calss = 'signed';
+				   }elseif($val['isBeforeToday'] && !$val['isFinished']){
+				   		$calss = 'be-overdue';
+				   }elseif($val['isToday'] && $val['isFinished']){
+				   		$calss = 'signed';
+				   }elseif($val['isToday'] && !$val['isFinished']){
+				   		$calss = 'same-day';
+				   }elseif($val['isAfterToday']){
+				   		$calss = '';
+				   }else{
+				   		$calss = '';
+				   }
+				 ?>
+					<li class="<?php echo $calss;?>"><?php echo $val['day'];?></li>
+				<?php }?>	
+				</ul>
+			</div>
+			<p class="explain">战胜自我任务:已坚持<span name="finishedDays"><?php echo $finishedDays;?></span>天,获得奖励<span name="tickets"><?php echo $tickets; ?></span>券,<span name="points"><?php echo $points;?></span>积分 </p>
+			<p class="task-type">已连续签到<span name="continueDays"><?php echo $continueDays;?></span>天，当日任务（<span name="todayFinished"><?php echo $todayFinished? '完成':'未完成'?></span>）</p>
+		</div>
+		<div class="list-of-prizes">
+			<div class="poster-small">
+				<img src="<?php echo $staticroot; ?>/apps/game/apkv1/pic/holiday-banner4.png" />
+				<h1>奖品发放</h1>
+			</div>
+			<div class="roll-padding">
+				<div class="msg" id="msg">
+					<div id="roll">
+					 <?php foreach ($prizeRank as $val){?>
+						<p><?php echo $val; ?></p>
+					<?php }?>			
+					</div>
+					<div id="copyRoll">	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="layer" id="layerPig">
+		<div class="layer-bg-black"></div>
+		<img src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/img/holiday/pig-move.gif" />
+	</div>
+
+	<div id="load" class="layer layer-window prompt " >
+		<div class="layer-bg-black"></div>
+		<div class="img-container">
+			<p class="head">提示</p>
+			<span class="tips">登录账号后才能参与活动，请先登录账号</span>
+		</div>
+	
+		<div class="btn-container double">
+			<input type="button" name="but-hide" value="稍后" class="but-a negative" />
+			<input type="button" name="ok" value="立即登录" class="but-a" />
+		</div>
+	</div>
+	<div id="successPrize" class="layer layer-window prompt" >
+		<div class="layer-bg-black"></div>
+		<div class="img-container">
+			<p class="head">提示</p>
+			<span class="tips">您已抽过奖品</span>
+		</div>
+		<div class="btn-container">
+			<input type="button" name="but-hide" value="知道了" class="but-a" />
+		</div>
+	</div>
+	<div id="ajaxTitle" class="layer layer-window prompt" >
+		<div class="layer-bg-black"></div>
+		<div class="img-container">
+			<p class="head">提示</p>
+			<span class="tips" name="msg">您已抽过奖品</span>
+		</div>
+		<div class="btn-container">
+			<input type="button" name="ok" value="确定" class="but-a" />
+		</div>
+	</div>
+	<div id="source" class="layer layer-window prompt" >
+		<div class="layer-bg-black"></div>
+		<div class="img-container">
+			<p class="head">提示</p>
+			<span class="tips">您当前版本过底，请更新至<?php echo $limitClientVersion; ?>版本参加活动</span>
+		</div>
+	
+		<div class="btn-container double">
+			<input type="button" name="but-hide" value="稍后" class="but-a negative" />
+			<input type="button" name="ok" value="立即更新" class="but-a" />
+		</div>
+	</div>
+	
+	<div id="layerEntity" class="layer layer-window">
+			<div class="layer-bg-black"></div>
+			<div class="img-container">
+				<div class="img-wrapper">
+					<img name="poster" src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/img/holiday/entity.png">
+				</div>
+				<span class="tips" > <span>Darling, 务必填写完成信息再离开啦!<br />此生只见君一面！</span></span>
+				<span class="tips" name="msg">恭喜您！砸到了 <span>200元</span>京东购物卡!</span>
+			</div>
+			<div class="addressinfo-container">
+				<div class="ad-info">
+					<em>收货人:</em><input name="name" class="btn-input" type="text" placeholder="姓名">
+				</div>
+				<div class="ad-info">
+					<em>联系电话:</em><input name="phone" class="btn-input" type="text" placeholder="手机">
+				</div>
+				<div class="ad-info">
+					<em>收货地址:</em><textarea name="address" class="btn-input btn-textarea" rows="3" placeholder="所在省市详细街道信息"></textarea>
+				</div>
+			</div>
+			<div class="btn-container">
+				<p class="msg">请填写您的收货信息来领取奖品</p>
+				<input type="button" value="提交" class="but-entity" name="ok" />
+				<p name="error" class="error">请添加收货人</p>
+			</div>
+	</div>
+	<div id="integral" class="layer layer-window" data-url="<?php echo $webroot.'/api/point/gainList/' ?>" >
+		<div class="layer-bg-black"></div>
+		<div class="img-container">
+			<div class="img-wrapper">
+				<img name="poster" src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/img/holiday/entity.png">
+			</div>
+			<span class="tips" name="msg"></span>
+		</div>
+	
+		<div class="btn-container double">
+			<input type="button" value="立即查看" name="ok" class="but-a negative" />
+			<input type="button" name="but-hide" value="知道了" class="but-a" />
+		</div>
+	</div>
+
+	<div id="layerNot" class="layer layer-window">
+		<div class="layer-bg-black"></div>
+		<div class="img-container">
+			<div class="img-wrapper">
+				<img name="poster" src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/img/holiday/entity.png">
+			</div>
+			<span class="tips" name="msg">什么也没有啊</span>
+		</div>
+		<div class="btn-container">
+			<input type="button" name="but-hide" value="知道了" class="but-a" />
+		</div>
+	</div>
+	<div id="layerEntitySuccess" class="layer layer-window">
+		<div class="layer-bg-black"></div>
+		<div class="img-container">
+			<div class="img-wrapper">
+				<img name="poster" src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/img/holiday/successKind.png">
+			</div>
+			<span class="tips">信息已提交成功！<br />请耐心等待您的奖品！</span>
+		</div>
+		<div class="btn-container">
+		
+			<input type="button" name="but-hide" value="知道了" class="but-a" />
+		</div>
+	</div>
+	<div id="voucher" class="layer layer-window" data-url="<?php echo $webroot.'/client/task/myticket/' ?>" >
+		<div class="layer-bg-black"></div>
+		<div class="img-container">
+			<div class="img-wrapper">
+				<img name="poster" src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/img/holiday/entity.png">
+			</div>
+			<span class="tips" name="msg"></span>
+		</div>
+		<div class="title">
+			<p class="msg">请在"我的A券"中查看，并在有效期内使用</p>
+		</div>
+		<div class="btn-container double">
+			<input type="button" value="立即查看" name="ok" class="but-a negative" />
+			<input type="button" name="but-hide" value="知道了" class="but-a" />
+		</div>
+	</div>
+	<div id="unfinishedTask" class="layer layer-window prompt" >
+		<div class="layer-bg-black"></div>
+		<div class="img-container">
+			<p class="head">提示</p>
+			<span class="tips" name="msg">铜猪完成连续打工1天后，才能砸银蛋</span>
+		</div>
+	
+		<div class="btn-container">
+			<input type="button" name="but-hide" value="知道了" class="but-a" />
+		</div>
+	</div>
+</body>
+<script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/Common.js?v=<?php echo $version;?>"></script>
+<script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/validate.js?v=<?php echo $version;?>"></script>
+<script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/Form.js?v=<?php echo $version;?>"></script>
+<script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/zepto.js?v=<?php echo $version;?>"></script>
+<script type="text/javascript" src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/holiday/task.js?v=<?php echo $version;?>"></script>
+<script>
+	function onClientEvent(ac,data){
+		setGameStatus(ac,data);
+	}
+	var holidayData =<?php echo $holidayData ;?>;
+</script>
+</html>

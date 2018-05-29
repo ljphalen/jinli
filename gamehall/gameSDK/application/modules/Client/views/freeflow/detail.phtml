@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="format-detection" content="email=no" />
+	<title>免流量活动说明</title>
+	<link rel="stylesheet" href="<?php echo $staticroot; ?>/apps/game/apkv1/assets/css/activity.css?v=<?php echo $version;?>">
+	<script type="text/javascript">var game_source='<?php echo $game_source?>', t_bi = "<?php echo $t_bi;?>";</script>
+	<script>var token = '<?php echo $token;?>';</script>
+	
+</head>
+<body id="freeflow-page">
+	<div class="freeflow-wrapper">
+		<div class="ac-content ui-editor">
+		 <?php echo html_entity_decode($info['content']); ?>
+		</div>
+	</div>
+	<div class="feedback-section">
+		<p class="tips">本专区还在完善中，如有建议或问题请反馈，谢谢！</p>
+		<div class="feedback">
+			<a class="btn-orange" data-action="gamehall.freeflow.feedback">一键反馈</a>
+		</div>
+	</div>
+
+</body>
+<script>
+		window.onload=function(){
+			var btn=document.getElementsByClassName("btn-orange");
+			if(!btn.length) return;
+			action=btn[0].getAttribute("data-action");
+			data={};
+			btn[0].addEventListener("click",function(){
+				if(window.gamehall){
+					var ret=window.gamehall.onEvent(action,JSON.stringify(data));
+					if(ret==false){
+						window.gamehall.onEvent('gamehall.alert',JSON.stringify({alertStr:'调起失败'}));
+					}
+				}
+			})
+		}
+	</script>
+</html>

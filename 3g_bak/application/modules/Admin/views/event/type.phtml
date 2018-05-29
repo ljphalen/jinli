@@ -1,0 +1,41 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $indexUrl; ?>">活动列表</a></li>
+			<li ><a href="<?php echo $typeEditUrl; ?>">添加新活动</a></li>
+		</ul>
+	</div>
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+				<th class="th">活动名</th>
+				<th class="th">活动标识</th>
+				<th class="th">奖品有限时长(分钟)</th>
+				<th class="th">单天最大领奖次数</th>
+				<th class="th">状态</th>
+				<th class="th">开始时间</th>
+				<th class="th">结束时间</th>
+				<th class="th">操作</th>
+			</tr>
+			<?php foreach ($dataList as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['id'];?></td>
+					<td class="td" align="left"><?=$v['name'];?></td>
+					<td class="td" align="left"><?=$v['type_sign'];?></td>
+					<td class="td"><?php echo $v['valid_minutes']; ?></td>
+					<td class="td"><?php echo $v['max_times'];?></td>
+					<td class="td"><?php echo $v['status']==1?'进行中':'已关闭';?></td>
+					<td class='td'><?php echo  date("Y-m-d H:i:s",$v['start_time']);?></td>
+					<td class="td"><?php echo date("Y-m-d H:i:s",$v['end_time']); ?></td>
+					<td class="td"><a href="<?php echo $typeEditUrl; ?>/?id=<?php echo $v['id']; ?>">编辑</a>&nbsp;
+						<a href="javascript:void(0);" onclick="deleteOne('<?php echo $typeDelUrl; ?>/?id=<?php echo $v['id']; ?>', '', event);">删除</a>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

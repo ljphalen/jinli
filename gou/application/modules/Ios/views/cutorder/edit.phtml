@@ -1,0 +1,65 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+	<div class="module" style="background-color:##fafafa">
+
+		<section id="iScroll" class="cut-order">
+			<div class="gotop">
+				<span>返回顶部</span>
+			</div>
+			<div class="input-info">
+				<form action="<?php echo $webroot.$editPostUrl?>">
+					<input type="hidden" name="trade_no" value=<?php echo $info['trade_no'];?>>
+					<div class="legend">
+						<h3>请填写收货信息</h3>
+					</div>
+					<fieldset>
+						<ul>
+							<li>
+								<label>收<b></b>货<b></b>人：</label>
+								<input name="buyer_name" require maxlength="20" type="text" value=<?php echo $info['buyer_name'];?>
+									data-msg="{'require':'请输入收货人姓名', 'maxlength':'字符个数不能大于20'}"
+									placeholder="请输入收货人姓名"/>
+							</li>
+							<li>
+								<label>手<b></b><b></b><b></b><b></b>机：</label>
+								<input name="mobile" require data-verify="\d{11}" type="tel" value=<?php echo $info['phone'];?>
+									data-msg="{'require':'请输入手机号码', 'verify':'格式错误，请重新填写'}"
+									placeholder="请输入手机号码"/>
+							</li>
+							<li class="J_areaWrap" old-aNode="<?php echo end(explode('|',$address['country']));?>">
+								<label>收货地区：</label>
+								<select require name="province" data-msg="{'require': '请选择省份'}"></select>
+								<select require name="city" data-msg="{'require': '请选择城市'}"></select>
+								<select require name="country" data-msg="{'require': '请选择地区'}"></select>
+							</li>
+							<li>
+								<label>街道地址：</label>
+								<input name="detail_address" require maxlength="100" type="text" value=<?php echo $address['detail_address'];?>
+									data-msg="{'require': '请输入街道地址'}"
+									placeholder="请输入街道地址"/>
+							</li>
+							<li>
+								<label>邮政编码：</label>
+								<input name="postcode" require data-verify="\d{6}" type="tel" value=<?php echo $address['postcode'];?>
+									data-msg="{'require': '请输入邮编'}"
+									placeholder="请输入邮编"/>
+							</li>
+							<li>
+								<input name="gbook" maxlength="150" type="text" placeholder="留言" value="<?php echo html_entity_decode($info['gbook']);?>">
+							</li>
+						</ul>
+					</fieldset>
+					<div class="btn-wrap" >
+						<div class="web-btn">
+							<a id="J_formSubmit" data-ajaxurl="<?php echo $webroot;?>/api/ios_cut/getstatus?id=<?php echo $goods['id'];?>" href="javascript:;">修改订单</a>
+						</div>
+						<span>下单后请在15分钟内支付，超过时间订单将失效。</span>
+					</div>
+				</form>
+			</div>
+		</section>
+
+	</div>
+
+	<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/newfooter.phtml");?>

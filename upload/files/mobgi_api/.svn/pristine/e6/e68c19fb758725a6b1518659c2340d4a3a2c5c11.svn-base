@@ -1,0 +1,115 @@
+{{pagerCss}}
+<link media="screen" href="{{rootUrl}}/css/table.css" rel="stylesheet" type="text/css">
+<link media="screen" href="{{rootUrl}}/css/gri.controls.css" rel="stylesheet" type="text/css">
+<div class="colMain">
+    <div class="title"><p class="fl">应用列表</p></div>
+    <div class="main">
+        <div class="toolbar">
+            <div class="search fl">
+                <form action="/implantable/applist" method="GET">
+                <span>{{search}}</span>
+                <span>
+                    <input typt="text" class="iText" name='appname' value='{{params.appname}}' />
+                    <input type="submit" class="submit" value="" onclick="confirmSubmit();"/>
+                    <span class="sign">可输入应用名称查询</span>
+                </span>
+                
+                </form>
+            </div>
+            <a href="../implantable/appedit" class="fr add">新增</a> &nbsp;
+        </div>
+        <div class="content">
+            <div class="grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>应用名</th>
+                            <th>Appkey</th>
+                            <th>应用状态</th>
+                            <th>广告类型信息</th>
+                            <th>最后操作人</th>
+                            <th>最后更新时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- loop result -->
+                        <tr>
+                            <td><span class="blue">{{result' value.appname}}</span></td>
+                            <td>{{result' value.appkey}}</td>
+                            <td>
+                                <p class="onfbk" style="width:80px;">
+                                    <a class="aon setAppstateOn <!-- if {{result' value.state}} == 1 -->cur<!-- else --><!-- endif -->" id="{{result' value.id}}">ON</a>
+                                    <a class="aoff setAppstateOFF <!-- if {{result' value.state}} == 0 -->cur<!-- else --><!-- endif -->" id="{{result' value.id}}">OFF</a>
+                                </p>
+                            </td>
+                            <td>{{result' value.blocknuminfo}}</td>
+                            <td>{{result' value.oprater}}</td>
+                            <td>
+                            <?php echo format_time($v1['updatetime']); ?>
+                            </td>
+                            <td>
+                                <a href="appedit?id={{result' value.id}}" class="edit" title="编辑"></a>
+                                |
+                                <a href="../implantable/appdelete?id={{result' value.id}}" class="del" title="删除"></a>
+                            </td>
+                        </tr> 
+                        <!-- endloop -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">{{pager.pages}}</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{{rootUrl}}/js/gri.dateRange.js"></script>
+<script type="text/javascript">
+$(function(){
+
+$(".setAppstateOn").click(function(){
+        if($(this).hasClass('cur')){
+            return;
+        }
+        if(!confirm("您确认要打开这个应用吗？")){
+            return;
+        }
+        $(this).parent().find('input').val(1);
+        $(this).addClass("cur");
+        $(this).parent().find(".aoff").removeClass('cur');
+        set_appstate($(this).attr("id"), 1);
+    });
+
+$(".setAppstateOFF").click(function(){
+        if($(this).hasClass('cur')){
+            return;
+        }
+        if(!confirm("您确认要关闭这个应用吗？")){
+            return;
+        }
+        $(this).parent().find('input').val(0);
+        $(this).addClass("cur");
+        $(this).parent().find(".aon").removeClass('cur');
+        set_appstate($(this).attr("id"), 0);
+    });
+
+
+});
+
+function set_appstate(appid, state)
+{
+    ajaxGET("/implantable/setAppState", "appid=" + appid + "&state=" + state, function(data) {
+        if (data.code == 0) {
+
+        } else {
+            alert(data.msg)
+        }
+    })
+}
+
+function confirmSubmit()
+{
+    return true;
+}
+
+
+</script>

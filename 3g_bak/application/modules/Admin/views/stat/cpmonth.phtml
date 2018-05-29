@@ -1,0 +1,176 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<style>.ui-datepicker-calendar {
+			display: none;
+		}  </style>
+	<form method="post" action="<?php echo $baseUrl; ?>" id="addFrom">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">选择月份</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="month" value="<?php echo $searchParam['month']; ?>">
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">CP名称</th>
+					<td class="td">
+						<select id="page_type" name="cp">
+							<option value="">请选择</option>
+							<?php foreach ($searchData['cpList'] as $key => $value) { ?>
+								<option value="<?php echo $value['id']; ?>" <?php if ($searchParam['cp'] == $value['id']) echo 'selected'; ?>><?php echo $value['name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">关键字（业务名称）</th>
+					<td class="td">
+						<input type="text" class="input_w" name="keywords" value="<?php echo $searchParam['keywords']; ?>"/>
+					</td>
+				</tr>
+				<tr class="tr" id="column">
+					<th class="th">筛选</th>
+					<td class="td">
+			<span>
+				状态：
+				<select name="status">
+					<?php foreach ($searchData['status'] as $k => $v) { ?>
+						<option value="<?php echo $k; ?>" <?php if ($searchParam['status'] == $k) echo 'selected'; ?>><?php echo $v; ?></option>
+					<?php } ?>
+				</select>
+			</span>
+					</td>
+				</tr>
+
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+		<input type="hidden" id="hidden_export" name="export" value="0"/>
+	</form>
+
+	<div class="table_list">
+		<table width="100%">
+			<tr class="ct">
+				<td class="td2">序号</td>
+				<td class="td2">月份</td>
+				<td class="td2">业务名称</td>
+				<td class="td2">公司名称</td>
+				<td class="td2">PV</td>
+				<td class="td2">结算方式</td>
+				<td class="td2">单价</td>
+				<td class="td2">后台结算金额</td>
+				<td class="td2">实际结算金额</td>
+				<td class="td2">修改原因</td>
+				<td class="td2">cp备注</td>
+				<td class="td2">修改</td>
+				<td class="td2">CP确认</td>
+			</tr>
+
+			<?php foreach ($dataList as $k => $v) { ?>
+				<tr class="ct">
+					<td class="td2"><?php echo $v['id']; ?></td>
+					<td class="td2"><?php echo $v['month']; ?></td>
+					<td class="td2"><?php echo $v['title']; ?></td>
+					<td class="td2"><?php echo $v['company'] ?></td>
+					<td class="td2"><?php echo $v['pv']; ?>
+						<input type="hidden" id="inputpvhold-<?php echo $v['id']; ?>" value="<?php echo $v['pv']; ?>"/>
+					</td>
+					<td class="td2">
+						<span id="inputchecktypetxthold-<?php echo $v['id']; ?>"><?php echo $searchData['checkType'][$v['checkType']]; ?></span>
+						<input type="hidden" id="inputchecktypehold-<?php echo $v['id']; ?>" value="<?php echo $v['checkType']; ?>"/>
+					</td>
+					<td class="td2" id="inputpricehold-<?php echo $v['id']; ?>"><?php echo $v['price']; ?></td>
+					<td class="td2" id="inputbcheckMoneyhold-<?php echo $v['id']; ?>"><?php echo $v['bcheckMoney'] ?></td>
+					<td class="td2" id="inputmoneyhold-<?php echo $v['id']; ?>"><?php echo $v['acheckMoney'] ?></td>
+					<td class="td2" id="inputreasonhold-<?php echo $v['id']; ?>"><?php echo $v['reason'] ?></td>
+					<td class="td2"><?php echo $v['remark'] ?></td>
+					<td class="td2">
+						<button class="btn-modify" mid="<?php echo $v['id']; ?>" title="点击修改">点击修改</button>
+					</td>
+					<td class="td2"><?php echo $v['status'] == 2 ? '已确认' : '未对帐'; ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+	<div id="ui-dialog-money" style="display:none;">
+		<p>结算方式：<select id="inputChecktype">
+				<?php foreach ($searchData['checkType'] as $k => $v) { ?>
+					<option value="<?php echo $k; ?>"><?php echo $v; ?></option>
+				<?php } ?>
+			</select>
+		</p>
+		<p>结算单价：<input type="text" id="inputPrice"/>元</p>
+
+		<p>结算金额：<input type="text" id="inputMoney"/>(实际结算金额)</p>
+
+		<p>修改原因：<textarea rows="4" cols="20" id="inputReason"></textarea></p>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#sdate").datepicker({
+				changeMonth: true,
+				changeYear: true,
+				showButtonPanel: true,
+				dateFormat: 'yy年mm月',
+				onClose: function (dateText, inst) {
+					var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+					var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+					$(this).datepicker('setDate', new Date(year, month, 1));
+				}
+			});
+			$(".btn-modify").click(function () {
+				var id = $(this).attr("mid");
+				$("#inputChecktype").val($("#inputchecktypehold-" + id).val());
+				$("#inputPrice").val($("#inputpricehold-" + id).html());
+				$("#inputMoney").val($("#inputmoneyhold-" + id).html());
+				$("#inputReason").val($("#inputreasonhold-" + id).html());
+				$("#ui-dialog-money").dialog({
+					title: '请输入调整后的金额',
+					width: 420,
+					modal: true,
+					buttons: {
+						"Ok": function () {
+							var pv = $("#inputpvhold-" + id).val();
+							var checktype = $("#inputChecktype").val();
+							var price = $("#inputPrice").val();
+							var money = $("#inputMoney").val();
+							var reason = $("#inputReason").val();
+							var checktypetxt = checktype + (checktype == 'cps' ? '（按pv）' : '（按月）');
+							var bcheckMoney = checktype == 'cpt' ? price : price * pv;
+							$.getJSON("/Admin/stat/modifyCpMonthMoney", {
+								"id": id,
+								"checkType": checktype,
+								"price": price,
+								"money": money,
+								"reason": reason
+							}, function (json) {
+								if (json.success == true) {
+									$("#inputchecktypetxthold-" + id).html(checktypetxt);
+									$("#inputchecktypehold-" + id).val(checktype);
+									$("#inputpricehold-" + id).html(price);
+									$("#inputbcheckMoneyhold-" + id).html(bcheckMoney);
+									$("#inputmoneyhold-" + id).html(money);
+									$("#inputreasonhold-" + id).html(reason);
+								} else {
+									alert('修改失败');
+								}
+								$("#ui-dialog-money").dialog('close');
+							});
+						},
+						"Cancel": function () {
+							$(this).dialog('close');
+						}
+					}
+				});
+			});
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

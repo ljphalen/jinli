@@ -1,0 +1,62 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li class="current"><a href="<?php echo $listUrl;?>">积分商城</a></li>
+        <li><a href="<?php echo $pointPrizeIndexUrl;?>">积分抽奖</a></li>
+        <li><a href="<?php echo $presendIndexUrl;?>">人工发放</a></li>
+        <li><a href="<?php echo $pointDescIndexUrl;?>">积分说明管理</a></li>
+	</ul>
+</div>
+
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('sort');" type="submit">重新排序</button></span></span>
+    <span class="btn2"><span><a href="<?php echo $addGoodUrl;?>" style="text-decoration:none;color:#ffffff;height: 21px;margin: 0 -9px;padding: 0 10px;line-height: 21px;padding-bottom: 2px;">添加商品</a></span></span>
+    <span class="btn2"><span><a href="<?php echo $addUrl;?>" style="text-decoration:none;color:#ffffff;height: 21px;margin: 0 -9px;padding: 0 10px;line-height: 21px;padding-bottom: 2px;">添加商品分类</a></span></span>
+    <span class="btn2"><span><a href="<?php echo $indexUrl.'?category_id=1';?>" style="text-decoration:none;color:#ffffff;height: 21px;margin: 0 -9px;padding: 0 10px;line-height: 21px;padding-bottom: 2px;">限时秒杀管理</a></span></span>
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+		    <td width="80">ID</td>
+		    <td width="120">排序</td>
+			<td width="100">商品分类名称</td>
+			<td width="80">类型</td>
+			<td width="120">商品数量(在线/总数)</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($categorys as $key => $value) {?>
+		<tr class="ct">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+		    <td><?php echo $value['id'];?></td>
+			<td><input type="text" class="input" style="width:80px" name="sort[<?php echo $value['id'];?>]" value="<?php echo $value['sort'];?>"></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $type[$value['goods_type']];?></td>
+			<td><?php echo $goodTotal[$value['id']]['onlineTotal'];?> / <?php echo $goodTotal[$value['id']]['goodsTotal'];?></td>
+			<td><?php echo $value['status'] ? '开启' : '关闭';?></td>		
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>&nbsp;&nbsp;&nbsp;
+			<a href="<?php echo $pointShopIndexUrl;?>/?category_id=<?php echo $value['id'];?>" class="mr10">商品管理</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Mall_Category/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

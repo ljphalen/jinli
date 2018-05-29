@@ -1,0 +1,59 @@
+ <!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>消费金额明细</title>
+<link rel="stylesheet" type="text/css" href="/template/default/css/general.css" />
+<link rel="stylesheet" type="text/css" href="/template/default/css/main.css" />
+<script src="/public/js/common.js" language="javascript" type="text/javascript"></script>
+<script type="text/javascript" src="/template/default/js/common.js"></script>
+<script type="text/javascript" src="/template/default/js/jquery-1.4.2-min.js"></script>
+
+</head>
+
+<body>
+<script type="text/javascript">
+
+$(function(){
+	$("#btnexcel").click(function(){
+		document.location.href='/index.php?ac=report_paydetail&dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>&clientid=<{$clientid}>&subclientid=<{$subclientid}>&gameid=<{$gameid}>&name=<{$name}>&toexcel=1';
+	});
+});
+
+function show_ipaydetail(){
+	if($("#ipay_detail").is(':visible')){
+		$("#ipay_detail").hide();	
+	}else{
+		$("#ipay_detail").show();	
+	}
+}
+
+</script>
+
+<style>
+#listDiv,#list-table{
+	width:400px;	
+}
+#list-table td{
+	text-align:center;
+	width:50%;
+}
+#list-table th{
+	background-color:#BBDDE5;
+}
+
+#list-table td{
+	background-color:#FFF;
+}
+</style>
+
+<div>日期：<{$dateStart}> — <{$dateEnd}> &nbsp;&nbsp;&nbsp;&nbsp;<br>
+渠道号：<{$clientid}> &nbsp;&nbsp;&nbsp;&nbsp;公司名称：<{$name}></div>
+<div class="list-div" id="listDiv">
+<{$paytable}>
+
+<div style="text-align:right"><input type="button" name="button" id="btnexcel" value="导出Excel" /></div>
+</div>
+
+</body>
+</html>

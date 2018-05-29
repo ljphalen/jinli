@@ -1,0 +1,164 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<style>
+    .step2 li{
+        width: 23%;
+    }
+    .step2 li.line{
+        position: static;
+    }
+    .medal-container {
+        overflow: hidden;
+    }
+    .medal-lists {
+        margin-top: 20px;
+    }
+    .medal-lists li {
+        float: left;
+        width: 48%;
+        min-width:430px;
+        border: 1px solid #eee;
+        padding: 6px;
+        background: #fff;
+    }
+    .add-medal {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+    .medal-list {
+        position: relative;
+
+    }
+    .medal-lists li:nth-child(1){
+        margin-right: 1%
+    }
+    .medal-list iframe{
+        width: 257px;
+        height:90px;
+    }
+    .input-container {
+        display: inline-block;
+        margin-left: 10px;
+        width:100%;
+    }
+    .medal-container input{
+        width:220px;
+    }
+    .input-container p {
+        margin-bottom: 10px;
+    }
+    .uploadImg {
+        height: 100px;
+        width: 100px;
+        display: inline-block;
+    }
+    .uploadImg img {
+        width: 90px;
+        height: 90px;
+    }
+    iframe {
+        width: 100%;
+        height: 80px;
+    }
+    .red {
+        color: red;
+    }
+    .title{
+        float: left;
+        text-align: left;
+        width: 52px;
+        margin: 50px 0px 0px 12px;
+    }
+</style>
+<div class="nav">
+	<ul class="cc">
+	   <li ><a href="<?php echo $indexUrl;?>">道具兑换</a></li>
+       <li class="current"><a href="javascript:;">编辑兑换活动</a></li>
+	</ul>
+</div>
+<div class="step step2 mb10">
+		<ul class="cc">
+			<li ><span class="fl"><em></em></span>编辑活动</li>
+			<li class="line"></li>
+			<li class="current">编辑道具</li>
+			<li class="line"></li>
+			<li><span class="fl"><em></em></span>编辑游戏</li>
+			<li class="line"></li>
+			<li><span class="fl"><em></em></span>编辑奖品</li>
+		</ul>
+</div>
+<div style="clear: both;"></div>
+<form method="post" action="<?php echo $editStep2PostUrl.'/?id='. $infoData['id'];?>" id="addFrom">
+<input name="festivalId" value="<?php echo $infoData['id'];?>" type="hidden" />
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr" >
+				<th class="th">道具名称</th>
+				<td class="td"><input type="text" class="input" name="propsName"  value="<?php echo $infoData['prop_name'];?>"><span>&nbsp;&nbsp;例如:"粽子","月饼"</span></td>
+			</tr>
+			<?php $i=1;?>
+    		<?php foreach ($groupData as $groupKey => $groupItem):?>
+			<tr class="tr J_seriesContainer">
+				<th class="th">系列<span class="J_index"><?php echo $groupKey+1; ?></span></th>
+				<td class="td medal-container">
+					<div style="position:relative">
+						<span>系列<?php echo $groupKey+1; ?> 名称&nbsp;&nbsp;</span>
+						<input name="props[<?php echo $groupKey+1; ?>][groupId]" value="<?php echo $groupItem['data']['id'];?>" type="hidden" />
+						<input type="text" class="input" name="props[<?php echo $groupKey+1; ?>][groupName]"  value="<?php echo $groupItem['data']['name'];?>">
+						<span class="red">&nbsp;&nbsp;最多支持4个道具</span>
+					</div>
+					<ul class="J_medalLists medal-lists">
+					   <?php foreach ($groupItem['props'] as $propKey => $propItem):?>
+						<li>
+                            <div class="medal-list">
+                                <div class="input-container">
+                                    <input type="hidden" name="props[<?php echo $groupKey+1; ?>][items][<?php echo $propKey+1; ?>][propId]" value="<?php echo $propItem['id']; ?>">
+                                    <p><span>系列<?php echo $groupKey+1; ?> 第 <?php echo $propKey+1; ?>个道具元素</span></p>
+                                    <p><span>道具名称&nbsp;&nbsp;</span><input type="text" class="input" name="props[<?php echo $groupKey+1; ?>][items][<?php echo $propKey+1; ?>][propName]"  value="<?php echo $propItem['name']?>"></p>
+                                    <p><span>发放概率&nbsp;&nbsp;</span><input type="text" class="input" name="props[<?php echo $groupKey+1; ?>][items][<?php echo $propKey+1; ?>][probability]"  value="<?php echo $propItem['probability']?>"></p>
+                                    <p><span>间隔时间&nbsp;&nbsp;</span><input type="text" class="input" name="props[<?php echo $groupKey+1; ?>][items][<?php echo $propKey+1; ?>][interval]"  value="<?php echo $propItem['interval']?>"></p>
+                                </div>
+                                <div>
+                                    <h1 class="title">彩色</h1>
+                                    <div class="uploadImg">
+                                        <div class="J_img" id="simg<?php echo $i?>1">
+                                            <img src="<?php echo $attachPath.$propItem['img'];?>">
+                                            <input type="hidden" name="props[<?php echo $groupKey+1; ?>][items][<?php echo $propKey+1; ?>][propImg]" value="<?php echo $propItem['img']?>">
+                                        </div>
+                                    </div>
+                                    <iframe src="<?php echo $uploadUrl.'/?imgId=simg'.$i.'1';?>"  frameborder="0" scrolling="no"></iframe>
+                                </div>
+                                <div>
+                                    <h1 class="title">灰色</h1>
+                                    <div class="uploadImg">
+                                        <div class="J_img" id="simg<?php echo $i?>2">
+                                            <img src="<?php echo $attachPath.$propItem['gray_img'];?>">
+                                            <input type="hidden" name="props[<?php echo $groupKey+1; ?>][items][<?php echo $propKey+1; ?>][propGrayImg]" value="<?php echo $propItem['gray_img']?>">
+                                        </div>
+                                    </div>
+                                    <iframe src="<?php echo $uploadUrl.'/?imgId=simg'.$i.'2';?>"  frameborder="0" scrolling="no"></iframe>
+                                </div>
+                            </div>
+						</li>
+						<?php $i=$i+1?>
+						<?php endforeach;?>
+					</ul>
+				</td>
+			</tr>
+			<?php endforeach;?>
+		</table>
+    </div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">下一步</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+    //广告表单数据提交
+    $(document).ready(function(){
+        ajaxForm('addFrom',function(ret){
+            ajaxRedirect(ret, baseurl+'<?php echo $editStep3Url.'/?id='. $infoData['id'];?>');
+        });
+    })
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

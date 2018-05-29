@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Untitled Document</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+	<link rel="stylesheet" type="text/css" href="css/reset.css"/>
+	<script type="text/javascript" src="js/jquery-1.4.2-min.js"></script>
+    <style>
+    	body {
+			background:#F5F5F5;
+		}
+		.content {
+			width:13px;
+			height:1000px;
+			background:#1A56AC url(img/arrow_left.jpg) 0% 35% no-repeat;
+		}
+		
+		.content.right {
+			background:#1A56AC url(img/arrow_right.jpg) 0% 35% no-repeat;
+		}
+	</style>	
+    <script>
+    	$(function(){
+			
+			$(document).toggle(function(){
+				$(window.parent.document).find("#frame").attr("cols","0,7,*");
+				
+				/*window.parent.document.getElementById("frameset").cols="0,7,*";*/
+				$(".content").addClass("right");
+			},function(){
+				/*window.parent.document.getElementById("frameset").cols="200,7,*";*/
+				$(window.parent.document).find("#frame").attr("cols","200,7,*");
+				$(".content").removeClass("right");
+			});
+		});
+    </script>
+</head>
+<body scroll="no">
+<div class="content">
+
+</div>	
+</body>
+</html>

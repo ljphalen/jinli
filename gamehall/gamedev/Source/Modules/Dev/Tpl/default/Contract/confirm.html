@@ -1,0 +1,127 @@
+<include file="Public:header"/>
+<include file="Public:bootcss"/>
+<div class="mainw mainw2 clearfix">
+    <div class="rmain col-md-12 rmain-inf">
+        <div class="panel">
+
+            <h2 class="yyname">签署合同</h2>
+
+            <div class="flow-w flow-w1">
+                <div class="flow"><span class="on">第一步：签署合同</span><span>第二步：申请联运</span></div>
+            </div>
+
+            <div class="panel-body">
+                <form class="form-horizontal" role="form"  method="post" id="add-contract" onsubmit="return checkSub();"
+                      action="{:U('subconfirm')}">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4>合同信息确认：</h4>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <textarea class="form-control" cols="50" rows="10" id="contract-content" readonly="readonly">
+金立游戏开发者平台合作协议&nbsp;
+甲    方：深圳市金立通信设备有限公司&nbsp;
+联系地址：深圳市福田区深南大道7008号阳光高尔夫大厦15楼&nbsp;
+联系人：  {$jinliName} &nbsp;
+邮箱：    {$jinliEmail}    &nbsp; 
+
+乙    方：  {$company}&nbsp;
+联系地址：  {$address}   &nbsp;              
+联系人：    {$contact}&nbsp;
+邮箱：     {$contact_email}&nbsp;
+
+经甲乙双方充分协商，达成如下合同条款，以兹双方共同信守。
+1.定义
+1.1合作产品：指乙方拥有自主知识产权的Android 简体中文版 {$app_name} （包名： {$package} ）及其增值服务。
+1.2用户：指通过甲方平台下载合作产品成功运行合作产品的用户。
+1.3甲方平台：指甲方自身或关联公司或甲方指定的第三方拥有的推广平台。
+2.合作内容
+2.1 乙方向甲方提供合作产品所必要的信息，甲方利用甲方平台为合作产品进行推广服务。
+2.2 就用户在合作产品上进行消费所产生的收益，甲乙双方按本协议第五条约定分成。
+2.3 合同期限自合同签订之日起壹年。
+3 乙方权利义务
+3.1 乙方保证合作产品不侵犯第三方的合法权益，不违反公序良俗，不含黄色、色情、宗教、政治等禁止性内容。如有违反此项约定的，由乙方承担全部责任，且乙方保证甲方免于遭受损失。
+3.2 乙方保证乙方产品在甲方平台的正常浏览及下载，并合作产品正常运行和维护，对因合作产品产生的投诉、纠纷等相关问题自行承担责任。
+3.3 乙方更新合作产品版本或停止服务的，需提前15日通知甲方。
+3.4 乙方确保合作游戏产品以及依托合作游戏平台所发布的信息内容不得含有暗扣费、乱扣费等违规情形；否则，甲方有权立即终止本协议，且乙方须赔偿甲方所遭受的一切损失。
+3.5 乙方保证，终端用户点击运行合作手机游戏产品时，未经终端用户确认的，不得运行，不得收取相关费用；否则，甲方有权立即终止本协议，且乙方须赔偿甲方所遭受的一切损失。
+3.6 乙方保证，在用户所持终端弹出信息窗口的，应当以显著的方式向用户提供关闭或者退出窗口的功能标识。
+4.甲方权利义务
+4.1 甲方保证所获得的乙方所有资料，仅限用于合作专区的合作项目，决不用于其他目的（双方协商书面同意的除外），否则乙方有权要求甲方赔偿由此引起的一切直接经济损失。
+4.2 如任何第三方在甲方平台发布仿冒合作产品的，甲方应在接到乙方书面通知后 2个工作日内下架。
+4.3 甲方在推广合作产品过程中，不得进行不正当竞争行为，包括但不限于以下类型：
+4.3.1 利用协议提供的合作游戏推广权利谋取单方面的不正当利益；
+4.3.2 采取带有淫秽、色情、赌博、暴力、迷信及危害国家安全等违法或不健康内同的文字、图片、音频、视频等诱使广告方式引导用户；
+4.3.3 其他有悖于商业规范和法律规范的行为。
+4.4 乙方授权甲方在对合作产品推广的过程中使用乙方公司名称、商号、商标及合作产品图片、影像、视频等的相关权利。甲方行使上述权利时不得损害乙方合法权益，在本协议终止之日起20个工作日内撤下所有此类合作产品相关的内容。
+5.收入分配与结算
+5.1 乙方分成收益=用户消费金额*（1-渠道费率）*（1-税费率）*乙方分成比例
+5.2 甲方与乙方分成比例为   {$share} .
+5.3 渠道费率：在用户充值A币或A券的时候产生的渠道费率统一为：3%。
+          A币或A券：用于购买Amigo平台上的各种虚拟产品和增值服务，用户先用人民币购买A币或A券，然后用A币或A券购买道具，A币或A券：人民币=1：1.
+5.4 甲乙双方同意选择以下第   {$receiptType}    种方式计算税费率。
+          A.     乙方结算时提供的为普通发票，税费率为：6%；
+          B.     乙方结算时提供税率为3%的增值税专用发票，税费率为：3%；
+          C.     乙方结算时提供税率为6%的增值税专用发票，税费率为：0%；
+5.5 结算方式。按月结算，双方每月结束后以电子邮件形式进行结算确认，甲方应于每月10日前向乙方提交结算账单供乙方核对，计算自上月1日0时0分至上月30日（大月为31日）23点59分之间合作游戏收入及乙方应得分成。经双方确认后，乙方应按第5.4条约定开具等额发票，甲方在当月15日23：59前收到发票的，于当月25到30日将乙方应得收入汇至乙方的指定银行账号，后寄到的发票顺延到次月25到30日打款。以上结算如遇节假日则顺延。
+5.7 甲乙双方应按中国法律之规定，各自缴纳与自身经营有关之任何税款。
+5.8乙方指定账户资料如下：
+开户名称：{$account_name}
+开户银行：{$account_bank}   
+银行账号：{$account_key}      
+5.9 乙方账户变更的，应提前 15个工作日书面通知甲方。因乙方账户变更而未提前书面通知、以及延迟开发票等造成甲方延迟付款的，甲方不承担违约责任，由此产生的损失由乙方自行承担。
+5.10 任何一方对分成收益提出异议，由双方协商解决。
+6.违约与终止
+6.1 任何一方不履行或不完全履行约定义务，应承担相应违约责任，并赔偿因此给对方造成的损失。
+6.2 违约方应当在非违约方以书面形式告知违约事实后的十个工作日内采取补救措施，逾期不作补救的，非违约方有权终止协议并要求违约方赔偿其因此遭受的损失。本协议另有约定的除外。
+7.其他
+7.1因本协议解释及执行产生的争议，任何一方均可将争议提交甲方所在地人民法院解决。
+7.2本协议自双方签字或盖章之日起生效。一式贰份，双方各执一份。
+        （以下无正文）
+
+
+        甲方（盖章）                         乙方（盖章）
+
+
+        授权代表签字：刘立荣                 授权代表签字：
+                            </textarea>
+                            <input type="hidden" value="{$id}" name="id"/>
+                            <div class="col-sm-12">
+                                <label><input type="checkbox" id="agree" name="agree" > &nbsp;&nbsp;我已阅读并同意签署以上合同内容</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8">
+                            <input type="hidden" name="re_edit" value="{$re_edit}"/>
+                            <button type="submit" class="btn btn-success bo128" id="saveSubBtn">保存并继续</button>
+                            <a class="btn btn-success bo128" href="{:U('Contract/edit',array('id'=>$id,'add_edit'=>1))}">返回修改</a>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<include file="Public:footer"/>
+<include file="./Source/Tpl/Common/alertDialog.html"/>
+<script type=text/javascript src="{:cdn('PUBLIC')}/common/js/jquery.form.js?{:C('JS_VERSION')}"></script>
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/app/jui/css/smoothness/jquery-ui-1.9.1.custom.min.css">
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-1.9.1.custom.min.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/development-bundle/ui/i18n/jquery.ui.datepicker-zh-CN.js"></script>
+
+<script>
+    function checkSub(){
+        var agree = $("#agree").attr("checked");
+        if(agree!='checked'){
+            alertDialog("您必须阅读并同意签署以上合同内容");
+            return false;
+        }
+        return true;
+    }
+</script>

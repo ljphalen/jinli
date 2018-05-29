@@ -1,0 +1,89 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $listUrl;?>">福利任务</a></li>
+		<li><a href="<?php echo $dlistUrl;?>">连续登录</a></li>
+		<li ><a href="<?php echo $dailyTaskUrl;?>">每日任务</a></li>
+		<li class="current"><a href="<?php echo $weallistUrl;?>">任务说明</a></li>
+	</ul>
+</div>
+<form action="<?php echo $taskInfoConfigPostUrl;?>" method="post" id="addFrom">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<div class="h_a">任务说明管理</div>
+	<div class="table_full">
+		<table width="100%">
+		    
+			<tr class="tr">
+				<th class="th">福利任务说明</th>
+				<td class="td">
+					 <textarea id="game_task_desc"  name="game_task_desc" class="textarea" style="height:500px; width:800px"><?php echo $configs['game_task_desc'];?></textarea>
+				</td>
+			</tr>		
+			<tr class="tr">
+				<th class="th">连续登录说明</th>
+				<td class="td">
+				 	<textarea id="game_weal_desc" name="game_weal_desc" class="textarea" style="height:500px; width:800px"><?php echo $configs['game_weal_desc'];?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">每日任务说明</th>
+				<td class="td">
+				 	<textarea id="gameDailyTaskDesc" name="gameDailyTaskDesc" class="textarea" style="height:500px; width:800px"><?php echo $configs['gameDailyTaskDesc'];?></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//游戏表单数据提交
+var editor;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor = K.create('textarea[name="game_task_desc"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+var editor1;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor1 = K.create('textarea[name="game_weal_desc"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+
+var editor2;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+	editor2 = K.create('textarea[name="gameDailyTaskDesc"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Wealtaskconfig/taskInfoConfig');
+	},function(){
+		editor.sync();
+		editor1.sync();
+		editor2.sync();
+	});
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

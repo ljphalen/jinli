@@ -1,0 +1,44 @@
+<?php echo $this->render("layout/header.phtml");?>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="h_a">配置管理</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">港币汇率</th>
+				<td class="td">
+				   <input class="input" name="fj_currency_rate_hk" class="input wc" value="<?php echo $configs['fj_currency_rate_hk'];?>"/>
+				   <span class="a_help">当前实时汇率: <b id="ex_rate"></b></span>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+
+
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Config/index');
+	});
+
+	$.ajax({
+		type:'post',
+		dataType : 'json',
+		url : baseurl + '<?php echo $getExchangeRate;?>',
+		data:'fc=HKD&tc=CNY&token=<?php echo $token;?>',
+		success : function(res){
+			if(res.success){
+				$msg = res.data.rate + ' ( '+res.data.ftc+' )';
+				$('#ex_rate').text($msg);
+			}
+		}
+	});
+
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

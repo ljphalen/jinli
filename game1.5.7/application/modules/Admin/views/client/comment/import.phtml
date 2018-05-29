@@ -1,0 +1,35 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">评论审核</a></li>
+		<li><a href="<?php echo $manageUrl;?>">评论管理</a></li>
+        <li><a href="<?php echo $logUrl;?>">审核记录</a></li>
+        <li><a href="<?php echo $slistUrl;?>">敏感词库</a></li>
+        <li class="current"><a href="<?php echo $plistUrl;?>">词库管理</a></li>
+        <li><a href="<?php echo $blistUrl;?>">黑名单</a></li>
+	</ul>
+</div>
+<form method="post" action="<?php echo $importPostUrl;?>" id="addFrom" enctype="multipart/form-data">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	  <div class="wrap">
+		<tr class="tr" id="up_file">
+			<th class="th">导入敏感词</th>
+			<td class="td" >
+			    <td class="td"><input type="file" class="input" name="pimportcsv" value="" id="csv"></td>
+			</td>
+	    </tr>
+	   </div>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script>
+$(document).ready(function(){
+	ajaxForm('addFrom', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Client_Comment/sindex');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

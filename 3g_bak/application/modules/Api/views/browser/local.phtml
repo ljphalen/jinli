@@ -1,0 +1,43 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>服务器配置测试接口</title>
+<style type="text/css">
+body,div,p,form,input,h1,h2,h3,h4,h5,ul,ol,li,dl,dt,dd,table,tbody,tr,td,textarea,img,iframe,figure{margin:0; padding:0; list-style:none; vertical-align:middle;}
+body{font:14px/1.5 "微软雅黑",arial,helvetica,sans-serif; color:#000;}
+img{border:0; -webkit-touch-callout:none;}
+a:active,a:hover{outline:none;}
+h1,h2,h3,h4,h5,h6 {font-size:100%; font-weight:500;}
+</style>
+</head>
+
+<body>
+<ul>
+<?php foreach($data as $k=>$v){?>
+<li><a class="inteface" data-client='<?php echo $v['info'];?>'  href="javascript:void(0)">response data_<?=$k+1;?></a></li>
+<?php }?>
+</ul>
+
+<script type="text/javascript">
+window.onload = function(){
+var $ = function (id,element) {
+return arguments[1] === undefined ? document.getElementById(id) : element.querySelector(id);
+};
+
+var els = document.querySelectorAll('.inteface');
+for (var i = 0; i < els.length; i++) {
+(function(n){
+els[n].addEventListener('click',function(){
+var strJson = this.getAttribute('data-client');
+var ret = window.prompt('gn://GNLocalAppData/startApp',strJson);
+},true);
+})(i);
+}
+}
+</script>
+</body>
+</html>

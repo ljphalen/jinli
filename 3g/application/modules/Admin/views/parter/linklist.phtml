@@ -1,0 +1,44 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $bussinessUrl; ?>">业务列表</a></li>
+			<li><a href="<?php echo $editBussinessUrl; ?>">添加信息</a></li>
+			<li class="current"><a href="<?php echo $linkListUrl; ?>">业务链接列表</a></li>
+			<li><a href="<?php echo $editLinkUrl; ?>">添加业务链接</a></li>
+		</ul>
+	</div>
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<td>ID</td>
+				<td>合作商</td>
+				<td>业务名称</td>
+				<td>链接</td>
+				<td>链接名称</td>
+				<td>状态</td>
+				<td>添加时间</td>
+				<td>编辑时间</td>
+				<td>操作</td>
+			</tr>
+			<?php foreach ($data as $v) { ?>
+				<tr class="ct">
+					<td class="td"><?=$v['id'];?></td>
+					<td class="td" style="color:blue"><?=$v['p_name'];?></td>
+					<td class="td" style="color:blue"><?php echo $v['b_name']; ?></td>
+					<td class="td" style="color:blue"><?php echo $v['url']; ?></td>
+					<td class="td" style="color:red"><?php echo $v['url_name']; ?></td>
+					<td class="td" style="color:blue"><?php echo $v['status'] == 1 ? '开启' : '关闭'; ?></td>
+					<td class="td"><?php echo date('Y-m-d H:i:s', $v['created_time']); ?></td>
+					<td class="td"><?php echo date('Y-m-d H:i:s', $v['edit_time']); ?></td>
+					<td class="td"><a href="/Admin/Parter/editLink?id=<?php echo $v['id']; ?>">编辑</a> ｜
+						<a href="javascript:void(0);" onclick="deleteOne('<?php echo $delLinkUrl; ?>/?id=<?php echo $v['id']; ?>', '', event);">删除</a>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

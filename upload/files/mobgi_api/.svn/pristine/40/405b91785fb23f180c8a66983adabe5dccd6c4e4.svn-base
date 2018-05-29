@@ -1,0 +1,177 @@
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>
+<link media="screen" href="{{rootUrl}}/css/chosen.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="{{rootUrl}}/css/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/Categorywidget_sdk.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/float.js"></script>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">导量配置设置</p>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="app-detail" style="">
+                <form method="POST" action="/push/editconfigsave" style="">
+                    <ul class="form" style="">
+                        <li>
+                            <span class="label">导量配置名称：</span>
+                            <div class="fc">
+                                <input type="hidden" name="config_id" id="config_id" value="{{configInfo.id}}"/>
+                                <input type="text" name="config_name" id="config_name" required  class="iText" value="{{configInfo.config_name}}"/>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label">导量平台：</span>
+                            <div class="fc">
+                                <select name="platform" class="required" required id="platform">
+                                    <option value="1"  <!-- if {{configInfo.platform}}==1 --> selected="selected" <!-- endif --> >Android</option>
+                                    <option value="2"  <!-- if {{configInfo.platform}}==2 --> selected="selected" <!-- endif --> >IOS</option>
+                                </select>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label">导量产品：</span>
+                            <div class="fc">
+                                <select name="product_id" class="required" required id="product_id" onchange="javascript:$('#product_name').val($('#product_id option:selected').text().replace('(T)', '').replace('(A)', '').replace('(I)', ''))">
+                                </select>
+                            </div>
+                        </li>
+                        
+                        <li class="line"></li>
+                        
+                        <li>
+                            <span class="label">应用：</span>
+                            <div class="fc">
+                                <script>
+                                    function appkey(){
+                                        <!-- if {{limitInfo.appkey}} -->
+                                            <!-- loop limitInfo.appkey -->
+                                                $("#appkey").append("<option selected value='{{limitInfo.appkey' value.appkey}}'>{{limitInfo.appkey' value.app_name}}</option>");
+                                            <!-- endloop -->
+                                        <!-- endif -->
+                                    }
+                                </script>
+                                <div class="clearfix config" id="games_box"></div>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label">渠道：</span>
+                            <div class="fc addChannel">
+                                <div class="clearfix config" id="channels_box"></div>
+                                <script>
+                                    function channel_id(){
+                                        <!-- if {{limitInfo.channel}} -->
+                                            <!-- loop limitInfo.channel -->
+                                                $("#channel_id").append("<option selected value='{{limitInfo.channel_id' key}}'>{{limitInfo.channel_id' value}}</option>")
+                                            <!-- endloop -->
+                                        <!-- endif -->
+                                    }
+                                </script>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label">其它条件：</span>
+                            <div class="fc">
+                                <div class="grid">
+                                    <div class="gridToolbar">
+                                        <p class="fl">
+                                            <input type="hidden" name="config_value" id="config_value" value='{{result.config_detail_condition.value}}' />
+                                        </p>
+                                        <p class="fr" id="addconfig">
+                                            <a href="javascript:void(0)" id="addTerm" class="btn">新增</a>
+                                        </p>
+                                    </div>
+                                    <table id="termGrid">
+                                        <thead>
+                                            <tr>
+                                                <th>条件名</th>
+                                                <th>条件判断式</th>
+                                                <th>条件值</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- if {{configInfo.config_value.json2value}} -->
+                                            <!-- loop configInfo.config_value.json2value -->
+                                            <tr>
+                                                <td systemTerm="{{result.config_detail_condition.json2value' value.type}}"><p class="blue"><a style="cursor: pointer" onmouseover="javascript:getConditionCount(this)">{{configInfo.config_value.json2value' value.params}}</a></p></td>
+                                                <td formula="{{configInfo.config_value.json2value' value.operate}}">{{configInfo.config_value.json2value' value.operate_desc}}</td>
+                                                <td>{{configInfo.config_value.json2value' value.expected_value}}</td>
+                                                <td>
+                                                    <a href="javascript:void(0)" name="systemTerm" class="edit" title="更新"></a>
+                                                    |
+                                                    <a href="javascript:void(0)" class="del" title="删除"></a>
+                                                </td>
+                                            </tr>
+                                            <!-- endloop -->
+                                            <!-- endif -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </li>
+                        
+                        <li class="line"></li>
+                        
+                        <li>
+                            <div class="fc">
+                                <input type="button" class="submit" value="保存" onclick="checksubmit()">
+                                <input type="button" onclick="window.location.href = '/push/config'" class="cancel" value="取消">
+                            </div>
+                        </li>
+                        
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="addTermPopUp">
+    <div class="addAD">
+        <p style="margin-bottom:20px;height:20px;">
+            <select style="margin-right:25px;" name="systemTerm">
+                <option value="default">系统默认条件</option>
+                <option value="custom_install">安装特定软件</option>
+                <option value="custom_imei">特定设备列表</option>
+            </select>
+            <select style="margin-right:25px;" name="termName">
+                <option value="条件名">条件名</option>
+                <option value="城市">城市</option>
+                <option value="时间短">时间短</option>
+            </select>
+            <select name="formula">
+                <option value="==">等于</option>
+                <option value="!=">不等于</option>
+                <option value=">">大于</option>
+                <option value=">=">大于等于</option>
+                <option value="<">小于</option>
+                <option value="<=">小于等于</option>
+                <option value="in">包含</option>
+                <option value="not in">不包含</option>
+            </select>
+        </p>
+        <div><span class="label">条件值：</span><textarea id='tj_box_value' style="width:350px;height:60px;display:none"></textarea><span  id="textbox"></span></div>
+    </div>
+    <div style="text-align:center;padding:10px 0;">
+        <a href="javascript:void(0)" class="btn" id="ok">确定</a>
+        <a href="javascript:void(0)" class="cancel">取消</a>
+    </div>
+</script>
+
+<!--载入公共JS-->
+
+<!-- include "addconfig_inc" -->
+
+
+<script language="javascript">
+$(function(){
+    var product_id = "{{configInfo.product_id}}";
+    autoPlatform(product_id);
+})
+</script>

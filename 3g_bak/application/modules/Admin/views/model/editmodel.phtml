@@ -1,0 +1,150 @@
+<?php echo $this->render("layout/header3.phtml");
+$models = $operators = $versions = array();
+?>
+<div id="p" class="easyui-panel" title="添加信息">
+	<!-- <div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $indexUrl; ?>">机型列表</a></li>
+			<li class="current"><a href="javascript:;">添加机型</a></li>
+		</ul>
+	</div> -->
+	<form method="post" action="<?php echo $editPostModelUrl; ?>" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+		<table class="editTable">
+			<tr class="tr">
+				<th class="th">机型</th>
+				<td class="td" id="td_1">
+					<?php if ($info['model']) {
+						$models = explode(',', $info['model']);
+						foreach ($models as $k => $v) {
+							?>
+							<select class="easyui-combobox" name="post[model][<?php echo $k + 1;?>]">
+								<option value="">请选择</option>
+								<?php foreach ($attrTypes['1'] as $key => $val) { ?>
+									<option value="<?php echo $val['value']; ?>"  <?php if ($v == $val['value']) echo 'selected'; ?>><?php echo $val['value']; ?></option>
+								<?php }?>
+							</select>
+						<?php }
+					} else { ?>
+						<select class="easyui-combobox" name="post[model][1]">
+							<option value="">请选择</option>
+							<?php foreach ($attrTypes['1'] as $key => $val) { ?>
+								<option value="<?php echo $val['value']; ?>"><?php echo $val['value']; ?></option>
+							<?php } ?>
+						</select>
+					<?php } ?>
+					<span style="color: blue;padding-left:10px;" id="span_1"><a id="selAdd_1" href="javascript:void(0);" data-index="<?php echo empty($models) ? 1 : count($models); ?>" onclick="add(1)">添加</a></span>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">版本</th>
+				<td class="td">
+					<?php if ($info['version']) {
+						$versions = explode(',', $info['version']);
+						foreach ($versions as $k => $v) {
+							?>
+							<select class="easyui-combobox" name="post[version][<?php echo $k + 1;?>]">
+								<option value="">请选择</option>
+								<?php foreach ($attrTypes['2'] as $key => $val) { ?>
+									<option value="<?php echo $val['value']; ?>"   <?php if ($v == $val['value']) echo 'selected'; ?> ><?php echo $val['value']; ?></option>
+								<?php }?>
+							</select>
+						<?php }
+					} else { ?>
+						<select class="easyui-combobox" name="post[version][1]">
+							<option value="">请选择</option>
+							<?php foreach ($attrTypes['2'] as $key => $val) { ?>
+								<option value="<?php echo $val['value']; ?>"><?php echo $val['value']; ?></option>
+							<?php } ?>
+						</select>
+					<?php } ?>
+					<span style="color: blue;padding-left:10px;" id="span_2"><a id="selAdd_2" href="javascript:void(0);" data-index="<?php echo empty($versions) ? 1 : count($versions); ?>" onclick="add(2)">添加</a></span>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">运营商</th>
+				<td class="td">
+					<?php if ($info['operator']) {
+						$operators = explode(',', $info['operator']);
+						foreach ($operators as $k => $v) {
+							?>
+							<select class="easyui-combobox" name="post[operator][<?php echo $k + 1;?>]">
+								<option value="">请选择</option>
+								<?php foreach ($attrTypes['3'] as $key => $val) { ?>
+									<option value="<?php echo $val['value']; ?>"   <?php if ($v == $val['value']) echo 'selected'; ?>><?php echo $val['value']; ?></option>
+								<?php }?>
+							</select>
+						<?php }
+					} else { ?>
+						<select class="easyui-combobox" name="post[operator][1]">
+							<option value="">请选择</option>
+							<?php foreach ($attrTypes['3'] as $key => $val) { ?>
+								<option value="<?php echo $val['value']; ?>"><?php echo $val['value']; ?></option>
+							<?php } ?>
+						</select>
+					<?php } ?>
+					<span style="color: blue;padding-left:10px;" id="span_3"><a id="selAdd_3" href="javascript:void(0);" data-index="<?php echo empty($operators) ? 1 : count($operators); ?>" onclick="add(3)">添加</a></span>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">地域</th>
+				<td class="td">
+					<select name="area[]" class="easyui-combotree" style="width:200px;"
+					        data-options="url:'/Admin/model/AjaxgetAllData',method:'get'" multiple>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">最高优先级</th>
+				<td class="td">
+					<select class="easyui-combobox" name="prior">
+						<?php foreach ($types as $k => $v) { ?>
+							<option value="<?php echo $k; ?>"   <?php if ($k == $info['prior']) echo 'selected'; ?> ><?php echo $v; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+		</table>
+		<input name="id" id="id" value="<?php echo $info['id']; ?>" type="hidden">
+		<div style="text-align:center;padding:5px">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
+        </div>
+	</form>
+</div>
+<script type="text/javascript">
+	//表单数据提交
+    function submitForm(){
+        $('#addFrom').form('submit');
+    }
+
+	function add(type) {
+		var typeValues = <?php echo ($jsonType);?>;
+		index = $('#selAdd_' + type).attr("data-index");
+		index++;
+		$('#selAdd_' + type).attr("data-index", index);
+		var name = '';
+		switch (type) {
+			case 1:
+				name += '[model][' + index + ']';
+				break;
+			case 2:
+				name += '[version][' + index + ']';
+				break;
+			case 3:
+				name += '[operator][' + index + ']';
+				break;
+			default:
+				name += '[province][' + index + ']';
+				break;
+		}
+		var html = '<select name="post' + name + '"><option value="0">请选择</option>';
+		$.each(typeValues, function (k, v) {
+			if (type == v.key) {
+				$.each(v.val, function (m, n) {
+					html += '<option value="' + n.value + '">' + n.value + '</option>';
+				})
+			}
+		});
+		$("#span_" + type).before(html);
+	}
+</script>

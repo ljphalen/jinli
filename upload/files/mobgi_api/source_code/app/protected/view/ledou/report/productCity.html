@@ -1,0 +1,195 @@
+<script type="text/javascript">
+//接收数据
+var data = JSON.parse('{{result}}');
+var url = "{{siteUrl}}ProductReport/productCity";
+</script>
+<!-- include 'inc' -->
+<div class="colMain">
+    <div class="title"><p class="fl">城市分布</p></div>
+    <div class="filter">
+        <div class="plugin"><select name='pid' class='choosen-pid choose-select'></select></div>
+        <div class="plugin">
+            <div class="ta_date" id="div_date">
+                 <span class="date_title" id="date"></span>
+                 <a class="opt_sel" id="input_trigger" href="#"><i class="i_orderd"></i></a>
+            </div>
+        </div>
+        <div class="plugin"><select name='appkey' class='choose-appkey choose-select'></select></div>
+    </div>
+    <div class="main">
+        <div class="chart-title">
+            <span>城市分布</span>
+            <a class="index type" href="javascript:void(0);" id="index-impressions">展示用户数</a>
+            <a class="index type" href="javascript:void(0);"  id="index-clicks">点击用户数</a>
+            <a class="index type" href="javascript:void(0);"  id="index-start_downloads">开始下载用户数</a>
+            <a class="index type" href="javascript:void(0);"  id="index-finish_downloads">下载完成用户数</a>
+            <a class="index type" href="javascript:void(0);"  id="index-installs">安装用户数</a>
+            <a class="index type" href="javascript:void(0);"  id="index-startup">启动用户数</a>
+            <a class="fr btn" id="desc" style="cursor:pointer;">说明</a>
+        </div>
+        <div id="hightchart" class="hightchart"></div>
+    </div>
+    
+    <div class="main grid">
+        <div class="filter">
+            <div class="plugin"><select class='ajaxSelect province-select' _t='1'  style="min-width:200px;"></select></div>
+            <div class='plugin' id='city'></div>
+        </div>
+        <table class="stat_tbl tablesorter">
+            <thead>
+                <tr>
+                    <th>城市</th>
+                    <th>展示用户数</th>
+                    <th>点击用户数</th>
+                    <th>开始下载用户数</th>
+                    <th>下载完成用户数</th>
+                    <th>安装用户数</th>
+                    <th>启动用户数</th>
+                </tr>
+            </thead>
+            <tbody class="tbody_fill">
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="desc-content">
+    <table>
+        <tr><td><b>展示用户数</b></td><td>展示过广告的设备数量</td></tr>
+        <tr><td><b>点击用户数</b></td><td>点击过广告的设备数量</td></tr>
+        <tr><td><b>开始下载用户数</b></td><td>开始下载广告应用的设备数量</td></tr>
+        <tr><td><b>下载完成用户数</b></td><td>下载完成广告应用的设备数量</td></tr>
+        <tr><td><b>安装用户数</b></td><td>安装了广告应用的设备数量</td></tr>
+        <tr><td><b>启动用户数</b></td><td>启动了广告应用的设备数量</td></tr>
+    </table>
+</div>
+<script type="text/javascript">
+$(function(){
+ // 表格
+    $(".province-select").append("<option value=''>请选择</option>");
+    $.each(data.selectType, function(i, v){
+        $(".province-select").append("<option value='"+v+"'>"+v+"</option>");
+    });
+    $(".ajaxSelect").chosen().live('change',function(){
+        var params = {};
+        params.stime = data.url.startDate;
+        params.etime = data.url.endDate;
+        params.appkey = data.url.appkey;
+        params.type = data.url.type;
+        params.pid = data.url.pid;
+        params.province = $(".province-select").val();
+        params._t = $(this).attr("_t");
+        if (params._t == 2) {
+            params.city = $(".city-select").val();
+        }
+        if (params.province){
+            $.ajax({
+                type : "POST",
+                dataType : "json",
+                url : "{{siteUrl}}ProductReport/contrastCity",
+                data : params,
+                success: function(retData){
+                    if (retData.errorCode == -1 ){
+                        alert(retData.errorMsg);
+                        return false;
+                    }
+                    if (retData._t == 1){
+                        var cityHtml = "<select class='ajaxSelect city-select' _t='2' style='min-width:200px;'>";
+                        $.each(retData.data.city, function(i, c){
+                            cityHtml += "<option value='"+c.city+"'>"+c.city+"</option>";
+                        });
+                        cityHtml += "</select>";
+                        $("#city").html(cityHtml);
+                        $(".city-select").chosen();
+                    }
+                    if (retData.data.table){
+                        var tbodyHtml = "";
+                        impressions = clicks = start_downloads = finish_downloads = installs = startup = 0;
+                        $.each(retData.data.table, function(i, value){
+                            impressions += parseFloat(value.impressions);
+                            clicks += parseFloat(value.clicks);
+                            start_downloads += parseFloat(value.start_downloads);
+                            finish_downloads += parseFloat(value.finish_downloads);
+                            installs += parseFloat(value.installs);
+                            startup += parseFloat(value.startup);
+                            tbodyHtml += "<tr><td>"+value.city+"</td>";
+                            tbodyHtml += "<td>"+value.impressions+"</td>";
+                            tbodyHtml += "<td>"+value.clicks+"</td>";
+                            tbodyHtml += "<td>"+value.start_downloads+"</td>";
+                            tbodyHtml += "<td>"+value.finish_downloads+"</td>";
+                            tbodyHtml += "<td>"+value.installs+"</td>";
+                            tbodyHtml += "<td>"+value.startup+"</td>";
+                            tbodyHtml += "</tr>";
+                        });
+                        tbodyHtml += "<tr><td><b>合计</b></td>";
+                        tbodyHtml += "<td>"+impressions+"</td>";
+                        tbodyHtml += "<td>"+clicks+"</td>";
+                        tbodyHtml += "<td>"+start_downloads+"</td>";
+                        tbodyHtml += "<td>"+finish_downloads+"</td>";
+                        tbodyHtml += "<td>"+installs+"</td>";
+                        tbodyHtml += "<td>"+startup+"</td>";
+                        tbodyHtml += "</tr>";
+                        $(".tbody_fill").html(tbodyHtml);
+                    }
+                }
+            });
+        }
+    });
+    // 日期
+    var dateRange = new pickerDateRange('date', {
+        theme : 'ta', // 日期选择器TA主题
+        isTodayValid : 1,
+        startDate : data.url.startDate,
+        endDate : data.url.endDate,
+        monthRangeMax : 3,
+        minValidDate : 1379174400,
+        success : function (dateObj){
+            var date = {
+                    startDate : dateObj.startDate, 
+                    endDate : dateObj.endDate,
+            };
+            request(date, data.url, url); // 请求服务器
+        }
+    });
+ // 产品Select
+    var productHtml = "";
+    $.each(data.product, function(pid, pname){
+        productHtml += "<option value='"+pid+"'";
+        if (data.url.pid == pid) {
+            productHtml += " selected "
+        }
+        productHtml += " >"+pname+"</option>";
+    });
+    $(".choosen-pid").live('change', function(){
+        var pid = {pid : $(this).val() };
+        request(pid, data.url, url);
+    }).append(productHtml).chosen();
+    // 产品Select
+    var appHtml = "";
+    $.each(data.appkey, function(key, name){
+        appHtml += "<option value='"+key+"'";
+        if (data.url.appkey == key) {
+            appHtml += " selected "
+        }
+        appHtml += " >"+name+"</option>";
+    });
+    $(".choose-appkey").live('change', function(){
+        var appkey = {appkey : $(this).val() };
+        request(appkey, data.url, url);
+    }).append(appHtml);
+    $(".choose-select").chosen();
+    // 分类
+    $(".index").removeClass('index-sel').live('click', function(){
+        var type = {type : $(this).attr('id')};
+        request(type, data.url, url);
+    });
+    $("#"+data.url.type).addClass('index-sel');
+    
+    // 图表
+    var chart_data = makeChartData(data.chart, data.index, data.field);
+    $("#hightchart").empty().createChart({
+        chartType: 'pie',
+        categories: chart_data.categories,
+        series : chart_data.series
+    });
+});
+</script>

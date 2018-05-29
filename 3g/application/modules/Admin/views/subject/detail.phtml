@@ -1,0 +1,49 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class=""><a href="/Admin/subject/caipiao">彩票活动管理</a></li>
+			<li class="current"><a href="/Admin/subject/userList">用户列表</a>
+		</ul>
+	</div>
+	<div class="table_list">
+		<input type="hidden" value="<?php echo $token; ?>">
+		<table width="100%">
+			<tr class="hd">
+				<td width='360'>ID</td>
+				<td width="360">手机号</td>
+				<td>获取时间</td>
+				<td>状态</td>
+				<td>操作</td>
+			</tr>
+			<?php foreach ($list as $k => $v) { ?>
+				<tr class="ct">
+					<td><?php echo $v['id']; ?></td>
+					<td><?php echo $v['phone_number']; ?></td>
+					<td><?php echo date('Y-m-d H:i:s', $v['get_time']); ?></td>
+					<td><?php echo $v['sta'] == 1 ? "<span style='color:red'>已领取</span>" : '未领取'; ?></td>
+					<td>
+						<a href="javascript:void(0);" onclick="changeSta(<?php echo $v['id']; ?>,<?php echo $v['sta']; ?>)">更改状态</a>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+	<script type="text/javascript">
+
+		function changeSta(id, sta) {
+			$.ajax({
+				'type': 'post',
+				'url': '/Admin/Subject/changeSta',
+				'dataType': 'json',
+				'data': {'id': id, 'sta': sta, 'token': '<?php echo $token;?>'},
+				'success': function (e) {
+					alert(e.msg);
+					window.location.reload();
+				}
+			});
+		}
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

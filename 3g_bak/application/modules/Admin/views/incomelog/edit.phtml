@@ -1,0 +1,64 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">上线日志列表</a></li>
+		<li class="current"><a href="<?php echo $editUrl; ?>">添加日志记录</a></li>
+	</ul>
+</div>
+
+<div class="table_list">
+	<form id="form1" name="form1" method="post" action="<?php echo $this->baseUrl; ?>">
+	<input type="hidden" name="token" value="<?php echo $token; ?>">
+	<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">日期</th>
+			<td class="td"><input type="text"  id="get_time" name="get_time"  class="input"  value="<?php echo date('Y-m-d H:i:s', $data['get_time']); ?>"/></td>
+		</tr>
+			<tr class="tr">
+			<th class="th" >总收入</th>
+			<td class="td"><input type="text"  id="income" name="income" class="input" value="<?php echo $data['income']; ?>"/></td>
+		</tr>
+			<tr class="tr">
+			<th class="th">CPS</th>
+			<td class="td"><input type="text"  id="cps" name="cps"  class="input" value="<?php echo $data['cps']; ?>"/></td>
+		</tr>
+			<tr class="tr">
+			<th class="th">CPC</th>
+			<td class="td"><input type="text"  id="cpc" name="cpc"  class="input" value="<?php echo $data['cpc']; ?>"/></td>
+		</tr>
+			<tr class="tr">
+			<th class="th">CPT</th>
+			<td class="td"><input type="text"  id="cpt" name="cpt" class="input"  value="<?php echo $data['cpt']; ?>"/></td>
+		</tr>
+		<tr class="tr">
+			<th  class="th">CPA</th>
+			<td class="td"><input type="text"  id="cpa" name="cpa" class="input"  value="<?php echo $data['cpa']; ?>"/></td>
+		</tr>
+		
+		<tr class="tr">
+			<th  class="th">PUSH</th>
+			<td class="td"><input type="text"  id="push" name="push" class="input"   value="<?php echo $data['push']; ?>"/></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">字体</th>
+			<td class="td"><input name="font" type="text"  class="input" value="<?php echo $data['font']; ?>">  </td>
+		</tr>
+		<input type="hidden" name="id" value="<?php echo $data['id']; ?>">
+ 	</table>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+	</form>
+</div>
+	</div>
+<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function () {
+	$('#get_time').datetimepicker();
+	ajaxForm('form1', function (ret) {
+		ajaxRedirect(ret, '<?php echo $listUrl; ?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

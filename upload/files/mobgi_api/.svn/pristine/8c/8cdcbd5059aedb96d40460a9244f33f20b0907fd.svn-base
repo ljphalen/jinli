@@ -1,0 +1,155 @@
+<div class="colMain">
+    <div class="title">
+        <p class="fl">图片素材审核</p>
+    </div>
+    <div class="main" data-tabs-name="pic">
+            <div class="app-detail">
+                <form action="../resource/pic_check_save" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" value="{{result.id}}" name="id" />
+                    <ul class="form">
+                        <li>
+                            <span class="label">平台类型：</span>
+                            <div class="fc">
+                                <select name="platform" id="platform">
+                                    <option value="0">通用</option>
+                                    <option value="1">Android</option>
+                                    <option value="2">IOS</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">图片名称：</span>
+                            <div class="fc">
+                                <input type="text" class="iText required" required name="beizhu" value="{{result.beizhu}}" style="width:220px;" />
+                                <select name="ad_subtype" id="ad_subtype">
+                                    <option value="">自动从图片名称匹配</option>
+                                    <option value="0" >横屏</option>
+                                    <option value="1" >竖屏</option>
+                                    <option value="2" >自定义</option>
+                                    <option value="20" >BANNER</option>
+                                    <option value="10" >icon</option>
+                                </select>
+                                <select name="product" class="required" required id="product">
+                                    <option value="">自动从图片名称匹配</option>
+                                    <!-- loop product -->
+                                    <option value="{{product' value.id}}" <!-- if {{product' value.product_name}}=={{result.product_name}} -->selected<!-- endif -->>{{product' value.product_name}}</option>
+                                    <!-- endloop -->
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">广告类型：</span>
+                            <div class="fc">
+                                <input type="hidden" name="adtype" class="required" value="{{result.ad_type}}"/>
+                                <input type="hidden" name="resolution" value="{{result.resolution}}" />
+                                <span id="adtype_txt"></span>
+                                <span id="ad_subtype_txt"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">图片色调：</span>
+                            <div class="fc">
+                                <select name="color" id="color">
+                                    <option value="其它">其它(默认)</option>
+                                    <option value="冷色调">冷色调</option>
+                                    <option value="暖色调">暖色调</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">图片焦点：</span>
+                            <div class="fc">
+                                <select name="focus" id="focus">
+                                    <option value="其它">其它(默认)</option>
+                                    <option value="图像">图像</option>
+                                    <option value="文字">文字</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">图片噱头：</span>
+                            <div class="fc">
+                                <select name="xuetou" id="xuetou">
+                                    <option value="其它">其它(默认)</option>
+                                    <option value="游戏介绍">游戏介绍</option>
+                                    <option value="美女">美女</option>
+                                    <option value="热血">热血</option>
+                                    <option value="中奖">中奖</option>
+                                    <option value="玩法创新">玩法创新</option>
+                                    <option value="时事热点">时事热点</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">图片预览：</span>
+                            <div class="fc">
+                                <img src="{{result.pic_url}}" id="img_prev" width="150px" height="80px" />
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">审核意见：</span>
+                            <div class="fc">
+                                <input type="text" class="iText" required name="check_msg" value="{{result.check_msg}}" style="width:220px;" />
+                            </div>
+                        </li>
+                        <li class="line"></li>
+                        <li>
+                            <div class="fc">
+                                <input type="hidden" value="{{result.ischeck}}" name="ischeck" />
+                                <input type="button" onclick="checkproduct(1)" value="审核通过" class="submit" />
+                                <input type="button" value="审核驳回" class="cancel" onclick="checkproduct(2)" />
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+    </div>
+</div>
+<script>
+        $(function(){
+            $("#ad_subtype").val({{result.ad_subtype}});
+            
+            setgameid('{{result.product_name}}')
+            $("#platform").val('{{result.platform}}');
+            $("#color").val('{{result.color}}');
+            $("#xuetou").val('{{result.xuetou}}');
+            $("#focus").val('{{result.focus}}');
+            var adtype="{{result.ad_type}}"
+            if(adtype=="0"){
+                $("#adtype_txt").text("插页广告");
+            }else if(adtype=="1"){
+                $("#adtype_txt").text("BANNER广告");
+            }else if(adtype=="10"){
+                $("#adtype_txt").text("ICON");
+            }
+            $("#ad_subtype_txt").text($("#ad_subtype").find("option:selected").text());
+            $("#ad_subtype").change(function(a,b,c){
+            	var adtype=$(this).val();
+                    if(adtype=="0" || adtype=="1"){
+                        $("#ad_type").val("0");
+                        $("#adtype_txt").text("插页广告");
+                    }else if(adtype=="20"){
+                    	$("#ad_type").val("1");
+                        $("#adtype_txt").text("BANNER广告");
+                    }else if(adtype=="10"){
+                    	$("#ad_type").val("10");
+                        $("#adtype_txt").text("ICON");
+                    }else{
+                    	$("#ad_type").val("");
+                        $("#adtype_txt").text("");
+                        }
+                    $("#ad_subtype_txt").text($("#ad_subtype").find("option:selected").text());
+                 
+                });
+            
+        })
+        function checkproduct(type){
+            if(type==2 && $("input[name='check_msg']").val()==""){
+                alert("请输入审核意见");
+                $("input[name='check_msg']").focus();
+                return false;
+            }
+            $("input[name='ischeck']").val(type);
+            $('form').submit();
+        }
+</script>

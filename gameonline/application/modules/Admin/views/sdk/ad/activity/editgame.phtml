@@ -1,0 +1,205 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li><a href="<?php echo $listUrl;?>">公告活动管理</a></li>
+    	<li><a href="<?php echo $addUrl;?>">添加</a></li>
+    	<li class="current"><a href="javascript:;">编辑游戏</a></li>
+	</ul>
+</div>
+<div class="step mb10">
+		<ul class="cc">
+			<li><span class="fl"><em>编辑</em></span></li>
+			<li class="line"></li>
+			<li class="current">编辑游戏</li>
+		</ul>
+</div>
+<form action="<?php echo $editGameUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="adid" id="adid" type="hidden" value="<?php echo $adid ;?>" />
+<input name="show_type" id="show_type" type="hidden" value="<?php echo $show_type ;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">游戏名称</th>
+			<td class="td"><input type="text" class="input wb" name="name" value="<?php echo $s['name'];?>"></td>
+			<th class="th">类型</th>
+			<td class="td">
+			<select name="cooperate">
+                	<option value="1" <?php   echo $s['cooperate'] == 1 ?'SELECTED':'';?> >联运游戏</option>
+                	<option value="2" <?php   echo $s['cooperate'] == 2 ?'SELECTED':'';?> >非联运游戏</option>
+            </select>
+			</td>
+		</tr>
+		<tr>
+			<th class="th">游戏ID</th>
+			<td class="td"><input type="text" class="input wb" name="game_id" value="<?php echo $s['game_id'];?>"></td>
+		</tr>	
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="editForm" action="<?php echo $editGamePostUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<input name="adid" id="adid" type="hidden" value="<?php echo $adid ;?>" />
+<input name="name" id="name" type="hidden" value="<?php echo $s['name'] ;?>" />
+<input name="cooperate" id="cooperate" type="hidden" value="<?php echo $s['cooperate'] ;?>" />
+<input name="page" id="page" type="hidden" value="<?php echo $page ;?>" />
+<input name="show_type" id="show_type" type="hidden" value="<?php echo $show_type ;?>" />
+<?php if(count($current_games)){?>
+<div class="h_a">
+    <span>共选择<?php echo count($current_games); ?>个游戏</span>
+    <?php foreach($current_games as $key=>$val){?>
+	<span><a href="javascript:" onclick="deleteOne1('<?php echo $deleteGameUrl;?>/?gameid=<?php echo $val;?>&adid=<?php echo $adid;?>', '', event);"><?php echo $current_game_name[$val];?></a><a style="background: url(<?php echo $staticPath;?>/img/layout/tab.png);width: 7px;height: 7px;display: inline-block;background-position: -20px 20px;"></a></span>&nbsp;&nbsp;
+	<?php }?>
+</div>
+<div class="h_a">
+<span class="btn2" style="margin-left:55px;"><span><button onclick="$('#action').val('finish');" type="submit">完成</button></span></span>
+</div>
+<?php }?>
+<div class="h_a">
+    <span class="btn2"><span><button onclick="$('#action').val('add');" type="submit">添加</button></span></span>
+	<span>共<?php echo intval($total);?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input id="checkAll" type="checkbox"></td>
+			<td>ID</td>
+			<td>标题</td>
+			<td>图标</td>
+			<td>分类</td>
+			<td>大小</td>
+			<td>版本</td>
+			<td>状态</td>
+		</tr>
+<?php if($games) {?>
+<?php foreach($games as $key => $value) {?>
+		<tr class="ct page<?php echo $page;?>" >
+		    <td>
+		    <?php if($current_games[$value['id']] == $value['id']){ ?>
+		    <font color="green">√</font>
+		    <?php }else{?>
+		    <input class="checkbox" name="ids[]" <?php echo  ($current_games[$value['id']] == $value['id'])?'CHECKED':''; ?> value="<?php echo $value['id'];?>" type="checkbox">
+		   <?php }?>
+		    </td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['name'];?></td>
+			<td><img src="<?php echo $value['img'];?>" style="width:7.2em;height:7.2em"/></td>
+        	<td><?php echo $category_title[$value['id']] ? implode($category_title[$value['id']], ',') : '';?></td>
+        	<td><?php echo $oline_versions[$value['id']]['size'];?>M</td>
+        	<td><?php echo $oline_versions[$value['id']]['version'];?></td>
+        	<td><?php echo $value['status'] ? '已上线' : '已下线';?></td>
+		</tr>
+<?php }} ?>
+	</table>
+</div>
+<div class="mr10 cc content">
+<?php echo $pager;?>
+</div>
+</form>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('editForm', function(ret) {
+		if(ret.data.action == 'finish'){
+			ajaxRedirect1(ret, baseurl+'/Admin/Sdk_Ad_Activity/index/');
+		}else{
+			ajaxRedirect1(ret, baseurl+'/Admin/Sdk_Ad_Activity/editGame/');
+		}
+		
+	});
+	var ids;
+	//复选框全选
+	$("#checkAll").click(function(){
+		ids=new Array();
+		$(".checkbox").each(function(){
+			if($(this).attr("checked")){
+		        $(this).removeAttr("checked");
+		    }
+		    else{
+		        $(this).attr("checked",'true');
+		        ids.push($(this).attr('value'));
+		    }
+		});
+		checkGameNum(ids);
+	});
+	$(".checkbox").click(function(){
+		ids=new Array();
+		if(!$(this).attr("checked")){
+	        $(this).removeAttr("checked");
+	    }
+	    else{
+	        $(this).attr("checked",'true');
+	        ids.push($(this).attr('value'));
+	    }
+	    checkGameNum(ids);
+	})
+})
+// ajax跳转
+function ajaxRedirect1(ret, url) {
+	if (ret == '')
+		return false;
+	if (ret) {
+		if (ret.success) {
+			location.href = url+'?adid='+ret.data.adid+'&name='+ret.data.name+'&cooperate='+ret.data.cooperate;
+		} else {
+			showError('', ret.msg);
+		}
+	}
+}
+//删除单个信息
+function deleteOne1(url, msg, e) {
+	if (msg == '')
+		msg = '确认删除该条信息？';
+	showConfirm(msg, function() {
+				$.ajax({
+							url : url,
+							type : 'POST',
+							dataType : 'json',
+							data : 'token='+token,
+							success : function(ret) {
+								if (ret.success) {
+									showMsg('', ret.msg);
+									setTimeout(function() {
+										location.href = baseurl+'/Admin/Sdk_Ad_Activity/editGame/?action=del&adid='+ret.data.adid;
+											}, 500);
+								} else {
+									showError('', ret.msg);
+								}
+							}
+						});
+			}, e);
+
+}
+
+function checkGameNum(ids){
+	// alert(ids.join(','));
+	if(ids.length==0||ids==undefined) return;
+	show_type = $('#show_type').val();
+	if(show_type == 2){
+		return false;
+	}
+	//需要把公告id
+	$.ajax({
+		url : baseurl + "/Admin/Sdk_Ad_Activity/gameNumCheck",
+		type : 'POST',
+		dataType : 'json',
+		data : 'act=edit&token='+'<?php echo $token;?>&ids='+ids.join(','),
+		success : function(ret) {
+			if (ret.success) {
+				
+			} else {
+				showError('', ret.msg);
+				var arr=ret.data.split(',');
+				for(var i=0,len=arr.length;i<len;i++){
+					var id=arr[i];
+					$(".checkbox[value="+id+']').removeAttr('checked');
+				}
+			}
+			
+		}
+	});
+}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

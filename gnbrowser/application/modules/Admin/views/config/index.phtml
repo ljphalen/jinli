@@ -1,0 +1,44 @@
+<?php echo $this->render("layout/header.phtml");?>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="h_a">配置管理</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">新闻筛选条件</th>
+				<td class="td">
+				   <input name="gionee_news_filter" type="radio" <?php if($configs['gionee_news_filter']==1) echo 'checked';?>  value="1">随机   <input name="gionee_news_filter" type="radio" <?php if($configs['gionee_news_filter']==2) echo 'checked';?> value="2">按时间筛选
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">新闻显示条数</th>
+				<td class="td">
+				   <input name="gionee_news_number" type="text" value="<?php echo $configs['gionee_news_number'];?>">条(每个分类显示的条数)
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">图片筛选条件</th>
+				<td class="td">
+				   <input name="gionee_picture_filter" type="radio" <?php if($configs['gionee_picture_filter']==1) echo 'checked';?>  value="1">随机   <input name="gionee_picture_filter" type="radio" <?php if($configs['gionee_picture_filter']==2) echo 'checked';?> value="2">按时间筛选
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">图片显示条数</th>
+				<td class="td">
+				   <input name="gionee_picture_number" type="text" value="<?php echo $configs['gionee_picture_number'];?>">条(每个分类显示的条数)
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Config/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

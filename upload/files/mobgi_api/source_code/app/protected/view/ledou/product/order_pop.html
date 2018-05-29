@@ -1,0 +1,124 @@
+<div class="addAD">
+    <div class="grid">
+            <form action="/order/saveorder" method="post" name="form" id="product">
+            <div class="main">
+                <div class="app-detail">
+                    <ul class="form">
+                        <li>
+                            <span class="label">订单号：</span>
+                            <div class="fc">
+                                <input type="hidden" id="index" name="index" value="{{index}}" class="iText" />
+                                <input type="hidden" id="oid" name="oid" value="{{oid}}" class="iText" />
+                                <input type="text" id="orderid" name="orderid" value="{{orderid}}" <!-- if {{oid}} -->disabled<!-- endif --> class="iText required" /><span class="red">*</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">合同编号：</span>
+                            <div class="fc">
+                                <input type="text" id="agreementid" name="agreementid" value="{{agreementid}}" class="iText required" />
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">合同周期：</span>
+                            <div class="fc">
+                                <input type="text" name="startdate"  id="startdate" value="{{startdate}}" class="iText"/>至<input type="text" name="enddate"  id="enddate" value="{{enddate}}"  class="iText"/>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">结算方式：</span>
+                            <div class="fc">
+                                <select name="paymethod" class="required" required id="paymethod">
+                                    <option value="1" <!-- if {{paymethod}}== 1 -->selected<!-- endif -->>CPM</option>
+                                    <option value="2" <!-- if {{paymethod}}== 2 -->selected<!-- endif -->>CPC</option>
+                                    <option value="5" <!-- if {{paymethod}}== 5 -->selected<!-- endif -->>CPD</option>
+                                    <option value="4" <!-- if {{paymethod}}== 4 -->selected<!-- endif -->>CPI</option>
+                                    <option value="3" <!-- if {{paymethod}}== 3 -->selected<!-- endif -->>CPA</option>
+                                    <option value="6" <!-- if {{paymethod}}== 6 -->selected<!-- endif -->>CPS</option>
+                                    <option value="7" <!-- if {{paymethod}}== 7 -->selected<!-- endif -->>CPT</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">单价：</span>
+                            <div class="fc">
+                                <input type="text" id="price" name="price" value="{{price}}" class="iText required" />
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+        <div style="text-align:center;padding:10px 0;">
+            <a href="javascript:void(0)" class="btn" id="ok">确定</a>
+            <a href="javascript:void(0)" class="cancel" id="cancel">取消</a>
+        </div>
+    </div>
+</div>
+<script>
+    $(function() {
+        <!-- if {{orderid}} -->
+        
+        <!-- else -->
+            //新增订单自动生成订单号
+            ajaxGET("/order/createOrderKey", "appkey=" + appkey, function(data) {
+                if (data.result == 0) {
+                    $("#orderid").val(data.key);
+                } else {
+                    alert("生成订单号失败,请重试")
+                }
+            });
+        <!-- endif -->
+        $("#paymethod").val({{paymethod}})
+        var startDateTextBox = $('#startdate');
+        var endDateTextBox = $('#enddate');
+        startDateTextBox.datetimepicker({
+                dateFormat: 'yy-mm-dd', 
+                timeFormat: '',
+                stepHour: 1,
+                stepMinute: 1,
+                stepSecond: 1,
+                //numberOfMonths: 2,
+                minDate: -1,
+                onClose: function(dateText, inst) {
+            if (endDateTextBox.val() != '') {
+                var testStartDate = startDateTextBox.datetimepicker('getDate');
+                var testEndDate = endDateTextBox.datetimepicker('getDate');
+                if (testStartDate > testEndDate)
+                    endDateTextBox.datetimepicker('setDate', testStartDate);
+            }
+            else {
+                endDateTextBox.val(dateText);
+            }
+                },
+                onSelect: function (selectedDateTime){
+                        endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
+                }
+        });
+        
+        endDateTextBox.datetimepicker({
+                dateFormat: 'yy-mm-dd', 
+                timeFormat: '',
+                stepHour: 1,
+                stepMinute: 1,
+                stepSecond: 1,
+                //numberOfMonths: 2,
+                minDate: 0,
+                onClose: function(dateText, inst) {
+            if (startDateTextBox.val() != '') {
+                var testStartDate = startDateTextBox.datetimepicker('getDate');
+                var testEndDate = endDateTextBox.datetimepicker('getDate');
+                if (testStartDate > testEndDate)
+                    startDateTextBox.datetimepicker('setDate', testEndDate);
+            }
+            else {
+                startDateTextBox.val(dateText);
+                    }
+                },
+                onSelect: function (selectedDateTime){
+                        startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
+                }
+        });
+        
+        
+    });
+</script>

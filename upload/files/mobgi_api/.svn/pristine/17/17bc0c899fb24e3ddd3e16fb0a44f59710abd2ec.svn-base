@@ -1,0 +1,73 @@
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>
+<link media="screen" href="{{rootUrl}}/css/chosen.css" rel="stylesheet" type="text/css">
+<div class="colMain">
+    <div class="title">
+        <p class="fl">视频素材审核</p>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="devInfo">
+                <form action="../resource/video_check_save" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" value="{{result.id}}" name="id" />
+                    <input type="hidden" value="{{result.product_name}}" name="product_name" id="product_name" />
+                    <ul class="form">
+                        <li>
+                            <span class="label">平台类型：</span>
+                            <div class="fc">
+                                <select name="platform" class="required" required id="platform"  <!-- if {{result.id}} -->disabled<!-- endif -->>
+                                    <option value="1">Android</option>
+                                    <option value="2">IOS</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">视频名称：</span>
+                            <div class="fc">
+                                <input type="text" class="iText required" required name="video_name" value="{{result.video_name}}" style="width:220px;float:left;" />
+                                <select style="float:left;margin:0 5px;" name="ad_type" id="ad_type" <!-- if {{result.id}} -->disabled<!-- endif -->>
+                                    <option value="0" >插屏</option>
+                                </select>
+                                <select name="product" class="required" required id="product_id" <!-- if {{result.id}} -->disabled<!-- endif --> onchange="javascript:$('#product_name').val($('#product_id option:selected').text().replace('(T)', '').replace('(A)', '').replace('(I)', ''))">
+                                    <!-- loop product -->
+                                    <option value="{{product' value.id}}" <!-- if {{product' value.id}}=={{result.ad_product_id}} -->selected<!-- endif -->>{{product' value.product_name}}</option>
+                                    <!-- endloop -->
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                           <span class="label">视频地址：</span>
+                            <div class="fc">
+                                <a href='{{result.video_url}}' target="_blank">{{result.video_name}}</a>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">审核信息：</span>
+                            <div class="fc">
+                                <input type="text" class="iText" value="{{result.check_msg}}" name="check_msg" />
+                            </div>
+                        </li>
+                        <li class="line"></li>
+                        <li>
+                            <div class="fc">
+                                <input type="hidden" class="iText" value="{{result.ischeck}}" name="ischeck" />
+                                <input type="button" value="审核通过" class="submit" onclick="checkproduct(1)"/>
+                                <input type="button" value="审核驳回" class="cancel" onclick="checkproduct(2)" />
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script language="javascript">
+   function checkproduct(type){
+        if(type==2 && $("input[name='check_msg']").val()==""){
+            alert("请输入审核意见");
+            $("input[name='check_msg']").focus();
+            return false;
+        }
+        $("input[name='ischeck']").val(type);
+        $('form').submit();
+    }
+</script>

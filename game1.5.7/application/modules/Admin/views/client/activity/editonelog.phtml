@@ -1,0 +1,126 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	<li><a href="<?php echo $lotterylogUrl;?>">抽奖记录</a></li>
+    <li class="current"><a href="<?php echo $editlotterylogUrl;?>">奖品管理</a></li>
+    <li><a href="<?php echo $listUrl;?>">活动列表</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑账号信息</div>
+<form method="post" action="<?php echo $editPostlotteryonelogUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<input name="uname" value="<?php echo $info['uname'];?>" type="hidden" />
+<input name="grant_status" value="<?php echo $info['grant_status'];?>" type="hidden" />
+	<div class="h_a">账号信息</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">账号</th>
+				<td class="td">
+					 <?php echo $info['uname'];?>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">姓名</th>
+				<td class="td">
+				   <input name="name" class="input wc" value="<?php echo $usr_info['realname'];?>"/>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">地址</th>
+				<td class="td">
+				   <input name="address" class="input wc" value="<?php echo $usr_info['address'];?>"/>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="h_a">抽奖信息</div>
+	<div class="table_full">
+		<table width="100%">
+		   <tr class="tr">
+				<th class="th">活动名称</th>
+				<td class="td">
+				   <?php echo $hd_info['name'];?>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">标记状态</th>
+				<td class="td">
+				   <?php echo $info['label_status'] ? '挂起' : '';?>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">奖项</th>
+				<td class="td">
+				   <?php echo $this->awards[$info['lottery_id']];?>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">奖品</th>
+				<td class="td">
+				  <?php echo $act_info[$info['lottery_id']]['award_name'];?>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">抽奖时间</th>
+				<td class="td">
+					 <?php echo date('Y-m-d H:i:s', $info['create_time']);?>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">发放状态</th>
+			    <td class="td">
+			    <?php if(!$info['grant_status']) {?>
+			     <select name="grant_status" class="wa">
+				    <option <?php if($info['grant_status'] == 0) echo 'selected';?> value="0">未发放</option>
+				    <option <?php if($info['grant_status'] == 1) echo 'selected';?> value="1">已发放</option>
+				 </select>
+			    <?php } else {?>
+			       已发放
+			    <?php } ?>
+				 
+			   </td>
+			</tr>
+			<tr class="tr">
+				<th class="th">发放时间</th>
+			    <td class="td">
+				 <?php echo !$info['grant_time'] ? "暂无" : date('Y-m-d H:i:s', $info['grant_time']);?>
+			   </td>
+			</tr>
+			<tr class="tr">
+				<th class="th">备注</th>
+				<td class="td"><textarea style="width: 600px; height: 300px" class="textarea"
+						name="remark"><?php echo $info['remark'];?></textarea>
+				</td>
+		</tr>
+		</table>
+	</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	var editor;
+	KindEditor.ready(function(K) {
+		K.token = '<?php echo $token;?>';
+	    editor = K.create('textarea[name="remark"]', {
+	        resizeType : 1,
+	        allowPreviewEmoticons : false,
+	        allowImageUpload : true,
+	        uploadJson : '<?php echo $uploadImgUrl;?>',
+	        items : EDITOR_ITEMS
+	    });
+	 });
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Activity/editlog');
+	},function(){
+		editor.sync();
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

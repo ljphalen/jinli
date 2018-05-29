@@ -1,0 +1,49 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $menuUrl; ?>">菜单列表</a></li>
+		<li><a href="#" onclick="to()" ">刷新菜单</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl; ?>" method="post">
+	<input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>菜单名称</td>
+			<td>父菜单名</td>
+			<td>指令</td>
+		</tr>
+		<?php
+		foreach ($list as $vList) :
+			foreach ($vList['sub_button'] as $v):
+				?>
+				<tr class="ct">
+					<td><?php echo $v['name'];?></td>
+					<td><?php echo $vList['name'];?></td>
+					<td><?php echo $v['key'];?></td>
+				</tr>
+			<?php
+			endforeach;
+		endforeach; ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+
+<script>
+	function to() {
+		$.post("<?php echo $menuUrl.'?up=1';?>", {'token': token}, function (data) {
+			if (data.success === true) {
+				$.messager.alert('提示信息', textDecode(textDecode(data.msg)));
+			} else {
+				$.messager.alert('错误信息', textDecode(textDecode(data.msg)));
+			}
+		}, 'json');
+	}
+
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

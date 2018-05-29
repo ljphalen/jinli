@@ -1,0 +1,99 @@
+<{config_load file="site.conf"}> <{include file="public/pageHead.html"}>
+<link href="/template/default/css/validate.css" rel="stylesheet"
+	type="text/css" />
+<script src="/template/default/js/jquery.validate.js" type="text/javascript"
+	language="javascript"></script>
+<script type="text/javascript">
+function clen(s) {
+  var l = 0;
+  var a = s.split("");
+   for (var i=0;i<a.length;i++) {
+     l++;
+   }
+  return l;
+}
+
+jQuery.validator.addMethod("isLenNickname", function(value, element){   
+	   var length = clen(value);
+	   return length>=2&&length<=9 ;
+   }, "长度为2-9个字");
+
+$(document).ready(function() {
+	$("#theForm").validate({
+		rules: {
+			nickname:{
+				required:true,
+				//isLenNickname:true,
+				minlength:2,
+				maxlength:9
+			}
+		},
+		messages: {
+			nickname:{
+				required:"请输入姓名",
+				//isLenNickname:"长度为2-9个字",
+				minlength:"最小2个字",
+				maxlength:"最大9个字"
+			}
+		}
+	});	
+	
+	
+	$("#role_id").change(function(){
+	});
+});
+</script>
+
+<h1><span class="action-span"></span>
+<span class="action-span1">个人信息</span><span id="search_id"
+	class="action-span1"> - <{$actionText}></span>
+<div style="clear: both"></div>
+</h1>
+
+<div class="main-div">
+<form action="/index.php?ac=set_person" method="post"
+	enctype="multipart/form-data" name="theForm" id="theForm">
+    <input type="hidden" name="userid" value="<{$admin.userid}>" />
+<table width="100%">
+	<{if $error}>
+	<tr align="center">
+		<td colspan="2" style="color: red"><{$error}></td>
+	</tr>
+	<{/if}>
+	<tr>
+    <td colspan="3">
+    <div class="main-div">
+        <h1>
+            <div class="section_title">
+                用户设置
+            </div>
+        </h1>
+        <table id="list-table__" width="100%">
+            <tbody>
+                <tr>
+                    <td class="label_2" width="336">登录帐号：</td>
+                    <td width="733"><label><{$personName}></label></td>
+                </tr>
+                <tr>
+                    <td class="label_2" width="336">角色类型：</td>
+                    <td><label><{$personRole}></label></td>
+                </tr>
+                <tr>
+                    <td class="label_2" width="336">姓名：</td>
+                    <td><input type="text"  name="nickname" id="nickname" value="<{$personNickname}>" /></td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div>
+    </td>
+    </tr>
+    <tr>
+        <td colspan="2" align="center"><input type="submit" name="smt" id="smt" value="提交" class="button" /></td>
+    </tr>
+  </table>
+</form>
+</div>
+
+<{include file="public/pageFoot.html"}>
+<script src="/template/default/js/common.js" type="text/javascript"></script>

@@ -1,0 +1,53 @@
+<?php echo $this->render("layout/header.phtml");?>
+<section id="page">
+	<!-- 主体内容 -->
+	<section id="content">
+		<section class="product">
+			<section class="product-detail">
+			   <section class="top-box">
+				<div class="mod-slide J_slidePic">
+				   <div class="wrap">
+					<?php if(strpos($info['img'], 'http://') === false) {
+								$img = $attachPath.$info['img'];
+							}else{
+								$img = $info['img'].'_200x200.'.end(explode(".",  $info['img']));
+							};?>
+						<ul class="pic">
+						   <?php foreach($info['item_imgs'] as $key=>$value){?>
+						   <li><img src="<?php echo $value['url'].'_200x200.'.end(explode(".",  $value['url']));?>" alt=" " /></li>
+						   <?php } ?>
+						</ul>
+					</div>
+					<div class="handle">
+					<?php foreach($info['item_imgs'] as $key=>$value){?>
+					<span></span>
+					<?php } ?>
+				    </div>
+				 </div> 
+				 <div class="txtInfo">  
+					<div class="txt">
+						<h3><?php echo $info['title'];?></h3>
+						<p>
+							<span><em><?php echo $info['price'];?>元</em></span>
+							<span>（预计可返<em><?php echo $taoke_info['commission'];?>元</em>银币）</span>
+							</p>
+					</div>
+                 </div>
+                 </section>
+				 <article class="intro">
+					<?php echo html_entity_decode($info['descrip']);?>
+				 </article>
+				 <nav class="button">
+					<a href="#" class="J_WantBtn" data-ajaxUrl="<?php echo $webroot.'/goods/want/?id=',$info['id'];?>" data-productId="<?php echo $info['id'];?>">
+					<span>我想要(<em class="J_wantCount"><?php echo $info['default_want']+$info['want'];?></em>)</span></a>
+					<a href="<?php echo $taoke_info['click_url'];?>">
+					<span>立即购买</span></a>
+				</nav>
+			</section>
+		</section>
+	</section>
+	<!--  /主体内容 -->
+</section>
+</body>
+</html>
+

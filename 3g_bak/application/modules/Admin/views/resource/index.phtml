@@ -1,0 +1,40 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $listUrl; ?>">资源列表</a></li>
+		<li><a href="<?php echo $addUrl; ?>">添加资源</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">排序</td>
+			<td width="100">名称</td>
+			<td width="100">公司</td>
+			<td width="100">大小</td>
+			<td width="300">下载地址</td>
+			<td>图标</td>
+			<td width="100">状态</td>
+			<td width="100">操作</td>
+		</tr>
+		<?php foreach ($resource as $key => $value) { ?>
+			<tr class="ct">
+				<td><?php echo $value['sort']; ?></td>
+				<td><?php echo $value['name']; ?></td>
+				<td><?php echo $value['company']; ?></td>
+				<td><?php echo $value['size']; ?></td>
+				<td><?php echo $value['down_url']; ?></td>
+				<td><img src="<?php echo $attachPath . $value['icon']; ?>" width="100"/></td>
+				<td><?php echo $value['status'] == 1 ? '开启' : '关闭'; ?></td>
+				<td>
+					<a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+					<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+				</td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

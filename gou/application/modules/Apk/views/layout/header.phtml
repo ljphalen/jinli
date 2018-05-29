@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<?php
+$ua = Util_Http::getServer('HTTP_USER_AGENT');
+$is_uc = (strpos($ua, 'UC AppleWebKit') || strpos($ua, 'UCWEB')) ? true : false;
+$source = strpos(Util_Http::getServer('REQUEST_URI'), 'debug') ? '.source' : '';
+?>
+<?php if ($cache) {?>
+<html <?php if($is_uc) echo 'class="uc-hack"'?> manifest="/api/cache/index?cn=<?php echo $cn;?>" >
+<?php } else {?>
+<html <?php if($is_uc) echo 'class="uc-hack"'?>>
+<?php }?>
+<head>
+	<meta charset="UTF-8">
+	<title><?php echo $title;?></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="format-detection" content="email=no" />
+	
+	<link rel="stylesheet" href="<?php echo $staticRoot;?>/??/sys/reset/phonecore<?php echo $source;?>.css,/apps/gou/apk/assets/css/gou<?php echo $source;?>.css?v=<?php echo $version;?>" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+	<script type="text/javascript" src="<?php echo $staticRoot;?>/??/sys/icat/1.1.5/icat<?php echo $source;?>.js,/apps/gou/apk/assets/js/main<?php echo $source;?>.js?v=<?php echo $version;?>"></script>
+	<script type="text/javascript">var token= '<?php echo $token;?>'; var t_bi = '<?php echo $t_bi;?>';</script>
+</head>

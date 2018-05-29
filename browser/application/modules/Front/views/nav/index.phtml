@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, user-scalable=0" />
+<meta charset="utf-8">
+<title>网站导航 - 金立门户</title>
+<meta name="appRef" content="<?php echo $staticResPath;?>" />
+<link rel="stylesheet" href="<?php echo $staticSysPath;?>/reset/mpcore.css?v=<?php echo $version;?>" />
+<style type="text/css">
+	html{background:-webkit-gradient(linear, 0 0, 0 80%, from(#77C7FC), to(#FEFFFF)); background-repeat:no-repeat;}
+	@media screen and (min-width:721px){body{font-size:15px;}}
+	@media screen and (max-width:480px){body{font-size:10px;}}
+	@media screen and (max-width:320px){body{font-size:6.6px;}}
+	@media screen and (max-width:240px){body{font-size:5px;}}
+	a:link, a:visited{text-decoration:none; color:#0066B5;}
+	
+	.wrap{margin:8px;}
+	.nav-list{border-radius:6px; background:#E7F1FA; overflow:hidden;}
+	.nav-list dt{padding:9px 0px 9px 6px; font-size:20px; white-space:nowrap; border:solid #B0C5D8; border-width:0 1px; border-bottom:solid 1px #B0C5D8; position:relative;}
+	@media screen and (max-width:320px){.nav-list dt{font-size:15px;}}
+	.nav-list dt img{right:9px; top:9px; height:18px; width:18px; position:absolute;}
+	.nav-list dd{background:-webkit-gradient(linear, 0 0, 0 100%, from(#daeefe), to(#feffff));}
+	.nav-list table{width:100%; border-collapse:collapse; font-size:20px; white-space:nowrap;}
+	@media screen and (max-width:320px){.nav-list table{font-size:15px;}}
+	.nav-list table th, .nav-list table td{padding:12px 0; text-align:center; border:solid #B0C5D8; border-width:0 1px; border-bottom:dotted 1px #B0C5D8;}
+	.nav-list table th{color:#4CAB13;}
+</style>
+<script type="text/javascript" src="<?php echo $staticSysPath; ?>/icat/1.1.3/icat.js?v=<?php echo $version;?>" main="../browser.js" corelib="//jquery.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$('dt').click(function(){
+			$(this).next('dd').toggle();
+		});
+	});
+</script>
+</head>
+<body  dt-cr="<?php echo $crUrl;?>">
+	<div data-role="page" id="page" class="wrap">
+		<div class="nav-list">
+			<dl>
+				<dt>
+					分类导航<img
+						src="<?php echo $staticResPath;?>//pic/up.png"
+						alt="" />
+				</dt>
+				<dd>
+					<table>
+<?php foreach($f_navtypes as $k=>$navtype){?>
+						<tr>
+
+							<th>[<?php echo $navtype['name'];?>]</th>
+<?php
+	foreach ( $f_navs as $key => $nav ) {
+		if ($nav ['navtype'] == $navtype ['id']) {
+			?>
+							<td><a href="<?php echo $nav['link'];?>"><?php echo $nav['name'];?></a></td>
+<?php }}?>
+						</tr>
+<?php }?>
+					</table>
+				</dd>
+
+				<dt>
+					精品导航<img
+						src="<?php echo $staticResPath;?>//pic/up.png"
+						alt="" />
+				</dt>
+				<dd>
+					<table>
+<?php foreach($j_navtypes as $k=>$navtype){?>
+						<tr>
+							<th>[<?php echo $navtype['name'];?>]</th>
+<?php
+	foreach ( $j_navs as $key => $nav ) {
+		if ($nav ['navtype'] == $navtype ['id']) {
+			?>
+							<td><a href="<?php echo $nav['link'];?>"><?php echo $nav['name'];?></a></td>
+<?php }}?>
+						</tr>
+<?php }?>
+						</table>
+				</dd>
+			</dl>
+		</div>
+	</div>
+</body>
+</html>

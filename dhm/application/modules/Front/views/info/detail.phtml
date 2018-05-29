@@ -1,0 +1,63 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body id="infoDetail">
+	<div class="gotop">
+		<span>返回顶部</span>
+	</div>
+	<div class="module webapp">
+		<header class="header" id="J_header">
+			<div class="wrap">
+				<div class="title">
+					<a href="<?php echo $refer;?>" class="back"></a>
+					<a href="/" class="back-home" onclick="baiduStatic('海淘资讯', '海淘资讯-资讯详情', '海淘资讯-资讯详情-返回首页点击次数')"></a>
+					<h1><?php echo html_entity_decode($info['title']);?></h1>
+				</div>
+			</div>
+		</header>
+		<div class="iScroll" id="J_scrollWrap">
+			<div class="layout-center">
+				<article class="mixed-map-and-text">
+					<h1><?php echo html_entity_decode($info['title']);?></h1>
+					<div class="time"><?php echo date('Y-m-d', $info['start_time']);?></div>
+					<?php echo html_entity_decode($info['content']);?>
+					<?php if($footer&&$is_share): ?>
+						<?php echo html_entity_decode($footer['footer']);?>
+					<?php endif; ?>
+				</article>
+			</div>
+
+			<div class="layout-center" id="J_templateWrap"></div>
+
+			<div class="layout-center">
+				<div class="share-to-sns">
+					<div class="share-title">分享到</div>
+					<ul class="share-wrap"
+						share-title="我刚刚在#大红帽#发现这篇【<?php echo html_entity_decode($info['title']);?>】文章链接，内容超赞，很值得看，分享给大家。@大红帽DHM"
+						share-url=""
+						share-pic="">
+						<li data-type="weibo" class="item weibo J_shareToWeibo"
+							onclick="baiduStatic('大红帽资讯详情', '大红帽资讯详情-分享到', '大红帽资讯详情-分享到-新浪微博')">
+							<div class="pic"></div>
+							<div class="title">新浪微博</div>
+						</li>
+						<li data-type="qzone" class="item qzone J_shareToQzone"
+							onclick="baiduStatic('大红帽资讯详情', '大红帽资讯详情-分享到', '大红帽资讯详情-分享到-QQ空间')">
+							<div class="pic"></div>
+							<div class="title">QQ空间</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/template" id="J_attentionTemplate">
+		<%if(type){%>
+		<div class="text-bottom <%=type%>">
+			<img src="<?php echo $staticRoot;?>/apps/dhm/asset/img/text-bottom-<%=type%>.png">
+			<%if(type == 'weibo'){%>
+			<a class="attention-weibo" href="http://weibo.com/p/1005055604318952"></a>
+			<%}%>
+		</div>
+		<%}%>
+	</script>
+	
+<?php echo $this->render("layout/footer.phtml");?>

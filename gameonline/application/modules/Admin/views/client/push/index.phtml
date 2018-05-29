@@ -1,0 +1,90 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a >Phsh配置管理</a></li>
+	</ul>
+</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+		   <tr class="tr">
+				<th class="th">Phsh类型</th>
+				<td class="td">
+					<label class="mr20"><input  name="ptype" checked  value="1" type="radio" id="radio1" onclick="showContent(1)">打开网页</label>
+					<label class="mr20"><input  name="ptype" value="2" type="radio" id="radio2" onclick="showContent(2)" >分类列表界面</label>
+					<label class="mr20"><input  name="ptype" value="3" type="radio" id="radio3" onclick="showContent(3)" >专题列表界面</label>
+					<label class="mr20"><input  name="ptype" value="4" type="radio" id="radio4" onclick="showContent(4)">游戏详情界面</label>
+					<label class="mr20"><input  name="ptype" value="5" type="radio" id="radio5" onclick="showContent(5)">礼包详情界面</label>
+					<label class="mr20"><input  name="ptype" value="6" type="radio" id="radio6" onclick="showContent(6)">活动详情界面</label>
+				</td>
+			</tr>
+			<tr class="tr" id="t_link">
+				<th class="th">链接地址</th>
+				<td class="td">
+				   <input type="text" name="link" class="input wc" id="link">
+				</td>
+			</tr>
+			<tr class="tr" id="t_id">
+				<th class="th">ID</th>
+				<td class="td">
+				   <input type="text" name="id" class="input" id="id">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">通知栏标题</th>
+				<td class="td">
+				   <textarea name="title" class="textarea wc" id="title"></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">通知栏内容</th>
+				<td class="td">
+				  <textarea name="content" class="textarea wc" id="content"></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">生成格式</th>
+				<td class="td">
+				  <textarea name="gs" class="textarea" id="gs" style="width: 500px; height: 100px"  disabled="disabled"></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="button" id="test">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	showContent = function(flag) {
+ 		if (flag != 1) {
+ 			$("#t_link").hide();
+ 			$("#t_id").show();
+ 		} else {
+ 			$("#t_link").show();
+ 			$("#t_id").hide();
+ 		}
+ 	}
+ 	showContent(1);
+})
+$('#test').click(function(){
+		    $('#title,#content').html("");
+			$.ajax({
+				url : baseurl + "/Admin/Client_Push/get_name",
+				type : 'POST',
+				dataType : 'json',
+				data : 'token='+'<?php echo $token;?>'+'&ptype='+$("input[@type=radio][name=ptype][checked]").val()+'&title='+$("#title").val()+'&content='+$("#content").val()+'&id='+$("#id").val()+'&link='+encodeURIComponent($("#link").val()),
+				success : function(ret) {
+					 if (ret.success) {
+						var list = ret.data.list;
+						$('#gs').val(list.gs) ;
+					} else {
+						showError('', ret.msg);
+					}
+				}
+			});
+			return false;
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

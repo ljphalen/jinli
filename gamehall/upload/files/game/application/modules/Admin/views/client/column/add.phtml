@@ -1,0 +1,127 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">栏目列表</a></li>
+		<li class="current"><a href="javascript:;">添加栏目</a></li>
+	</ul>
+</div>
+<div class="h_a">添加栏目</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td"><select name="status">
+						<option value="1">开启</option>
+						<option value="2">关闭</option>
+				</select></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input" name="sort"
+					value="0"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">栏目名称</th>
+				<td class="td"><input type="text" class="input wc" name="name"
+					value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">链接</th>
+				<td class="td"><input type="text" name="link" class="input wc" id="link">&nbsp;&nbsp;<span id="tips" style="color:red;">添加子栏目后该链接自动失效</span>
+			    </td>
+			</tr>
+		</table>
+		<div class="h_a">
+			<input type="checkbox" name="addcolumn" value='1' id="addcolumn">添加子栏目
+		</div>
+		<div>
+			<table width="100%" id="container">
+				<tr class="hd">
+					<td width="50"></td>
+					<td></td>
+					<td width="50"></td>
+
+				</tr>
+				<tr class="ct">
+					<td class="td">排序：<input type="text" class="input" width="30"
+						name="addsort[]" value="0">
+					</td>
+					<td class="td">名称：<input type="text" class="input wc"
+						name="addname[]" value=""> <br /> 链接：<input type="text"
+						class="input wc" name="addlink[]" value="">
+					</td>
+					<td class="td"><a data-type="del" href="javascript:void(0);">删除</a>
+					</td>
+				</tr>
+				<tr class="ct">
+					<td class="td">排序： <input type="text" class="input" width="30"
+						name="addsort[]" value="0">
+					</td>
+					<td class="td">链接：<input type="text" class="input wc"
+						name="addname[]" value=""> <br /> 地址：<input type="text"
+						class="input wc" name="addlink[]" value="">
+					</td>
+					<td class="td"><a data-type="del" href="javascript:void(0);">删除</a>
+					</td>
+				</tr>
+
+			</table>
+		</div>
+		<div class="h_a">
+			<span><input type="button" id="addModule" value="增加" /></span>
+		</div>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script
+	src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Column/index');
+	});
+	
+	var moduleHtml= "<tr class='ct'>"
+		+"<td class='td'>排序："
+		+"<input type='text' class='input' width='30' name='addsort[]' value='0' ></td>"
+		+"<td class='td'>	名称：<input type='text' class='input wc' name='addname[]' value=''>"
+		+"<br/>"
+		+"链接：<input type='text' class='input wc' name='addlink[]' value=''></td>"
+		+"<td class='td'>  <a data-type='del' href='javascript:void(0);'>删除</a></td></tr>";
+	var addTr = function(){
+		$("#container").append(moduleHtml);
+	};
+		
+	if($("#addcolumn").attr("checked")){
+		$("#container input[type='text']").attr("readonly",false).css({"background":"#fff"}); 
+		$("#addModule").bind("click",addTr);
+	} else {
+		$("#container a").hide();
+		$("#container input[type='text']").attr("readonly",true).css({"background":"#ccc"});
+	} 
+	
+	$("#addcolumn").change(function(){
+		$("#addModule").unbind("click",addTr);
+		if ($(this).attr("checked")) {
+			$("#container input[type='text']").removeAttr("readonly").css({"background":"#fff"});
+			$("#addModule").bind("click",addTr);
+			$("#container a").show();
+		} else {
+			$("#container a").hide();
+			$("#container input[type='text']").attr("readonly",true).css({"background":"#ccc"})  ; 
+		}
+	});
+	
+	$("#container").delegate('a[data-type=del]', 'click', function(event) {
+		if($("#container tr").length > 2){
+			$(this).parent().parent().remove();
+		}
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

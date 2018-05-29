@@ -1,0 +1,69 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>金立游戏开发者中心</title>
+</head>
+<body>
+<table class="app_report">
+	<tr><th>分类</th><th>状态</th><th>当天（款）</th><th>累计（款）</th></tr>
+	<tr><td>APIKey</td><td>新增</td><td>{$union_apps["total"]}</td><td>{$union_apps_all["total"]}</td></tr>
+	<tr><td>APIKey</td><td>待审核</td><td>{$union_apps["0"]}</td><td>{$union_apps_all["0"]}</td></tr>
+	<tr><td>APIKey</td><td>已审核:总数</td><td>{$union_apps["2"]}</td><td>{$union_apps_all["2"]}</td></tr>
+	<tr><td>APIKey</td><td>已审核:通过</td><td>{$union_apps["-1"]}</td><td>{$union_apps_all["-1"]}</td></tr>
+	<tr><td>APIKey</td><td>已审核:不通过</td><td>{$union_apps["1"]}</td><td>{$union_apps_all["1"]}</td></tr>
+	<tr><td>应用总数</td><td>新增</td><td>{$apps["total"]}</td><td>{$apps_all["total"]}</td></tr>
+	<tr><td>版本总数</td><td>新增</td><td>{$apks["total"]}</td><td>{$apks_all["total"]}</td></tr>
+	<tr><td>版本</td><td>未提交</td><td>{$apks["0"]}</td><td>{$apks_all["0"]}</td></tr>
+	<tr><td>版本</td><td>待审核</td><td>{$apks["1"]}</td><td>{$apks_all["1"]}</td></tr>
+	<tr><td>版本</td><td>已审核:总数</td><td>{$apks["4"]}</td><td>{$apks_all["4"]}</td></tr>
+	<tr><td>版本</td><td>已审核:通过(含上线)</td><td>{$apks["2"]}</td><td>{$apks_all["2"]}</td></tr>
+	<tr><td>版本</td><td>上线</td><td>{$apks["3"]}</td><td>{$apks_all["3"]}</td></tr>
+	<tr><td>版本</td><td>已审核:不通过</td><td>{$apks["-1"]}</td><td>{$apks_all["-1"]}</td></tr>
+	<tr><td>版本</td><td>下线</td><td>{$apks["-2"]}</td><td>{$apks_all["-2"]}</td></tr>
+</table>
+
+<volist name="chkapps_type" id="type">
+	<if condition="!empty($chkapps[$key])">
+	<table class="app_report">
+		<tr>
+			<th colspan="11" style="text-align:left;font-size:16px;">{$type}</th>
+		</tr>
+		<tr>
+			<td>游戏名称</td>
+			<td>游戏版本</td>
+			<td>应用包名</td>
+			<td>公司名称</td>
+			<td>开发者账号</td>
+			<td>模式</td>
+			<td>联网类型（网游/单机）</td>
+			<td>新游戏/更新游戏</td>
+			<td>提交时间</td>
+			<td>审核时间</td>
+			<td>上线时间</td>
+		</tr>
+		<volist name="chkapps[$key]" id="vo">
+			<php>$label = json_decode($vo['label'], true);</php>
+			<tr>
+				<td>{$vo['app_name']}</td>
+				<td>{$vo['version_name']}</td>
+				<td>{$vo['package']}</td>
+				<td>{:M("account_infos")->where(array("account_id"=>$vo['author_id']))->getField('company')}</td>
+				<td>{:M("accounts")->where(array("id"=>$vo['author_id']))->getField('email')}</td>
+				<td><eq name="vo.is_join" value="2">普通<else/>联运</eq></td>
+				<td><if condition="$label[103] eq 1">单机<else/>网游</if></td>
+				<td>{:D("Dev://Apks")->getReleaseStatus($vo['app_id'], $vo['id'])}</td>
+				<td class="time"><gt name="vo.created_at" value="0">{$vo['created_at']|date="Y-m-d H:i:s",###}</gt></td>
+				<td class="time"><gt name="vo.checked_at" value="0">{$vo['checked_at']|date="Y-m-d H:i:s",###}</gt></td>
+				<td class="time"><gt name="vo.onlined_at" value="0">{$vo['onlined_at']|date="Y-m-d H:i:s",###}</gt></td>
+			</tr>
+		</volist>
+	</table>
+	</if>
+</volist>
+<style>
+	.app_report,.app_report tr,.app_report th,.app_report td{border:1px gray; text-align: left;}
+	.app_report th{width:150px}
+	.app_report td {border: 1px rgb(240, 164, 155);border-bottom-style: inset;}
+</style>
+</body>
+<html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<title>{{project_title}}</title>
+<link rel="shortcut icon" href="{{rootUrl}}/favicon.ico" />
+<link media="screen" href="{{rootUrl}}/css/reset.css" rel="stylesheet" type="text/css">
+<link media="screen" href="{{rootUrl}}/css/layout.css" rel="stylesheet" type="text/css">
+<link media="screen" href="{{rootUrl}}/css/jquery-ui-1.8.22.custom.css" rel="stylesheet" type="text/css">
+<script src="{{rootUrl}}/js/jquery-1.8.2.min.js" type="text/javascript"></script>
+<script src="{{rootUrl}}/js/jquery-ui-1.8.22.custom.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/highcharts.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/hightcharts/exporting.js"></script>
+</head>
+<body>
+<div class="colMain">
+    <div class="main">
+        <div class="grid">
+            <a class="fr btn" href="{{siteUrl}}Statis/appStatisByDay?appkey={{appkey}}&field=requests&sdate={{sdate}}&edate={{edate}}&type=day&channel_id={{channel_id}}">日期</a>
+            <a class="fr btn" href="{{siteUrl}}Statis/appStatisByDay?appkey={{appkey}}&field=requests&sdate={{sdate}}&edate={{edate}}&type=hour&channel_id={{channel_id}}">小时</a>
+            <table>
+                <thead><tr>
+                        <th>日期</th>
+                        <th><a href="{{siteUrl}}Statis/appStatisByDay?appkey={{appkey}}&field=requests&sdate={{sdate}}&edate={{edate}}&type={{type}}&channel_id={{channel_id}}">请求数</a></th>
+                        <th><a href="{{siteUrl}}Statis/appStatisByDay?appkey={{appkey}}&field=requests_success&sdate={{sdate}}&edate={{edate}}&type={{type}}&channel_id={{channel_id}}">请求成功数</a></th>
+                        <th><a href="{{siteUrl}}Statis/appStatisByDay?appkey={{appkey}}&field=impressions&sdate={{sdate}}&edate={{edate}}&type={{type}}&channel_id={{channel_id}}">展示数</a></th>
+                        <th><a href="{{siteUrl}}Statis/appStatisByDay?appkey={{appkey}}&field=impressions_rate&sdate={{sdate}}&edate={{edate}}&type={{type}}&channel_id={{channel_id}}">展示比例</a></th>
+                        <th><a href="{{siteUrl}}Statis/appStatisByDay?appkey={{appkey}}&field=clicks&sdate={{sdate}}&edate={{edate}}&type={{type}}&channel_id={{channel_id}}">点击数</a></th>
+                        <th><a href="{{siteUrl}}Statis/appStatisByDay?appkey={{appkey}}&field=clicks_rate&sdate={{sdate}}&edate={{edate}}&type={{type}}&channel_id={{channel_id}}">点击率</a></th>
+                        <th><a href="{{siteUrl}}Statis/appStatisByDay?appkey={{appkey}}&field=finish_downloads&sdate={{sdate}}&edate={{edate}}&type={{type}}&channel_id={{channel_id}}">下载完成数</a></th>
+                        <th><a href="{{siteUrl}}Statis/appStatisByDay?appkey={{appkey}}&field=installed&sdate={{sdate}}&edate={{edate}}&type={{type}}&channel_id={{channel_id}}">安装数</a></th>
+                        <th><a href="{{siteUrl}}Statis/appStatisByDay?appkey={{appkey}}&field=startups&sdate={{sdate}}&edate={{edate}}&type={{type}}&channel_id={{channel_id}}">启动数</a></th>
+                        <th><a href="{{siteUrl}}Statis/appStatisByDay?appkey={{appkey}}&field=registers&sdate={{sdate}}&edate={{edate}}&type={{type}}&channel_id={{channel_id}}">注册数</a></th>
+                </tr></thead>
+                <tbody>
+                    <!-- loop result -->
+                    <tr>
+                        <td><span class="blue" >{{result' value.date}}</span></td>
+                        <td>{{result' value.requests}}</td>
+                        <td>{{result' value.requests_success}}</td>
+                        <td>{{result' value.impressions}}</td>
+                        <td>{{result' value.impressions_rate}}%</td>
+                        <td>{{result' value.clicks}}</td>
+                        <td>{{result' value.clicks_rate}}%</td>
+                        <td>{{result' value.finish_downloads}}</td>
+                        <td>{{result' value.installed}}</td>
+                    </tr> 
+                    <!-- endloop -->
+                </tbody>
+                <tr>
+                    <td><span class="blue" >合计</span></td>
+                    <td>{{total.requests}}</td>
+                    <td>{{total.requests_success}}</td>
+                    <td>{{total.impressions}}</td>
+                    <td>{{total.impressions_rate}}%</td>
+                    <td>{{total.clicks}}</td>
+                    <td>{{total.clicks_rate}}%</td>
+                    <td>{{total.finish_downloads}}</td>
+                    <td>{{total.installed}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="container"></div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+$(function () {
+        $('#container').highcharts({
+            chart: {
+                type: 'line',
+                marginRight: 25,
+                marginBottom: 50
+            },
+            title: {
+                text:"{{title}}",
+                x: -20 //center
+            },
+            xAxis: {
+                categories: JSON.parse('{{xlas}}')
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            legend: {
+                layout: 'vertical',
+                verticalAlign: 'bottom',
+                borderWidth: 0
+            },
+            series: [{
+                name: '{{field}}',
+                data: JSON.parse('{{chartValue}}')
+            }]
+        });
+    });
+    
+</script>

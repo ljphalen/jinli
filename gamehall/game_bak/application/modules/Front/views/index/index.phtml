@@ -1,0 +1,126 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="wrap">
+	<div class="content">
+	   <!-- 广告图片 start-->
+	   <?php if($ads){ ?>
+		<div class="mod_box banner_box"  id='sliderPlay'>
+			<div class="banner_slide" >
+				<ul class="slide_list">
+				   <?php foreach($ads as $key=>$val) {
+				   		if( $val['ad_ptype'] == 1 ){
+				   			$link  = $webroot.'/Front/Game/detail/?id='.$val['link'];
+				   			$intersrc_id ='GID'.$val['link'];
+				   		} elseif ( $val['ad_ptype'] == 2){
+				   			$link  = $webroot.'/Front/Category/index/?category='.$val['link'];
+				   			$intersrc_id ='CID'.$val['link'];
+				   		} elseif( $val['ad_ptype'] == 4 ) {
+							$intersrc_id ='link';
+				   			$link  = html_entity_decode($val['link']);
+				   		} elseif ( $val['ad_ptype'] == 5){  
+				   			$link  = $webroot.'/Front/News/detail/?id='.$val['link'];
+				   			$intersrc_id ='NID'.$val['link'];
+				   		} 
+				   	?>  
+					<li><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $tj_object, 'homepage_ADID'.$val['id'].'_'.$intersrc_id, $link) ;?>" alt="" target="_blank"><img  data-original="<?php echo $attachPath.$val['img']; ?>" src="<?php echo $staticResPath; ?>/images/default_banner.png?v=<?php echo $version;?>" alt="<?php echo $val['title']; ?>"  /></a></li>
+				   <?php } ?>
+				</ul>
+			</div>
+			<div class="picsroller_num" id='btnBox' >
+			  <?php foreach($ads as $key=>$val) { 
+			  	    if ($key == 0){
+			  	    	echo '<a class="cur" href="javascript:void(0)" data-index="'.($key+1).'">'.($key+1).'</a>';
+			  	    }else{
+			  	    	echo '<a href="javascript:void(0)" data-index="'.($key+1).'">'.($key+1).'</a>';
+			  	    }
+              }?>			
+			</div>
+		</div>
+        <?php } ?>
+	   <!-- 广告图片 end-->	
+	   <!-- main s -->
+		<div class="main">
+			<!-- 大家都在玩模块 s-->
+			<div class="mod_box game_box paddingbottom_style1">
+				<div class="hd"><i class="hd_ico"></i><h2 class="title">大家都在玩</h2><a class="more" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', 'category100', $tj_intersrc.'_allplay', $webroot.'/Front/Category/index/') ;?>" alt="" >更多&gt;</a></div>
+				<div class="bd">
+					<ul class="game_list clearfix">
+						<?php foreach($playgames as $key=>$val) {?>  
+						<li>
+							<a  class="thumb" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $val['package'], 'homepage_allplay'.($key+1).'_GID'.$val['id'], $webroot.'/Front/Game/detail/?id='.$val['id']) ;?>" title="<?php  echo $val['name'];?>"><img  class="lazy" data-original="<?php echo $val['img'];?>" src="<?php echo $staticResPath; ?>/images/default_icon.png?v=<?php echo $version;?>" alt="<?php echo $val['name'];?>" /></a>
+							<h4><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $val['package'], 'homepage_allplay'.($key+1).'_GID'.$val['id'], $webroot.'/Front/Game/detail/?id='.$val['id']) ;?>" title="<?php  echo $val['name'];?>"><?php  echo $val['name'];?></a></h4>
+							<p class="type"><?php echo $val['category_title'];?></p>
+							<a  class="download_btn" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'startdl', $val['package'], 'homepage_allplay'.($key+1).'_GID'.$val['id'], $val['link']) ;?>" >下载</a>
+						</li>
+						<?php } ?>
+					</ul>
+				</div>
+			</div>
+			<!-- 火爆网游模块 s-->
+			<div class="mod_box game_box paddingbottom_style1">
+				<div class="hd"><i class="hd_ico"></i><h2 class="title">火爆网游</h2><a class="more" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', 'category100', $tj_intersrc.'_hotgame', $webroot.'/Front/Category/index/');?>">更多&gt;</a></div>
+				<div class="bd">
+					<ul class="game_list clearfix">
+						<?php foreach($webgames as $key=>$val) {
+						     
+							?>  
+						<li>
+							<a class="thumb" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $val['package'], 'homepage_hotgame'.($key+1).'_GID'.$val['id'], $webroot.'/Front/Game/detail/?id='.$val['id']) ;?>" title="<?php  echo $val['name'];?>"><img  class="lazy" data-original="<?php echo $val['img'];?>" src="<?php echo $staticResPath; ?>/images/default_icon.png?v=<?php echo $version;?>" alt="<?php echo $val['name'];?>" /></a>
+							<h4><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $val['package'], 'homepage_hotgame'.($key+1).'_GID'.$val['id'], $webroot.'/Front/Game/detail/?id='.$val['id']) ;?>" title="<?php  echo $val['name'];?>"><?php  echo $val['name'];?></a></h4>
+							<p class="type"><?php echo $val['category_title'];?></p>
+							<a class="download_btn" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'startdl', $val['package'], 'homepage_hotgame'.($key+1).'_GID'.$val['id'], $val['link']) ;?>" >下载</a>
+						</li>
+						<?php } ?>
+					</ul>
+				</div>
+			</div>
+			<!-- 最新游戏模块 s-->
+			<div class="mod_box game_box paddingbottom_style1">
+				<div class="hd"><i class="hd_ico"></i><h2 class="title">最新游戏</h2><a class="more" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', 'category100', $tj_intersrc.'_newgame', $webroot.'/Front/Category/index/') ;?>">更多&gt;</a></div>
+				<div class="bd">
+					<ul class="game_list clearfix">
+						<?php foreach($newgames as $key=>$val) {?>  
+					    <li>
+							<a class="thumb" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $val['package'], 'homepage_newgame'.($key+1).'_GID'.$val['id'], $webroot.'/Front/Game/detail/?id='.$val['id']) ;?>" title="<?php  echo $val['name'];?>"><img  class="lazy" data-original="<?php echo $val['img'];?>" src="<?php echo $staticResPath; ?>/images/default_icon.png?v=<?php echo $version;?>" alt="<?php echo $val['name'];?>" /></a>
+							<h4><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', $val['package'], 'homepage_newgame'.($key+1).'_GID'.$val['id'], $webroot.'/Front/Game/detail/?id='.$val['id']) ;?>" title="<?php  echo $val['name'];?>"><?php  echo $val['name'];?></a></h4>
+							<p class="type"><?php echo $val['category_title'];?></p>
+							<a class="download_btn" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'startdl', $val['package'], 'homepage_newgame'.($key+1).'_GID'.$val['id'], $val['link']) ;?>" >下载</a>
+						</li>
+						<?php } ?>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- main d -->
+		<div class="aside">
+			<!-- 新闻公告 s-->
+			<div class="mod_box news_box">
+				<div class="hd"><i class="hd_ico"></i><h2 class="title">新闻公告</h2><a class="more" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', 'newslist', 'homepage_news', $webroot.'/Front/News/index/');?>">更多&gt;</a></div>
+				<div class="bd">
+				   <?php  if($news_img){?>
+					<a class="" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', 'newsdetail'.$news_img['id'], 'homepage_news_img_zx'.$news_img['id'], $webroot.'/Front/News/detail/?id='.$news_img['id']);?>"><img  class="lazy" data-original="<?php echo $attachPath.$news_img['thumb_img']; ?>" src="<?php echo $staticResPath; ?>/images/pic.jpg?v=<?php echo $version;?>" alt="" height="96px" width="198px" /></a>
+					<?php }?>
+					<ul class="news_list">
+					<?php foreach($news as $key=>$val) {
+					        if($new_img_flag && ($key >= 5) ){
+					        	break;
+					        }
+						?>  
+						<li><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', 'newsdetail'.$val['id'], 'homepage_news_txt_zx'.$news[0]['id'], $webroot.'/Front/News/detail/?id='.$val['id']);?>"><?php echo $val['title'];?></a></li>
+					<?php }?>	
+					</ul>
+				</div>
+			</div>
+			<!-- 新闻公告 e-->
+			<!-- 本周排行 s-->
+	          <?php echo $this->render("layout/download.phtml");?> 
+			<!-- 艾米客户端下载 s-->
+			 <?php echo $this->render("layout/client.phtml");?> 
+		</div>
+		 <!-- 右侧的悬浮框 -->
+	    <?php echo $this->render("layout/right.phtml");?>
+	</div>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>
+<script type="text/javascript" src="<?php echo $staticResPath; ?>/js/unslider.js?v=<?php echo $version;?>"></script>
+</body>
+</html>

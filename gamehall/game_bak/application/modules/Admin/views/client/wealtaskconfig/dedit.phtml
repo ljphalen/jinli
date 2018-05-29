@@ -1,0 +1,73 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $listUrl;?>">福利任务</a></li>
+		<li class="current"><a href="<?php echo $dlistUrl;?>">连续登录</a></li>
+		<li ><a href="<?php echo $dailyTaskUrl;?>">每日任务</a></li>
+		<li><a href="<?php echo $taskInfoConfigUrl;?>">任务说明</a></li>
+	</ul>
+</div>
+
+<form method="post" action="<?php echo $deditPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">	
+		<tr class="tr">
+			<th class="th">活动名称</th>
+			<td class="td"><input type="text" class="input wc" name="task_name" value="<?php echo $info['task_name'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">弹出框图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg">
+						<img src="<?php echo $attachPath.$info['img'];?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动开始结束时间</th>
+			<td class="td"><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $info['start_time'])?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s', $info['end_time'])?>" /></td>
+		</tr>
+		<tr class="tr" >
+				<th class="th">奖励方式</th>
+				<td class="td">
+				   <div>
+				    <div><input <?php if($info['award_type'] == 1) echo 'checked';?> name="award_type" value="1" type="radio">登录奖励&nbsp;+&nbsp;&nbsp;
+				    <input name="award_1" value="<?php echo $info['award_1'];?>"/> &nbsp;&nbsp;<span><font color="#FF0000">(必须填写正整数)</font></span></div>
+				    <div><input <?php if($info['award_type'] == 2) echo 'checked';?> name="award_type" value="2" type="radio">登录奖励&nbsp;×&nbsp;&nbsp;
+				    <input name="award_2" value="<?php echo $info['award_2'];?>"/> &nbsp;&nbsp;<span><font color="#FF0000">(必须填写正整数)</font></span></div>
+				  </div>
+				</td>
+			</tr>
+		<tr class="tr" >
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="select wa">
+				<option <?php if ($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+				<option <?php if ($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+	$('#end_time').datetimepicker();      
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Wealtaskconfig/dindex');
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

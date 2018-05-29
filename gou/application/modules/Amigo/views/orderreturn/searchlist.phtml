@@ -1,0 +1,53 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+	<div class="module">
+	<?php if($hasheader){?>
+		<header id="iHeader" class="hd">
+			<div class="top-wrap">
+				<div class="title">
+					<a href="<?php echo $webroot;?>/amigo/orderreturn/search" class="back"></a>
+					<h1>退/换货</h1>
+					<span class="voice"></span>
+				</div>
+			</div>
+		</header>
+	<?php }?>
+
+		<section id="iScroll">
+			<div class="select-order">
+			<?php if($orders) {?>
+				<form action="<?php echo $webroot;?>/amigo/orderreturn/step" method="post">
+				<input type="hidden" name="token" value="<?php echo $token;?>">
+				<input type="hidden" name="parm" value="" data-error="请选择订单">
+					<div class="t">请选择需要退/换货的订单：</div>
+					<ul class="J_selectOrder">
+					<?php foreach ($orders as $key=>$value) {?>
+						<li>
+							<time>下单时间：<?php echo date('Y-m-d H:i:s', $value['create_time']);?></time>
+							<figure class="item-pictext">
+								<div class="pic">
+									<span><img src="<?php echo $attachPath.$goods[$value['goods_id']]['img'];?>" alt=""></span>
+								</div>
+								<div class="desc">
+									<h3><?php echo html_entity_decode($goods[$value['goods_id']]['title']);?></h3>
+									<p class="price">￥<?php echo $value['deal_price'];?></p>
+									<p class="text">收货地址：<?php echo $value['address'];?></p>
+								</div>
+								<div class="options">
+									<input type="checkbox" value="<?php echo $value['id'].'|'.$value['order_token'];?>" />
+								</div>
+							</figure>
+						</li>
+					<?php }?>
+					</ul>
+					<div class="f web-btn"><button class="J_formVerify">下一步</button></div>
+				</form>
+				<?php } else {?>
+					<div class="no-order">未查询到订单</div>
+				<?php }?>
+			</div>
+		</section>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl.'?type='.$type;?>">游戏列表</a></li>
+		<li class="current"><a>版本管理</a></li>
+	</ul>
+</div>
+<div class="h_a">
+    <a href="<?php echo $step2editUrl.'?id='.$id.'&type='.$type;?>">
+    <input type="button" value="游戏版本列表"/>
+    </a>
+    <?php if($type == 2){?> 
+    <div style=" position:absolute;right:20px;top:68px;display: none;"><a href="<?php echo $step2Url.'?id='.$id.'&type='.$type;?>">
+    <input type="button" value=" 添加游戏版本" />
+    </a></div>
+    <?php }?>
+</div>
+<div class="table_full">
+<dl style="display:-webkit-box">
+	<dt style="width:64px;height:64px; " >
+	<img style="height: 100%;width:auto;" src="<?php echo $info['img'];?>" alt="" >
+	</dt>
+	<dd style="padding-left: 64px">
+		<p><span class="name">游戏名称:<?php echo $info['name'];?></span></p>
+		<p><span class="id">游戏ID:<?php echo $id;?></span></p>
+		<p><span class="type">类型:<?php echo $category_titles;?></span></p>
+		<p><span class="name">游戏包名:<?php echo $info['package'];?></span></p>
+		<p><span class="name">游戏下载量:<?php echo $info['downloads'];?></span></p>
+	</dd>
+</dl>
+</div>
+<div class="h_a">
+	<span>共<?php echo count($versions);?>个版本</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="40">版本ID</td>
+			<td width="100">版本号</td>
+			<td>VersionCode</td>
+			<td>大小</td>
+			<td>下载地址</td>
+			<td>上线时间</td>
+			<td>最后更新时间</td>
+			<td>状态</td>
+			<td>差分包</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($versions as $key => $value) {?>
+		<tr class="ct">
+		    <td><?php echo $value['id'];?></td>
+			<td><?php echo $value['version'];?></td>
+			<td><?php echo $value['version_code']; ?></td>
+			<td><?php echo $value['size']; ?>M</td>
+			<td><?php echo $value['link']; ?></td>
+			<td><?php echo date('Y-m-d H:i:s', $on_times[$value['id']]);?></td>
+			<td><?php echo date('Y-m-d H:i:s', ($on_times[$value['id']] > $value['update_time'] ? $on_times[$value['id']] : $value['update_time']) );?></td>
+			<td><?php echo $value['status'] ? '已上线' : '已下线';?></td>
+			<td><?php echo $packages[$value['id']]['num'] ? $packages[$value['id']]['num'] : 0; ?></td>
+			<td>
+			<?php $url = ($value['status'] ? $step3editUrl : $step6Url);?>
+			<a href="<?php echo $url;?>/?id=<?php echo $value['id'];?>&game_id=<?php echo $id;?>&type=<?php echo $type;?>" class="mr10"><?php echo $value['status'] ? '编辑':'查看';?></a>
+			<a href="<?php echo $step4editUrl;?>/?id=<?php echo $value['id'];?>&game_id=<?php echo $id;?>&type=<?php echo $type;?>" class="mr10">管理差分包</a>
+			<?php if(!$value['status']){?>
+			<?php if($type == 2){?>
+			<a style="display: none;" href="javascript:" onclick="deleteOne('<?php echo $deleteVersionUrl;?>/?id=<?php echo $value['id'];?>&type=<?php echo $type;?>', '', event);">删除</a>
+			<?php }}?>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

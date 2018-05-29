@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>手柄驱动</title>
+<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+<meta http-equiv="description" content="this is my page">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="js/jquery-1.7.js"></script>
+<script type="text/javascript" src="js/pop.js"></script>
+<script type="text/javascript">
+	function downloadGame(gameid) {
+	    showBg("seldiv");
+	    $("#seldiv").css("display","block");
+	    $("#driverdownlaod").click(function(){
+	    	location.href = "http://42.121.118.91:8080/NibiruWebHtml/test/JinliDriver.apk";
+	    	$("#seldiv").css("display","none");
+	    	closeBg();
+	    });
+	    $("#gamedownload").click(function(){
+	    	 //调用驱动来下载游戏
+			$("#myframe").attr("src", "uvs://addBadge?gameid=" + gameid);
+			$("#seldiv").css("display","none");
+			closeBg();
+	    });
+	}
+</script>
+<style>
+	a{
+	    font-size:50px;
+		color:black;
+		text-decoration: underline;
+	}
+	a:hover{
+		color:green;
+		text-decoration: none;
+	}
+	img{
+		position: relative;
+		top:80px;
+	}
+	#fullbg {
+	background-color: Gray;
+	display: none;
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	filter: Alpha(Opacity =     60); /* IE */
+	-moz-opacity: 0.7; /* Moz + FF */
+	opacity: 0.7;
+	height: 1000%;
+	width:100%;
+	z-index: 3;
+}
+#driverdownlaod{
+    height:50px;
+    font-size: 20px;
+}
+#gamedownload{
+    height:50px;
+     font-size: 20px;
+}
+</style>
+</head>
+<body style="height: 100%">
+   <div id="fullbg"></div>
+   <div style="margin: 0 auto;text-align: center;">
+	<img src="imgs/833.png" width="260px"/>&nbsp;<a id="downloada" href="javascript:downloadGame(847);">下载王者之剑</a><br/><br/><br/><br/>
+	<img src="imgs/847.png" width="260px"/>&nbsp;<a id="downloada" href="javascript:downloadGame(833);">下载致命空隙</a>
+	<iframe id="myframe" hidden="hidden"></iframe>
+	</div>
+	<div style="width:529px;height:280px;position:absolute;top:20%;left:30%;font-size: 23px;border: 0px solid gray;background-color: #c9e0fc;display:none;z-index: 5;background:url(imgs/jindu.png) no-repeat;color:white;padding-top:60px" id="seldiv">
+		<div style="text-indent: 30px;line-height: 30px;width:95%;margin: 0 auto;">请注意该游戏为手柄游戏，如果您未安装手柄驱动请点击"下载手柄驱动"，先安装手柄驱动。如果未安装驱动，则无法下载游戏。如果您已经安装了手柄驱动，请忽略本提示，点击"继续下载游戏"!</div>
+		<div style="text-align: center;margin-top: 5px">
+			<input type="button" id="driverdownlaod" value="下载手柄驱动"/>&nbsp;&nbsp;<input type="button" id="gamedownload" value="继续下载游戏"/>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+	<div class="module">
+<?php if($hasheader){?>
+		<header id="iHeader" class="hd">
+			<div class="top-wrap">
+				<div class="title">
+					<a href="<?php echo $webroot.'/amigo/index/index';?>" class="back"></a>
+					<h1>商品详情</h1>
+					<span class="voice"></span>
+				</div>
+			</div>
+		</header>
+<?php }?>
+
+		<section id="iScroll">
+			<div class="gotop <?php if($info['is_praise']){?>gotop-custom<?php }?>" style="display: none;">
+				<span>返回顶部</span>
+			</div>
+			<?php if($info['is_praise']){?>
+			<div class="vote J_vote <?php if(Gou_Service_LocalGoods::checkParise($info['id'])) echo 'on'; ?>" data-ajax="<?php echo $webroot;?>/api/praise/index?module=amigo_goods&item_id=<?php echo $info['id'];?>">
+				<span>赞(<?php echo Common::parise($info['praise']);?>)</span>
+			</div>
+			<?php }?>
+			<div class="detail-wrap">
+				<div class="pic-text-price">
+					<p><img src="<?php echo $attachPath.$info['img'];?>" alt=""></p>
+					<p><?php echo html_entity_decode($info['title']);?></p>
+					<p>一口价：<em class="f-red">￥<?php echo $info['price'];?></em>
+						<?php foreach ($keywords as $key=>$value) {?>
+						<span class="bg<?php echo $key+1;?>"><?php echo $value;?></span>
+						<?php }?>
+					</p>
+				</div>
+				<form action="<?php echo $webroot;?>/amigo/goods/buy_step">
+				 	<input value="<?php echo $info['id'];?>" name="goods_id" type="hidden">
+				 	<div class="other-inf">
+						<span>快递：￥0.0</span>
+						<span>销量：<?php echo $info['purchase_num'];?>件</span>
+						<span>广东 深圳</span>
+					</div>
+					<div class="num J_quantity">数量：<span class="minus">-</span> <input value="1" name="number" type="text"  data-verify="^[1-9]\d*$" data-error="数量格式不正确"> <span class="add">+</span> （每次限购<em class="f-red"><?php echo $info['limit_num'];?></em>件）</div>
+					<div class="tip-order">
+					<?php if($info['stock_num'] == 0 && $null_stock_desc){ ?>
+						<p class="f-red">	<?php echo $null_stock_desc;?></p>
+					<?php }?>
+					<?php if($info['stock_num'] > 0 && $has_stock_desc){ ?>
+						<p class="f-red">	<?php echo $has_stock_desc;?></p>
+					<?php }?>
+<?php 
+if($info['end_time'] < Common::getTime() || $info['status'] == 0) {
+?>
+						<div class="web-btn"><button type="button" class="gray">已下架</button></div>
+<?php 
+} else {
+    if($info['stock_num'] > 0) {
+?>
+						<div class="web-btn  J_formSubmit"><button type="button">立即抢购</button></div>
+<?php 
+    } else {
+        if($info['is_sale'] == 1) {
+?>
+                    <div class="web-btn  J_formSubmit"><button type="button">立即预订</button></div>
+<?php 
+        } else {
+?>
+         <div class="web-btn"><button type="button" class="gray">已抢光，下回更精彩</button></div>
+<?php }}}?>
+					</div>
+				</form>
+			</div>
+
+			<div class="pro-detail J_proDetail" data-ajaxurl="<?php echo $webroot;?>/amigo/goods/images?id=<?php echo $info['id'];?>">
+				<h3>图文详情</h3>
+				<div class="wrap"></div>
+				<script id="J_dtemplate" type="text/icat-template">
+					<ul> 						
+					<%for(var i=0, len=data.list.length; i<len; i++){%>
+						<li><img src="<%=data.list[i]%>" alt=""></li>
+					<%}%>
+					</ul>
+				</script>	
+			</div>
+		</section>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

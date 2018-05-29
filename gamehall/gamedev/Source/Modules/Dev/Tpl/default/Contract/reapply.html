@@ -1,0 +1,115 @@
+<include file="Public:header"/>
+<include file="Public:bootcss"/>
+<style>
+    .col-sm-10 label {
+        font-weight: normal;
+    }
+
+    .panel-body {
+        *width: 92%
+    }
+
+    .panelws select.form-control {
+        *height: auto !important;
+        *padding: 4px 0;
+        *margin-top: 0px;
+    }
+
+    .thumbnail {
+        *width: auto;
+    }
+
+    .mainw .form-horizontal .form-control-static {
+        padding-top: 0px;
+    }
+
+    .panelws .form-group input {
+        *padding-top: 8px;
+        *height: 22px !important;
+        margin-bottom: 0px \9;
+    }
+
+    .panelws .form-group textarea {
+        *padding-top: 8px;
+        margin-left: 15px;
+        width: 95%;
+    }
+</style>
+
+<div class="mainw mainw2 clearfix">
+    <div class="rmain col-md-12 rmain-inf">
+        <div class="panel panelws">
+
+            <if condition="$edit eq 1">
+                <h3 class="yyname"><a href="{:U('Contract/mindex')}">我的合同</a> » {$vo.app_name} » 合同管理 » 合同修改 </h3>
+
+                <div class="flow-w flow-w2" style="padding: 0px;">
+                    <div class="flow">
+                    	<span>第一步：合同修改</span><span class="on">第二步：回传合同</span><span>第三步：提交审核</span><span>第四步：审核上线</span>
+                    </div>
+                </div>
+                <br/>
+                <h2 class="yyname">下载、回传合同</h2>
+                <elseif condition="$reassign eq 1"/>
+                	<h3 class="yyname"><a href="{:U('Contract/mindex')}">我的合同</a> » {$vo.app_name} » 合同管理 » 合同续签 </h3>
+                <else/>
+                	<h2 class="yyname"><a href="{:U('Contract/mindex')}">游戏管理</a> » {$vo.app_name} » 合同回传 </h2>
+            </if>
+            <div class="panel-body">
+                <form class="form-horizontal app-edit" role="form" action="{:U('Contract/reapply_post')}" method="post"
+                      enctype="multipart/form-data">
+                    <div class="form-group iconup">
+                        <label for="conFile" class="col-sm-2 control-label"><em>* </em>回传合同扫描件：</label>
+
+                        <div class="col-sm-10">
+                            <div class="row icons">
+                                <div class="col-md-6">
+                                    <input id="conFile" name="conFile" type="file" style="display:none;"
+                                           onchange="$('#uplfile').html(this.value)"/>
+
+                                    <div id="uploadContract" class="btn btn-info btn-small"
+                                         onclick="$('#conFile').click();">上&nbsp;&nbsp;&nbsp;&nbsp;传
+                                    </div>
+									
+                                </div>
+                                <div class="col-md-6">
+                                    <if condition="$reassign eq 1">
+                                    	<a class="btn" href="{:U('Contract/reshow', array("id"=>$vo[id]))}" target="_blank">《{$vo.app_name}》续签电子协议合同下载</a>
+                                    <else/>
+                                        <a class="btn" href="{:U('Contract/show', array("id"=>$vo[id]))}" target="_blank">《{$vo.app_name}》电子协议合同下载</a>
+                                    </if>
+                                </div>
+								<span id="uplfile" style="padding-left:15px; padding-top:15px;"></span>
+                            </div>
+                            <h5 class="mt0" style="margin-top:10px">请上传已加盖公章的pdf合同，仅支持PDF文档，文件限20M以内</h5>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="form-group">
+                        <div class="col-md-8">
+                            <input id="id" name="id" type="hidden" value="{$vo.id}">
+                            <input id="edit_id" name="edit_id" type="hidden" value="{$edit}">
+                            <button type="submit" class="btn btn-success bo128" id="saveSubBtn">提交审核</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<include file="Public:footer"/>
+<include file="./Source/Tpl/Common/alertDialog.html"/>
+<include file="_uploadGift"/>
+
+<script type=text/javascript src="{:cdn('PUBLIC')}/common/js/jquery.form.js?{:C('JS_VERSION')}"></script>
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/app/jui/css/smoothness/jquery-ui-1.9.1.custom.min.css">
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-1.9.1.custom.min.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript"
+        src="{:cdn('PUBLIC')}/app/jui/development-bundle/ui/i18n/jquery.ui.datepicker-zh-CN.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+</script>

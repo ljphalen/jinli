@@ -1,0 +1,122 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<style type="text/css">
+    .uploadAdv{
+        width: 26%;float: left;
+        border: 1px solid #cca;
+        margin-left: 28px;
+    }
+    .uploadImgAdv .img{
+        width: 300px;
+        height: 300px;
+    </style>
+    <div class="nav">
+        <ul class="cc">
+            <li class=""><a href="<?php echo $listUrl; ?>">壁纸列表</a></li>
+            <li class=""><a href="<?php echo $wallpaperlivelist; ?>">动态壁纸列表</a></li>
+            <li class="current"><a href="<?php echo $actionwallpaper; ?>">动态壁纸包上传</a></li>
+        </ul>
+    </div>
+    <div class="h_a">动态壁纸包上传</div>
+    <form method="post" action="<?php echo $addPostUrl; ?>" id="addForm">
+        <input name="token" value="<?php echo $token; ?>" type="hidden" />
+        <div class="table_full">
+            <table width="100%">
+                <tr class="tr">
+                    <th class="th">动态壁纸包</th>
+                    <td class="td">
+                        <ul class="uploadFile">
+                            <li id="File"></li>
+                        </ul>
+                        <p style="clear: both;">
+                            <iframe name="upload"
+                                    src="<?php echo $uploadUrl . '/?FileId=File'; ?>"
+                                    style="height: 150px; width: 100%;" frameborder="0" scrolling="no"></iframe>
+                        </p>
+                        <input type="hidden" name="wallpaperlive" class="wallpaperlive" value="">
+                        <input type="hidden" name="wallpaperlive_size" class="wallpaperlive_size" value="">
+                    </td>
+                </tr>
+                <tr class="tr">
+                    <th class="th">作者</th>
+
+                    <td class="td">
+                        <input type="text" name="auth" value=""/>
+                    </td>
+
+                </tr>
+                <tr class="tr">
+                    <th class="th">壁纸名字</th>
+
+                    <td class="td">
+                        <input type="text" name="wallpaperlive_name" value=""/>
+                    </td>
+
+                </tr>
+                <tr class="tr">
+                    <th class="th">预览图</th>
+                    <td class="td">
+                        <div class="uploadAdv">
+                            <ul class="uploadImgAdv">
+                                <li id="SubjectImg_01">
+                                    <img src="<?php echo $staticPath; ?>/img/content/nopic.jpg" width="271" height="320"/>
+                                    <input type="hidden" name="img_adv01" value="">
+                                </li>
+                            </ul>
+                            <p style="clear:both;">
+                                <iframe name="upload" src="<?php echo $uploadAdvUrl . '/?imgId=SubjectImg_01'; ?>" style="height:80px;width:90%;" frameborder="0" scrolling="no"></iframe>
+                            </p>
+                        </div>&nbsp;&nbsp;
+                        <div class="uploadAdv">
+                            <ul class="uploadImgAdv">
+                                <li id="SubjectImg_02">
+                                    <img src="<?php echo $staticPath; ?>/img/content/nopic.jpg" width="271" height="320"/>
+                                    <input type="hidden" name="img_adv02" value="">
+                                </li>
+                            </ul>
+                            <p style="clear:both;">
+                                <iframe name="upload" src="<?php echo $uploadAdvUrl . '/?imgId=SubjectImg_02'; ?>" style="height:80px;width:90%;" frameborder="0" scrolling="no"></iframe>
+                            </p>
+                        </div>
+                        <div class="uploadAdv">
+                            <ul class="uploadImgAdv">
+                                <li id="SubjectImg_03">
+                                    <img src="<?php echo $staticPath; ?>/img/content/nopic.jpg" width="271" height="320"/>
+                                    <input type="hidden" name="img_adv03" value="">
+                                </li>
+                            </ul>
+                            <p style="clear:both;">
+                                <iframe name="upload" src="<?php echo $uploadAdvUrl . '/?imgId=SubjectImg_03'; ?>" style="height:80px;width:90%;" frameborder="0" scrolling="no"></iframe>
+                            </p>
+                        </div>
+                    </td>
+
+                </tr>
+                <tr class="tr">
+                    <th class="th">详细描述</th>
+                    <td class="td">
+                        <textarea name="descript" style="width: 800px; height: 100px;"></textarea>(最多200字)
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+    </form>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            ajaxForm('addForm', function (ret) {
+
+                ajaxRedirect(ret, baseurl + '/Admin/wallpaperlive/index');
+            });
+        })
+        function getLocalTime(nS) {
+            return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+        }
+        function showData(data) {
+            var file_data = data.path;
+            var file_size = data.size;
+            $(".wallpaperlive").val(file_data);
+            $(".wallpaperlive_size").val(file_size);
+        }
+
+    </script>
+    <?php echo $this->render("layout/footer.phtml"); ?>

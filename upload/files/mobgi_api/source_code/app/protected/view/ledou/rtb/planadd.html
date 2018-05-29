@@ -1,0 +1,216 @@
+<script type="text/javascript" src="{{rootUrl}}/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/float.js"></script>
+<div class="colMain">
+    <div class="title">
+        <p class="fl"><a href="planview?config_id={{plan.config_id}}{{config_id}}&config_name={{config_name}}">{{config_name}}</a>->导量计划{{plan.id}}</p>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="app-detail" style="">
+                <form method="POST" action="/rtb/plan_save" style="">
+                    <ul class="form" style="">
+                        <li>
+                            <input type="hidden" name="id" value="{{plan.id}}">
+                            <input type="hidden" name="copy" value="{{copy}}">
+                            <input type="hidden" name="config_name" value="{{config_name}}">
+                            <!-- if !{{plan.id}} --><input type="hidden" name="config_id" value="{{config_id}}"><!-- endif -->
+                            <!-- if {{copy}} --><input type="hidden" name="config_id" value="{{plan.config_id}}"><!-- endif -->
+                            <span class="label">有效次数：</span>
+                            <div class="fc">
+                                <input type="radio" class="radio required" name="go_method" value="1" <!-- if {{plan.go_method}} == 1 || empty({{plan.go_method}})  -->checked<!-- endif -->>一次性导量
+                                <input type="radio" class="radio required" name="go_method" value="2" <!-- if {{plan.go_method}} == 2  -->checked<!-- endif -->>周期性导量
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">导量时间：</span>
+                            <div class="fc">
+                                <input type="text" name="start_time" id="start_time" value="<!-- if {{plan.id}} -->{{plan.stime}}<!-- else -->{{stime}}<!-- endif -->" class="iText required"/> 到 <input type="text" name="end_time" id="end_time" value="<!-- if {{plan.id}} -->{{plan.etime}}<!-- else -->{{etime}}<!-- endif -->" class="iText required"/>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">导量类型：</span>
+                            <div class="fc">
+                                <select name="ad_type" class="required">
+                                    <!-- loop ad_type -->
+                                        <option value="{{ad_type' key}}" <!-- if {{plan.ad_type}} == {{ad_type' key}}  -->selected<!-- endif -->>{{ad_type' value}}</option>
+                                    <!-- endloop -->
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">导量单价：</span>
+                            <div class="fc">
+                                <select name="method" class="required" required id="platform">
+                                    <!-- loop method -->
+                                        <option value="{{method' key}}" <!-- if {{plan.method}} == {{method' key}}  -->selected<!-- endif -->>{{method' value}}</option>
+                                    <!-- endloop -->
+                                </select>
+                                <input type="text" id="price" name="price" value="{{plan.price}}" onblur="javascript:if(isNaN(this.value)){this.focus();this.value=''}" class="iText required"/>元
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label">导量上限：</span>
+                            <div class="fc">
+                                <select name="limit_type[]">
+                                    <option value="maxprice" <!-- if {{plan.maxcondition.c}}=="maxprice" -->selected<!-- endif -->>金额上限(元)</option>
+                                    <option value="maximp" <!-- if {{plan.maxcondition.c}}=="maximp" -->selected<!-- endif -->>展示量上限(次)</option>
+                                    <option value="maxclick" <!-- if {{plan.maxcondition.c}}=="maxclick" -->selected<!-- endif -->>点击数上限(次)</option>
+                                </select>
+                                <input type="text" name="maxvalue[]" value="{{plan.maxcondition.v}}" onblur="javascript:if(isNaN(this.value)){this.focus();this.value=''}" class="iText"/>
+                                <input type="button" id="add_method_btn" value="增加" onclick="add_method()" class="btn"/>
+                            </div>
+                        </li>
+                        <li id="limit_type_htmlbox">
+                            <!-- if {{plan.maxcondition1}} -->
+                                <!-- loop plan.maxcondition1 -->
+                                <span class="label" style="display: none">导量上限：</span>
+                                    <div class="fc">
+                                        <select name="limitcondition[]">
+                                            <option value="||"  <!-- if {{plan.maxcondition1' value.f}}=="||" --> selected <!-- endif --> >OR</option>
+                                            <option value="&&"  <!-- if {{plan.maxcondition1' value.f}}=="&&" --> selected <!-- endif --> >AND</option>
+                                        </select>
+                                        <select name="limit_type[]" onchange="check_limit_type()">
+                                            <option value="maxprice" <!-- if {{plan.maxcondition1' value.c}}=="maxprice" --> selected <!-- endif -->>金额上限(元)</option>
+                                            <option value="maximp" <!-- if {{plan.maxcondition1' value.c}}=="maximp" --> selected <!-- endif -->>展示量上限(次)</option>
+                                            <option value="maxclick" <!-- if {{plan.maxcondition1' value.c}}=="maxclick" --> selected <!-- endif -->>点击数上限(次)</option>
+                                        </select>
+                                        <input type="text" name="maxvalue[]" value="{{plan.maxcondition1' value.v}}" onblur="javascript:if(isNaN(this.value)){this.focus();this.value=''}" class="iText"/>
+                                        <a href="javascript:;" onclick="javascript:$(this).parent().remove();" id="s">删除</a>
+                                    </div>
+                                <!-- endloop -->
+                            <!-- endif -->
+                        </li>
+                        <li class="line"></li>
+                        <li>
+                            <div class="fc">
+                                <input type="button" class="submit" value="确定" onclick="checksubmit()">
+                                <input type="button" onclick="window.location.href = '/rtb/planview?config_id={{plan.config_id}}{{config_id}}&config_name={{config_name}}'" class="cancel" value="取消">
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div  id="limit_type_html" style="display: none">
+    <div class="fc">
+        <select name="limitcondition[]">
+            <option value="||">OR</option>
+            <option value="&&">AND</option>
+        </select>
+        <select name="limit_type[]" onchange="check_limit_type()">
+            <option value="maxprice">金额上限(元)</option>
+            <option value="maximp">展示量上限(次)</option>
+            <option value="maxclick">点击数上限(次)</option>
+        </select>
+        <input type="text" name="maxvalue[]" value="0" onblur="javascript:if(isNaN(this.value)){this.focus();this.value=''}" class="iText"/>
+        <a href="javascript:;" onclick="javascript:$(this).parent().remove();" id="s">删除</a>
+    </div>
+</div>
+
+<script>
+function checksubmit(){
+    var limitflag=true;
+    $("#limit_type_htmlbox input").each(function(){if(this.value==""){
+            this.focus();
+            jAlert("导量限制的值不能为空");
+            limitflag=false;
+    }})
+    if(limitflag==false){
+        return false;
+    }
+    <!-- if {{plan.runstatus}}==3 -->
+        jAlert("该计划已经导量完毕,不允许修改！");
+        return false;
+    <!-- endif -->
+    if(!isfloat($("#price").val())){
+       jAlert("导量计划请输入浮点型的数值");
+       return false;
+    }
+    
+    //导量上限的填入值必须都是浮点值
+    var allFloat = true;
+    $("input[name='maxvalue[]']").each(function(){
+        if(!isfloat($(this).val())){
+            allFloat = false;
+        }
+    });
+    if(!allFloat){
+        jAlert("导量上限请输入浮点型的数值");
+        return false;
+    }
+    $('form').submit();
+}
+function add_method(){
+    var html=$("#limit_type_html").html();
+    var limitcount=$("#limit_type_htmlbox").find("div").length;
+    if(limitcount<1){//只能添加1个
+        $("#limit_type_htmlbox").append(html)
+    }else{
+        jAlert("不能再多了");
+    }
+}
+function check_limit_type(){
+        console.log($(this).find("option:selected").attr("value"),2222)
+        $(".main").find("select[name='limit_type[]']").each(function(){
+            console.log($(this).find("option:selected").attr("value"))
+        })
+}
+$(function(){
+    var startDateTextBox = $('#start_time');
+    var endDateTextBox = $('#end_time');
+    startDateTextBox.datetimepicker({
+            dateFormat: 'yy-mm-dd', 
+            timeFormat: 'HH:mm:ss',
+            stepHour: 1,
+            stepMinute: 1,
+            stepSecond: 1,
+            //numberOfMonths: 2,
+            minDate: -1,
+            onClose: function(dateText, inst) {
+		if (endDateTextBox.val() != '') {
+			var testStartDate = startDateTextBox.datetimepicker('getDate');
+			var testEndDate = endDateTextBox.datetimepicker('getDate');
+			if (testStartDate > testEndDate)
+				endDateTextBox.datetimepicker('setDate', testStartDate);
+		}
+		else {
+			endDateTextBox.val(dateText);
+		}
+            },
+            onSelect: function (selectedDateTime){
+                    endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
+            }
+    });
+    endDateTextBox.datetimepicker({
+            dateFormat: 'yy-mm-dd', 
+            timeFormat: 'HH:mm:ss',
+            stepHour: 1,
+            stepMinute: 1,
+            stepSecond: 1,
+            //numberOfMonths: 2,
+            minDate: 0,
+            onClose: function(dateText, inst) {
+		if (startDateTextBox.val() != '') {
+			var testStartDate = startDateTextBox.datetimepicker('getDate');
+			var testEndDate = endDateTextBox.datetimepicker('getDate');
+			if (testStartDate > testEndDate)
+				startDateTextBox.datetimepicker('setDate', testEndDate);
+		}
+		else {
+			startDateTextBox.val(dateText);
+                }
+            },
+            onSelect: function (selectedDateTime){
+                    startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
+            }
+    });
+    <!-- if {{plan.runstatus}}==3 -->
+        <!-- if !{{copy}} -->$("input,select").attr("disabled",true);<!-- endif -->
+        $("input[type='button']").attr("disabled",false);
+        $("#limit_type_htmlbox a").bind("click",function(){jAlert("不允许删除");return false;});
+    <!-- endif -->
+})
+</script>

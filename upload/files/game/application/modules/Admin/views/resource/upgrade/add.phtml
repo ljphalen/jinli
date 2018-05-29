@@ -1,0 +1,37 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $listUrl;?>">差分峰值列表</a></li>
+	    <li class="current"><a href="javascript:;">添加差分峰值</a></li>
+	</ul>
+</div>
+<div class="h_a">添加差分峰值</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">内存下限(<span style="color: red">*</span>)</th>
+			<td class="td"><input type="text" class="input wc" name="phone_ram_min" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">内存上限(<span style="color: red">*</span>)</th>
+			<td class="td"><input type="text" class="input wc" name="phone_ram_max" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">apk包峰值(<span style="color: red">*</span>)</th>
+			<td class="td"><input type="text" class="input wc" name="max_apk" value=""></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $listUrl;?>');
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

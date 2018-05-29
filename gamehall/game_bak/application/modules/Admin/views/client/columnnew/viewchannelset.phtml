@@ -1,0 +1,61 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl.'/?column_version=1.5.2';?>">1.5.2</a></li>
+		<li><a href="<?php echo $listUrl.'/?column_version=1.5.3';?>">1.5.3-1.5.7</a></li>
+		<li><a href="<?php echo $listUrl.'/?column_version=1.5.8';?>">1.5.8</a></li>
+		<li><a href="<?php echo $listUrl.'/?column_version=1.5.9';?>">1.5.9及以上</a></li>
+		<li class="current"><a href="javascript:;">查看栏目配置</a></li>
+	</ul>
+</div>
+<div class="h_a">查看栏目配置</div>
+<div class="step mb10">
+		<ul class="cc">
+			<li style="width:25%;background: #74B88A"  ><span class="fl"><em>设置栏目</em></span></li>
+			<li class="line" style="left:25%"></li>
+			<li style="width:25%" class="current" ><span class="fl"><em>设置频道</em></span></li>
+			<li class="line" style="left:50%"></li>
+			<li style="width:25%"><span class="fl"><em>频道排序</em></span></li>
+			<li class="line" style="left:75%"></li>
+			<li  style="width:25%"><span class="fl"><em>设置时间</em></span></li>
+		
+		</ul>
+</div>
+<div class="table_list">
+<table width="100%">
+	<tr class="hd" >
+		<td >ID</td>
+		<td >频道名称</td>
+		<td >类型</td>
+		<td >默认图片</td>
+		<td >其他</td>
+	</tr>
+	<?php foreach ($info as $key=>$value) {?>
+	<tr class="ct" >
+	    <td><?php echo ($key+1);?></td>
+		<td><input type="text" class="input" name="name" value="<?php echo $value['name']?>" size="10" disabled="disabled"></td>
+		<td>
+			<?php echo $channel_type[$value['channel_type']];?>
+		</td>
+		<td>
+			<ul class="uploadImg">
+				<li id="icon_default<?php echo ($key+1) ;?>">
+					<img src="<?php echo ($value['icon_default'])?$attachPath.$value['icon_default']:$staticPath.'/img/content/nopic.jpg';?>"/>
+				</li>
+			</ul>			
+		</td>
+		<td>
+			<?php 
+			if($value['channel_type'] == 2){
+				echo $show_type[$value['channel_type']]['name'];
+			}
+			?>
+		</td>
+	</tr>
+	<?php }?>
+	</table>
+</div>
+<div class="mb10 tac">
+<a href="<?php echo $viewChannelSortUrl.'/?log_id='.$log_id.'&column_version='.$value['column_version']; ?>" style="color: #fff;padding: 6px;display: inline-block;background: #c83f38;border-radius: 2px;width: 50px;text-decoration:none;">下一步</a>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

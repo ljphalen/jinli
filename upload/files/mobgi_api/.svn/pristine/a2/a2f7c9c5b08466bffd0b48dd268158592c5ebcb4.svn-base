@@ -1,0 +1,57 @@
+<link media="screen" href="{{rootUrl}}/css/uploadify.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{{rootUrl}}/js/swfobject.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.uploadify.v2.1.0.min.js"></script>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">图片管理</p>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="toolbar tabs">
+                <ul class="fl">
+                    
+                </ul>
+            </div>
+            <div >
+				<form id="form" runat="server"> 
+				<div id="upbutton">
+				<input type="file" name="uploadapk" id="uploadapk" /> 
+				</div>
+				<div id="upfile" class="grid">
+				<input type="text" class="iText" name="filename" readOnly=true id="filename" />
+				<a href="javascript:void(0)" class="del" title="删除"></a>
+				</div>
+				</form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$(function(){
+	$("#upfile").hide();
+	$("#uploadapk").uploadify({
+		'uploader'    :'{{rootUrl}}/../swf/uploadify.allglyphs.swf',
+		'script'      :'../ApkManage/savefile',
+		'cancelImg'   :'{{rootUrl}}/images/cancel.png',
+		'scriptAccess':'always',
+		'auto'	      : true,
+		'multi'       : false,
+		'buttonText'  :'upload APK',
+		'onComplete'  :function(event,queueID,fileObj,response,data){
+			var jjson =  JSON.parse(response);
+				if(jjson.success)
+				{
+					$("#upbutton").hide();
+					$("#filename").val(jjson.msg);
+					$("#upfile").show();
+				}
+				else
+				{
+					alert(jjson.msg);
+				}				
+				return true;
+			}
+		
+		});
+})
+</script>

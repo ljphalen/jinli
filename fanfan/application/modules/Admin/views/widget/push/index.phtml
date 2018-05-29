@@ -1,0 +1,44 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">列表</a></li>
+		<li><a href="<?php echo $editUrl;?>">发送</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="30">ID</td>
+			<td width="100">类型</td>
+			<td width="300">标题</td>
+			<td width="300">内容</td>
+			<td width="300">消息</td>
+			<td width="300">push反馈</td>
+			<td width="100">发送时间</td>
+			<td width="100">操作</td>
+		</tr>
+<?php foreach($list as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['type'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $value['content'];?></td>
+			<td><?php echo $value['msg_body'];?></td>
+			<td><?php echo $value['response'];?></td>
+
+
+			<td><?php echo date('Y-m-d H:i:s', $value['created_at']);?></td>
+			<td>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+		<tr class="ct">
+			<td  colspan="8" ><?php echo json_encode(array('title'=>$value['title'],'type'=>$value['type'],'content'=>$value['content'],'msg_body'=>json_decode($value['msg_body'], true)));?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

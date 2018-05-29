@@ -1,0 +1,72 @@
+<?php echo $this->render("layout/newheader.phtml");?>
+<body>
+<?php if($hasheader) {?>
+	<header id="iHeader" class="hd">
+		<div class="top-wrap">
+			<div class="title">
+				<a href="<?php echo $webroot.'/user/account/order_list?tid='.$order['order_type'];?>" class="back"></a>
+				<h1>订单详情</h1>
+			</div>
+		</div>
+	</header>
+<?php }?>
+	
+	<div id="iScroll">
+		<article class="ac">
+			<section class="pay-box">
+				<div class="rount-rect">
+					<ul>
+						<li>实付款：<?php echo $order['real_price'];?>元（使用银币<span class="zt-orange"><?php echo $order['silver_coin'];?></span>元）</li>
+						<li>订单号：<?php echo $order['trade_no'];?></li>
+						<li>状态：<?php if($order['iscash'] == 1){?>
+								   货到付款
+								 <?php } else {?>
+								   <?php echo Gou_Service_Order::orderStatus($order['status']); ?>
+								 <?php }?></li>
+						<?php if(($order['status'] == 4 || $order['status'] == 5) && $order['order_type'] == 2 && $order['express_code']) {?>
+						 <li>快递单号：<?php echo $order['express_code'];?></li>
+						 <?php }?>
+						<li>生成时间：<?php echo date('Y-m-d H:i:s', $order['create_time']);?></li>
+						<li>付款时间：<?php if ($order['pay_time']) echo date('Y-m-d H:i:s', $order['pay_time']);?></li>
+					</ul>
+				</div>
+			</section>
+
+			<div class="goods-box">
+				<div class="pic"><img src="<?php echo $attachPath . $goods['img'];?>" alt=""></div>
+				<div class="desc">
+					<p><?php echo $goods['title'];?></p>
+					<p>单价：<b><?php echo $goods['price'];?>元</b></p>
+					<p>数量：<?php echo $order['number'];?></p>
+				</div>
+				<div class="pay">实际支付：￥<?php echo $order['real_price'];?>（使用<s><?php echo $order['silver_coin'];?>元</s>银币）</div>
+			</div>
+
+
+			<div class="gift-box">
+				<?php if($order['order_type'] == 1) {?>
+					<p>手机号：<?php echo $order['phone'];?></p>
+				<?php } elseif ($order['order_type'] == 3) {?>
+					<?php
+					if($order['status'] == 5) {
+					 	foreach ($read_coins as $key=>$value) {
+					?>
+					<p><?php echo $goods['title'];?>：<br/><b><?php echo $value['card_number'];?></b></p>
+				<?php }}} else {?>
+					<p>收货人：<?php echo $address['buyer_name'];?></p>
+					<p>手机号：<?php echo $address['mobile'];?></p>
+					<p>收货地址：<?php echo $address['adds'], $address['detail_address'];?></p>
+					<p>邮编：<?php echo $address['postcode'];?></p>
+				<?php }?>
+				<?php if($order['status'] > 1) { ?><div class="btn"><a href="tel:0755-82583525" class="rount-rect gray">联系我们</a></div><?php }?>
+			</div>
+<?php if (($order['iscash'] == 2) && $order['status'] == 1 && $order['real_price'] != 0) {?>
+			<div class="links-btn">
+				<a href="tel:0755-82583525" class="rount-rect gray">联系我们</a>
+				<a href="<?php echo $webroot.'/order/pay?out_order_no=',$order['out_trade_no'];?>" class="rount-rect orange">去支付</a>
+			</div>
+<?php }?>
+		</article>
+	</div>
+</body>
+</html>

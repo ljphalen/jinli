@@ -1,0 +1,76 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">店铺收藏列表</a></li>
+		<li class="current"><a href="javascript:;">编辑收藏</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑收藏</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">标题</th>
+				<td class="td"><input type="text" class="input" name="title" value="<?php echo $shop['name'];?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">UID</th>
+				<td class="td"><input type="text" class="input wc" name="uid"	value="<?php echo $info['uid'];?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">产品ID</th>
+				<td class="td"><input type="text" class="input wc" name="item_id"	value="<?php echo $info['item_id'];?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">链接地址</th>
+				<td class="td"><input type="text" class="input wc" name="url"	value="<?php echo $info['url'];?>"></td>
+			</tr>
+			<tr class="tr">
+            <tr class="tr">
+                <th class="th">平台</th>
+                <td class="td"><input type="text" class="input" name="src" value="<?php echo $info['src'];?>"></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">价格</th>
+                <td class="td"><input type="text" class="input" name="price" value="<?php echo $info['price'];?>"></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">图片</th>
+                <td class="td">
+                    <ul class="uploadImg">
+                        <li id="NewsImg">
+                            <img src="<?php
+                            if (empty($shop['logo'])) {
+                                echo $staticPath . '/img/content/nopic.jpg';
+                            } else {
+                                if (strpos($shop['logo'], 'http://') === false) {
+                                    echo $attachPath . $shop['logo'];
+                                } else {
+                                    echo $shop['logo'];
+                                }
+                            } ?>"/>
+                            <input type="hidden" name="image" value="<?php echo $shop['logo'];?>">
+                        </li>
+                    </ul>
+                    <p style="clear:both;">
+                          <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=NewsImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                    </p></td>
+            </tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Favorite_Shop/index?s=1');
+	});
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

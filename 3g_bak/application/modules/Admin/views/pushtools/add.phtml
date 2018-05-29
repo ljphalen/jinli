@@ -1,0 +1,58 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">PUSH列表</a></li>
+		<li class="current"><a href="javascript:;">添加PUSH配置</a></li>
+	</ul>
+</div>
+<div class="h_a">添加PUSH配置</div>
+<form method="post" action="<?php echo $addPostUrl; ?>" id="addForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">type</th>
+				<td class="td">
+				<input type="text" class="input wc" name="type" value="normal">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">title</th>
+				<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">text</th>
+				<td class="td"><textarea name="text" rows="10" cols="80"></textarea></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">after_open</th>
+				<td class="td"><input type="text" class="input wc" name="after_open" value="go_url"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">big_picture_url</th>
+				<td class="td"><input type="text" class="input wc" name="big_picture_url" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">url</th>
+				<td class="td"><input type="text" class="input wc" name="url" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">activity</th>
+				<td class="td"><input type="text" class="input wc" name="activity" value="com.android.browser.activity.AdvancedSettingPreference"></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	//用户表单数据提交
+	$(document).ready(function () {
+		ajaxForm('addForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Pushtools/add');
+		});
+	})
+
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

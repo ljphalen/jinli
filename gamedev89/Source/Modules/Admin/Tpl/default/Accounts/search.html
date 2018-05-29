@@ -1,0 +1,71 @@
+	<div class="pageHeader">
+		<form id="accounts_form" onsubmit="return navTabSearch(this);" action="{:U('Accounts/index')}" method="post">
+		<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+		<input type="hidden" name="do" value="{$_REQUEST.do}"/>
+		<div class="searchBar">
+			<ul class="searchContent" style="overflow: inherit; height: auto;">
+				<li>
+					<label>审核状态：</label>
+					<select name="status" id="audited">
+
+                            <volist name="status_list" id="name">
+                            <option value="{$key}"
+                                <eq name="_REQUEST.status" value="$key">selected</eq>
+                                >{$name}
+                            </option>
+                            </volist>
+                             <option value=""
+                                <eq name="_REQUEST.status" value="">selected</eq>
+                                >全部
+                            </option>
+                    </select>
+				
+				</li>
+				<li>
+                    <label>日期：</label>
+                    <input type="text"
+                        name="created_s" value="{$_REQUEST.created_s}" class="date textInput readonly" yearstart="-10" yearend="0" pattern="yyyy-MM-dd" readonly="">
+                      到 
+                       <input type="text"
+                        name="created_e" value="{$_REQUEST.created_e}" class="date textInput readonly" yearstart="-10" yearend="0" pattern="yyyy-MM-dd" readonly="">
+                </li>
+                <li>
+                    <label>审核人：</label>
+                    <input type="text" name="audit_admin_name" value="{$_REQUEST.audit_admin_name}"/>
+                </li>
+                <li>
+                    <label>注册帐号：</label>
+                    <input type="text" name="email" value="{$_REQUEST.email}"/>
+                </li>
+                 <li>
+                    <label>注册公司名：</label>
+                    <input type="text" name="company" value="{$_REQUEST['company']}"/>
+                </li>
+                <li>
+                    <label>联系人查询：</label>
+                    <input type="text" name="contact" value="{$_REQUEST['contact']}"/>
+                </li>
+                 <input type='hidden' name='do_export' value='0' />
+                <div class="buttonActive"><div class="buttonContent"><button type="submit" id="b_do_sub">查询</button></div></div>
+                <div class="buttonActive"><div class="buttonContent"><button type="submit" id="b_do_export">导出</button></div></div>
+			</ul>
+
+		</div>
+		</form>
+	</div>
+	
+<script type="text/javascript">
+$("#b_do_export").click(function(){
+	//$("#accounts_form").attr('action',"{:U('Accounts/index')}");
+	$("#accounts_form").attr('onsubmit','');
+	$("input[name='do_export']").val(1);
+})
+
+$("#b_do_sub").click(function(){
+	$("#accounts_form").attr('onsubmit','return navTabSearch(this);');
+	$("input[name='do_export']").val(0);
+})
+</script>
+
+
+</script>

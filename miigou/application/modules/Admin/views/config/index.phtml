@@ -1,0 +1,35 @@
+<?php echo $this->render("layout/header.phtml");?>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="h_a">配置管理</div>
+	<div class="table_full">
+		<table width="100%">
+				
+			<tr class="tr">
+				<th class="th">货到付款地址</th>
+				<td class="td">
+				   <input class="input wc"  name="cod_url" value="<?php echo $configs['cod_url'];?>"/>
+				</td>
+			</tr>
+			
+			<tr class="tr">
+				<th class="th">搜索默认关键字</th>
+				<td class="td">
+				   <input class="input wc"  name="search_keyword" value="<?php echo $configs['search_keyword'];?>"/>
+				</td>
+			</tr>
+			
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Config/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

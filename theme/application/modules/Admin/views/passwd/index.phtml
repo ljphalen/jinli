@@ -1,0 +1,50 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<section class="navigator" menuOn="zt_myThemes">
+
+</section>
+<section class="ajax_wrap">
+<div class="h_a"></div>
+<form method="post" action="<?php echo $passwdPostUrl;?>" id="editUserFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+    <table width="100%" class="view_list_tb clear-fix">
+        <tbody>
+            <tr>
+                <td colspan="2" style="text-align:center">修改密码</td>
+            </tr>
+            <tr class="tr">
+                <td class="th">当前密码</td>
+                <td class="td"><input type="password" maxlength="20" name="current_password" class="input rd_1 w300"></td>
+            </tr>
+            <tr class="tr">
+                <td class="th">新密码</td>
+                <td class="td"><input type="password" maxlength="20" name="password" class="input rd_1 w300"></td>
+            </tr>
+            <tr class="tr">
+                <td class="th">重复密码</td>
+                <td class="td"><input type="password" maxlength="20" name="r_password" class="input rd_1 w300"></td>
+            </tr>
+         </tbody>
+    </table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button class="btn_s2" onfocus="blur();" type="submit">保存</button></span></span></div>
+</form>
+</section>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+    ajaxForm('editUserFrom',function(ret){
+    	if (ret) {
+    		if (ret.success) {
+    			showMsg('', ret.msg);
+    			setTimeout(function() {
+    						logout(baseurl+'/Admin/Index/index');
+    					}, 500);
+    		} else {
+    			showError('', ret.msg);
+    		}
+    	}
+    });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

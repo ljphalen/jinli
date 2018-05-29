@@ -1,0 +1,32 @@
+<?php echo $this->render("layout/header.phtml");?>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="h_a">配置管理</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">默认搜索关键字</th>
+				<td class="td">
+				   <textarea class="textarea" name="gc_search_keyword" class="input wc"><?php echo $configs['gc_search_keyword'];?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">银币百分比</th>
+				<td class="td">
+				   <input class="input" name="gc_silver_coin_rate" class="input wc" value="<?php echo $configs['gc_silver_coin_rate'];?>"/>%
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Config/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

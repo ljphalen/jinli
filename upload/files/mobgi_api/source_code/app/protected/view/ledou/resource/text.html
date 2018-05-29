@@ -1,0 +1,222 @@
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.colorpicker.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>
+<link media="screen" href="{{rootUrl}}/css/chosen.css" rel="stylesheet" type="text/css">
+<div class="colMain">
+    <div class="title">
+        <p class="fl">图片素材管理</p>
+    </div>
+    <div class="main" data-tabs-name="text">
+        <div class="content">
+            <!-- include 'menu' -->
+            <div class="devInfo">
+                <form action="../resource/text_save" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" value="{{result.id}}" name="id" />
+                    <input type="hidden" value="{{product_name}}" name="product_name" id="product_name" />
+                    <ul class="form">
+                        <li>
+                            <span class="label">平台类型：</span>
+                            <div class="fc">
+                                <select name="platform" id="platform" onchange="autoPlatform()">
+                                    <option value="">所有(默认)</option>
+                                    <option value="1">Android</option>
+                                    <option value="2">IOS</option>
+                                </select>   
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">产品名称：</span>
+                            <div class="fc">
+                                <select name="product_id[]" class="required" required id="product_id">
+                                    <option value="">默认选中权限所属产品</option>
+                                    <!-- loop product -->
+                                        <option value="{{product' value.id}}">{{product' value.product_name}}</option>
+                                    <!-- endloop -->
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">文案类型：</span>
+                            <div class="fc">
+                                <select name="type" id="type">
+                                    <option value="介绍">介绍</option>
+                                    <option value="诱惑">诱惑</option>
+                                    <option value="热点">热点</option>
+                                    <option value="其它">其它</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">广告类型：</span>
+                            <div class="fc">
+                                <select name="subtype" id="subtype">
+                                    <option value="3">自定义</option>
+                                    <option value="1">BANNER</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">文案详情：</span>
+                            <div class="fc">
+                                <input type="text" class="iText required" value="{{result.content}}" name="content" id="content" />
+                            </div>
+                        </li>
+                        <li>
+                        <div class="fc" style="width:500px;height:100px;display:flex;">
+                        <div  style="width:30px;height:30px;margin:20px 0px 0px 0px;background-color:#ffffff;border:thin solid #dddddd;" id="bkcolor"></div><span style="margin-top:18px;">背景颜色</span>
+                        <div  style="width:30px;height:30px;margin:20px 0px 0px 30px;background-color:#000000;border:thin solid #dddddd;" id="ttcolor"></div><span style="margin-top:18px;">标题颜色</span>        
+                        <div  style="width:30px;height:30px;margin:20px 0px 0px 30px;background-color:#000000;border:thin solid #dddddd;" id="txcolor"></div><span style="margin-top:18px;">文字颜色</span>
+                        <div  style="width:30px;height:30px;margin:20px 0px 0px 30px;background-color:#000000;border:thin solid #dddddd;" id="wbcolor"></div><span style="margin-top:18px;">网址颜色</span>
+                        </div>
+                        </li>
+                        <li>
+                            <span class="label">文案预览：</span>
+                    <div class="fc" style="width:500px;display:flex;padding-left:0px;background-color:#ffffff;" id="dpblock">
+                    <div align="left">
+					<img alt="" src="{{result.pic_url}}" style="width:100px;height:100px;" id='pic_1' >
+					</div>
+					<div style="width:180px;margin-left:20px;margin-top:25px;">
+					<p><span style="font-size:25px;color:#000000;" id="product_text" >{{result.product_name}}</span></p>
+					<p><span id='content_text' style="color:#000000;">{{result.content}}</span></p>
+					</div>
+					<div style="border-left:thin solid green;margin-left:20px;">
+					<img style="width:50px;height:50px; margin-left:20px; margin-top:10px;" id='pic_2' src="{{result.pic_url}}">
+					<p style="margin-left:20px;margin-top:1px;color:#000000;" id="web_text">免费下载</p>
+					</div>
+                            </div>
+                        </li>
+                        <li class="line"></li>
+                        <li>
+                            <div class="fc">
+                            	<input type="hidden" id="style" value='{"background_color":"#ffffff","title_color":"#000000","text_color":"#000000","web_color":"#000000"}' name="style" />
+                                <input type="button" onclick="checksubmit()" value="保存" class="submit" />
+                                <input type="button" value="取消" class="cancel" onclick="window.location.href = '/resource/text'" />
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+        function checksubmit(){
+            var length = $("input[name='content']").val().replace(/[^\x00-\xff]/g,"NB").length; 
+            if(length<4 || length>32){
+                jAlert("文案详情限定4~32个字符");
+                return false
+            }
+            $("input[name='content']").focus();
+            $("form").submit();
+        }
+        $(function(){
+            if('{{result.style}}' != "")
+            {
+            	$("#style").val('{{result.style}}');
+            }
+            if($("#style").val() != "")
+            {
+	            var style = eval('('+$("#style").val()+')');
+	            $("#bkcolor").css("background-color",style.background_color);
+	            $("#dpblock").css("background-color",style.background_color);
+	            $("#ttcolor").css("background-color",style.title_color);
+	            $("#product_text").css("color",style.title_color);
+	            $("#txcolor").css("background-color",style.text_color);
+	            $("#content_text").css("color",style.text_color);
+	            $("#wbcolor").css("background-color",style.web_color);
+	            $("#web_text").css("color",style.web_color);
+            }
+            
+			$("#product_name").val("{{result.product_name}}");
+			$("#product_id").val("{{result.ad_product_id}}");
+			$("#type").val("{{result.type}}");
+			$.ajax(
+					{
+						url:"/resource/getpicurl?product_id={{result.product_id}}",
+						success:function(a,b,c,d){
+							$("#pic_1,#pic_2").attr("src",a);
+						}
+						}
+					);
+			$("#product_id").change(function(){
+                var product_name = '';
+                if($("#product_id").children("option[selected]").length == 0){
+                    product_name = $("#product_id").children("option").eq(0).text().replace("(T)", "").replace("(A)", "").replace("(I)", "");
+                }else{
+                    product_name =$("#product_id").children("option[selected]").eq(0).text().replace("(T)", "").replace("(A)", "").replace("(I)", "");
+                }
+				$("#product_name").val(product_name);
+//				$("#product_name").val($(this).children("option[selected]").eq(0).text());
+				$("#product_text").html($("#product_name").val());
+				var obj = $.ajax(
+						{
+							url:"/resource/getpicurl?product_id="+$(this).val(),
+							success:function(a,b,c,d){
+								$("#pic_1,#pic_2").attr("src",a);
+							}
+							}
+						);
+				});
+			$("#content").change(function(){
+				$("#content_text").html($(this).val());
+			});
+
+			$("#bkcolor").colorpicker({
+				fillcolor:true,
+				success:function(o,color){
+					$("#bkcolor").css("background-color",color);
+					$("#dpblock").css("background-color",color);
+					var style = eval('('+$("#style").val()+')');
+					style.background_color = color;
+					$("#style").val(JSON.stringify(style));					
+				}
+				});
+			$("#ttcolor").colorpicker({
+				fillcolor:true,
+				success:function(o,color){
+				$("#ttcolor").css("background-color",color);
+				$("#product_text").css("color",color);
+				var style = eval('('+$("#style").val()+')');
+				style.title_color = color;
+				$("#style").val(JSON.stringify(style));
+				}
+				});
+			$("#txcolor").colorpicker({
+				fillcolor:true,
+				success:function(o,color){
+				$("#txcolor").css("background-color",color);
+				$("#content_text").css("color",color);
+				var style = eval('('+$("#style").val()+')');
+				style.text_color = color;
+				$("#style").val(JSON.stringify(style));
+				}
+				});
+			$("#wbcolor").colorpicker({
+				fillcolor:true,
+				success:function(o,color){
+				$("#wbcolor").css("background-color",color);
+				$("#web_text").css("color",color);
+				var style = eval('('+$("#style").val()+')');
+				style.web_color = color;
+				$("#style").val(JSON.stringify(style));
+				}
+				});
+               autoPlatform(); 
+        })
+            
+        function autoPlatform() {
+            ajaxPOST("/reproduct/autoPlatform", {"platform": $("#platform").val()}, function(data) {
+                var length = data.length;
+                str = '';
+                for (i=0; i<length; i++)
+                {
+                    str += '<option value="'+data[i].id+'">'+data[i].platform_product_name+'</option>'
+                }
+                $("#product_id").html(str);
+                $("#product_id").change();
+                //重新绑定select的选择组件
+                $("#product_id").removeClass("chzn-done");
+                $("#product_id_chzn").remove();
+                $("#product_id").chosen({});
+            })
+        }
+</script>

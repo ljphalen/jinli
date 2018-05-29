@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<?php if($cache) {?>
+<html manifest="/cache?cn=<?php echo $cn;?>">
+<?php } else {?>
+<html>
+<?php }?>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="stylesheet" href="<?php echo $staticResPath;?>/elife/assets/css/e3.nav.css?v=<?php echo $version;?>" />
+
+<title>elife导航</title>
+</head>
+
+<body>
+<div class="wrapper">
+	<header>
+		<nav>
+			<ul class="nav-tab" id="J_nav_tab">
+			<?php $i = 0;$j=1; foreach($types as $key => $value) { $i++;?>
+				<li class="t<?php echo $i;?> <?php if($i == 1) echo 'sel';?> <?php if($i == 2) echo 'nextbg';?>" data-id="<?php echo $j++;?>" data-remote="<?php echo $webroot.'/api/elife/index?tid='.$value['id'];?>">
+					<div>
+						<i class="ui-nav-icon"><img src="<?php echo $attachPath.$value['icon'];?>" width="36" height="36" /></i>
+						<span class="ui-nav-icon-text"><?php echo $value['name'];?></span>
+					</div>
+				</li>
+			<?php }?>
+			</ul>
+		</nav>
+	</header>
+	<section class="content">
+		<section id="J_nav_box">
+		</section>
+	</section>
+	<section class="nav-info">
+		<p>ELIFE智能手机</p>
+	</section>
+</div>
+<script src="<?php echo $staticPath;?>/??/sys/icat/1.1.4/icat.js,/apps/3g/elife/assets/js/e3.nav.js?v=<?php echo $version;?>"></script>
+<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

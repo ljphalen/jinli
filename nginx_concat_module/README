@@ -1,0 +1,53 @@
+NAME
+	This is the nginx version of apache mod_concat but enhanced.
+
+SYNOPSIS
+	location /foo/ {
+		 # turn on concatenation
+		 # (default: off)
+		 concat	on;
+	}
+
+	location /bar/ {
+		 # turn on concatenation
+		 # (default: off)
+		 concat on;
+		 
+		 # max concat file number allowed
+		 # (default: 10)
+		 # concat_max_files 10;
+
+		 # only files in the same content types are allowed
+		 # (default on)
+		 # concat_unique on;
+
+		 # content types allowed 
+		 # (default: application/x-javascript, text/css)
+		 # concat_types text/html;
+	}
+
+DESCRIPTION
+	The idea of combining multiple files together to speed up page 
+	rendering was first brought in perlbal, by David Davis. Then mod_concat
+	was implemented	by Ian Holsman at AOL. This technique is really simple
+	but very useful, by specifing a set of files to load in one HTTP
+	request.
+
+	This module basically works as what its apache cousin does.
+	Additionally, it also support maximum concat file number setting and
+	version string (the string after the third question mark will be
+	treated as version string and ignored).
+
+EXAMPLE
+	http://foobar.com/??a.js,b.js,c.js
+	http://foobar.com/??a.css,b.css,c.css
+	http://foobar.com/??a.js,dir1/b.js,dir2/c.js
+	http://foobar.com/somelocation/??1.js,2.js
+	http://foobar.com/??a.js,b.js,c.js?t=20100520
+
+SEE ALSO
+	http://code.google.com/p/modconcat/
+	http://www.artzstudio.com/2008/08/using-modconcat-to-speed-up-render-start/
+
+AUTHOR
+	Joshua Zhu <shudu@taobao.com>

@@ -1,0 +1,97 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+    <ul class="cc">
+        <li class="current"><a href="<?php echo $listUrl; ?>">关键字列表</a></li>
+    </ul>
+</div>
+<form action="<?php echo $indexUrl; ?>" method="post" id="searchForm">
+    <input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <td class="td">开始结束时间</td>
+                <td class="td">
+                    <div>
+                        <input class="input" type="text" style="width:143px;" id="start_time" name="start_time" value="<?php echo $params['start_time']; ?>" placeholder="须选择分表"/> 至
+                        <input class="input" type="text" style="width:143px;" id="end_time" name="end_time" value="<?php echo $params['end_time']; ?>" placeholder="须选择分表"/>
+                    </div>
+                </td>
+                <td class="td">关键字</td>
+                <td class="td">
+                    <input class="input wb" type="text" name="keyword" value="<?php echo $params['keyword']; ?>">
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">关键词表(1-10分表)</th>
+                <td class="td">
+                    <select name="table">
+                        <option value="">请选择可能所在的表</option>
+                        <option value="1" <?php echo $params['table'] == 1 ? 'selected="selected"':''; ?> >01</option>
+                        <option value="2" <?php echo $params['table'] == 2 ? 'selected="selected"':''; ?> >02</option>
+                        <option value="3" <?php echo $params['table'] == 3 ? 'selected="selected"':''; ?> >03</option>
+                        <option value="4" <?php echo $params['table'] == 4 ? 'selected="selected"':''; ?> >04</option>
+                        <option value="5" <?php echo $params['table'] == 5 ? 'selected="selected"':''; ?> >05</option>
+                        <option value="6" <?php echo $params['table'] == 6 ? 'selected="selected"':''; ?> >06</option>
+                        <option value="7" <?php echo $params['table'] == 7 ? 'selected="selected"':''; ?> >07</option>
+                        <option value="8" <?php echo $params['table'] == 8 ? 'selected="selected"':''; ?> >08</option>
+                        <option value="9" <?php echo $params['table'] == 9 ? 'selected="selected"':''; ?> >09</option>
+                        <option value="10" <?php echo $params['table'] == 10 ? 'selected="selected"':''; ?> >10</option>
+                    </select>
+                </td>
+                <td class="td">当前关键词总数：<?php echo $total; ?></td>
+                <td class="td">
+                    <span class="btn"><span><button type="submit">搜 索</button></span></span>
+                    <span class="btn"><span><button type="button" id="extportBtn">导出关键词</button></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+    <div class="table_list">
+        <table width="100%">
+            <tr class="hd">
+                <td width="50%">关键字</td>
+                <td width="20%">搜索量</td>
+                <td width="30%">创建时间</td>
+            </tr>
+            <?php foreach ($skeys as $key => $value) { ?>
+                <tr class="ct">
+                    <td><?php echo $value['s']; ?></td>
+                    <td><?php echo $value['count']; ?></td>
+                    <td><?php echo date('Y-m-d H:i:s', $value['create_time']); ?></td>
+                </tr>
+            <?php } ?>
+        </table>
+    </div>
+</form>
+<div class="mr10 cc">
+    <?php echo $pager; ?>
+</div>
+
+<div class="mr10 cc">
+    <form action="<?php echo $downloadUrl;?>" method="post" id="exportForm">
+        <input name="token" type="hidden" value="<?php echo $token;?>" />
+        <input type="hidden" name="table" value="<?php echo $params['table'];?>">
+        <input type="hidden" name="keyword" value="<?php echo $params['keyword'];?>">
+        <input type="hidden" name="start_time" value="<?php echo $params['start_time'];?>">
+        <input type="hidden" name="end_time" value="<?php echo $params['end_time'];?>">
+    </form>
+</div>
+
+<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+    //导购表单数据提交
+    $(document).ready(function () {
+        $('#start_time').datetimepicker();
+        $('#end_time').datetimepicker();
+        submitForm = function () {
+            $("#searchForm").submit();
+        };
+        $("#extportBtn").click(function(){
+            $("#exportForm").submit();
+        });
+    })
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

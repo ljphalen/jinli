@@ -1,0 +1,87 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li><a href="<?php echo $indexUrl;?>">商品列表</a></li>
+		<li class="current"><a href="<?php echo $searchUrl;?>">添加商品</a></li>
+		<li><a href="<?php echo $meilishuoStep1Url;?>">添加美丽说商品</a></li>
+	</ul>
+</div>
+<div class="step mb10">
+	<ul class="cc">
+		<li class="current">第一步：选择商品</li>
+		<li class="line"></li>
+		<li><span class="fl"><em></em></span>第二步：完善商品</li>
+	</ul>
+</div>
+<form action="<?php echo $searchUrl;?>" method="get">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">商品来源</th>
+				<td class="td">
+					<select name="supplier">
+						<?php
+						unset($configs[9]);
+						foreach ($configs as $key=>$val):?>
+							<option value="<?php echo $key;?>" <?php if ($key == $search['supplier']) echo 'selected="selected"';?>><?php echo $val['name'];?></option>
+						<?php endforeach;?>
+					</select>
+				</td>
+				<th class="th">商品分类</th>
+				<td class="td">
+					<input class="input w" type="text" name="category_name" value="<?php echo $search['category_name'];?>">
+				</td>
+				<th class="th">商品名称</th>
+				<td class="td">
+					<input class="input w" type="text" name="title" value="<?php echo $search['title'];?>">
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn">
+			<span>
+				<button type="submit">获取数据</button>
+			</span>
+		</span>
+	</div>
+</form>
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="50">名称</td>
+			<td width="60">图片</td>
+			<td width="60">分类</td>
+			<td width="80">市场价</td>
+			<td width="80">销售价</td>
+			<td width="40">折扣</td>
+			<td width="40">附加信息</td>
+			<td width="40">操作</td>
+		</tr>
+		<?php if(!empty($data)): foreach ($data as $key=>$val):?>
+		<tr class="ct">
+			<td><a href="<?php echo $val['link'];?>" target="_blank"><?php echo $val['title'];?></a></td>
+			<td><img alt="" src="<?php echo $val['img'];?>" width="58"></td>
+			<td><?php echo $val['category_name'];?></td>
+			<td><?php echo $val['market_price'];?></td>
+			<td><?php if($val['sale_price_min']>0&&$val['sale_price_min']!=$val['sale_price']) echo $val['sale_price_min'].'~'.$val['sale_price'];else echo $val['sale_price'];?></td>
+			<td><?php echo round($val['sale_price']/$val['market_price'], 2) * 10;?></td>
+			<td><?php echo '库存：'.$val['storage'];?></td>
+			<td><a href="<?php echo $addUrl;?>?supplier=<?php echo $search['supplier'];?>&id=<?php echo $val['id'];?>" class="btn btn_success">添加</a></td>
+		</tr>
+		<?php endforeach; endif;?>
+	</table>
+	<div class="mr10 cc">
+		<?php echo $pager;?> </div>
+</div>
+
+<script type="text/javascript">
+//商品表单数据提交
+$(document).ready(function(){
+	
+});
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

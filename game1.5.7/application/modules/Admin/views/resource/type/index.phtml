@@ -1,0 +1,85 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">机型列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加机型</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">分辨率</th>
+			<td class="td">
+			<?php foreach($resolutions as $key=>$value) {?>
+			<label class="mr20"><input type="checkbox" <?php if (in_array($value['id'], $search['resolution'])) echo 'checked';?> name="resolution[]" value="<?php echo $value['id'];?>"><?php echo $value['title'];?></label>
+			<?php }?>			
+			</td>
+		</tr>
+		<tr class="tr" style="display:none;">
+		    <th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			    <option  value="0">全部</option>
+				<option <?php if($search['status'] == 2) echo 'selected';?> value="2">开启</option>
+				<option <?php if($search['status'] == 1) echo 'selected';?> value="1">关闭</option>
+			</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">运营商</th>
+			<td class="td">
+			<select name="operators" class="wa">
+				<option  value="a">全部</option>
+				<?php foreach($operators as $key=>$value){?>
+				<option <?php if($search['operators'] == $value['id']) echo 'selected';?> value="<?php echo $value['id'];?>"><?php echo $value['title'];?></option>
+				<?php } ?>
+				<option  <?php if($search['operators'] == 'b') echo 'selected';?> value="b" >所有运营商</option>
+			</select>
+		</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td">
+			<input type="text" class="input" name="title" value="<?php echo empty($search['title'])?'':$search['title'];?>">
+		</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">排序</td>
+			<td width="100">ID</td>
+			<td>名称</td>
+			<td>分辨率</td>
+			<td>运营商</td>
+			<td style="display:none;">状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $resolutions[$value['resolution']]['title'];?></td>
+			<td><?php echo $value['operators'] == 0 ? '所有运营商': $operators[$value['operators']]['title'];?></td>
+			<td style="display:none;"><?php echo $value['status'] == 1 ? '开启' : '关闭';?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,65 @@
+<script src="{{rootUrl}}/js/core.js" type="text/javascript"></script>
+<script src="{{rootUrl}}/js/app-type.js" type="text/javascript"></script>
+<script src="{{rootUrl}}/js/games.js?ver={{staticVer}}" type="text/javascript"></script>
+<link media="screen" href="{{rootUrl}}/css/table.css" rel="stylesheet" type="text/css">
+<style>
+#gamelist{width:30%;background:#fff;border:1px solid #dedede;padding:5px;}
+#gamelist li{width:100%;height:25px;line-height:25px;text-indent:15px;
+             border-bottom:1px dashed #ccc;color:#666;cursor:pointer;}
+</style>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">{{title}}-广告商信息</p>
+    </div>
+    <div class="main">
+        <div class="app-detail">
+            <form action="../VideoAdsCom/save" method="POST" >
+                <input type="hidden" name="id" value='{{result.id}}' /> 
+                <ul class="form">
+                    <li>
+                        <span class="label">视频广告商编号：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" required name="identifier" <!-- if {{result.identifier}} --> readonly <!-- endif --> style="width:220px;" value="{{result.identifier}}" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">视频广告商名称：</span>
+                        <div class="fc Menu2">
+                            <input type="text" id="name" class="iText required" name="name" required style="width:220px;" name="name" value="{{result.name}}" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">平台类型：</span>
+                        <div class="fc">
+                            <select id="settlement_method"  name="settlement_method">
+                                <option value="cpm" <!-- if {{result.settlement_method}}==cpm --> selected <!-- endif -->>cmp</option>
+                                <option value="cpc" <!-- if {{result.settlement_method}}==cpc --> selected <!-- endif -->>cpc</option>
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">结算单价：</span>
+                        <div class="fc Menu2">
+                            <input type="text" id="settlement_price" class="iText required" required style="width:220px;" name="settlement_price" value="{{result.settlement_price}}" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="fc">
+                            <input type="button" onclick="confirmSubmit();" value="确定" class="submit" />
+                            <input type="button" value="取消" class="cancel" onclick="window.location.href='/VideoAdsCom/index'" />
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function confirmSubmit()
+    {
+        $("form").submit();
+    }
+</script>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>HotWifi安全认证</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="format-detection" content="email=no" />
+
+<link rel="stylesheet" href="/static/p.css" />
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript">
+var num = 5;
+function timer() {
+    if (num >= 0) {
+        var str = '';
+        str += '系统认证中，' + num + ' 秒钟后跳转到认证成功页.';
+        $('.banner').html(str);
+        num--;
+        setTimeout(timer, 1000);
+    }
+    else {
+        window.location.href = "<?php echo $ptnerUrl;?>";        
+    }
+}
+window.onload = timer;
+</script>
+
+</head>
+<body>
+	<div class="module panel1">
+		<section class="links-box">
+			<div class="banner">认证成功</div>
+		</section>
+	</div>
+</body>
+</html>

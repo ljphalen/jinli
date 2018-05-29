@@ -1,0 +1,50 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $msgUrl; ?>">图文列表</a></li>
+		<li><a href="<?php echo $msgeditUrl; ?>">添加图文</a></li>
+	</ul>
+</div>
+<form action="<?php echo $msgUrl; ?>" method="post">
+	<input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+	<div class="table_full">
+		<div class="table_full">
+
+		</div>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button type="submit">搜 索</button></span></span>
+	</div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>id</td>
+			<td>栏目</td>
+			<td>标题</td>
+			<td>子消息数量</td>
+			<td>添加时间</td>
+			<td width="120">操作</td>
+		</tr>
+		<?php foreach ($dataList as $key => $value) { ?>
+			<tr class="ct">
+				<td><?php echo $value['id']; ?></td>
+				<td><?php echo $keys[$value['key']]; ?></td>
+				<td><?php echo $value['title']; ?></td>
+				<td><?php echo $value['num']; ?></td>
+				<td><?php echo $value['created_at']; ?></td>
+				<td>
+					<a href="<?php echo $msgeditUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+					<a href="javascript:" onclick="deleteOne('<?php echo $msgdelUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+				</td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

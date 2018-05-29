@@ -1,0 +1,78 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $indexUrl;?>">日志列表</a></li>
+    <li class="current"><a href="javascript:;">编辑免单日志</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑免单日志</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editFrom">
+    <input name="id" value="<?php echo $info['id'];?>" type="hidden"/>
+    <input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">期数</th>
+			<td class="td"><?php echo $info['number'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">手机</th>
+			<td class="td"><?php echo $info['username'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">商品id</th>
+			<td class="td"><?php echo $info['goods_id'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">商品名称</th>
+			<td class="td"><?php echo $info['goods_title'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">商品单价</th>
+			<td class="td"><?php echo $info['goods_price'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">开奖时间</th>
+			<td class="td"><?php echo date('Y-m-d H:i:s', $info['create_time']);?></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				<select name="status" onchange="showremark(this.value);">
+<?php foreach($status as $key=>$value) {?>
+				<option <?php echo ($info['status'] == $key) ? 'selected="selected"' :'';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php }?>
+			</select>
+			</td>
+		</tr>
+		<tr class="tr" id="remark">
+			<th class="th">备注</th>
+			<td class="td"><textarea class="textarea wc"  name="remark" /><?php echo $info['remark']?></textarea>填写备注，如下单渠道、订单号等
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Orderfreelog/index');
+	});
+})
+showremark = function(flag) {
+	if (flag == 1) {
+		$("#remark").show();
+	} else {
+		$("#remark").hide();
+	}
+}
+<?php if($info['status'] == 1) { ?>
+$("#remark").show();
+<?php } else {?>
+$("#remark").hide();
+<?php }?>
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

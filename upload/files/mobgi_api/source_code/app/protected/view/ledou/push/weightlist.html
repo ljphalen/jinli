@@ -1,0 +1,153 @@
+<link media="screen" href="{{rootUrl}}/css/gri.controls.css" rel="stylesheet" type="text/css">
+<div class="colMain">
+    <div class="title"><p class="fl">产品导量权重列表</p></div>
+    <div class="main">
+        <div class="toolbar">
+            <div class="search fl">
+                <span>
+                    <form name="form" method="GET" action="weight">
+                        <input type="text" id="keyword" name="keyword" value="{{keyword}}" class="iText" title="输入关键字可搜索配置名" />
+                        <input type="text" id="dtime" name="dtime" value="{{dtime}}" class="iText datepicker" title="根据时间区间搜索" style="width:170px;" sdate="<?php echo $_GET['screatedate'];?>" edate="<?php echo $_GET['ecreatedate'];?>"/>
+                        <select id="state" name="state">
+                            <option value="">导量状态</option>
+                            <option value="1" <!-- if {{state}}==1 --> selected <!-- endif --> >生效中</option>
+                            <option value="2" <!-- if {{state}}==2 --> selected <!-- endif --> >未生效</option>
+                            <option value="3" <!-- if {{state}}==3 --> selected <!-- endif --> > 已过期</option>
+                        </select>
+                        <input type="hidden" name="screatedate"  id="screatedate" value="<?php echo $_GET['screatedate'];?>">
+                        <input type="hidden" name="ecreatedate" id="ecreatedate" value="<?php echo $_GET['ecreatedate'];?>">
+                        <input type="submit" class="submit" value="" title="输入关键字可搜索配置名" onclick="confirmSubmit();"/>
+                    </form>
+                </span>
+            </div>
+            <a href="/push/weightedit_view"  style="width:85px" class="fr add">新建权重设置</a>
+        </div>
+        <div class="content">
+            <div class="grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>设置ID</th>
+                            <th>设置名称</th>
+                            <th>导量时间</th>
+                            <th>产品权重</th>
+                            <th>导量状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- loop result -->
+                        <tr id='t{{result' value.id}}'>
+                            <td>{{result' value.id}}</td>
+                            <td>{{result' value.config_name}}</td>
+                            <td>{{result' value.stime}}~<br>{{result' value.etime}}</td>
+                            <td>
+                                <!-- if {{result' value.product_combo_arr}} -->
+                                    <!-- loop result' value.product_combo_arr -->
+                                    <p><a href="config?keyword=<?php echo $v2['product_name']; ?>&platform=0&state=0" style="text-decoration: underline;"><!-- if !{{result' product_combo_arr' value.has_plan}} --><font color='red'><!-- endif --><?php echo $v2['product_name']; ?>：<?php echo $v2['weight']; ?><!-- if !{{result' product_combo_arr' value.has_plan}} --></font><!-- endif --></a></p>
+                                    <!-- endloop -->
+                                <!-- endif -->
+                            </td>
+                            <td><span>
+                                    <!-- if {{result' value.state}}==1 --><font color="green">生效中</font>
+                                    <!-- elseif {{result' value.state}}==2 --><font color="red">未生效</font>
+                                    <!-- elseif {{result' value.state}}==3 --><font color="black">已过期</font>
+                                    <!-- else --><font color="red">异常状态</font>
+                                    <!-- endif -->
+                            </td>
+                            <td>
+                                <a href="weightedit_view?weight_id={{result' value.id}}" class="edit" title="编辑" intime="{{result' value.intime}}"></a>
+                                |
+                                <a href="weightedit_view?weight_id={{result' value.id}}&copy=1" class="copy" title="复制">复制</a>
+                                |
+                                <a href="weightdel?id={{result' value.id}}" class="del" title="删除" intime="{{result' value.intime}}"></a>
+                            </td>
+                        </tr>
+                        <!-- endloop -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">{{pager.pages}}</div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="{{rootUrl}}/js/thickbox.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/gri.dateRange.js"></script>
+<link rel="stylesheet" href="{{rootUrl}}/css/thickbox.css" type="text/css" />
+<script language="javascript">
+
+    var nc = false;
+    var dateRange = new pickerDateRange("dtime",{
+        theme : 'ta', // 日期选择器TA主题
+        isTodayValid : 1,
+        startDate : "<?php echo $_GET['screatedate'];?>",
+        endDate : "<?php echo $_GET['ecreatedate'];?>",
+        minValidDate : 0,
+        needCompare : 1,
+        stopToday:false,
+        success : function (dateObj){
+            $("#dtime").attr("sdate", dateObj.startDate);
+            $("#dtime").attr("edate", dateObj.endDate);
+            if(dateObj.needCompare == 1)
+            {
+            	$("#dtime").attr("csdate", dateObj.startCompareDate);
+                $("#dtime").attr("cedate", dateObj.endCompareDate);
+                nc = true;
+            }else
+            {
+            	$("#dtime").attr("csdate", "");
+                $("#dtime").attr("cedate", "");
+                nc = false;
+            }
+        }
+    });
+    var screatedate = "<?php echo $_GET['screatedate'];?>";
+    var ecreatedate = "<?php echo $_GET['ecreatedate'];?>";
+    if(screatedate!=''&ecreatedate!=''){
+        $("#dtime").val("<?php echo $_GET['screatedate'].' 至 '.$_GET['ecreatedate'];?>")
+    }
+    function confirmSubmit()
+    {
+        sdate = $("#dtime").attr("sdate");
+        edate = $("#dtime").attr("edate");
+        $("#screatedate").attr("value",sdate);
+        $("#ecreatedate").attr("value",edate);
+        return true;
+    }
+    
+$(function(){
+    $("#dtime").change(function(){
+        if($("#dtime").val() == ""){
+            $("#dtime").attr("sdate", "");
+            $("#dtime").attr("edate", "");
+        }
+    });
+    
+    $("a.edit").click(function(){
+        if($(this).attr("intime") == "1"){
+            jAlert("生效时间的开始时间前5min到生效时间结束的时间段内不可编辑");
+            return false;
+        }
+    });
+    
+    //先取消公共JS绑定的click事件再绑定click事件
+    $("a.del").unbind("click").click(function(){
+        if($(this).attr("intime") == "1"){
+            jAlert("生效时间的开始时间前5min到生效时间结束的时间段内不可删除");
+//            $(this).unbind("click").unbind("click");
+            return false;
+        }else{
+            var opt = $(this);
+            var url = opt.attr("href");
+            opt.attr("href", "#");
+            jConfirm("是否确定要删除？", function() {
+                window.location.href = url;
+            }, function() {
+                opt.attr("href", url);
+            });
+        }
+    });
+})
+
+</script>

@@ -1,0 +1,31 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $listUrl;?>">首页推荐日程</a></li>
+        <li><a href="<?php echo $editUrl . '?day_id=' . date('Y-m-d', $day_id);?>">编辑首页推荐</a></li>
+	    <li class="current"><a href="javascript:;">编辑记录</a></li>
+	</ul>
+</div>
+<div class="mb10"><?php echo date("Y年m月d日", $day_id);?>首页推荐编辑记录</div>
+<div class="h_a">
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="50">ID</td>
+			<td width="50">编辑人</td>
+			<td width="50">编辑时间</td>
+		</tr>
+		<?php foreach($list as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['username'];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+		</tr>
+	 <?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc"><?php echo $pager;?></div>
+<?php echo $this->render("layout/footer.phtml");?>

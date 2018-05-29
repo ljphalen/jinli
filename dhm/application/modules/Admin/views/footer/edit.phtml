@@ -1,0 +1,67 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">底部列表</a></li>
+    <li class="current"><a href="javascript:;">编辑分类</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑分类</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">名称</th>
+			<td class="td"><input type="text" class="input wb" name="name" value="<?php echo $info['name'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">显示内容</th>
+			<td class="td">
+				<script id="editor" type="text/plain"
+						style="width:100%;height:500px;"><?php echo html_entity_decode(trim($info['footer'])); ?></script>
+			</td>
+		</tr>
+		
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm', function (ret) {
+		ajaxRedirect(ret, '<?php echo Util_Http::getServer("HTTP_REFERER"); ?>');
+	});
+
+	var parents = <?php echo json_encode($parents);?>;
+	setparents = function(parent_id, chval) {
+		var options = '<option value="0">无</option>';
+		$.each(parents, function(index,data){
+			var s = '';
+			if (data.root_id == parent_id) {
+				if(data.id == chval) s = 'selected';
+				options += '<option value="'+data.id+'" '+s+'>'+data.name+'</option>';
+			}
+		});
+		$("select[name='parent_id']").html(options);
+	}
+	setparents(<?php echo $info['root_id'] ? $info['root_id'] : 0;?>, <?php echo $info['parent_id'] ? $info['parent_id'] : 0;?>);
+	if(parents == '') $("#parents_tr").hide();
+})
+
+</script>
+
+
+<script type="text/javascript">
+	var ue = UE.getEditor('editor', {'textarea': 'footer',
+		'initialFrameWidth':720, //初始化宽度
+		'initialFrameHeight':360, //初始化高度
+	});
+	$(function () {
+		ajaxForm('addForm', function (ret) {
+			ajaxRedirect(ret, '<?php echo Util_Http::getServer("HTTP_REFERER"); ?>');
+		});
+	});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

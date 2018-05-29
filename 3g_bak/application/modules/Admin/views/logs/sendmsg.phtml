@@ -1,0 +1,80 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class=""><a href="<?php echo $innerMsgUrl; ?>">站内信列表</a></li>
+		<li class="current"><a href="<?php echo $sendMsgUrl; ?>">发送站内信</a></li>
+	</ul>
+</div>
+
+<div class="h_a">手动发送站内信</div>
+<form method="post" action="<?php echo $importUrl; ?>" id="addFrom" enctype="multipart/form-data">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">请选择条件</th>
+				<td class="td"><select name="send_type" id="send_type">
+						<option value="0">请选择</option>
+						<option value="1">单个用户</option>
+						<option value="2">所有用户</option>
+					</select>
+				</td>
+			</tr>
+			<tbody style="display:none" id="t_body">
+			<tr class="tr">
+				<th class="th">请输入用户名:</th>
+				<td class="td"><input type="text" name="username" id="username" style="width: 160px;height:20px"></td>
+			</tr>
+			</tbody>
+			<tr class="tr">
+				<th class="th">信息类型</th>
+				<td class="td"><select name="message_type">
+						<?php foreach ($msgType as $k => $v) { ?>
+							<option value="<?php echo $k; ?>"><?php echo $v; ?></option>
+						<?php } ?>
+					</select>
+			<tr class="tr">
+				<th class="th">站内信内容</th>
+				<td class="td"><input type="text" name="content" id="content" style="width: 400px;height:100px;"></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit" id="submitBtn">确定</button></span></span>
+	</div>
+</form>
+
+<script type="text/javascript">
+	//广告表单数据提交
+	$("#submitBtn").bind('click', function () {
+		var type = $("#send_type option:selected").val();
+		if (type == '0') {
+			alert('请先选择收信人！');
+			return false;
+		} else if (type == '1') {
+			var reg = /^0?1[3|4|5|7|8|9][0-9]\d{8}$/;
+			var username = $("#username").val();
+			if (!reg.test(username)) {
+				alert('用户名有错，请确认是否为正确的手机号码！');
+				return false;
+			}
+		}
+		if (confirm('确定要给当前用户发送站内信?')) {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/logs/sendmsg');
+			});
+		} else {
+			return false;
+		}
+	});
+
+	$("#send_type").bind('change', function () {
+		var send_type = $("#send_type option:selected").val();
+		if (send_type == '1') {
+			$("#t_body").show();
+		} else {
+			$("#t_body").hide();
+		}
+	});
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

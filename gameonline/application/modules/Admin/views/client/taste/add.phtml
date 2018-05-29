@@ -1,0 +1,136 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">尝鲜列表</a></li>
+		<li class="current"><a href="">添加内容</a></li>
+	</ul>
+</div>
+<div class="step mb10">
+		<ul class="cc">
+			<li class="current">选择内容</li>
+			<li class="line"></li>
+			<li><span class="fl"><em></em></span>设置时间</li>
+		</ul>
+</div>
+<form action="<?php echo $addUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input wb" name="name" value="<?php echo $s['name'];?>"></td>
+			<th class="th">ID</th>
+			<td class="td"><input type="text" class="input wb" name="id" value="<?php echo $s['id'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<?php if(count($current_games)){?>
+<div class="h_a">
+    <?php foreach($current_games as $k=>$v){?>
+	<span><a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?game_id=<?php echo $v['game_id'];?>&id=<?php echo $v['id'];?>', '', event);"><?php echo $current_name[$v['game_id']];?></a><a style="background: url(<?php echo $staticPath;?>/img/layout/tab.png);width: 7px;height: 7px;display: inline-block;background-position: -20px 20px;"></a></span>&nbsp;&nbsp;
+	<?php }?>
+</div>
+<div class="h_a">
+<span class="btn2" style="margin-left:55px;"><span><button onclick="check1();" type="button">下一步设置生效时间</button></span></span>
+</div>
+<?php }?>
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('add');" type="submit">添加</button></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+	<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已添加共<?php echo count($current_games);?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td>ID</td>
+			<td>标题</td>
+			<td>图标</td>
+			<td>分类</td>
+			<td>大小</td>
+			<td>版本</td>
+			<td>状态</td>
+		</tr>
+<?php if($games) {?>
+<?php foreach($games as $key => $value) {?>
+		<tr class="ct">
+		    <td>
+		    <?php /*?><?php if (!in_array($value['id'], $taste_ids)) {?><?php */?>
+		    <input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox">
+		    <?php /*?><?php }else{?><?php */?>
+		    <!-- <font color="green">√</font> -->
+		    <?php /*?><?php }?><?php */?>
+		    </td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['name'];?></td>
+			<td><img src="<?php echo $value['img'];?>" style="width:7.2em;height:7.2em"/></td>
+        	<td><?php echo $category_title[$value['id']] ? implode($category_title[$value['id']], ',') : '';?></td>
+        	<td><?php echo $oline_versions[$value['id']]['size'];?>M</td>
+        	<td><?php echo $oline_versions[$value['id']]['version'];?></td>
+        	<td><?php echo $value['status'] ? '已上线' : '已下线';?></td>
+		</tr>
+<?php }} ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<div id="dialog" title="是否确认发布？">
+	</div>
+</form>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	//check();
+	ajaxForm('batchForm', function(ret) {
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Taste/add');
+	});
+	$("#dialog").dialog({
+		autoOpen:false,
+		modal:true
+	})
+})
+function check1(){
+	$.ajax({
+		url : baseurl + "/Admin/Client_Taste/check",
+		type : 'POST',
+		dataType : 'json',
+		data : 'token='+'<?php echo $token;?>',
+		success : function(ret) {
+			 if (ret.success) {
+				 if(ret.msg) {
+				   showConfirm2(ret.msg);
+				 } else {
+					 location.href= baseurl+'/Admin/Client_Taste/addCt';
+				 }
+			} else {
+				showError('', ret.msg);
+			}
+			
+		}
+	});
+}
+
+function showConfirm2( msg) {
+	$("#dialog").html(msg);
+	$("#dialog").dialog({
+      buttons : {
+        "确定" : function() {
+         	 setTimeout(function() {
+		        location.href= baseurl+'/Admin/Client_Taste/addCt';
+			}, 500);
+        },
+        "取消" : function() {
+          $(this).dialog("close");
+        }
+      }
+    });
+     $("#dialog").dialog("open");
+}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

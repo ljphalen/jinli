@@ -1,0 +1,66 @@
+#!/bin/bash
+
+PROJECT=
+SRC_REPO=
+DIST_PATH=
+PASSWORD=
+EXCLUDE_FILES=
+
+initialize() {
+    PROJECT=$1
+    if [ -n "$2" ]; then
+        SRC_REPO=$2
+    else
+        SRC_REPO=http://19.9.0.130/svn/motion/trunk/gamehall/$PROJECT
+    fi
+    DIST_PATH=$PWD/files/$PROJECT
+    PASSWORD=$PWD/old/rsync.ps
+    EXCLUDE_FILES=$PWD/rsync.exclude
+
+    chmod 600 $PWD/old/rsync.ps
+}
+
+checkEnv() {
+    svn info $SRC_REPO
+    error=$?
+
+    if [ $error -ne 0 ]; then
+        echo "Could not find svn path : "$SRC_REPO"";
+        exit 1
+    fi
+
+    mkdir -p $PWD/files
+    rm -rf $DIST_PATH
+}
+
+checkoutSrc() {
+    echo "start update files...."
+    sleep 1 
+    svn co $SRC_REPO $DIST_PATH --force
+}
+
+rsyncFiles() {
+    echo "start rsync files...."
+    sleep 1
+    rsync -avz --password-file=$PASSWORD --exclude-from=$EXCLUDE_FILES $DIST_PATH gou3g@42.121.237.23::www
+    exit 1
+}
+
+#------------------------------------------------------------
+#------------------------- Main Entry ------------------------
+#------------------------------------------------------------
+if [ -n "$1" ]; then
+    initialize $1 $2
+    checkEnv
+    checkoutSrc
+    rsyncFiles
+else
+    echo "Usage: ./rsync.sh <project_name> [<svn_repo_url>]"
+    echo "<project_name>:    项目名称, 如 game, gameweixin, 对应测试站的项目目录名"
+    echo "[<svn_repo_url>]:  可选参数, 指定需要同步的代码svn仓库全路径"
+    echo "例如:"
+    echo "./rsync.sh game"
+    echo "./rsync.sh game http://19.9.0.130/svn/motion/branches/game_v1.5.7_release/"
+    exit 1
+fi
+

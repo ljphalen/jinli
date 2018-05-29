@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>夺宝奇兵</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="用户中心-夺宝奇兵">
+    <link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/call/css/call.min.css?ver=<?php echo $version;?>" />
+</head>
+<body style="background-color: #eee;">
+	<input type="hidden" name="token" id="token" value="<?php echo $token;?>">
+    <div class="main-body">
+        <div class="main-wrap">
+            <div class="return">
+                <div class="btn-back"><i></i><a href="<?php echo $webroot;?>/user/index/index" >返回</a></div>
+            </div>
+            <img src="<?php echo $staticResPath;?>/call/pic/background.xxx.jpg" alt="">
+             <div class="current-gold">当前金币 <span  id="remined_scores"><?php echo $userScores['remained_score']?$userScores['remained_score']:0;?></span> <img src="<?php echo $staticResPath;?>/call/img/gold-icon.png" alt="">
+              可开箱 <span id="remained_times" ><?php echo $remainedTimes?$remainedTimes:0;?></span> 次
+             </div>
+            <div class="buttons-wrap"  data-url="<?php echo $webroot;?>/user/snatch/ajaxsnatching">
+            	<?php foreach($goods as $k=>$v){?>
+                <p>
+                <span><?php echo $v['subtitle'];?></span>
+                <span  class="btn"    data-index="<?php echo $v['id'];?>"> - <?php echo $v['name'];?></span></p>
+               <?php }?>
+            </div>
+        </div>
+        <div class="rule-wrap">
+            <div class="rule-txt">
+                <?php echo $config['snatch_rule_content'];?>
+            </div>
+            <p class="copyright">最终解释权归<?=Lang::_('PRODUCT_TEAM_NAME')?>所有</p>
+        </div>
+    </div>
+    <!-- 弹窗 抽中/未抽中 -->
+    <div class="u-popup-wrap" style="display:none;"  id="popup">
+        <div>
+            <div class="title"></div>
+            <div class="content">很遗憾，宝藏被其他人拿走了</div>
+            <div class="button">
+                <span class="btn ok" onclick="popup_hide()" >确认</span>
+            </div>
+        </div>
+    </div>
+    <!-- / 弹窗 -->
+    <!-- 弹窗 金币不足 -->
+    <div class="popup-gold-notEnough" style="display:none;">
+        <div class="content">
+            <p>您的金币不足</p>
+            <p>签到，做任务都可以获得金币哦</p>
+        </div>
+        <div class="buttons"> <span class="btn ok" onclick="popup_hide()"  >确认</span></div>
+    </div>
+    <script type="text/javascript" src="<?php echo $staticResPath;?>/call/js/lib/zepto.js?ver=<?php echo $version;?>"></script>
+  <script type="text/javascript" src="<?php echo $staticResPath;?>/call/js/raiders.js?ver=<?php echo $version;?>"></script>
+  <script type="text/javascript">
+  function popup_hide() {
+      $('.u-popup-wrap').hide();
+      $('.popup-gold-notEnough').hide();
+  }
+</script>
+</body>
+</html>

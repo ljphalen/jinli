@@ -1,0 +1,82 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class=""><a href="<?php echo $indexUrl; ?>">用户列表</a></li>
+			<li class="current"><a href="<?php echo $logUrl; ?>">中奖记录</a></li>
+		</ul>
+	</div>
+	<div class="table_full">
+		<form action="<?php echo $logUrl; ?>" method="POST" id="form">
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<table width="100%" cellspacing="0" cellpadding="0">
+				<tr class="tr">
+					<th class="th">奖品状态：</th>
+					<td class="td"><select name="prize_status">
+						<option value="-3"  selected="selected">请选择</option>
+					<?php foreach($prizeStatus as $k=>$v){?>
+						<option value="<?php echo $k;?>"  <?php if($k==$params['prize_status'])  echo 'selected';?>><?php echo $v;?></option>
+					<?php }?>
+					</select></td>
+				</tr>
+			
+			<tr class="tr">
+				<th class="th">奖品等级</th>
+				<td class="td"><select name="prize_level">
+					<option value="0">请选择</option>
+					<?php foreach($prizeLevel as $k=>$v){?>
+						<option value="<?php echo $k;?>"  <?php if($params['prize_level'] == $k) echo 'selected';?>> <?php echo $v;?></option>
+					<?php }?>
+				</select>
+			</td>
+			</tr>
+				<tr class="tr">
+					<th class="th">用户名：</th>
+					<td class="td"><input name="uname"  value="<?php echo $params['uname'];?>" type="text"  class="input"></td>
+				</tr>
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+
+            <div><a href="/admin/link/logexport">导出</a></div>
+		</form>
+	</div>
+
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+                <th class="th">游客名</th>
+				<th class="th">用户ID</th>
+                <th class="th">用户名</th>
+				<th class="th">奖品等级</th>
+				<th class="th">奖品ID(或金币数)</th>
+				<th class="th">状态</th>
+				<th class="th">序号</th>
+				<th class="th">获取时间</th>
+				<th class="th">更新时间</th>
+				<th class="th">用户IP</th>
+				<th class="th">操作</th>
+			</tr>
+			<?php foreach ($dataList as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['id'];?></td>
+                    <td class="td"><?php echo $v['uname'];?></td>
+					<td class="td"><?php echo $v['uid'];?></td>
+                    <td class="td"><?php echo $v['username'];?></td>
+					<td class="td" align="left"><?=$prizeLevel[$v['prize_level']]?$prizeLevel[$v['prize_level']]:'幸运奖';?></td>
+					<td class="td"><?php echo $v['prize_val'] ?></td>
+					<td class="td"><?php echo $prizeStatus[$v['prize_status']];?></td>
+					<td class="td"><?php echo $v['num'] ?></td>
+					<td class="td"><?php echo date("Y-m-d H:i:s",$v['add_time']) ?></td>
+					<td class="td"><?php echo date("Y-m-d H:i:s",$v['update_time']) ?></td>
+					<td class="td"><?php echo $v['user_ip'];?></td>
+					<td class="td"><a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $v['id']; ?>', '', event);">删除</a></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

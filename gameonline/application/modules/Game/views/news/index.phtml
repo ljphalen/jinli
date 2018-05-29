@@ -1,0 +1,88 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+</script>
+	<div id="page">
+		<a name="top"></a>
+		<header class="hd">
+			<h1><div class="omit">新闻中心</div></h1>
+			<div class="back-home"><a href="<?php echo $webroot.'?t_bi='.$source;?>">&lt;</a></div>
+		</header>
+
+		<article class="ac">
+			<div class="center-list J_centerItem">
+				<ul>
+					<?php $type = array(1 => '资讯', 3 => '活动'); ?>
+					<?php foreach($news as $key=>$value) {
+						if ($value['ntype'] == 1) $t_id = 'ZX'.$value['id'];
+						if ($value['ntype'] == 3) $t_id = 'HD'.$value['id'];
+						if(empty($value['thumb_img'])) {
+							$thumbImg = '';
+						} elseif((strpos($value['thumb_img'],'http://') !== false)){
+							$thumbImg = $value['thumb_img'];
+						} else{
+							$thumbImg = $attachPath . $value['thumb_img'];
+						}
+					?>
+					<li>
+						<a class="detail" href="<?php echo Common::tjurl($tjUrl, $value['id'], $t_id, $webroot.'/news/detail?id='.$value['id'].'&intersrc='.$t_id, '');?>&t_bi=<?php echo $source;?>">
+							<div class="photo"><img data-src="<?php echo $thumbImg;?>" src="<?php echo $staticResPath; ?>/pic/blank.gif"></div>
+							<div class="desc">
+								<h3><?php echo "【{$type[$value['ntype']]}】".$value['title'];?></h3>
+								<p><?php echo $value['resume'];?></p>
+							</div>
+						</a>
+					</li>
+					<?php }?>
+				</ul>
+			</div>
+			<?php if($hasnext) {?>
+			<div class="load-more J_loadMore" data-ajaxUrl="<?php echo $webroot.'/news/more/?intersrc='.$intersrc.'&t_bi='.$source;?>" data-hasnext="<?php echo $hasnext;?>" data-curpage="<?php echo $page;?>">
+				<span>加载更多</span>
+			</div>
+			<?php }?>
+		</article>
+        <div class="goTop J_gotoTop">
+			<a ></a>
+		</div>
+		<div class="suggest_field">
+				<h1>热门游戏</h1>
+				<ul class="list">
+				<?php 
+				$ad_ptype = array(1 => 'GID', 2 => 'CID', 3 => 'SID');
+				$col = 1;
+				?>
+				<?php foreach ($games as $key => $value){?>	
+				<?php  
+					    $tid = $ad_ptype[$value['ad_ptype']];
+					    $taid = substr($value['link'],strpos($value['link'],'=')+1);
+				?>
+					<li>
+						<a href="<?php echo Common::tjurl($tjUrl, $value['id'], 'ADA01'.$col.'_'.'ADID'.$value['id'].'_'.$tid.$taid, $value['link'],'ADA01'.$col.'_'.'ADID'.$value['id'].'_'.$tid.$taid);?>&t_bi=<?php echo $source;?>">
+							<img data-src="<?php echo $attachPath. $value['img'];?>" src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="<?php echo $value['title'];?>">
+						</a>
+					</li>
+				<?php 
+					$col +=1;
+					}?>
+				</ul>
+		</div>
+		<footer class="ft">
+			<div class="wchat" >
+				<img src="<?php echo $staticResPath;?>/pic/wechat.png" alt="" />
+				<div>
+				<p>欢迎关注我们的微信公众帐号！</p>
+				<p>微信号：JXH-20121220</p>
+			    </div>
+			</div>
+			<div class="quick-links">
+				<a href="<?php echo $webroot.'/contact?t_bi='.$source;?>">联系我们</a>
+				<a href="<?php echo $webroot.'/feedback?t_bi='.$source;?>">意见反馈</a>
+				<a href="<?php echo strpos($configs['game_link'], '?') == false ? $configs['game_link'].'&t_bi='.$source :$configs['game_link'].'?t_bi='.$source;?>"><?php echo $configs['game_title'];?></a>
+			</div>
+		</footer>
+	</div>
+</body>
+<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

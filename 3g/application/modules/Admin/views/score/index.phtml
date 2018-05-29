@@ -1,0 +1,87 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $indexUrl; ?>">积分总表</a></li>
+		</ul>
+	</div>
+
+	<form id="search">
+		<div>查询条件：</div>
+		<div>
+			<table>
+				<tr>
+					<td>类型:</td>
+					<td>
+						<select name="group_id">
+							<option value="0">请选择</option>
+							<?php foreach ($actionTypes as $k => $v) { ?>
+								<option value="<?php echo $k; ?>"><?php echo $v['val']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+					<td>动作:</td>
+					<td>
+						<select name="score_type">
+							<option value="0">请选择</option>
+							<?php foreach ($logTypes as $key => $val) { ?>
+								<option value="<?php echo $key; ?>"><?php echo $val ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>开始时间:</td>
+					<td>
+						<input type="text" id="start_time" name="start_time" width="80px;" value="<?php echo $sdata; ?>">
+					</td>
+					<td>结束时间:</td>
+					<td><input type="text" id="end_time" name="end_time" width="80px;" value="<?php echo $edate ?>">
+					</td>
+				</tr>
+				<tr>
+					<td>手机号：</td>
+					<td><input id="tel" name="tel" type="text" width="100px;" value="<?php echo $phone; ?>"></td>
+				</tr>
+			</table>
+			<div><input type="submit" value="确定"></div>
+		</div>
+
+	</form>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="10%">序号</td>
+				<td width="10%">用户手机号</td>
+				<td width="12%">活动类别</td>
+				<td width="12%">动作</td>
+				<td width="12%">变动前积分数</td>
+				<td width="12%">变动后积分数</td>
+				<td width="12%">受影响积分数</td>
+				<td width="20%">时间</td>
+			</tr>
+			<?php foreach ($data as $key => $value) {
+				?>
+				<tr class="ct">
+					<td><?php echo $value['id']; ?></td>
+					<td><?php echo $value['user_phone']; ?></td>
+					<td><?php echo $actionTypes[$value['group_id']]['val']; ?>
+					<td><?php echo $logTypes[$value['score_type']]; ?></td>
+					<td><?php echo $value['before_score']; ?></td>
+					<td><?php echo $value['after_score']; ?></td>
+					<td><?php echo $value['affected_score']; ?></td>
+					<td><?php echo date('Y-m-d H:i:s', $value['add_time']); ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?></div>
+
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#start_time').datetimepicker();
+			$('#end_time').datetimepicker();
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

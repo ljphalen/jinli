@@ -1,0 +1,44 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath ?>appjs/payment/paylist.js"></script>
+<section class="ajax_wrap">
+    <div id="pay_paymember_member">
+        <div class="content">
+        	<div class="userlist">
+        	    <?php echo $this->render("pay/filter.phtml"); ?>
+				<div class="user_veiw_list">
+					<table class="view_list_tb toggle_icon">
+						<thead>
+							<tr>
+								<th>名称</th>
+								<th class="on <?php if($_GET['sort'] == 'down' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="down">下载个数</th>
+								<th class="on <?php if($_GET['sort'] == 'purchase_times' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="purchase_times">购买个数</th>
+								<th class="on <?php if($_GET['sort'] == 'total' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="total">购买营业额(A币)</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach($members as $member){ ?>
+							<tr>
+								<td><?php echo $member['nick_name']; ?></td>
+								<td><?php echo $member['all_download_times']; ?></td>
+								<td><?php echo $member['all_purchase_times']; ?></td>
+								<td><?php echo $member['all_total']; ?></td>
+								<td><a class="btn_txt" href="/Admin/pay/memberinfo?memberId=<?php echo $member['user_id']; ?>">详情</a></td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
+				<?php echo $this->render("common/pageshow.phtml"); ?>
+        	</div>
+        </div><!-- content end -->
+    </div>
+</section>
+<script type="text/javascript">
+	$(function(){
+	});
+</script>
+</body>
+</html>

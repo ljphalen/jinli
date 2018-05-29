@@ -1,0 +1,57 @@
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="edit_form">
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr>
+			<th>名称</th>
+			<td>
+				<input type="text" style="width:250px;" class="easyui-textbox" name="name" required="true" value="<?php echo $info['name']; ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>卡片</th>
+			<td>
+				<select class="easyui-combobox" name="type_id">
+					<?php
+					foreach ($cates as $v):
+						$select = $info['type_id'] == $v['id'] ? 'selected="selected"' : '';
+						?>
+						<option value="<?php echo $v['id']; ?>" <?php echo $select;?>><?php echo $v['name']; ?></option>
+					<?php
+					endforeach;
+					?>
+				</select>
+		</tr>
+		<tr>
+			<th>样式</th>
+			<td>
+				<select class="easyui-combobox" name="style">
+					<?php
+					foreach ($styles as $k => $v):
+						$select = $info['style'] == $k ? 'selected="selected"' : '';
+						?>
+						<option value="<?php echo $k; ?>" <?php echo $select;?>><?php echo $v; ?></option>
+					<?php
+					endforeach;
+					?>
+				</select>
+		</tr>
+		<tr>
+			<th>状态</th>
+			<td>
+				<?php
+				foreach (Common::$status as $k => $name):
+					$checked = $info['status'] == $k ? 'checked="checked"' : '';
+					?>
+					<input type="radio" name="status" class="input" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+				<?php endforeach; ?>
+			</td>
+		</tr>
+		<tr>
+			<th>排序</th>
+			<td>
+				<input type="text" name="sort" class="easyui-numberspinner" style="width:80px" value="<?php echo $info['sort']; ?>">
+			</td>
+		</tr>
+	</table>
+</form>

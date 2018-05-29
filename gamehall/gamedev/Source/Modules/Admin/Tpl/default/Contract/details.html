@@ -1,0 +1,269 @@
+<style>
+    .edit{
+        display: none;
+    }
+</style>
+
+<div class="page">
+	<div class="pageContent">
+        <form method="post" action="__URL__/details_edit" class="pageForm required-validate"
+              class="pageForm required-validate" enctype="multipart/form-data"
+              onsubmit="return iframeCallback(this,dialogAjaxDone);">
+		<div class="pageFormContent" layoutH="58">
+            <if condition="$check eq '1'">
+
+            <div class="unit">
+                <label>APPID：</label>
+                <p class="show">{$vo.app_id}</p>
+            </div>
+            <div class="unit">
+                <label>应用名称：</label>
+                <p class="">{$vo.app_name}</p>
+            </div>
+            <div class="unit">
+                <label>合同类型：</label>
+                <p>
+                    <switch name="vo.type">
+                        <case value="0">主合同</case>
+                        <case value="1">续签合同</case>
+                    </switch>
+                </p>
+            </div>
+
+            <div class="unit">
+                <label>发票类型：</label>
+                <p>{$vo['receipt']|default="未填写"}</p>
+            </div>
+            <div class="unit">
+                <label>分成比例：</label>
+                <p class="show">{$vo.share|default="未填写"}</p>
+            </div>
+            <div class="unit">
+                <label>开户名称：</label>
+                <p class="show">{$vo.account_name|default="未填写"}</p>
+            </div>
+            <div class="unit">
+                <label>银行账号：</label>
+                <p class="show">{$vo.account_key|default="未填写"}</p>
+            </div>
+            <div class="unit">
+                <label>开户银行：</label>
+                <p class="show">{$vo.account_bank|default="未填写"}</p>
+            </div>
+            <div class="unit">
+                <label>公司名称：</label>
+                <p class="show">{$vo.company_name|default="未填写"}</p>
+            </div>
+            <div class="unit">
+                <label>联系地址：</label>
+                <p class="show">{$vo.province}{$vo.city}{$vo.address_detail}</p>
+            </div>
+            <div class="unit">
+                <label>联系人姓名：</label>
+                <p class="show">{$vo.contact|default="未填写"}</p>
+            </div>
+            <div class="unit">
+                <label>联系人邮箱：</label>
+                <p class="show">{$vo.contact_email|default="未填写"}</p>
+                <input name="contact_email" value="{$vo.contact_email}" class="edit require textInput valid" type="text" size="50">
+            </div>
+
+            <div class="unit">
+                <label>申请日期：</label>
+                <p>{$vo.ctime|date='Y/m/d',###}</p>
+            </div>
+
+            <div class="unit">
+                <label>合同有效期：</label>
+                <p>{$vo.vtime|date='Y/m/d',###} - {$vo.etime|date='Y/m/d',###}</p>
+            </div>
+
+            <div class="unit">
+                <label>合同文件：</label>
+                <p>
+                    <a href="{:Helper ( 'Apk' )->get_url ( 'user' )}{$vo.filepath}" target="_blank">{$vo.filename}</a>
+                </p>
+            </div>
+
+            <div class="unit show">
+                <label>合同状态：</label>
+                <p>{$vo.status}</p>
+            </div>
+            <div class="unit show">
+                <eq name="vo['status']" value="审核不通过">
+                <label style="color: red;">不通过原因：</label>
+                    <p style="color: red;">{$vo.notpass_reason}</p>
+                </eq>
+            </div>
+            <div class="unit show">
+                <eq name="vo['status']" value="审核不通过">
+                    <label style="color: red;">备注：</label>
+                    <p style="color: red;">{$vo.note}</p>
+                </eq>
+            </div>
+
+            <div class="unit show">
+                <label>审核人：</label>
+                <p class="">{$vo.checker|default="未填写"}</p>
+            </div>
+			<else/>
+                <div class="unit">
+                    <label>游戏名称：</label>
+                    <p class="show">{$vo.app_name}</p>
+                    <input name="app_name" value="{$vo.app_name}" class="edit require textInput valid" type="text" size="50">
+                </div>
+                <div class="unit">
+                    <label>游戏包名：</label>
+                    <p class="">{$vo.package}</p>
+                </div>
+
+                <div class="unit">
+                    <label>发票类型：</label>
+                    <p class="show">{$vo.receipt|default="未填写"}</p>
+                    <select name="receipt_id" class="edit">
+                        <option value="1" <if condition="$vo.receipt_id  eq '1' " >  selected </if> >A .&nbsp;&nbsp; 乙方结算时提供的为普通发票，税费率为：6%</option>
+                        <option value="2" <if condition="$vo.receipt_id  eq '2' " >  selected </if> >B.&nbsp; &nbsp; 乙方结算时提供税率为3%的增值税专用发票，税费率为：3%</option>
+                        <option value="3" <if condition="$vo.receipt_id  eq '3' " >  selected </if> >C.&nbsp; &nbsp; 乙方结算时提供税率为6%的增值税专用发票，税费率为：0%</option>
+                    </select>
+                </div>
+
+                <div class="unit">
+                    <label>分成比例：</label>
+                    <p class="show">{$vo.share|default="未填写"}</p>
+                    <input name="share" value="{$vo.share}" class="edit require textInput valid" type="text" size="50">
+                </div>
+                <div class="unit">
+                    <label>开户名称：</label>
+                    <p class="show">{$vo.account_name|default="未填写"}</p>
+                    <input name="account_name" value="{$vo.account_name}" class="edit require textInput valid" type="text" size="50">
+                </div>
+
+                <div class="unit">
+                    <label>银行账号：</label>
+                    <p class="show">{$vo.account_key|default="未填写"}</p>
+                    <input name="account_key" value="{$vo.account_key}" class="edit require textInput valid" type="text" size="50">
+                </div>
+
+                <div class="unit">
+                    <label>开户银行：</label>
+                    <p class="show">{$vo.account_bank|default="未填写"}</p>
+                    <input name="account_bank" value="{$vo.account_bank}" class="edit require textInput valid" type="text" size="50">
+                </div>
+
+                <div class="unit">
+                    <label>公司名称：</label>
+                    <p class="show">{$vo.company_name|default="未填写"}</p>
+                    <input name="company_name" value="{$vo.company_name}" class="edit require textInput valid" type="text" size="50">
+                </div>
+
+                <div class="unit">
+                    <label>联系地址：</label>
+                    <p class="show">{$vo.province}{$vo.city}{$vo.address_detail}</p>
+                    <div class="edit">
+                    	{:A("Dev://Misc")->area_show($vo[area], $vo[province], $vo[city]);}
+                    </div>
+                    <input name="address_detail" value="{$vo.address_detail}" class="edit require textInput valid" type="text" size="50">
+
+                </div>
+                <div class="unit">
+                    <label>联系人姓名：</label>
+                    <p class="show">{$vo.contact|default="未填写"}</p>
+                    <input name="contact" value="{$vo.contact}" class="edit require textInput valid" type="text" size="50">
+
+                </div>
+
+                <div class="unit">
+                    <label>联系人邮箱：</label>
+                    <p class="show">{$vo.contact_email|default="未填写"}</p>
+                    <input name="contact_email" value="{$vo.contact_email}" class="edit require textInput valid" type="text" size="50">
+                </div>
+
+                <div class="unit show">
+                    <label>金立商务对接人：</label>
+                    <p class="">{$joiner.name|default="未填写"}</p>
+                </div>
+
+
+                <div class="unit show">
+                    <label>对接人联系邮箱：</label>
+                    <p class="">{$joiner.email|default="未填写"}</p>
+                </div>
+
+                <div class="unit show">
+                    <label>审核人：</label>
+                    <p class="">{$vo.checker|default="未填写"}</p>
+                </div>
+
+                <div class="edit" id="editer">
+                    <label>修改人：</label>
+                    <p class="">{$Think.SESSION.loginUserName}</p>
+                    <input name="checker" value="{$Think.SESSION.loginUserName}" class="edit require textInput valid" type="hidden" size="50">
+                </div>
+
+                <div class="unit show">
+                    <label>状态：</label>
+                    <p>{$vo.status}</p>
+                </div>
+
+                <eq name="vo['status']" value="申请不通过">
+	                <div class="unit show">
+	                        <label style="color: red;">不通过原因： </label>
+	                        <p style="color: red;">{$vo.notpass_reason}</p>
+	                </div>
+                </eq>
+                <eq name="vo['status']" value="申请不通过">
+	                <div class="unit show">
+	                        <label style="color: red;">备注： </label>
+	                        <p style="color: red;">{$vo.note}</p>
+	                </div>
+                </eq>
+                <div class="unit">
+                    <input name="id" value="{$vo.id}" class="edit require textInput valid" type="hidden" size="50">
+                </div>
+                </if>
+		</div>
+		<div class="formBar">
+            <ul>
+                <if condition="$check neq '1'">
+                    <li class="show"><div class="buttonActive"><div class="buttonContent"><button id="edit_detail" type="button">修改</button></div></div></li>
+                    <li class="edit"><div class="buttonActive"><div class="buttonContent"><button id="edit_submit" type="submit">保存修改</button></div></div></li>
+                </if>
+                <li><div class="button"><div class="buttonContent"><button type="button" class="close">关闭</button></div></div></li>
+            </ul>
+        </div>
+        </form>
+	</div>
+</div>
+<script src="{:cdn('PUBLIC')}/common/js/city.js?{:C('JS_VERSION')}"></script>
+<script>
+    $(function () {
+	    function checkSub(){
+	        var area = $("select[name=area_area]").val();
+	        var province = $("select[name=area_province]").val();
+	        var city = $("select[name=area_city]").val();
+	
+	        if(area == ""){
+	            alertDialog("请选择所在地区");
+	            return false;
+	        }
+	        if(province == ""){
+	            alertDialog("请选择所在省份");
+	            return false;
+	        }
+	        if(city == ""){
+	            alertDialog("请选择所在城市");
+	            return false;
+	        }
+	    }
+	    $("#edit_detail").on('click',function(){
+	        $(".show").hide();
+	        $(".edit").show();
+	        $("#editer").addClass('unit');
+	    });
+	    $("#edit_submit").on('click',function(){
+	        checkSub();
+	    });
+
+    });
+
+</script>

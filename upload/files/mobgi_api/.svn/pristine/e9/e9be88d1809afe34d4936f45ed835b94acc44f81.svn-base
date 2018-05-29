@@ -1,0 +1,253 @@
+<style>
+    #gamelist{width:30%;background:#fff;border:1px solid #dedede;padding:5px;}
+    #gamelist li{width:100%;height:25px;line-height:25px;text-indent:15px;
+                 border-bottom:1px dashed #ccc;color:#666;cursor:pointer;}
+    </style>
+    <script src="{{rootUrl}}/js/games.js?ver={{staticVer}}" type="text/javascript"></script>
+    <script src="{{rootUrl}}/js/adclicktype.js" type="text/javascript"></script>
+    <div class="colMain">
+    <div class="title"><p class="fl">产品信息</p></div>
+    <form action="/reproduct/check_save" method="post" name="form">
+        <div class="main">
+            <div class="app-detail">
+                <ul class="form">
+                    <p> <span  style="font-size:18px">基本信息：</span>
+                    <li>
+                        <span class="label">平台类型：</span>
+                        <div class="fc">
+                            <select name="platform" id="platform">
+                                <option value="0">通用</option>
+                                <option value="1">Android</option>
+                                <option value="2">IOS</option>
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">产品名：</span>
+                        <input type="hidden" value="{{product.id}}" name="id">
+                        <input type="hidden" value="{{product.product_name}}" name="pname">
+                        <div class="fc">
+                            <select name="product_id" id='product_id' class="required" required onchange="autoProduct(0)">
+                                <!-- loop myproduct -->
+                                <option value="{{myproduct' value.id}}">{{myproduct' value.product_name}}</option>
+                                <!-- endloop -->
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">APPKEY：</span>
+                        <div class="fc">
+                            <input type="text" id="appkey" onkeyup="getGameinfo('gametype', 'pappkey')" onfocus="getGameinfo('gametype', 'pappkey')" name="pappkey" value="{{product.appkey}}" class="iText required" />
+                            <select id="gametype" onchange="getGameinfo('gametype', 'pappkey')">
+                                <option value="1" selected>名称</option>
+                                <option value="2">APPKEY</option>
+                            </select>
+                            <input type="hidden" name="appkey_is_right" value="1">
+                            <span class="red">*</span>
+                            <ul id="gamelist" style="display:none;">
+
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">包名：</span>
+                        <div class="fc">
+                            <input type="text" name="ppackage" id="ppackage" value="{{product.product_package}}" class="iText" />
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">版本号：</span>
+                        <div class="fc">
+                            <input type="text" name="product_version" id="product_version" value="{{product.product_version}}" class="iText" />
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">产品图标：</span>
+                        <div class="fc">
+                            <input type="text" name="picon" id="picon" value="{{product.product_icon}}" class="iText required"  style="width:500px;" />
+                            <input type="button" value="选择图片" class="submit pickimg" id="pickimg"/>
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                      <li>
+                        <span class="label">IOS启动标识：</span>
+                        <div class="fc">
+                            <textarea id="pdesc" class="iText"  name="ios_identify" style="width:500px;">{{product.ios_identify}}</textarea>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">产品介绍：</span>
+                        <div class="fc">
+                            <textarea id="pdesc" class="required" name="pdesc" style="width:500px;">{{product.product_desc}}</textarea>
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                     <li class="line"></li>
+                  
+                  	   <p> <span  style="font-size:18px">导量配置：</span>
+                    <li><span class="label"><input type="button" onclick="javascript:$(this).parent().parent().next().toggle();$(this).parent().parent().next().next().toggle();" value="自定义导量计划" class="cancel" style="width:120px"></span></li>
+                    <li style="display:none">
+                        <span class="label">导量限制：</span>
+                        <div class="fc">
+                            <div class="grid">
+                                <div class="gridToolbar"><input type="hidden" name="stat_limit" value='{{product.limitjson}}' /><a href="javascript:void(0)" id="addDL" class="btn fr">新增</a></div>
+                                <table id="DLGrid">
+                                    <thead>
+                                        <tr>
+                                            <th>规则名</th>
+                                            <th>内容</th>
+                                            <th>数值</th>
+                                            <th>内容</th>
+                                            <th>数值</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            <!-- if {{product.limit}} -->     
+                                            <!-- loop product.limit -->
+                                                <tr>
+                                                    <td id="{{product.limit' key}}">{{product.limit' key}}</td>
+                                                    <td>每天</td>
+                                                    <td>{{product.limit' value.day_limit}}</td>
+                                                    <td>总数</td>
+                                                    <td>{{product.limit' value.total_limit}}</td>
+                                                    <td>
+                                                        <a href="javascript:void(0)" class="edit" title="编辑"></a>
+                                                        |
+                                                        <a href="javascript:void(0)" class="del" title="删除"></a>
+                                                    </td>
+                                                </tr>
+                                            <!-- endloop -->
+                                        <!-- endif -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </li>
+                 
+                    <li style="display:none">
+                        <span class="label">导量计划：</span>
+                        <div class="fc">
+                            <div class="grid">
+                                <div class="gridToolbar"><input type="hidden" name="stat_plan" value='<!-- if {{product.planjson}}=="" -->{"stat_plan":[{"start_time":"Now","end_time":"Never"}]}<!-- else -->{{products.limitjson}}<!-- endif -->' /><a href="javascript:void(0)" id="addDLJH" class="btn fr">新增</a></div>
+                                <table id="DLJHGrid">
+                                    <thead>
+                                        <tr>
+                                            <th>序号</th>
+                                            <th>开始时间</th>
+                                            <th>结束时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                         <!-- if {{product.plan}} -->
+                                        <!-- loop product.plan -->
+                                                <!-- if {{product.plan' key}} == "default_pan" --> 
+                                                    <!-- loop product.plan.default_pan' key -->
+                                                        <tr>
+                                                            <td>{{product.plan.default_pan' key}}</td>
+                                                            <td><code><?php echo $v2["start_time"];?></code></td>
+                                                            <td><code><?php echo $v2["end_time"];?></td>
+                                                            <td>
+                                                                <a href="javascript:void(0)" class="edit" title="更新"></a>
+                                                                |
+                                                                <a href="javascript:void(0)" class="del" title="删除"></a>
+                                                            </td>
+                                                        </tr>
+                                                    <!-- endloop -->
+                                                <!-- else -->
+                                                    <!-- loop product.plan.default_pan' key -->
+                                                        <tr>
+                                                            <td>{{product.plan.default_pan' key}}</td>
+                                                            <td><code><?php echo $v2["start_time"];?></code></td>
+                                                            <td><code><?php echo $v2["end_time"];?></td>
+                                                            <td>
+                                                                <a href="javascript:void(0)" class="edit" title="更新"></a>
+                                                                |
+                                                                <a href="javascript:void(0)" class="del" title="删除"></a>
+                                                            </td>
+                                                        </tr>
+                                                    <!-- endloop -->
+                                                <!-- endif -->
+                                        <!-- endloop -->
+                                    <!-- endif -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="line"></li>
+                    <!--  选项卡start -->
+                    <li>
+                    	<div class="toolbar tabs"  style="margin-bottom:18px;">
+						    <ul class="fl">
+						        <li data-name="illustration"  class="cur"><a href="javascript:void(0);">插图配置与素材</a></li>
+						        <li data-name="video"><a href="javascript:void(0);">视频配置与素材</a></li>
+						    </ul>
+						</div>
+					    <!-- include "illustration_check" -->
+						<!-- include "video_check" -->
+                    </li>  <!--  选项卡endsffffssddddsdd-->
+                    <script>	 
+				    $(".tabs ul li").click(function(){
+				    	$(this).addClass("cur");
+				    	$(this).siblings().removeClass("cur");
+				    	if($(this).attr("data-name") =='illustration'){
+				    		$("#illustration").show();
+				    		$("#video").hide();
+				    	}else{
+				    		$("#illustration").hide();
+				    		$("#video").show();
+				    	}
+				    })
+				</script>
+                    
+                    
+                    <li>
+                        <span class="label">审核意见：</span>
+                        <div class="fc">
+                            <input type="text" value="" name="check_msg" class="iText" value="{{product.check_msg}}" />
+                            <input type="hidden" value="" name="ischeck" class="iText" />
+                        </div>
+                    </li>
+                    <li>
+                        <div class="fc">
+                            <input type="button" onclick="checkproduct(1)" value="审核通过" class="submit" />
+                            <input type="button" onclick="checkproduct(2)" value="审核驳回" class="cancel" />
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- include "inc" -->
+<script>
+function autoProduct(op) {
+    if (op == 0) {
+        $("#ad_title").find("tbody tr").remove();
+    }
+    $("input[name='id']").val($("select[name='product_id']").val());
+    $("input[name='pname']").val($("select[name='product_id']").find("option:selected").text());
+    ajaxPOST("/reproduct/autoProductinfo", {"product_name": $("input[name='pname']").val()}, function(data) {
+        append_resource(data)
+    })
+}
+$(function() {
+    setgameid('{{product.product_name}}')
+    $("#platform").val('{{product.platform}}');
+    $("input[name='id']").val($("select[name='product_id']").val());
+})
+function checkproduct(type){
+    $("input[name='ischeck']").val(type);
+    if(type==2 && $("input[name='check_msg']").val()==""){
+        alert("请输入审核意见");
+        $("input[name='check_msg']").focus();
+        return false;
+    }
+    $('form').submit();
+}    
+</script>
+<link media="screen" href="{{rootUrl}}/css/chosen.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>
+

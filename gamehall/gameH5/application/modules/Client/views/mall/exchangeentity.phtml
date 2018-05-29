@@ -1,0 +1,74 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+var isLoign = '<?php $isLogin ? 'true': 'false';?>';
+</script>
+<body>
+   <!-- 商品还可以兑换 -->
+   <?php if($good['remaind_num']) {?>
+	<div class="banner-container border-1px">
+		<img  alt="" src="<?php echo $attachPath. $good['img'];?>">
+		<span class="num-left entity-left">剩余：<em id="entityLeft"><?php echo $good['remaind_num'];?></em>个</span>
+		<span class="desc"><?php echo $good['consume_point'];?>积分兑换1个，每人最多兑换<?php echo $good['preson_limit_num'];?>个</span>
+		<span class="events-status status-ongoing"><i class="icon-clock"></i>剩余<?php echo floor(($good['end_time'] - Common::getTime()) /3600/24);?>天</span>
+	</div>
+
+	<div class="operation-container border-1px">
+		<span class="total-points">当前共<em id="totalPoints"><?php echo intval($userInfo['points']);?></em>积分</span>
+		<?php if(is_array($exchangeInfo) && $exchangeInfo['canExchangeNums']) {?>
+		<span class="consume-points">还可兑换<em id="canExchangeNums"><?php echo $exchangeInfo['canExchangeNums']; ?></em>个，消耗<em id="consumePoints"><?php echo $exchangeInfo['consumePoints'];?></em>积分</span>
+		<?php }?>
+		<?php if($exchangeInfo['canExchangeNums']) {?>
+		<div class="addressinfo-container tline">
+			<span class="address-tips">收货信息(用于积分抽奖和积分商城兑换地址)</span>
+			<div class="ad-info">
+				<em>收货人:</em><input id="name" name='receiver' class="btn-input" type="text" placeholder="姓名" value='<?php echo $userInfo['receiver'];?>'/>
+			</div>
+			<div class="ad-info">
+				<em>联系电话:</em><input id="phone" name='receiverphone' class="btn-input" type="text" placeholder="手机或固话" value='<?php echo $userInfo['receiverphone'];?>'/>
+			</div>
+			<div class="ad-info">
+				<em>收货地址:</em><textarea id="address" name='address' class="btn-input btn-textarea" rows="3"  placeholder="所在省市详细街道信息"><?php echo $userInfo['address'];?></textarea>
+			</div>
+		</div>
+		<?php }?>
+		<?php if(is_array($exchangeInfo) && $exchangeInfo['haveExchangeNum']) {?>
+		<span class="consume-points">您已经兑换了<em id="haveExchangeNum"><?php echo $exchangeInfo['haveExchangeNum'];?></em>个</span>
+		<?php } else if(is_array($exchangeInfo) && !$exchangeInfo['haveExchangeNum'] && !$exchangeInfo['canExchangeNums']) {?>
+		<span class="consume-points">您的积分不足</span>
+		<?php } ?>
+	</div>
+	
+	<?php if(is_array($exchangeInfo) && $exchangeInfo['canExchangeNums']) {?>
+	<div id="exEntityBtn" class="btn-container J-confirm" data-ajaxUrl="<?php echo $webroot; ?>/client/Mall/exchangeEntityPost/?goodId=<?php echo $good['id'].'&puuid='.$userInfo['uuid'].'&uname='.$userInfo['uname'];?>">
+		<a class="btn-orange ">确定</a>
+	</div>
+	<div class="J_dialog dialog invisible">	
+	</div>
+	<div class="J_loading loading-container invisible">
+		<i class="icon-loading"></i><span class="loading-tips">正在提交，请稍等...</span>
+	</div>
+    <?php }?>
+    
+	<!-- 商品兑换完 -->
+   <?php } else  {?>
+	<div class="banner-container border-1px">
+	    <img src="<?php echo $attachPath. $good['img'];?>">
+		<span class="events-status status-over"><i class="icon-clock"></i>已结束</span>
+	</div>
+	<div class="player-container border-1px">
+		<h1>本次共有<em><?php echo $logs[0];?></em>位玩家成功兑换了奖励，感谢各位的参与！</h1>
+		<ul id="playerList" class="player-list">
+			<?php foreach($logs[1] as $key=>$value){?>
+				<li class="tline">
+					<?php echo $value['no'] ;?>.<?php echo $value['nickname'] ;?>
+				</li>
+			<?php }?>
+		</ul>
+	</div>
+	<div class="<?php echo $loadingStyle;?> J_loadMore invisible" data-ajaxurl="<?php echo $webroot; ?>/client/Mall/exchangeOverMore?goodId=<?php echo $good['id'].'&puuid='.$userInfo['uuid'].'&uname='.$userInfo['uname'];?>" data-hasnext="<?php echo $logs[2] ? 'true' : 'false';?>" data-curpage="<?php echo $logs[3];?>">
+		<span class="load"></span>
+	</div>
+	<?php }?>
+</body>
+</html>

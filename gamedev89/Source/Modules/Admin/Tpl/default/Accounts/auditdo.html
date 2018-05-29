@@ -1,0 +1,55 @@
+<div class="page">
+	<div class="pageContent">
+	
+	<form method="post" action="__URL__/auditSave/navTabId/__MODULE__/" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone)">
+		<div class="pageFormContent" layoutH="58">
+		<input type="hidden" name="id" value="{$accounts.id}" >
+		<input type="hidden" name="ajax" value="1">
+		<input type="hidden" name="aduit_admin_id" value="1">
+			<div class="unit">
+				<label>审核结果：</label>
+				<select name="audited" class=”combox”>
+					<volist name="audited_list" id="audited">
+						<option value="{$key}" >{$audited}</option>
+					</volist>
+				</select>
+			</div>
+			<div class="unit">
+				<label>审核人：</label>
+				{$_SESSION['loginUserName']}
+			</div>
+			<div class="unit">
+				<label>审核日期：</label>
+				{:date('Y-m-d')}
+			</div>
+			<div class="unit">
+				<label>备         注：</label>
+				<select name="remarks" class=”combox” >
+					<volist name="reason_list" id="reason">
+						<option value="{$key}" >{$reason}</option>
+					</volist>
+				</select>
+			</div>
+			<div class="unit">
+				<label>&nbsp;</label>
+				<textarea name="reason_content" rows="3" cols="57"></textarea>
+			</div>
+			<div class="unit">
+				<label>&nbsp;</label>
+				<br/>
+				已通过审核无需填写备注信息。
+
+				未通过审核备注信息会展示给开发者，请简洁清楚描述未通过原因。
+			</div>
+			
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">提交</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+	
+	</div>
+</div>

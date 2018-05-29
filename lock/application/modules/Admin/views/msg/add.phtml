@@ -1,0 +1,43 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">push消息列表</a></li>
+    <li class="current"><a href="javascript:;">添加push消息</a></li>
+	</ul>
+</div>
+<div class="h_a">添加push消息</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">内容</th>
+			<td class="td"><textarea class="input" name="content" class="textarea wc" style="height:40px;width:600px"></textarea></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">启动目标</th>
+			<td class="td">
+				<select name="dest">
+<?php foreach($dest as $key=>$value) { ?>
+					<option value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php }?>
+				</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//表单数据提交
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Msg/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

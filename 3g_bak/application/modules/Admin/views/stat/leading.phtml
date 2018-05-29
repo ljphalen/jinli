@@ -1,0 +1,105 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<form method="post" action="<?php echo $baseUrl; ?>" id="addFrom">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">选择日期</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $params['sdate']; ?>"> 至
+						<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $params['edate']; ?>">
+
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">选择内容属性</th>
+					<td class="td"><select id="attrType" name="attrType" onchange="settypes(this.value, 0)">
+							<option>请选择</option>
+							<?php foreach ($params['attrubutes'] as $v) { ?>
+								<option value="<?php echo $v ?>" <?php if ($v == $params['attrType']) echo 'selected'; ?>><?php echo $v; ?></option>
+							<?php } ?>
+						</select></td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">选择渠道商</th>
+					<td class="td"><select name="channel" id="channel">
+							<?php foreach ($params['channels'] as $k => $v) { ?>
+								<option value="<?php echo $v['ch']; ?>" <?php if ($v['ch'] == $params['cval']) echo 'selected'; ?>><?php echo $v['name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">选择合作商</th>
+					<td class="td">
+						<select name="partner_id" id="partner_id">
+							<?php foreach ($params['partners'] as $k => $v) { ?>
+								<option value="<?php echo $v['id'] ?>" <?php if ($v['id'] == $params['partner_id']) echo 'selected'; ?>><?php echo $v['name'] ?></option>
+							<?php } ?>
+						</select>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<div class="h_a"><input type="button" value="数据导出" id="downLoad"><span style="padding-left: 800px;font-size:14px;">当前页合计:  <font id="amount" style="color:red"><?php echo $params['sum']; ?></font></span>
+	</div>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="ct">
+				<td class="td2">渠道商</td>
+				<td class="td2">内容</td>
+				<td class="td2"> URL</td>
+				<td class="td2">内容属性</td>
+				<td class="td2">合作商</td>
+				<td class="td2">上线时间</td>
+				<td class="td2">下线时间</td>
+				<td class="td2">点击量</td>
+			</tr>
+
+			<?php foreach ($list as $k => $v) { ?>
+				<tr class="ct">
+					<td class="td2"><?php echo $params['channel']['name'] ? $params['channel']['name'] : '普通'; ?></td>
+					<td class="td2"><?php echo mb_strlen($v['title'], 'utf-8') > 20 ? mb_substr($v['title'], 0, 20, 'utf-8') . '...' : $v['title']; ?></td>
+					<td class="td2"><?php echo strlen($v['link']) >= 45 ? substr($v['link'], 0, 45) . "..." : $v['link']; ?></td>
+					<td class="td2"><?php echo $v['style']; ?></td>
+					<td class="td2"><?php echo $v['partner'] ? $v['partner'] : '---'; ?>
+					<td class="td2"><?php echo date('Y-m-d H:i:s', $v['start_time']); ?></td>
+					<td class="td2"><?=date('Y-m-d H:i:s', $v['end_time']);?></td>
+					<td class="td2"><?php echo $v['clicked']; ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+
+	<script src="<?php echo $staticPath; ?>/js/admin/highcharts.js"></script>
+	<script src="<?php echo $staticPath; ?>/js/admin/exporting.js"></script>
+	<script src="<?php echo $staticPath; ?>/js/admin/stat.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			//$('#column').hide();
+
+			$("#sdate").datepicker({
+				dateFormat: 'yy-mm-dd'
+			});
+			$("#edate").datepicker({
+				dateFormat: 'yy-mm-dd'
+			});
+		})
+		$("#downLoad").bind('click', function () {
+			var sdate = $("#sdate").val();
+			var edate = $("#edate").val();
+			var attrType = $("#attrType").val();
+			var channel = $("#channel").val();
+			location.href = '<?php echo $baseUrl;?>?export=1&sdate=' + sdate + '&edate=' + edate + '&attrType=' + attrType + '&channel=' + channel;
+
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

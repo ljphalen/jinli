@@ -1,0 +1,48 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+</script>
+<div id="list-page">
+		<section class="wrap">
+			<div class="ad-topic">
+				<a >
+					<img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $attachPath. $info['img'];?>">
+					<div class="content">
+						<span><?php echo $info['resume']; ?></span>
+							<p><?php echo  date('Y-m-d',$info['start_time']); ?></p>
+					</div>
+				</a>
+			</div>
+			<div class="num-tips">共<?php echo $total;?>款游戏</div>
+			<div class="item-list J_gameItem">
+				<ul>
+					<?php if(count($games)){?>
+					<?php foreach($games as $key=>$value) {?>
+					<?php 
+					     $intersrc = 'SUBJECT'.$id;
+					     $href = $webroot.'/channel/index/detail/?id='.$value['id'].'&intersrc='.$intersrc.'&t_bi='.$source;
+					?>
+					<li>
+						<a data-infpage="<?php echo $value['name'].','.$href.','.$value['infpage'];?>">
+							<span class="icon"><img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $value['img'];?>"></span>
+							<span class="desc">
+								<em><?php echo $value['name'];?></em>
+								<p><em>大小：<?php echo $value['size'].'M';?></em></p>
+								<b><?php echo $value['resume'];?></b>
+							</span>
+						</a>
+					</li>
+					<?php }?>
+					<?php }?>
+				</ul>
+			</div>
+		</section>
+		<?php if($hasnext){ ?>
+			<div class="loading J_loadMore" style="display:none" data-ajaxUrl="<?php echo $webroot.'/channel/subject/moreSj/?id='.$id.'&intersrc='.$intersrc.'&t_bi='.$source;?>" data-hasnext="<?php echo $hasnext;?>" data-curpage="<?php echo $page;?>">
+			<span class="load"></span>
+            </div>
+	   <?php } ?>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

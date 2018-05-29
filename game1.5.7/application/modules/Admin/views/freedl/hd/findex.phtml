@@ -1,0 +1,70 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $listUrl;?>">免流量活动</a></li>
+		<li><a href="<?php echo $ulistUrl;?>">用户统计</a></li>
+        <li class="current"><a href="<?php echo $flistUrl;?>">流量统计</a></li>
+         <li><a href="<?php echo $blistUrl;?>">黑名单</a></li>
+	</ul>
+</div>
+<form action="<?php echo $flistUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+		    <th class="th">时间</th>
+			<td class="td" colspan="2"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo $s['start_time'];?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo $s['end_time'];?>" /></div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+	<span class="btn2"><span><button type="button" id="extportBtn">导出数据</button></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<span>共　<?php echo $total;?>　条结果&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;累计消耗流量　<?php echo $consum;?> M</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="120">月份</td>
+			<td width="120">本月消耗</td>
+			<td width="120">操作</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+		    <td><?php echo $value['year_month'];?></td>
+			<td><?php echo $value['month_consume'];?>M</td>
+			<td>
+			<a href="<?php echo $fdetailUrl;?>/?year_month=<?php echo $value['year_month'];?>&month_consume=<?php echo $value['month_consume'];?>" class="mr10">内容明细</a>
+			&nbsp;&nbsp;<a href="<?php echo $foindexUrl;?>/?year_month=<?php echo $value['year_month'];?>&month_consume=<?php echo $value['month_consume'];?>">运营商明细</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<div class="mr10 cc">
+	<form action="<?php echo $fexportUrl;?>" method="post" id="exportForm">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<input name="start_time" type="hidden" value="<?php echo $s['start_time'];?>" />
+	<input name="end_time" type="hidden" value="<?php echo $s['end_time'];?>" />
+	</form>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	 ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Freedl_Hd/findex');
+	});
+	$("#extportBtn").click(function(){
+		$("#exportForm").submit();
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

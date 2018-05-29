@@ -1,0 +1,67 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div id="page">
+		<header class="hd">
+			<div class="back-page">
+				<a href="<?php echo $webroot;?>"><img src="<?php echo $staticResPath;?>/pic/btn_backPage.png" alt="" /></a>
+			</div>
+			<h2>我的账户</h2>
+		</header>
+		
+		<article class="ac">
+			<div class="account-tab webkitbox">
+				<a href="<?php echo $webroot.'/user/want/index';?>">心愿清单</a>
+				<a class="selected">账号设置</a>
+			</div>
+			
+			<div class="account-inf">
+				<ul>
+					<li>
+						<h3>基本信息</h3>
+						<div class="desc">
+							<p>
+							账  号:<?php echo $user_info['username'];?><br />
+							用户名:<?php echo $user_info['realname'];?><br />
+							性  别:<?php echo $sex[$user_info['sex']];?><br />
+							生  日:<?php echo $user_info['birthday'] == '0000-00-00' ? '' : $user_info['birthday'] ;?>
+							</p>
+							<div class="edit"><a href="<?php echo $webroot.$userinfoUrl;?>">编辑<i>&raquo;</i></a></div>
+						</div>
+					</li>
+					<li>
+						<h3>第三方账号绑定</h3>
+						<div class="desc">
+							<p>淘宝账号:<?php echo $user_info['taobao_nick'];?></p>
+							<div class="edit"><a href="<?php echo $webroot.$getauthcodeUrl;?>">绑定<i>&raquo;</i></a></div>
+						</div>
+					</li>
+					<li>
+						<h3>收货人信息</h3>
+						<div class="desc">
+						<?php
+						if($consignees){
+						foreach ($consignees as $key=>$value) {
+						list($value['province'],) = explode('|', $value['province']);
+						list($value['city'],) = explode('|', $value['city']);
+						list($value['country'],) = explode('|', $value['country']);
+						?>
+							<p><?php echo $value['province'].'&nbsp;&nbsp;'.$value['city'].'&nbsp;&nbsp;'.$value['country'].'&nbsp;&nbsp;'.$value['address'].'&nbsp;&nbsp;'.$value['realname'].'&nbsp;&nbsp;'.$value['mobile'].'&nbsp;&nbsp;'.$value['phone'].'&nbsp;&nbsp;'.$value['postcode'];?></p>
+							<div class="edit"><a href="<?php echo $webroot.$editconsigneeUrl?>/?id=<?php echo $value['id'];?>">编辑<i>&raquo;</i></a></div>
+						<?php }}else{?>
+							<p>&nbsp;</p>
+							<div class="edit"><a href="<?php echo $webroot.$addconsigneeUrl;?>">添加<i>&raquo;</i></a></div>
+						<?php }?>
+						</div>
+					</li>
+				</ul>
+				<div class="log-out"><a href="" class="J_showDialog">退出登录</a></div>
+			</div>
+		</article>
+	</div>
+	
+	<div class="JS-dbMask"></div>
+    <div class="dialog-box J_dialogBox">
+    	<p>确认退出?</p>
+    	<div class="btn"><a href="<?php echo $webroot.'/user/login/logout';?>">确定</a><span>取消</span></div>
+    </div>
+</body>
+</html>

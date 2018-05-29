@@ -1,0 +1,75 @@
+{{pagerCss}}
+<div class="colMain">
+    <div class="title"><p class="fl">用户黑名单</p></div>
+    <div class="main">
+        <div class="toolbar">
+            <div class="search fl">                
+                <span>
+                <form action="/blacklist/blackuser" method="GET" id="search_form">
+                	<select name="data_from" id="data_from">
+                	<option value="db" <!-- if {{params.data_from}} == "db" -->selected<!-- endif -->>数据库</option>
+                	<option value="redis" <!-- if {{params.data_from}} == "redis" -->selected<!-- endif -->>redis</option>
+                	</select>
+                    <input type="text" class="iText" name='check' value='{{params.check}}' /><input type="submit" class="submit" value=" " />
+                    <span class="sign">可以按uuid或者udid来查询</span>
+                 </form>
+                </span>        
+            </div>
+            <div>
+            <span class="search fr">
+                 <form  action="/blacklist/flushuser" method="POST">
+                 <input type="submit"  class="add" style="width:150px" value="清空redis缓存" />
+                 </form>
+             	</span> 
+            	<span class="search fr" style="padding-right:30px">
+                 <form  action="/blacklist/adduser" method="POST">
+                 <select name='add_name' required>
+                 <option value="uuid" selected>uuid</option>
+                 <option value="udid" disabled="true" >udid</option>
+                 </select>
+                  <input type="text" class="iText requried"  name='add_value' required value='' /><input type="submit"  class="add" value="增加" />
+                 </form>
+             </span>   
+            </div>
+        </div>
+        <div class="content">
+            <div class="grid">
+                <table>
+                    <thead>
+                        <tr>
+                        	<th>黑名单用户ID</th>
+                            <th>uuid</th>
+                            <th>udid</th>
+                            <th>创建时间</th>
+                            <th>更新时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- loop result -->
+                        <tr>
+                            <td><span class="blue">{{result' value.id}}</span></td>
+                            <td>{{result' value.uuid}}</td>
+                            <td>{{result' value.udid}}</td>
+                            <td>{{date('Y-m-d H:i:s',result' value.created)}}</td>
+                            <td>{{date('Y-m-d H:i:s',result' value.updated)}}</td>
+                            <td>
+                                <a href="../blacklist/deleteuser?id={{result' value.id}}&data_from={{params.data_from}}&uuid={{result' value.uuid}}" class="del" title="删除"></a>
+                            </td>
+                        </tr> 
+                        <!-- endloop -->
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin: 20px auto; text-align: center;width:290px;">{{pager.pages}}</div>
+        </div>
+    </div>
+</div>
+<script>
+$(function(){
+	$("#data_from").change(function(){
+		$("#search_form").submit();
+		});
+	
+})
+</script>

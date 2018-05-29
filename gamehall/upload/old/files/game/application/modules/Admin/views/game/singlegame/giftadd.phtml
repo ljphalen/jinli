@@ -1,0 +1,130 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li class="current"><a href="javascript:;">编辑礼包</a></li>
+	</ul>
+</div>
+<form id="batchForm" action="<?php echo $giftAddPostUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="day_id" value="<?php echo $day_id;?>" type="hidden" />
+<div class="table_list">
+	<table id="table_list" width="100%">
+	<thead>
+		<tr class="hd">
+			<td width="10">排序</td>
+			<td width="20">礼包ID</td>
+			<td width="20">操作</td>
+			<td width="20">礼包名称</td>
+			<td width="20">删除</td>
+		</tr>
+	 </thead>
+	 <tbody>
+		<?php for ($key = 0; $key < 6; $key++) {?>
+		<tr class="ct">
+			<td><input type="text" style="width:50px" class="input" name="sort[]" value="<?php echo 6 - $key;?>"></td>
+			<td><input type="text" style="width:100px" class="input" name="giftId[]" value=""></td>
+			<td><button name="getGiftName" type="button">获取名称</button></td>
+			<td name="giftName"></td>
+			<td><a href="javascript:void(0);" name="deleteRow">删除</a></td>
+		</tr>
+	   <?php } ?>
+    </tbody>
+	</table>
+</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<td class="td" colspan="4"><button type="button" name="addGiftRow">添加新礼包</button></td>
+		</tr>
+		<tr class="tr">
+			<td class="td" width="10">标题(<span style="color: red">*</span>)</td>
+			<td class="td" width="30"><input type="text" class="input" name="title"></td>
+			<td class="td" width="10">状态(<span style="color: red">*</span>)</td>
+			<td class="td" width="30">
+			   <select name="status" class="wa">
+					<?php foreach($status_list as $key=>$value) {?>
+    			    <option value="<?php echo $key;?>" <?php if($key == 1) echo 'selected';?>><?php echo $value;?></option>
+    			    <?php }?>
+                </select>
+            </td>
+		</tr>
+    </table>
+</div>
+<div class="mb10 tac">
+    <span class="btn"><span><a href="<?php echo $editUrl.'?dayId='.$day_id;?>"><button type="button">返回</button></a></span></span>
+    <span class="btn"><span><button onfocus="blur();" type="submit">完成</button></span></span>
+</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $editUrl.'?dayId='.$day_id;?>');
+	});
+
+	var fixHelperModified = function(e, tr) {
+	    var $originals = tr.children();
+	    var $helper = tr.clone();
+	    $helper.children().each(function(index) {
+	        $(this).width($originals.eq(index).width())
+	    });
+	    return $helper;
+	};
+	var updateIndex = function(e, ui) {
+		updateSort();
+	};
+    
+	$("#table_list tbody").sortable({
+	    helper: fixHelperModified,
+	    stop: updateIndex
+	});
+	$("#table_list tbody").disableSelection();
+
+    var updateSort = function() {
+    	var length = $("#table_list tbody tr").length;;
+    	$("input[name^='sort']", $("#table_list tbody tr")).each(function (i) {
+			$(this).val(length - i);
+		});
+    };
+
+	$("a[name='deleteRow']").click(function() {
+		if($("#table_list tbody tr").length <= 1) {
+	    	alert("不能少于1个");
+		    return ;
+		}
+	    this.parentNode.parentNode.remove();
+		updateSort();
+	});
+
+	$("button[name='addGiftRow']").click(function() {
+		var tbody=$("#table_list tbody");
+		var trNode = $("#table_list tbody tr").eq(0).clone(true);
+		trNode.find("input[name^='giftId']").val("");
+		trNode.find("td[name='giftName']").text("");
+		trNode.appendTo(tbody);
+		updateSort();
+	});
+
+	$("button[name='getGiftName']").click(function() {
+	    var idInput = $(this).parent().parent().find("input[name^='giftId']");
+	    var giftId = idInput.val();
+	    if(! giftId) {
+	    	alert("请输入礼包ID");
+		    return ;
+		}
+	    var giftNameTd = $(this).parent().parent().find("td[name='giftName']");
+	    $.post("<?php echo $queryGiftNameUrl;?>",
+	    	{token:"<?php echo $token;?>", giftId: giftId},
+    	    function(result, status){
+    	        if(result.success) {
+    		        giftNameTd.text(result.msg);
+    	    	}else{
+    		    	alert(result.msg);
+    	    	}
+    	    }
+	    );
+	});
+	
+	
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

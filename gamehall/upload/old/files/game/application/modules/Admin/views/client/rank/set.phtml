@@ -1,0 +1,101 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $newUrl;?>">最新发布</a></li>
+	    <li><a href="<?php echo $listUrl;?>">下载最多</a></li>
+	    <li><a href="<?php echo $monthUrl;?>">月榜</a></li>
+	    <li><a href="<?php echo $olrankUrl;?>">网游活跃榜</a></li>
+	    <li><a href="<?php echo $soaringUrl;?>">游戏飙升榜</a></li>
+        <li class="current"><a href="<?php echo $setUrl;?>">排行榜设置</a></li>
+        <li><a href="<?php echo $manUrl;?>">排行榜管理</a></li>
+        <li><a href="<?php echo $weekUrl;?>">周榜管理</a></li>
+	</ul>
+</div>
+<form method="post" action="<?php echo $editUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="h_a">设置排行榜</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">最新发布数量</th>
+				<td class="td">
+					<input name="game_rank_newnum" class="input" value="<?php echo $configs['game_rank_newnum'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">下载最多数量/周榜</th>
+				<td class="td">
+					<input name="game_rank_mostnum" class="input" value="<?php echo $configs['game_rank_mostnum'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">月榜</th>
+				<td class="td">
+					<input name="game_rank_monthnum" class="input" value="<?php echo $configs['game_rank_monthnum'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">周榜</th>
+				<td class="td">
+					<input name="game_rank_weeknum" class="input" value="<?php echo $configs['game_rank_weeknum'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">新游榜</th>
+				<td class="td">
+					<input name="game_rank_cnewnum" class="input" value="<?php echo $configs['game_rank_cnewnum'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">上升最快</th>
+				<td class="td">
+					<input name="game_rank_fastestnum" class="input" value="<?php echo $configs['game_rank_fastestnum'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">网游榜</th>
+				<td class="td">
+					<input name="game_rank_onlineknum" class="input" value="<?php echo $configs['game_rank_onlineknum'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">单机榜</th>
+				<td class="td">
+					<input name="game_rank_pcnum" class="input" value="<?php echo $configs['game_rank_pcnum'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">网游活跃榜</th>
+				<td class="td">
+					<input name="game_rank_olranknum" class="input" value="<?php echo $configs['game_rank_olranknum'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">游戏飙升榜</th>
+				<td class="td">
+					<input name="game_rank_soaringnum" class="input" value="<?php echo $configs['game_rank_soaringnum'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">默认位置</th>
+				<td class="td">
+					<select name="game_client_rank">
+                	<option <?php if($configs['game_client_rank'] == 1) echo 'selected';?> value="1">最新发布</option>
+                	<option <?php if($configs['game_client_rank'] == 0) echo 'selected';?> value="0">下载最多/周榜</option>
+            	</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Rank/set');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

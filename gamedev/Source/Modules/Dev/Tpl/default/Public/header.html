@@ -1,0 +1,28 @@
+<include file="Public:header_min" />
+	<div class="topLogin">
+		<div class="w">
+			<gt name="uid" value="0">
+				<a href="{:U('user/info')}">{$user['company']|default="用户中心"}</a><i></i><a href="{:U('message/index')}">站内信</a><i></i><a href="{:U('Login/logout')}">退出</a>
+			<else/>
+				<a href="{:U('login/login')}">登录</a><i>|</i><a href="{:U('login/reg')}">注册</a>
+			</gt>
+		</div>
+	</div>
+	<?php if( in_array(strtolower(MODULE_NAME), array("user", "apps", "union", "chart", "message", "help"))): ?>
+	<div class="loginNav">
+		<div class="w">
+			<a href="{:U('/')}" class="nlogo" title="{:C('SMTP.SMTP_NAME')}"><img src="{:cdn('PUBLIC')}/common/images/logo.png" alt="login"></a>
+			<ul>
+				<li id="help_tab1"><a href="{:U('help/index')}" >文档中心</a></li>
+				<li id="chart_tab1"><a href="{:U('chart/index')}" >数据统计</a></li>
+				<li id="union_tab1"><a href="{:U('union/index')}" >游戏联运</a></li>
+				<li id="apps_tab1"><a href="{:U('apps/index')}" >应用管理</a></li>
+				<li><a href="{:U('/')}">首页</a></li>
+			</ul>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<script>$("#<?php echo strtolower(MODULE_NAME);?>_tab1").addClass("this");</script>
+	<?php endif; ?>
+<div id="wrap">
+	<div class="container">

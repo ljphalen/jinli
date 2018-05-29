@@ -1,0 +1,39 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">规则列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加规则</a></li>
+	</ul>
+</div>
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="50">ID</td>
+			<td width="80">平台</td>
+			<td width="80">类型名称</td>
+			<td width="60">规则</td>
+			<td width="60">状态</td>
+			<td width="80">操作</td>
+		</tr>
+<?php foreach($data as $key => $value) { ?>
+		<tr class="ct <?php if($value['status']) echo 'blue';?>">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['src'];?></td>
+			<td><?php echo $value['type'];?></td>
+			<td><?php echo $value['preg'];?></td>
+            <td><?php echo $value['status'] == 1 ? '开启' : '关闭';?></td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+
+<?php echo $this->render("layout/footer.phtml");?>
+

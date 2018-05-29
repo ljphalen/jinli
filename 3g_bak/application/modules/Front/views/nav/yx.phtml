@@ -1,0 +1,193 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title></title>
+<style type="text/css">
+	*{
+		margin:0;
+		padding: 0;
+	}
+	body{
+		position: relative;
+		background: #f9f5ed;
+		min-height: 800px;
+	}
+	p{
+		text-align: center;
+	}
+	p img{
+		width: 100%;
+
+		max-width: 360px;
+		vertical-align: top;
+	}
+
+
+	.reg-box{
+		position: absolute;
+		left:50%; margin-left:-180px;
+		width:360px;
+		bottom: 140px;
+	}
+
+	@media only screen 
+	and (min-device-width : 320px) 
+	and (max-device-width : 480px) {
+		.reg-box{
+			position: absolute;
+			left:50%; margin-left:-160px;
+			width:320px;
+			bottom: 100px;
+		}
+	}
+
+	@media only screen 
+	and (min-device-width : 481px) 
+	and (max-device-width : 1280px) {
+		.reg-box{
+			position: absolute;
+			left:50%; margin-left:-180px;
+			width:360px;
+			bottom: 140px;
+		}
+	}
+
+	#step3 {
+		text-align: center;
+		color: #82b630;
+		margin-top: -100px;
+	}
+	#step3 p{
+		margin-top: 5px;
+	}
+
+	.reg-box .filed{
+		margin-bottom: 10px;
+		width: 300px;
+		margin:0 auto 10px;
+		overflow: hidden;
+	}
+
+	.reg-box .input{
+		float: left;
+		display: inline-block;
+		width: 300px;
+		border: 1px solid #efefef;
+		outline: none;
+		padding: 10px 5px;
+		box-sizing:border-box;
+	}
+	.reg-box .btn{
+		border: 0;
+		outline: 0;
+		width: 300px;
+		display: inline-block;
+		background: #ff9000;
+		color:#fff;
+		padding: 10px 5px;
+	}
+	.reg-box .btn1{
+		float: right;
+		border: 0;
+		outline: 0;
+		width: 110px;
+		display: inline-block;
+		background: #ddd;
+		color:#333;
+		padding: 10px 0px;
+		text-align: center;
+	}
+
+	.reg-box .btn2{
+		border: 0;
+		outline: 0;
+		width: 65px;
+		height: 25px;
+		display: inline-block;
+		vertical-align: middle;
+		margin: 6px 5px 0 0;
+	}
+
+	.reg-box .img-code{
+		float: left;
+		margin-left: 10px;
+		width: 170px;
+		overflow: hidden;
+	}
+	.reg-box .img-code span{
+		font-size: 10px;
+		color:#4982D6;
+	}
+
+	.none{
+		display: none;
+	}	
+
+	audio{
+		background: #ccc;
+		border:0;
+		width: 100%;
+	}
+
+</style>
+<script> var token ='<?php echo $token;?>';</script>
+</head>
+
+<body>
+	<p><img src="<?php echo $staticResPath;?>/act/youxin/pic/20140827_01.jpg" /></p>
+	<p><img src="<?php echo $staticResPath;?>/act/youxin/pic/20140827_02.jpg" /></p>
+	<p><img src="<?php echo $staticResPath;?>/act/youxin/pic/20140827_03.jpg" /></p>
+	<p><img src="<?php echo $staticResPath;?>/act/youxin/pic/20140827_04.jpg" /></p>
+	<p><img src="<?php echo $staticResPath;?>/act/youxin/pic/20140827_05.jpg" /></p>
+	<div class="reg-box">
+		<form action="">
+			<div id="step1">
+				<div class="filed">
+					<input class="input input-tel" type="text" name="tel" maxLength="11" placeholder="请输入手机号码" />
+				</div>
+				<div class="filed">
+					<input class="input input-code" style="width:180px;" type="text" name="code" placeholder="请输入验证码" />
+					<input id="getCode" data-url="<?php echo $webroot?>/User/Account/getSmsVierifyCode" class="btn1" type="button" name="codeBtn" value="获取验证码" />
+				</div>
+				<div class="filed">
+					<input id="btn-next" data-url="<?php echo $webroot?>/User/Account/registerBySms" class="btn" type="button" name="submit" value="下一步" />
+				</div>
+			</div>
+			<div id="step10" class="none">
+				<div class="filed">
+					<input class="input input-tel1" disabled="disabled" type="text" name="tel" maxLength="11" placeholder="请输入手机号码" />
+				</div>
+				<div id="imgCode" class="filed">
+					<input class="input input-image" style="width:120px;" type="text" name="code" placeholder="请输入验证码" />
+					<span class="img-code"><img id="getImgCode"  data-url="<?php echo $webroot;?>/user/Account/getImageCode"  class="btn2" src="" /><span>点击图片刷新</span></span>
+				</div>
+				<div id="" class="filed">
+					<input id="btn-next2" data-url="<?php echo $webroot?>/User/Account/gvcRegister" class="btn" type="button" name="submit" value="下一步" />
+				</div>
+			</div>
+			<div id="step2" class="none">
+				<div class="filed">
+					<input class="input input-pass" type="text" name="tel" placeholder="请输入密码" />
+				</div>
+				<div class="filed">
+					<input class="input input-repass" type="text" name="repass" placeholder="请输入确认密码" />
+				</div>
+				<div class="filed">
+					<input id="btn-reg" data-url="<?php echo $webroot?>/User/Account/setPassword" class="btn" type="button" name="submit" value="立即注册" />
+				</div>
+			</div>
+			<div id="step3" class="none">
+				<h2>注册成功！</h2>
+				<p>9月4日，客官记得回来哦！</p>
+			</div>
+		</form>
+	</div>
+<script type="text/javascript" src="<?php echo $staticResPath;?>/act/youxin/js/main.js"></script>
+</body>
+</html>

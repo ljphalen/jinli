@@ -1,0 +1,289 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $indexUrl;?>?s=1">订单列表</a></li>
+    <li class="current"><a href="javascript:;">查看订单</a></li>
+	</ul>
+</div>
+<div class="h_a">订单信息</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">订单编号</th>
+			<td class="td" style="width:30%"><?php echo $order['trade_no'];?></td>
+			<th class="th">订单状态</th>
+			<td class="td" style="width:30%"><?php echo Gou_Service_Order::orderStatus($order['status']);?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">外部订单号</th>
+			<td class="td" style="width:30%"><?php echo $order['out_trade_no'];?></td>
+			<th class="th">商品价格</th>
+			<td class="td" style="width:30%"><?php echo $order['deal_price'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">生成时间</th>
+			<td class="td" style="width:30%"><?php echo date('Y-m-d H:i:s', $order['create_time']);?></td>
+			<th class="th">付款时间</th>
+			<td class="td" style="width:30%"><?php echo $order['pay_time'] ? date('Y-m-d H:i:s', $order['pay_time']) : '';?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">确认收货时间</th>
+			<td class="td" style="width:30%"><?php echo $order['take_time'] ? date('Y-m-d H:i:s', $order['take_time']) : '';?></td>
+			<th class="th">实付款</th>
+			<td class="td" style="width:30%"><?php echo $order['real_price'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">付款方式</th>
+			<td class="td" style="width:30%"><?php echo $order['pay_type'] == 1 ? '在线支付' : '货到付款';?></td>
+			<th class="th">商品数量</th>
+			<td class="td edit_data" style="width:30%" form-name="number"><?php echo $order['number'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">买家留言</th>
+			<td class="td" colspan="3"><?php echo $order['gbook'];?></td>			
+		</tr>
+		<?php if($order_refund) {?>
+		<tr class="tr">
+			<th class="th">退款订单号</th>
+			<td class="td" style="width:30%"><?php echo $order_refund['refund_no'];?></td>
+			<th class="th">支付退款订单号</th>
+			<td class="td edit_data" style="width:30%" form-name="number"><?php echo $order_refund['out_refund_no'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">退款状态</th>
+			<td class="td" style="width:30%"><?php echo Gou_Service_OrderRefund::refundStatus($order_refund['status']);?></td>
+			<th class="th">描述</th>
+			<td class="td edit_data" style="width:30%" form-name="number"><?php echo $order_refund['description'];?></td>
+		</tr>
+		<?php }?>
+	</table>
+</div>
+
+
+<div class="h_a">商品信息</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">商品名称</th>
+			<td class="td" style="width:30%"><?php echo $goods['title'];?></td>
+			<th class="th">商品价格</th>
+			<td class="td" style="width:30%"><?php echo $goods['price'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">供应商</th>
+			<td class="td" style="width:30%"><?php echo $supplier['name']?></td>
+			<th class="th">市场价</th>
+			<td class="td" style="width:30%"><?php echo $goods['price'];?></td>
+		</tr>
+	</table>
+</div>
+
+<div class="h_a">优惠及配送</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">运送方式</th>
+			<td class="td" style="width:30%">卖家包邮</td>
+			<th class="th">优惠额</th>
+			<td class="td" style="width:30%"><?php echo Common::money($order['deal_price'] - $order['real_price']);?></td>
+		</tr>
+	</table>
+</div>
+
+<?php if($goods['goods_type'] !=1 ) {?>
+<div class="h_a">收货信息</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">收货人</th>
+			<td class="td edit_data" style="width:30%" form-name="buyer_name"><?php echo $address['buyer_name'];?></td>
+			<th class="th">手机号码</th>
+			<td class="td edit_data" style="width:30%" form-name="mobile"><?php echo $address['mobile'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">邮编</th>
+			<td class="td edit_data" style="width:30%" form-name="postcode"><?php echo $address['postcode'];?></td>
+			<th class="th">收货地址</th>
+			<td class="td" style="width:30%">
+				<div class="edit_address"><?php echo $address['adds'],$address['detail_address'];?></div>
+				<div class="J_areaWrap" old-aNode="<?php echo $addressSub;?>" style="display: none;">
+					<select name="province" id="J_province"></select>
+					<select name="city" id="J_city"></select>
+					<select name="country" id="J_country"></select>
+					<input id="detail_address" class="input" value="<?php echo $address['detail_address'];?>">
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<?php }?>
+<div class="h_a">操作</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" id="order_id" value="<?php echo $order['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th" style="width:20%">订单状态</th>
+			<td class="td">
+				<select name="status" id="select">
+					<?php foreach ($orderStatus as $key=>$value) {?>
+					<option <?php if($order['status'] == $key) echo 'selected';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+					<?php }?>
+				</select>
+			</td>
+		</tr>
+		<?php if($goods['goods_type'] !=1) {?>
+		<tr class="tr">
+			<th class="th">快递单号</th>
+			<td class="td">
+				<select name="shippingCrop">
+					<option>...请选择物流公司...</option>
+					<?php foreach ($shipping as $value) {?>
+					<option <?php if($shippingArr[0] == $value['title']) echo 'selected';?> value="<?php echo $value['title'];?>"><?php echo $value['title'];?></option>
+					<?php }?>
+				</select>
+				<input class="input wb" type="text" name="express_code" value="<?php echo $shippingArr[1];?>">
+			</td>
+		</tr>
+		<?php }?>
+		<tr class="tr" id="refund_reason" style="<?php echo $order['refund_reason'] ? '' : 'display:none';?>">
+			<th class="th">退款原因</th>
+			<td class="td">
+				<textarea rows="1" cols="100" name="refund_reason"><?php echo $order['refund_reason'];?></textarea>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">备注</th>
+			<td class="td">
+				<textarea rows="5" cols="100" name="remark"><?php echo $order['remark'];?></textarea>
+			</td>
+		</tr>
+	</table>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+</div>
+
+<div class="h_a">订单操作日志</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>操作人</td>
+			<td>时间</td>
+			<td>操作内容</td>
+		</tr>
+		<?php foreach($log as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['uid'] ? Admin_Service_User::getUserNameByUID($value['uid']): '系统';?></td>
+			<td><?php echo $value['create_time']?date('Y-m-d H:i:s',$value['create_time']) : '';?></td>
+			<td><?php echo Gou_Service_Order::formatLog($value['update_data']); ?></td>
+		</tr>
+		<?php } ?>
+	</table>
+</div>
+<script type="text/javascript" src="<?php echo $staticRoot;?>/apps/admin/js/admin/area/dataArea.js"></script>
+<script type="text/javascript" src="<?php echo $staticRoot;?>/apps/admin/js/admin/area/linkage.js"></script>
+<script type="text/javascript">
+var areaWrap = $('.J_areaWrap'), oS = areaWrap.find('select');
+$.linkage({
+	isArea: true,
+	areaWrap: areaWrap,
+	s1: oS.eq(0),
+	s2: oS.eq(1),
+	s3: oS.eq(2),
+	aNode: areaWrap.attr('old-aNode') || ''
+});
+
+//用户表单数据提交
+$(document).ready(function(){
+	var currPayType = <?php echo $order['pay_type'];?>;
+	var currOrderStatus = <?php echo $order['status'];?>;
+
+	$('.edit_data').dblclick(function(){
+		var order_id = $('#order_id').val();
+		var value = $(this).text();
+		var formname = $(this).attr('form-name');
+
+		var codStatus = [1,2,3];
+		if (currPayType == 1 && formname == 'number'){
+			return false;
+		} else if (currPayType == 2 && currOrderStatus > 3){
+			return false;
+		}
+
+		
+		if (value != '' && formname != ''){
+			$(this).html('<input id="'+formname+'" class="input" value="'+value+'">');
+
+			$('#'+formname).blur(function(){
+				var newValue = $('#'+formname).val();
+				$.ajax({
+					url:'<?php echo $editOrderAjax; ?>',
+					type:'post',
+					data:'order_id='+order_id+'&value='+newValue+'&cloumn='+formname+'&isaddress=0&token=<?php echo $token;?>',
+					success:function(msg){
+						if (msg == 1){
+							$('#'+formname).parent().text($('#'+formname).val());
+							$('#'+formname).remove();
+						}
+					}
+				}); // end ajax
+			});
+		}// end if
+	});
+
+	$('.edit_address').dblclick(function(){
+		if (currPayType == 2 && currOrderStatus>3){
+			return false;
+		}
+		
+		$('.edit_address').css('display', 'none');
+		$('.J_areaWrap').css('display', 'block');
+
+		$('#detail_address').blur(function(){
+			var order_id = $('#order_id').val();
+			var detail_address = $('#detail_address').val();
+			var province = $('#J_province').val();
+			var city = $('#J_city').val();
+			var country = $('#J_country').val();
+			if (detail_address != '' && province.split("|")[1] != undefined && 
+					city.split("|")[1] != undefined && country.split("|")[1] != undefined){
+				$.ajax({
+					url:'<?php echo $editOrderAjax; ?>',
+					type:'post',
+					data:'order_id='+order_id+'&province='+province+
+						'&city='+city+'&country='+country+
+						'&detail_address='+detail_address+
+						'&isaddress=1&token=<?php echo $token;?>',
+					success:function(msg){
+						if (msg == 1){
+							$('.edit_address').text(province.split("|")[0] + ' ' + 
+									city.split("|")[0] + ' ' + 
+									country.split("|")[0] + ' ' + 
+									detail_address);
+							$('.edit_address').css('display', 'block');
+							$('.J_areaWrap').css('display', 'none');
+						}
+					}
+				}); // end ajax
+			}
+			
+		}); 
+	});
+	
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/admin/Amigo_order/index?s=1');
+	});
+
+	$('#select').change(function(){
+		option = $(this).children('option:selected').val();
+        if(option == '10'){
+        	$('#refund_reason').show();
+        }else{
+        	$('#refund_reason').hide();
+        }        
+    });
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

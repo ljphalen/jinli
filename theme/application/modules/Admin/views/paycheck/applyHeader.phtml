@@ -1,0 +1,36 @@
+<div class="com_tb_wrap desginer_tb">
+	<ul id="desinger_type_tab">
+		<li class="<?php if($type=='personal') echo 'hover'; ?>" val="personal">个人设计师</li>
+		<li class="<?php if($type=='company') echo 'hover'; ?>" val="company">企业设计师</li>
+	</ul>
+</div><!--com_tb_wrap end-->
+<div class="com_tb_wrap">
+    <div class="com_tb">
+        <label class="tb_cell">搜索:</label>
+        <div class="tb_cont tb_cell">
+            <input type="text" style="width:350px;" class="rd_1 search_name" value="<?php echo $_GET['keyword']; ?>">
+            <button class="btn_s2 detial_search_btn" id="search_btn">搜索</button>
+            <span class="checkout fr">导出EXCEL</span>
+        </div>
+    </div><!-- com_tb end -->
+</div><!--com_tb_wrap end-->
+<script type="text/javascript">
+	$(function(){
+		//搜索关键词
+		$("#search_btn").click(function(){
+			var keyword = $(".search_name").val();
+			var url = location.pathname+'?keyword='+keyword;
+			window.location.href=url; 
+		});
+		//tab切换
+		$("#desinger_type_tab").find('li').click(function(){
+			var type = $(this).attr('val');
+			if(type=='personal'){
+				var url = '/admin/paycheck/personalapply';
+			} else {
+				var url = '/admin/paycheck/companyapply';
+			}
+			window.location.href=url; 
+		});
+	});
+</script>

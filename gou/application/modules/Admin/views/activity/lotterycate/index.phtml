@@ -1,0 +1,39 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li class="current"><a href="<?php echo $indexUrl;?>">活动列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加活动</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="30">排序</td>
+			<td width="30">ID</td>
+			<td width="200">活动名称</td>
+			<td width="100">奖品数量</td>
+			<td width="100">开始日期</td>
+			<td width="100">结束日期</td>
+			<td width="100">状态</td>
+			<td width="120">操作</td>
+		</tr>
+		<?php if (!empty($list)): foreach ($list as $val):?>
+		<tr class="ct">
+			<td><?php echo $val['sort'];?></td>
+			<td><?php echo $val['id'];?></td>
+			<td><?php echo $val['title'];?></td>
+			<td><?php echo $val['awards_num'];?></td>
+			<td><?php echo date("Y-m-d",$val['start_time']);?></td>
+			<td><?php echo date("Y-m-d",$val['end_time']);?></td>
+			<td><?php echo $val['status']==1 ? '开启' : '关闭';?></td>
+			<td>
+				<a href="<?php echo $awardsUrl;?>/?cate_id=<?php echo $val['id'];?>" class="mr10">明细列表</a>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $val['id'];?>" class="mr10">编辑</a>
+				<a style="" href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $val['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+		<?php endforeach; endif;?>
+	</table>
+</div>
+<div class="mr10 cc"><?php echo $pager;?></div>
+<?php echo $this->render("layout/footer.phtml");?>

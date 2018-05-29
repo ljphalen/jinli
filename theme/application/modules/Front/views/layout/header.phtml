@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<?php if ($cache) { ?>
+    <html manifest="/cache?cn=<?php echo $cn . '&pt=' . $pt; ?>">
+    <?php } else {
+        ?>
+        <html>
+        <?php } ?>
+        <head>
+            <meta charset="utf-8">
+            <title></title>
+            <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+            <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+            <meta name="format-detection" content="telephone=no" />
+            <link rel="stylesheet" href="<?php echo $staticSysPath; ?>/reset/mpcore.css?v=<?php echo $version; ?>" />
+            <link rel="stylesheet" href="<?php echo $staticResPath; ?>/assets/css/theme.css?v=<?php echo $version; ?>" />
+            <?php if (!$phoneGap) { ?>
+                <script type="text/javascript" src="<?php echo $staticroot; ?>??/sys/icat/1.1.5/icat.js,/apps/theme/assets/js/cordova-2.0.0.js,/apps/theme/assets/js/theme.js?v=<?php echo $version; ?>"></script>
+            <?php } ?>
+            <script type="text/javascript">
+                var token = '<?php echo $token; ?>';
+            </script>
+        </head>
+        <body>

@@ -1,0 +1,115 @@
+<div id="msgedit_tab" class="easyui-tabs" style="width:100%;height:100%;">
+	<div title="回复信息">
+    <form method="post" action="<?php echo $this->baseUrl; ?>" id="edit_form">
+	    <input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	    <input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	    <table class="editTable">
+		    <tr>
+			    <th>用户</th>
+			    <td><?=$info['name']?> at <?=$info['created_at']?></td>
+		    </tr>
+		    <tr>
+			    <th>用户信息</th>
+			    <td>Mobile:<?=$info['tel']?><BR>QQ:<?=$info['qq']?><BR>Email:<?=$info['email']?>
+				    <br>IP:<?=$info['ip']?>(<?=$info['area']?>)<br>UUID:<?=$info['uuid']?></td>
+		    </tr>
+		    <tr>
+			    <th>状态</th>
+			    <td>
+				<select class="easyui-combobox" name="f_status">
+					<?php
+					foreach ($f_status_list as $k => $name):
+						$select = $info['f_status'] == $k ? 'selected="selected"' : '';
+						?>
+						<option value="<?=$k?>" <?=$select?>><?=$name?></option>
+					<?php
+					endforeach;
+					?>
+				</select>
+				</td>
+		    </tr>
+		    <tr>
+			    <th>手机信息</th>
+			    <td><?=$info['info']?></td>
+		    </tr>
+		    <tr>
+			    <th>类别</th>
+			    <td>
+				    <select class="easyui-combobox" name="adm_type">
+					    <?php
+					    foreach ($admtypes as $k => $name):
+						    $select = $info['adm_type'] == $k ? 'selected="selected"' : '';
+						    ?>
+						    <option value="<?=$k?>" <?=$select?>><?=$name?></option>
+					    <?php
+					    endforeach;
+					    ?>
+				    </select>
+		    </tr>
+		    <tr>
+			    <th>回复</th>
+			    <td>
+				    <textarea style="width: 250px;height: 100px" name="msg"><?=$info['replay']?></textarea>
+			    </td>
+		    </tr>
+		    <tr>
+			    <th>反馈类型</th>
+			    <td>
+				<select class="easyui-combobox" name="content_type">
+					<?php
+					foreach ($content_type_list as $k => $name):
+						$select = $info['content_type'] == $k ? 'selected="selected"' : '';
+						?>
+						<option value="<?=$k?>" <?=$select?>><?=$name?></option>
+					<?php
+					endforeach;
+					?>
+				</select>
+				</td>
+		    </tr>
+		    <tr>
+			    <th>内容</th>
+			    <td>
+				    <?=$info['content']?>
+			    </td>
+		    </tr>
+
+		    <tr>
+			    <th>赚送经验值</th>
+			    <td>
+				    <select name="experience_points">
+					    <option value="0">请选择</option>
+					    <option value="1">1经验值</option>
+					    <option value="2">2经验值</option>
+					    <option value="3">3经验值</option>
+				    </select>
+			    </td>
+		    </tr>
+	    </table>
+    </form>
+  </div>
+  <div title="历史记录">
+	<div style="width:100%;height:100%;overflow-y:auto;">
+		<table class="easyui-datagrid" style="width:100%;height:396px;"
+              data-options="
+                  rownumbers:true,
+                  singleSelect:true,
+                  url:'historylist',
+                  queryParams: {'uid': <?php echo $info['uid']; ?>},
+                  method:'get',
+                  pagination:true,
+				          pageSize:10      
+              ">
+          <thead>
+              <tr>
+                  <th data-options="field:'created_at',width:120">创建时间</th>
+                  <th data-options="field:'content',width:220">内容</th>
+                  <th data-options="field:'type',width:80,align:'right'">类别</th>
+                  <th data-options="field:'content_type_desc',width:80,align:'right'">反馈类型</th>
+              </tr>
+          </thead>
+      </table>
+	</div>
+  </div>
+</div>
+

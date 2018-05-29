@@ -1,0 +1,67 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav" style="padding-bottom:20px">
+	<li><a href="/Admin/Stat/hotwords">百度热词统计</a></li>
+	<li class="current"><a href="/Admin/Stat/baiduSearch">百度搜索统计</a></li>
+</div>
+<form method="post" action="<?php echo $baseUrl; ?>" id="addFrom">
+	<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">选择日期</th>
+				<td class="td">
+					<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $params['sdate']; ?>"> 至
+					<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $params['edate']; ?>">
+
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<div class="h_a"><span><input type="button" value="导出" id="downLoad"></span></div>
+<div class="table_list">
+	<table width="90%">
+		<tr class="ct">
+			<td>起止时间</td>
+			<td>关键词</td>
+			<td>搜索次数</td>
+		</tr>
+
+		<?php foreach ($data as $v) { ?>
+			<tr class="ct">
+				<td class="td2"><?php echo $params['sdate']; ?>到<?php echo $params['edate'] ?></td>
+				<td class="td2"><?php echo $v['content']; ?></td>
+				<td class="td2"><?php echo $v['total'] ? $v['total'] : 0; ?></td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+<script src="<?php echo $staticPath; ?>/js/admin/stat.js"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#sdate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+		$("#edate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+
+	})
+
+	$("#downLoad").bind('click', function () {
+		var sdate = $("#sdate").val();
+		var edate = $("#edate").val();
+		var type = $("#type").val();
+		window.location.href = '<?php echo $baseUrl;?>?export=1&sdate=' + sdate + '&edate=' + edate;
+
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>
+
+	

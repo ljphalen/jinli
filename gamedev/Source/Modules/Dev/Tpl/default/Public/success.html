@@ -1,0 +1,39 @@
+<include file="Public:header" />
+
+<?php $waitSecond = $waitSecond < 3 ? 3 : $waitSecond; ?>
+
+<div class="mainw mainw3">
+	<div class="mok">
+		<div class="successw mt <eq name="status" value="0">mt-wrong<else/>success</eq>">
+    		<h2>{$msgTitle}</h2>
+       		<p>{$message}{$error}</p>
+    	</div>
+		
+		<present name="closeWin" >
+			<p class="mb">系统将在<em class="fblue" id="wait">{$waitSecond}</em>秒后自动跳转，如果不想等待，直接<a id="href" href="{$jumpUrl}" class="fblue">点击这里</a>跳转</p>
+		</div>
+		</present>
+		
+		<present name="closeWin" >
+			<p class="mb">系统将在<em class="fblue" id="wait">{$waitSecond}</em>秒后自动关闭，如果不想等待，直接<a id="href" href="{$jumpUrl}" class="fblue">点击这里</a>跳转</p>
+		</present>
+		
+		<notpresent name="closeWin" >
+			<p class="mb">系统将在<em class="fblue" id="wait">{$waitSecond}</em>秒后自动跳转，如果不想等待，直接<a id="href" href="{$jumpUrl}" class="fblue">点击这里</a>跳转</p>
+		</notpresent>
+    	
+	</div>
+</div>
+<script type="text/javascript">
+(function(){
+var wait = document.getElementById('wait'),href = document.getElementById('href').href;
+var interval = setInterval(function(){
+	var time = --wait.innerHTML;
+	if(time == 0) {
+		location.href = href;
+		clearInterval(interval);
+	};
+}, 1000);
+})();
+</script>
+<include file="Public:footer" />

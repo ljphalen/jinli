@@ -1,0 +1,29 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">包名列表</a></li>
+    <li class="current"><a href="javascript:;">添加包名</a></li>
+	</ul>
+</div>
+<div class="h_a">添加包名</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr" id="package">
+			<th class="th">包名</th>
+			<td class="td"><textarea class="textarea wc" style="width: 800px; height: 500px" name="package" value=""></textarea></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Package/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

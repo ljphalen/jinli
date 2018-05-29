@@ -1,0 +1,41 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div id="page">
+	<header id="header">
+		<div class="m-nav">
+			<section><a class="back" href="<?php echo $webroot.'/product/?sid='.$series_id;?>"><span>返回</span></a></section>
+			<section><span><?php echo $product['title'];?></span></section>
+			<section></section>
+		</div>
+	</header>
+	<div id="content" class="pintro">
+		<div class="module">
+			<div class="product-banner"><a href="<?php echo $webroot.'/product/img?id='.$product['id'].'&sid='.$series_id;?>"><img src="<?php echo $attachPath.$product['img'];?>" alt="" /></a></div>
+		</div>
+		<div class="module">
+			<ul class="product-intro clearfix">
+				<?php foreach($attribute as $key=>$value){?>
+				<li class="item">
+					<section class="item-pic"><img src="<?php echo $attachPath.$value["icon_url"];?>" alt="" /></section>
+					<section class="item-txt"><?php echo $value["title"];?></section>
+				</li>
+				<?php }?>
+			</ul>
+			<div class="button">
+				<a href="<?php echo $webroot.'/product/guige?id='.$product["id"].'&sid='.$series_id;?>" class="btn-gray">技术规格</a>
+				<?php if($product['buy_url']) { ?><a href="<?php echo $product['buy_url'];?>" class="btn-gray">立即购买</a><?php }else{?><span class="btn-disable">敬请期待</span><?php }?>
+				<a href="tel:400-779-6666" class="btn-gray">电话咨询</a>
+			</div>
+		</div>
+		<div class="module">
+			<!-- 底部链接模块-->
+			<ul class="bottom-link">
+				<li class="title">其他系列</li>
+				<?php foreach($series as $key=>$value){?>
+				<li><a href="<?php echo $webroot.'/product/?sid='.$value["id"];?>"><?php echo $value["name"];?></a></li>
+				<?php }?>
+			</ul>
+		</div>
+	</div>
+</div>
+<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/footer.phtml");?>

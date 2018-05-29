@@ -1,0 +1,95 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $oldListUrl;?>">旧版本说明</a></li>
+		<li><a href="<?php echo $bannerUrl;?>">单机网游图片</a></li>
+		<li><a href="<?php echo $recListUrl;?>">推荐列表</a></li>
+		<li class="current"><a href="<?php echo $recImgUrl;?>">推荐图片</a></li>
+		<li><a href="<?php echo $imgUrl;?>">图片广告</a></li>
+		<li><a href="<?php echo $imgLogUrl;?>">历史列表图片</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="ad_type" type="hidden" value="<?php echo $ad_type;?>" />
+<div class="table_full">
+	<table width="100%">	
+		<tr>
+		   <th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			    <option  value="0">全部</option>
+				<option <?php if($s['status'] == 2) echo 'selected';?> value="2">开启</option>
+				<option <?php if($s['status'] == 1) echo 'selected';?> value="1">关闭</option>
+			</select>
+			</td>
+			<th class="th">关键字</th>
+			<td class="td"><input type="text" class="input" name="title" value="<?php echo empty($s['title'])?'':$s['title'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo $s['start_time'];?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo $s['end_time'];?>" /></div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span>共<?php echo $total;?>条结果</span>
+    <span class="btn2"><span><button onclick="$('#action').val('sort');" type="submit">重新排序</button></span></span>
+	<span class="btn2"><span><a href="<?php echo $addUrl;?>"><button type="button">添加图片</button></a></span></span>
+	<span class="btn2"><span><a href="<?php echo $setUrl;?>"><button type="button">设置</button></a></span></span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="60">排序</td>
+		    <td>id</td>
+			<td>标题</td>
+			<td>类型</td>
+			<td>图片</td>
+			<td width="120">开始时间</td>
+			<td width="120">结束时间</td>
+			<td width="60">状态</td>
+			<td width="100">操作</td>
+		</tr>
+<?php foreach($ads as $key => $value) {?>
+		<tr class="ct">
+			<td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><input type="text" class="input" style="width:30px" name="sort[<?php echo $value['id'];?>]" value="<?php echo $value['sort'];?>"></td>
+		    <td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $value['ad_ptype'] ? $ad_ptypes[$value['ad_ptype']] :'';?></td>
+			<td><img src="<?php echo $attachPath.$value['img'];?>" style="width:70px;height:70px;"/></td>
+		        <td><?php echo date('Y-m-d H:i:s', $value['start_time']);?></td>
+		        <td><?php echo date('Y-m-d H:i:s', $value['end_time']);?></td>
+			<td><?php echo $value['status'] == 1 ? '开启' : '关闭';?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Ad_Recpic/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

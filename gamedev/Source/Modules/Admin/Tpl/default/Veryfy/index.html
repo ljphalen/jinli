@@ -1,0 +1,196 @@
+<form id="pagerForm" action="__ACTION__" method="post">
+	<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+	<input type="hidden" name="numPerPage" value="{$_REQUEST.numPerPage}" />
+	<input type="hidden" name="orderField" value="{$_REQUEST.orderField}" />
+	<input type="hidden" name="orderDirection" value="{$_REQUEST.orderDirection}" />
+	<volist name="_search" key="name" id="field">
+		<input type="hidden" name="_search[{$key}]" value="{$field|safe}"/>
+	</volist>
+</form>
+
+<div class="page">
+
+	<!--查询开始-->
+	<div class="pageHeader">
+		<form onsubmit="return navTabSearch(this);" action="__URL__" method="post" name="myform" id = 'myform_veryfy'>
+		<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+        <input type="hidden" name="type" value="{$_REQUEST.type}"/>
+		<div class="searchBar">
+			<ul class="searchContent" style=" overflow:inherit;">
+				<li>
+					<label>应用状态：</label>
+					<select class="combox" id="status" name="_search[status]">
+						<option value="" selected>全部</option>
+						<option value="0" <if condition="$_REQUEST._search.app_name eq '0'">selected</if>>未提交</option>
+						<option value="1" <if condition="$_REQUEST._search.app_name eq '1'">selected</if>>审核中</option>
+						<option value="2" <if condition="$_REQUEST._search.app_name eq '2'">selected</if>>审核通过</option>
+						<option value="3" <if condition="$_REQUEST._search.app_name eq '3'">selected</if>>已上线</option>
+						<option value="-1" <if condition="$_REQUEST._search.app_name eq '-1'">selected</if>>审核不通过</option>
+						<option value="-2" <if condition="$_REQUEST._search.app_name eq '-2'">selected</if>>已下线</option>
+						<option value="-3" <if condition="$_REQUEST._search.app_name eq '-3'">selected</if>>认领下线</option>
+						<option value="-4" <if condition="$_REQUEST._search.app_name eq '-4'">selected</if>>封号下线</option>
+					</select>
+					<script type="text/javascript">
+					$("select[name='_search[status]']").val("{:$_search[status]}");
+					</script>
+				</li>
+				<li>
+					<label>账号状态：</label>
+					<select class="combox" id="acc_status" name="_search[acc_status]">
+						<option value="all">不限</option>
+						<option value="2">审核通过</option>
+						<option value="0">审核中</option>
+						<option value="1">审核未通过</option>
+						<option value="-2">封号</option>
+					</select>
+					<script type="text/javascript">
+					$("select[name='_search[acc_status]']").val('{:$_search[acc_status]}');
+					</script>
+				</li>
+				<li>
+					<label>AppID：</label>
+					<input type="text" name="_search[app_id]" value="{$_REQUEST._search.app_id}"/>
+				</li>
+				<li>
+					<label>应用名称：</label>
+					<input type="text" name="_search[app_name]" value="{$_REQUEST._search.app_name}"/>
+				</li>
+				<li>
+					<label>应用包名：</label>
+					<input type="text" name="_search[package]" value="{$_REQUEST._search.package}"/>
+				</li>
+				<li>
+					<label>开发者：</label>
+					<input type="text" name="_search[author]" value="{$_REQUEST._search.author}"/>
+				</li>
+				<li>
+					<label>审核人：</label>
+					<input type="text" name="_search[account]" value="{$_REQUEST._search.account}"/>
+				</li>
+                <li>
+					<label>提交时间：</label>
+					<input type="text" name="_search[timeStart]" value="{$_REQUEST._search.timeStart}" class="date" yearstart="-10" yearend="0" pattern="yyyy-MM-dd" size="12" readonly/>
+					到<input type="text" name="_search[timeEnd]" value="{$_REQUEST._search.timeEnd}" class="date" yearstart="-10" yearend="0" pattern="yyyy-MM-dd" size="12" readonly/>
+				</li>
+                
+                <div class="buttonActive"><div class="buttonContent"><button type="button"  id="verfy_sub" >查询</button></div></div>
+                <div class="buttonActive"><div class="buttonContent"><button type="button" id="verfy_export" >导出</button></div></div>
+				<script type="text/javascript">
+				$("#verfy_export").click(function(){
+					$("#myform_veryfy").attr('action',"{:U('Veryfy/export')}");
+					$("#myform_veryfy").attr('onsubmit','');
+					$("#myform_veryfy").submit();
+				})
+				
+				$("#verfy_sub").click(function(){
+					$("#myform_veryfy").attr('action',"");
+					$("#myform_veryfy").attr('onsubmit','return navTabSearch(this);');
+					$("#myform_veryfy").submit();
+				})
+				</script>
+			</ul>
+
+		</div>
+		</form>
+	</div>
+	<!--查询结束-->
+
+	<div class="pageContent">
+
+		<!-- 列表开始 -->
+		<table class="list listW" width="100%" layoutH="138">
+			<thead>
+			<tr>
+				<th orderField="id" class="{:orderField('id','desc')}">ApkID</th>
+				<th orderField="app_id" class="{:orderField('app_id','desc')}">AppID</th>
+				<th class="time">提交日期</th>
+				<th class="time">期望上线</th>
+				<th class="time">测试日期</th>
+				<th class="tc5">开发者帐号</th>
+				<th class="tc4">分类</th>
+				<th class="tc4">模式</th>
+				<th class="tc4">签名</th>
+				<th>应用名称</th>
+				<th class="package">包名</th>
+				<th class="tc6">已通过安检</th>
+				<th class="tc4">版本名称</th>
+				<th class="tc4">版本类型</th>
+				<th class="tc4">应用状态</th>
+				<th class="tc4">云测状态</th>
+				<th class="tc4">操作</th>
+				<th class="tc4">测试记录</th>
+			</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="list">
+				<php>
+					$accounts = D("Dev://Accounts")->getAccountAll($vo['author_id']);
+					$admin_info = D("Admin")->find($vo['admin_id']);
+					$baidu_safe = D('ApkSafe')->apkStatus($vo['id'],1);
+					$tencent_safe = D('ApkSafe')->apkStatus($vo['id'],2);
+				</php>
+
+				<tr target="sid_user" rel="{$vo['id']}">
+					<td>{$vo['id']}</td>
+					<td>{$vo['app_id']}</td>
+					<td class="time">{$vo['created_at']|date="Y-m-d H:i:s",###}</td>
+					<td class="time">{$vo['online_time']}</td>
+					<td class="time"><notempty name="vo.checked_at">{$vo['checked_at']|date="Y-m-d H:i:s",###}</notempty></td>
+					<td class="email">{:AccountsModel::listTxt($vo['author_id'])}</td>
+					<td>{:$vo['category_one']==100?'游戏':'应用'}</td>
+					<td><eq name="vo.category_one" value="200">普通<else/>{:ApksModel::getJoin($vo['is_join'])}</eq></td>
+					<td><eq name="vo.is_join" value="2">未签<else/>{:ApksModel::getSign($vo['sign'])}</eq></td>
+					<td class="app">{$vo['app_name']}</td>
+					<td class="package">{$vo['package']}</td>
+					<td>
+						<php>
+							echo '百度：';
+							echo empty($baidu_safe)?'未发送':'<a href="'.U('AppManage/safelog',array('apk_id' => $vo['id'])).'" target="dialog" width="800" height="600">'.$baidu_safe.'</a>';
+							echo "<br>";
+							echo '腾讯：';
+							echo empty($tencent_safe)?'未发送':'<a href="'.U('AppManage/safelog',array('apk_id' => $vo['id'])).'" target="dialog" width="800" height="600">'.$tencent_safe.'</a>';
+						</php>
+					</td>
+					<td>{$vo['version_name']}</td>
+					<td>{:D("Dev://Apks")->getReleaseStatus($vo['app_id'], $vo['id'])}</td>
+					<td><php>echo $apkStatus[$vo['status']];</php></td>
+					<td>
+						<a href="__URL__/testin/md5/{$vo['apk_md5']}" target="dialog" max="true" width="820" height="450">
+							{:D("Testin")->getStatusByMd5($vo['apk_md5'])}
+						</a>
+					</td>
+					<td>
+						<php>if($vo['status']==1):</php>
+							<a href="__URL__/edit/id/{$vo['id']}/navTabId/__MODULE__" target="dialog" width="1000" height="450" max="true" mask="true"><font color="red">审核</font></a>
+						<php> endif;</php>
+					</td>
+					<td>
+						<php>if(abs($vo['status']) > 1 || $vo['status']=="-1"):</php><a href="{:U("@admin")}/testlog/index/apk_id/{$vo['id']}" target="navTab" mask="true">测试记录</a><php>endif;</php>
+					</td>
+				</tr>
+
+			</volist>
+			</tbody>
+		</table>
+		<!-- 列表结束 -->
+
+		<!-- 分页开始 -->
+		<div class="panelBar">
+			<div class="pages">
+				<span>显示</span>
+				<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+					<option value="10" <eq name="numPerPage" value="10">selected</eq>>10</option>
+					<option value="20" <eq name="numPerPage" value="20">selected</eq>>20</option>
+					<option value="50" <eq name="numPerPage" value="50">selected</eq>>50</option>
+					<option value="100" <eq name="numPerPage" value="100">selected</eq>>100</option>
+					<option value="200" <eq name="numPerPage" value="200">selected</eq>>200</option>
+				</select>
+				<span>共{$totalCount}条</span>
+			</div>
+			<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="10" currentPage="{$currentPage}"></div>
+		</div>
+		<!-- 分页结束 -->
+
+	</div>
+
+</div>

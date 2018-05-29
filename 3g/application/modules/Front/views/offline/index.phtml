@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<link rel="stylesheet" href="<?php echo $staticSysPath;?>/reset/mpcore.css?v=<?php echo $version;?>" />
+	<link rel="stylesheet" href="<?php echo $staticResPath;?>/assets/css/3g.navigator.css?v=<?php echo $version;?>" />
+</head>
+<body>
+	<div id="page">
+		<section class="bd error-page">
+			<div class="icon"><img src="<?php echo $staticResPath;?>/pic/ico_offline.png" alt=""></div>
+			<p class="tips">网络连接错误，请重试！</p>
+			<div class="button"><span class="btn gray">刷新</span></div>
+		</section>
+	</div>
+	<script type="text/javascript">
+		var doc = document,
+			btn = doc.querySelector('.btn'),
+			href = sessionStorage.getItem('curpage') || 'http://gou.gionee.com';
+		if(doc.addEventListener){
+			btn.addEventListener('click', function(){
+				location.href = href;
+			}, false);
+		}
+	</script>
+</body>
+</html>

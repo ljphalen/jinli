@@ -1,0 +1,55 @@
+<?php echo $this->render("user/header.phtml");?>
+<body>
+	<div class="header">
+		<div class="container">
+			<div class="hd-name"></div>
+			<!--<div class="hd-content"><span>第一次使用商户平台？</span><a href="<?php echo $registerUrl;?>">立即注册</a></div>-->
+		</div>
+	</div>
+	<div class="login-container">
+		<img class="login-bg"  src="/static/img/login_bg.jpg" alt="">
+		<div class="login-body">
+			<div class="container">
+				<div class="hotwifi"></div>
+				<div class="login-content">
+					<form method="post" id="login_form" action="<?php echo $loginPostUrl;?>">
+						<input type="hidden" name="token" value="<?php echo $token;?>">
+						<div class="section-title">登录</div>
+						<div class="group">
+							<span class="icon-name"></span>
+							<input type="text" class="control" name="username" placeholder="用户名或者手机号">
+						  </div>
+						<div class="group">
+							<span class="icon-password"></span>
+							<input type="password" class="control" name="passwd" placeholder="密码">
+						</div>
+						<span class="J_alert alert"></span>
+						<button style="width: 350px" type="submit" class="btn btn-primary">登录</button>
+						<!-- <a href="<?php echo $registerUrl;?>" class="btn btn-default">注册</a>-->
+					</form>
+				</div>
+			</div>
+		</div>
+		<?php echo $this->render("user/footer.phtml");?>  
+</div>
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" src="/static/js/jquery.form.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$("button[type=submit]").click(function(event) {
+			event.preventDefault();
+			$('#login_form').ajaxSubmit(function(ret){
+				if (ret.success == false) {
+					$(".J_alert").addClass("alert-danger").html(ret.msg).css('display','block');
+				} else {
+					setTimeout(function(){
+						location.href="<?php echo $manageUrl;?>";
+					}, 1000);
+				}
+			});
+			return false;
+		});
+	})
+</script>
+</body>
+</html>

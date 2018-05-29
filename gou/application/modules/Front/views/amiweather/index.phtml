@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>今日搭配推荐</title>	
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="email=no" />
+    <body id="recoment" data-pagerole="body">
+    <?php if($info) {?>
+    <script type="text/javascript">
+    <?php if($data) { ?>
+    tanx_c.config = encodeURIComponent(JSON.stringify({"keyword" : "<?php echo $info['keywords'];?>",
+    	    "temp":"<?php echo $data['temperature'][0];?>-<?php echo $data['temperature'][1];?>",
+    	    "currentTemp":"<?php echo $data['current_temp'];?>",
+    	    "aqi":<?php echo $data['aqi'];?>,
+    	    "weather":"<?php echo $data['weather'];?>",
+    	    "date":"<?php echo date('Y-m-d', Common::getTime());?>"}));    
+    <?php }?>
+        document.write('<a style="display:none!important" id="tanx-a-mm_<?php echo $info['num_iid'];?>"></a>');
+        tanx_s = document.createElement("script");
+        tanx_s.type = "text/javascript";
+        tanx_s.charset = "gbk";
+        tanx_s.id = "tanx-s-mm_<?php echo $info['num_iid'];?>";
+        tanx_s.async = true;
+        tanx_s.src = "http://p.tanx.com/ex?i=mm_<?php echo $info['num_iid'];?>";
+        tanx_h = document.getElementsByTagName("head")[0];
+        if(tanx_h)tanx_h.insertBefore(tanx_s,tanx_h.firstChild);
+    </script>
+    <?php } else {?>	
+    <script type="text/javascript">
+        (function(){
+    		location.href = '<?php echo $url;?>';
+    	}())
+    </script>
+    <?php }?>
+    	<?php echo $this->render("layout/tj.phtml");?>
+    </body>
+
+</html>

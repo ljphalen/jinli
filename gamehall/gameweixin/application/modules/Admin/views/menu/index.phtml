@@ -1,0 +1,137 @@
+<?php echo $this->render("layout/admin_header.phtml");?>
+
+	<div class="body">
+	<h1 class="page-title" >自定义菜单</h1>
+		<?php echo $this->render("layout/side.phtml");?>
+		
+		<div class="col-main">
+			<div class="J_gift_error_tips error-pop-tips hidden">
+			</div>
+			<div class="menu-body">
+				<div class="menu-tips-container">
+					提示：<br/>
+				      1. 主菜单次序只能为1~9的整数，子菜单只能为01~09的整数；<br/>
+				      1.  主菜单不能超过4个字，子菜单不能超过8个字；<br/>
+				      2.  菜单经过编辑后将会在24小时内生效（具体时间取决于微信）；<br/>
+				</div>
+				<table id="menuTable" class="J_table table">
+					<thead>
+						<tr>
+							<th>次序</th>
+							<th>主菜单</th>
+							<th>子菜单</th>
+							<th>关键词或链接</th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php foreach($newMenusList['main'] as $key => $menu) {?>
+							<tr class="J_mainItem line">
+								<td class="order-menu">
+									<div class="J_mainOrder "><?php echo $menu['sequence']?></div>
+									<input class="J_mainOrder order-input hidden" type="text"  value="<?php echo $menu['sequence']?>"/>
+								</td>
+								<td class="main-menu">
+									<div class="J_mainKeyword "><?php echo $menu['name']?></div>
+									<input class="J_mainKeyword keyword-input hidden" type="text" />
+									<icon class="J_mainMenuDel icon-remove hidden"></icon>
+								</td>
+								<td class="sub-menu">
+									<button class="J_subMenuAdd btn btn-menuAdd hidden">添加子菜单</button>
+								</td>
+								<td class="keyword-item">
+								<?php if(!isset($newMenusList['sub'][$menu['id']])) {?>
+							
+								<input  type="text" class="J_keywordVal "  disabled value="<?php echo $menu['opt_type'] == WeiXin_Service_Menu::WEIXIN_KEYWORD_TYPE_STRING ? $keyIdList[$menu['menuset']] : $menu['menuset'] ?>"/>
+								<div class="J_keywordEditContainer hidden">
+									<select class="J_chooseKeyType">
+										<option <?php echo $menu['opt_type'] == WeiXin_Service_Menu::WEIXIN_KEYWORD_TYPE_STRING ? 'selected' : '' ?>  data-type="keyword">关键字</option>
+										<option  <?php echo $menu['opt_type'] == WeiXin_Service_Menu::WEIXIN_URL_TYPE_STRING ? 'selected' : '' ?>  data-type="link">链接</option>
+									</select>
+									<div class="J_keywordContainer keywordContainer">
+										<select>
+											<option >请选择</option>
+											<?php foreach($keywordList as $kword => $keyword) {?>
+													<option  <?php echo $keyword['id'] == $menu['menuset']? 'selected' : '' ?> data-keywordId="<?php echo $keyword['id']?>"><?php echo $keyword['keyword']?></option>
+											<?php }?>
+										</select>
+									</div>
+									<div class="J_linkContainer linkContainer hidden">
+										<input  type="text" class="J_link" value="<?php echo $menu['menuset']?>"/>
+									</div>
+								</div>
+								<?php }?></td>
+							</tr>
+							
+							<?php if(isset($newMenusList['sub'][$menu['id']])) {?>
+							<?php foreach($newMenusList['sub'][$menu['id']] as $k => $subMenu) {?>
+								<tr class="J_subItem">
+									<td class="order-menu">
+										<div class="J_subOrder ">0<?php echo $subMenu['sequence']?></div>
+										<input class="J_subOrder order-input hidden" type="text"  value="0<?php echo $subMenu['sequence']?>"/>
+									</td>
+									<td class="main-menu">
+										<div class="cross-line"></div>
+									</td>
+									<td class="sub-menu">
+										<div data-menuId="<?php echo $subMenu['id']?>" class="J_subKeyword "><?php echo $subMenu['name']?></div>
+										<input class="J_subKeyword keyword-input hidden" type="text" />
+										<icon class="J_subMenuDel icon-remove hidden"></icon>
+									</td>
+									<td class="keyword-item">
+										<input  type="text" class="J_keywordVal "  disabled value="<?php echo $subMenu['opt_type'] == WeiXin_Service_Menu::WEIXIN_KEYWORD_TYPE_STRING ? $keyIdList[$subMenu['menuset']] : $subMenu['menuset'] ?>"/>
+										<div class="J_keywordEditContainer hidden">
+											<select class="J_chooseKeyType">
+												<option  <?php echo $subMenu['opt_type'] == WeiXin_Service_Menu::WEIXIN_KEYWORD_TYPE_STRING ? 'selected' : '' ?> data-type="keyword">关键字</option>
+												<option  <?php echo $subMenu['opt_type'] == WeiXin_Service_Menu::WEIXIN_URL_TYPE_STRING ? 'selected' : '' ?> data-type="link">链接</option>
+											</select>
+											<div class="J_keywordContainer keywordContainer">
+												<select>
+													<option  >请选择</option>
+													<?php foreach($keywordList as $keywordKey => $keyword) {?>
+													<option  <?php echo $keyword['id'] == $subMenu['menuset']? 'selected' : '' ?> data-keywordId="<?php echo $keyword['id']?>"><?php echo $keyword['keyword']?></option>
+													<?php }?>
+												</select>
+											</div>
+											<div class="J_linkContainer linkContainer hidden">
+												<input  type="text" class="J_link" value="<?php echo $subMenu['menuset']?>"/>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<?php }?>
+								<?php }?>
+						<?php }?>
+					</tbody>
+				</table>
+
+				<div class="btn-container">
+					<button id="addMainMenu" class="btn btn-mainMenu hidden">添加主菜单</button>
+					<button id="menuEdit" class="btn">编辑</button>
+					<button id="menuSave" class="btn hidden" data-id="" data-ajaxUrl="<?php echo $editPostUrl?>" >保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="hiddenKeyWord" class="hidden">
+		<div  class="J_keywordContainer keywordContainer ">
+			<select>
+				<option >请选择</option>
+				<?php foreach($keywordList as $kword => $keyword) {?>
+					<option data-keywordId="<?php echo $keyword['id']?>"><?php echo $keyword['keyword']?></option>
+				<?php }?>
+			</select>
+		</div>
+	</div>
+	<div class="J_dialog mask  hidden">
+		<div class="dialog-error-container">
+			<h1>提示</h1>
+			<p><i class="icon-info"></i>是否确认删除？</p>
+			<input id="delMenuConfirm" class="btn-ok" type="button" value="确定" />
+			<input id="delMenucancel" class="btn-ok" type="button" value="取消" />
+		</div>
+	</div>
+	
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

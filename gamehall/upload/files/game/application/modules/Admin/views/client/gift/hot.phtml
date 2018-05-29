@@ -1,0 +1,101 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $gameListUrl;?>">游戏列表</a></li>
+	    <li><a href="<?php echo $privilegeGiftListUrl;?>">特权礼包</a></li>
+        <li class="current"><a href="<?php echo $hotUrl;?>" style="width:150px">新手礼包(热门礼包)</a></li>
+	</ul>
+</div>
+<form action="<?php echo $hotUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="game_id" type="hidden" value="<?php echo $s['game_id']; ?>" />
+<div class="table_full">
+	<table width="100%">
+	    <tr>
+		   <th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			    <option  value="0">全部</option>
+				<option <?php if($s['status'] == 2) echo 'selected';?> value="2">开启</option>
+				<option <?php if($s['status'] == 1) echo 'selected';?> value="1">关闭</option>
+			</select>
+			</td>
+			<th class="th">游戏名称</th>
+			<td class="td"><input type="text" class="input" name="game_name" value="<?php echo $s['game_name'];?>"></td>
+			<th class="th">礼包名称</th>
+			<td class="td"><input type="text" class="input" name="gift_name" value="<?php echo $s['gift_name'];?>"></td>
+			<th class="th">礼包ID</th>
+			<td class="td"><input type="text" class="input" name="gift_id" value="<?php echo $s['gift_id'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac">
+	<span class="btn"><span><button type="submit">搜 索</button></span></span>
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;请尽量避免同时搜索游戏名称和礼包名称(加载会慢); 当输入ID时,其他搜索条件将被忽略</span>
+</div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateGiftHotUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('sort');" type="submit">重新排序</button></span></span>
+    <span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">开启</button></span></span>
+    <span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">关闭</button></span></span>
+    <span class="btn2"><span><a href="<?php echo $addHotUrl; ?>"><button type="button">添加热门礼包</button></a></span></span>
+    <span class="btn2"><span><button id="asyncWebGameBtn" type="button">同步网游频道热门礼包</button></span></span>
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="50">排序</td>
+			<td width="50">礼包ID</td>
+			<td width="200">礼包名称</td>
+			<td width="80">VIP等级</td>
+			<td width="50">游戏ID</td>
+			<td width="100">游戏名称</td>
+			<td width="100">兑奖码数量（剩余/总）</td>
+			<td width="150">生效时间</td>
+			<td width="30">状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><input type="text" class="input" style="width:30px" name="sort[<?php echo $value['id'];?>]" value="<?php echo $value['sort'];?>"></td>
+			<td><?php echo $value['gift_id'];?></td>
+			<td><?php echo html_entity_decode($value['gift_name'], ENT_QUOTES);?></td>
+			<td><?php echo 'VIP'.$value['vip_level'];?></td>
+			<td><?php echo $value['game_id'];?></td>
+			<td><?php echo $game_names[$value['game_id']];?></td>
+			<td><?php echo $remains_key[$value['gift_id']]."/".($remains_key[$value['id']][0] + $total_key[$value['gift_id']]);?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['effect_start_time']);?><br><?php echo date('Y-m-d H:i:s', $value['effect_end_time']);?></td>
+			<td><?php echo $value['status'] ? '开启' : '关闭';?></td>
+			<td>
+				<a href="<?php echo $editHotUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script>
+$(document).ready(function(){
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Client_Gift/hot');
+	});
+	$("#asyncWebGameBtn").click(function() {
+		$.post("<?php echo $asyncWebGameUrl; ?>",
+			{token:"<?php echo $token;?>"},
+		    function(result, status){
+			   showMsg("提示", result.msg);
+		});
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

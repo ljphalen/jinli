@@ -1,0 +1,137 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<style>
+.step2 li{
+    width: 23%;
+}
+.step2 li.line{
+	position: static;
+}
+.hidden {
+	display: none;
+}
+</style>
+<div class="nav">
+	<ul class="cc">
+       <li class="current"><a href="javascript:;">添加活动</a></li>
+	</ul>
+</div>
+<div class="step step2 mb10">
+	<ul class="cc">
+		<li ><span class="fl"><em></em></span>添加活动</li>
+		<li class="line"></li>
+		<li class="current">添加任务</li>
+		<li class="line"></li>
+		<li><span class="fl"><em></em></span>添加奖品</li>
+	</ul>
+</div>
+<div style="clear: both;"></div>
+<form method="post" action="<?php echo $addStep2PostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr" >
+				<th class="th">任务名称</th>
+				<td class="td"><input type="text" class="input" name="activity[name]"  value=""><span>&nbsp;&nbsp;例如:"今日任务"</span></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">图片</th>
+				<td class="td" colspan="2" style="min-width:800px">
+					<ul class="uploadImg">
+						<li id="img">
+							<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+							<input type="hidden" name="activity[img]" value="">
+						</li>
+					</ul>			
+	                <p style="clear:both;">
+		                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=img';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tr>
+			<?php
+			$start_time = strtotime(date('Y-m-d', strtotime($start_time)));
+			$end_time = strtotime(date('Y-m-d', strtotime($end_time)));
+			for ($cur = $start_time; $cur <= $end_time; $cur+= 86400) {
+			?>
+			<tr  class="tr">
+				<th class="th">
+					<?php echo date('Y-m-d', $cur) ?>
+				</th>
+				<?php
+				for ($i = 1; $i <= 2; $i++) { 
+					$key = "activity[day_task][{$cur}][{$i}]";
+				?>
+				<td  class="td">
+					<table class="remove-border">
+						<tr>
+							<th class="th2">任务 <?php echo $i ?></th>
+							<td><input name=<?php echo $key."[name]";?> type="text" class="input"  /></td>
+						</tr>
+						<tr>
+							<th class="th2">类型</th>
+							<td>
+								<select name=<?php echo $key."[type]";?>>
+									<option value="1">参加网游</option>
+									<option value="2">下载游戏</option>
+								</select>
+							</td>
+						</tr>		
+						<tr>
+							<th class="th2">奖励</th>
+							<td>
+								<select name=<?php echo $key."[award_type]" ?>  class="J_select select">
+									<option value="1" selected>A卷</option>
+									<option value="2">积分</option>
+								</select>
+								<div style="display:inline-block;">
+									<span>&nbsp;&nbsp;&nbsp;面额</span>
+									<input type="number" class="input" name=<?php echo $key."[award_count]";?>  value="">
+								</div>
+								<div class="J_time" >
+									<span>&nbsp;&nbsp;&nbsp;有效期从</span>
+									第<input type="number" class="input" name=<?php echo $key."[start_time]";?> value="" min="1">天
+									<span>至</span>
+									第<input type="number" class="input" name=<?php echo $key."[end_time]";?> value="" min="1">天
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<th class="th2">游戏ID</th>
+							<td><input name=<?php echo $key."[game_id]";?> type="text" class="input" /></td>
+						</tr>	
+					</table>
+				</td>
+				<?php } ?>
+			</tr>
+			<?php } ?>
+		</table>
+    </div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">下一步</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$("body").on('change', '.J_select', function(event) {
+	changePrizeType($(this));
+});
+
+$(".J_select").each(function(index, el) {
+	changePrizeType($(this));
+});
+
+function changePrizeType(ele){
+	var type=ele.find('option:selected').val();
+	if(type==1){
+		ele.siblings('.J_time').removeClass('hidden');
+	}else if(type==2){
+		ele.siblings('.J_time').addClass('hidden');
+	}
+}
+
+//广告表单数据提交
+$(document).ready(function(){
+	 ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $addStep3Url;?>');
+	 });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

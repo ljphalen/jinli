@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>提意见</title>
+<link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/call/css/call.min.css?v=<?php echo $version;?>" />
+</head> 
+
+<body class="ui-app">
+<div class="ui-top-bar">
+	<a class="ui-pos link-back" href="<?php echo $webroot;?>/activity/tips" ></a>
+	<span class="ui-top-txt">提意见</span>
+</div>
+
+<div class="ui-page page1 js-active" style="bottom:0;">
+	<div class="ui-page-content">
+		<div class="feed-content">
+			<div class="feed-info">
+				<span class="">欢迎您给我们提出宝贵意见，让我们一起把浏览器做得更好！</span>
+			</div>
+			<div id="js-radio-list" class="feed-row ui-list-radio">
+			<?php foreach($types as $k=>$v){?>
+				<p>
+					<label class="ui-radio"><input type="radio" name="menu_id"  value="<?php echo $v['id']; ?>" <?php if($k==0) echo 'class="checked" checked';?>/><?php echo $v['name'];?></label>
+				</p>
+			<?php }?>
+			</div>
+			<div id="js-checkbox-list" class="feed-row">
+			<?php foreach ($data as $key=>$val){?>
+				<ul class="ui-list-checkbox <?php echo $key==$types[0]['id']? '':'none';?>" pid="<?php echo $key;?>">
+				<?php foreach ($val as $m){?>
+				<li>
+					<label for="" class="ui-checkbox">
+						<input type="checkbox" name="checked_list"  value="<?php echo $m['id'];?>"/>
+					</label>
+					<p><?php echo $m['name'];?></p>
+				</li>
+				<?php }?>
+			</ul>
+		<?php }?>
+			</div>
+			<div class="feed-row">
+				<div>
+					<textarea class="ui-textarea"  name="react"></textarea>
+				</div>
+			</div>
+			<div class="feed-row">
+				<p>联系方式</p>
+				<input type="text" class="inp-tel" name="contact" value="" />
+				<input type="hidden" value="<?php echo $refurl;?>" name="refurl">
+			</div>
+		</div>
+		<div class="ui-panel">
+			<a class="ui-block ui-button ui-button-gray ui-no-active" href="javascript:void(0);" id="js-feed-submit">提交</a>
+		</div>
+	</div>
+</div>
+
+<!-- <div class="ui-bottom-bar call-bottom-bar">
+	<a href="history.html" class="s1"><i></i>最近通话</a>
+	<a href="list.html" class="s2"><i></i>拔号</a>
+	<a href="rule.html" class="s3 active"><i></i>规则说明</a>
+</div> -->
+<script data-main="call" src="<?php echo $staticResPath;?>/call/vendor/requirejs/require.js"></script>
+<script type="text/javascript">
+	var token = "<?php echo $token;?>";
+	require.config({
+		baseUrl: "<?php echo $staticResPath;?>/call/js",
+	    paths: {
+	        call: 'call.min.js?v=<?php echo $version?>'
+	    }
+	});
+</script>
+</body>
+</body>
+</html>

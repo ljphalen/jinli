@@ -1,0 +1,49 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div id="page">
+		<header class="hd">
+			<h1>美图</h1>
+			<div class="back">
+				<a href="<?php echo $webroot;?>"><span class="left-arrow"><i></i></span></a>
+			</div>
+		</header>
+		<article class="ac chartlet">
+			<div class="pic-wrap J_picWrap">
+				<div class="pic-box" class="J_itemWrap" data-ajaxUrl="<?php echo $webroot.'/picture/more';?>">
+				<div id="curInfo" class="hidden" curpage="1" hasnext="<?php echo $hasnext;?>"></div>
+					<div class="l-wrap mr-r10">
+						<ul>				
+						<?php foreach($lpictures as $key=>$value) {?>
+							<li>
+								<a href="<?php echo $webroot.'/picture/detail';?>/?id=<?php echo $value['id'];?>">
+									<img class="scrollLoading" src="<?php if(strpos($value['img'], 'http://') === false){echo $attachPath . $value['img'];}else{echo $value['img'];};?>"  alt="" />
+								</a>
+							</li>
+						<?php }?>
+						</ul>
+					</div>
+					<div class="r-wrap">
+						<ul>
+							<?php foreach($rpictures as $key=>$value) {?>
+							<li>
+								<a href="<?php echo $webroot.'/picture/detail';?>/?id=<?php echo $value['id'];?>">
+									<img class="scrollLoading" src="<?php if(strpos($value['img'], 'http://') === false){echo $attachPath . $value['img'];}else{echo $value['img'];};?>"  alt="" />
+								</a>
+							</li>
+							<?php }?>
+						</ul>
+					</div>
+			</div>
+			</div>
+		</article>
+	</div>
+	<script id="J_picItemView" type="template">
+		{each data.list}
+		<li>
+			<a href="{$value.url}">
+				<img class="scrollLoading" xSrc="{$value.img}" src="<?php echo $staticResPath;?>/pic/loading.gif" alt="" />
+			</a>
+		</li>
+		{/each}
+	</script>
+<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,46 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">分享手机号</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+              <option  value="0">所有状态</option>
+				<option <?php if($search['status'] == 2) echo 'selected';?> value="2">已发奖</option>
+				<option <?php if($search['status'] == 1) echo 'selected';?> value="1">未发奖</option>
+			</select></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span><span style="float:left;">当前日志总数：<?php echo $total;?></span></div>
+
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>手机号</td>
+			<td>点击量时间</td>
+			<td>发奖状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['qq'];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+			<td><?php echo $value['status'] == 2 ? '已发奖' : '未发奖';?></td>
+			<td><a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

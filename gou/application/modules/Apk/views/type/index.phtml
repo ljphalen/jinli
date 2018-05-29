@@ -1,0 +1,63 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+	<div class="module module-page" id="J_categoryPage">
+    	<?php if ($hasheader) {?>
+    		<header id="iHeader" class="hd">
+    			<div class="top-wrap">
+    				<div class="title">
+    					<a href="<?php echo $webroot;?>" class="back"></a>
+    					<h1>分类</h1>
+    				</div>
+    			</div>
+    		</header>
+    	<?php }?>
+			<section class="cat-search">
+			<form action="<?php echo $action;?>" method="POST" accept-charset="utf-8">
+				<input type="text" name="keyword" autocomplete="off" value="<?php echo $keyword;?>" placeholder="<?php echo $keyword;?>">
+				<button></button>
+			</form>
+		</section>
+		<section class="category-wrap">
+			<ul class="category-nav" id="J_categoryNav" data-ajaxurl="<?php echo $webroot;?>/api/apk_type/ptype">
+		 		<?php foreach ($ptype as $key=>$value){?>
+		 		<li data-id="<?php echo $value['id'];?>" data-link="<?php echo $value['link'];?>">
+		 			<a href="javascript:;"><i><img src="<?php echo $value['icon'];?>"></i><?php echo $value['name'];?></a></li>
+		 	    <?php }?>
+			</ul>
+			<div class="goods-wrap" id="J_goodsWrap"></div>
+			<script id="J_dtemplate" type="text/icat-template">
+				<div class="types-wrap">
+					<% if(data.ad_data.length){ %>
+					<a class="top-banner" href="<%= data.ad_data[0].link %>">
+						<img src="<%=blankPic%>" data-src="<%= data.ad_data[0].img%>" alt="<%= data.ad_data[0].name %>">
+					</a>
+					<% } %>
+					<ul class="types-list">
+						<% for(var i=0, list=data.type_data.list, max=list.length; i<max; i++) {%>
+							<% if(list[i].items.length) { %>
+							<li>
+								<h3><%= list[i].name %></h3>
+								<ul class="goods-list">
+									<%for(var j=0, len=list[i].items.length; j<len; j++){%>
+									<li>
+										<a href="<%=list[i].items[j].link%>">
+											<i class="J_mask"></i>
+											<img src="<%=blankPic%>" data-src="<%=list[i].items[j].img%>" alt="<%=list[i].items[j].name%>">
+											<p class="title">
+												<%=list[i].items[j].name%>
+											</p>
+										</a>
+									</li>
+									<%}%>
+								</ul>
+							</li>
+							<% } %>
+						<% } %>
+					</ul>
+				</div>
+			</script>
+		</section>
+	</div>
+<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl . '?show_type=' . $info['show_type'];?>">商品列表</a></li>
+    <li class="current"><a href="javascript:;">编辑商品</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑商品</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<input name="show_type" value="<?php echo $info['show_type'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input wa" name="sort" value="<?php echo $info['sort'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">是否货到付款</th>
+			<td class="td">
+				<label class="mr20"><input <?php if($info['iscash'] == 1) echo 'checked';?>  name="iscash" value="1" type="radio">是</label>
+				<label class="mr20"><input <?php if($info['iscash'] == 2) echo 'checked';?>  name="iscash" value="2" type="radio">否</label>
+			</td>
+		</tr>
+		<tr class="tr" <?php if(empty($info['show_type'])) echo 'style="display: none;"';?>>
+			<th class="th">是否新人专供</th>
+			<td class="td">
+				<label class="mr20"><input <?php if($info['is_new_user'] == 1) echo 'checked';?>  name="is_new_user" value="1" type="radio">是</label>
+				<label class="mr20"><input <?php if($info['is_new_user'] == 2) echo 'checked';?>  name="is_new_user" value="2" type="radio">否</label>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">商品类型</th>
+			<td class="td">
+				<select name="goods_type" class="wa">
+				<?php foreach ($goods_types as $key=>$value) {?>
+					<option <?php if ($info['goods_type'] == $key) echo 'selected = selected';?>  value="<?php echo $key;?>"><?php echo $value;?></option>
+				<?php }?>
+				</select>				
+			</td>
+		</tr>
+	   <!-- <tr class="tr">
+			<th class="th">是否推荐首页</th>
+			<td class="td">
+				<label class="mr20"><input <?php if($info['isrecommend'] == 1) echo 'checked';?>  name="isrecommend" value="1" type="radio">是</label>
+				<label class="mr20"><input <?php if($info['isrecommend'] == 2) echo 'checked';?>  name="isrecommend" value="2" type="radio">否</label>
+			</td>
+		</tr> -->
+		<tr class="tr">
+			<th class="th">供应商</th>
+			<td class="td">
+				<select name="supplier" class="wb">
+<?php foreach($suppliers as $key=>$value) { 
+if ($key != -1) {
+?>
+					<option value="<?php echo $suppliers[$key]['id'];?>" <?php if($info['supplier'] == $suppliers[$key]['id']) echo 'selected="selected"';?>><?php echo $suppliers[$key]['name'];?></option>
+<?php }}?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status" class="wb">
+                	<option <?php if($info['status'] == 1) echo 'selected="selected"';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 0) echo 'selected="selected"';?> value="0">关闭</option>
+            </select></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">售价</th>
+			<td class="td"><input type="text" class="input wb" name="price" value="<?php echo $info['price'];?>"></td>
+		</tr>
+		<tr class="tr" <?php if(empty($info['show_type'])) echo 'style="display: none;"';?>>
+			<th class="th">银币使用上限</th>
+			<td class="td"><input type="text" class="input wb" name="silver_coin" value="<?php echo $info['silver_coin'];?>"></td>
+		</tr>
+		<tr class="tr" id="stock_num">
+			<th class="th">可销售的库存</th>
+			<td class="td"><input type="text" name="stock_num" class="input wb" value="<?php echo $info['stock_num'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">每人限购数</th>
+			<td class="td"><input type="text" class="input wb" name="limit_num" value="<?php echo $info['limit_num'];?>"></td>
+		</tr>
+		<tr class="tr" id="purchase_num">
+			<th class="th">已购买数量</th>
+			<td class="td"><?php echo $info['purchase_num'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">商品名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg">
+						<img src="<?php echo $attachPath.$info['img'];?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">产品详情图片</th>
+			<td class="td">
+					<?php foreach($goods_imgs as $key=>$value) {?>
+						<div id="upimg<?php echo $value['id'];?>">
+							<ul class="uploadImg">
+								<li id="upImg<?php echo $value['id'];?>">
+									<img src="<?php echo $attachPath.$value['img'];?>"/>
+									<input type="hidden" name="upImg[<?php echo $value['id'];?>]" value="">
+								</li>
+								<li><a href="javascript:void(0)" onclick="deleteImg('<?php echo $deleteImgUrl;?>?id=<?php echo $value['id'];?>', 'upimg<?php echo $value['id'];?>', event);">删　除</a></li>
+							</ul>
+							<p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=upImg',$value['id'];?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>
+						</div>
+					<?php }?>
+				<div id="imgs"></div>
+				<div class="mb10"><button onclick="addupload();" onfocus="blur();" type="button" class="btn">＋添加预览图片</button></div>				 
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">开始结束时间</th>
+			<td class="td"><div><input class="input" type="text" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $info['start_time']);?>" /> 至 <input class="input" type="text" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s', $info['end_time']);?>" /></div>
+			</td>
+		</tr>
+		<tr class="tr" id="descrip">
+				<th class="th">内容</th>
+				<td class="td"><textarea
+						style="width: 800px; height: 500px" class="textarea"
+						name="descrip"><?php echo $info['descrip'];?></textarea>
+				</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+	K.token = token;
+    editor = K.create('textarea[name="descrip"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $adminroot.$uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/LocalGoods/index?show_type=<?php echo $show_type;?>');
+	});
+
+	var imgc = 0;
+	addupload  = function() {
+		var al = $('<ul class="uploadImg"><li id="Img'+imgc+'"><img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/><input type="hidden" name="simg['+imgc+']" value=""></li></ul><p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>'+imgc+'" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>');
+		$('#imgs').append(al);
+		imgc++;
+	}
+	deleteImg = function(url, elid, e) {
+		showConfirm("确认删除该条信息？", function() {
+			$.ajax({
+						url : url,
+						type : 'POST',
+						dataType : 'json',
+						data : 'token='+token,
+						success : function(ret) {
+							if (ret.success) {
+								$('#'+elid).remove();
+							} else {
+								showError('', ret.msg);
+							}
+						}
+					});
+		}, e);
+	}
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

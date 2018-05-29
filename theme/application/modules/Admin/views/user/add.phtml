@@ -1,0 +1,72 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<section class="ajax_wrap">
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">用户列表</a></li>
+    <li class="current"><a href="javascript:;">添加用户</a></li>
+	</ul>
+</div>
+<div class="clear-fix"></div>
+<!--<div class="h_a">添加用户</div>-->
+<form method="post" action="<?php echo $addPostUrl;?>" id="addUserFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<thead>
+			<tr>
+				<td colspan="2" style="text-align:center">添加用户</td>
+			</tr>
+		</thead>
+		<tbody>
+		<tr class="tr">
+			<td class="th">用户名</th>
+			<td class="td"><input type="text" class="input rd_1 w300" name="username" maxlength="30" value=""></td>
+		</tr>
+		<tr class="tr">
+			<td class="th">用户Email</th>
+			<td class="td"><input type="text" maxlength="30" name="email" class="input rd_1 w300"></td>
+		</tr>
+		<tr class="tr">
+			<td class="th">用户密码</th>
+			<td class="td"><input type="password" maxlength="20" name="password" class="input rd_1 w300"></td>
+		</tr>
+		<tr class="tr">
+			<td class="th">重复密码</th>
+			<td class="td"><input type="password" maxlength="20" name="r_password" class="input rd_1 w300"></td>
+		</tr>
+		<tr class="tr">
+			<td class="th">用户组</th>
+			<td class="td">
+			   <!--  <div class="select_box" id="groupid">
+				    <div class="tb_cont tb_cell">
+                        <label class="select_val" val="">请选择</label>
+                    	<ul class="select_option">
+                    		<?php foreach($groups as $key => $value) {?>
+	                        <li val="<?php echo $value['groupid'];?>"><?php echo $value['name'];?></li>
+	                        <?php }?>
+                        </ul>
+                    </div>
+                 </div> -->
+
+				<select name="groupid" class="input">
+					<?php foreach($groups as $key => $value) {?>
+	                <option value="<?php echo $value['groupid'];?>"><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+            </td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button class="btn_s2" onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+</section>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('addUserFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/User/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

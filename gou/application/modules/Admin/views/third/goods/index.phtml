@@ -1,0 +1,91 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">第三方商品库列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="get" id="searchForm" >
+<input name="token" type="hidden" value="<?php echo $token;?>"/>
+<div class="table_full">
+	<table width="100%">
+        <tr class="tr">
+            <!-- <th class="th">标题</th>
+            <td class="td"><input type="text" class="input wc" name="title" value="<?php echo $params['title'];?>"></td> -->
+            <th class="th">产品ID</th>
+            <td class="td"><input type="text" class="input wc" name="goods_id"	value="<?php echo $params['goods_id'];?>"></td>
+             <th class="th">UNIQUE_PID</th>
+             <td class="td"><input type="text" class="input wc" name="unique_pid"   value="<?php echo $params['unique_pid'];?>"></td>
+        </tr>
+        <!-- <tr class="tr">
+            <th class="th">ID</th>
+            <td class="td"><input type="text" class="input wc" name="id"	value="<?php echo $params['id'];?>"></td>
+            <th class="th">UPID</th>
+           
+        </tr> -->
+        <!-- <tr class="tr">
+           	<th class="th">设备</th>
+            <td class="td">
+            	<select name="system" id="select">
+                    <option value="">请选择</option>
+                    <option value="0" <?php if($params['system'] == '0') echo 'selected="selected"';?>>android</option>
+                    <option value="1" <?php if($params['system'] == '1') echo 'selected="selected"';?>>ios</option>
+                </select>
+            </td>
+            <th class="th">平台</th>
+            <td class="td">
+            	<select name="channel_id" id="select">
+                    <option value="">请选择</option>
+                    	<?php foreach($channel as $key=>$val):?>
+                        <option value="<?php echo $key;?>" <?php if($params['channel_id']== $key) echo 'selected="selected"';?>><?php echo $val;?></option>
+                        <?php endforeach;?>
+                </select>
+            </td>            
+        </tr> -->
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span><span style="float:left;">当前总条数：<?php echo $total;?></span></div>
+
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="5%">ID</td>
+		    <td width="10%">产品ID/UPID</td>
+            <td width="10%">标题</td>
+            <td width="5%">平台</td>
+            <td width="7%">商品图片</td>
+            <td width="5%">价格</td>
+            <td width="7%">抓取次数</td>
+            <td width="15%">Data</td>
+            <td width="7%">状态</td>
+            <td width="4%">排序</td>
+            <td width="10%">更新时间</td>
+            <td width="10%">操作</td>
+		</tr>
+<?php foreach($list as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo sprintf('%s / %s', $value['goods_id'], $value['unique_pid']);?></td>
+            <td><?php echo $value['title']; ?></td>
+            <td><?php echo $value['channel'];?></td>
+            <td><?php if($value['img']):?><img src="<?php if(strpos($value['img'], 'http://') === false) {echo $attachPath.$value['img'];}else{echo $value['img'];};?>" width="25" height="25"/><?php endif; ?></td>
+            <td><?php echo $value['price']; ?></td>
+            <td><?php echo $value['request_count'];?></td>
+            <td><?php foreach (json_decode($value['data'], true) as $key=>$val){printf("<b>%s</b> => %s<br/>", $key, $val);} ?></td>
+            <td><?php echo $value['status'];?></td>
+            <td><?php echo $value['sort'];?></td>
+            <td><?php echo date('Y-m-d H:i:s', $value['update_time']);?></td>
+            <td>
+                <a href="<?php echo $editUrl;?>/?goods_id=<?php echo $value['goods_id'];?>" class="mr10">编辑</a>
+                <a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?goods_id=<?php echo $value['goods_id'];?>', '', event);">删除</a>
+            </td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,46 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $editUrl; ?>">添加数据</a></li>
+		</ul>
+	</div>
+
+
+	<form id="batchForm" action="<?php echo $this->baseUrl; ?>" method="post">
+		<input name="token" type="hidden" value="<?php echo $token; ?>">
+
+		<div class="table_list">
+			<table width="100%">
+				<tr class="hd">
+					<td width="50">ID</td>
+					<td>标题</td>
+					<td width="120">添加时间</td>
+					<td width="100"></td>
+				</tr>
+				<?php foreach ($list as $key => $value) {
+					?>
+					<tr class="ct">
+						<td><?php echo $value['id']; ?></td>
+						<td><?php echo $value['title']; ?></td>
+						<td title="<?php echo date('Y-m-d H:i:s', $value['create_time']); ?>"><?php echo date('Y-m-d H:i:s', $value['create_time']); ?></td>
+						<td>
+							<a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+							<a href="/front/topic/info?id=<?php echo $value['id']; ?>" class="mr10">查看</a>
+						</td>
+					</tr>
+				<?php } ?>
+			</table>
+		</div>
+		<div class="h_a">
+			<span> 共<?php echo $total; ?>条结果</span>
+		</div>
+		<div class="mr10 cc">
+			<?php echo $pager; ?>
+		</div>
+	</form>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

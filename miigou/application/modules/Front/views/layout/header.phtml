@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html>
+<?php
+$ua = Util_Http::getServer('HTTP_USER_AGENT');
+$source = strpos(Util_Http::getServer('REQUEST_URI'), 'debug') ? '.source' : '';
+?>
+<head>
+	<meta charset="UTF-8">
+	<title><?php echo $title;?></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="format-detection" content="email=no" />
+	<?php if(ENV == 'product') {?>
+	<link rel="stylesheet" href="statics/assets/css/phonecore<?php echo $source;?>.css?v=<?php echo $version;?>" />
+	<script type="text/javascript" src="statics/assets/js/sys<?php echo $source;?>.js?v=<?php echo $version;?>" data-main="./main"></script>
+	<?php } else {?>
+	<link rel="stylesheet" href="<?php echo $staticRoot;?>/gou/star/assets/css/phonecore<?php echo $source;?>.css?v=<?php echo $version;?>" />
+	<script type="text/javascript" src="<?php echo $staticRoot;?>/gou/star/assets/js/sys<?php echo $source;?>.js?v=<?php echo $version;?>" data-main="./main"></script>
+	<?php }?>
+</head>

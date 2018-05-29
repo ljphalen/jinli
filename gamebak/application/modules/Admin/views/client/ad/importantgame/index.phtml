@@ -1,0 +1,49 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li class="current"><a href="<?php echo $listUrl;?>">重点游戏列表</a></li>
+    	<li><a href="<?php echo $addUrl;?>">添加重点游戏</a></li>
+    	<li><a href="<?php echo $settingsUrl;?>">设置</a></li>
+    </ul>
+</div>
+
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="ad_type" type="hidden" value="<?php echo $ad_type;?>" />
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td>游戏名称</td>
+			<td>apk包名</td>
+			<td width="120">添加时间</td>
+			<td width="100">操作</td>
+		</tr>
+<?php foreach($games as $key => $value) {?>
+		<tr class="ct">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><?php echo $value['name'];?></td>
+			<td><?php echo $value['package'];?></td>
+		    <td><?php echo date('Y-m-d H:i:s', $value['add_time']);?></td>
+			<td>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Ad_Importantgame/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,550 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<link href="<?php echo "$staticPath/game/assets/css/luck-draw.css?v=$version"; ?>" rel="stylesheet" />
+<div class="nav">
+    <ul class="cc">
+        <li><a href="<?php echo $pointShopIndexUrl;?>">积分商城</a></li>
+        <li><a href="<?php echo $pointPrizeIndexUrl;?>">积分抽奖</a></li>
+        <li><a href="<?php echo $presendIndexUrl;?>">人工发放</a></li>
+        <li class="current"><a href="javascript:void();">编辑抽奖活动</a></li>
+    </ul>
+</div>
+
+<div class="luck-draw-block">
+    <table class="add-luck-draw" id="form">
+        <tr>
+            <td class="space-left">
+                名称
+            </td>
+            <td class="space-left">
+                <input type="text" name="title" value="<?php echo $prize['title'];?>"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="space-left">
+                抽奖时间
+            </td>
+            <td  class="space-left">
+                <input class="time" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $prize['start_time']);?>"/>
+                至
+                <input class="time" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s', $prize['end_time']);?>"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="space-left">
+                活动图片<br>(720*320)
+            </td>
+            <td  class="space-left">
+                <ul class="uploadImg">
+                    <li id="AdImg">
+                        <img src="<?php echo $attachPath.$prize['img'];?>"/>
+                        <input type="hidden" name="img" value="<?php echo $prize['img'];?>">
+                    </li>
+                </ul>
+                <p style="clear:both;">
+                    <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="space-left">
+                最低版本
+            </td>
+            <td  class="space-left">
+                <input type="text" class="input" name="version" value="<?php echo $prize['version'];?>"> 默认1.5.5以上版本皆可参与
+            </td>
+        </tr>
+        <tr>
+            <td class="space-left">
+                消耗积分
+            </td>
+            <td  class="space-left">
+                <input type="text" name="point" value="<?php echo $prize['point'];?>"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="space-left">
+                活动说明
+            </td>
+            <td class="space-left">
+                <textarea style="width: 800px; height: 300px" class="textarea" name="descript"><?php echo $prize['descript'];?></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="space-left">
+                抽奖方式
+            </td>
+            <td class="space-left">
+                <select id="lotteryMode" >
+                    <option value="1" <?php echo ($prize['type']=='1') ? 'selected': '';?>>九宫格</option>
+                    <option value="2" <?php echo ($prize['type']=='2') ? 'selected': '';?>>转盘</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="space-left">
+                <img name="lotteryMode" src="<?php echo $staticPath;?>/game/assets/img/marquee.png" />
+                <img name="lotteryMode" src="<?php echo $staticPath;?>/game/assets/img/turntable.png" />
+            </td>
+            <td>
+                <div  id="prizeForm" class="luck-draw">
+                    <table>
+                        <tr>
+                            <td data-index="1">
+                                <span class="location">位置1</span>
+                                <table class="update hide">
+                                    <tr>
+                                        <td rowspan="3" style="width:156px">
+                                            <img name="bigPoster" src="" />
+                                        </td>
+                                        <td>
+                                            名称：<span name="prizeName"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            概率：<span name="probability"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            最大数量：<span name="maxQuantity"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span name="day"></span>
+                                        </td>
+                                        <td rowspan="2">
+                                            <input name="update" type="button" class="but-yellow" value="编辑" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span name="total"></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <input name="add" type="button" class="but-yellow" value="添加" />
+                            </td>
+                            <td data-index="2">
+                                <span class="location">位置2</span>
+                                <table class="update hide">
+                                    <tr>
+                                        <td rowspan="3" style="width:156px">
+                                            <img name="bigPoster"  src="" />
+                                        </td>
+                                        <td>
+                                            名称：<span name="prizeName"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            概率：<span name="probability"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            每大数量：<span name="maxQuantity"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span name="day"></span>
+                                        </td>
+                                        <td rowspan="2">
+                                            <input name="update" type="button" class="but-yellow" value="编辑" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span name="total"></span>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <input name="add" type="button" class="but-yellow" value="添加" /></td>
+                            <td data-index="3">
+                                <span class="location">位置3</span>
+                                <table class="update hide">
+                                    <tr>
+                                        <td rowspan="3" style="width:156px">
+                                            <img name="bigPoster" src="" />
+                                        </td>
+                                        <td>
+                                            名称：<span name="prizeName"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            概率：<span name="probability"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            最大数量：<span name="maxQuantity"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span name="day"></span>
+                                        </td>
+                                        <td rowspan="2">
+                                            <input name="update" type="button" class="but-yellow" value="编辑" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span name="total"></span>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <input name="add" type="button" class="but-yellow" value="添加" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-index="8">
+                                <span class="location">位置8</span>
+                                <table class="update hide">
+                                    <tr>
+                                        <td rowspan="3" style="width:156px">
+                                            <img name="bigPoster" src="" />
+                                        </td>
+                                        <td>
+                                            名称：<span name="prizeName"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            概率：<span name="probability"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            最大数量：<span name="maxQuantity"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span name="day"></span>
+                                        </td>
+                                        <td rowspan="2">
+                                            <input name="update" type="button" class="but-yellow" value="编辑" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span name="total"></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <input name="add" type="button" class="but-yellow" value="添加" />
+                            </td>
+                            <td>
+                                <h3>抽奖开关</h3>
+                                <select id="status">
+                                    <option <?php if($prize['status'] == 1) echo 'selected';?> value="1">开启</option>
+                                    <option <?php if($prize['status'] == 0) echo 'selected';?> value="0">关闭</option>
+                                </select>
+                            </td>
+                            <td data-index="4">
+                                <span class="location">位置4</span>
+                                <table class="update hide">
+                                    <tr>
+                                        <td rowspan="3" style="width:156px">
+                                            <img name="bigPoster" src="" />
+                                        </td>
+                                        <td>
+                                            名称：<span name="prizeName"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            概率：<span name="probability"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            最大数量：<span name="maxQuantity"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span name="day"></span>
+                                        </td>
+                                        <td rowspan="2">
+                                            <input name="update" type="button" class="but-yellow" value="编辑" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span name="total"></span>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <input name="add" type="button" class="but-yellow" value="添加" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-index="7">
+                                <span class="location">位置7</span>
+                                <table class="update hide">
+                                    <tr>
+                                        <td rowspan="3" style="width:156px">
+                                            <img name="bigPoster" src="" />
+                                        </td>
+                                        <td>
+                                            名称：<span name="prizeName"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            概率：<span name="probability"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            最大数量：<span name="maxQuantity"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span name="day"></span>
+                                        </td>
+                                        <td rowspan="2">
+                                            <input name="update" type="button" class="but-yellow" value="编辑" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span name="total"></span>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <input name="add" type="button" class="but-yellow" value="添加" />
+                            </td>
+                            <td data-index="6">
+                                <span class="location">位置6</span>
+                                <table class="update hide">
+                                    <tr>
+                                        <td rowspan="3" style="width:156px">
+                                            <img name="bigPoster" src="" />
+                                        </td>
+                                        <td>
+                                            名称：<span name="prizeName"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            概率：<span name="probability"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            最大数量：<span name="maxQuantity"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span name="day"></span>
+                                        </td>
+                                        <td rowspan="2">
+                                            <input name="update" type="button" class="but-yellow" value="编辑" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span name="total"></span>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <input name="add" type="button" class="but-yellow" value="添加" />
+                            </td>
+                            <td data-index="5">
+                                <span class="location">位置5</span>
+                                <table class="update hide">
+                                    <tr>
+                                        <td rowspan="3" style="width:156px">
+                                            <img name="bigPoster" src="" />
+                                        </td>
+                                        <td>
+                                            名称：<span name="prizeName"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            概率：<span name="probability"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            最大数量：<span name="maxQuantity"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span name="day"></span>
+                                        </td>
+                                        <td rowspan="2">
+                                            <input name="update" type="button" class="but-yellow" value="编辑" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span name="total"></span>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <input name="add" type="button" class="but-yellow" value="添加" />
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div class="ok">
+        <input value="完成" type="button" id="submit" class="but-yellow" />
+    </div>
+</div>
+<div title="配置奖品" id="prizeAllocation" class="prize-allocation">
+    <table>
+        <tr>
+            <td>奖品</td>
+            <td colspan="2">
+                <select name="type"  disabled>
+                    <option value="1">实体</option>
+                    <option value="2">A券</option>
+                    <option value="3">积分</option>
+                    <option value="0">最低奖项</option>
+                </select>
+						<span data-name="amount">
+							<input type="text"  name="amount" />
+                          	<span data-name="aSecuritiesTitle" class="font-12">A券 请填写大于0的正整数</span>
+							<span data-name="integralTitle" class="font-12">积分 请填写大于0的正整数</span>
+						</span>
+            </td>
+        </tr>
+        <tr data-name="validityPeriod" >
+            <td>
+                有效期
+            </td>
+            <td colspan="2">
+                <input text="text" name="validityPeriod"><span class="font-12">天 请填写大于0的正整数</span>
+            </td>
+        </tr>
+        <tr data-name="productType" >
+            <td>
+                未中奖品
+            </td>
+            <td colspan="2">
+                <select id="leastType" disabled>
+                    <option value="1">积分</option>
+                    <option value="0">不中</option>
+                </select>
+                <input type="text" name="integralNumber" /><span class="font-12" id="integralNumberTitle"> 积分数量</span>
+            </td>
+        </tr>
+        <tr data-name="prizeName">
+            <td>
+                奖品名称
+            </td>
+            <td colspan="2">
+                <input name="prizeName" type="text" /> <font style="color: red">建议长度不要超过6个中文汉字</font>
+            </td>
+        </tr>
+        <?php foreach($config as $item):?>
+            <tr data-name="<?php echo "poster{$item['index']}";?>">
+                <td>
+                    图片
+                </td>
+                <td>
+                    <ul class="uploadImg">
+                        <li id="<?php echo "AdImg{$item['index']}_1";?>">
+                            <img class="js_form" src="<?php echo $attachPath . $item['smallPoster'];?>">
+                            <br/><span>(小图)</span>
+                            <input type="hidden" name="smallPoster" value="<?echo $item['smallPoster'];?>">
+                        </li>
+                    </ul>
+                    <p style="clear:both;">
+                        <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=' . "AdImg{$item['index']}_1";?>" style="height:80px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                    </p>
+                </td>
+                <td>
+                    <ul class="uploadImg">
+                        <li id="<?php echo "AdImg{$item['index']}_2";?>">
+                            <img class="js_form" src="<?php echo $attachPath . $item['bigPoster'];?>">
+                            <br/><span>(大图)</span>
+                            <input type="hidden" name="bigPoster" value="<?echo $item['bigPoster'];?>">
+                        </li>
+                    </ul>
+                    <p style="clear:both;">
+                        <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId='."AdImg{$item['index']}_2";?>" style="height:80px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                    </p>
+                </td>
+            </tr>
+        <?php endforeach;?>
+        <tr data-name="probability">
+            <td>
+                中奖概率
+            </td>
+            <td colspan="2">
+                <input type="text" name="probability" /> <font style="color: red">请输入0-1000000之间整数</font>
+            </td>
+        </tr>
+        <tr data-name="leastDate">
+            <td>
+                发放间隔
+            </td>
+            <td colspan="2">
+                <input name="leastDate" type="text" />(秒) <font style="color: red">请输入大于等于0的整数</font>
+            </td>
+        </tr>
+        <tr data-name="maxQuantity">
+            <td>
+                最大数量
+            </td>
+            <td colspan="2">
+                <input type="text" name="maxQuantity" /> <font style="color: red">请输入大于等于0的整数</font>
+            </td>
+        </tr>
+        <input type="hidden" name="cId" />
+    </table>
+    <div data-name="lotteryNumber" class="lottery-number">
+        抽奖次数达到&nbsp;&nbsp;<input text="text" name="lotteryNumber" />(次)之后，才开放此奖品
+    </div>
+    <input name="ok" type="button" value="完成" class="but-yellow ok" />
+</div>
+<div id="alert">
+    <p name="msg"></p>
+</div>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/game/assets/js/Form.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/game/assets/js/validate.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/game/assets/js/luckDraw.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+    var attachPath ="<?php echo $attachPath; ?>";
+    var actionUrl = "<?php echo $editPostUrl;?>/?id=<?php echo $prize['id'];?>";
+    var redirectUrl = baseurl+'/Admin/Point_Prize/index';
+    var luckDrawData = {
+        list:<?php echo json_encode($config);?>
+    };
+    var editor;
+    KindEditor.ready(function(K) {
+        K.token = '<?php echo $token;?>';
+        editor = K.create('textarea[name="descript"]', {
+            resizeType : 1,
+            allowPreviewEmoticons : false,
+            allowImageUpload : true,
+            uploadJson : '<?php echo $uploadUrl;?>',
+            items : EDITOR_ITEMS
+        });
+    });
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

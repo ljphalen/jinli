@@ -1,0 +1,195 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+
+<!-- 导航栏Ajax加载 指向navagator.html menuOn表示分别需要高亮的菜单栏id
+用下划线_隔开 eg:bz_taotu_taotuPack-->
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- wp01-壁纸详情-->
+    <div id="bz_usr_wp01">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">状态</label>
+
+                    <div class="tb_cont tb_cell">
+
+                        <ul class="tag_list tag_one"><!-- tag_one 一级标签 只能选中一个 -->
+                            <li value="0" class="<?php if (!$type) echo 'on' ?>">
+                                <a href="/Admin/Clockmy/index">所有状态</a>
+                            </li>
+                            <?php foreach ($status as $k => $v) { ?>
+                                <li value="<?php echo $k ?>" class="<?php if ($type == $k) echo 'on' ?>">
+                                    <a href="/Admin/Clockmy/index?tid=<?php echo $k ?>"><?php echo $v ?></a>
+                                </li>
+                            <?php } ?>
+
+                        </ul>
+
+                    </div>
+
+                    <div class="tb_cell">
+                        <ul class="tb_switch">
+                            <li class="txt_switch">批量管理</li>
+                            <li class="btn_switch switch_pics" openId="viewPics">宫格</li>
+                            <!-- openId 表示点击时 显示哪个id下的内容 -->
+                            <li class="btn_switch switch_list on" openId="viewList">列表</li>
+                        </ul>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+            <!-- 宫格模式 admin_mode显示各子项目的管理按钮-->
+            <section class="view view_pics " id="viewPics">
+                <!-- 批量管理内容 默认隐藏 -->
+                <div class="view_admin view_pics_admin">
+                    <!-- checkClass表示 点击后 哪些class要被选中 -->
+                    <button class="btn_check btn_check_all" checkClass="btn_check_pics"></button>
+                    <label>全选</label>
+                    <span class="btn btn_s1 pack_del pop_btn" openPopId="fixTipView">批量删除</span>
+                </div>
+                <h1 class="block_name">全部时钟</h1>
+                <ul class="view_pics_wrap "><!--  -->
+                    <?php foreach ($clock as $v) { ?>
+
+                        <li class="view_pics_list">
+                            <div class="pic_cont btn_on">
+                                <img src="<?php echo $v['c_imgthumb']; ?>">
+                                <button class="btn_check btn_check_pics" val="<?php echo $v['id']; ?>"></button>
+                                <?php if ($v['c_status'] < 3 || $v['c_status'] > 4) { ?>
+                                    <div class="view_pics_btns">
+                                        <button><a class="btn_txt" href="/Admin/clockmy/myclockedit?id=<?php echo $v['id']; ?>">修改</a></button>
+                                        <button><a class="btn_txt pop_btn delBtn" openPopId="fixTipView" value="<?php echo $v['id']; ?>">删除</a></button></div>
+                                <?php } ?>
+                            </div>
+                            <p class="pic_name"><?php echo $v['c_filename'] ?></p>
+                            <p class="pic_name"><?php echo $status[$v['c_status']] ?></p>
+                        </li>
+                    <?php } ?>
+                </ul>
+                <div class="clear-fix"></div>
+            </section>
+
+            <!-- 列表模式 -->
+            <section class="view view_list show" id="viewList">
+                <!-- 批量管理内容 默认隐藏 -->
+                <div class="view_admin view_list_admin">
+                    <!-- checkClass表示 点击后 哪些class要被选中 -->
+                    <button class="btn_check btn_check_all" checkClass="btn_check_list"></button>
+                    <label>全选</label>
+                    <!--<span class="btn btn_s1 pack_approve">批量通过</span>-->
+                    <span class="btn btn_s1 pack_del pop_btn" openPopId="fixTipView">批量删除</span>
+                </div>
+                <table class="view_list_tb">
+                    <thead>
+                        <tr><th>ID</th><th>时钟</th><th>名称</th><th>上传时间</th><th>编辑</th><th>状态</th><th>序号</th></tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($clock as $vlist) { ?>
+                            <tr>
+                                <td><?php echo $vlist['id']; ?></td>
+                                <td class="btn_on">
+                                    <button class="btn_check btn_check_list" val="<?php echo $vlist['id']; ?>"></button>
+                                    <img src="<?php echo $vlist['c_imgthumb']; ?>"></td>
+                                <td><?php echo $vlist['c_filename']; ?></td>
+                                <td><?php echo date("Y-m-d H:i:s", $vlist['c_uploadtime']) ?></td>
+                                <td>
+                                    <?php if ($vlist['c_status'] < 3 || $vlist['c_status'] > 4) { ?>
+                                        <a class="btn_txt" href="/Admin/clockmy/myclockedit?id=<?php echo $vlist['id']; ?>">修改</a>
+                                        <a class="btn_txt pop_btn delBtn" openPopId="fixTipView" value="<?php echo $vlist['id']; ?>">删除</a>
+                                    <?php } ?>
+                                </td>
+
+                                <td><?php echo $status[$vlist['c_status']] ?></td>
+                                <td><?php echo $vlist['c_sort'] ?></td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </section>
+
+        </div><!-- content end -->
+
+    </div>
+</section>
+<!-- 分页模块 -->
+<?php echo $this->render("common/pageshow.phtml"); ?>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">是否删除时钟<span></span></p>
+                    <div class="tip_btns">
+                        <button class="btn_s2 del_ok">确定</button>
+                        <button class="btn_s2 btnCancel">取消</button>
+                    </div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+
+<script type="text/javascript">
+    var token = "<?php echo $token; ?>"
+
+    $(".delBtn").click(function () {
+        var clockid = $(this).attr("value");
+        $(".del_ok").click(function (e) {
+            var data = "id=" + clockid + "&token=" + token;
+
+            var url = "/Admin/Clockmy/delclock";
+            $(".pop_wraper").removeClass("show");
+            $.post(url, data, function (d) {
+
+                if (d) {
+                    if (urlpar[1] != 'undefined') {
+                        window.location.href = "/Admin/clockmy/index/" + "?" + urlpar[1];
+                    } else {
+                        window.location.href = "/Admin/clockmy/index/";
+                    }
+                }
+            });
+
+            stopPropagation(e)
+        })
+    });
+
+    //批量删除
+    $(".pack_del").click(function () {
+
+        var sel_rows = $(".btn_on").find(".on");
+        var ids = "";
+        sel_rows.each(function () {
+            ids += "_" + $(this).attr("val");
+        });
+        ids = ids.substr(1);
+
+        $(".del_ok").click(function (e) {
+            var data = "ids=" + ids + "&token=" + token;
+
+            var url = "/Admin/clockmy/delclocksets";
+            $(".pop_wraper").removeClass("show");
+            $.post(url, data, function (d) {
+
+                if (d) {
+                    if (urlpar[1] != 'undefined') {
+                        window.location.href = "/Admin/clockmy/index/" + "?" + urlpar[1];
+                    } else {
+                        window.location.href = "/Admin/clockmy/index/";
+                    }
+                }
+            });
+
+            stopPropagation(e)
+        })
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.js"></script>
+<section class="ajax_wrap">
+    <div id="pay_paylist_list">
+        <div class="content">
+        <!--销售列表 begin-->	
+        	<div class="salerlist">
+        		<div class="com_tb_wrap">
+        			<div class="com_tb">
+        				<label class="tb_cell">搜索</label>
+        				<div class="tb_cont tb_cell">
+        					<input type="text" style="width:350px;" class="rd_1 search_name" value="">
+				            <button class="btn_s2 detial_search_btn" id="search_btn">搜索</button>
+        				</div>
+        			</div><!--com_tb end-->
+        		</div><!--com_tb_wrap end-->
+        		<div class="com_tb_wrap">
+        			<div class="com_tb">
+        				<label class="tb_cell" style="vertical-align:middle">时间范围</label>
+        				<div class="tb_cont tb_cell">
+        					<div class="time_about">
+        						<ul>
+        							<li class="hover">近一周</li>
+        							<li>近一个月</li>
+        							<li>近半年</li>
+        							<li>近一年</li>
+        						</ul>
+        					</div>
+        					<div class="time_search">
+        						<input name="from" type="text" onClick="laydate({istime:   true, format: 'YYYY-MM-DD hh:mm:ss'})" readonly class="time_start laydate-icon datepicker" style="margin-right:0.2rem" value="<?php echo $from;?>">
+								<label class="end_time">至</label>
+								<input name="to" type="text" onClick="laydate({istime:   true, format: 'YYYY-MM-DD hh:mm:ss'})" readonly class="time_end laydate-icon datepicker" value="<?php echo $to;?>">
+								<button class="btn_s2 search_time" >查询</button>
+        					</div>
+        					<div class="change_txt fl">
+        						<span><a class="btn_txt">EXCEL</a></span>
+        					</div>
+        				</div>
+        			</div><!--com_tb end-->
+        		</div><!--com_tb_wrap end-->
+        		<div class="saler_tb">
+        			<table class="view_list_tb">
+        				<thead>
+        					<tr>
+        						<th>名称</th>
+        						<th>主题个数</th>
+        						<th>下载总数</th>
+        						<th>销售总数</th>
+        						<th>销售营业额（A币）</th>
+        						<th>可提现金额（元）</th>
+        						<th>操作</th>
+        					</tr>
+        				</thead>
+        				<tbody>
+        					<tr>
+        						<td>设计师1</td>
+        						<td>12</td>
+        						<td>12</td>
+        						<td>6</td>
+        						<td>200</td>
+        						<td>200</td>
+        						<td><a class="btn_txt">详情</a></td>
+        					</tr>
+        					<tr>
+        						<td>设计师1</td>
+        						<td>12</td>
+        						<td>12</td>
+        						<td>6</td>
+        						<td>200</td>
+        						<td>200</td>
+        						<td><a class="btn_txt">详情</a></td>
+        					</tr>
+        				</tbody>
+        			</table>
+        		</div>
+        	</div>
+        <!-- content end -->
+        </div>
+	</div>
+</section>
+
+</body>
+<script type="text/javascript">
+	$(function(){
+		$('.time_about li').each(function(index){
+			var $this = $(this);
+			$this.click(function(index){
+				$this.siblings().removeClass('hover');
+				$this.addClass('hover');
+			})
+		});
+	})
+</script>
+</html>

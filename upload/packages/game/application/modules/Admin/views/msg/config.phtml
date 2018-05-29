@@ -1,0 +1,61 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">运营消息</a></li>	
+    <li><a href="<?php echo $listPushUrl;?>">通知栏消息</a></li>
+    <li><a href="<?php echo $sysMsgUrl;?>">系统消息</a></li>
+	<li class="current"><a href="javascript:;">消息设置</a></li>
+	</ul>
+</div>
+<div class="h_a">消息设置</div>
+<form method="post" action="/Admin/Msg/config_post" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">系统消息</th>
+			<td class="td">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">A券过期消息</th>
+					<td class="td">
+						<select name="msg_atickexpire">
+							<option value="1" <?php if($config['msg_atickexpire'] == 1) echo 'selected';?>>开启</option>
+							<option value="0" <?php if($config['msg_atickexpire'] == 0) echo 'selected';?>>关闭</option>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">A券赠送消息</th>
+					<td class="td">
+						<select name="msg_atickgive">
+							<option value="1" <?php if($config['msg_atickgive'] == 1) echo 'selected';?>>开启</option>
+							<option value="0" <?php if($config['msg_atickgive'] == 0) echo 'selected';?>>关闭</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">运营消息</th>
+			<td class="td">
+			<select name="msg_yunying">
+				<option value="1" <?php if($config['msg_yunying'] == 1) echo 'selected';?>>开启</option>
+				<option value="0" <?php if($config['msg_yunying'] == 0) echo 'selected';?>>关闭</option>
+			</select>
+			</td>		
+		</tr>	
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//表单数据提交
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Msg/config');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

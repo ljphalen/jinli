@@ -1,0 +1,77 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li class="current"><a href="<?php echo $listUrl;?>">推荐抽奖活动</a></li>
+    </ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+    <input name="token" type="hidden" value="<?php echo $token;?>" />
+    <div class="table_full">
+        <table width="100%">
+            <tr>
+                <th class="th">手机号</th>
+                <td class="td"><input class="input wb" type="text" name="phone" value="<?php echo $search['phone'];?>"></td>
+                <th class="th">用户uid</th>
+                <td class="td"><input class="input wb" type="text" name="uid" value="<?php echo $search['uid'];?>"></td>
+            </tr>
+            <tr>
+                <th class="th">提交时间</th>
+                <td class="td" colspan="3">
+                    <input class="input" type="text" maxlength="30" id="start_time" name="start_time" value="<?php echo $search['start_time'];?>">
+                    <input class="input" type="text" maxlength="30" id="end_time" name="end_time" value="<?php echo $search['end_time'];?>">
+                </td>
+            </tr>
+            <tr>
+                <th class="th"></th>
+                <td class="td" colspan="3">
+                    <span class="btn"><span><button type="submit">搜 索</button></span></span>
+                    <span class="btn"><span><button type="button" onclick="downloadOrder();">下载</button></span></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+<form action="<?php echo $downloadUrl;?>" method="post" id="DownloadForm" >
+    <input name="token" type="hidden" value="<?php echo $token;?>"/>
+    <input type="hidden" name="phone" value="<?php echo $search['phone'];?>">
+    <input type="hidden" name="start_time" value="<?php echo $search['start_time'];?>">
+    <input type="hidden" name="end_time" value="<?php echo $search['end_time'];?>">
+    <input type="hidden" name="uid" value="<?php echo $search['uid'];?>">
+</form>
+<div class="table_list">
+    <table width="100%">
+        <tr class="hd">
+            <td width="5%">序号</td>
+            <td width="30%">手机号</td>
+            <td width="50%">UID</td>
+            <td width="15%">提交时间</td>
+        </tr>
+        <?php foreach($result as $key => $value) {?>
+            <tr class="ct">
+                <td><?php echo str_pad($value['id'], 5, 0, STR_PAD_LEFT);?></td>
+                <td><?php echo $value['phone'];?></td>
+                <td><?php echo $value['uid'];?></td>
+                <td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+            </tr>
+        <?php } ?>
+    </table>
+</div>
+<div class="mr10 cc">
+    <?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/admin/highcharts.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#start_time").datepicker({
+            dateFormat : 'yy-mm-dd'
+        });
+        $("#end_time").datepicker({
+            dateFormat : 'yy-mm-dd'
+        });
+    })
+
+    function downloadOrder(){
+        $('#DownloadForm').submit();
+    }
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

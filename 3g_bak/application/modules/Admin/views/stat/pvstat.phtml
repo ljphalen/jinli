@@ -1,0 +1,587 @@
+<?php echo $this->render("layout/header.phtml");
+$sum = $sum ? $sum : 0;
+?>
+	<style type="text/css">
+		.expendTable tr {
+			background: #fff;
+		}
+
+		.expendTable tr td {
+			padding: 10px;
+			color: red;
+			border-bottom: 1px solid #efefef;
+		}
+	</style>
+	<script src="<?php echo $staticPath; ?>/v2/echarts/echarts.js" type="text/javascript"></script>
+	<script>
+		require.config({
+			paths: {"echarts": "<?php echo $staticPath;?>/v2/echarts"}
+		});
+	</script>
+	<form method="post" action="/Admin/Stat/pvstat" id="addFrom">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">时间范围</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $searchParam['sdate']; ?>"> 至
+						<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $searchParam['edate']; ?>">
+
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">所属页面</th>
+					<td class="td">
+						<select id="page_type" name="page_type">
+							<option value="">请选择页面类型</option>
+							<?php foreach ($searchData['pageCate'] as $key => $value) { ?>
+								<option value="<?php echo $key; ?>" <?php if ($searchParam['page_type'] == $key) echo 'selected'; ?>><?php echo $value; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<?php
+				$display = ($searchParam['page_type'] != 'nav') ? 'style="display:none;"' : '';
+				?>
+
+				<tr class="tr s_pt s_nav" <?=$display?>>
+					<th class="th">所属分类</th>
+					<td class="td">
+						<select id="sel_cate" name="type_id" onchange="settypes(this.value, 0)">
+							<option value="">请选择分类</option>
+							<?php
+							foreach ($searchData['navCate'] as $key => $value) {
+								$selected = ($searchParam['type_id'] == $value['id']) ? "selected" : '';
+								$name     = ($value['page_id'] == 1) ? '首页-' . $value["name"] : '子页-' . $value["name"];
+								echo sprintf('<option %s value="%d">%s</option>', $selected, $value['id'], $name);
+							}
+							?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr s_pt s_nav" id="column" <?=$display?>>
+					<th class="th">所属栏目</th>
+					<td class="td">
+						<select name="column_id">
+							<option value="">选择栏目</option>
+							<?php foreach ($searchData['navColumn'] as $k => $v) {
+								if ($v['type_id'] == $searchParam['type_id']) {
+									$selected = ($searchParam['column_id'] == $k) ? "selected" : '';
+									echo sprintf('<option %s value="%d">%s</option>', $selected, $k, $v);
+								}
+							}
+							?>
+						</select>(请先选择分类再选择栏目)
+					</td>
+				</tr>
+
+				<tr class="tr s_pt s_nav" id="channel" <?=$display?>>
+					<th class="th">选择渠道号</th>
+					<td class="td">
+						<select name="channel" id="channel_id">
+							<?php foreach ($searchData['navChannel'] as $v) { ?>
+								<option value="<?php echo $v['ch']; ?>" <?php if ($searchParam['channel'] == $v['ch']) echo 'selected'; ?>><?php echo $v['name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<?php
+				$display = ($searchParam['page_type'] != 'localnav') ? 'style="display:none;"' : '';
+				?>
+
+				<tr class="tr s_pt s_localnav" <?=$display?>>
+					<th class="th">所属卡片</th>
+					<td class="td">
+						<select id="nav_type" name="local_type_id" onchange="setlocalnavtypes(this.value, 0)">
+							<option value="">请选择卡片</option>
+							<?php
+							foreach ($searchData['localnavtype'] as $key => $value) {
+								$selected = ($searchParam['local_type_id'] == $value['id']) ? "selected" : '';
+								echo sprintf('<option %s value="%d">%s</option>', $selected, $value['id'], $value['name']);
+							}
+							?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr s_pt s_localnav" id="column" <?=$display?>>
+					<th class="th">所属栏目</th>
+					<td class="td">
+						<select name="local_column_id">
+							<option value="">选择栏目</option>
+							<?php
+							foreach ($searchData['localnavcolumn'] as $k => $v) {
+								if ($v['type_id'] == $searchParam['local_type_id']) {
+									$selected = ($searchParam['local_column_id'] == $v['id']) ? "selected" : '';
+									echo sprintf('<option %s value="%d">%s</option>', $selected, $v['id'], $v['name']);
+								}
+							}
+							?>
+						</select>(请先选择卡片再选择栏目)
+					</td>
+				</tr>
+
+				<?php
+				$display = ($searchParam['page_type'] != 'sites') ? 'style="display:none;"' : '';
+				?>
+
+				<tr class="tr s_pt s_sites" <?=$display?>>
+					<th class="th">一级分类</th>
+					<td class="td">
+						<select name="siteCate1" id="first_level" onchange="setSiteCate2(this.value, 0)">
+							<option value="0">请选择分类</option>
+							<?php
+							foreach ($searchData['siteCate1'] as $k => $v) {
+								$selected = ($searchParam['siteCate1'] == $v['id']) ? "selected" : '';
+								echo sprintf('<option %s value="%d">%s</option>', $selected, $v['id'], $v['name']);
+							}
+							?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr s_pt s_sites" <?=$display?>>
+					<th class="th">二级分类</th>
+					<td class="td">
+						<select name="siteCate2" id="second_level">
+							<option value="0">请选择</option>
+							<?php
+							foreach ($searchData['siteCate2'] as $k => $v) {
+								if ($v['parent_id'] == $searchParam['siteCate1']) {
+									$selected = ($searchParam['siteCate2'] == $v['id']) ? "selected" : '';
+									echo sprintf('<option %s value="%d">%s</option>', $selected, $v['id'], $v['name']);
+								}
+							}
+							?>
+						</select>
+					</td>
+				</tr>
+
+				<?php
+				$display = ($searchParam['page_type'] != 'news') ? 'style="display:none;"' : '';
+				?>
+
+				<tr class="tr s_pt s_news" <?=$display?>>
+					<th class="th">选择位置</th>
+					<td class="td">
+						<select name="pos_id" id="position_id">
+							<?php foreach ($searchData['position'] as $k => $v) { ?>
+								<option value="<?php echo $k; ?>" <?php if ($k == $searchParam['pos_id']) echo 'selected'; ?> ><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">关键字</th>
+					<td class="td">
+						<input type="text" class="input_w" name="keywords" value="<?php echo $searchParam['keywords']; ?>"/>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">URL</th>
+					<td class="td">
+						<input type="text" class="input_w" name="url" value="<?php echo $searchParam['url']; ?>"/>
+					</td>
+				</tr>
+
+				<tr class="tr" id="column">
+					<th class="th">筛选</th>
+					<td class="td">
+			<span>
+				状态：
+				<select name="showStatus">
+					<?php foreach ($searchData['showStatus'] as $k => $v) { ?>
+						<option value="<?php echo $k; ?>" <?php if ($searchParam['showStatus'] == $k) echo 'selected'; ?>><?php echo $v; ?></option>
+					<?php } ?>
+				</select>
+			</span>
+			<span style="margin-left:15px;">
+				数据类型：
+				<select name="dataType">
+					<?php foreach ($searchData['dataType'] as $k => $v) { ?>
+						<option value="<?php echo $k; ?>" <?php if ($searchParam['dataType'] == $k) echo 'selected'; ?>><?php echo $v; ?></option>
+					<?php } ?>
+				</select>
+			</span>
+					</td>
+				</tr>
+
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+		<input type="hidden" id="hidden_export" name="export" value="0"/>
+	</form>
+	<style type="text/css">
+		table {
+			empty-cells: show;
+			border-collapse: collapse;
+		}
+
+		table th {
+			white-space: nowrap;
+		}
+
+		table td {
+			white-space: nowrap;
+		}
+	</style>
+	<div class="h_a">
+		总访问量: <span id="total" style="color: #00d1ff;font-size:14px"></span>
+		<span style="float:right;"><input type="button" value="导出" id="downLoad"></span>
+	</div>
+<?php if (($searchParam['page_type'] == 'nav' && !$searchParam['column_id'])) { ?>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="ct">
+				<td class="td2">IＤ</td>
+				<td class="td2" width="80px">栏目</td>
+				<?php foreach ($date as $d) { ?>
+					<td class="td2" width="70px"><?php echo $d; ?></td>
+				<?php } ?>
+				<td class="td2">总和</td>
+			</tr>
+			<?php foreach ($list as $k => $v) { ?>
+				<tr class="ct">
+					<td><?php echo $v['id']; ?></td>
+					<td class="td2"><?php echo $v['name']; ?></td>
+					<?php foreach ($date as $d) { ?>
+						<td class="td2"><?php echo in_array($d, array_keys($v['details'])) ? $v['details'][$d] : 0; ?></td>
+					<?php } ?>
+					<td class="td2"><?php echo $v['clicked']; ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php } elseif ($searchParam['page_type'] == 'news') { ?>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="ct">
+				<td class="td2">IＤ</td>
+				<td class="td2" width="80px">标题</td>
+				<?php foreach ($date as $d) { ?>
+					<td class="td2" width="70px"><?php echo $d; ?></td>
+				<?php } ?>
+				<td class="td2">总和</td>
+			</tr>
+			<?php foreach ($list as $k => $v) { ?>
+				<tr class="ct">
+					<td><?php echo $v['id']; ?></td>
+					<td class="td2"><?php echo $v['title']; ?></td>
+					<?php foreach ($date as $d) { ?>
+						<td class="td2"><?php echo in_array($d, array_keys($v['details'])) ? $v['details'][$d] : 0; ?></td>
+					<?php } ?>
+					<td class="td2"><?php echo $v['clicked']; ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php } elseif ($searchParam['page_type'] == 'sites') { ?>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td>ID</td>
+				<td>名称</td>
+				<?php foreach ($date as $v) { ?>
+					<td><?php echo date('Y-m-d', strtotime($v)); ?></td>
+				<?php } ?>
+				<td>总和:<span id="sum" style="color:red"></span></td>
+			</tr>
+			<?php
+			$sumTrData          = array();
+			$jsonDataX          = $date;
+			$jsonDataLegend     = array();
+			$jsonDataSeries     = array();
+			$jsonDataSeriesData = array();
+			foreach ($list as $key => $value) { ?>
+				<tr class="ct">
+					<td><?php echo $value['id']; ?></td>
+					<td><?php echo $value['name']; ?></td>
+					<?php
+					$total = 0;
+					foreach ($date as $d) {
+						?>
+						<td class="td2"><?php echo $value[$d] ? $value[$d] : 0;?></td>
+						<?php
+						$total += $value[$d];
+						$sumTrData[$d] += intval($value[$d]);
+						$jsonDataSeriesData[] = $value[$d] ? $value[$d] : 0;
+					} ?>
+					<?php
+					$jsonDataLegend[] = $value['name'];
+					$jsonDataSeries[] = array(
+						'name'  => $value['name'],
+						'type'  => 'line',
+						'stack' => '访问量',
+						'data'  => $jsonDataSeriesData
+					);
+					?>
+					<td class="td"><?php echo $total; ?></td>
+				</tr>
+			<?php } ?>
+			<tr class="ct">
+				<td>总和</td>
+				<td>-</td>
+				<?php foreach ($sumTrData as $v) { ?>
+					<td><?php echo $v; ?></td>
+				<?php } ?>
+				<td><?php echo array_sum($sumTrData); ?></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+	<script>
+		var jsonDataX = <?php echo json_encode($jsonDataX);?>;
+		var jsonDataLegend = <?php echo json_encode($jsonDataLegend);?>;
+		var jsonDataSeries = <?php echo json_encode($jsonDataSeries);?>;
+	</script>
+	<script src="<?php echo $staticPath; ?>/v2/js/statv2.js?v=<?php echo $version; ?>"></script>
+	<div id="_st_hold1" style="width:100%;height:300px;"></div>
+<?php } elseif ($searchParam['page_type'] == 'localnav') { ?>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td>ID</td>
+				<td>名称</td>
+				<td>栏目</td>
+				<?php foreach ($date as $v) { ?>
+					<td><?php echo date('Y-m-d', strtotime($v)); ?></td>
+				<?php } ?>
+				<td>总和:<span id="sum" style="color:red"></span></td>
+			</tr>
+			<?php
+			$sumTrData          = array();
+			$jsonDataX          = $date;
+			$jsonDataLegend     = array();
+			$jsonDataSeries     = array();
+			$jsonDataSeriesData = array();
+			foreach ($list as $key => $value) { ?>
+				<tr class="ct">
+					<td><?php echo $value['id']; ?></td>
+					<td><?php echo $value['name']; ?></td>
+					<td><?php echo $value['column']; ?></td>
+
+					<?php
+					$total = 0;
+					foreach ($date as $d) {
+						?>
+						<td class="td2"><?php echo $value[$d] ? $value[$d] : 0;?></td>
+						<?php
+						$total += $value[$d];
+						$sumTrData[$d] += intval($value[$d]);
+						$jsonDataSeriesData[] = $value[$d] ? $value[$d] : 0;
+					} ?>
+					<?php
+					$jsonDataLegend[] = $value['name'];
+					$jsonDataSeries[] = array(
+						'name'  => $value['name'],
+						'type'  => 'line',
+						'stack' => '访问量',
+						'data'  => $jsonDataSeriesData
+					);
+					?>
+					<td class="td"><?php echo $total; ?></td>
+				</tr>
+			<?php } ?>
+			<tr class="ct">
+				<td>总和</td>
+				<td>-</td>
+				<td>-</td>
+				<?php foreach ($sumTrData as $v) { ?>
+					<td><?php echo $v; ?></td>
+				<?php } ?>
+				<td><?php echo array_sum($sumTrData); ?></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+	<script>
+		var jsonDataX = <?php echo json_encode($jsonDataX);?>;
+		var jsonDataLegend = <?php echo json_encode($jsonDataLegend);?>;
+		var jsonDataSeries = <?php echo json_encode($jsonDataSeries);?>;
+	</script>
+	<script src="<?php echo $staticPath; ?>/v2/js/statv2.js?v=<?php echo $version; ?>"></script>
+	<div id="_st_hold1" style="width:100%;height:300px;"></div>
+<?php } elseif ($searchParam['page_type'] == 'bookmark') { ?>
+	<div class="table_list">
+		<table cellspacing="0" cellpadding="0" width="100%">
+			<tbody>
+			<tr class="ct">
+				<td class="td2" width="200px">时间</td>
+				<td class="td2" width="70px">hash</td>
+				<?php foreach ($date as $d): ?>
+					<td class="td2" width="70px"><?php echo $d; ?></td>
+				<?php endforeach; ?>
+				<td class="td2" width="70px">总和</td>
+			</tr>
+			<?php
+			$sum = 0;
+			foreach ($list as $k => $v) {
+				?>
+				<tr class="ct">
+					<td class="td2"><?php echo $k; ?></td>
+					<td class="td2"><?php echo $hashTitle[$k]; ?></td>
+					<?php
+					$total = 0;
+					foreach ($date as $d):
+						?>
+						<td class="td2"><?php echo $v[$d]; ?></td>
+						<?php
+						$total += $v[$d];
+						$sum += $v[$d];
+					endforeach;
+					?>
+					<td class="td2"><?php echo $total; ?></td>
+				</tr>
+			<?php } ?>
+			</tbody>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php } else { ?>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="ct">
+				<td class="td2">IＤ</td>
+				<td class="td2" width="80px">标题</td>
+				<?php foreach ($date as $d) { ?>
+					<td class="td2" width="70px"><?php echo $d; ?></td>
+				<?php } ?>
+				<td class="td2">总和</td>
+			</tr>
+			<?php
+			$jsonDataX          = $date;
+			$jsonDataLegend     = array();
+			$jsonDataSeries     = array();
+			$jsonDataSeriesData = array();
+			foreach ($list as $k => $v) { ?>
+				<tr class="ct">
+					<td><?php echo $v['ngid']; ?></td>
+					<td class="td2"><?php echo $v['title']; ?></td>
+					<?php
+					$total = 0;
+					foreach ($date as $d) {
+						?>
+						<td class="td2"><?php echo $v[$d];?></td>
+						<?php
+						$total += $v[$d];
+						$sum += $v[$d];
+						$jsonDataSeriesData[] = $v[$d] ? $v[$d] : 0;
+					} ?>
+					<?php
+					$jsonDataLegend[] = $v['title'];
+					$jsonDataSeries[] = array(
+						'name'  => $v['title'],
+						'type'  => 'line',
+						'stack' => '访问量',
+						'data'  => $jsonDataSeriesData
+					);
+					?>
+					<td class="td2"><?php echo $total; ?></td>
+				</tr>
+			<?php } ?>
+			<tr class="ct">
+				<td>总和</td>
+				<td>-</td>
+				<?php foreach ($sumTrData as $v) { ?>
+					<td><?php echo $v; ?></td>
+				<?php } ?>
+			</tr>
+		</table>
+	</div>
+	<script>
+		var jsonDataX = <?php echo json_encode($jsonDataX);?>;
+		var jsonDataLegend = <?php echo json_encode($jsonDataLegend);?>;
+		var jsonDataSeries = <?php echo json_encode($jsonDataSeries);?>;
+	</script>
+	<script src="<?php echo $staticPath; ?>/v2/js/statv2.js?v=<?php echo $version; ?>"></script>
+	<div id="_st_hold1" style="width:100%;height:300px;"></div>
+<?php } ?>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			var columns = <?php echo json_encode($searchData['navColumn']);?>;
+			settypes = function (typeId, val) {
+				var options = '<option value="">请选择栏目</option>';
+				$.each(columns, function (index, data) {
+					var s = '';
+					if (data.type_id == typeId) {
+						if (data.id == val) s = 'selected';
+						options += '<option value="' + data.id + '" ' + s + '>' + data.name + '</option>';
+					}
+				});
+				$("select[name='column_id']").html(options);
+			}
+
+			var localnavcolumns = <?php echo json_encode($searchData['localnavcolumn']);?>;
+			setlocalnavtypes = function (typeId, val) {
+				var options = '<option value="">请选择栏目</option>';
+				$.each(localnavcolumns, function (index, data) {
+					var s = '';
+					if (data.type_id == typeId) {
+						if (data.id == val) s = 'selected';
+						options += '<option value="' + data.id + '" ' + s + '>' + data.name + '</option>';
+					}
+				});
+				$("select[name='local_column_id']").html(options);
+			}
+
+			if ($('#sel_cate').val() != 0 && $('#sel_cate').val() != '') {
+				settypes($('#sel_cate').val(), <?php echo empty($searchParam['column_id']) ? '0' : $searchParam['column_id']; ?>);
+			}
+
+			if ($('#nav_type').val() != 0 && $('#nav_type').val() != '') {
+				setlocalnavtypes($('#nav_type').val(), <?php echo empty($searchParam['local_column_id']) ? '0' : $searchParam['local_column_id']; ?>);
+			}
+
+			$("#sdate").datepicker({
+				dateFormat: 'yy-mm-dd'
+			});
+			$("#edate").datepicker({
+				dateFormat: 'yy-mm-dd'
+			});
+
+			$("#total").text('<?php echo $sum;?>');
+
+			$("#page_type").change(function () {
+				$(".s_pt").hide();
+				$(".s_" + $(this).val()).show();
+			});
+
+			$("#downLoad").bind('click', function () {
+				$("#hidden_export").val(1);
+				$("#addFrom").submit();
+				$("#hidden_export").val(0);
+			});
+		});
+		var setSiteCate2 = function (types, chval) {
+			var siteCate2 = <?php echo json_encode($searchData['siteCate2']);?>;
+			var options = '<option value="">请选择</option>';
+			$.each(siteCate2, function (index, data) {
+				var s = '';
+				if (data.parent_id == types) {
+					if (data.id == chval) s = 'selected';
+					options += '<option value="' + data.id + '" ' + s + '>' + data.name + '</option>';
+				}
+			});
+			$("select[name='siteCate2']").html(options);
+		}
+		function showDetail(id) {
+			$("#columnx_" + id).slideToggle();
+		}
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

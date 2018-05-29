@@ -1,0 +1,63 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">常见问题列表</a></li>
+		<li class="current"><a href="javascript:;">添加常见问题</a></li>
+	</ul>
+</div>
+<div class="h_a">添加常见问题</div>
+<form method="post" action="<?php echo $addPostUrl; ?>" id="addForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input" name="sort" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">问题</th>
+				<td class="td"><input type="text" class="input wc" name="question"
+				                      value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td"><select name="status" class="select">
+						<option value="1">开启</option>
+						<option value="0">关闭</option>
+					</select></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">答案</th>
+				<td class="td"><textarea id="answer"
+				                         style="width: 800px; height: 500px" class="textarea"
+				                         name="answer"></textarea></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script
+	src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+	//用户表单数据提交
+	$(document).ready(function () {
+		ajaxForm('addForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Questions/index');
+		});
+	})
+	var editor;
+	KindEditor.ready(function (K) {
+		K.token = $('#token').val();
+		editor = K.create('textarea[name="answer"]', {
+			//uploadJson : uploadImgUrl,
+			resizeType: 1,
+			allowPreviewEmoticons: false,
+			allowImageUpload: false,
+			items: EDITOR_ITEMS
+		});
+	});
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,95 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body id="goodsDetail">
+	<div class="gotop">
+		<span>返回顶部</span>
+	</div>
+	<div class="module gray-bg webapp">
+		<header class="header" id="J_header">
+			<div class="wrap">
+				<div class="title">
+					<a href="<?php echo $refer ? urldecode($refer) : $webroot;?>" class="back"></a>
+					<a href="/" class="back-home" onclick="baiduStatic('商品详情', '商品详情-返回首页', '商品详情-返回首页点击次数')"></a>
+					<h1>商品详情</h1>
+				</div>
+			</div>
+		</header>
+		<div class="iScroll" id="J_scrollWrap">
+			<section class="layout-center">
+				<div id="J_carouselWrap" class="carousel-wrap bigger">
+					<ul class="carousel">
+					<?php 
+					for($i = 0; $i < $total_img; $i++){?>
+						<li>
+							<div class="pic">
+								<img src="<?php echo $staticRoot;?>/apps/dhm/asset/img/blank.gif" data-src="<?php echo Common::getImageUrl($imgs[$i]['img']);?>">
+							</div>
+						</li>
+					<?php }?>
+					</ul>
+					<ol class="carousel-indicators">
+					<?php for($i = 0; $i < $total_img; $i++){?>
+						<li></li>
+					<?php }?>
+					</ol>
+				</div>
+			</section>
+			<section class="layout-center">
+				<dl class="goods-intro">
+					<dt class="title">
+						<span><a href="<?php echo $webroot;?>/goods?brand_id=<?php echo $brand['id'];?>"><?php echo $brand['name'];?></a></span>
+						<h1><?php echo html_entity_decode($info['title']);?></h1>
+					</dt>
+					<dd class="price">海淘价：<i class="dollar">￥</i><em><?php echo $price;?></em></dd>
+					<dd>
+						<span>国内价：￥<?php echo Common::money($info['max_price']);?></span>
+						<span>最多可省：￥<?php echo Common::money($info['max_price'] - $min_price);?></span>
+					</dd>
+				</dl>
+			</section>
+			<section class="divide-section"></section>
+			<section class="layout-center">
+				<div class="column-title-simple">
+					<h2>商家信息</h2>
+					<?php foreach ($malls as $key=>$value) {?>
+					<div class="seller-list">
+						<ul>
+							<li class="pic-wrap">
+								<div class="pic">
+									<img src="<?php echo $staticRoot;?>/apps/dhm/asset/img/blank.gif" data-src="<?php echo Common::getAttachPath().$mall_list[$value['mall_id']]['logo'];?>">
+								</div>
+							</li>
+							<li class="info">
+								<div class="title">
+									<h3><?php echo html_entity_decode($mall_list[$value['mall_id']]['name']);?></h3>
+									<span><?php echo $countrys[$mall_list[$value['mall_id']]['country_id']]['name'];?></span>
+								</div>
+								<p class="price"><i class="dollar">￥</i><?php echo Common::money($value['min_price']);?></p>
+								<?php if($value['type_id'] == 1) {?>
+								<p class="site"><?php echo html_entity_decode($mall_list[$value['mall_id']]['link']);?></p>
+								<?php }?>
+							</li>
+							<?php if($value['type_id'] == 1) {?>
+							<li class="buy">
+								<a class="btn btn-buy" href="<?php echo $value['url'];?>">去购买</a>
+							</li>
+							<?php }?>
+						</ul>
+					</div>
+				<?php }?>	
+				</div>
+			</section>
+
+			<section class="divide-section"></section>
+
+			<section class="layout-center">
+				<div class="column-title-simple">
+					<h2>商品详情</h2>
+				</div>
+				<div class="mixed-map-and-text">
+					<?php echo html_entity_decode($info['content']);?>
+				</div>
+			</section>
+		</div>
+	</div>
+	
+<?php echo $this->render("layout/footer.phtml");?>

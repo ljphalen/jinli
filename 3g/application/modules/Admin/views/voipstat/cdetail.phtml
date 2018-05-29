@@ -1,0 +1,41 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $visitUrl; ?>">PV/UV统计</a></li>
+		<li><a href="<?php echo $userLogUrl ?>">新增激活用户</a></li>
+		<li><a href="<?php echo $newRegisterUrl; ?>">新增注册用户</a></li>
+		<li><a href="<?php echo $connected1Url; ?>">接通统计</a></li>
+		<li><a href="<?php echo $periodUrl ?>">通话时段统计</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="tr">
+			<td class="td">呼叫号码</td>
+			<td class="td">被呼叫号</td>
+			<td class="td">拔打时间</td>
+			<td class="td">通话时长(秒)</td>
+
+		</tr>
+		<?php if (empty($dataList)) { ?>
+			<tr class="ct">
+				<td class="td">暂无相关信息</td>
+			</tr>
+		<?php } else { ?>
+			<?php foreach ($dataList as $v) { ?>
+				<tr class="ct">
+					<td class="td"><?php echo $v['caller_phone']; ?></td>
+					<td class="td"><?php echo $v['called_phone']; ?></td>
+					<td class="td"><?php echo date('Y-m-d H:i:s', $v['called_time']); ?></td>
+					<td class="td"><?php echo $v['duration']; ?></td>
+				</tr>
+			<?php }
+		} ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+<?php echo $this->render("layout/footer.phtml"); ?>
+	
+	

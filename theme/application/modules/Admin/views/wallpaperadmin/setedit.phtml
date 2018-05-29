@@ -1,0 +1,190 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript"
+src="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath ?>jssdk/farbtastic.js"></script>
+
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- 页面唯一id标识符  套图管理-打包套图 - 添加-->
+    <div id="bz_admin_taotu_pack02">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">套图名称</label>
+                    <div class="tb_cont tb_cell">
+                        <input type="text" class="rd_1" value="<?php echo $setinfo['set_name'] ?>">
+                        <input type="hidden" class="setid" value="<?php echo $setinfo['set_id'] ?>">
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">套图标签</label>
+                    <div class="tb_cont tb_cell">
+                        <div class="select_box">
+                            <label class="select_val" val="<?php echo $setinfo['set_targ'] ?>"><?php echo $lineTarg[$setinfo['set_targ']]['w_type_name'] ?></label>
+                            <ul class="select_option">
+                                <?php foreach ($targs as $v) { ?>
+                                    <li val="<?php echo $v['w_type_id'] ?>"><?php echo $v["w_type_name"] ?></li>
+                                <?php } ?>
+
+                            </ul>
+                        </div><!-- select_box -->
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap color_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">套图颜色</label>
+                    <div class="tb_cont tb_cell">
+                        <input type="text" class="colorval" name="color" value="<?php echo $setinfo['set_image_color'] ?>" id="taotuPickedColor">
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+            <div id="taotuColorPicker"></div>
+
+            <div class="line_title">选择壁纸</div>
+            <div class="drag_sort_wrap">
+                <div class="drag_sort">
+                    <label>待选壁纸</label>
+                    <ul class="drag_sort_list" id="dragSortTxtPack">
+                        <!--  目前是由js动态生成 webgBusiness_bz.js 内 bz_admin_taotu_pack02->initImgData()
+                                <li role="txtPack" targetImg="img01" data-url="image/t_img01.jpg">壁纸一</li>
+                                <li role="txtPack" targetImg="img02" data-url="image/t_img02.jpg">壁纸二</li>
+                                <li role="txtPack" targetImg="img03" data-url="image/t_img03.jpg">壁纸三</li>
+                                <li role="txtPack" targetImg="img04" data-url="image/t_img04.jpg">壁纸四</li>
+                                <li role="txtPack" targetImg="img05" data-url="image/t_img05.jpg">壁纸五</li>
+                                <li role="txtPack" targetImg="img06" data-url="image/t_img06.jpg">壁纸六</li>
+                        -->
+
+                    </ul>
+                    <div class="clear-fix"></div>
+                    <div><button class="btn_s3" id="packBzAdd">添加</button></div>
+                </div><!-- drag_sort end -->
+
+                <div class="drag_sort">
+                    <label>已选壁纸</label>
+                    <ul class="drag_sort_list" id="dragSortTxtPack2">
+
+                        <!-- <li role="txtPack2" targetimg="1032"
+                             data-url="http://dev.theme.gionee.com/attachs/theme/wallpaper/2014/12/gbeni0jq9vkeilreipsn9j2vq1/qhdpi/57EFA403C77419727BC9021C025B5ED7_%E5%BF%AB%E4%B9%90%E5%85%AC%E4%B8%BB.jpg"
+                             style="cursor: pointer;"
+                             data-cursor="pointer">乐公主.png</li>
+                        -->
+                        <?php foreach ($setimage as $v) { ?>
+                            <li role="txtPack2" targetimg="<?php echo $v['wallpaper_id'] ?>" style="cursor: pointer;"  data-url="<?php echo $v['url'] ?>"><?php echo $v["wallpaper_name"]; ?>
+                            </li>
+                        <?php } ?>
+
+                    </ul>
+                    <div class="clear-fix"></div>
+                    <div><button class="btn_s3" id="packBzDel">删除</button></div>
+                </div><!-- drag_sort end -->
+
+                <div class="drag_sort">
+                    <label>缩略图</label>
+                    <ul class="drag_sort_img" id="dragSortImgPack">
+
+                        <!-- <li targetimg="1033" class="img_list" style="width: calc(50% - 2px); float: left;">
+                             <img src="http://dev.theme.gionee.com/attachs/theme/wallpaper/2014/12/gbeni0jq9vkeilreipsn9j2vq1/qhdpi/294F2C989915A74309239763878FEE10_%E6%B5%AA%E6%BC%AB%E7%AB%A5%E5%B9%B4.jpg"
+                                                                                                                 style="width: 100%;"></li>-->
+                        <?php foreach ($setimage as $v) { ?>
+                            <li class="img_list" targetimg="<?php echo $v['wallpaper_id'] ?>"><img src="<?php echo $v['url'] ?>"></li>
+                        <?php } ?>
+                    </ul>
+                </div><!-- drag_sort end -->
+
+                <div class="clear-fix"></div>
+            </div><!-- drag_sor_wrap end -->
+
+
+            <div class="com_tb_wrap">
+                <?php if ($groupid == 3) { ?>
+                    <div class="com_tb">
+                        <label class="tb_cell">上线时间</label>
+                        <div class="tb_cont tb_cell">
+                            <input type="text" class="laydate-icon linetime" onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" readonly value='<?php echo $datatimes; ?>'>
+                        </div>
+                    </div><!-- com_tb end -->
+                <?php } else { ?>
+                    <div class="com_tb">
+                        <label class="tb_cell">打包时间</label>
+                        <div class="tb_cont tb_cell">
+
+                            <input type="text" onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" class="laydate-icon linetime" value='<?php echo $datatimes ?>'  readonly>
+                        </div>
+                    </div><!-- com_tb end -->
+                <?php } ?>
+            </div><!-- com_tb_wrap end -->
+
+
+            <div class="bnts_wrap"><button class="btn_s2 pop_btn submits" openPopId="fixTipView">提交</button><button class="btn_s2" id="bzAdminTaoTuP2Cancel">取消</button></div>
+
+
+        </div><!-- content end -->
+
+    </div>
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">确定保存?</p>
+                    <div class="tip_btns"><button class="btn_s2 save_ok">确定</button></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+
+
+<script type="text/javascript">
+    $(function () {
+        $(".save_ok").click(function () {
+            $(".pop_wraper").removeClass("show");
+            var setid = $(".setid").val();
+            var name = $(".rd_1").val();
+            var targid = $(".select_val").attr("val");
+
+            var packageTime = $(".rd_2").val();
+            var color = $(".colorval").val();
+
+            var lineTime = $(".linetime").val();
+            var imids = $("#dragSortImgPack >li").map(function () {
+                return $(this).attr("targetimg");
+            }).get().join("_");
+
+            var data = "setid=" + setid + "&name=" + name + "&color=" + color +
+                    "&targid=" + targid + "&imids=" + imids +
+                    "&packagetime=" + packageTime + "&lineTime=" + lineTime + "&token=" + token;
+
+            //alert(data);
+            var url = "/Admin/wallpaperadmin/update_edit";
+
+            $.post(url, data, function (r) {
+                if (r) {
+                    // window.location.href = "/Admin/wallpaperadmin/adminset";
+                    history.go(-1);
+                } else {
+                    alert("请重新提交")
+                }
+            });
+
+
+        })
+    })
+</script>
+</body>
+</html>

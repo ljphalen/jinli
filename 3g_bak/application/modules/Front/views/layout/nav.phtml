@@ -1,0 +1,19 @@
+<header class="hd">
+	<div class="menu">
+		<ul>
+			<?php
+			$menu = array(
+				'product' => array('url' => $webroot."/product?t_bi=" . $t_bi, 'name' => '金立产品'),
+				'resource' => array('url' => $webroot. "/resource?t_bi=" . $t_bi, 'name' => '资源下载'),
+				'services' => array('url' => $webroot."/services?t_bi=" . $t_bi, 'name' => '售后服务'),
+			);
+			$nav = isset($menu[$nav]) ? $nav : 'product';
+
+			foreach ($menu as $key => $val):
+				$class = ($nav == $key) ? ' class="actived" ' : '';
+			?>
+				<li<?php echo $class; ?>><a href="<?php echo $val['url']; ?>"><?php echo $val['name']; ?></a></li>
+			<?php endforeach; ?>
+		</ul>
+	</div>
+</header>

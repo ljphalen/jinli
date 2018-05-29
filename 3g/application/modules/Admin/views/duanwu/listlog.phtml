@@ -1,0 +1,106 @@
+<?php echo $this->render("layout/header3.phtml");
+$_listUrl = $this->listlogUrl;
+$_editUrl = $this->editlogUrl;
+$_delUrl  = $this->dellogUrl;
+?>
+
+	<div data-options="region:'center',split:true,border:false" style="overflow: hidden;">
+
+		<div id="datagrid_toolbar" style="padding:5px;">
+			<div style="float: left;">
+				<form method="post" id="search_form" style="padding: 0px;" onsubmit="search(datagrid,'#search_form');return false;">
+					游客名:<input id="uname" name="filter[uname]" style="width: 100px" value="" >
+					用户ID:<input id="uid" name="filter[uid]" style="width: 100px" value="" >
+					奖品等级:<input id="uid" name="filter[rank]" style="width: 100px" value="" >
+					<input name="token" value="<?php echo $token; ?>" type="hidden" />
+					<input name="togrid" value="1" type="hidden" />
+					<a href="javascript:search(datagrid,'#search_form');" class="easyui-linkbutton" iconCls="icon-search" plain="true" >查 询</a>
+				</form>
+				<a href="/admin/duanwu/listlogexport">导出</a>
+			</div>
+
+				<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
+				<span class="toolbar-btn-separator"></span>
+				<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a>
+				<block name="button"></block>
+				<a href="#"></a>
+			</div>
+		</div>
+		<table id="datagrid" toolbar="#datagrid_toolbar" border="false"></table>
+	</div>
+
+
+	<script>
+		var token = "<?php echo $token; ?>";
+		var edit_W = 400;
+		var edit_H = 300;
+		var datagrid;
+		$(function () {
+			//数据列表
+			datagrid = $("#datagrid").datagrid({
+				url: '<?php echo $_listUrl; ?>',
+				queryParams: {'togrid': 1, 'token': token},
+				fit: true,
+				autoRowHeight: false, //自动行高
+				border: false,
+				pagination: true, //分页栏
+				pagePosition: 'bottom', //分页栏位置
+				rownumbers: true,//显示行数
+				striped: true,//显示条纹
+				showFooter: true, //显示统计行
+				pageSize: 20,//每页记录数
+				remoteSort: true,//是否通过远程服务器对数据排序
+				singleSelect: false,//只允许选择单行
+				// main content
+
+				sortName: 'id',//默认排序字段
+				sortOrder: 'desc',//默认排序方式 'desc' 'asc'
+				idField: 'id',
+				columns: [[
+					{field: 'ck', checkbox: true},
+					{field: 'id', title: 'ID', sortable: true, align:'center', width: 60},
+					{field: 'uname', title: '游客名', sortable: false, width: 100},
+					{field: 'uid', title: '用户ID', sortable: true, width: 50},
+					{field: 'rank', title: '等级', sortable: true, width: 30},
+					{field: 'val', title: '奖励值', sortable: true, width: 30},
+					{field: 'date', title: '日期', sortable: false, align:'center',width: 100},
+					{field: 'created_at', title: '添加时间', sortable: false,align:'center', width: 140},
+					{field: 'updated_at', title: '更新时间', sortable: false,align:'center', width: 140},
+					{field: 'ip_addr', title: 'ip地址', sortable: true, width: 100},
+					{field: 'ip_area', title: '地区', sortable: true, width: 100},
+					{field: 'no', title: '序号', sortable: true, width: 30},
+					{field: 'status', title: '状态', sortable: false,align:'center', width: 60},
+				]],
+
+				onLoadSuccess: function () {
+					$(this).datagrid('clearSelections');//取消所有的已选择项
+					$(this).datagrid('unselectAll');//取消全选按钮为全选状态
+				},
+				onRowContextMenu: function (e, rowIndex, rowData) {
+					e.preventDefault();
+					$(this).datagrid('unselectAll');
+					$(this).datagrid('selectRow', rowIndex);
+					$('#datagrid_menu').menu('show', {
+						left: e.pageX,
+						top: e.pageY
+					});
+				},
+				onDblClickRow: function (rowIndex, rowData) {
+					edit(rowIndex, rowData);
+				}
+			});
+
+		});
+
+
+		function add() {
+			addData("添加", "#edit_form", datagrid, "<?php echo $_editUrl; ?>", edit_W, edit_H);
+		}
+		function edit(rowIndex, rowData) {
+			editData(rowIndex, rowData, "编辑", '#edit_form', datagrid, "<?php echo $_editUrl; ?>", edit_W, edit_H, 'id');
+		}
+		function del() {
+			delData(datagrid, "<?php echo $_delUrl; ?>");
+		}
+	</script>
+<?php echo $this->render("layout/footer3.phtml"); ?>

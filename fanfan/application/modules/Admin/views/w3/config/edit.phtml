@@ -1,0 +1,45 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<form method="post" action="<?php echo $editUrl; ?>" id="editForm">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="h_a"><b>3.0配置</b> (注意：输入时请切换到半角状态)</div>
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">联网时间(v3.0)</th>
+					<td class="td">
+						<input name="w3_auto_time" type="text" class="input wc" value="<?php echo $configs['w3_auto_time']; ?>">
+						<br>（请输入24小时标准时间格式，如03:00 [服务器瞬间压力过大 设置一个时间]）
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">详情页字数(v3.0)</th>
+					<td class="td">
+						<input name="w3_content_len" type="text" class="input" value="<?php echo $configs['w3_content_len']; ?>">个
+						<br>(0表示全部显示)
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">初始化数据新闻ID(v3.0)</th>
+					<td class="td">
+						<input name="w3_init_news_id" type="text" class="input wc" value="<?php echo $configs['w3_init_news_id']; ?>">
+						<br>（用,分割）
+					</td>
+				</tr>
+
+			</table>
+		</div>
+		<div class="mb10 tac">
+			<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			ajaxForm('editForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/W3_Config/edit');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

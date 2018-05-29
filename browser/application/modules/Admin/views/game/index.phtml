@@ -1,0 +1,40 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">游戏列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加游戏</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">排序</td>
+			<td>标题</td>
+			<td>图标</td>
+			<td>下载链接</td>
+			<td>公司名称</td>
+			<td>文件大小</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($games as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['name'];?></td>
+			<td><img src="<?php echo $attachPath,$value['img'];?>" style="width:7.2em;height:7.2em"/></td>
+			<td><?php echo $value['link'];?></td>
+			<td><?php echo $value['company'];?></td>
+			<td><?php echo $value['size'];?></td>
+			<td><?php echo $value['status'] ? '开启':'关闭';?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>管理系统</title>
+<meta charset="UTF-8">
+<link href="<?php echo $staticPath;?>/css/layout.css?v=<?php echo $version;?>" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="<?php echo $staticPath;?>/css/jquery-ui.css?v=<?php echo $version;?>" />
+<link rel="shortcut icon" href="/favicon.ico" />
+</head>
+<body>
+<div class="wrap">
+<table width="100%" cellpadding="0" cellspacing="0" height="100%">
+	<tr class="head">
+		<th height="60"><a href="#" class="logo"></a></th>
+		<td height="60">
+			<div class="nav">
+				<ul id="B_main_block">
+<?php foreach($mainmenu as $key=>$value){?> 
+    <li id="<?php echo $value['id'];?>"><a class="" href="#<?php echo $value['id'];?>" style="width:80px;"><?php echo $value['name'];?></a></li>
+<?php }?>
+					
+	       </ul>
+			</div>
+			<div class="login_info">
+				<span class="mr10">管理员：<?php echo $username;?></span><a href="<?php echo $passwdUrl;?>" target="parent" class="mr10">[修改密码]</a><a href="<?php echo $logout;?>" class="mr10">[注销]</a>
+			</div>
+		</td>
+	</tr>
+	<tr class="tab">
+		<th>
+			<div class="search"><input id="keyword" size="15" class="gray" onFocus="adminSearchClass.focus();" onBlur="adminSearchClass.blur();" onKeyUp="adminSearchClass.keyup(event);" onKeyDown="javascript:void(0);" value="后台搜索" type="text"><button type="button" name="keyword" value="" onClick="adminSearchClass.search();"><img src="<?php echo $staticPath;?>/img/layout/search.png" onClick="adminSearchClass.search();" align="absmiddle"></button></div>
+		</th>
+		<td>
+ 			<div id="B_tabA" class="tabA">
+				<a href="javascript:;" class="tabA_pre" onClick="prev()" title="上一个">上一个</a><a href="javascript:;" class="tabA_next" onClick="next()" title="下一个">下一个</a>
+      	<ul id="B_history"></ul>
+      </div>
+		</td>
+	</tr>
+	<tr class="content">
+		<th>
+		 <div id="B_menunav">
+				<div class="menubar">
+					<dl id="B_menubar">
+							<dt class="disabled"></dt>
+					</dl>
+				</div>
+				<div id="menu_next" class="menuNext" style="visibility: hidden"><a href="javascript:;" class="pre" title="上一页">上一页</a> <a href="javascript:;" class="next" title="下一页">下一页</a></div>
+			</div>
+				
+			<!--h2 id="menu_title" class="h2"></h2-->
+			<!--div class="menubar" id="B_menunav">
+				<ul id="B_menubar"></ul>
+			</div-->
+		</th>
+		<td id="B_frame">
+			<div id="breadCrumb" style="display:none;"></div>
+			 <div class="options"><a href="#" class="refresh" title="刷新" onClick="frameRefresh()">刷新</a>&nbsp;|&nbsp;<a href="javascript://" id="fullScreen" class="admin_full" title="全屏">全屏</a></div>
+			<iframe id="default" name="parent" src="<?php echo $default;?>" style="height: 100%; width: 100%;" frameborder="0" scrolling="0"></iframe>
+		</td>
+	</tr>
+</table>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery.js?v=<?php echo $version;?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui.min.js?v=<?php echo $version;?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery.form.js?v=<?php echo $version;?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/common.js?v=<?php echo $version;?>"></script>
+<script type="text/javascript">
+var baseurl = '<?php echo $adminroot;?>';
+var USUALL = []; /*常用的功能模块*/
+var TEMP = [];
+var SUALL = USUALL.concat('-',[{name:'最近操作',disabled:true}],TEMP);
+var MAIN_BLOCK = <?php echo $mainview;?>;/*主菜单区*/
+var SUBMENU_CONFIG = <?php echo $jsonmenu;?>;
+var FULL_CSS = "<?php echo $staticPath;?>/css/fullscreen.css";
+var agt = navigator.userAgent.toLowerCase();
+var is_ie = ((agt.indexOf("msie") != -1) && (agt.indexOf("opera") == -1));
+var is_gecko = (navigator.product=='Gecko');
+var imgpath = '<?php echo $staticPath;?>/img';
+var times = 0;
+var getdescurl = '<?php echo $getdesc;?>';
+var searchurl = '<?php echo $search;?>';
+var token = '<?php echo $token;?>';
+
+$(window).ready(function(){
+	adminNavClass.initTips = initTips;
+	init();
+	adminSearchClass.init();
+	if(parent.adminNavClass){
+        parent.adminNavClass.initTips();
+    }
+	if(window.frameElement){
+	    parent.location.href = window.location.href;
+	}
+});
+</script>
+<script src="<?php echo $staticPath;?>/js/common/Cookie.js?v=<?php echo $version;?>"></script>
+<script src="<?php echo $staticPath;?>/js/admin/admin.js?v=<?php echo $version;?>"></script>
+<div id="msg_tip" title="">有新问贴（<span style="color:red;">0</span>）枚，请查收。</div>
+<div id="msg_tip_fb" title=""></div>
+<script type="text/javascript">
+    //活动问贴提醒
+    function checkQa(){
+        $.ajax({
+            url: baseurl + '/Admin/Qa_Question/getNewQuestion/',
+            dataType: 'json',
+            success: function(data){
+                if(data){
+                    var msg = $('#msg_tip');
+                    var msg_con = $('#msg_tip span');
+                    $('.ui-dialog').find('.ui-dialog-titlebar').css('background', 'none').css('border', '0');
+                    $('.ui-dialog').find('.ui-dialog-content').css('text-align', 'center');
+                    var total = parseInt(msg_con.text()) + 1;
+                    msg_con.text(total);
+                    msg.dialog('open');
+                }
+            }
+        });
+    }
+
+    function checkFeedbackTip(){
+        $.ajax({
+            url: baseurl + '/Admin/Cs_Feedback_Qa/getTip',
+            dataType: 'json',
+            success: function(data){
+                if(data.num>0){
+                    $('.ui-dialog').find('.ui-dialog-titlebar').css('background', 'none').css('border', '0');
+                    $('.ui-dialog').find('.ui-dialog-content').css('text-align', 'center');
+                    var msg_con = $('#msg_tip_fb');
+                    html = "<a href='"+data.url+"', target='_blank'>有 [<span style='color: red'>"+data.num+"</span>] 条新的反馈提交, 请火速赶往反馈模块进行处理<a>"
+                    msg_con.html(html);
+                    msg_con.dialog('open');
+                }
+            }
+        });
+    }
+    $(document).ready(function() {
+        setInterval('checkQa()', 30000);
+        setInterval('checkFeedbackTip()', 5000);
+        $('#msg_tip').dialog({
+            width: '200px',
+            autoOpen: false,
+            show:{
+                effect: 'clip',
+                duration: 1000
+            },
+            hide:{
+                effect: 'clip',
+                duration: 500
+            },
+            draggable: false,
+            position:{
+                at: 'right bottom'
+            }
+        });
+
+        $('#msg_tip_fb').dialog({
+            width: '200px',
+            autoOpen: false,
+            show:{
+                effect: 'clip',
+                duration: 1000
+            },
+            hide:{
+                effect: 'clip',
+                duration: 500
+            },
+            draggable: false,
+            position:{
+                at: 'right bottom'
+            }
+        });
+    })
+</script>
+</body>
+</html>

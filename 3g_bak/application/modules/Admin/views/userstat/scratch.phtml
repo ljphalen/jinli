@@ -1,0 +1,74 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<form method="post" action="<?php echo $baseUrl; ?>" id="addFrom">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">时间范围</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $sdate; ?>"> 至
+						<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $edate; ?>">
+
+					</td>
+				</tr>
+
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+		<input type="hidden" id="hidden_export" name="export" value="0"/>
+	</form>
+
+	<div class="h_a">
+		&nbsp; <span id="total" style="color: red;font-size:14px"></span>
+		<span style="float:right;"><input type="button" value="导出" id="downLoad"></span>
+	</div>
+
+	<div class="table_list">
+		<table width="100%">
+			<tr class="ct">
+				<td class="td2" style="width:62px;">日期</td>
+				<td class="td2">页面PV</td>
+				<td class="td2">页面UV</td>
+				<td class="td2">刮奖PV</td>
+				<td class="td2">刮奖UV</td>
+				<td class="td2">刮开人数</td>
+				<td class="td2">获得金币用户数</td>
+				<td class="td2">获得金币总额</td>
+				<td class="td2">领取－刮开转化率</td>
+			</tr>
+			<?php
+			foreach ($dataList as $k => $v) { ?>
+				<tr class="ct">
+					<td><?php echo $k; ?></td>
+					<td class="td2"><?php echo $v['index_pv'] ? $v['index_pv'] : 0; ?></td>
+					<td class="td2"><?php echo $v['index_uv'] ? $v['index_uv'] : 0; ?></td>
+					<td class="td2"><?php echo $v['scratch_pv'] ? $v['scratch_pv'] : 0; ?></td>
+					<td class="td2"><?php echo $v['scratch_uv'] ? $v['scratch_uv'] : 0; ?></td>
+					<td class="td2"><?php echo $v['scratch_num'] ? $v['scratch_num'] : 0; ?></td>
+					<td class="td2"><?php echo $v['geted_number'] ? $v['geted_number'] : 0; ?></td>
+					<td class="td2"><?php echo $v['scores_amount'] ? $v['scores_amount'] : 0; ?></td>
+					<td class="td2"><?php echo $v['scratch_num'] ? bcdiv($v['geted_number'], $v['scratch_num'], 4) * 100 : 0; ?>％</td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#sdate").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#edate").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#total").text('<?php echo $sum;?>');
+			$("#downLoad").bind('click', function () {
+				$("#hidden_export").val(1);
+				$("#addFrom").submit();
+				$("#hidden_export").val(0);
+			});
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,153 @@
+<?php echo $this->render("festival/activity/header.phtml");?>
+<body>
+	<header class="header">
+		<img src="<?php echo $staticroot; ?>/apps/game/events/medalEvent/pic/blank.gif" data-src="<?php echo $attachPath.$festivalInfo['banner_img']; ?>" alt=""/>
+	</header>
+	<acrticle class="ac">
+		<div class="pic-container-1">
+			<img data-src="<?php echo $attachPath.$configImgs['img1']; ?>" src="<?php echo $staticroot; ?>/apps/game/events/medalEvent/pic/blank.gif" alt=""/>
+		</div>
+		<div class="prize-container">
+			<a   class="J_openWebview link exchange-rule" data-title="兑换奖品规则" data-url="<?php echo $webRoot.'/client/Festival_Activity/prizeRuleInfo/?festivalId='.$festivalInfo['id']?>">兑换规则</a>
+			<ul class="prize-list">
+			<!--data-exchangeStatus 1:不可兑换 2：可兑换 3 已兑换 -->
+				<!-- data-prizeType 1:实物 2 虚拟物品（A券或积分） -->
+				<!-- data-title 、data-source、data-url 分别为跳转到实物兑换(或已兑换)页面的url和title -->
+				<?php foreach ($prizeInfo as $val) { ?>
+					<li class="J_exchange" 
+						data-exchangeStatus="<?php echo $val['exchangeStatus'];?>" 
+						data-prizeType="<?php echo $val['prizeType']; ?>" 
+						data-propNum="<?php echo $val['needExchagePropNum']; ?>" 
+						data-prizeId="<?php echo $val['prizeId']; ?>" 
+						<?php if($val['prizeType'] == 1){?>
+						data-title="<?php echo $val['prizeName']; ?>"
+						data-source=""			
+						data-url="<?php echo $webRoot.($val['isExchagedPirze']?'/client/Festival_Activity/exchanged/':'/client/Festival_Activity/exchangePrize/').'?puuid='.$uuid.'&festivalId='.$festivalInfo['id'].'&prizeId='.$val['prizeId'] ; ?>" 
+						<?php }?>
+						data-bigImgSrc="<?php echo $attachPath.$val['prizeImg']; ?>"
+						>
+						<div class="pic">	
+							<img data-src="<?php echo $attachPath.$val['prizeIcon']; ?>" src="<?php echo $staticroot; ?>/apps/game/events/medalEvent/pic/blank.gif" alt="" />
+						</div>
+						<span class="leftNum">剩余<?php echo $val['remainExchangePrizeNum'] ?>个</span>
+						<?php if($val['exchangeStatus'] == 3){?>
+							<button class="btn btn-exchange">已兑换</button>
+						<?php }elseif ($val['exchangeStatus'] == 1){?>
+							<button class="btn btn-disable">兑换</button>
+						<?php }else{?>
+							<button class="btn">兑换</button>
+						<?php }?>
+						
+					</li>
+				<?php }?>
+			</ul>
+		</div>
+		<div class="pic-container-2">
+			<img data-src="<?php echo $attachPath.$configImgs['img2']; ?>" src="<?php echo $staticroot; ?>/apps/game/events/medalEvent/pic/blank.gif" alt=""/>
+		</div>
+		<div class="medal-container">
+			<span class="title">我的<?php echo $festivalInfo['prop_name'];?>:&nbsp;<?php echo $propsTotal;?>个</span>
+			<span class="download-tips">点击对应的图标下载游戏后即有机会获得<?php echo $festivalInfo['prop_name'];?></span>
+			<?php if($online){?>
+			<a class="login-tips "><?php echo $nickName; ?></a> 
+			<?php }else{?>
+			<!-- 如果已登录则显示以下标签 -->
+			<a class="login-tips underline">未登录</a>
+			<?php }?>
+			<?php foreach ($propGropList as $val) { ?>
+				<div class="medal-list-wrapper">
+					<span class="sub-title"><?php echo $val['propGroupname']; ?></span>
+					<span class="sub-title medal-num"><?php echo $val['propGroupNum']; ?>个</span>
+					<ul class="medal-img-container">
+						<?php foreach ($val['propList'] as $va){?>
+						<li data-title="<?php echo $va['propName'] ?>" data-url="<?php echo $webRoot.'/client/Festival_Activity/gameList/?festivalId='.$festivalInfo['id'].'&groupPropId='.$val['propGroupId'].'&prizeId='.$va['propId']; ?>"  class="J_openWebview J_checkStatus <?php if(!$online || intval($va['propNum']) <= 0  ){echo "unavailabile";} ?>">
+							<span class="corner "><?php echo $va['propNum']; ?></span>
+							<div class="pic">
+								<img data-src="<?php echo $attachPath.$va['propImg']; ?>" src="<?php echo $staticroot; ?>/apps/game/events/medalEvent/pic/blank.gif" alt="" />
+							</div>
+						</li>
+						<?php }?>
+					</ul>
+					<div class="clearfix"></div>
+				</div>
+			<?php }?>
+		</div>
+		<?php if(count($prizeRank)){?>
+		<div class="pic-container-3">
+			<img data-src="<?php echo $attachPath.$configImgs['img3']; ?>" src="<?php echo $staticroot; ?>/apps/game/events/medalEvent/pic/blank.gif" alt=""/>
+		</div>
+		<div class="notice-container">
+			<span class="title">奖品兑换榜</span>
+			<ul class="notice-list">
+				<li>
+					<div class="sub-title nickname">昵称</div>
+					<div class="sub-title prop"><?php echo $festivalInfo['prop_name'];?></div>
+					<div class="sub-title prize">奖品</div>
+				</li>
+				<?php foreach ($prizeRank as $key=> $val) { ?>
+				<li>
+					<div class="omit"><?php echo $val['nickname']; ?></div>
+					<div><?php echo $val['consumeNum']; ?>个</div>
+					<div class="omit"><?php echo $val['prizeName']; ?></div>
+				</li>
+				<?php } ?>
+			</ul>
+			<div class="look-all-container">
+				<button  class="J_openWebview btn" data-title="奖品排行榜" data-url="<?php echo $webRoot.'/client/Festival_Activity/prizeRank/?festivalId='.$festivalInfo['id'] ?> ">查看全部</button>
+			</div>
+		</div>
+		<?php }?>
+		<div class="activityDesc-container">
+			<h1 class="title">活动说明</h1>
+			<div class="ui-editor desc-container">
+			 <?php echo html_entity_decode($festivalInfo['description']); ?>
+			</div>
+		</div>
+	</acrticle>
+	<footer class="footer">
+		<img data-src="<?php echo $attachPath.$configImgs['img4']; ?>" src="<?php echo $staticroot; ?>/apps/game/events/medalEvent/pic/blank.gif" alt=""/>
+	</footer>
+
+	<div class="J_dialog mask hidden">
+		<div class="J_award dialog-container hidden">
+			<img src="<?php echo $staticroot; ?>/apps/game/events/medalEvent/pic/blank.gif"  alt=""/>
+			<div class="num-tips">
+				兑换此奖品需要集齐<span class="J_num num">20</span>个<?php echo $festivalInfo['prop_name'];?>
+			</div>
+			<div class="J_btn_container btn-container">
+				<button class="J_virtual_exchange btn" data-ajaxUrl="<?php echo $webRoot.'/client/Festival_Activity/exchangePrizePost/'; ?>" >立即兑换</button>
+			</div>
+			<div class="J_ex_success status-container hidden">
+				<span class="success-tips">兑换成功</span>
+				<span class="back-tips">3秒后返回...</span>
+			</div>
+			<div class="J_ex_fail status-container hidden">
+				<span class="fail-tips">兑换失败，请重试...</span>
+				<div class="multile-btn-container">
+					<button class="J_cancel_virtual_retry btn btn-disable">取消</button>
+					<button class="J_vritual_retry btn " data-ajaxUrl="<?php echo $webRoot.'/client/Festival_Activity/exchangePrizePost/'; ?>">重试</button>
+				</div>
+			</div>
+		</div>
+		<div class="J_update dialog-container hidden">
+			<img src="<?php echo $attachPath.$configImgs['img5']; ?>" alt=""/>
+			<div class="num-tips">
+				您当前的客户端版本过低，请更新后参加活动
+			</div>
+			<div class="btn-container">
+				<button  data-gameId="<?php echo $clientGameId; ?>"
+				       data-source="<?php echo $source;?>" 
+				       data-title = "游戏大厅"
+				       data-url = "<?php echo $webRoot.'/client/index/detail/?id='.$clientGameId.'&t_bi='.$source; ?>"
+				       data-downurl = "<?php echo $gameInfo['link'];?>"
+				       data-packagename = "<?php echo $gameInfo['package'];?>"
+				       data-filesize = "<?php echo $gameInfo['size'];?>"
+				       data-sdkinfo="Android1.6"
+				       data-resolution="240*320-1080*1920"
+				       class="J_openDetailView  btn">立即更新</button>
+			</div>
+		</div>
+		
+	</div>
+</body>
+</html>

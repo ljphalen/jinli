@@ -1,0 +1,80 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">点击量列表</a></li>
+    <li class="current"><a href="<?php echo $listUrl;?>">新增分类</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">URL</th>
+			<td class="td"><input class="input wc" type="text" name="url" value="<?php echo $param['url'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">日期</th>
+			<td class="td">
+			<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $sdate;?>"> 至 
+		    <input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $edate;?>"> 
+		    </td>
+			
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">编号</td>
+			<td>URL</td>
+			<td>点击量</td>
+			<td>时间</td>
+		</tr>
+<?php foreach($listclick as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><a href="<?php echo $value['url'];?>" target="_blank"><?php echo $value['url'];?></td>
+			<td><?php echo $value['click'];?></td>
+			<td><?php echo $value['dateline'];?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	var yesterday = "<?php echo $yesterday;?>";
+	var weekday = "<?php echo $weekday;?>";
+	var monthday = "<?php echo $monthday;?>";
+	var threemonth = "<?php echo $threemonth;?>";
+	$("#sdate").datepicker({
+				dateFormat : 'yy-mm-dd'
+			});
+	$("#edate").datepicker({
+				dateFormat : 'yy-mm-dd'
+			});
+	$('#app').bind('change', function(){
+		var app = $(this).val();
+		window.location.href = $('#listUrl').val() + 'app=' + app;
+	});
+	$('#quick').bind('change',function(){
+		var selectDate = $(this).val();
+		console.log($('#listUrl').val());
+		if (selectDate == 'week') {
+			window.location.href = $('#listUrl').val() + '/?sdate=' + weekday + '&edate=' + yesterday + '&quick=week';
+		} else if (selectDate == 'month') {
+			window.location.href = $('#listUrl').val() + '/?sdate=' + monthday + '&edate=' + yesterday + '&quick=month';
+		} else if (selectDate == 'quarter') {
+			window.location.href = $('#listUrl').val() + '/?sdate=' + threemonth + '&edate=' + yesterday + '&quick=quarter';
+		}
+	});
+	
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

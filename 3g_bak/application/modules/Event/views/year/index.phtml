@@ -1,0 +1,86 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>金立浏览器个人中心周年庆特别活动</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/events/css/ucenter.min.css?ver=<?php echo $version;?>"/>
+    <script type="text/javascript">
+    var token = "<?php echo $token;?>";
+    var initConfig = {
+    	cf_js:<?php 				echo $data['activity'] ; ?>,	//是否活动已经结束  1：已经结束 ，0：未结束
+    	cf_login:<?php 			echo $data['login']; ?>, //是否已经登陆 1：已经登陆  0：未登陆
+    	cf_lingjiang: <?php 	echo $data['chance']; ?>, 	//是否有领奖机会 0：没有   1:有
+    	cf_gqsj:<?php 			echo $data['expireSeconds']; ?>,	//领奖过期时间 单位/秒
+    	status: <?php 			echo $data['prizeStatus']; ?>,	// -2：默认值 -1：已过期 0：未领取 1：已领取
+    	cf_ljUrl: "<?php 			echo $data['prizeUrl']; ?>",//领奖页面地址
+    	cf_sysj: <?php 			echo $data['remainedSeconds']; ?>,	//未领取奖品的剩余时间  单位/秒
+    	cf_cjurl:"<?php 			echo $webroot.'/event/year/ajaxDrawing'; ?>",
+    	cf_loginUrl:"<?php 	echo $data['loginUrl']; ?>",	//要跳转的登陆页
+    };
+
+    <?php if(!empty($prize) && $prize['prize_status'] ==0){?>
+        var jiangping = {
+        	"err_msg":"恭喜获得<?php echo $data['prizeName']; ?>，可用于个人<br>中心的话费和新款手机兑换！",
+			"prize_id":"<?php echo $prize['id']; ?>",
+			"prize_image":"<?php echo $attachPath.$data['prizeImageUrl']; ?>",
+			'prize_type':"<?php echo $data['prize_type'];?>",
+        }
+    <?php }?>
+    </script>
+</head>
+<body class="ui-app">
+    <div class="main">
+        <div class="main-hd">
+            <div class="banner">
+                <img src="<?php  echo $staticResPath;?>/events/pic/uc_banner_640x260.png" width="100%" height="auto" />
+            </div>
+        </div>
+        <div class="main-bd">
+            <div class="act-date"><span>活动时间：<?php echo $sdate;?>-<?php echo $edate;?></span></div>
+            <div class="act-btn-wrap">
+                <div id="J_btn_award" class="btn-gift-default btn-gift-flash">领礼物</div>
+            </div>
+            <div class="act-award-wrap">
+                <img src="<?php  echo $staticResPath;?>/events/pic/uc_award_640x260.jpg" width="100%" height="auto" />
+            </div>
+        </div>
+        <div class="main-ft">
+            <ul class="act-rules">
+               <?php echo html_entity_decode($config['national_day_rule']);?>
+            </ul>
+            <div class="copyright">
+                本活动最终解释权归金立浏览器所有<br/>如有问题请联系官方QQ群：274289481
+            </div>
+        </div>
+    </div>
+    <div id="J_award_dialog" class="ui-dialog ui-dialog-award">
+    <div class="ui-dialog-cwp">
+        <div class="ui-dialog-cnt">
+            <div class="ui-dialog-hd">
+                <div class="ui-award-info">
+                    <div id="J_award_txt" class="ui-award-txt">该账号今天已领过奖啦！</div>
+                    <div id="J_award_pic" class="ui-award-pic"><img /></div>
+                </div>
+            </div>
+            <div class="ui-dialog-arrow"></div>
+            <div class="ui-dialog-bd">
+                <div id="J_award_tip" class="ui-award-tip">活动期间每个账号只能参与一次活动</div>
+            </div>
+        </div>
+        <div class="ui-dialog-btn">
+            <!-- <a id="J_btn_quit" class="btn btn-quit" href＝"#">确定放弃</a> -->
+            <a id="J_btn_ok" class="btn btn-ok" href="#">立即领奖</a>
+        </div>
+    </div>
+</div>
+    <!-- /活动弹窗 -->
+    <script src="<?php echo $staticResPath;?>/events/js/zepto.min.js?ver=<?php echo $version;?>"></script>
+	<script src="<?php echo $staticResPath;?>/events/js/ucenter.min.js?ver=<?php echo $version;?>"></script>
+</body>
+</html>

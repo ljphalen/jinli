@@ -1,0 +1,1 @@
+(function(a){GameApk.model=a.Model.extend({});GameApk.model.setting={mainModel:{}};})(ICAT);

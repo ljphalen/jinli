@@ -1,0 +1,156 @@
+<link media="screen" href="{{rootUrl}}/css/reset.css" rel="stylesheet" type="text/css">
+<link media="screen" href="{{rootUrl}}/css/layout.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="{{rootUrl}}/css/zTreeStyle.css" type="text/css">
+<link media="screen" href="{{rootUrl}}/css/jquery-ui-1.8.22.custom.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{{rootUrl}}/js/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.tablednd.0.8.min.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/common.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/Categorywidget_sdk.js"></script>
+<script src="{{rootUrl}}/js/jquery-ui-1.8.22.custom.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/core.js"></script>
+<script src="{{rootUrl}}/js/validate.js" type="text/javascript"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/float.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>
+<link media="screen" href="{{rootUrl}}/css/chosen.css" rel="stylesheet" type="text/css">
+<style>
+#gamelist{width:30%;background:#fff;border:1px solid #dedede;padding:5px;}
+#gamelist li{width:100%;height:25px;line-height:25px;text-indent:15px;
+             border-bottom:1px dashed #ccc;color:#666;cursor:pointer;}
+</style>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">{{title}}-应用策略</p>
+    </div>
+    <div class="main">
+        <div class="app-detail">
+            <form action="../IncentiveVideoAdLimit/save" method="POST" >      
+                <input type="hidden" name="id"   id="incentive_video_id" value='{{result.id}}' />
+                <ul class="form">
+                  <p> <span  style="font-size:18px">基本信息：</span>
+                      <li>
+                        <span class="label">平台类型：</span>
+                        <div class="fc">
+                            <select id="platform"  name="platform"   <!-- if {{result.id}} -->disabled <!-- endif -->  onchange="autoPlatform()" >
+                                <option value="1" <!-- if {{result.platform}}==1 --> selected <!-- endif -->>Android</option>
+                                <option value="2" <!-- if {{result.platform}}==2 --> selected <!-- endif -->>IOS</option>
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                       <span class="label">应用：</span>
+                         <div class="fc">            
+                         <select id="app_key"  name="app_key"  >
+                         <!-- loop appList -->
+                           <option value="{{appList' value.appkey}}"  <!-- if {{result.app_key}}=={{appList' value.appkey}} --> selected <!-- endif --> >{{appList' value.app_name}}</option>
+                         <!-- endloop -->
+                        </select>
+                        </div>
+                    </li>
+                
+                    <li class="line"></li>
+                       <p> <span  style="font-size:18px">策略配置：</span>
+                      
+                     <li>
+			             <span class="label">网路环境策略</span>
+			             <div class="fc">
+			             	 <input type="radio" class=" required"     name="play_network"    value="0"  <!-- if {{result.play_network}}==0 -->checked="checked" <!-- endif -->  />wifi环境下提前缓存
+			                 <input type="radio" class=" required"     name="play_network"   value="1"   <!-- if {{result.play_network}}==1 -->checked="checked" <!-- endif -->  />全网络环境下提前缓存	                 
+			                 <span class="red">*</span>
+			             </div>
+		            </li>
+	                  <li>
+			             <span class="label">视频横竖屏设置</span>
+			             <div class="fc">
+			             	 <input type="radio" class=" required"     name="video_play_set"    value="2"  <!-- if {{result.video_play_set}}==2 -->checked="checked" <!-- endif -->  />支持横竖屏
+			                 <input type="radio" class=" required"     name="video_play_set"   value="0"   <!-- if {{result.video_play_set}}==0 -->checked="checked" <!-- endif -->  />支持横屏	 
+			                  <input type="radio" class=" required"     name="video_play_set"   value="1"   <!-- if {{result.video_play_set}}==1 -->checked="checked" <!-- endif -->  />支持竖屏                 
+			                 <span class="red">*</span>
+			             </div>
+		            </li>
+		             <li>
+			             <span class="label">全局的概率</span>
+			             <div class="fc">
+			             	<input type="text" class="iText "    name="rate" value="{{result.rate}}" style="width:200px;" />
+			                 <span class="red">(0-1的数字)*</span>
+			             </div>
+		            </li>
+	                 <li>
+			             <span class="label">播放点击关闭是否弹窗</span>
+			             <div class="fc">
+			             	 <input type="radio" class=" required"     name="is_alert"    value="0"  <!-- if {{result.is_alert}}==0 -->checked="checked" <!-- endif -->  />否
+			                 <input type="radio" class=" required"     name="is_alert"   value="1"   <!-- if {{result.is_alert}}==1 -->checked="checked" <!-- endif -->  />弹窗提示  
+			                标题： <input type="text" class="iText "    name="title"  value="{{result.title}}" style="width:200px;" />
+			               弹框内容：  <input type="text" class="iText "    name="content"  value="{{result.content}}" style="width:200px;" />
+			             </div>
+		            </li>   
+                 
+                    
+                    <li>
+                        <div class="fc">
+                            <input type="button" onclick="confirmSubmit();" value="确定" class="submit" />
+                            <input type="button" value="取消" class="cancel" onclick="window.location.href='/IncentiveVideoAdLimit/index'" />
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+	$(function(){
+	    $('#app_key').chosen();
+	    //是编辑页面
+	    productAppKey = "{{result.app_key}}";
+	    if(productAppKey)
+	    {
+	        autoPlatform(productAppKey);
+	    }
+
+	    if($("input[name='is_alert']:checked").val()==0){
+	    	$('input[name="content"]').attr("readonly","readonly");
+	    	$('input[name="title"]').attr("readonly","readonly");
+	    }
+	});
+	
+	$('input[name="is_alert"]').click(function(){
+		if( $(this).val() == 1){
+			$('input[name="content"]').removeAttr("readonly");
+			$('input[name="title"]').removeAttr("readonly");
+		}else{
+			$('input[name="content"]').attr("readonly","readonly");
+			$('input[name="title"]').attr("readonly","readonly");
+			$('input[name="content"]').val('');
+			$('input[name="title"]').val('');
+		}
+		
+	});
+	
+    function confirmSubmit()
+    {
+        $("form").submit();
+    }
+    
+    function autoPlatform(appKey) {
+        ajaxPOST("/IncentiveVideoAdLimit/autoPlatform", {"platform": $("#platform").val()}, function(data) {
+            var length = data.length;
+            str = '';   
+            for (i=0; i<length; i++)
+            {           
+            	 if_selecte ='';
+            	 if(appKey == data[i].appkey){
+                     if_selecte =  'selected="selected"';
+                 }
+                str += '<option value="'+data[i].appkey+'" '+ if_selecte +'>'+data[i].app_name+'</option>'
+            }
+            $("#app_key").html(str);          
+            //重新绑定select的选择组件
+            $("#app_key").removeClass("chzn-done");
+            $("#app_key_chzn").remove();
+            $("#app_key").chosen({});        
+        })
+    }
+
+</script>

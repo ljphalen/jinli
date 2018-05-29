@@ -1,0 +1,107 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<form method="post" action="<?=$this->baseUrl?>" id="addFrom">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">时间范围</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="sdate"
+						       value="<?php echo $params['sdate']; ?>"> 至
+						<input class="input" type="text" id="edate" maxlength="30" name="edate"
+						       value="<?php echo $params['edate']; ?>">
+
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">查询类型</th>
+					<td class="td">
+						<select name="search_type">
+							<?php foreach ($searchType as $k => $v) { ?>
+								<option value="<?php echo $k; ?>" <?php if ($k == $params['search_type']) echo 'selected'; ?>><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+		<input type="hidden" id="hidden_export" name="export" value="0"/>
+	</form>
+
+	<div class="h_a">
+		&nbsp; <span id="total" style="color: red;font-size:14px"></span>
+	</div>
+	<style type="text/css">
+		table {
+			empty-cells: show;
+			border-collapse: collapse;
+		}
+
+		table th {
+			white-space: nowrap;
+		}
+
+		table td {
+			white-space: nowrap;
+		}
+	</style>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="ct">
+				<td class="td2">名称</td>
+				<?php
+				$dateList = array_keys($list);
+				foreach ($dateList as $name) {
+					?>
+					<td class="td2"><?=$name?></td>
+				<?php } ?>
+				<td class="td2">总和</td>
+			</tr>
+
+			<tr class="ct">
+				<td class="td2">列表</td>
+				<?php
+				$sum = 0;
+				foreach ($list as $num) {
+					$sum += $num;
+					?>
+					<td class="td2"><?=$num?></td>
+				<?php } ?>
+				<td class="td2"><?php echo $sum; ?></td>
+			</tr>
+			<tr class="ct">
+				<td class="td2">内容</td>
+				<?php
+				$sum = 0;
+				foreach ($contents as $num) {
+					$sum += $num;
+					?>
+					<td class="td2"><?=$num?></td>
+				<?php } ?>
+				<td class="td2"><?php echo $sum; ?></td>
+			</tr>
+		</table>
+	</div>
+
+	<div>
+
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#sdate").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#edate").datepicker({dateFormat: 'yy-mm-dd'});
+
+
+			$("#downLoad").bind('click', function () {
+				$("#hidden_export").val(1);
+				$("#addFrom").submit();
+				$("#hidden_export").val(0);
+			});
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

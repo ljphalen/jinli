@@ -1,0 +1,32 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $listUrl; ?>">页面列表</a></li>
+			<li class="current"><a href="javascript:;">添加页面</a></li>
+		</ul>
+	</div>
+	<div class="h_a">添加页面</div>
+	<form method="post" action="<?php echo $addPostUrl; ?>" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">属性名</th>
+					<td class="td"><input type="text" name="name" id="name"></td>
+				</tr>
+			</table>
+			<span style="padding-left:260px;margin-top:20px;"><input type="submit" class="btn" value="提交"></span>
+		</div>
+
+	</form>
+
+	<script type="text/javascript">
+		//表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Attribute/index');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

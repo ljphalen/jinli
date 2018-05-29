@@ -1,0 +1,241 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>中奖名单</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-touch-fullscreen" content="yes" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<link rel="stylesheet" href="<?php echo $staticResPath; ?>/events/weixin0501/css/main.min.css?v=<?=$version?>" />
+	<script type="text/javascript">
+		var token = "<?=$token?>";
+	</script>
+</head>
+<body>
+<?php
+$top[1] = array_slice($userList,0,1);
+$top[2]= array_slice($userList,1,2);
+$top[3] = array_slice($userList,3,5);
+$top[4] = array_slice($userList,8);
+
+function getRank($top,$uid) {
+	foreach($top as $rank => $list) {
+		foreach($list as $user) {
+			if ($user['id'] ==$uid) {
+				return $rank;
+			}
+		}
+	}
+	return 0;
+}
+$rank = getRank($top,$userInfo['id']);
+
+$img = array(
+	0 => 'failure.png',
+	1 => 'first-prize.png',
+	2 => 'second-prize.png',
+	3 => 'third-prize.png',
+	4 => 'fourth-prize.png',
+)
+?>
+
+<header class="ui_rel" id="header">
+	<!-- 暂时缺少一个中奖页面的Banner -->
+	<img src="<?php echo $staticResPath; ?>/events/weixin0501/pic/result-main.jpg" alt="" width="100%" />
+	<img src="<?php echo $staticResPath; ?>/events/weixin0501/pic/<?=$img[$rank]?>" class="prizeLevel" alt="" />
+
+	<?php
+	$url = Common::clickUrl(1359918,'NAV','http://item.m.jd.com/product/1359918.html');
+	?>
+	<a href="<?=$url?>" class="btn_s71"></a>
+	<?php if($rank>0):?>
+	<a href="javascript:;" id="btnPrize" class="btn_prize"></a>
+	<?php endif;?>
+</header>
+
+<div class="ui-pg-prize">
+	<div style="color:#f00; line-height: 30px;">为保证活动的公平性，已将存在刷单操作的用户剔除</div>
+	<div class="prize-title"><h2>中奖名单</h2></div>
+	<div class="prize-box">
+		<div class="prize-wrap p1">
+			<div class="title">
+				<span>获得金立S7手机</span>
+			</div>
+			<ul>
+				<?php foreach($top[1] as $v):?>
+				<li>
+					<p><img src="<?=$v['face']?>" alt=""></p>
+					<p><?=$v['nickname']?></p>
+					<p>攒了<?=$v['num']?>里程</p>
+				</li>
+				<?php endforeach;?>
+			</ul>
+		</div>
+	</div>
+	<div class="prize-box">
+		<div class="prize-wrap p2">
+			<div class="title">
+				<span>获得价值300元携程旅游礼品卡</span>
+			</div>
+			<ul>
+				<?php foreach($top[2] as $v):?>
+					<li>
+						<p><img src="<?=$v['face']?>" alt=""></p>
+						<p><?=$v['nickname']?></p>
+						<p>攒了<?=$v['num']?>里程</p>
+					</li>
+				<?php endforeach;?>
+			</ul>
+		</div>
+	</div>
+	<div class="prize-box">
+		<div class="prize-wrap">
+			<div class="title">
+				<span>获得价值200元携程旅游礼品卡</span>
+			</div>
+			<ul>
+				<?php foreach($top[3] as $v):?>
+					<li>
+						<p><img src="<?=$v['face']?>" alt=""></p>
+						<p><?=$v['nickname']?></p>
+						<p>攒了<?=$v['num']?>里程</p>
+					</li>
+				<?php endforeach;?>
+
+			</ul>
+		</div>
+	</div>
+	<div class="prize-box">
+		<div class="prize-wrap">
+			<div class="title">
+				<span>获得旅行必备神器移动电源</span>
+			</div>
+			<ul>
+				<?php foreach($top[4] as $v):?>
+					<li>
+						<p><img src="<?=$v['face']?>" alt=""></p>
+						<p><?=$v['nickname']?></p>
+						<p>攒了<?=$v['num']?>里程</p>
+					</li>
+				<?php endforeach;?>
+			</ul>
+		</div>
+	</div>
+</div>
+<footer>
+	<div class="copyright">本活动最终解释权归“集砖箱”所有</div>
+	<div><img src="<?php echo $staticResPath; ?>/events/weixin0501/pic/WXbottom.jpg"  width="100%" alt=""></div>
+</footer>
+<!-- 联系方式弹窗 -->
+<div class="bg_mask u_c" id="conContact" style="display: none;">
+	<div class="contact-wrap">
+		<h2>联系方式</h2>
+		<div class="contact">
+			<ul>
+				<li>
+					<span>收件人</span>
+					<input id="addr_uname" type="text" name="username" value="" placeholder="请输入真实姓名">
+				</li>
+				<li class="select-wrap">
+					<span>省份</span>
+					<select name="province_id" id="province_id" data-url="http://3g.3gtest.gionee.com/user/center/ajaxGetAreaDataList">
+						<option value="0">请选择</option>
+						<option value="2">北京市</option>
+						<option value="4">天津市</option>
+						<option value="6">上海市</option>
+						<option value="8">重庆市</option>
+						<option value="10">河北省</option>
+						<option value="12">河南省</option>
+						<option value="14">云南省</option>
+						<option value="16">辽宁省</option>
+						<option value="18">黑龙江省</option>
+						<option value="20">湖南省</option>
+						<option value="22">安徽省</option>
+						<option value="24">山东省</option>
+						<option value="26">新疆维吾尔自治区</option>
+						<option value="28">江苏省</option>
+						<option value="30">浙江省</option>
+						<option value="32">江西省</option>
+						<option value="34">湖北省</option>
+						<option value="36">广西壮族自治区</option>
+						<option value="38">甘肃省</option>
+						<option value="40">山西省</option>
+						<option value="42">内蒙古</option>
+						<option value="44">陕西省</option>
+						<option value="46">吉林省</option>
+						<option value="48">福建省</option>
+						<option value="50">贵州省</option>
+						<option value="52">广东省</option>
+						<option value="54">青海省</option>
+						<option value="56">西藏</option>
+						<option value="58">四川省</option>
+						<option value="60">宁夏回族自治区</option>
+						<option value="62">海南省</option>
+						<option value="64">台湾省</option>
+					</select>
+				</li>
+				<li class="select-wrap">
+					<span>城市</span>
+					<select name="city_id" id="city_id">
+						<option value="0">请选择</option>
+					</select>
+				</li>
+				<li><span>地址</span><input id="addr_addr" type="text" name="address" value="" placeholder="请输入详细地址"></li>
+				<li><span>联系电话</span><input id="addr_tel" type="text" name="phone" value="" placeholder="请输入有效电话"></li>
+				<li id="prize-addr-tips" style="display:none;">请填写完整有效信息，才可提交</li>
+			</ul>
+			<div><a id="J_btn_addr" class="submit" href="javascript:;"><span>提交</span></a></div>
+		</div>
+	</div>
+</div>
+<!-- /联系方式弹窗 -->
+
+<!-- 联系方式已收到弹窗 -->
+<div class="bg_mask u_c" id="conContactRec" style="display:none;">
+	<div class="contact-wrap">
+		<div class="contact">
+			<p>恭喜您，您的联系方式已收到</p>
+			<p>请耐心等候</p>
+			<p>我们会在第一时间为您配送礼品</p>
+			<div><a class="submit J_btn_ok" href="javascript:;"><span>我知道了</span></a></div>
+		</div>
+	</div>
+</div>
+<!-- /联系方式已收到弹窗 -->
+
+<!-- 信息提交异常弹窗 -->
+<div class="bg_mask u_c" id="conContactErr" style="display:none;">
+	<div class="contact-wrap">
+		<div class="contact">
+			<p>信息提交异常</p>
+			<p>请检查网络连接，并重新提交信息</p>
+			<div><a class="submit J_btn_ok" href="javascript:;"><span>我知道了</span></a></div>
+		</div>
+	</div>
+</div>
+<!-- /信息提交异常弹窗 -->
+
+<?php
+$nonceStr  = Common::randStr(10);
+$timestamp = time();
+$ticket    = Gionee_Service_WxHelp::getJSApiTicket($pageData['wx_appid'], $pageData['wx_appkey']);
+$url       = Gionee_Service_WxHelp::getJSCurUrl();
+$signstr   = sprintf('jsapi_ticket=%s&noncestr=%s&timestamp=%s&url=%s', $ticket, $nonceStr, $timestamp, $url);
+$signature = sha1($signstr);
+?>
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="<?php echo $staticResPath; ?>/events/weixin0501/js/main.min.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+	wx.config({
+		debug: false,
+		appId: "<?=$pageData['wx_appid']?>",
+		timestamp: <?=$timestamp?>,
+		nonceStr: '<?=$nonceStr?>',
+		signature: '<?=$signature?>',
+		jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
+	});
+</script>
+</body>
+</html>

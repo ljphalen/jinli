@@ -1,0 +1,68 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $visitUrl; ?>">PV/UV统计</a></li>
+		<li><a href="<?php echo $userLogUrl ?>">新增激活用户</a></li>
+		<li><a href="<?php echo $newRegisterUrl; ?>">新增注册用户</a></li>
+		<li class="current"><a href="<?php echo $connectedUrl; ?>">接通统计</a></li>
+		<li><a href="<?php echo $periodUrl ?>">通话时段统计</a></li>
+	</ul>
+</div>
+<div class="table_full">
+	<form action="<?php echo $baseUrl; ?>" method="POST">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+		<table width="100%" cellspacing="0" cellpadding="0">
+			<tr class="tr1">
+				<td class="td1"> 月份(201410)：
+					<input class="input" type="text" maxlength="6" id="ym" name="ym" value="<?php echo $ym; ?>">
+
+					<input type="submit" value="查询"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="tr">
+			<td class="td">日期</td>
+			<td class="td">接通次数</td>
+			<td class="td">接通时长(秒)</td>
+			<td class="td">接通人数</td>
+			<td class="td">人均接通时长(秒)</td>
+			<td class="td">人均接通次数</td>
+			<td class="td">总拔打次数</td>
+			<td class="td">总拔打人数</td>
+			<td class="td">人均拔打次数</td>
+			<td class="td">查看详情</td>
+
+		</tr>
+		<?php
+		foreach ($dataList as $v) {
+			$v2 = $dataList1[$v['date']];
+			?>
+			<tr class="ct">
+				<td class="td"><?php echo $v['date'];?></td>
+				<td class="td"><?php echo $v['totalTimes'];?></td>
+				<td class="td"><?php echo $v['totalTime'];?></td>
+				<td class="td"><?php echo $v['totalPerson'];?></td>
+				<td class="td"><?php echo floor($v['totalTime'] / $v['totalPerson']);?></td>
+				<td class="td"><?php echo floor($v['totalTimes'] / $v['totalPerson']);?></td>
+				<td class="td"><?php echo $v2['totalTimes'];?></td>
+				<td class="td"><?php echo $v2['totalPerson'];?></td>
+				<td class="td"><?php echo floor($v2['totalTimes'] / $v2['totalPerson']);?></td>
+				<td class="td">
+					<a href="/Admin/Voipstat/perCallTimes?date=<?php echo $v['date'];?>&total=<?php echo $v2['totalPerson'];?>">用户拔号统计</a>&nbsp;
+					<a href="/Admin/Voipstat/perCallTimesExport?date=<?php echo $v['date'];?>">导出</a>&nbsp;
+					<a href="/Admin/Voipstat/cDetail?date=<?php echo $v['date'];?>">详情</a>
+				</td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+<?php echo $this->render("layout/footer.phtml"); ?>
+	
+	

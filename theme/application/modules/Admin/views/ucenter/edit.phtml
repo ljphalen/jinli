@@ -1,0 +1,180 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link rel="stylesheet" href="<?php echo $staticPath ?>jssdk/plugins/jcrop/jquery.Jcrop.css" type="text/css" />
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <div id="zt_ucenter_edit">
+        <div class="content">
+            <form name="userInfo" id="userInfo">
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <span class="ucenter_header fl h18">基础资料</span>
+                        <input type="hidden" name="userId" value="<?php echo $userId;?>" />
+                    </div>
+                </div>
+
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell tb_title">昵称 :</label>
+                        <div class="tb_cont tb_cell">
+                            <input name="nick_name" type="text" class="rd_1 w300" value="<?php echo $userInfo['nick_name'];?>"> <span class="input-tips" style="display:none">2－14个字符支持中英文和数字</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell tb_title">性别 :</label>
+                        <div class="tb_cont tb_cell">
+                            <ul class="radio_wrap" id="sex">
+                                <li class="radio <?php if($userInfo['sex'] == 1){?>on<?php } ?>" val="1">男</li>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <li class="radio <?php if($userInfo['sex'] == 0){?>on<?php } ?>" val="0">女</li>
+                            </ul>
+                            <input name="sex" type="hidden" value="" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell align_middle tb_title">头像 :</label>
+                        <div class="tb_cont tb_cell">
+                            <div class="fl" id="iconDemo">
+                                <img <?php if($userInfo[ 'icon']){?>src="
+                                <?php echo $iconUrl. '/userIcon/'.$userInfo[ 'icon']. '?t='.time();?>" uri="<?php echo $userInfo[ 'icon'];?>"
+                                <?php } else {?>src="/statics/freetribe/image/default_user_icon.png"
+                                <?php } ?>width="100" height="100"/></div>
+                            <div class="fl iconBtnBox">
+                                <button class="btn_s3 pop_btn" id="uploadBtn">设置头像</button>
+                                <span class="pop_btn none" openPopId="selectIcon" id="showSelectIconBtn"></span>
+                                <input id="fileToUpload" style="display: none" type="file" name="upfile">
+                                <br/>
+                                <br/>
+                                <span style="font-color: gray; width: 100px;">
+
+                                上传小于10MB的<br/>
+
+                                JPG, PNG, GIF图片</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <div class="ucenter_header fl h18">支付必备</div>
+                        <div class="fl pay_header_desc">&nbsp;&nbsp;(用于获得收入分成)</div>
+                    </div>
+                </div>
+
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell tb_title"></label>
+                        <div class="tb_cont tb_cell">
+                            <ul class="radio_wrap" id="designer_type">
+                                <li class="radio <?php if($userDetail['designer_type'] == 0){?>on<?php } ?>" val="0" data-type="1">个人设计师</li>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <li class="radio <?php if($userDetail['designer_type'] == 1){?>on<?php } ?>" val="1" data-type="0">企业设计师</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+                <div class="userInfo info_cont <?php if($userDetail['designer_type'] == 1) echo 'none';?>">
+                    <?php echo $this->render("ucenter/personal.phtml"); ?>
+                </div>
+                <div class="companyInfo <?php if($userDetail['designer_type'] == 0) echo 'none';?>">
+                    <?php echo $this->render("ucenter/company.phtml"); ?>
+                </div>
+                <div class="bnts_wrap" style="height: 150px;">
+                    <div class="fl" style="width: 200px;">&nbsp;</div>
+                    <div class="fl">
+                        <span class="btn_s2" id="saveBtn" style="width:250px;">同议相关协议并保存</span>
+                        <span class="pop_btn none" openPopId="saveBaseInfo" id="hideSaveBtn"></span>
+                        <br/>
+                        <a href="#" style="color: blue;">阅读协议</a>, 如不同意阅读协议请关闭此页面
+                    </div>
+                </div>
+
+        </div>
+        <!-- content end -->
+    </div>
+</section>
+
+<!-- 弹窗 确认提交-->
+<div class="pop_wraper" id="saveBaseInfo">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">为了保证您能及时地获得收入分成，请再次确认信息是否正确。</p>
+                    <div class="tip_btns">
+                        <button class="btn_s2" id="submitBtn">确定</button>
+                        <button class="btn_s2 btnCancel">取消</button>
+                    </div>
+                    <div class="pop_close"></div>
+                </div>
+                <!-- pop_cont_tip 结束 -->
+            </div>
+            <!-- pop_content 结束 -->
+        </div>
+        <!-- pop-inner 结束 -->
+    </div>
+    <!-- pop-outer 结束 -->
+</div>
+<!-- pop-wraper 结束 -->
+
+<!-- 弹窗 图片 pop_style_img表示是图片 带该class的 点击页面其它区域会关闭该图片-->
+<div class="pop_wraper" id="selectIcon">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <div>
+                        <input type="hidden" id="select_img" name="img" />
+                        <input type="hidden" id="select_x" name="x" />
+                        <input type="hidden" id="select_y" name="y" />
+                        <input type="hidden" id="select_w" name="w" />
+                        <input type="hidden" id="select_h" name="h" />
+                        <img id="selectImg" />
+                    </div>
+                    <div class="tip_btns">
+                        <button class="btn_s2" id="avatarSubmitBtn">确定</button>
+                        <button class="btn_s2 btnCancel">取消</button>
+                    </div>
+                    <div class="pop_close"></div>
+                </div>
+                <!-- pop_cont_tip 结束 -->
+            </div>
+            <!-- pop_content 结束 -->
+        </div>
+        <!-- pop-inner 结束 -->
+    </div>
+    <!-- pop-outer 结束 -->
+</div>
+<!-- pop-wraper 结束 -->
+
+<script src="<?php echo $staticPath ?>jssdk/plugins/ajaxfileupload/jquery.ajaxfileupload.js" type="text/javascript"></script>
+<script type="text/javascript" src="<?php echo $staticPath ?>jssdk/plugins/jcrop/jquery.Jcrop.min.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath ?>jssdk/plugins/jquery.validate.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath ?>jssdk/plugins/placeholder/placeholder.js"></script>
+<link rel="stylesheet" href="<?php echo $staticPath ?>jssdk/plugins/jcrop/jquery.color.js" type="text/css" />
+<script type="text/javascript">
+        var upload_icon_url = "/Admin/Ucenter/uploadicon?token=" + token;
+        var upload_id_url = "/Admin/Ucenter/uploadid?token=" + token;
+        var upload_license_url = "/Admin/Ucenter/uploadLicense?token=" + token;
+        var upload_tax_url = "/Admin/Ucenter/uploadTax?token=" + token;
+        var resize_icon_url = "/Admin/Ucenter/resize?token=" + token;
+        var edit_user_url = "/Admin/Ucenter/doedit";
+        var theme_index_url = "/Admin/Index/index";
+        var icon_url = "<?php echo $iconUrl; ?>";
+        var session_id = "<?php echo session_id(); ?>";
+        var check_nickname_url = "/Admin/Ucenter/checknickname";
+</script>
+<script type="text/javascript" src="<?php echo $staticPath ?>appjs/ucenter/ucenter.js"></script>
+</body>
+
+</html>

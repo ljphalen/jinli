@@ -1,0 +1,80 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">商品列表</a></li>
+		<li><a href="<?php echo $step1Url;?>">添加商品</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">商品分类</th>
+			<td class="td">
+			<select name="category_id" class="wa">
+				<option value="0">所有</option>
+<?php foreach($categorys as $key=>$value) {?>
+				<option value="" disabled="disabled"><?php echo $value['area_name'];?></option>
+				<?php foreach($value['items'] as $key=>$value) {?>				
+                	<option <?php if($value['id'] == $search['category_id']) echo 'selected';?> value="<?php echo $value['id'];?>"><?php echo '|－'.$value['title'];?></option>
+<?php } }?>
+			</select>
+			</td>
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+				<option value="0">所有状态</option>
+				<option <?php if($search['status'] == 1) echo 'selected';?> value="1">在架上</option>
+				<option <?php if($search['status'] == 0 && $st == 1) echo 'selected';?> value="2">已下架</option>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="30">排序</td>
+			<td>商品ID</td>
+			<td>商品名称</td>
+			<td>图片</td>
+			<td>所属分类</td>
+			<td>单价</td>
+			<td>预计返利</td>
+			<td>想要数</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($goods as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><img src="<?php if(strpos($value['img'], 'http://') === false) {echo $attachPath,$value['img'];}else{echo $value['img'],'_120x120.',end(explode(".",  $value['img']));};?>"/></td>
+			<td><?php echo $client_categorys[$value['category_id']]['title'];?></td>
+	        <td><?php echo $value['price'];?></td>
+	        <td><?php echo $value['commission'];?></td>
+	        <td><?php echo $value['default_want'];?></td>
+			<td><?php echo $value['status'] == 1 ? '在架上' : '已下架';?></td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

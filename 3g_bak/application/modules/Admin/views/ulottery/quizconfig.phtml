@@ -1,0 +1,72 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $quizUrl; ?>">列表</a></li>
+			<li class=""><a href="<?php echo $editQuizUrl; ?>">添加内容</a></li>
+			<li><a href="<?php echo $importQuizUrl; ?>">数据导入</a></li>
+		<li class="current"><a href="<?php echo $quizConfigUrl; ?>">配置信息</a></li>
+		<li><a href="<?php echo $quizlogUrl; ?>">统计信息</a></li>
+	</ul>
+</div>
+<div class="h_a">基本配置：</div>
+<form method="post" action="/Admin/Ulottery/quizConfig" id="addFrom">
+<input name="token" id="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">	
+		
+			<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				<select name="quiz_status">
+					<option value="1"   <?php if($data['quiz_status'] == 1) echo 'selected';?>>开启</option>
+					<option value="0"   <?php if($data['quiz_status'] == 0) echo 'selected';?>>关闭</option>
+				</select>
+			</td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">单道题答对获得金币数</th>
+			<td class="td"><input  type="text"  value="<?php echo max(0,$data['quiz_per_reward_scores']);?>"  name="quiz_per_reward_scores"  class="input"></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">全部答对获赠金币数</th>
+			<td class="td"><input  type="text"  value="<?php echo max(0,$data['quiz_all_right_reward_scores']);?>"  name="quiz_all_right_reward_scores"  class="input"></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">可答题数量</th>
+			<td class="td"><input  type="text"  value="<?php echo $data['quiz_per_day_num']?$data['quiz_per_day_num']:5;?>"  name="quiz_per_day_num"  class="input"></td>
+		</tr>
+				
+		<tr class="tr">
+			<th class="th">规则说明</th>
+			<td class="td"><textarea rows="6" cols="10" name="quiz_rule_content"  style="width: 600px; height:400px;"><?php echo $data['quiz_rule_content'];?></textarea></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 var editor;
+	 	KindEditor.ready(function(K) {
+	 		K.token = $('#token').val();
+	 	    editor = K.create('textarea[name=""quiz_rule_content""]', {
+	 	        resizeType : 1,
+	 	        allowPreviewEmoticons : false,
+	 	        allowImageUpload : true,
+	 	        uploadJson : '<?php echo $uploadImgUrl;?>',
+	 	        items : EDITOR_ITEMS
+	 	    });
+	 	});
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Ulottery/config');
+	},function(){
+  		editor.sync();
+  	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

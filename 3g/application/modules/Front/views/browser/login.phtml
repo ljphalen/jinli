@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<meta name="viewport"
+	      content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
+	<meta name="apple-touch-fullscreen" content="yes"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<meta name="format-detection" content="telephone=no"/>
+</head>
+<body>
+<?php
+
+$uname = '';
+if (!empty($userInfo['nickname'])) {
+	$uname = $userInfo['nickname'];
+	if (strlen($uname) > 24) {
+		$uname = mb_strcut($uname, 0, 24, 'utf-8') . '...';
+	}
+} else if (Common::checkIllPhone($userInfo['username'])) {
+	$uname = $userInfo['username'];
+}
+
+$data = array(
+	'uname'    => $uname,
+	'uid'      => intval($userInfo['id']),
+	//'tel'   => $userInfo['mobile'],
+	//'level' => $userInfo['user_level'],
+	'avatar'   => 'http://assets.3gtest.gionee.com/apps/3g/call/img/avatar.png',
+	'goldname' => '金币',
+	'gold'     => $userInfo['score']
+);
+
+$jsStr = Common::jsonEncode($data);
+echo $jsStr;
+$e       = new Util_Encrypt();
+$str     = $e->aesEncrypt($jsStr);
+$islogin = empty($userInfo['id']) ? 0 : 1;
+?>
+<script type="text/javascript">
+	GB = {};
+	GB.local = {};
+	GB.local.ucenter = {};
+	GB.local.ucenter = {
+		isLogin: "<?=$islogin?>",
+		nativeApi: function () {
+			return UCenterJSInterface || {};
+		},
+		checkLogin: function () {
+			var url;
+			if (GB.local.ucenter.isLogin === '1') {
+				url = "<?php echo $webroot;?>/user/index/index";
+			} else {
+				url = '<?php echo $webroot;?>/browser/login?act=redirect';
+			}
+			GB.local.ucenter.nativeApi().openNewWin(url);
+		},
+		updateUserData: function (str) {
+			if (GB.local.ucenter.nativeApi()) {
+				GB.local.ucenter.nativeApi().userUpdate(str);
+			}
+		}
+	}
+	window.onload = function () {
+		var str = "<?=$str?>";
+		GB.local.ucenter.updateUserData(str);
+	}
+</script>
+</body>
+</html>

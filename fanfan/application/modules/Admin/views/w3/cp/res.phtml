@@ -1,0 +1,139 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current">CP管理</li>
+	</ul>
+</div>
+<div class="h_a"></div>
+
+<form method="post" action="<?php echo $resUrl;?>" id="editForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th" style="width: 40px;">CP:</th>
+				<td>
+					<select id="id" name="id" onchange="to_cp_list(this.value)">
+						<?php
+						foreach ($cps as $key => $val){
+							$selected = '';
+							if ($key == $cpId) {
+								$selected = ' selected ';
+							}
+							echo "<option value=\"{$key}\" {$selected}>{$val[0]}</option>";
+						}
+						?>
+					</select>
+				</td>
+			</tr>
+		</table>
+
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">名称</th>
+					<td class="td"><input type="text" class="input" name="name" value="<?php echo $info['name'];?>"></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">简述</th>
+					<td class="td"><textarea class="input" name="desc" style="height:150px;width:450px"><?php echo $info['desc'];?></textarea></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">温馨提示</th>
+					<td class="td"><input type="text" class="input wc" name="tip" value="<?php echo $info['tip'];?>"></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">公司名称</th>
+					<td class="td"><input type="text" class="input" name="company" value="<?php echo $info['company'];?>"></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">资源大小</th>
+					<td class="td"><input type="text" class="input" name="size" value="<?php echo $info['size'];?>"></td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">图标</th>
+					<td class="td">
+						<ul class="uploadImg">
+							<li id="ResourceImg">
+								<img src="<?php echo $attachPath . $info['icon'];?>" width="100" />
+								<input type="hidden" name="icon" value="<?php echo $info['icon'];?>"> <br />
+								<a href="javascript:;">删除</a></li>
+						</ul>
+						<p style="clear: both;">
+							<iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=ResourceImg';?>" style="height: 50px; width: 100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">资源图片</th>
+					<td class="td">
+						<?php
+						$i=0;
+						foreach($info['pic'] as $picUrl) {
+							$imgName = "upImg{$i}";
+							?>
+							<div id="<?php echo $imgName;?>">
+								<ul class="uploadImg">
+									<li id="<?php echo $imgName;?>">
+										<img src="<?php echo $attachPath.$picUrl;?>"/>
+										<input type="hidden" name="simg[<?php echo $i;?>]" value="<?php echo $picUrl;?>">
+									</li>
+									<li><a href="javascript:void(0)" onclick="deleteImg('<?php echo $imgName;?>', event);">删除</a></li>
+								</ul>
+
+								<p style="clear:both;"><!--<iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=upImg',$i;?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>--></p>
+
+							</div>
+							<?php
+							$i++;
+						}?>
+						<div id="imgs"></div>
+						<div class="mb10"><button onclick="addupload();" onfocus="blur();" type="button"　class="btn">＋添加预览图片</button></div>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">备注</th>
+					<td class="td"><textarea class="input" name="mark" class="textarea wc" style="height:60px;width:300px"><?php echo $info['mark'];?></textarea></td>
+				</tr>
+			</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		ajaxForm('editForm',function(ret){
+			ajaxRedirect(ret, baseurl+'/Admin/W3_Cp/res?cp_id=<?php echo $cpId;?>');
+		})
+
+		/**
+		var editor;
+		KindEditor.ready(function(K) {
+			K.token = $('#token').val();
+			editor = K.create('textarea[name="desc"]', {
+				resizeType : 1,
+				allowPreviewEmoticons : false,
+				allowImageUpload : false,
+				items : EDITOR_ITEMS
+			});
+		});
+		**/
+		var imgc = <?php echo $i;?>;
+		addupload  = function() {
+			var al = $('<ul class="uploadImg"><li id="Img'+imgc+'"><img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/><input type="hidden" name="simg['+imgc+']" value=""></li></ul><p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>'+imgc+'" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>');
+			$('#imgs').append(al);
+			imgc++;
+		}
+		deleteImg = function(elid, e) {
+			showConfirm("确认删除该条信息？", function() {
+				$('#'+elid).remove();
+			}, e);
+		}
+
+	})
+	function to_cp_list(id) {
+		var url = "<?php echo $resUrl;?>?cp_id=" + id;
+		window.location.href=url; // 跳转
+	}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

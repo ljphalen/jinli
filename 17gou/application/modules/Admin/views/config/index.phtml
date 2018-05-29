@@ -1,0 +1,105 @@
+<?php echo $this->render("layout/header.phtml");?>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+
+	<div class="h_a">下载配置</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">Android下载地址配置</th>
+				<td class="td">
+				   <textarea class="input wc" name="android_dl_url"><?php echo $configs['android_dl_url'];?></textarea>
+				</td>
+			</tr>
+            <tr class="tr">
+				<th class="th">ios下载地址配置</th>
+				<td class="td">
+				   <textarea class="input wc" name="ios_dl_url"><?php echo $configs['ios_dl_url'];?></textarea>
+				</td>
+			</tr>
+            <tr class="tr">
+                <th class="th">版本号</th>
+                <td class="td">
+                    <input class="input wc" name="apk_version" value="<?php echo $configs['apk_version'];?>">
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">更新日期</th>
+                <td class="td">
+                    <input class="input wc" name="apk_uptime" value="<?php echo $configs['apk_uptime'];?>">
+                </td>
+            </tr>
+		</table>
+	</div>
+
+    <div class="h_a">客服</div>
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">邮箱</th>
+                <td class="td">
+                    <input class="input wc" name="kefu_mail" value="<?php echo $configs['kefu_mail'];?>">
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">电话</th>
+                <td class="td">
+                    <input class="input wc" name="kefu_phone" value="<?php echo $configs['kefu_phone'];?>">
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="h_a">商务合作</div>
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">邮箱</th>
+                <td class="td">
+                    <input class="input wc" name="bd_mail" value="<?php echo $configs['bd_mail'];?>">
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">电话</th>
+                <td class="td">
+                    <input class="input wc" name="bd_phone" value="<?php echo $configs['bd_phone'];?>">
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="h_a">关注我们</div>
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">微博号</th>
+                <td class="td">
+                    <input class="input wc" name="gz_weibo" value="<?php echo $configs['gz_weibo'];?>">
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">微信号</th>
+                <td class="td">
+                    <input class="input wc" name="gz_weixin" value="<?php echo $configs['gz_weixin'];?>">
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">QQ群</th>
+                <td class="td">
+                    <input class="input wc" name="gz_qq" value="<?php echo $configs['gz_qq'];?>">
+                </td>
+            </tr>
+        </table>
+    </div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Config/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

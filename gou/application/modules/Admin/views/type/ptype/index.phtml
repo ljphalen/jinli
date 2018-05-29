@@ -1,0 +1,42 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">分类列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加分类</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="30">ID</td>
+			<td>排序</td>
+			<td>分类名称</td>
+			<td width="100">推荐</td>
+			<td width="256">子类</td>
+			<td width="100">图标</td>
+			<td width="100">状态</td>
+			<td width="40">点击量</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($suppliers as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['name'];?></td>
+			<td><?php echo $value['recommend'];?></td>
+			<td><?php echo implode(',',$type[$value['id']]);?></td>
+			<td><img src="<?php echo $attachPath,$value['icon'];?>" width=52/></td>
+			<td><?php echo $value['status'] ? '开启':'关闭';?></td>
+			<td><a href="/admin/stat/click?type_id=26&item_id=<?php echo $value['id'];?>" target="_blank"><?php echo $value['hits'];?></a></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

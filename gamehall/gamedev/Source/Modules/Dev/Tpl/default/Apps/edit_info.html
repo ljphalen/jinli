@@ -1,0 +1,51 @@
+<div class="row">
+    <div class="col-sm-12">
+    	<h4>已获取信息</h4>
+    </div>
+</div>
+
+<div class="form-group baoname">
+	<label class="col-sm-2 control-label">包名称：</label>
+	<div class="col-sm-7">
+		<p class="form-control-static">{$apkinfo['package']}</p>
+	</div>
+	
+	<div style="display:none;">
+		<label for="apkupload">
+			<span class="btn btn-info btn-md fileinput-button" style="width:130px;" id="apkupload">
+		        重新上传
+		    </span>
+	        <input type="hidden" id="type" name="type" value="2" />
+	    </label>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-sm-2 control-label">应用名称：</label>
+	<div class="col-sm-4">
+		<p class="form-control-static">
+			<input type="text" class="form-control" maxlength="50" name="app_name" id="app_name" value="{$apkinfo['app_name']}" />
+		</p>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-sm-2 control-label">版本：</label>
+	<div class="col-sm-10">
+		<p class="form-control-static">{$apkinfo['version_name']}</p>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-sm-2 control-label">系统支持：</label>
+	<div class="col-sm-10">
+		<?php
+		$apkConfig = C("apk");
+		$minSDK = $apkinfo['min_sdk_version'];
+		?>
+		<p class="form-control-static">Android {$apkConfig['SDK_VER'][$minSDK]}</p>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-sm-2 control-label">文件大小：</label>
+	<div class="col-sm-10">
+		<p class="form-control-static">{$apkinfo['file_size']|showsize|implode="",###}</p>
+	</div>
+</div>

@@ -1,0 +1,34 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $indexUrl?>">假期任务</a></li>
+        <li class="current"><a href="javascript:;">中奖记录</a></li>
+	</ul>
+</div>
+<div class="h_a">
+	<span>共<?php echo count($items);?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="80">奖品名称</td>
+			<td width="150">数量</td>
+			<td width="150">发放数量</td>
+			<td width="80">奖项</td>
+			<td width="150">操作</td>
+		</tr>
+		<?php foreach ($items as $item):?>
+			<tr class = "ct">
+		    	<td><?php echo $item['reward_item_name'];?></td>
+				<td><?php if(isset($item['total_count'])) {echo $item['total_count'];}else {echo "-";}?></td>
+				<td><?php echo $item['send_count'];?></td>
+				<td><?php echo $item['reward_name'];?></td>
+				<td><a href="<?php echo $rewardUrl."/?id=".$id."&key=".$item['key']."&page=1&name=".$item['reward_item_name']."&type=".$item['type'];?>" class="mr10">查看记录</a>
+				&nbsp;<a href="<?php echo $rewardExportUrl."/?id=".$id."&key=".$item['key']."&name=".$item['reward_item_name']."&reward=".$item[reward_name]."&type=".$item['type'];?>" class="mr10">导出记录</a></td>
+			</tr>
+		<?php endforeach;?>
+	</table>
+</div>
+<div class="mr10 cc">
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

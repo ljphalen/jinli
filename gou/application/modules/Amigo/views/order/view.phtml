@@ -1,0 +1,77 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+	<div class="module">
+	<?php if($hasheader){?>
+		<header id="iHeader" class="hd">
+			<div class="top-wrap">
+				<div class="title">
+					<a href="<?php echo $webroot;?>/amigo/order/search?id=<?php echo $id;?>" class="back"></a>
+					<h1>查询结果</h1>
+					<span class="voice"></span>
+				</div>
+			</div>
+		</header>
+	<?php }?>
+
+		<section id="iScroll">
+<?php if($order){?>
+	<?php if($order['status'] == 1) {?>
+			<div class="result-show">
+				<p>尊敬的用户, 您于<?php echo date('Y-m-d H:i:s',$order['create_time']);?>订单创建成功. <?php if($order['pay_type'] == 1){?>请立即支付.<?php }?></p>
+				 <?php if($order['pay_type'] == 1){?><div class="web-btn"><a href="<?php echo $webroot;?>/amigo/order/pay?out_order_no=<?php echo $order['out_trade_no']; ?>">立即支付</a><?php }?></div>
+			</div>
+	<?php }elseif($order['status'] == 2) {?>
+			<div class="result-show">
+				<p>尊敬的用户,您的订单已支付,请等待收货.</p>
+			</div>
+	<?php }elseif($order['status'] == 3) {?>
+	<div class="result-show">
+				<p>卖家未发货.</p>
+			</div>
+	<?php }elseif($order['status'] == 4) {?>
+	<div class="result-show">
+				<p>买家未收货.</p>
+			</div>
+	<?php }elseif($order['status'] == 5) {?>
+	<div class="result-show">
+				<p>订单交易成功.</p>
+			</div>
+	<?php }elseif($order['status'] == 6) {?>
+			<div class="result-show">
+				<p>订单已取消.</p>
+			</div>
+	<?php }elseif($order['status'] == 7) {?>
+			<div class="result-show">
+				<p>申请退/换货.</p>
+			</div>
+	<?php }elseif($order['status'] == 10) {?>
+			<div class="result-show">
+				<p>取消退款.</p>
+			</div>
+	<?php }elseif($order['status'] == 11) {?>
+			<div class="result-show">
+				<p>订单已取消.</p>
+			</div>
+	<?php }elseif($order['status'] == 12) {?>
+			<div class="result-show">
+				<p>已退款.</p>
+			</div>
+	<?php }elseif($order['status'] == 13) {?>
+			<div class="result-show">
+				<p>退款失败.</p>
+			</div>
+	<?php }else{?>
+			<div class="result-show">
+				<p>订单状态未知.</p>
+			</div>
+	<?php }?>
+<?php }else{?>
+			<div class="result-show">
+				<p>未查询到订单.</p>
+			</div>
+<?php }?>
+		</section>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<style>
+		.iform {
+			width: 200px;
+		}
+	</style>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $baseUrl; ?>">基本配置信息</a></li>
+		</ul>
+	</div>
+
+	<div class="h_a">配置信息（值为0时默认无限制）</div>
+	<form method="post" action="<?php echo $editBaseUrl; ?>" id="addForm">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">每天最大次数（看图）</th>
+					<td class="td">
+						<input type="text" name="user_ads_max_number" value="<?php echo $data['user_ads_max_number'] ? $data['user_ads_max_number'] : 5; ?>" class="input">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">连续签到单次递增积分数</th>
+					<td class="td">
+						<input type="text" name="user_signin_step" value="<?php echo $data['user_signin_step'] ? $data['user_signin_step'] : 0; ?>" class="input"><span style="color:red">设置连续签到递增的积分数，不用设为0</span>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">连续签到单次领取最大积分数</th>
+					<td class="td">
+						<input type="text" name="user_signin_per_max" value="<?php echo $data['user_signin_per_max'] ? $data['user_signin_per_max'] : 5; ?>" class="class"><span style="color: red">连续签到达到最大值时不再递增，而是以此值为准</span>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th"> 每人每天最大兑换数</th>
+					<td class="td">
+						<input type="text" name="user_person_max_exchange" value="<?php echo $data['user_person_max_exchange'] ? $data['user_person_max_exchange'] : 1; ?>" class="input">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">单个商品单天最大兑换个数</th>
+					<td class="td">
+						<input type="text" name="user_day_max_number" value="<?php echo $data['user_day_max_number'] ? $data['user_day_max_number'] : 1; ?>" class="input">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">单个用户免费使用畅聊次数</th>
+					<td class="td">
+						<input type="text" name="user_voip_max_time" value="<?php echo $data['user_voip_max_time'] ? $data['user_voip_max_time'] : 0; ?>" class="input">
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">关注微信送的金币数</th>
+					<td class="td">
+						<input type="text" name="user_wx_content_rewards" value="<?php echo $data['user_wx_content_rewards'] ? $data['user_wx_content_rewards'] : 0 ?>" class="input">
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">每月增送通话时长</th>
+					<td class="td">
+						<input type="text" name="user_give_voip_minius" value="<?php echo $data['user_give_voip_minius'] ? $data['user_give_voip_minius'] : 0; ?>" class="input">分钟
+					</td>
+				</tr>
+				
+				<tr class="tr">
+					<th class="th">网盟广告状态</th>
+					<td class="td">
+						<input type="radio" name="user_wangmeng_status" value="0" class="input" <?php if($data['user_wangmeng_status'] == 0) echo 'checked';?>>关闭
+						<input type="radio" name="user_wangmeng_status" value="1" class="input" <?php if($data['user_wangmeng_status'] == 1) echo 'checked';?>>开启
+					</td>
+				</tr>
+				
+				<tr class="tr">
+					<th class="th">充流量包商品活动编号</th>
+					<td class="td">
+						<input type="text" name="user_flow_acitivity_num" value="<?php echo $data['user_flow_acitivity_num'] ? $data['user_flow_acitivity_num'] : 0; ?>" class="input">
+					</td>
+				</tr>
+				
+			</table>
+		</div>
+
+		
+		<div class="mb10 tac">
+			<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script type="text/javascript">
+		//用户表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/uprivilege/base');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

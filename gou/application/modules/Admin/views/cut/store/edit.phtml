@@ -1,0 +1,219 @@
+<?php echo $this->render("layout/header.phtml");?>
+<style>
+    .ui-button { margin-left: -1px; }
+    .ui-button { top :1.2px; }
+    .ui-button-icon-only .ui-button-text { padding: 0.36em; }
+    .ui-autocomplete-input { margin: 0; padding: 0.48em 0 0.47em 0.45em;width:418px; left:0px }
+</style>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">商品列表</a></li>
+    <li class="current"><a href="javascript:;">编辑商品</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑商品</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+
+<input name="num_iid" value="<?php echo $info['num_iid'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input wa" name="sort" value="<?php echo $info['sort']?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">商品名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">价格</th>
+			<td class="td"><input type="text" class="input wc" name="price" value="<?php echo $info['price'];?>">(注意：如果该商品已经在砍价中，则不能修改价格)</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">分享标题</th>
+			<td class="td"><input type="text" class="input wc" name="share_title" value="<?php echo $info['share_title']?$info['share_title']:$info['title'];?>"></td>
+		</tr>
+ 		
+        <tr class="tr">
+            <th class="th">所属分类</th>
+            <td class="td">
+                <select name="type_id" id="child_type">
+                    <?php foreach ($type as $key => $t) { ?>
+                        <option <?php echo ($info['type_id'] == $t['id']) ? 'selected="selected"' : ''; ?>
+                          value="<?php echo $t['id']; ?>"><?php echo $t['name']; ?></option>
+                    <?php } ?>
+                </select>
+            </td>
+        </tr>
+        <tr class="tr">
+            <th class="th">商品图标</th>
+            <td class="td">
+                <ul class="uploadImg">
+                    <li id="gimg">
+                        <img src="<?php if (strpos($info['img'], 'http://') === false) {
+                            echo $attachPath, $info['img'];
+                        } else {
+                            echo $info['img'];
+                        }; ?>"/>
+                        <input type="hidden" name="img" value="<?php echo $info['img']; ?>">
+                    </li>
+                </ul>
+                <p style="clear:both;">
+                    <iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=gimg'; ?>"
+                            style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                </p>
+            </td>
+        </tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+                <select name="status">
+                    <option <?php if($info['status'] == 1) echo 'selected';?> value="1">&nbsp;&nbsp;开&nbsp;&nbsp;启&nbsp;&nbsp;</option>
+                    <option <?php if($info['status'] == 0) echo 'selected';?> value="0">&nbsp;&nbsp;关&nbsp;&nbsp;闭&nbsp;&nbsp;</option>
+                </select>
+           	</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script>
+    (function( $ ) {
+        $.widget( "ui.combobox", {
+            _create: function() {
+                var self = this,
+                    select = this.element.hide(),
+                    selected = select.children( ":selected" ),
+                    value = selected.val() ? selected.text() : "";
+                var input = this.input = $( "<input>" )
+                    .insertAfter( select )
+                    .val( value )
+                    .autocomplete({
+                        delay: 0,
+                        minLength: 0,
+                        source: function( request, response ) {
+                            var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+                            response( select.children( "option" ).map(function() {
+                                var text = $( this ).text();
+                                if ( this.value && ( !request.term || matcher.test(text) ) )
+                                    return {
+                                        label: text.replace(
+                                            new RegExp(
+                                                "(?![^&;]+;)(?!<[^<>]*)(" +
+                                                $.ui.autocomplete.escapeRegex(request.term) +
+                                                ")(?![^<>]*>)(?![^&;]+;)", "gi"
+                                            ), "<strong>$1</strong>" ),
+                                        value: text,
+                                        option: this
+                                    };
+                            }) );
+                        },
+                        select: function( event, ui ) {
+                            ui.item.option.selected = true;
+                            self._trigger( "selected", event, {
+                                item: ui.item.option
+                            });
+                        },
+                        change: function( event, ui ) {
+                            if ( !ui.item ) {
+                                var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( $(this).val() ) + "$", "i" ),
+                                    valid = false;
+                                select.children( "option" ).each(function() {
+                                    if ( $( this ).text().match( matcher ) ) {
+                                        this.selected = valid = true;
+                                        return false;
+                                    }
+                                });
+                                if ( !valid ) {
+                                    // remove invalid value, as it didn't match anything
+                                    $( this ).val( "" );
+                                    select.val( "" );
+                                    input.data( "autocomplete" ).term = "";
+                                    return false;
+                                }
+                            }
+                        }
+                    })
+                    .addClass( "ui-widget ui-widget-content ui-corner-left" );
+
+                input.data( "autocomplete" )._renderItem = function( ul, item ) {
+                    return $( "<li></li>" )
+                        .data( "item.autocomplete", item )
+                        .append( "<a>" + item.label + "</a>" )
+                        .appendTo( ul );
+                };
+
+                this.button = $( "<button type='button'>&nbsp;</button>" )
+                    .attr( "tabIndex", -1 )
+                    .attr( "title", "Show All Items" )
+                    .insertAfter( input )
+                    .button({
+                        icons: {
+                            primary: "ui-icon-triangle-1-s"
+                        },
+                        text: false
+                    })
+                    .removeClass( "ui-corner-all" )
+                    .addClass( "ui-corner-right ui-button-icon" )
+                    .click(function() {
+                        // close if already visible
+                        if ( input.autocomplete( "widget" ).is( ":visible" ) ) {
+                            input.autocomplete( "close" );
+                            return;
+                        }
+
+                        // work around a bug (likely same cause as #5265)
+                        $( this ).blur();
+
+                        // pass empty string as value to search for, displaying all results
+                        input.autocomplete( "search", "" );
+                        input.focus();
+                    });
+            },
+
+            destroy: function() {
+                this.input.remove();
+                this.button.remove();
+                this.element.show();
+                $.Widget.prototype.destroy.call( this );
+            }
+        });
+    })( jQuery );
+</script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+	K.token = token;
+    editor = K.create('textarea[name="description"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        urlType:'domain',
+        uploadJson : '<?php echo $adminroot.$uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+//auto complete
+$('#shop_combo').combobox();
+//get goods info
+//商品表单数据提交
+$(document).ready(function(){
+ 	$("#start_time").datepicker({
+		dateFormat : 'yy-mm-dd'
+	});
+	$("#end_time").datepicker({
+		dateFormat : 'yy-mm-dd'
+	});
+	ajaxForm('addForm',function(ret){
+        ajaxRedirect(ret, '<?php echo Util_Http::getServer('HTTP_REFERER'); ?>');
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

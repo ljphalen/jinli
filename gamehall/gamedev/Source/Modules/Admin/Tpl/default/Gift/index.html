@@ -1,0 +1,107 @@
+<form id="pagerForm" action="__URL__" method="post">
+	<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+	<input type="hidden" name="numPerPage" value="{$_REQUEST.numPerPage}" />
+	<input type="hidden" name="orderField" value="{$_REQUEST.orderField}" />
+	<input type="hidden" name="orderDirection" value="{$_REQUEST.orderDirection}" />
+	<volist name="_search" key="name" id="field">
+		<input type="hidden" name="_search[{$key}]" value="{$field|safe}"/>
+	</volist>
+</form>
+
+<div class="page">
+	<div class="pageHeader">
+		<form onsubmit="return navTabSearch(this);" action="__URL__/" method="post">
+		<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+		<div class="searchBar">
+			<ul class="searchContent">
+				<li>
+					<label>应用名称：</label>
+					<input type="text" name="_search[app_name]" value="{$_search[app_name]}"/>
+				</li>
+				<li>
+					<label>应用状态：</label>
+					{:Helper("Form")->name("_search[app_status]")->option(D("Dev://Apks")->getStatus())->default('全部')->value($_search[app_status])->class('form-control')->select();}
+				</li>
+				<li>
+					<label>礼包状态：</label>
+					{:Helper("Form")->name("_search[status]")->option(GiftModel::$status)->default('全部')->value($_search[status])->class('form-control')->select();}
+				</li>
+				<li>
+					<label>有效期：</label>
+					<input type="text" name="_search[timeStart]" value="{$_search.timeStart}" class="date" yearstart="-10" yearend="0" pattern="yyyy-MM-dd" size="12" readonly/>
+					到<input type="text" name="_search[timeEnd]" value="{$_search.timeEnd}" class="date" yearstart="-10" yearend="0" pattern="yyyy-MM-dd" size="12" readonly/>
+				</li>
+                <div class="buttonActive"><div class="buttonContent"><button type="submit">查询</button></div></div>
+			</ul>
+		</div>
+		</form>
+	</div>
+	
+	<div class="pageContent">
+		<table class="list" width="100%" layoutH="138">
+			<thead>
+				<tr>
+					<th width="50" orderField="id" class="{:orderField('id','asc')}">编号</th>
+					<th>应用</th>
+					<th>标题</th>
+					<th>开始时间</th>
+					<th>结束时间</th>
+					<th>状态</th>
+					<th>审核时间</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="list">
+				<tr target="sid_user" rel="{$vo['id']}">
+					<td class="center">{$vo['id']}</td>
+					<td>{:D("Apps")->where(array("id"=>$vo['app_id']))->getField('app_name')}</td>
+					<td>{$vo['name']}</td>
+					<td>{$vo.vtime_from|date="Y-m-d",###}</td>
+					<td>{$vo.vtime_to|date="Y-m-d",###}</td>
+					<td>{$vo.status|GiftModel::getStatus}</td>
+					<td>
+						<gt name="vo.atime" value="1">{$vo.atime|date="Y-m-d",###}</gt>
+					</td>
+					<td>
+						<a href="__URL__/view/id/{$vo.id}" width="600" height="400" target="dialog">资料</a>
+
+						<eq name="vo.status" value="1">
+							<a href="__URL__/view/auth/1/id/{$vo.id}" width="600" height="400" target="dialog"><font color="red">审核</font></a>
+						</eq>
+
+						<eq name="vo.status" value="2">
+							<a href="__URL__/off/id/{$vo.id}" target="ajaxTodo" title="你确定要下线该记录吗？"><font color="red">下线</font></a>
+						</eq>
+						
+						<gt name="vo.status" value="1">
+							<a href="{:U("GiftCodes/index", array("gift_id"=>$vo["id"]))}" target="navTab">发放记录</a>
+						</gt>
+					</td>
+				</tr>
+			</volist>
+			</tbody>
+		</table>
+
+		<div class="panelBar">
+			<div class="pages">
+				<span>显示</span>
+				<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+					<option value="10" <eq name="numPerPage" value="10">selected</eq>>10</option>
+					<option value="20" <eq name="numPerPage" value="20">selected</eq>>20</option>
+					<option value="50" <eq name="numPerPage" value="50">selected</eq>>50</option>
+					<option value="100" <eq name="numPerPage" value="100">selected</eq>>100</option>
+					<option value="200" <eq name="numPerPage" value="200">selected</eq>>200</option>
+				</select>
+				<span>共{$totalCount}条</span>
+			</div>
+			<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="10" currentPage="{$currentPage}"></div>
+		</div>
+	</div>
+</div>
+<script>
+function sort(id, sort)
+{
+	$.get("__URL__/sort/id/"+id+"/sort/"+sort.value);
+}
+</script>

@@ -1,0 +1,95 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li class="current"><a href="<?php echo $listUrl;?>">活动记录</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">	
+		 <tr>
+		    <th class="th">用户账号</th>
+			<td class="td"><input type="text" class="input" name="uname" value="<?php echo $s['uname'];?>"></td>
+		</tr>
+		 <tr>
+		  <th class="th">答题日期</th>
+			<td class="td">
+			 <?php foreach($quota as $key=>$value) {?>
+			 <label class="mr20"><input type="checkbox" <?php if (in_array($key, $s['day_id'])) echo 'checked';?> name="day_id[]" value="<?php echo $key;?>"><?php echo $value;?></label>
+			 <?php }?>
+			</td>
+		</tr>
+		 <tr>
+			<th class="th">答题时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo $s['start_time'];?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo $s['end_time'];?>" /></div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="mb10">
+  <form action="<?php echo $exportUrl;?>" method="post" id="exportForm">
+        <input name="token" type="hidden" value="<?php echo $token;?>" />
+		<input type="hidden" name="uname" value="<?php echo $s['uname'];?>" />
+		<?php foreach($quota as $key=>$value) {?>
+		<input style="display:none;" type="checkbox" <?php if (in_array($key, $s['day_id'])) echo 'checked';?> name="day_id[]" value="<?php echo $key;?>">
+		<?php }?>
+		<input type="hidden" name="start_time" value="<?php echo $s['start_time'];?>">
+		<input type="hidden" name="end_time"  value="<?php echo $s['end_time'];?>" />
+	    <span class="btn"><span><button type="button" id="extportBtn">导出记录</button></span>	
+  </form>
+ 
+</div>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2" style="display:none;"><span><button onclick="$('#action').val('close');" type="submit">未发放</button></span></span>
+    <span class="btn2" style="display:none;"><span><button onclick="$('#action').val('open');" type="submit">已发放</button></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td style="display:none;"><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td>用户账号</td>
+			<td>最后答题日期</td>
+			<td>最后答题时间</td>
+			<td>积分</td>
+			<td>查看记录</td>
+		</tr>
+<?php foreach($activityies as $key => $value) {?>
+		<tr class="ct">
+		    <td style="display:none;"><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><?php echo $value['uname'];?></td>
+			<td><?php echo $quota[$day_tmp[$value['uname']]];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $time_tmp[$value['uname']]);?></td>
+		    <td><?php echo $value['score'];?></td>
+		    <td>
+			<a href="<?php echo $logUrl;?>/?uname=<?php echo $value['uname'];?>" class="mr10">查看记录</a>
+			</td>		
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Festival_Guoqing/index');
+	});
+	 $("#extportBtn").click(function(){
+			$("#exportForm").submit();
+     });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

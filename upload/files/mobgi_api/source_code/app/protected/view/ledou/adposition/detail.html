@@ -1,0 +1,113 @@
+<script src="{{rootUrl}}/js/core.js" type="text/javascript"></script>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">{{title}}-自定义广告类型</p>
+    <!-- if {{result.id}} -->
+        <a class="del" href="/AdPosition/delete?id={{result.id}}">删除</a>
+    <!-- endif -->
+    </div>
+    <div class="main">
+        <div class="app-detail">
+            <form action="save" method="POST" >
+                <input type="hidden" name="id" value='{{result.id}}' />
+                <ul class="form">
+                    <li>
+                        <span class="label">广告类型ID：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" required name="pos_key" <!-- if {{result.id}} --> readonly<!-- endif --> style="width:220px;" value="{{result.pos_key}}" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">广告类型名字：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" required name="pos_name" style="width:220px;" value="{{result.pos_name}}" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">广告父类型：</span>
+                        <div class="fc">
+                            <select name="ad_type">
+                                <option <!-- if {{result.ad_type}} == 0 --> selected='selected' <!-- endif --> value="0">抢占式</option>
+                                <option <!-- if {{result.ad_type}} == 1 --> selected='selected' <!-- endif --> value="1">嵌入式</option>
+                                <option <!-- if {{result.ad_type}} == 2 --> selected='selected' <!-- endif --> value="2">PUSH</option>
+                            </select>
+                            <select name="ad_subtype" _val ="{{result.ad_subtype}}">
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">支持广告类型：</span>
+                        <div class="fc">
+                            <table>
+                                <tr>
+                                    <td><input type="text" class="iText search_input" id="left" /></td>
+                                    <td width="150px"></td>
+                                    <td><input type="text" class="iText search_input" id="right"/></td>
+                                </tr>
+                                <tr>
+                                    <td><select id="left_sel" class="multi" multiple="multiple" _target="right_sel" style="height: auto;">
+                                        <!-- loop leftSel -->
+                                        <option _name="{{leftSel' value}}" value="{{leftSel' key}}">{{leftSel' value}}</option>
+                                        <!-- endloop -->
+                                    </select></td>
+                                    <td align="center">
+                                        <input type="button" class="submit selMove" _from="left_sel" _to="right_sel" value="添加->"/><br />
+                                        <input type="button" class="cancel selMove" _from="right_sel" _to="left_sel" value="<-删除"/>
+                                    </td>
+                                    <td><select id="right_sel" name="parent_ids[]" class="multi" multiple="multiple" _target="left_sel" style="height: auto;">
+                                        <!-- loop parentIdsArr -->
+                                        <option _name="{{parentIdsArr' value}}" value="{{parentIdsArr' key}}">{{parentIdsArr' value}}</option>
+                                        <!-- endloop -->
+                                    </select></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="fc">
+                            <input type="submit" value="确定" class="submit subbtn" />
+                            <input type="button" value="取消" class="cancel" onclick="window.location.href='/AdPosition/index'" />
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$(function(){
+    var parentOpt = $("select[name=ad_type]");
+    var childOpt = $("select[name=ad_subtype]");
+    changeSelect(parentOpt, childOpt);
+    parentOpt.change(function(){
+        changeSelect(parentOpt, childOpt);
+    });
+    
+    // 提交动作之前，选中所有下拉框
+    $("form").submit(function(){
+        $("#right_sel").children("option").attr("selected","selected");
+    });
+})
+
+// 二级联动
+function changeSelect(parentOpt, childOpt){
+    var parentVal = parentOpt.val();
+    var obj = { 
+        0 :{ 0 : '半屏', 1 : '全屏'},
+        1 : { 0 : 'Banner横幅图片广告', 1 : 'Banner横幅文字广告', 2 : '插页广告', 3 : '浮窗广告' },
+        2 : { 0:'消息',1:'APP',2:"快捷方式" },
+    };
+    var optionHtml = "";
+    var selectId = childOpt.attr("_val");
+    $.each(obj[parentVal], function(i, k){
+        if ( selectId == i ){
+            optionHtml += "<option selected value='" + i + "'>" + k + "</option>";
+        }else{
+            optionHtml += "<option value='" + i + "'>" + k + "</option>";
+        }
+    });
+    childOpt.html(optionHtml);
+}
+</script>

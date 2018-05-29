@@ -1,0 +1,40 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li ><a href="<?php echo $listUrl;?>">福利任务</a></li>
+		<li><a href="<?php echo $dlistUrl;?>">连续登录</a></li>
+		<li ><a href="<?php echo $dailyTaskUrl;?>">每日任务</a></li>
+		<li><a href="<?php echo $taskInfoConfigUrl;?>">任务说明</a></li>
+		<li class="current"><a href="javascript:void();">每日任务配置</a></li>
+	</ul>
+</div>
+<form method="post" action="<?php echo $dailyTaskConfigPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">每日任务下载</th>
+	            <td>分类ID <input name="daily_task_download_category_id" class="input" value="<?php echo $configs['daily_task_download_category_id'];?>" />
+	            </td>
+			</tr>					
+			<tr class="tr">
+				<th class="th">每日任务分享</th>
+					<td>分类ID <input name="daily_task_share_category_id" class="input" value="<?php echo $configs['daily_task_share_category_id'];?>" />
+	            </td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Wealtaskconfig/dailyTaskConfig');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

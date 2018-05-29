@@ -1,0 +1,59 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<script type="text/javascript"
+src="<?php echo $root . 'jquery.min.js' ?>"></script>
+<script type="text/javascript"
+src="<?php echo $root . 'layer/layer.min.js' ?>"></script>
+
+<style type="text/css">
+    .uploads{
+        margin: 150px auto;
+        border: 2px skyblue solid;
+        height: 220px;
+        width: 180px;
+        background-color: #999999;
+        text-align: center;
+        line-height: 200px;
+        font-size: 18px;
+
+    }
+    .uploads:hover{
+        background-color: #2D93CA;
+        border: 3px  #222 solid;
+        cursor: pointer;
+    }
+</style>
+
+<div class="h_a">上传壁纸</div>
+<div class="uploads" >
+    上传壁纸
+</div>
+
+
+<script type="text/javascript">
+
+    $(function() {
+
+        var webroot = "<?php echo $webroot; ?>";
+
+        $(".uploads").click(function() {
+
+            $.layer(pop);
+        });
+
+        var pop = {
+            type: 2,
+            maxmin: true,
+            shadeClose: true,
+            moveOut: 0,
+            title: '壁纸上传',
+            shade: [0.5, '#fff'],
+            offset: ['20px', ''],
+            area: [($(window).width() - 50) + 'px', ($(window).height() - 50) + 'px'],
+            iframe: {src: webroot + '/Admin/wallpaper/uploads'}
+        }
+    })
+
+
+</script>
+
+<?php echo $this->render("layout/footer.phtml"); ?>

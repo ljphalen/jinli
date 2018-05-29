@@ -1,0 +1,66 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li class="current"><a href="<?php echo $listUrl;?>">福利任务</a></li>
+		<li><a href="<?php echo $dlistUrl;?>">连续登录</a></li>
+		<li ><a href="<?php echo $dailyTaskUrl;?>">每日任务</a></li>
+		<li><a href="<?php echo $taskInfoConfigUrl;?>">任务说明</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+      <table width="100%">
+	   <tr class="tr">
+			<th class="th">任务名称</th>
+			<td class="td"><input type="text" class="input" name="task_name" value="<?php echo $s['task_name'];?>"></td>
+			<th class="th">任务状态</th>
+			<td class="td">
+			 <select name="status" class="select wa">
+			    <option  value="0">全部</option>
+				<option <?php if ($s['status'] == 2) echo 'selected';?> value="2">开启</option>
+				<option <?php if ($s['status'] == 1) echo 'selected';?> value="1">关闭</option>
+			 </select>
+		   </td>
+	 </tr>
+	 </table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">任务id</td>
+			<td width="100">任务名称</td>
+			<td>奖励</td>
+			<td>完成用户数</td>
+			<td>共发放奖励</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($result as $key => $value) { ?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['task_name'];?></td>
+			<td><?php 
+			 $award = json_decode($value['award_json'],true);
+			 $a_total = 0;
+			 foreach($award as $k=>$v){
+			 	$a_total  =  $a_total + intval($v['denomination']);
+			 } ?>
+			<?php echo  $a_total;?>A券</td>
+			<td><?php echo intval($nums[$value['id']]['num']);?></td>
+			<td><?php echo $nums[$value['id']]['ticket_total'] ? intval($nums[$value['id']]['ticket_total']) : '无';?>A券</td>
+			<td><?php echo $value['status'] ? '开启' : '关闭';?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">任务编辑</a>
+			<a href="<?php echo $wealTaskDetailUrl;?>/?task_id=<?php echo $value['id'];?>" class="mr10">任务明细</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

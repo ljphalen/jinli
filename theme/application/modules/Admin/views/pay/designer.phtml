@@ -1,0 +1,61 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.css" rel="stylesheet" type="text/css">
+<script type="text/javascript"src="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath ?>appjs/payment/paylist.js"></script>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <div id="pay_paydesigner_designer">
+        <div class="content">
+            <div class="designer_list">
+<?php echo $this->render("pay/filter.phtml"); ?>
+                <div class="com_tb_wrap" style="border-bottom:0px;">
+                    <div class="com_tb">
+                        <div class="tb_cell">
+                            <ul class="tb_switch">
+                                <li class="btn_txt"><a href="?outExcl=ture">导出Excel</a></li>
+                            </ul>
+                        </div>
+                    </div><!-- com_tb end -->
+                </div><!-- com_tb_wrap end -->
+                <div class="designer_list_tb">
+                    <div class="dersigner_list_cont">
+                        <table class="view_list_tb toggle_icon">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th class="on <?php if ($_GET['sort'] == 'count' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="count">主题个数</th>
+                                    <th class="on <?php if ($_GET['sort'] == 'down' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="down">下载个数</th>
+                                    <th class="on <?php if ($_GET['sort'] == 'total' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="total">销售个数</th>
+                                    <th class="on <?php if ($_GET['sort'] == 'sum' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="sum">销售营业额(A币)</th>
+                                    <th class="on <?php if ($_GET['sort'] == 'income' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="income">可提现金额</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+<?php foreach ($designers as $designer) { ?>
+                                    <tr>
+                                        <td><?php echo $designer['nick_name']; ?></td>
+                                        <td><?php echo $designer['all_count']; ?></td>
+                                        <td><?php echo $designer['all_download_times']; ?></td>
+                                        <td><?php echo $designer['all_total']; ?></td>
+                                        <td><?php echo $designer['all_sum']; ?></td>
+                                        <td><?php echo $designer['all_income']; ?></td>
+                                        <td><a class="btn_txt" href="/Admin/pay/designerdetail?uid=<?php echo $designer['uid']; ?>">详情</a></td>
+                                    </tr>
+<?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+<?php echo $this->render("common/pageshow.phtml"); ?>
+            </div>
+        </div><!-- content end -->
+    </div>
+</section>
+<script type="text/javascript">
+    $(function () {
+
+    });
+</script>
+</body>
+</html>

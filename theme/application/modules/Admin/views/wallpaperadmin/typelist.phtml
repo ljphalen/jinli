@@ -1,0 +1,175 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+
+
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- 页面唯一id标识符  一般情况下id=文件名  eg:bz_admin_taotu02-->
+    <div id="bz_admin_tag">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <table class="view_list_tb tb_half">
+                <thead>
+                    <tr><th>一级标签</th><th>排序</th><th>预览图</th><th>操作</th></tr>
+                </thead>
+                <tbody id="tagAddLeft" class="tag_add_sec">
+                    <?php foreach ($targs as $v) { ?>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           <!-- <tr class="tg_row_lft tg_row_disable"><td>-->
+                        <tr class="tg_row_lft" tid="<?php echo $v['w_type_id'] ?>"><td>
+                                <input class="rd_1 tag_input" type="text" value="<?php echo $v["w_type_name"] ?>" placeholder="添加标签"></td>
+                            <td>
+                                <input class="rd_1 addsort" type="text" value="<?php echo $v["w_type_sort"] ?>" placeholder="添加排序">
+                            </td>
+                            <td>
+                                <div class="file_ipt_img" >
+                                    <?php if ($v['w_type_image']) { ?>
+                                        <img src="<?php echo $attachPath . $v['w_type_image']; ?>">
+                                    <?php } else { ?>
+                                        <img src="<?php echo $staticPath ?>/image/img_add.jpg">
+                                    <?php } ?>
+
+                                </div>
+                                <div class="file_ipt_btn"><input type="file" class="file_loader" name="files">
+                                    <button class="btn_s3">选择文件</button>
+                                </div>
+                            </td>
+
+                            <td vid="<?php echo $v['w_type_id'] ?>" vname="<?php echo $v['w_type_name'] ?>" vurl="<?php echo $v['w_type_image'] ?>">
+                                <a class="tb_half_txt_btn targ_del " openPopId="fixTipConfirm">删除</a>
+                                <a class="tb_half_txt_btn targ_save" openPopId="fixTipView">保存</a>
+                            </td>
+
+                        </tr>
+                    <?php } ?>
+                    <tr class="tg_row_lft tg_row_disable" ><td>
+                            <input class="rd_1 tag_input" type="text" value="" placeholder="添加标签"></td>
+
+                        <td>0</td>
+                        <td>
+                            <div class="file_ipt_img" >
+                                <img src="<?php echo $staticPath ?>/image/img_add.jpg">
+                            </div>
+                            <div class="file_ipt_btn"><input type="file" class="file_loader" name="files">
+                                <button class="btn_s3">选择文件</button>
+                            </div>
+                        </td>
+
+                        <td>
+                            <a class="tb_half_txt_btn targ_del " openPopId="fixTipConfirm">删除</a>
+                            <a class="tb_half_txt_btn targ_save " openPopId="" >保存</a>
+
+                        </td>
+                    </tr>
+                </tbody>
+                <!-- tfoot 不用管 只是作为代码模板供js调用 -->
+                <tfoot class="none">
+                    <tr id="tg_lft_disable">
+                        <td><input class="rd_1 tag_input" type="text" value="" placeholder="添加标签"></td>
+                        <td>0</td>
+
+                        <td>
+                            <div class="file_ipt_img">
+                                <img src="<?php echo $staticPath ?>/image/img_add.jpg"></div>
+                            <div class="file_ipt_btn"><input type="file" class="file_loader" name="files">
+                                <button class="btn_s3">选择文件</button>
+                            </div>
+                        </td>
+                        <td>
+                            <a class="tb_half_txt_btn targ_del " openPopId="fixTipConfirm" ">删除</a>
+                            <a class="tb_half_txt_btn targ_save" openPopId="" >保存</a>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <table class="view_list_tb tb_half tb_tag_two">
+                <thead>
+                    <tr><th>二级标签</th><th>排序</th><th>操作</th></tr>
+                </thead>
+                <tbody id="tagAddRight" class="tag_add_sec">
+
+
+                    <?php foreach ($subtargs as $vs) { ?>
+                        <tr class="tg_row_rgt ">
+                            <td>
+                                <input type="hidden" class="subtarg_id" value="<?php echo $vs['w_subtype_id'] ?>"/>
+                                <input class="rd_1 tag_input addtarg2" type="text" value="<?php echo $vs['w_subtype_name'] ?>" placeholder="添加标签">
+                            </td>
+                            <td>0</td><td><a class="tb_half_txt_btn deltarg2" valid ="<?php echo $vs['w_subtype_id']; ?>" >删除</a></td>
+                        </tr>
+                    <?php } ?>
+                    <tr class="tg_row_rgt tg_row_disable">
+                        <td>
+                            <input class="rd_1 tag_input addtarg2" type="text" value="" placeholder="添加标签">
+                        </td>
+                        <td>0</td><td><a class="tb_half_txt_btn">删除</a></td>
+                    </tr>
+                </tbody>
+                <!-- tfoot 不用管 只是作为代码模板供js调用 -->
+                <tfoot class="none">
+                    <tr id="tg_rgt_disable">
+                        <td><input class="rd_1 tag_input addtarg2" type="text" value="" placeholder="添加标签"></td>
+                        <td>0</td><td><a class="tb_half_txt_btn">删除</a></td></tr>
+                </tfoot>
+            </table>
+            <div class="clear-fix"></div>
+            <!--<div class="bnts_wrap"><button id="tagSave" class="btn_s2 pop_btn disable" >保存</button></div>
+            -->
+        </div><!-- content end -->
+
+    </div>
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">保存成功</p>
+                    <div class="tip_btns "><button class="btn_s2 " id="saveconfirmYes">确定</button></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+<div class="pop_wraper" id="fixTipConfirm">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">是否删除标签</p>
+                    <div class="tip_btns"><button class="btn_s2" id="confirmYes">确定</button>
+                        <button class="btn_s2" id="confirCancel">取消</button></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/vendor/load-image.all.min.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-image.js"></script>
+
+<!-- The File Upload validation plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-validate.js"></script>
+
+<script type="text/javascript" src="<?php echo $staticPath ?>appjs/wallpaperadmin/typelist.js"></script>
+
+</body>
+</html>

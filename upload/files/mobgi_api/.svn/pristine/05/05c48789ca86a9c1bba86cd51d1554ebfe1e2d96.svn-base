@@ -1,0 +1,102 @@
+<script src="{{rootUrl}}/js/core.js" type="text/javascript"></script>
+<script src="{{rootUrl}}/js/app-type.js" type="text/javascript"></script>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">{{title}}-帐号信息</p>
+    <!-- if {{result.adminid}} -->
+        <a class="del" href="/admin/delete?adminid={{result.adminid}}">删除</a>
+    <!-- endif -->
+    </div>
+    <div class="main">
+        <div class="app-detail">
+            <form action="../admin/save" method="POST" >
+                <input type="hidden" name="adminid" id="adminid" value='{{result.adminid}}' />
+                <ul class="form">
+                    <li>
+                        <span class="label">用户名：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" required name="username" style="width:220px;" value="{{result.username}}" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">真实名：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" required name="realname" style="width:220px;" value="{{result.realname}}" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">邮箱：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" required name="e_name" style="width:220px;" value="{{result.e_name}}" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">角色：</span>
+                        <div class="fc">
+                            {{select}}
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">解锁：</span>
+                        <div class="fc">
+                            <select name="lock_open" id="lock_open">
+                                <option value="0">是</option>
+                                <option value="1">否</option>
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">密码：</span>
+                        <div class="fc">
+                            <input type="password" id="password" class="iText" style="width:220px;" name="" />
+                            <!-- if {{result.adminid}} --><span class="sign">如果不想修改密码,请留空</span><!-- else --><span class="red">*</span><span class="sign">长度不能少于8位</span><!-- endif -->
+                        </div>
+                    </li>
+                    <li>
+                        <div class="fc">
+                            <input type="submit" value="确定" class="submit" />
+                            <input type="button" value="取消" class="cancel" onclick="window.location.href='/admin/index'" />
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function(){
+        $("input[type=password]").focus(function(){
+            $(this).attr("name", "password");
+        });
+        
+        $(".submit").click(function(){
+            //检测密码强度,必须由数字与字母组合,至少6位的字符串。 
+           password=$("#password").val(); 
+           if(password !== ''){
+                if(password.length<8){  
+                    jAlert("密码长度不能少于8位字符X");
+                    return false;
+                }
+                if(/^\d+$/.test(password))
+                {  
+                    jAlert('密码不能全数字');
+                    return false;
+                }
+                if(/^[a-z]+$/i.test(password))
+                {  
+                    jAlert('密码不能全字母');
+                    return false;
+                }
+                if(!/^[A-Za-z0-9]+$/.test(password))
+                {
+                    jAlert("密码只能含有数字有字母");
+                    return false;
+                }
+           }
+           $('form').submit();
+        });
+    });
+</script>

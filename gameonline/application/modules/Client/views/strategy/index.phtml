@@ -1,0 +1,43 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+</script>
+<body >
+	<div  id="list-page">
+		<section class="wrap">
+			<div class="<?php echo strnatcmp($apk_version,'1.5.2') >= 0? 'subject-list-v2 J_stratgyItem' : 'subject-list J_stratgyItem';?>">
+				<ul>
+					<?php 
+					 foreach($strategys as $key=>$value){
+                     $intersrc = 'detail'.$id.'_strategy'.$value['id'];
+                     ?>
+					<li>
+						<a data-type="1" data-id="<?php echo $value['id'] ?>" data-viewType="WebView" data-infpage="<?php echo "攻略详情,".$webroot . '/client/strategy/detail/?id='.$value['id'].'&pc=5&intersrc='.$intersrc.'&t_bi=' . $source . '&sp=' . $sp;?>">
+							<div class="intro">
+									<?php if($value['thumb_img']){ ?>
+								<span class="pic">
+									<img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $attachPath. $value['thumb_img'];?>" alt="">
+								</span>
+								<?php }?>
+								<span class="title">
+									<b><?php echo $value['title']; ?></b>
+									<em><?php echo  date('Y-m-d',$value['create_time']); ?></em>
+								</span>
+							</div>
+							<div class="content">
+								<span class="desc"><?php echo  $value['resume']; ?></span>
+							</div>
+						</a>
+					</li>
+					<?php }?>
+				</ul>
+			</div>
+		</section>
+		<?php if($hasnext) {?>
+		<div class="loading J_loadMore"  style="display: none;" data-ajaxUrl="<?php echo $webroot . '/client/strategy/more/?id='.$id.'&t_bi=' . $source . '&sp=' . $sp;?>" data-hasnext="<?php echo $hasnext;?>" data-curpage="<?php echo $page;?>">
+			<span class="load"></span>
+		</div>
+		<?php }?>
+	</div> 
+</body>
+</html>

@@ -1,0 +1,149 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $indexUrl;?>">会员列表</a></li>
+    <li class="current"><a href="javascript:;">编辑购物车</a></li>
+	</ul>
+</div>
+
+<div class="h_a"><?php printf('当前购物车: 用户名: <b>%s</b>, 联系电话: <b>%s</b>, OpenID: <b>%s</b>', $nickname, $phone, $open_id); ?></div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="5%">ID</td>
+			<td width="5%">商品ID</td>
+			<td width="25%">商品名称</td>
+			<td width="10%">商品数量</td>
+			<td width="10%">商品下单价格</td>
+			<td width="15%">创建时间</td>
+			<td width="30%">备注</td>
+		</tr>
+		<?php if(empty($cart)):?>
+			<tr class="ct">
+				<td colspan="6">购物车为空</td>
+			</tr>
+		<?php endif;?>
+		<?php foreach($cart as $item) {?>
+			<tr class="ct">
+				<td><?php echo $item['id'];?></td>
+				<td><?php echo $item['goods_id'];?></td>
+				<td><?php echo !empty($item['goods'])?$item['goods']['title']:'';?></td>
+				<td><?php echo $item['goods_num'];?></td>
+				<td><?php echo $item['price'];?></td>
+				<td><?php echo date('Y-m-d H:i:s',$item['create_time']);?></td>
+				<td><?php echo $item['descrip'];?></td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+
+<div class="h_a">编辑购物车</div>
+<form method="post" action="<?php echo $cartPostUrl;?>" id="editFrom">
+    <input name="user_id" value="<?php echo $id;?>" type="hidden"/>
+	<input name="user_open_id" value="<?php echo $open_id;?>" type="hidden"/>
+    <input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%" id="carts">
+			<tr class="tr">
+				<th class="th" style="width: 50px;">选择商品</th>
+				<td class="td">
+					<input type="hidden" name="goods_id[]" value="0"/>
+					<input type="text" class="input wb" onclick="selectGoods(this);" placeholder="请输入商品ID或关键词">
+					<input type="hidden" name="goods_price[]" value="0"/>
+				</td>
+				<th class="th" style="width: 50px;">购买数量</th>
+				<td class="td">
+					<input type="number" name="num[]" value="1" class="input">
+				</td>
+				<th class="th" style="width: 50px;">备注</th>
+				<td class="td" width="30%">
+					<textarea name="goods_descrip[]" cols="50"></textarea>
+				</td>
+				<th class="td" width="5%"><a href="javascript:void(0);"></a></th>
+			</tr>
+		</table>
+		<div style="text-align: right; margin: 10px 0; padding-right: 23px;">
+			<a href="javascript:void(0);" onclick="addCart()">+ 添加</a>
+		</div>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+
+<style>
+	.ui-autocomplete {
+		max-height: 300px;
+		overflow-y: auto;
+		/* prevent horizontal scrollbar */
+		overflow-x: hidden;
+	}
+	/* IE 6 doesn't support max-height
+       * we use height instead, but this forces the menu to always be this tall
+       */
+	* html .ui-autocomplete {
+		height: 300px;
+	}
+</style>
+
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Fjuser/index');
+	});
+
+	var ac_num = 1;
+	addCart = function(){
+		var ac = $('<tr class="tr" id="g_'+ac_num+'">'+
+				'<th class="th" style="width: 50px;">选择商品</th>'+
+				'<td class="td">'+
+				'<input type="hidden" name="goods_id[]" value="0"/>'+
+				'<input type="text" class="input wb" onclick="selectGoods(this);" placeholder="请输入商品ID或关键词">'+
+				'<input type="hidden" name="goods_price[]" value="0"/>'+
+				'</td>'+
+				'<th class="th" style="width: 50px;">购买数量</th>'+
+				'<td class="td">'+
+				'<input type="number" name="num[]" value="1" class="input">'+
+				'</td>'+
+				'<th class="th" style="width: 50px;">备注</th>'+
+				'<td class="td" width="30%">'+
+				'<textarea name="goods_descrip[]" cols="50"></textarea>'+
+				'</td>'+
+				'<th class="td" width="5%"><a href="javascript:void(0);" onclick="delCart('+ac_num+');">删除</a></th>'+
+				'</tr>');
+		ac_num++;
+		$('#carts').append(ac);
+	};
+	delCart = function(gid){
+		$('#g_'+gid).detach();
+	};
+
+	selectGoods = function(obj){
+		$.ajax({
+			url: baseurl + '/Admin/Goods/getAllGoods/',
+			dataType : 'json',
+			success: function(data){
+				var projects = data.data;
+				$(obj).autocomplete({
+					minLength: 0,
+					source: projects,
+					focus: function(event, ui){
+						$(this).val(ui.item.label);
+						return false;
+					},
+					select: function(event, ui){
+						$(this).val(ui.item.label);
+						$(this).prev('input').val(ui.item.value);
+						$(this).next('input').val(ui.item.desc);
+						return false;
+					}
+				});
+			}
+		});
+	};
+});
+
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

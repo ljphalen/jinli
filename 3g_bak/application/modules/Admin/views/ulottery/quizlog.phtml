@@ -1,0 +1,71 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+			<ul class="cc">
+			<li><a href="<?php echo $quizUrl; ?>">列表</a></li>
+			<li class=""><a href="<?php echo $editQuizUrl; ?>">添加内容</a></li>
+			<li><a href="<?php echo $importQuizUrl; ?>">数据导入</a></li>
+			<li ><a href="<?php echo $quizConfigUrl; ?>">配置信息</a></li>
+			<li class="current"><a href="<?php echo $quizlogUrl; ?>">统计信息</a></li>
+	</ul>
+	</div>
+	<div class="table_full">
+		<form action="<?php echo $quizlogUrl; ?>" method="POST" id="form">
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<table width="100%" cellspacing="0" cellpadding="0">
+				<tr class="tr">
+					<th class="th">时间范围</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="sdate"
+						       value="<?php echo $params['sdate']; ?>"> 至
+						<input class="input" type="text" id="edate" maxlength="30" name="edate"
+						       value="<?php echo $params['edate']; ?>">
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">用户手机号：</th>
+					<td class="td">
+						<input name="mobile" value="<?php echo $params['mobile'] ?>">
+					</td>
+				</tr>
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+		</form>
+	</div>
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">日期</th>
+				<th class="th">答题用户数</th>
+				<th class="th">答题数</th>
+				<th class="th">详情</th>
+			</tr>
+			<?php foreach ($dataList as $k=>$v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$k;?></td>
+					<td class="td" align="left"><?=$v['quiz_users'];?></td>
+					<td class="td" align="left"><?=$v['quiz_times'] ;?></td>
+					<td class="td"><a href="/Admin/Ulottery/quizdetail?date=<?php echo $k;?>">查看</a></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+	
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#sdate").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#edate").datepicker({dateFormat: 'yy-mm-dd'});
+
+			$("#downLoad").bind('click', function () {
+				$("#hidden_export").val(1);
+				$("#addFrom").submit();
+				$("#hidden_export").val(0);
+			});
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

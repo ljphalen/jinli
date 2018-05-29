@@ -1,0 +1,198 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+
+<div class="mainw clearfix">
+	<include file="nav_left" />
+	<div class="rmain fl col-md-8">
+		<div class="panel accountc">
+			<h2 class="yyname">账户修改</h2>
+			<div class="panel-body">
+			<style>.col-sm-8, .col-sm-5{padding-top:7px;}</style>
+				<form class="form-horizontal usereidtfrom" id="editform" method="post" action="__URL__/editsave/" enctype="multipart/form-data" role="form">
+					<div class="form-group">
+						<label class="col-sm-3 control-label">帐户：</label>
+						<div class="col-sm-5">
+							<span class="form-control-static">{$account.email}</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="nickname" class="col-sm-3 control-label"><em>*</em>企业简称：</label>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" id="nickname" name="account[nickname]" tabindex="1" value="{$account.nickname}" maxlength="20">
+							<span class="help-block">请输入新昵称</span>
+						</div>
+						<div class="col-sm-4">
+							<div id="nicknameTip" class="onCorrect"></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="contact" class="col-sm-3 control-label"><em>*</em>联系人：</label>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" id="contact" tabindex="1" name="account[contact]" value="{$info.contact}">
+							<span class="help-block">请输入新联系人姓名</span>
+						</div>
+						<div class="col-sm-4">
+							<div id="contactTip" class="onCorrect"></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="phone" class="col-sm-3 control-label"><em>*</em>联系人手机：</label>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" id="phone" tabindex="1" name="account[phone]" value="{$info.phone}">
+							<span class="help-block">请输入新联系人手机</span>
+						</div>
+						<div class="col-sm-4">
+							<div id="phoneTip" class="onCorrect"></div>
+						</div>
+					</div>
+					<div class="form-group" id="authcode_div" style="display:none;">
+						<label for="authcode" class="col-sm-3 control-label"><em>*</em>验证码：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" maxlength="6" style="width:80px;padding-right:20px;" id="authcode" name="account[authcode]">
+							<a href="javascript:void(0);" id="fetchAuthcode" class="btn btn-success">获取验证码</a>
+							<div id="cms_note">
+								<span class="help-block">请输入手机收到的验证码<br />若长时间没收到，请点击获取验证码重新获取</span>
+							</div>
+						</div>
+						<style>
+							#authcode, #fetchAuthcode{display:inline; float:left; margin-right:5px;}
+							#cms_note{display:inline-block; }
+						</style>
+						<div class="col-sm-3">
+							<div id="authcodeTip" class="onCorrect"></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="contactEmail" class="col-sm-3 control-label"><em>*</em>联系人邮箱：</label>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" id="contactEmail" tabindex="1" name="account[contact_email]" value="{$info.contact_email}">
+							<span class="help-block">请输入新邮箱</span>
+						</div>
+						<div class="col-sm-4">
+							<div id="contactEmailTip" class="onCorrect"></div>
+						</div>
+					</div>
+					<if condition="$user.info_status neq AccountinfoModel::STATUS_SUC" >
+					<div class="form-group">
+						<label for="companyName" class="col-sm-3 control-label"><em>*</em>公司注册名称：</label>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" id="companyName" name="account[company]" tabindex="1" value="{$info.company}" placeholder="长度请不要超过50个字">
+							<span class="help-block">用以审核确认开发者身份，资料审核后将不可更改</span>
+						</div>
+						<div class="col-sm-4">
+							<div id="companyNameTip" class="onCorrect"></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="passportNum" class="col-sm-3 control-label"><em>*</em>营业执照注册号：</label>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" id="passportNum" name="account[passport_num]" tabindex="1" value="{$info.passport_num}"  placeholder="长度请不要超过50个字">
+							<span class="help-block">用以审核确认开发者身份、资料审核后将不可更改</span>
+						</div>
+						<div class="col-sm-4">
+							<div id="passportNumTip" class="onCorrect"></div>
+						</div>
+					</div>
+					
+					<div class="form-group edits">
+						<label for="companyPassport" class="col-sm-3 control-label"><em>*</em>营业执照扫描件：</label>
+						<div class="col-sm-5">
+							<input type="text" id="companyurl" readOnly="true">
+							<input type="file" class="form-control companyPassport" id="companyPassport" tabindex="1" name="company_passport" onchange="document.getElementById('companyurl').value=this.value;" >
+							<input type="text" class="form-control formimg" value="点击上传" >
+							
+							<span class="help-block">上传小于1MB的jpg或png格式图片
+							</span><br><br>
+							<notempty name="info.company_passport">
+								<a href="{:Helper("Apk")->get_url('user')}{$info['company_passport']}" target="_blank">
+									<img src="{:Helper("Apk")->get_url('user')}{$info['company_passport']}" onload="javascript:resizeimg(this,330,200);" width="330" height="200" />
+								</a>
+							</notempty>
+							
+						</div>
+						<div class="col-sm-4">
+							<div id="companyPassportTip" class="onCorrect"></div>
+						</div>
+					</div>
+					
+					<else />
+						<div class="form-group">
+						<label for="nickname" class="col-sm-3 control-label">公司注册名称：</label>
+						<div class="col-sm-8 editname">
+							<span>{$info.company}</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="nickname" class="col-sm-3 control-label">营业执照注册号：</label>
+						<div class="col-sm-8 editname">
+							<span>{$info.passport_num}</span>
+						</div>
+					</div>
+					<div class="form-group edits ">
+						<label for="taxPassport" class="col-sm-3 control-label"><em>*</em>营业执照扫描件：</label>
+						<div class="col-sm-6 editname">
+							<span><notempty name="info.company_passport">
+								<a href="{:Helper("Apk")->get_url('user')}{$info['company_passport']}" target="_blank">
+									<img src="{:Helper("Apk")->get_url('user')}{$info['company_passport']}" onload="javascript:resizeimg(this,330,200);" width="330" height="200" />
+								</a>
+							</notempty></span>
+						</div>
+						<div class="col-sm-2">
+							<span id="authStatus"></span>
+						</div>
+					</div>
+					
+					</if>
+					
+					
+					
+					<if condition="0" >
+					<div class="form-group">
+						<label for="taxNumber" class="col-sm-3 control-label">税务登记证号：</label>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" id="taxNumber" tabindex="1" name="account[tax_number]" value="{$info.tax_number}" 
+							<if condition="$info['status'] eq '2'">readonly="readonly"</if>
+							>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="taxPassport" class="col-sm-3 control-label">税务登记证扫描件：</label>
+						<div class="col-sm-5">
+							<span><notempty name="info.tax_passport">
+								<a href="{:Helper("Apk")->get_url('user')}{$info['tax_passport']}" target="_blank">
+									<img src="{:Helper("Apk")->get_url('user')}{$info['tax_passport']}" onload="javascript:resizeimg(this,300,200);" width="200" height="200" />
+								</a>
+							</notempty></span>
+							<if condition="$info['status'] neq '2'">
+							<input type="file" class="form-control" id="taxPassport" tabindex="1" name="tax_passport">
+							</if>
+						</div>
+						<div class="col-sm-3">
+							<span id="authStatus"></span>
+						</div>
+					</div>
+				  </if>
+					<div class="btnw usereidt">
+							<button id="infoedit" class="btnwbotr">保存</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<load href="{:cdn('PUBLIC')}/app/validate/formValidator-4.1.1.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/themes/126/js/theme.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/themes/126/style/style.css?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/formValidatorRegex.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/common/js/validate.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/common/js/resizeImg.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/common/js/form/infoedit.js?{:C('JS_VERSION')}" />
+<script type="text/javascript">
+if ($ != jQuery) {
+    $ = jQuery.noConflict();
+}
+var phone_old = "{$info.phone}";
+</script>
+<include file="Public:footer" />

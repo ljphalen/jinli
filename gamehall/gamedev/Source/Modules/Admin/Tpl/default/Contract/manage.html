@@ -1,0 +1,190 @@
+<form id="pagerForm" action="{:U('Contract/manage')}" method="post">
+	<input type="hidden" name="pid" value="{$_REQUEST.pid}"/>
+	<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+	<input type="hidden" name="numPerPage" value="{$_REQUEST.numPerPage}" />
+	<input type="hidden" name="orderField" value="{$_REQUEST.orderField}" />
+	<input type="hidden" name="orderDirection" value="{$_REQUEST.orderDirection}" />
+	<input type="hidden" name="_search[status]" value="{$_REQUEST[status]}"/>
+	<volist name="_search" key="name" id="field">
+		<input type="hidden" name="_search[{$key}]" value="{$field|safe}"/>
+	</volist>
+</form>
+
+<div class="page">
+	<div class="pageHeader">
+		<form onsubmit="return navTabSearch(this);" action="{:U('Contract/manage')}" method="post" name="manage_myform" id='manage_myform'>
+		<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+		<div class="searchBar">
+			<ul class="searchContent" style="overflow: inherit; height: auto;">
+                <!--<li>-->
+					<!--<label>应用状态：</label>-->
+					<!--<select class="combox" id="appall_status" name="_search[status]">-->
+					<!--<option value="all">全部</option>-->
+					<!--<option value="passed">审核通过</option>-->
+					<!--<option value="online">已上线</option>-->
+					<!--<option value="offline">已下线</option>-->
+					<!--</select>-->
+					<!--<script>$("#appall_status").val('{$_search[status]}')</script>-->
+				<!--</li>-->
+
+				<li>
+					<label>合同状态：</label>
+					<php>
+						$status = ContractModel::$status;
+					</php>
+					{:Helper("Form")->name('_search[status]')->class('combox')->option($status)->value($_search["status"])->select();}
+				</li>
+                <li>
+                    <label>合同类型：</label>
+                    <select class="combox" name="_search[type]">
+                        <option value="" selected>全部</option>
+                        <option value="0" <if condition="$_REQUEST._search.type eq '0'">selected</if>>主合同</option>
+                        <option value="1" <if condition="$_REQUEST._search.type eq '1'">selected</if>>续签合同</option>
+                    </select>
+                </li>
+                <li>
+                    <php>
+                        $joiners = M('contract_contact')->where(array('status'=>1))->getField('id,name');
+                    </php>
+                    <label>商务对接人：</label>
+					{:Helper("Form")->name('_search[join_id]')->class('combox')->option($joiners)->value($_search["join_id"])->select();}
+                </li>
+                <li>
+                    <label>开发者名称：</label>
+                    <input type="text" name="_search[company_name]" value="{$_search[company_name]}" class="medium" >
+                </li>
+                <li>
+                    <label>邮箱：</label>
+                    <input type="text" name="_search[contact_email]" value="{$_search[contact_email]}" class="medium" >
+                </li>
+                <li>
+                    <label>合同名称：</label>
+                    <input type="text" name="_search[name]" value="{$_search[name]}" class="medium" >
+                </li>
+				<li>
+					<label>应用名称：</label>
+					<input type="text" name="_search[app_name]" value="{$_search[app_name]}" class="medium" >
+				</li>
+                <li>
+                    <label>应用包名：</label>
+                    <input type="text" name="_search[package]" value="{$_search[package]}" class="medium" >
+                </li>
+				<li>
+					<label>创建时间：</label>
+					<input type="text" name="_search[startDay]" value="{$_search[startDay]}" class="date" size="12" readonly/>
+					到<input type="text" name="_search[endDay]" value="{$_search[endDay]}" class="date" size="12" readonly/></a>
+				</li>
+                <li>
+                    <php>
+                        $receipts = M('contract_receipt')->getField('id,ratio');
+                    </php>
+                    <label>税费率：</label>
+					{:Helper("Form")->name('_search[receipt_id]')->class('combox')->option($receipts)->value($_search["receipt_id"])->select();}
+                </li>
+
+                <li>
+                    <label>分成比例：</label>
+                    <php>
+                        $shares = M('think_config')->where(array('name'=>'SHARE_RATIO'))->select();
+                    </php>
+                    <select class="combox" name="_search[share]">
+                        <option value="" selected>全部</option>
+                        <foreach name="shares" item="v">
+                          <option value="{$v.value}" <if condition="$_REQUEST._search.share eq $v.value">selected</if>>{$v.value}</option>
+                        </foreach>
+                    </select>
+                </li>
+
+				<div class="buttonActive"><div class="buttonContent"><button type="button" id="manage_sub" >查询</button></div></div>
+                <div class="buttonActive"><div class="buttonContent"><button type="button" id="manage_export" >导出</button></div></div>
+				 <script type="text/javascript">
+				$("#manage_export").click(function(){
+					$("#manage_myform").attr('action',"{:U('Contract/manage_export')}");
+					$("#manage_myform").attr('onsubmit','');
+					$("#manage_myform").submit();
+				});
+				
+				$("#manage_sub").click(function(){
+					$("#manage_myform").attr('action',"");
+					$("#manage_myform").attr('onsubmit','return navTabSearch(this);');
+					$("#manage_myform").submit();
+				})
+				</script>
+			</ul>
+		</div>
+		</form>
+	</div>
+    <div class="pageContent">
+		<table class="list listW" width="100%" layoutH="138">
+			<thead>
+				<tr>
+					<th width="50" orderField="id" class="{:orderField('id','asc')}">编号</th>
+                    <th>APPID</th>
+	                <th>合同编号</th>
+	                <th>应用名称</th>
+	                <th>包名</th>
+                    <th>应用状态</th>
+                    <th>合同名称</th>
+					<th>税费率</th>
+	                <th>开发者</th>
+                    <th>回传日期</th>
+                    <th>合同有效期</th>
+                    <th>合同数</th>
+                    <th>合同状态</th>
+					<th width="100">操作</th>
+					<th width="100">合同详情</th>
+				</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="list">
+				<tr target="sid_node" rel="{$vo['id']}">
+					<td class="app">{$vo['id']}</td>
+                    <td class="app">{$vo['app_id']}</td>
+                    <td class="app">{$vo['number']}</td>
+                    <td class="app">{$vo['app_name']}</td>
+                    <td class="package">{$vo['package']}</td>
+					<td>应用</td>
+                    <td class="package">{$vo['name']}</td>
+                    <td class="">
+                        <switch name="vo.receipt_id">
+                            <case value="1">6%</case>
+                            <case value="2">3%</case>
+                            <case value="3">0%</case>
+                        </switch>
+                    </td>
+                    <td class="tc4">{$vo.company_name}</td>
+                    <td class="time">
+                        <gt name="vo['rtime']" value="0">
+                            {$vo['rtime']|date="Y-m-d",###}
+                        </gt>
+                    </td>
+                    <td class="time">{$vo['vtime']|date="Y-m-d",###}<br/>
+                        {$vo['etime']|date="Y-m-d",###}
+                    </td>
+                    <td class="tc5">{:D('Contract')->where(array('package'=>$vo['package']))->count()}</td>
+                    <td class="tc4">{$status[$vo[status]]}</td>
+                    <td>
+                        <a href="{:U('Contract/detail_pkg', array('id'=>$vo['id'],'pkg'=>$vo['package']))}" target="dialog" width="800" height="800" max="true" >资料</a>
+                    </td>
+					<td>
+                        <a href="{:U('Contract/details', array('id'=>$vo['id']))}/check/1" target="dialog" width="800" height="800" >合同详情</a>
+                    </td>
+				</tr>
+			</volist>
+			</tbody>
+		</table>
+		<div class="panelBar">
+			<div class="pages">
+				<span>显示</span>
+				<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+					<option value="10" <eq name="numPerPage" value="10">selected</eq>>10</option>
+					<option value="20" <eq name="numPerPage" value="20">selected</eq>>20</option>
+					<option value="50" <eq name="numPerPage" value="50">selected</eq>>50</option>
+					<option value="100" <eq name="numPerPage" value="100">selected</eq>>100</option>
+					<option value="200" <eq name="numPerPage" value="200">selected</eq>>200</option>
+				</select>
+				<span>共{$totalCount}条</span>
+			</div>
+			<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="10" currentPage="{$currentPage}"></div>
+		</div>
+	</div>

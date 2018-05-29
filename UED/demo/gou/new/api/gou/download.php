@@ -1,0 +1,1 @@
+{"success":true,"msg":"","data":{"title":"\u597d\u54c8\u54c8\u54c8\u54c8","link":"http:\/\/gou.3gtest.gionee.com\/index\/tj?id=14&type=AD&_url=http%253A%252F%252Fgoudl.gionee.com%252Fapps%252Fshoppingmall%252Fvancl.apk&chl_id=10&idx_id=1&t_bi=_2248744352","img":"http:\/\/gou.3gtest.gionee.com\/attachs\/ad\/201305\/111344.jpg"}}

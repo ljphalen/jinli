@@ -1,0 +1,470 @@
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="edit_form" enctype="multipart/form-data">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr class="tr">
+			<th class="th">选择显示模块类型</th>
+			<td class="td">
+				<select id="pageType" name="pageType">
+					<?php foreach ($pageType as $k => $v) { ?>
+						<option value="<?php echo $k; ?>" <?php if ($k == $ext->ptype) echo 'selected'; ?>><?php echo $v; ?></option>
+					<?php } ?>
+				</select>
+				<select id="lotteryType" name="ext" <?php if ($ext->ptype != '3') echo 'style="display:none;"'; ?>>
+					<option value="">请选择</option>
+					<?php foreach ($lotteryType as $k => $v) { ?>
+						<option value="<?php echo $v['n']; ?>" <?php if ($k == $ext->lotteryType) echo 'selected'; ?>><?php echo $v['cn']; ?></option>
+					<?php } ?>
+				</select>
+				<select id="newsSourceType" name="newsSourceExt" <?php if ($ext->ptype != '5') echo 'style="display:none;"'; ?>>
+					<option value="">请选择</option>
+					<?php foreach ($newsSourceList as $k => $v) { ?>
+						<option value="<?php echo $v['id']; ?>" <?php if ($v['id'] == $ext->newsSourceId) echo 'selected'; ?>><?php echo $v['title']; ?></option>
+					<?php } ?>
+				</select>
+				<span id="newsadHolder" <?php if ($ext->ptype != '5') echo 'style="display:none;"'; ?>>
+					<label><input type="radio" <?php if (0 == $ext->is_ad) echo 'checked'; ?> value="0" name="is_news_ad"/></label> 否
+					<label><input type="radio" <?php if (1 == $ext->is_ad || empty($info['id'])) echo 'checked'; ?> value="1" name="is_news_ad"/></label> 是
+				</span>
+				<span id="imgswitchHolder" <?php echo $ext->ptype != 4 ? 'style="display:none;"' : ''; ?>>
+				列名:<input type="text" class="input" name="imgswitchExt" value="<?php echo $ext->switchName; ?>"/>
+				</span>
+				<span id="topicDesc" <?php echo $ext->ptype != 6 ? 'style="display:none;"' : ''; ?>>
+				描述:<input type="text" class="input" name="topicDesc" value="<?php echo $ext->topicDesc; ?>"/>
+				</span>
+			</td>
+		</tr>
+
+		<tr class="tr">
+			<th class="th">分类</th>
+			<td class="td"><select name="type_id" onchange="settypes1(this.value, 0)">
+					<option value="">请选择</option>
+					<?php
+					foreach ($types as $key => $value) {
+						$checked = ($info['type_id'] == $value['id']) ? 'selected="selected"' : '';
+						$star    = ($value['status'] == 1) ? '*' : '';
+						$name    = ($value['page_id'] == 1) ? '首页-' . $value["name"] : '子页-' . $value["name"];
+
+						?>
+						<option <?php echo $checked; ?> value="<?php echo $value['id']; ?>"><?php echo $name . $star; ?></option>
+					<?php } ?>
+				</select></td>
+		</tr>
+		<tr class="tr" id="column">
+			<th class="th">栏目</th>
+			<td class="td">
+				<select id="column_id1" name="column_id"></select>(请先选择分类再选择栏目)
+			</td>
+		</tr>
+
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td">
+				<input style="width:250px;" type="text" class="easyui-textbox" name="title" required="true" value="<?php echo $info['title']; ?>">
+			</td>
+		</tr>
+
+		<tr class="tr">
+			<th class="th">来源属性</th>
+			<td class="td">
+				<select name="style">
+					<?php foreach ($attributes as $v) { ?>
+						<option value="<?php echo $v['name']; ?>" <?php if ($v['name'] == $info['style']) echo 'selected'; ?>><?php echo $v['name']; ?></option>
+					<?php } ?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">颜色</th>
+			<td class="td">
+				<input type="text" style="width: 60px" class="easyui-textbox" name="color" value="<?php echo $info['color']; ?>">
+				(颜色值，如:#1459A3,#0F8755, 不填为默认颜色)
+			</td>
+		</tr>
+
+		<tr class="tr">
+			<th class="th">合作商</th>
+			<td class="td"><select name="parter_id" id="parter_id">
+					<?php foreach ($cooperators as $k => $v) { ?>
+						<option value="<?php echo $v['id'] ?>"  <?php if ($v['id'] == $urlInfo['pid']) echo 'selected'; ?>><?php echo $v['name']; ?></option>
+					<?php } ?>
+				</select></td>
+		</tr>
+		<tr class="tr" id="tr_business" style="display: <?php echo empty($blist) ? 'none' : '' ?>">
+			<th class="th">业务列表</th>
+			<td class="td">
+				<select id="bid" name="bid">
+					<option value="0">请选择</option>
+					<?php foreach ($blist as $k => $v) { ?>
+						<option value="<?php echo $v['id']; ?>"  <?php if ($v['id'] == $urlInfo['bid']) echo 'selected'; ?>><?php echo $v['name']; ?></option>
+					<?php } ?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr" id="tr_url" style="display:<?php echo empty($urlList) ? 'none' : '' ?>">
+			<th class="th">合作商链接</th>
+			<td class="td">
+				<select name="cp_id" id="cp_id">
+					<option value="0">请选择</option>
+					<?php foreach ($urlList as $k => $v) { ?>
+						<option value="<?php echo $v['id']; ?>"  <?php if ($v['id'] == $urlInfo['id']) echo 'selected'; ?>><?php echo "{$v['url_name']}:{$v['url']}"; ?></option>
+					<?php } ?>
+				</select></td>
+		</tr>
+
+		<tr class="tr" id="tr_link" style="display: <?php echo empty($info['cp_id']) ? '' : 'none' ?>">
+			<th class="th">链接地址</th>
+			<td class="td">
+				<input style="width:250px;height: 50px" type="text" class="easyui-textbox" data-options="multiline:true" name="link" value="<?php echo $info['link']; ?>">
+			</td>
+		</tr>
+		<tbody id="comPic" style="display: none">
+		<tr class="tr">
+			<th class="th">图片</th>
+			<td class="td">
+				<?php
+				if (!empty($info['img'])) {
+					$img = $attachPath . $info['img'];
+					if (stristr($info['img'], 'http')) {
+						$img = $info['img'];
+					}
+					echo sprintf('<img style="height:100px;" src="%s" /><br>', $img);
+				}
+				?>
+				<input type="file" id="img_upload" name="img"/>
+
+
+			</td>
+		</tr>
+		</tbody>
+
+		<tr class="tr">
+			<th class="th">开始结束时间</th>
+			<td class="td">
+				<input type="text" style="width: 150px" name="start_time" class="easyui-datetimebox" value="<?php echo date('Y-m-d H:i:s', !empty($info['start_time']) ? $info['start_time'] : time()); ?>">
+				至<input type="text" style="width: 150px" name="end_time" class="easyui-datetimebox" value="<?php echo date('Y-m-d H:i:s', !empty($info['end_time']) ? $info['end_time'] : strtotime('+1 year')); ?>">
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td">
+				<input type="text" name="sort" class="easyui-numberspinner" style="width:80px" value="<?php echo $info['sort']; ?>">(数字越大越靠后)
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				<?php
+				$arr = array(0 => '关闭', 1 => '开启');
+				foreach ($arr as $k => $name):
+					$checked = $info['status'] == $k ? 'checked="checked"' : '';
+					?>
+					<input type="radio" name="status" class="input" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+				<?php endforeach; ?>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">是否接口</th>
+			<td class="td"><select name="is_interface" min-width="100px">
+					<option <?php if ($info['is_interface'] == 1) echo 'selected="selected"'; ?> value="1">是</option>
+					<option <?php if ($info['is_interface'] == 0) echo 'selected="selected"'; ?> value="0">否</option>
+				</select></td>
+		</tr>
+
+		<tr class='tr'>
+			<th class="th">精准运营类型</th>
+			<td class="td"><select name="model_type" id="model_type">
+					<?php foreach ($operateTypes as $k => $v) { ?>
+						<option <?php if ($info['model_type'] == $k) echo 'selected="selected"'; ?> value="<?php echo $k; ?>"><?php echo $v; ?></option>
+					<?php } ?>
+				</select>
+			</td>
+		</tr>
+
+		<tr class="tr" style="display:<?php echo $info['model_type'] ? '' : 'none'; ?>" id="tr_model">
+			<th class="th">选择信息</th>
+			<td class="td">
+				<select name="model_id" id="model_id">
+					<option value="">请选择</option>
+					<?php
+					if ($info['model_type'] == 1) {
+						foreach ($modelList as $v) {
+							?>
+							<option value="<?php echo $v['id'];?>" <?php if ($info['model_id'] == $v['id']) echo 'selected';?>>
+								<?php
+								$val = '';
+								if ($v['model']) $val .= '机型 ' . $v['model'];
+								if ($v['version']) $val .= '版本 ' . $v['version'];
+								if ($v['operator']) $val .= '运营商  ' . $v['operator'];
+								if ($v['province']) $val .= '省份  ' . $v['province'];
+								if ($v['city']) $val .= '城市 ' . $v['city'];
+								echo $val;?></option>
+						<?php }
+					} else {
+						foreach ($imeiList as $m => $n) {
+							?>
+							<option value="<?php echo $n['id'];?>" <?php if ($info['model_id'] == $n['id']) echo 'selected';?>><?php echo $n['title'];?></option>
+						<?php }
+					} ?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th>标签分类</th>
+			<td>
+				<select name="label[]" class="easyui-combotree" style="width:200px;"
+		        data-options="url:'/Admin/ng/ajaxGetAllLabelData?id=<?php echo $id;?>',method:'get'" multiple>
+				</select>
+			</td>
+		</tr>
+	</table>
+</form>
+<script type="text/javascript">
+	$(document).ready(function () {
+		var columns = <?php echo json_encode($columns);?>;
+		settypes1 = function (types, chval) {
+			var options = '<option value="">请选择栏目</option>';
+			$.each(columns, function (index, data) {
+				var s = '';
+				var t = '';
+				if (data.type_id == types) {
+					if (data.id == chval) s = 'selected';
+					if (data.status == 1) t = '*';
+					options += '<option value="' + data.id + '" ' + s + '>' + data.name + t + '</option>';
+				}
+			});
+
+			$("#column_id1").html(options);
+		}
+		<?php if (!empty($info['id'])):?>
+		settypes1(<?php echo $info['type_id']?>, <?php echo $info['column_id']?>);
+		<?php endif;?>
+
+		var ptype = '<?php echo $ext->ptype;?>';
+		if (ptype == '2') {
+			$("#activityContent").show();
+			$("#comPic").hide();
+		} else {
+			$("#activityContent").hide();
+			$("#comPic").show();
+		}
+
+	});
+
+	$("#model_type").bind('change', function () {
+		var flag = $("#model_type option:selected").val();
+		if (flag == '1') {
+			$.ajax({
+				'url': '/Admin/Ng/ajaxGetModelInfo',
+				'type': 'post',
+				'dataType': 'json',
+				'data': {'token': '<?php echo $token;?>'},
+				'success': function (e) {
+					var txt = "<option value='0' >请选择</option>";
+					$.each(e.data, function (i, m) {
+						var temp = '';
+						if (m.model)        temp += '机型  ' + m.model;
+						if (m.version)        temp += '  版本 ' + m.version;
+						if (m.operator)    temp += '  运营商  ' + m.operator;
+						if (m.province)    temp += '  省份 ' + m.province;
+						if (m.city)                temp += '  城市  ' + m.city;
+						txt += "<option  value='" + m.id + "'>" + temp + "</option>";
+					});
+					$("#model_id").html(txt);
+					$("#tr_model").show();
+				}
+			});
+		} else if (flag == 2) {
+			$.ajax({
+				'url': '/Admin/Ng/ajaxImeiDataList',
+				'type': 'post',
+				'dataType': 'json',
+				'data': {'token': '<?php echo $token;?>'},
+				'success': function (e) {
+					var txt = "<option value='0' >请选择</option>";
+					$.each(e.data, function (i, m) {
+						txt += "<option value='" + m.id + "'>" + m.title + "</option>";
+					});
+					$("#model_id").html(txt);
+					$("#tr_model").show();
+				}
+			})
+		} else {
+			$("#tr_model").hide();
+			$("#model_id").val(0);
+		}
+	});
+
+	$("#parter_id").bind('change', function () {
+		var pid = $("#parter_id option:selected").val();
+		if (pid > 0) {
+			$.ajax({
+				'type': 'post',
+				'dataType': 'json',
+				'data': {'token': '<?php echo $token;?>', 'pid': pid},
+				'url': '/Admin/Parter/ajaxGetBussinessList',
+				'success': function (e) {
+					var html = "<option value='0'>请选择</option>";
+					$.each(e.data, function (i, m) {
+						html += "<option value='" + m.id + "'>" + m.name + "</option>";
+					});
+					$("#bid").html(html);
+					$("#tr_business").show();
+				}
+			});
+		} else {
+			$("#tr_business").hide();
+			$("#tr_url").hide();
+		}
+	});
+
+	$("#bid").bind('change', function () {
+		var bid = $("#bid option:selected").val();
+		if (bid > 0) {
+			$.ajax({
+				'type': 'post',
+				'dataType': 'json',
+				'data': {'token': '<?php echo $token;?>', 'bid': bid},
+				'url': '/Admin/Parter/ajaxGetUrlByBid',
+				'success': function (e) {
+					var html = "<option value='0'>请选择</option>";
+					$.each(e.data, function (i, m) {
+						html += "<option value='" + m.id + "'>" + m.url_name + " : " + m.url + "</option>";
+					});
+					$("#cp_id").html(html);
+					$("#tr_url").show();
+				}
+			});
+		} else {
+			$("#tr_url").hide();
+		}
+	});
+
+	$("#cp_id").bind('change', function () {
+		var id = $("#cp_id option:selected").val();
+		if (id > 0) {
+			$("#tr_link").hide();
+		} else {
+			$("#tr_link").show();
+		}
+	})
+
+	$("#level_type").bind('change', function () {
+		var parentId = $(this).val();
+		createHtml(parentId,'level_type','level[first]','一级标签','level_first');
+	});
+
+	function  createHtml(parentId,pre_label,label,tr_name,td_id){
+		$.ajax({  //ajax start 
+			'type': 'post',
+			'dataType': 'json',
+			'data': {'token': '<?php echo $token;?>', 'pid': parentId},
+			'url': '/Admin/Label/ajaxGetDataByParentId',
+			'success': function (e) {
+				var content = '<tr class="tr"  id="tr_'+td_id+'"><th class="th">'+tr_name+'</th><td id="td_'+td_id+'" class="td td_select">';
+				$.each(e.data, function (i, m) {
+					content += '<select name="'+label+'[' + (+i + 1) + ']" id="'+td_id+'_' + (+i + 1) + '" data-index="' + (1 + i) + '"><option value="0">请选择</option>';
+					content += '<option value="' + m.id + '">' + m.name + '</option>';
+					content += '</select>';
+				});
+				content +='</td></tr>';
+				if($("#tr_"+label)[0]){
+					$("#tr_"+label).html(content);
+				}else{
+					$("#tr_"+pre_label).after(content);
+				}
+			}
+		}); //ajax end 
+}
+
+// $(function(){
+// 	$('body').delegate('.td_select select','change', function(){
+// 		var val = $(this).val();
+// 		createHtml(val, 'level_first', 'level[second]', '二级标签','level_second');		
+// 	});
+// });
+	
+	$('#span_label_wrap').delegate('select', 'change', function () {
+		var that = $(this);
+		var index = $(this).data('index');
+		var pid = $(this).val();
+		$.ajax({
+			'type': 'post',
+			'dataType': 'json',
+			'data': {'token': '<?php echo $token;?>', 'pid': pid},
+			'url': '/Admin/Label/ajaxGetDataByParentId',
+			'success': function (e) {
+				var html = "";
+				$.each(e.data, function (i, m) {
+					html += "<label><input type='checkbox'  name='label_id[" + pid + "][]'  value='" + m.id + "'>" + m.name + "</label>";
+				});
+				if (!$('.lid_' + index)[0]) {
+					$("#td_label_id").append('<div class="lid_' + index + '"><h3>' + that.find("option:selected").text() + '</h3>' + html + '</div>');
+				}
+				console.log(pid);
+				if (pid == 0) {
+					$('.lid_' + index).remove();
+				}
+				$("#tr_label_id").show();
+			}
+		});
+	});
+
+
+	$("#pageType").bind('change', function () {
+		var pageType = $("#pageType").val();
+
+		$("#activityContent").hide();
+		$("#comPic").hide();
+		$("#lotteryType").hide();
+		$("#imgswitchHolder").hide();
+		$("#newsSourceType").hide();
+		$("#newsadHolder").hide();
+		$("#topicDesc").hide();
+		switch (pageType) {
+			case '1':
+				$("#comPic").show();
+				break;
+			case '2':
+				$("#activityContent").show();
+				break;
+			case '3':
+				$("#lotteryType").show();
+				break;
+			case '4':
+				$("#imgswitchHolder").show();
+				$("#comPic").show();
+				break;
+			case '5':
+				$("#newsSourceType").show();
+				$("#newsadHolder").show();
+				break;
+			case '6':
+				$("#topicDesc").show();
+				$("#comPic").show();
+				break;
+		}
+	});
+
+	
+
+	function add() {
+		var jsonData = $("#hidden_second_level").val();
+		var index = $("#add_type").attr('data-index');
+		index++;
+		$("#add_type").attr('data-index', index);
+		/* var html = '<select name="label_type['+index+']" id="label_type['+index+']" data-index="'+index+'"><option value="0">请选择';
+		 $.each(jsonData.data,function(i,m){
+		 html +='<option value="'+m.id+'">'+m.name+'</option>';
+		 });
+		 html +="</select>"; */
+
+		var cloneEl = $('#span_label_wrap select').first().clone().attr({
+			"name": "label_type[" + index + "]",
+			"id": "label_type[" + index + "]",
+			"data-index": index
+		});
+
+		$('#span_label_wrap').append(cloneEl);
+	}
+</script>

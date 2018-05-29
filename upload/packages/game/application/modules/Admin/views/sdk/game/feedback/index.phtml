@@ -1,0 +1,186 @@
+<?php echo $this->render("layout/header.phtml");?>
+<style>
+	.ct_01 td{
+		padding: 7px 0px 9px;
+		color: #666;
+	}
+	.text{
+		border:1px solid gray ;
+		background: #fff;
+		min-height:40px; 
+		margin-bottom: 4px;
+	}
+	.icon_user{
+		background-position: -144px -96px;
+		width: 16px;height: 16px;
+	}
+	
+</style>
+<div class="nav">
+	<ul class="cc">    
+         <li ><a href="<?php echo $clientListUrl;?>">意见反馈</a></li>
+        <li class="current"><a href="<?php echo $listUrl;?>">游戏反馈</a></li>
+        <li ><a href="<?php echo $h5ListUrl;?>">H5反馈</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">	
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			 <select name="status" class="select wa">
+			 	<option  value="0">全部</option>
+				<option <?php if ($s['status'] == 1) echo 'selected';?> value="1">未回复</option>
+				<option <?php if ($s['status'] == 2) echo 'selected';?> value="2">已回复</option>
+			 </select>
+		   </td>
+			<th class="th">标签</th>
+				<td class="td">
+				 <select name="label_name" class="select wa">
+				    <option  value="">全部</option>
+				    <option  value="0" <?php if ($s['label_name'] == '0') echo 'selected'; ?> >无</option>
+				    <?php foreach ($lable_arr as $key=>$val) { ?>
+					<option <?php if ($s['label_name'] == $val) echo 'selected';?> value="<?php echo $val;?>" ><?php echo $val;?></option>
+					<?php }?>
+				 </select>
+			   </td>
+		</tr>
+		<tr class="tr">
+		    <th class="th">账号</th>
+			<td class="td"><input type="text" class="input" name="uname" value="<?php echo $s['uname'];?>"></td>
+			 <th class="th">反馈内容</th>
+			<td class="td"><input type="text" class="input wc" name="content" value="<?php echo $s['content'];?>"></td>
+		</tr>
+		<tr class="tr">
+		    <th class="th">游戏名称</th>
+			<td class="td"><input type="text" class="input " name="name" value="<?php echo $s['name'];?>"></td>
+			 <th class="th">金立UUID</th>
+			<td class="td"><input type="text" class="input wc" name="uuid" value="<?php echo $s['uuid'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+    <span class="btn2"><span><button type="button" id="labelBtn" >标签管理</button></span></span>
+    <span class="btn2"><span><button type="button" id="extportBtn">导出excel</button></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>编号</td>
+			<td>游戏名称</td>
+			<td>账号</td>
+			<td>反馈时间</td>
+			<td>状态</td>
+			<td>附件</td>
+			<td>标签</td>
+			<td></td>
+		</tr>
+    <?php foreach($result as $key => $value) {?>
+		<tr class="ct_01">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $game_names[$value['game_id']];?></td>
+			<td><?php echo $value['uname'];?></td>
+		    <td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+			<td><?php echo ($value['status'] == 1)? '<font color="red">'.$feedback_status[$value['status']].'</font>': $feedback_status[$value['status']] ;?></td>
+			<td>
+			   <?php if($value['attach']){?>
+			   <img width="50px" height="50px" src="<?php echo $attachPath.'/'.$value['attach'];?>" />
+			   <?php }else{?>
+			   无
+			   <?php }?>
+			</td>
+			<td>
+				<select name="label_name" class="select wa" id="label_name" onChange="javascript:UpdateLable(this.value,<?php echo $value['id']; ?>);return false;">
+				   <option value="0">无</option>
+				    <?php foreach ($lable_arr as $key=>$val) { ?>
+					<option datatext="ddd" <?php if ($value['label_name'] == $val) echo 'selected';?> value="<?php echo $val;?>"  ><?php echo $val;?></option>
+					<?php }?>
+				 </select>
+			</td>
+		</tr>
+		<tr class="ct">
+			<td colspan="5">
+				<div class="text">
+					<?php echo $value['content'];?>
+				</div>
+				<span class="ui-icon ui-icon-person" style="display:inline-block;margin-bottom:-4px"></span>
+				<?php echo  "IMEI:".$value['imei'];?>/金立UUID:<?php echo $value['uuid'];?>/<?php echo '账号：'.$value['uname'];?>/<?php echo $value['model'];?>/<?php echo $value['client_pkg'] == "3" ? "SDK" : "其他";?>/<?php echo $value['version'];?>/<?php echo $value['sys_version'];?>
+			</td>
+			<td style="width:110px;">
+			   <?php if ($value['status'] ==  0){?>
+					<span class="btn2"><span><button  type="button" id="replyBtn" Onclick="replyjs(<?php echo $value['id'];?>)" >回复</button></span></span>
+				<?php }else{?>
+					<span class="btn2"><span><button  type="button" id="replyBtn" Onclick="replyjs(<?php echo $value['id'];?>)" >查看回复</button></span></span>
+				<?php }?>
+			</td>
+		</tr>
+	<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<div class="mr10 cc">
+	<form action="<?php echo $exportUrl;?>" method="post" id="exportForm">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<input type="hidden" name="status" value="<?php echo $s['status'];?>">
+	<input type="hidden" name="label_name" value="<?php echo $s['label_name'];?>">
+	<input type="hidden" name="tel" value="<?php echo $s['tel'];?>">
+	<input type="hidden" name="content" value="<?php echo $s['content'];?>">
+	<input type="hidden" name="name" value="<?php echo $s['name'];?>">
+	</form>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	 ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Sdk_Game_Feedback/index');
+	});
+	$("#extportBtn").click(function(){
+		$("#exportForm").submit();
+    });
+	$("#labelBtn").click(function(){
+		location.href = baseurl + "/Admin/Sdk_Game_Feedback/lable";
+    });
+
+
+})
+function replyjs(id){
+	location.href = baseurl + "/Admin/Sdk_Game_Feedback/reply/?id="+id;
+}
+function viewReply(id){
+	location.href = baseurl + "/Admin/Sdk_Game_Feedback/viewReply/?id="+id;
+}
+function UpdateLable(value,id){
+	$.ajax({
+		url : baseurl + "/Admin/Sdk_Game_Feedback/updateLable",
+		type : 'POST',
+		dataType : 'json',
+		data : 'token='+'<?php echo $token;?>'+'&id='+id+'&label_name='+value,
+		success : function(ret) {
+			 if (ret.success) {
+				showMsg('', ret.msg);
+				setTimeout(function() {
+					location.href = baseurl + "/Admin/Sdk_Game_Feedback/index";
+				}, 2000);
+			} else {
+				showError('', ret.msg);
+			}
+			
+		}
+	});
+}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

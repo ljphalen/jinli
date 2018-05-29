@@ -1,0 +1,118 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+	</div>
+	<div class="table_full">
+		<form action="<?php echo $orderUrl; ?>" method="POST" id="form">
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<table width="100%" cellspacing="0" cellpadding="0">
+				<tr class="tr">
+					<th class="th">订单状态：</th>
+					<td class="td">
+						<select name="order_status" id="order_status">
+							<option value="-1">请选择</option>
+							<?php foreach ($orderStatus as $k => $v) { ?>
+								<option <?php echo   ($k == $parms['order_status']) ? 'selected="selected"' : ''; ?> value="<?php echo $k; ?>"><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+					<tr class="tr">
+					<th class="th">订单类型：</th>
+					<td class="td">
+						<select name="order_type" id="order_type">
+							<option value="-1">请选择</option>
+							<?php foreach ($orderTypes as $k => $v) { ?>
+								<option <?php echo  ($k == $params['order_type']) ? 'selected="selected"' : ''; ?> value="<?php echo $k; ?>"><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				
+			<tr class="tr">
+					<th class="th">用户支付状态：</th>
+					<td class="td">
+						<select name="pay_status" id="status">
+							<option value="-1">请选择</option>
+							<?php foreach ($payStatus as $k => $v) { ?>
+								<option <?php echo  ($k == $params['pay_status']) ? 'selected="selected"' : ''; ?> value="<?php echo $k; ?>"><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				
+					<tr class="tr">
+					<th class="th">支付渠道：</th>
+					<td class="td">
+						<select name="pay_channel" id="pay_channel">
+							<option value="0">请选择</option>
+							<?php foreach ($channel as $k => $v) { ?>
+								<option <?php echo ($k == $params['pay_channel']) ? 'selected="selected"' : ''; ?> value="<?php echo $k; ?>"><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				
+				<tr class="tr">
+					<th class="th">下单时间</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $params['sdate']; ?>"> 至
+						<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $params['edate']; ?>">
+					</td>
+				</tr>
+				
+						
+			<tr class="tr">
+					<th class="th">订单号</th>
+					<td class="td">
+						<input type="text"  name="order_sn"  class="input"   value="<?php echo $params['"order_sn"'];?>"></td>
+				</tr>
+			
+				<tr class="tr">
+					<th class="th">用户手机号</th>
+					<td class="td">
+						<input type="text"  name="username"  class="input"   value="<?php echo $params['""username""'];?>"></td>
+				</tr>
+				
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+		</form>
+	</div>
+
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">订单ID</th>
+				<th class="th">用户ID</th>
+				<th class="th">订单号</th>
+				<th class="th">订单金额</th>
+				<th class="th">实际金额</th>
+				<th class="th">订单类型</th>
+				<th class="th">订单状态</th>
+				<th class="th">支付状态</th>
+				<td class="th">支付渠道</td>
+				<td class="th">下单时间</td>
+				<td class="th">对账时间</td>
+			</tr>
+			<?php foreach ($dataList as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['id'];?></td>
+					<td class="td" align="left"><?=$v['uid'];?></td>
+					<td class="td"><?php echo $v['order_sn'] ?></td>
+					<td class="td"><?php echo $v['deal_price'] ?></td>
+					<td class="td"><?php echo $v['total_fee']; ?></td>
+					<td class="td"><?php echo $orderTypes[$v['order_type']];?></td>
+					<td class="td"><?php echo $orderStatus[$v['order_status']];?></td>
+					<td class="td"><?php echo $payStatus[$v['pay_status']];?></td>
+					<td class="td"><?php echo $channel[$v['pay_channel']]?$channel[$v['pay_channel']]:'未知';?></td>
+					<td class="td"><?php echo date("Y-m-d H:i:s",$v['add_time']);?></td>
+					<td class="td"><?php echo date('Y-m-d H:i:s',$v['back_response_time']);?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

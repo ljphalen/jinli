@@ -1,0 +1,669 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+<style>
+.col-sm-10 label {
+	font-weight: normal;
+}
+
+.panel-body{*width: 92%}
+.panelws select.form-control{*height: auto!important;*padding: 4px 0;*margin-top: 0px;}
+.thumbnail{*width: auto;}
+.mainw .form-horizontal .form-control-static{padding-top: 0px;}
+.panelws .form-group input{*padding-top: 8px;*height: 22px!important;}
+.panelws .form-group textarea{*padding-top: 8px;}
+</style>
+<div class="mainw mainw2 clearfix">
+	<div class="rmain col-md-12 rmain-inf">
+		<div class="panel panelws">
+			<h2 class="yyname">完善应用信息</h2>
+			<div class="panel-body">
+				<form class="form-horizontal app-edit" role="form" action="{:U('apps/appsave')}" method="post">
+					<include file="_uploadModal" />
+					<div class="row">
+					    <div class="col-sm-12">
+					    	<h4>已获取信息</h4>
+					    </div>
+					</div>
+					
+					<div class="form-group baoname">
+						<label class="col-sm-2 control-label">包名称：</label>
+						<div class="col-sm-7">
+							<p class="form-control-static">{$apkinfo['package']}</p>
+						</div>
+						
+						<div style="display:none;">
+							<label for="apkupload">
+								<span class="btn btn-info btn-md fileinput-button" style="width:130px;" id="apkupload">
+							        重新上传
+							    </span>
+						        <input type="hidden" id="type" name="type" value="2" />
+						    </label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">应用名称：</label>
+						<div class="col-sm-4">
+							<p class="form-control-static">
+								<input type="text" class="form-control" maxlength="50" name="app_name" id="app_name" value="{$apkinfo['app_name']}" />
+							</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">版本：</label>
+						<div class="col-sm-10">
+							<p class="form-control-static">{$apkinfo['version_name']}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">系统支持：</label>
+						<div class="col-sm-10">
+							<?php
+							$apkConfig = C("apk");
+							$minSDK = $apkinfo['min_sdk_version'];
+							?>
+							<p class="form-control-static">Android {$apkConfig['SDK_VER'][$minSDK]}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">文件大小：</label>
+						<div class="col-sm-10">
+							<p class="form-control-static">{$apkinfo['file_size']|showsize|implode="",###}</p>
+						</div>
+					</div>
+					
+					<div class="row">
+					    <div class="col-sm-12">
+					    	<h4>需填写信息</h4>
+					    </div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-sm-2 control-label"><em>* </em>分类：</label>
+						<div class="col-sm-10 pl0">
+							<label class="col-sm-2">
+							<input type="radio" id="category_game" name="category_one" rel="" value="100" <php>if(empty($apkinfo['category_one']) || $apkinfo['category_one']!=200) echo 'checked="checked"';</php>>游戏
+							</label>
+						</div>
+					</div>
+					
+					<div id="app_section" <php>if($apkinfo['category_one']!=200) echo 'style="display:none;"';</php>>
+						<div class="form-group">
+							<label for="developer" class="col-sm-2 control-label"><em>* </em>合作模式：</label>
+							<div class="col-sm-4">
+								<php>
+								$cooperation_mode = array(0=>"免费",1=>"CPA",2=>"CPS");
+								</php>
+								<select name="cooperation_mode" class="form-control">
+								<volist id="vo" name="cooperation_mode">
+								<option value="{$key}" <php>if($apkinfo['cooperation_mode']==$key) echo 'selected="selected"';</php>>{$vo}</option>
+								</volist>
+								</select>
+							</div>
+							<div class="col-sm-6"></div>
+						</div>
+					</div>
+					<div id="game_section" <php>if($apkinfo['category_one']==200) echo 'style="display:none;"';</php>>
+						<div class="form-group children_category">
+							<label class="col-sm-2 control-label"><em>* </em>子分类：</label>
+							<div class="col-sm-10 category_group pl0">
+								<h5 class="mt0">最多可选三项</h5>
+									<php>
+								    foreach( $cate_game as $key =>$value ){
+								    	echo '<div class="col-sm-2"><label>';
+									    echo '<input type="checkbox" id="category_two" name="category_two[]" value="'.$value['id'].'" ';
+									    if( in_array($value['id'],$cate_two_info)){
+									    	echo 'checked';
+									    }
+									    echo '>';
+									    echo $value['name'];
+								    	echo '</label></div>';
+									}
+									</php>
+							</div>
+							<!-- 
+							<div class="col-sm-10 category_group" id="app_group" <php>if($apkinfo['category_one']!=200) echo 'style="display:none;"';</php>>
+									<php>
+								    foreach( $cate_app as $key =>$value ){
+								    	echo '<div class="col-sm-2"><label>';
+									    echo '<input type="checkbox" id="category_two" name="category_two[]" value="'.$value['id'].'" ';
+									    if( in_array($value['id'],$cate_two_info)){
+									    	echo 'checked';
+									    }
+									    echo '>';
+									    echo $value['name'];
+								    	echo '</label></div>';
+									}
+									</php>
+							</div>
+							 -->
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-2 control-label"><em>* </em>合作方式：</label>
+							<div class="col-sm-10 pl0">
+								<label>接入金立SDK的游戏请选择联运，详见帮助文档的联运流程</label>
+								<label class="col-sm-2">
+								<input type="radio" name="is_join" value="2" <php>if($apkinfo['is_join']!=1) echo 'checked="checked"';</php>>普通
+								</label>
+								<label class="col-sm-2">
+								<input type="radio" name="is_join" value="1" <php>if($apkinfo['is_join']==1) echo 'checked="checked"';</php>>联运
+								</label>
+								<span class="help-block union_checker"></span>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="developer" class="col-sm-2 control-label"><em>* </em>计费模式：</label>
+							<div class="col-sm-4">
+								<select name="fee_type" class="form-control">
+								<volist id="fee" name="feetype">
+								<option value="{$fee.id}" <php>if($apkinfo['fee_type']==$fee['id']) echo 'selected="selected"';</php>>{$fee.type_name}</option>
+								</volist>
+								</select>
+							</div>
+							<div class="col-sm-6"></div>
+						</div>
+	
+						<div class="form-group fee-mode-unit">
+							<label for="developer" class="col-sm-2 control-label"><em>* </em>计费通道：</label>
+							<div class="col-sm-10 fee_mode_group pl0">
+								<volist id="mode" name="fee_mode">
+								<div class="col-sm-2"><label>
+								<input type="checkbox" group="fee_mode" name="fee_mode[]" value="{$key}" 
+									<php>
+									if($apkinfo['is_join']==1 && $key != 107)
+										echo 'disabled';
+									if(in_array($key, $fee_mode_keys)) 
+										echo 'checked';
+									</php>
+									>{$mode}
+								</label></div>
+								</volist>
+							</div>
+							<div class="col-sm-6"></div>
+						</div>
+					</div>
+					
+					
+					<div class="form-group">
+						<label for="developer" class="col-sm-2 control-label"><em>* </em>客服电话：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" maxlength="30" name="service_phone" id="service_phone" value="{$apkinfo['service_phone']}" placeholder="010-12345678-123">
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+					
+					<div class="form-group">
+						<label for="developer" class="col-sm-2 control-label"><em>* </em>开发者：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" maxlength="15" name="developer" id="developer" value="{:empty($apkinfo['developer'])?$user['contact']:$apkinfo['developer']}" placeholder="开发者">
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+					<div class="form-group">
+						<label for="agent" class="col-sm-2 control-label">代理商：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" maxlength="15" id="agent" name="agent" value="{$apkinfo['agent']}" placeholder="代理商">
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+					<div class="form-group">
+						<label for="language" class="col-sm-2 control-label"><em>* </em>语言：</label>
+						<div class="col-sm-4">
+							<select name="language" class="form-control">
+							 <option <php>if($apkinfo['language']==1) echo 'selected="selected"';</php> value="1">中文</option>
+							 <option <php>if($apkinfo['language']==2) echo 'selected="selected"';</php> value="2">英文</option>
+							 <option <php>if($apkinfo['language']==3) echo 'selected="selected"';</php> value="3">其他</option>
+							</select>
+						</div>
+						<div class="col-sm-6"></div>
+					</div>
+					
+					<?php
+					$reso = explode("-", $apkinfo['reso']);
+					?>
+					<div class="form-group">
+						<label class="col-sm-2 control-label"><em>* </em>适配分辨率：</label>
+						<div class="col-sm-10 pl0">
+							<h5 class="mt0">适配分辨率，可多选（平台要求必须适配480*854、540*960、720*1280、1080*1920）</h5>
+							 	<php>
+							 	$default_checked = array('480*854','540*960','720*1280','1080*1920');
+							    foreach( $resoinfo as $key =>$value ){
+							    	echo '<div class="col-sm-2"><label>';
+								    echo '<input type="checkbox" id="reso" name="reso[]" value="'.$value['reso_id'].'" ';
+								    if( in_array($value['reso_id'], $reso) || in_array($value['reso_name'], $default_checked) ){
+								    	echo 'checked';
+								    }
+								    echo '>';
+								    echo $value['reso_name'];
+							    	echo '</label></div>';
+								}
+								</php>
+						</div>
+					</div>
+					
+					<hr>
+					<php>
+					$labelJson = json_decode($apkinfo['label']);
+					$labelArr = objectToArray($labelJson);
+					</php>
+					<volist id="vo" name="labelInfo">
+					<div class="form-group">
+						<label class="col-sm-2 control-label"><em>* </em>{$vo['name']}：</label>
+						<div class="col-sm-10 pl0 tags_{$i}" name="{$vo['name']}">
+							 	<php>
+							 	$m = 0;
+							 	$check = $labelArr[$key];
+							    foreach( $vo['child'] as $value ){
+							    	$type = $vo['name']=='联网类型'?'radio':'checkbox';
+							    	echo '<div class="col-sm-2"><label>';
+								    echo '<input type="'.$type.'" id="label_'.$i.'" name="label['.$key.'][]" value="'.$value['id'].'" ';
+								    if( ($vo['name']=='联网类型' && $m==0) || in_array($value['id'], $check)){
+								    	echo 'checked';
+								    }
+								    echo '>';
+								    echo $value['name'];
+							    	echo '</label></div>';
+							    	$m++;
+								}
+								</php>
+						</div>
+					</div>
+					</volist>
+					<hr>
+					
+					<div class="form-group">
+						<label for="brief" class="col-sm-2 control-label"><em>* </em>简述：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" id="brief" name="brief" maxlength="20"
+								value="{$apkinfo['brief']}" placeholder="游戏列表页一句话推荐语，不超过20个字">
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+					<div class="form-group">
+						<label for="keyword" class="col-sm-2 control-label"><em>* </em>热词：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" id="keyword" name="keyword" maxlength="40"
+								value="{$apkinfo['keyword']}" placeholder="搜索热词可搜索到对应的应用，英文逗号为分隔符">
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+					<div class="form-group">
+						<label for="description" class="col-sm-2 control-label"><em>* </em>应用介绍：</label>
+						<div class="col-sm-10">
+							<textarea rows="6" class="form-control appinfotext" style="width:95%" id="description" name="description" placeholder="不超过300字">{$apkinfo['description']|safe}</textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="changelog" class="col-sm-2 control-label">更新日志：</label>
+						<div class="col-sm-10">
+							<textarea rows="6" class="form-control appinfotext" style="width:95%" id="changelog" name="changelog" placeholder="不超过300字">{$apkinfo['changelog']}</textarea>
+						</div>
+					</div>
+					<hr />
+					<div class="form-group screenup">
+						<label for="dddd" class="col-sm-2 control-label"><em>* </em>应用截图：</label>
+						<div class="col-sm-10 app-screen ">
+							<h5 class="mt0">请上传至少5张图片，尺寸：480（宽）*800（高） 格式：jpg、png 单张大小：2M以内。</h5>
+							   <volist name="screenshotinfo" id="data">
+									<div class="col-md-3 screen-unit ">
+										<button type="button" class="close deleteBtn" fileid="{$data.id}" data-dismiss="alert" aria-hidden="true">×</button>
+									   	<div class="thumbnail" >
+											<a href="javascript:void(0)"><img src="{:Helper('Apk')->get_url('screen')}{$data.file_path}" width="150" height="250"></a>
+									   	</div>
+								   	</div>
+							   </volist>
+							   <div class="col-md-3 pl0" id="screenshotdiv">
+							   		<div class="thumbnail" >
+										<label id="screenUpload">
+											<img src="{:cdn('PUBLIC')}/common/images/screenshot_add.png">
+									   	</label>
+								   	</div>
+							   </div>
+						</div>
+					</div>
+					
+					<div class="form-group iconup">
+						<label for="dddd" class="col-sm-2 control-label"><em>* </em>应用图标：</label>
+						<?php
+						$defaultIcon = cdn('PUBLIC')."/common/images/icon_add.jpg";
+						?>
+						<div class="col-sm-10">
+							<h5 class="mt0">请上传512*512尺寸图标， 格式：png</h5>
+							<div class="row icons">
+							   <div class="col-md-2">
+								   	<div class="thumbnail thumbnailicon"><label for="largeicon"><img id="largeIconImg" src="{$largeiconurl|default=$defaultIcon}"  /><input id="largeIcon" value="{$largeIconId.id}" name="largesIcon" type="hidden" /></label></div>
+								   	<div id="largeIconUpload" class="btn btn-info btn-small">上传</div>
+							   </div>
+							   
+							</div>
+					
+						</div>
+					</div>
+					
+					<div class="form-group copyrightup">
+						<label for="" class="col-sm-2 control-label">著作权扫描件：</label>
+						<div class="col-sm-10">
+							<h5 class="mt0">
+								软件著作权扫描件用以确认软件是否具有可用于商业目的的权限，对于软件作品所享有的各项专有权利。<br />
+								支持JPG，PNG两种格式的图片，不大于2MB。
+							</h5>
+							<?php
+							$copyrightUpload = D('AppCert')->where(array('apk_id'=>$apkinfo["id"]))->getField('file_path');
+							if($copyrightUpload) $copyrightUpload = Helper ( "Apk" )->get_url ( "user" ). $copyrightUpload;
+							else $copyrightUpload = cdn('PUBLIC').'/common/images/icon_add.jpg';
+							?>
+							<div class="col-sm-10 app-screen">
+								<div class="col-md-3 pl0" id="copyrightdiv">
+							   		<div class="">
+										<label id="">
+											<img id="copyrightUploadImg" src="{$copyrightUpload}" style="max-width:400px;max-height:250px;" onclick="if(-1 == this.src.indexOf('icon_add.jpg'))window.open(this.src);">
+									   	</label>
+								   	</div>
+								   	<div id="copyrightUpload" class="btn btn-info btn-small">上传</div>
+								</div>
+							</div>
+					
+						</div>
+					</div>
+					
+					<div class="row">
+					    <div class="col-sm-12">
+					    	<h4>上线信息</h4>
+					    </div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label"><em>* </em>期望上线时间：</label>
+						<div class="col-sm-10 pl0">
+							<div class="controls input-append date form_date col-sm-3" data-date="" data-date-format="yyyy-mm-dd" data-link-field="online_time" data-link-format="yyyy-mm-dd">
+			                    <input size="16" type="text" value="{:empty($apkinfo['online_time'])?'':$apkinfo['online_time']}" 
+			                    	name="online_time" id="online_time" class="form-control" placeholder="{:date('Y-m-d H:i', strtotime('+7 days'))}">
+			                </div>
+							不能早于{:date("Y-m-d H:i", time() + 600)}
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label">备注：</label>
+						<div class="col-sm-10 pl0">
+							<label class="col-sm-6">
+							<textarea rows="6" class="form-control appinfotext" style="width:95%" id="resume" name="resume">{$apkinfo['resume']}</textarea>
+							</label>
+						</div>
+					</div>
+					
+					<hr>
+					<?php
+						//第一次上传或者没有老版本，则不显示差分包
+						$apkCount = D("Apks")->where(array("author_id"=>$uid, "package"=>$apkinfo["package"], "id"=>array("lt", $apkinfo["id"]) ))->count();
+						if ($apkinfo["file_size"] < C('APK.MAX_BSDIFF_SIZE') && $apkCount > 0) :
+					?>
+					<div class="form-group">
+						<div class="col-md-12" style="text-align: center;">
+						<label>
+							<input type="checkbox" name="bsdiff" id="bsdiff" 
+								value="1"
+								
+								
+								<php> if ($apkinfo[bsdiff]==1 || $_GET[fileuploaddone]==1):</php>
+								checked
+								<php>endif;</php>
+							/><!-- 0518 by shuhai 更新游戏时，低于50M的默认勾选申请差分包 -->
+								申请使用差分包升级（文件在50M以下的应用可选）
+						</label>
+						</div>
+					</div>
+					<?php endif; ?>
+					
+					<div class="form-group">
+						
+						<div class="col-md-8">
+							<input type="hidden" name="version_code" id="version_code" value="{$apkinfo.version_code}">
+							<input type="hidden" name="package" id="package" value="{$apkinfo.package}">
+							<input type="hidden" name="app_id" id="app_id" value="{$apkinfo.app_id}">
+							<input type="hidden" name="apk_id" id="apk_id" value="{$apkinfo.id}">
+							<input id="icon_id" name="icon_id" type="hidden" value="" >
+				  			<input id="icon_type" name="icon_type" type="hidden" value="2">
+				  			<input id="saveSub" name="saveSub" type="hidden" value="0">
+							<button type="submit" class="btn btn-success bo128" id="saveBtn" name="edit" value="1" onclick="$('#saveSub').val(0);return true;">仅保存不提交</button>
+							<button type="submit" class="btn btn-success bo128" id="saveSubBtn" onclick="$('#saveSub').val(1);return true;">保存并提交审核</button>
+						</div>
+					</div>
+				</form>
+				
+			</div>
+		</div>
+	</div>
+</div>
+<include file="Public:footer" />
+<include file="./Source/Tpl/Common/alertDialog.html" />
+
+<script type=text/javascript src="{:cdn('PUBLIC')}/common/js/jquery.form.js?{:C('JS_VERSION')}"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/common/js/webuploader/screen.js?{:C('JS_VERSION')}"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/common/js/webuploader/icon.js?{:C('JS_VERSION')}"></script>
+
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/app/jui/css/smoothness/jquery-ui-1.9.1.custom.min.css">
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-1.9.1.custom.min.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/development-bundle/ui/i18n/jquery.ui.datepicker-zh-CN.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	var num = 3;
+	for(var i=2; i<={:count($labelInfo)}; i++){
+		var _id = "label_"+i;
+		labelChecked(_id, num);	
+	}
+	labelChecked("category_two", num);
+	
+	$(function(){
+		$("#online_time").datetimepicker({
+			dateFormat:"yy-mm-dd",
+			timeFormat:"hh:mm",
+			regional: 'zh-CN',
+			minDate: new Date({:date('Y')}, {:date('m')} - 1, {:date('d')}, 0, 0),
+			maxDate: new Date(2015, 11, 31, 17, 30)
+			});
+	});
+	
+	$("#saveSubBtn").click(function(){
+		var category_two = $("input[type=checkbox][id='category_two']:checked").length;
+		var fee_mode = $("input[type=checkbox][group='fee_mode']:checked").length;
+		var service_phone = $("#service_phone").val();
+		var developer = $("#developer").val();
+		var agent = $("#agent").val();
+		var reso = $("input[type=checkbox][id='reso']:checked").length;
+		var keyword = $("#keyword").val();
+		var description = $("#description").val();
+		var brief = $("#brief").val();
+		var screenNum = $(".app-screen .screen-unit").length;
+		var defaultIcon = '{$defaultIcon}';
+		
+		var category = $('input[name="category_one"]:checked').val();
+		if(category == "100"){
+			if(category_two < 1){
+				alertDialog("请选择子分类");
+				return false;
+			}
+			if(fee_mode < 1){
+				alertDialog("请选择计费通道");
+				return false;
+			}
+		}
+		
+		if($.trim(service_phone) == ""){
+			alertDialog("请填写客服电话");
+			return false;
+		}
+		if($.trim(developer) == ""){
+			alertDialog("请填写开发者");
+			return false;
+		}else if(/^[\u4e00-\u9fa5a-zA-Z0-9]{1,30}$/gi.test(developer) == false){
+			alertDialog("开发者只能包括中文、英文字母和数字");
+			return false;
+		}
+		if(reso < 1){
+			alertDialog("请选择分辨率");
+			return false;
+		}
+		var num = 3;
+		for(var i=2; i<={:count($labelInfo)}; i++){
+			var _id = "label_"+i;
+			var _len  = $("input[id='"+_id+"']:checked").length;
+			if(_len == 0){
+				var name = $(".tags_"+i).attr("name");
+				alertDialog("请选择"+name);
+				return false;
+			}
+		}
+		if($.trim(brief) == ""){
+			alertDialog("请填写简述");
+			return false;
+		}
+		if($.trim(keyword) == ""){
+			alertDialog("请填写热词");
+			return false;
+		}
+		if($.trim(description) == ""){
+			alertDialog("请填写应用介绍");
+			return false;
+		}
+		if(screenNum < 5){
+			alertDialog("至少需要上传 5 张截图");
+			return false;
+		}
+		if($("#largeIconImg").attr("src") == defaultIcon){
+			alertDialog("请上传512*512的图标");
+			return false;
+		}
+		if($.trim($("#online_time").val()) == ""){
+			alertDialog("请填写期望上线时间");
+			return false;
+		}
+		
+		return true;
+	});
+});
+
+//联运事务处理
+$("input[name='is_join']").click(function(){
+	
+	if($("#category_game").attr("checked") != "checked"){
+		$(".union_checker").html("只有游戏才可以申请联运哟");
+		$("input[name='is_join'][value=2]").attr("checked", true);
+		return false;
+	}
+
+	if (1 != $(this).val()) {
+		$(":checkbox[group=fee_mode]").attr('disabled', false);
+		return true;
+	}
+	
+	$.ajax({
+	    type: "POST",
+		url:"<php>echo U('union/union_check_package')</php>",
+		data:{'package':"<php>echo safe($apkinfo['package']);</php>"},
+		success:function(data){
+			if(data.status == 1){
+				$(".union_checker").html(data.info);
+				$(":checkbox[group=fee_mode]").attr('checked', false);
+				$(":checkbox[group=fee_mode]").attr('disabled', true);
+				$(":checkbox[value=107]").attr('disabled', false).attr('checked', true).click(function(){return false;});
+				return true;
+			}else{
+				$("input[name='is_join'][value=2]").attr("checked", true);
+				$("input[name='is_join'][value=1]").attr("disabled", true);
+				$(".union_checker").html(data.info);
+				return false;
+			}
+		},
+		dataType:"json"
+	});
+}).click();
+
+function data_filter(){
+	var _brief = $("#brief").val();
+	var _keyword = $("#keyword").val();
+	var _description = $("#description").val();
+	var _changelog = $("#changelog").val();
+	
+	var _data = {brief:_brief, keyword:_keyword, description:_description, changelog:_changelog};
+	$.ajax({
+	    type: "POST",
+		url: "<php>echo U('apps/data_filter')</php>",
+		data: _data,
+		success:function(data){
+			if(data.status == 1){
+				return true;
+			}else{
+				var msg = "您提交的内容中包含非法词语";
+				if(typeof(data.keywords) != undefined)
+					msg += ":" + data.keywords;
+					
+				alertDialog(msg);
+				return false;
+			}
+		},
+		dataType:"json"
+	});
+	return true;
+}
+
+function online_time() {
+	var online_time = $("#online_time").val();
+	$.ajax({
+	    type: "POST",
+		url: "<php>echo U('apps/online_time_check')</php>",
+		data: {"online_time":online_time},
+		success:function(data){
+			if(data.status == 1){
+				return true;
+			}else{
+				var msg = "您设置的期望上线时间不正确，请重新设置上线时间";
+				alertDialog(msg);
+				return false;
+			}
+		},
+		dataType:"json"
+	});
+	return true;
+}
+
+$("#saveSubBtn").on('mouseover', function(){
+	data_filter();
+	online_time();
+});
+$("#brief,#description,#changelog,#keyword").blur(function(){
+	data_filter();
+});
+$("#online_time").blur(function(){
+	online_time();
+});
+
+function labelChecked(_id, _num){
+	$("input[type=checkbox][id='"+_id+"']").on("click",function(){
+		var _len  = $("input[type=checkbox][id='"+_id+"']:checked").length;
+        if(_len > _num){
+			alertDialog("最多只能选择 "+_num+" 项");
+       	 	$(this).attr('checked',false);
+        }
+ 	});
+}
+
+var screen_del = function(){
+	var _id = $(this).attr("fileid");
+	$.ajax({url:"/picture/del", data:"id="+_id});	
+}
+<literal>
+$("#online_time").on('change', function(){
+	var times = $(this).val();
+	var patten = new RegExp("\\\\d{4}\\\\-\\\\d{2}\\\\-\\\\d{2} \\\\d{2}:\\\\d{2}");
+	if(times.length > 0 && !patten.test( times )) {
+		$(this).val('');
+	}
+		
+	return true;
+});
+</literal>
+$(".deleteBtn").click(screen_del);
+</script>

@@ -1,0 +1,65 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $indexUrl;?>">统计列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加分类</a></li>
+		<li  class="current"><a href="<?php echo $listUrl;?>">分类列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">日期</th>
+				<td class="td"><input class="input" type="text" maxlength="30"
+					id="sdate" name="sdate" value="<?php echo $sdate;?>"> 至 <input
+					class="input" type="text" id="edate" maxlength="30" name="edate"
+					value="<?php echo $edate;?>"></td>
+
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button type="submit">搜 索</button></span></span>
+	</div>
+
+</form>
+<div class="table_full">
+	<table width="100%"><?php foreach($list as $key => $value) {?>
+		<tr class="tr">
+		
+		<td class="td">			
+                <dl class="cc purview_list_cr">
+	            <dt><label><a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>"><?php echo $value['name'];?></a> <span>[<?php echo intval($crs[$value['md5_url']]['total']);?>]</span> <a href="javascript:"
+							onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);"> [删除]</a></label></dt>
+	            <dd>
+	             <?php
+			     $i = 0;
+	             foreach($value['items'] as $k=>$item)
+				{?>
+		               <label><a href="<?php echo $editUrl;?>/?id=<?php echo $item['id'];?>"><?php echo $item['name'];?></a> <span>[<?php echo intval($crs[$item['md5_url']]['total']);?>]</span> <a href="javascript:"
+							onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $item['id'];?>', '', event);"> [删除]</a></label>
+	             <?php
+	             $i += intval($crs[$item['md5_url']]['total']);
+				 }
+				 ?>
+	                                </dd>
+	                </dl> 总点击量：<?php echo $i;?>
+            </td>
+           
+		</tr> <?php }	?>
+	</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#sdate").datepicker({
+				dateFormat : 'yy-mm-dd'
+			});
+	$("#edate").datepicker({
+				dateFormat : 'yy-mm-dd'
+			});
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

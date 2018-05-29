@@ -1,0 +1,73 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $listUrl;?>">免流量活动</a></li>
+		<li><a href="<?php echo $ulistUrl;?>">用户统计</a></li>
+        <li><a href="<?php echo $flistUrl;?>">流量统计</a></li>
+        <li><a href="<?php echo $blistUrl;?>">黑名单</a></li>
+        <li class="current"><a href="<?php echo $uzdetailUrl.'?id='.$s['id'].'&imsi='.$s['imsi'];?>">账号明细</a></li>
+	</ul>
+</div>
+<div class="h_a"><a href="<?php echo $ulistUrl;?>">返回用户统计</a></div>
+<div class="table_full">
+<dl style="display:-webkit-box">
+	<dd style="padding-left: 4px">
+		<p><span class="name" style="margin-left:10px">IMSI:<?php echo $s['imsi'];?> 累计消耗 <?php echo $consum;?>M 流量</span></p>
+	</dd>
+</dl>
+</div>
+<div class="h_a">
+    <span class="btn2"><span><button type="button" id="extportBtn">导出数据</button></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td >活动ID</td>
+			<td width="220">uuid</td>
+			<td>账号</td>
+			<td>昵称</td>
+			<td width="220">IMEI</td>
+			<td width="100">机型</td>
+			<td>版本</td>
+			<td>系统版本</td>
+			<td>应用名称</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['activity_id'];?></td>
+			<td><?php echo $value['uuid'];?></td>
+			<td><?php echo $value['uname'];?></td>
+			<td><?php echo $value['nickname'];?></td>
+			<td><?php echo $value['imei'];?></td>
+			<td><?php echo $value['model'];?></td>
+			<td><?php echo $value['version'];?></td>
+			<td><?php echo $value['sys_version'];?></td>
+			<td><?php echo $value['client_pkg'] == "gn.com.android.gamehall" ? "游戏大厅" : "艾米游戏";?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<div class="mr10 cc">
+	<form action="<?php echo $uzexportUrl;?>" method="post" id="exportForm">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<input type="hidden" name="id" value="<?php echo $s['id'];?>">
+	<input type="hidden" name="imsi" value="<?php echo $s['imsi'];?>">
+	</form>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#year_month').datetimepicker();
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Freedl_Hd/udetail');
+	});
+	$("#extportBtn").click(function(){
+		$("#exportForm").submit();
+    });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

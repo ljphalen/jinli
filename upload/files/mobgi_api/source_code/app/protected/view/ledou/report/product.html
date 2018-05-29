@@ -1,0 +1,117 @@
+<script type="text/javascript">
+//接收数据
+var data = JSON.parse('{{result}}');
+var url = "{{siteUrl}}ProductReport/product";
+</script>
+<!-- include 'inc' -->
+<div class="colMain">
+    <div class="title"><p class="fl">产品</p></div>
+    <div class="filter">
+        <div class="plugin"><select name='pid' class='choose-select'></select></div>
+        <div class="plugin">
+            <input type="text" class="iText datepicker" name="date" value="">
+        </div> 
+    </div>
+    <div class="main">
+        <div class="chart-title">
+            <span>概况</span>
+            <a class="index type" href="javascript:void(0);" id="index-impressions">展示用户数</a>
+            <a class="index type" href="javascript:void(0);"  id="index-clicks">点击用户数</a>
+            <a class="index type" href="javascript:void(0);"  id="index-start_downloads">开始下载用户数</a>
+            <a class="index type" href="javascript:void(0);"  id="index-finish_downloads">下载完成用户数</a>
+            <a class="index type" href="javascript:void(0);"  id="index-installs">安装用户数</a>
+            <a class="index type" href="javascript:void(0);"  id="index-startup">启动用户数</a>
+            <a class="index type" href="javascript:void(0);"  id="index-register">注册用户数</a>
+            <a class="index type" href="javascript:void(0);"  id="index-pay">付费用户数</a>
+            <a class="index type" href="javascript:void(0);"  id="index-income">收入</a>
+            <a class="fr btn" id="desc" style="cursor:pointer;">说明</a>
+        </div>
+        <div id="hightchart" class="hightchart"></div>
+    </div>
+    <div class="main">
+        <div class="chart-title">
+            <span>各环节转化率</span>
+            <a class="index ctype" href="javascript:void(0);" id="index-clicks_rate">点击率</a>
+            <a class="index ctype" href="javascript:void(0);"  id="index-start_downloads_rate">下载率</a>
+            <a class="index ctype" href="javascript:void(0);"  id="index-finish_downloads_rate">下载完成率</a>
+            <a class="index ctype" href="javascript:void(0);"  id="index-installs_rate">安装率</a>
+            <a class="index ctype" href="javascript:void(0);"  id="index-startup_rate">启动率</a>
+            <a class="index ctype" href="javascript:void(0);"  id="index-register_rate">注册率</a>
+            <a class="index ctype" href="javascript:void(0);"  id="index-ecpm">ecpm</a>
+            <a class="index ctype" href="javascript:void(0);"  id="index-cpc">cpc</a>
+            <a class="index ctype" href="javascript:void(0);"  id="index-arpu">arpu</a>
+            <a class="index ctype" href="javascript:void(0);"  id="index-arppu">arppu</a>
+        </div>
+        <div id="conversionRateChart" class="hightchart"></div>
+    </div>
+</div>
+<div id="desc-content">
+    <table>
+        <tr><td><b>点击率</b></td><td>点击用户数/展示用户数</td></tr>
+        <tr><td><b>下载率</b></td><td>开始下载用户数/点击用户数</td></tr>
+        <tr><td><b>下载完成率</b></td><td>下载完成用户数/开始下载用户数</td></tr>
+        <tr><td><b>安装率</b></td><td>安装用户数/下载完成用户数</td></tr>
+        <tr><td><b>启动率</b></td><td>启动用户数/安装用户数</td></tr>
+        <tr><td><b>注册率</b></td><td>注册用户数/启动用户数</td></tr>
+        <tr><td><b>ecpm</b></td><td>收入/（展示数/1000）</td></tr>
+        <tr><td><b>cpc</b></td><td>收入/点击数</td></tr>
+        <tr><td><b>arpu</b></td><td>收入/新增用户数</td></tr>
+        <tr><td><b>arppu</b></td><td>收入/付费用户数</td></tr>
+    </table>
+</div>
+<script type="text/javascript">
+$(function(){
+    // 日期
+    $('.datepicker').datepicker({
+        minDate:new Date(),
+        dateFormat : "yy-mm-dd",
+        minDate: "2013-01-01",
+        onClose : function (date){
+            var date = {date:date};
+            request(date, data.url, url); // 请求服务器
+        }
+    }).val(data.url.date);
+    // 产品Select
+    var productHtml = "";
+    $.each(data.product, function(pid, pname){
+        productHtml += "<option value='"+pid+"'";
+        if (data.url.pid == pid) {
+            productHtml += " selected "
+        }
+        productHtml += " >"+pname+"</option>";
+    });
+    $(".choose-select").live("change", function(){
+        var pid = {pid : $(this).val() };
+        request(pid, data.url, url);
+    }).append(productHtml).chosen();
+    // 分类
+    $(".type").removeClass('index-sel').live('click', function(){
+        var type = {type : $(this).attr('id')};
+        request(type, data.url, url);
+    });
+    $("#"+data.url.type).addClass('index-sel');
+ // 分类
+    $(".ctype").removeClass('index-sel').live('click', function(){
+        var ctype = {ctype : $(this).attr('id')};
+        request(ctype, data.url, url);
+    });
+    $("#"+data.url.ctype).addClass('index-sel');
+    // 图表
+    var chart_data = makeChartData(data.chart, data.index, 'date');
+    $("#hightchart").empty().createChart({
+        chartType: 'area',
+        categories: chart_data.categories,
+        series : chart_data.series
+    });
+    var conversionChart = makeChartData(data.conversionRateChart, data.conversionIndex, 'date');
+    $("#conversionRateChart").empty().createChart({
+        chartType: 'area',
+        categories: conversionChart.categories,
+        series : conversionChart.series,
+        dataFormat : 2,
+        chartOptions : {
+            tooltip : { valueSuffix: '%' }
+        }
+    });
+});
+</script>

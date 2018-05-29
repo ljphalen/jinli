@@ -1,0 +1,42 @@
+<?php
+$mainfast = sprintf('manifest="/static/localnav/%d.appcache"',$id);
+$localnav_to_appcache = Gionee_Service_Config::getValue('localnav_to_appcache');
+if (empty($localnav_to_appcache)) {
+	$mainfast = '';
+}
+?>
+<!DOCTYPE HTML>
+<html <?php echo $mainfast;?>>
+<head>
+<title><?php echo $title; ?></title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
+<meta name="apple-touch-fullscreen" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+<meta name="format-detection" content="telephone=no"/>
+<meta name="gn-night-mode" content="yes"/>
+<link rel="stylesheet" href="<?php echo $staticResPath;?>/localnav/css/main.min.css?v=<?php echo $version;?>"/>
+</head>
+<body>
+<script>
+	var initData = <?=$initData?>;
+</script>
+<div class="wrap">
+	<div class="card-wrap">
+		<?php
+		foreach ($list as $val) {
+			$tplData['list']     = $val['list'];
+			$tplData['columnId'] = $val['id'];
+			$filename = 'browser/_localnav_'.$val['style'].'.phtml';
+			echo $this->render($filename, $tplData);
+		}
+		?>
+	</div>
+</div>
+<!-- load script start -->
+<script type="text/javascript" src="<?php echo $staticSysPath;?>/lib/zepto/zepto.js?v=<?php echo $version;?>"></script>
+<script type="text/javascript" src="<?php echo $staticResPath;?>/localnav/js/main.min.js?v=<?php echo $version;?>"></script>
+<!-- load script end -->
+</body>
+</html>

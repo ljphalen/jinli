@@ -1,0 +1,60 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li class="current"><a href="<?php echo $listUrl;?>">抽奖记录</a></li>
+	</ul>
+</div>
+	<form action="<?php echo $userListUrl;?>" method="get">
+		<input name="token" type="hidden" value="<?php echo $token;?>" />
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">抽奖活动</th>
+					<td class="td">
+						<select name="cate_id">
+							<option value="0">...所有...</option>
+							<?php if(!empty($category)): foreach ($category as $val):?>
+								<option value="<?php echo $val['id']?>" <?php if($param['cate_id'] == $val['id']) echo 'selected="selected"'; ?>><?php echo $val['title'];?></option>
+							<?php endforeach; endif;?>
+						</select>
+					</td>
+					<th class="th" width="60">奖品名称</th>
+					<td class="td">
+						<input type="text" name="award_name" value="<?php echo $param['award_name'];?>"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac">
+	<span class="btn">
+		<span>
+			<button type="submit">搜 索</button>
+		</span>
+	</span>
+		</div>
+	</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">ID</td>
+			<td>UID</td>
+			<td>奖品名称</td>
+			<td>活动名称</td>
+			<td>积分消耗</td>
+			<td>抽奖时间</td>
+		</tr>
+		<?php foreach($list as $key => $value):?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['uid'];?></td>
+			<td><?php echo !$value['award_id']?'未中奖':$award[$value['award_id']]['award_name'];?></td>
+			<td><?php echo $category[$value['cate_id']]['title'];?></td>
+			<td><?php echo $value['score']?$value['score']:'免费';?></td>
+			<td><b><?php echo date('Y-m-d H:i:s',$value['create_time']);?></b></td>
+		</tr>
+		<?php endforeach; ?>
+	</table>
+</div>
+<div class="mr10 cc"><?php echo $pager;?></div>
+
+<?php echo $this->render("layout/footer.phtml");?>

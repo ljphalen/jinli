@@ -1,0 +1,47 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">游戏列表</a></li>
+		<li class="current"><a>最新消息</a></li>
+	</ul>
+</div>
+<div class="h_a">
+     共<?php echo $total;?>条通知
+</div>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a" style="display:none;">
+	<span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">上线</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">下线</button></span></span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td style="display:none;"><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="80">ID</td>
+			<td>图标</td>
+			<td>标题</td>
+			<td>分类</td>
+			<td>线上/最新</td>
+			<td>最后编辑时间</td>
+			<td>状态</td>
+		</tr>
+<?php foreach($new_versions as $key => $value) {?>
+		<tr class="ct">
+		    <td style="display:none;"><input class="checkbox" name="ids[]" value="<?php echo $value['id'].'|'.$value['game_id'];?>" type="checkbox"></td>
+			<td><?php echo $value['game_id'];?></td>
+			<td><img src="<?php echo $attachPath,$games[$value['game_id']]['img'];?>" style="width:7.2em;height:7.2em"/></td>
+			<td><?php echo $games[$value['game_id']]['name'];?></td>
+			<td><?php echo implode(',' , $category_title[$value['game_id']]);?></td>
+			<td><?php echo $oline_versions[$value['game_id']]['version'].'/'.$value['version'];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['update_time']);?></td>
+			<td><?php echo $value['status'] == 1 ? '上线' : '下线';?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

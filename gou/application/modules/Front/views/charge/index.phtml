@@ -1,0 +1,48 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<body>
+	<div data-role="page" data-theme="no" id="page" class="get-charge">
+	<?php if ($hasheader) {?>
+		<header class="hd">
+			<h1><strong>免费赢话费</strong></h1>
+			<p><a href="/index/index" data-ajax="false"><img src="<?php echo $staticResPath;?>/pic/btn_backhome.png" alt="" /></a></p>
+		</header>
+	<?php }?>
+		<div class="ct">
+			<div class="desc">
+				<dl>
+					<dt><em>你敢抽，我就敢送</em></dt>
+					<dd><s></s><span>抽中后您填写的手机号将收到由金立购发送的中奖确认短信。点击短信链接后输入中奖密语，确认无误后话费奖品将充入您填写的手机号。</span></dd>
+					<dd><s></s><span>确认无误充值到账时间为1个工作日内！</span></dd>
+					
+					<dt><em>抽奖池</em></dt>
+					<dd>
+						<li><img src="<?php echo $staticResPath;?>/pic/pic_jiang.jpg" alt=""></li>
+					</dd>
+				</dl>
+			</div>
+			<form class="form-box" action="<?php echo $fatePostUrl;?>" method="POST">
+				<input type="hidden" name="token" value="<?php echo $token;?>"/>
+				<ul>
+					<li><label for=""><em>手机号：</em></label><input type="text" name="mobile" class="l" value="" /></li>
+					<li><label for=""><em>通关密语：</em></label>
+						<select name="question">
+							<option value="wantgo">你最想去的地方是？</option>
+							<option value="shengri">你的生日是？</option>
+							<option value="chushengdi">你的出生地是？</option>
+						</select>
+						<input type="text" name="answer" class="l" /></li>
+					<li><button data-role="none"><span>确定</span></button></li>
+				</ul>
+			</form>
+			<div class="winners">
+				<ul>
+<?php foreach($fate_logs as $key=>$value) {?>
+					<li><span><em><?php echo substr_replace($value['mobile'], '******', 3, 6);?></em>刚刚抽中了<?php echo $value['price'];?>元话费，手气不错；</span></li>
+<?php }?>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li style="display:none;"><a href="<?php echo $listUrl;?>">积分概况</a></li>
+        <li><a href="<?php echo $pointShopIndexUrl;?>">积分商城</a></li>
+        <li><a href="<?php echo $pointPrizeIndexUrl;?>">积分抽奖</a></li>
+        <li class="current"><a href="<?php echo $presendIndexUrl;?>">人工发放</a></li>
+        <li><a href="<?php echo $pointDescIndexUrl;?>">积分说明管理</a></li>
+	</ul>
+</div>
+<div class="h_a">积分发放</div>
+<form method="post" action="<?php echo $addSendPointPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr">
+			<th class="th">发放数量</th>
+			<td class="td"><input type="text" class="input" name="send_num" value=""></td>
+	    </tr>
+		<tr class="tr">
+			<th class="th">发放原因</th>
+			<td class="td"><input type="text" class="input wc" name="reason" value=""></td>
+		     
+		</tr>
+		<tr class="tr">
+			<th class="th">用户类型</th>
+			<td>
+				<span>
+					<label>
+						<input type="radio" name="userType" value="1" checked onclick ="showContent(1)">账号
+						<input type="radio" name="userType" value="2" onclick ="showContent(2)" >UUID
+					</label>
+				</span>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th" id="th_link">发放账号</th>
+			<td class="td">
+			    <div style="float:left;color:red;">请导入csv文件</div>
+				<div style="float:right;">
+					<iframe src="/Admin/Mall_Goods/import" style="border:none;width:275px;height:50px;"></iframe>
+				</div>
+				<textarea id="sendInputTxt" name="sendInput" style="height:180px;width:100%;"></textarea>
+			    <br/>
+			<span style="color:red">输入账号请用英文“,”区隔。</span>
+			</td>
+		</tr>
+		<tr class="tr" >
+			<th class="th">是否发送消息</th>
+			    <td class="td">
+					<label class="mr20"><input checked name="is_send_msg" value="0" type="radio">否</label>
+					<label class="mr20"><input name="is_send_msg" value="1" type="radio">是</label>
+				</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">保存</button></span></span></div>
+</form>
+<script type="text/javascript">
+//广告表单数据提交
+showContent = function(flag) {
+	if (flag == 1) {
+	 $("#th_link").html('发放账号');
+	} else {
+	 $("#th_link").html('发放UUID');
+	}
+}
+$(document).ready(function(){
+	 showContent(1);
+	 ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Mall_Goods/presendIndex');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

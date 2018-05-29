@@ -1,0 +1,42 @@
+<?php echo $this->render("layout/header2.phtml"); ?>
+<section class="main-content">
+	<header class="header navbar bg-default">
+		<ul class="nav navbar-nav">
+			<li class="active">
+				<a href="javascript:;">文件列表</a>
+			</li>
+		</ul>
+		<div class="btn-group pull-right mg-r-sm">
+			<form id="form1" name="form1" method="post" action="<?php echo $this->baseUrl; ?>" enctype="multipart/form-data">
+				<input type="hidden" name="token" value="<?php echo $token; ?>">
+				<input type="hidden" name="MAX_FILE_SIZE" value="20000000">
+				<input type="file" style="display:inline" id="res_file" name="res_file" class="mr20">
+				<input type="submit" name="sub" class="btn btn-sm btn-primary navbar-btn" value="上传"> <!-- 允许上传的文件格式为：zip -->
+			</form>
+		</div>
+	</header>
+
+	<div class="content-wrap">
+		<div class="row">
+			<div class="col-lg-12">
+				<!-- table content start -->
+				<section class="panel">
+					<header class="panel-heading" style="padding-left:5px;"><strong>已上传的文件</strong></header>
+					<table class="table table-bordered table-striped no-margin">
+						<tr class="hd">
+							<td>文件名</td>
+						</tr>
+						<?php foreach ($files as $key => $value) { ?>
+							<tr class="ct">
+								<td><?php echo $value; ?></td>
+
+							</tr>
+						<?php } ?>
+					</table>
+				</section>
+			</div>
+		</div>
+	</div>
+</section>
+
+<?php echo $this->render("layout/footer.phtml"); ?>

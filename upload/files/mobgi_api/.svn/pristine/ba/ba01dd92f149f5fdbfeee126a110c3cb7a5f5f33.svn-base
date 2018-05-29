@@ -1,0 +1,589 @@
+<script language="javascript">
+function checksubmit(){
+    intime = "{{intime}}";
+    if(intime=="1"){
+        jAlert("生效时间的开始时间前5min到生效时间结束的时间段内不可编辑");
+        return false;
+    }
+    
+    if($("#config_name").val() == ''){
+        jAlert('导量配置名称不能为空');
+        $("#config_name").focus();
+        return false;
+    }
+    if($("#product_id").val()=="")
+    {
+        jAlert("请选择导量产品");
+        return false;
+    }
+    if ($("#appkey").val()==""){
+        jAlert("请选择应用");
+        $("#appkey").focus();
+        return false;
+    }
+    if ($("#channel_id").val()==""){
+        jAlert("请选择渠道");
+        $("#channel_id").focus();
+        return false;
+    }
+    if($("#channel_id").val().length > 30){
+        jAlert("渠道最多只能选择30个");
+        $("#channel_id").focus();
+        return false;
+    }
+    var existPushAd = false;
+    
+    $.ajax({
+        type: "GET",
+        url: "/push/getProductPushAd",
+        data: "product_id="+$("#product_id").val(),
+        dataType: "json",
+        async: false,
+        success: function(data){
+            if(data.exist===0){
+                existPushAd = false;
+            }else if(data.exist === 1){
+                existPushAd = true;
+            }
+        }
+    })
+    
+    if(existPushAd === false){
+        jAlert("请先配置该产品的push广告！");
+        return false;
+    }
+    
+    //初始化上传config_value
+    init_config_value_data();
+    $('form').submit();
+}
+
+function autoPlatform(productid) {
+    ajaxPOST("/reproduct/autoPlatform", {"platform": $("#platform").val()}, function(data) {
+        var length = data.length;
+        str = '<option value=""></option>';
+        for (i=0; i<length; i++)
+        {
+            if_selecte='';
+            if(productid == data[i].id)
+            {
+                if_selecte =  'selected="selected"';
+            }   
+            str += '<option value="'+data[i].id+'" '+if_selecte+'>'+data[i].platform_product_name+'</option>'
+        }
+        $("#product_id").html(str);
+        //重新绑定select的选择组件
+        $("#product_id").removeClass("chzn-done");
+        $("#product_id_chzn").remove();
+        $("#product_id").chosen({});
+    })
+}
+
+$(function(){
+    
+    $("#platform").bind("change",autoPlatform);
+    
+    //应用
+    var Gs = new Categorywidget_sdk({
+        interfaceName: 'Gs',
+        boxId: 'games_box',
+        ComboId: 'games_list',
+        ComboName: 'n2',
+        ComboSaveId: 'appkey',
+        ComboSaveName: 'appkey[]',
+        DataConfig: {text: 'app_name', value: 'appkey'},
+        DataSourceConfig: {
+            CategoryListCombo: '{{siteUrl}}developer/retDeveloperList',
+            CategoryDataUrl: '{{siteUrl}}apps/retDevelopsApp',
+            DataType: 'dev_id'
+        }
+    });
+    //渠道
+    var Cs = new Categorywidget_sdk({
+        interfaceName: 'Cs',
+        boxId: 'channels_box',
+        ComboId: 'channels_list',
+        ComboName: 'n1',
+        ComboSaveId: 'channel_id',
+        ComboSaveName: 'channel_id[]',
+        DataConfig: {text: 'realname', value: 'identifier'},
+        DataSourceConfig: {
+            CategoryListCombo: '{{channelUrl}}sys_groups/getCategoryListCombo',
+            CategoryDataUrl: '{{channelUrl}}channels_in_groups/GetLinkChannels',
+            DataType: 'channels'
+        }
+    });
+    appkey();
+    channel_id();
+    $(".channelsSearch_box_sys_table button:eq(0)").html("屏蔽>>");
+    $(".channelsSearch_box_sys_table button:eq(1)").html("取消屏蔽<<");
+//    $(".channelsSearch_box_sys_table button:eq(2)").html("屏蔽>>");
+//    $(".channelsSearch_box_sys_table button:eq(3)").html("取消屏蔽<<");
+
+    //增加条件
+    function showPopUpTerm(id, tr) {
+        var data = eval('({{condition_conf}})');
+        var formula = {
+                    number:["==","!=",">=","<="],
+                    string:["in","not in"],
+                    all:["==","!=",">=","<=","in","not in"],
+                    equipment:["==","!=","in","not in"],
+                    grep:["in","not in","like"]
+                }
+        var formula_desc = {};        
+        var formula_desc=new Array()
+        formula_desc["=="]="等于";
+        formula_desc["!="]="不等于";
+        formula_desc[">"]="大于";
+        formula_desc[">="]="大于等于";
+        formula_desc["<"]="小于";
+        formula_desc["<="]="小于等于";
+        formula_desc["in"]="包含";
+        formula_desc["not in"]="不包含";
+        
+        var $content = $('<div class="grid"></div>').append($("#addTermPopUp").html());
+        var PopUp = jDialog({
+            width: 450,
+            height: 220,
+            content: $content
+        });
+        
+        if (tr) { //更新时填充数据
+            var opt = "";
+            var pType = tr.children(":eq(0)").attr("systemterm")
+            var ev = tr.find(".blue").text();
+            var termName = "";
+            $.each(data, function(parentType, itemObj){
+                if(pType == parentType ){
+                    $.each(itemObj, function(k, v){
+                        if (ev == v.c_id){
+                            opt += "<option selected value='" + v.c_id + "'>" + v.name + "</option>";
+                            pType = parentType;
+                            termName = v.c_id;
+                        }else{
+                            opt += "<option value='" + v.c_id + "'>" + v.name + "</option>";
+                        }
+                    });
+                }
+                
+            });
+            $content.find("select[name=termName]").html(opt);
+            $content.find("select[name=systemTerm]").val(pType);
+            $content.find("textarea").val(tr.children(":eq(2)").text());
+            setFormula(termName,function(){
+                $content.find("select[name=formula]").val(tr.children(":eq(1)").text());
+            });
+        } else { 
+            var opt = "";
+            var id = $content.find("select[name=systemTerm]").first('option').val();
+            $.each(data[id], function(i, v) {
+                opt += "<option value='" + v.c_id + "'>" + v.name + "</option>";
+            });
+            $content.find("select[name=termName]").html(opt);
+            setFormula();
+        }
+        
+        $content.find("select[name=systemTerm]").change(function() {
+            var id = $(this).val();
+            var opt = "";
+            if (data[id]) {
+                $.each(data[id], function(i, v) {
+                    opt += "<option value='" + v.c_id + "'>" + v.name + "</option>";
+                });
+                $content.find("select[name=termName]").html(opt);
+            } else {
+                $content.find("select[name=termName]").empty();
+            }
+            setFormula($("select[name=termName]").val());
+        });
+        
+        $content.find("select[name=termName]").change(function() {
+            setFormula($(this).val());
+        });
+        
+        function setFormula(v,callback){
+            var v = v || $content.find("select[name=termName]").val();
+            switch(v){
+                case "start_times_today":
+                case "start_times_addup":
+                case "start_days_addup":
+                case "start_days_latest_interval":
+                case "start_days_first_interval":
+                case "app_cumulative_amount":
+                case "cumulative_amount":
+                case "number":
+                    var opt = "";
+                    $.each(formula.number, function(i, v) {
+                        opt += "<option value='" + v + "'>" + formula_desc[v] + "</option>";
+                    });
+                    $content.find("select[name=formula]").html(opt);
+                    break;
+                case "app_version":
+                case "net_type":
+                case "operator":
+                case "time":
+                case "date":
+                case "city":
+                case "province":
+                case "resolution":
+                case "custom_package_name":
+                case "custom_imei_number":
+                    var opt = "";
+                    $.each(formula.string, function(i, v) {
+                        opt += "<option value='" + v + "'>" + formula_desc[v] + "</option>";
+                    });
+                    $content.find("select[name=formula]").html(opt);
+                    break;
+                case "vendors_brand":
+                case "device_brand":
+                case "device_type":
+                case "app_type":
+                
+                    var opt = "";
+                    $.each(formula.string, function(i, v) {
+                        opt += "<option value='" + v + "'>" + formula_desc[v] + "</option>";
+                    });
+                    $content.find("select[name=formula]").html(opt);
+                    break;
+                default: //所有
+                    var opt = "";
+                    $.each(formula.all, function(i, v) {
+                        opt += "<option value='" + v + "'>" + formula_desc[v] + "</option>";
+                    });
+                    $content.find("select[name=formula]").html(opt);
+                    break;
+            }
+            setTextType(v);
+            callback && callback();
+        }
+        
+        function getCheckboxValue(name){
+            $("input[name='"+name+"']").click(function(){
+                            var str="";
+                            $('input[name="'+name+'"]:checked').each(function(){ 
+                                    str+=$(this).val()+",";
+                            })
+                            $("#tj_box_value").val(str.substring(0,str.length-1));
+                        })
+        }
+        
+        function setTextType(v){
+            var v = v || $content.find("select[name=termName]").val();
+            switch(v){
+                case "start_times_today":
+                case "start_times_addup":
+                case "start_days_addup":
+                case "start_days_latest_interval":
+                case "start_days_first_interval":
+                case "app_cumulative_amount":
+                case "cumulative_amount":
+                    $("#textbox").html('<input type="text" id="tj_value" value="'+$("#tj_box_value").val()+'" style="width:320px;height:20px;margin-top:20px">');
+                    break;
+                case "net_type":
+                    $("#textbox").html('WIFI<input name="tj_net_type" type="checkbox" value="wifi"> 2G<input name="tj_net_type" type="checkbox" value="1"> 3G<input name="tj_net_type" type="checkbox" value="2"> 4G<input name="tj_net_type" type="checkbox" value="3"> 其它<input name="tj_net_type" type="checkbox" value="unknow">');
+                    getCheckboxValue("tj_net_type");
+                    var tj=$("#tj_box_value").val();
+                    if(tj!=""){
+                        tjobj=tj.split(",");
+                        var net_type_input=$("input[name=tj_net_type]");
+                        for(var i=0;i<tjobj.length;i++){
+                            if(tjobj[i]=="wifi"){
+                                net_type_input[0].checked=true;
+                            }
+                            if(tjobj[i]=="1"){
+                                net_type_input[1].checked=true;
+                            }
+                            if(tjobj[i]=="2"){
+                                net_type_input[2].checked=true;
+                            }
+                            if(tjobj[i]=="3"){
+                                net_type_input[3].checked=true;
+                            }
+                            if(tjobj[i]=="unknow"){
+                                net_type_input[4].checked=true;
+                            }
+                        }
+                    }
+                    break;
+                case "operator":
+                    $("#textbox").html('中国移动<input name="tj_operator" type="checkbox" value="1" > 中国联通<input name="tj_operator" type="checkbox" value="2"> 中国电信<input name="tj_operator" type="checkbox" value="3"> 其它<input name="tj_operator" type="checkbox" value="4">');
+                    getCheckboxValue("tj_operator");
+                    var tj=$("#tj_box_value").val();
+                    if(tj!=""){
+                        tjobj=tj.split(",");
+                        var net_type_input=$("input[name=tj_operator]");
+                        for(var i=0;i<tjobj.length;i++){
+                            if(tjobj[i]=="1"){
+                                net_type_input[0].checked=true;
+                            }
+                            if(tjobj[i]=="2"){
+                                net_type_input[1].checked=true;
+                            }
+                            if(tjobj[i]=="3"){
+                                net_type_input[2].checked=true;
+                            }
+                            if(tjobj[i]=="4"){
+                                net_type_input[3].checked=true;
+                            }
+                        }
+                    }
+                    break;
+                case "time":
+                    $("#textbox").html('<input type="text"  name="tj_start_time" size=25 class="iText">--<input type="text" name="tj_end_time" size=25 class="iText">');
+                    var tj=$("#tj_box_value").val();
+                    if(tj!=""){
+                        tjobj=tj.split(",");
+                        var net_type_input=$("input[name=tj_operator]");
+                        $("input[name='tj_start_time']").val(tjobj[0].substring(1,tjobj[0].length));
+                        $("input[name='tj_end_time']").val(tjobj[1].substring(0,tjobj[1].length-1))
+                    }
+                    break;
+                case "date":
+                    $("#textbox").html('<input type="text"  name="tj_start_time" size=25 class="iText datepicker">--<input type="text" name="tj_end_time" size=25 class="iText datepicker">');
+                    $('.datepicker').datepicker({
+                        changeMonth:true,
+                        changeYear:true,
+                        minDate:new Date()
+                    });
+                    $('.datepicker').datepicker('option','dateFormat','yy-mm-dd');
+                    $("input[name='tj_end_time']").datepicker('option','minDate',new Date());
+                    var tj=$("#tj_box_value").val();
+                    if(tj!=""){
+                        tjobj=tj.split(",");
+                        var net_type_input=$("input[name=tj_operator]");
+                        $("input[name='tj_start_time']").val(tjobj[0].substring(1,tjobj[0].length));
+                        $("input[name='tj_end_time']").val(tjobj[1].substring(0,tjobj[1].length-1))
+                    }
+                    $("input[name='tj_end_time']").val();
+                    break;
+                case "city":
+                    $("#textbox").html('<select id="city" multiple="multiple" style="width:350px;height:90px;"><option value="北京市">北京市</option><option value="上海市">上海市</option><option value="广州市">广州市</option><option value="深圳市">深圳市</option><option value="杭州市">杭州市</option><option value="厦门市">厦门市</option><option value="成都市">成都市</option><option value="西安市">西安市</option><option value="南京市">南京市</option><option value="沈阳市">沈阳市</option><option value="天津市">天津市</option><option value="宁波市">宁波市</option><option value="济南市">济南市</option><option value="青岛市">青岛市</option><option value="长沙市">长沙市</option><option value="南昌市">南昌市</option><option value="重庆市">重庆市</option><option value="福州市">福州市</option><option value="南宁市">南宁市</option><option value="石家庄市">石家庄市</option><option value="长春市">长春市</option><option value="武汉市">武汉市</option><option value="郑州市">郑州市</option><option value="太原市">太原市</option><option value="哈尔滨市">哈尔滨市</option></select>');
+                    setMuliOptionValue("city");
+                    break;
+                case "province":
+                    $("#textbox").html('<select id="province" multiple="multiple" style="width:350px;height:90px;"><option value="北京市">北京市</option><option value="天津市">天津市</option><option value="重庆市">重庆市</option><option value="上海市">上海市</option><option value="河北省">河北省</option><option value="山西省">山西省</option><option value="辽宁省">辽宁省</option><option value="吉林省">吉林省</option><option value="黑龙江省">黑龙江省</option><option value="江苏省">江苏省</option><option value="浙江省">浙江省</option><option value="安徽省">安徽省</option><option value="福建省">福建省</option><option value="江西省">江西省</option><option value="山东省">山东省</option><option value="河南省">河南省</option><option value="湖北省">湖北省</option><option value="湖南省">湖南省</option><option value="广东省">广东省</option><option value="海南省">海南省</option><option value="四川省">四川省</option><option value="贵州省">贵州省</option><option value="云南省">云南省</option><option value="陕西省">陕西省</option><option value="甘肃省">甘肃省</option><option value="青海省">青海省</option><option value="台湾省">台湾省</option><option value="内蒙古自治区">内蒙古自治区</option><option value="广西壮族自治区">广西壮族自治区</option><option value="宁夏回族自治区">宁夏回族自治区</option><option value="新疆维吾尔自治区">新疆维吾尔自治区</option><option value="西藏自治区">西藏自治区</option><option value="香港特别行政区">香港特别行政区</option><option value="澳门特别行政区">澳门特别行政区</option></select>');
+                    setMuliOptionValue("province");
+                    break;
+//                case "resolution":
+//                    $("#textbox").html('<select id="resolution"><option value="S">微屏</option><option value="M">小屏</option><option value="L">中屏</option><option value="XL">大屏</option></select>');
+//                    $("#resolution").val($("#tj_box_value").val());
+//                    break;
+                case "vendors_brand":
+                    $("#textbox").html('<select id="vendors_brand"  multiple="multiple" style="width:350px;height:90px;"><option value="htc">htc</option><option value="samsung">samsung</option><option value="zte">zte</option><option value="sony">sony</option><option value="lenovo">lenovo</option><option value="lg">lg</option><option value="op">op</option><option value="thl">thl</option><option value="huawei">huawei</option><option value="meizu">meizu</option><option value="motorola">motorola</option><option value="xiaomi">xiaomi</option><option value="bbk">bbk</option><option value="k-touch">k-touch</option><option value="google">google</option><option value="gionee">gionee</option><option value="apple">apple</option><option value="nokia">nokia</option><option value="blackberry">blackberry</option></select>');
+                    setMuliOptionValue("vendors_brand");
+                    break;
+                case "app_type":
+                case "device_type":
+                case "app_version":
+                default: //所有
+                   $("#textbox").html('<textarea id="default_text" style="width:350px;height:60px;">'+$("#tj_box_value").val()+'</textarea>');
+                    break;
+            }
+        }
+        
+        $content.find("#ok").click(function() {
+            var termName = $content.find("select[name=termName]").val();
+            var formula = $content.find("select[name=formula]").val();
+            var formulaCn = $content.find("select[name=formula]").find("option:selected").text();
+            var formulaV = $content.find("textarea").val();
+            var systemTerm = $content.find("select[name=systemTerm]").val();
+            if(systemTerm == "default"){
+                switch(termName){
+                    case "start_times_today":
+                    case "start_times_addup":
+                    case "start_days_addup":
+                    case "start_days_latest_interval":
+                    case "start_days_first_interval":
+                    case "app_cumulative_amount":
+                    case "cumulative_amount":
+                        $("#tj_box_value").val($("#tj_value").val());
+                        var formulaV=$("#tj_box_value").val();
+                        var tempv = parseFloat($("#tj_box_value").val());
+                        if (isNaN(tempv)){
+                            jAlert("条件值必须为数字类型");
+                            return false;
+                        }
+                        break;
+                    case "time"://时间段
+                        var start_time=$("input[name=tj_start_time]").val();
+                        var end_time=$("input[name=tj_end_time]").val();
+                        var reg = /^(\d{1,2}):(\d{1,2})$/;
+                        if(!reg.test(start_time)||!reg.test(end_time)){
+                            alert("时间格式不正确\r\n格式为[时:分]列如20:10");
+                            return false;
+                        }
+                        var times="[";
+                        times+=start_time+",";
+                        times+=end_time;
+                        times+="]";
+                        $("#tj_box_value").val(times);
+                        formulaV=times;
+                        break;
+                    case "date":
+                        var times="[";
+                        times+=$("input[name=tj_start_time]").val()+",";
+                        times+=$("input[name=tj_end_time]").val();
+                        times+="]";
+                        $("#tj_box_value").val(times);
+                        formulaV=times;
+                        break;
+                    case "net_type":
+                        break;
+                    case "operator":
+                        break;
+                    case "resolution": //分辨率
+                        $("#tj_box_value").val($("#default_text").val());
+                        var formulaV = $content.find("textarea").val();
+                        var fv = formulaV;
+                        if(!fv){
+                            jAlert("条件值不能为空");
+                            return false;
+                        }
+                        
+                        //提交前验证分辨率是否符合格式。
+                        var formulavs = formulaV.split(/[,]/);
+                        for(var i = 0, l = formulavs.length; i < l; i++) {
+                            if(formulavs[i] != ''){
+                                var re=/^(\d+)X(\d+)$/g //匹配分辨率的正则表达式
+                                if(!re.test(formulavs[i])){
+                                    jAlert("分辨率格式不正确:" + formulavs[i] + "<br>(输入格式举例“480X800”，多个分辨率以半角英文逗号','分隔如：“480X800,380X200”)")
+                                    return false;
+                                }
+                            }
+                        }
+                        
+                        break;
+                    case "city":
+                        $("#tj_box_value").val($("#city").val());
+                        var formulaV = $content.find("textarea").val();
+                        break;
+                    case "province":
+                        $("#tj_box_value").val($("#province").val());
+                        var formulaV = $content.find("textarea").val();
+                        break;
+                    case "vendors_brand":
+                        $("#tj_box_value").val($("#vendors_brand").val());
+                        var formulaV = $content.find("textarea").val();
+                        break;
+                    case "app_type":
+                    case "app_version":
+                    case "device_type":
+                        //字符串
+                    default: //所有
+                        $("#tj_box_value").val($("#default_text").val());
+                        var formulaV = $content.find("textarea").val();
+                        var fv = formulaV.replace(/\s*/g,"");
+                        if(!fv){
+                            jAlert("条件值不能为空");
+                            return false;
+                        }
+                        //禁止输入换行符/[(\r\n)\n\r]/
+                        var re=/[(\r\n)\n\r]/g //匹配换行符的正则表达式
+                        if(re.test(formulaV)){
+                            jAlert("请不要输入换行符（多个值请以英文半角逗号隔开）")
+                            return false;
+                        }
+                        break;
+                }
+            }else{
+                $("#tj_box_value").val($("#default_text").val());
+                formulaV = $content.find("textarea").val();
+                var tempv = parseFloat(formulaV);
+                if (isNaN(tempv)){
+                    jAlert("条件值必须为数字类型");
+                    return false;
+                }
+            }
+            if (tr) {//更新时填充数据
+                tr.children(":eq(0)").find("p").html('<a style="cursor: pointer" onmouseover="javascript:getConditionCount(this)">'+termName+'</a>');
+                tr.children(":eq(0)").attr("systemTerm", systemTerm);
+                tr.children(":eq(1)").attr("formula",formula);
+                tr.children(":eq(1)").text(formulaCn);
+                tr.children(":eq(2)").text(formulaV);
+                tr.find(".edit").attr("name", systemTerm);
+            } else {
+                var str = '<tr>' +
+                        '<td systemTerm="'+systemTerm+'"><p class="blue"><a style="cursor: pointer" onmouseover="javascript:getConditionCount(this)">' + termName + '</a></p></td>' +
+                        '<td formula="'+formula+'">' + formulaCn + '</td>' +
+                        '<td>' + formulaV + '</td>' +
+                        '<td>' +
+                        '<a title="更新" name="' + systemTerm + '" class="edit" href="javascript:void(0)"></a> | <a title="删除" class="del" href="javascript:void(0)"></a>' +
+                        '</td>' +
+                        '</tr>';
+                $("#termGrid").find("tbody").append(str);
+            }
+            init_config_value_data();
+            if (PopUp) {
+                PopUp.close();
+            }
+        });
+        $content.find(".cancel").click(function() {
+            if (PopUp) {
+                PopUp.close();
+            }
+        });
+        
+    }
+    
+    function setMuliOptionValue(id){
+        var tj=$("#tj_box_value").val();
+        if(tj!=""){
+            tjobj=tj.split(",");
+            option=$("#"+id).find("option")
+            if(option!=''){
+                for(var o=0;o<option.length;o++){
+                    for(var j=0;j<tjobj.length;j++){
+                        if(tjobj[j]==option[o].text){
+                            option[o].selected=true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    $("#addTerm").click(function() {
+        showPopUpTerm();
+    });
+    
+    $("#termGrid").find(".edit").live("click", function() {
+        var tr = $(this).parents("tr");
+        showPopUpTerm($(this).attr("name"), tr);
+    });
+    
+    $("#termGrid").find(".del").live("click", function() {
+        $(this).parents("tr").remove();
+        init_config_value_data();
+    });
+    
+    })
+    
+    //读取条件配置信息为json
+    function init_config_value_data() {
+        var data = {"config_value": []};
+        $("#termGrid").find("tbody").children().each(function() {
+            var obj = {};
+            obj["type"] = $(this).children(":eq(0)").attr("systemTerm");
+            obj["params"] = $(this).children(":eq(0)").text();
+            obj["operate"] = $(this).children(":eq(1)").attr("formula");
+            obj["expected_value"] = $(this).children(":eq(2)").text();
+            data.config_value.push(obj);
+        });
+        if (data.config_value.length != 0) {
+            $("input[name='config_value']").val(obj2str(data)).change();
+        } else {
+            $("input[name='config_value']").val("").change();
+        }
+    }
+    
+    function getConditionCount(thiss){
+        var id=$(thiss).text();
+        ajaxGET("/conditionManages/getConditionInfo","condition_id="+id,function(data){
+            if(data.error==0){
+                $(thiss).attr("title",data.msg.name+"  "+data.msg.count);
+            }else{
+                $(thiss).attr("title",data.msg);
+            }
+        });
+    }
+</script>

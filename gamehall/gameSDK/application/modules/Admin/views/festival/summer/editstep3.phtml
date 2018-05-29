@@ -1,0 +1,276 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<link href="<?php echo $staticPath;?>/js/admin/kindeditor/themes/default/default.css" rel="stylesheet">
+<link rel="stylesheet" href="<?php echo $staticPath;?>/game/assets/css/holiday-task.css" />
+<script type="text/javascript" src="<?php echo $staticPath;?>/game/assets/js/Form.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath;?>/game/assets/js/validate.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath;?>/game/assets/js/holidayTaskPrize.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath;?>/game/assets/js/template/prizeAllocation.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script>
+	var holidayTaskData = <?php echo json_encode($reward);?>;
+	var imgPath = "<?php echo $attachPath; ?>";
+</script>
+
+<style>
+.step2 li{
+    width: 23%;
+}
+.step2 li.line{
+	position: static;
+}
+
+
+</style>
+
+<div class="nav">
+	<ul class="cc">
+       <li class="current"><a href="javascript:;">添加活动</a></li>
+	</ul>
+</div>
+<div class="step step2 mb10">
+	<ul class="cc">
+		<li ><span class="fl"><em></em></span>添加活动</li>
+		<li class="line"></li>
+		<li ><span class="fl"><em></em></span>添加任务</li>
+		<li class="line"></li>
+		<li class="current">添加奖品</li>
+	</ul>
+</div>
+<div id="prizeForm">
+	<table class="holiday-task-border prize-task">
+		<tr>
+			<td class="space-left" rowspan="2">
+				活动配置
+			</td>
+			<td class="space-left" colspan="2">
+				活动名称<input type="test" id="name" value=<?php echo $reward['name'];?> />
+				
+			</td>
+		</tr>
+		<tr>
+			<td  class="space-left"  colspan="2">
+				活动说明<textarea name="editor" style="width: 800px; height: 308px; "><?php echo $reward['descript'];?></textarea>
+			</td>
+		</tr>
+		
+		<?php 
+		for($i = 0; $i < 3; $i++) {
+			$prizeConfig = $reward['prizeConfig'][$i]; 
+		?>
+		<tr>
+			<td class="space-left" rowspan="4">
+				抽奖<?php echo $i+1;?>
+			</td>
+			<td  class="space-left" colspan="2">
+				奖项名称 <input name="prizeName" type="text" value="<?php echo $prizeConfig['prizeName'];?>" />
+			</td>
+		</tr>
+		<tr>
+			<td  class="space-left" colspan="2">
+				奖项描述<input type="text" name="prizeDescript" value="<?php echo $prizeConfig['prizeDescript'];?>" style="width:380px" />
+			</td>
+		</tr>
+		<tr>
+			<td style="width:40%">
+				<table class="remove-border" style="width:100%">
+					<tr><td ><h3>图片</h3></td></tr>
+					<tr>
+						<td>
+							<ul class="uploadImg">
+								<li id="img<?php echo $i;?>">
+									<img src="<?php echo $attachPath.$prizeConfig['poster'];?>" />
+									<input type="hidden" name="poster" value="<?php echo $prizeConfig['poster'];?>">
+								</li>
+							</ul>
+							<iframe name="upload" src="<?php echo $uploadUrl."/?imgId=img{$i}";?>" style="height:50px;width:95%;" frameborder="0" scrolling="no"></iframe>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table class="remove-border">
+					<tr><td><h3>参与条件</h3></td></tr>
+					<tr>
+						<td  class="space-left">
+							<select name="task" value="<?php echo $prizeConfig['task'];?>">
+								<option value="1" <?php if(Activity_Service_SummerHoliday::REWARD_CONDITION_DAILY==$prizeConfig['task'])  echo 'selected';?>>完成每日任务</option>
+								<option value="2" <?php if(Activity_Service_SummerHoliday::REWARD_CONDITION_CONTINUE_FINISHED==$prizeConfig['task'])  echo 'selected';?>>连续完成任务</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div name="taskDay" class="task-day" <?php if(2==$prizeConfig['task'])  echo 'style="display: block;"';?>>
+								连续完成<input type="text" name="continue" value="<?php echo $prizeConfig['continue'];?>" />天
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="space-left" name="news-prize">
+				<div class="add-news-prize">
+					<input name="add" type="button" data-type='<?php echo $i?>' class="but-yellow but-blue" value="添加新奖品" />
+				</div>
+			</td>
+		</tr>
+		<?php } ?>
+	</table>
+	<div class="ok">
+		<input value="提交" id="submit" type="button" class="but-yellow" />
+		<?php
+		if (Activity_Service_SummerHoliday::CFG_APCU_CACHE_TIME) { 
+		?>
+		提交后，配置将在<?php echo Activity_Service_SummerHoliday::CFG_APCU_CACHE_TIME;?>秒内生效
+		<?php
+		} 
+		?>
+	</div>
+</div>
+
+<?php 
+$i = 0;
+foreach ($reward['prize'] as $prize) {
+	$j = 0;
+	foreach ($prize as $prizeItem) {
+?>
+<div js="layer" id="prizeConfig<?php echo $i."-".$j;?>"> 
+	<div title="配置奖品" class="prize-allocation">
+		<table><tbody>
+		<tr> 
+			<td>奖品</td> 
+			<td colspan="2">
+				<select name="type" value=<?php echo $prizeItem['type'];?>> 
+					<option value="1" <?php if(1==$prizeItem['type'])  echo 'selected'; else echo 'disabled="disabled"'; ?>>A券</option>                       
+					<option value="2" <?php if(2==$prizeItem['type'])  echo 'selected'; else echo 'disabled="disabled"'; ?>>积分</option>
+					<option value="3" <?php if(3==$prizeItem['type'])  echo 'selected'; else echo 'disabled="disabled"'; ?>>实体</option>                        
+					<option value="0" <?php if(0==$prizeItem['type'])  echo 'selected'; else echo 'disabled="disabled"'; ?>>最低奖项</option> 			
+				</select>
+				<span data-name="amount" style="display: none;"> 				
+					<input type="text" name="amount" value="<?php echo $prizeItem['amount'];?>" > 			
+					<span data-name="aSecuritiesTitle" class="font-12" style="display: none;">A券 请填写大于0的正整数</span>
+					<span data-name="integralTitle" class="font-12" style="display: none;">积分 请填写大于0的正整数</span> 
+		  		</span> 			
+		  	</td> 		
+		</tr> 			
+		<tr data-name="validityPeriod" style="display: none;"> 		
+			<td>有效期</td> 				
+			<td colspan="2"> 		
+				<input text="text" name="validityPeriod" value="<?php echo $prizeItem['validityPeriod'];?>" >
+				<span class="font-12">天 请填写大于0的正整数</span> 	
+			</td>
+		</tr>
+		<tr data-name="productType" style="display: none;">
+			<td>类型和产品</td> 		
+			<td colspan="2"> 		
+				<select name="leastType" value="<?php echo $prizeItem['leastType'];?>">
+				<option value="1" <?php if(1==$prizeItem['leastType'])  echo 'selected';?>>积分</option>
+				<option value="0" <?php if(0==$prizeItem['leastType'])  echo 'selected';?>>不中</option></select> 					
+				<input type="text" name="integralNumber" value="<?php echo $prizeItem['integralNumber'];?>">
+				<span class="font-12" name="integralNumberTitle"> 积分数量</span> 
+			</td> 
+		</tr> 
+		<tr>
+			<td>奖品名称</td> 
+			<td colspan="2"> 
+			<input name="prizeName" type="text" value="<?php echo $prizeItem['prizeName'];?>" > 
+			<font style="color: red">建议长度不要超过6个中文汉字</font>
+			</td> 			
+		</tr> 		
+		<tr> 				
+			<td>图片</td> 				
+			<td> 					
+			<ul class="uploadImg"> 
+			<li id="AdImg<?php echo $i."-".$j;?>-1"> 
+			<img class="js_form" src="<?php echo $attachPath.$prizeItem['bigPoster'];?>"> 				
+			<input type="hidden" name="bigPoster" value="<?php echo $prizeItem['bigPoster'];?>"> 		
+			</li> 				
+			</ul> 				
+			<p style="clear:both;"> 				
+				<iframe name="upload" src="/Admin/Point_Prize/upload/?imgId=AdImg<?php echo $i."-".$j;?>-1" style="height:80px;width:100%;" frameborder="0" scrolling="no"></iframe> 			
+			</p> 
+			</td> 
+			<td>
+			<ul class="uploadImg"> 
+				<li id="AdImg<?php echo $i."-".$j;?>-2"> 
+					<img class="js_form" src="<?php echo $attachPath.$prizeItem['smallPoster'];?>"> 	
+					<input type="hidden" name="smallPoster" value="<?php echo $prizeItem['smallPoster'];?>"> 	
+				</li>
+			</ul> 					
+			<p style="clear:both;"> 			
+				<iframe name="upload" src="/Admin/Point_Prize/upload/?imgId=AdImg<?php echo $i."-".$j;?>-2" style="height:80px;width:100%;" frameborder="0" scrolling="no"></iframe> 					
+			</p> 				
+			</td> 			
+		</tr> 			
+		<tr data-name="probability" style="display: table-row;">
+		 	<td>中奖概率</td> 
+		 	<td colspan="2"> 
+		 		<input type="text" name="probability" value="<?php echo $prizeItem['probability'];?>" > 
+		 		<font style="color: red">请输入0-1000000之间整数</font>
+		 	</td> 
+		 </tr>
+		 <tr data-name="leastDate" style="display: table-row;">
+		 	<td>发放中最小间隔</td>
+		 	<td colspan="2"> 
+		 		<input name="leastDate" type="text" value="<?php echo $prizeItem['leastDate'];?>"> 
+		 		(秒)
+		 		<font style="color: red">请输入大于等于0的整数</font>
+		 	</td> 
+		 </tr> 			
+		<tr data-name="maxQuantity" style="display: table-row;">
+			<td>最大数量</td>
+			<td colspan="2">
+				<input type="text" name="maxQuantity" value="<?php echo $prizeItem['maxQuantity'];?>"> 
+				<font style="color: red">请输入大于等于0的整数</font>
+			</td> 			
+		</tr> 				
+		</tbody>
+		</table> 		
+		<div data-name="lotteryNumber" class="lottery-number" style="display: block;">抽奖次数达到&nbsp;&nbsp; 			
+			<input text="text" name="lotteryNumber" value="<?php echo $prizeItem['lotteryNumber'];?>">后，才开放此奖品 		
+		</div> 		
+		<input name="ok" type="button" value="完成" class="but-yellow ok"> 
+	</div>
+</div>
+<?php 
+		$j++;
+	}
+	$i++;
+}
+?>
+
+<div id="alert">
+	<p name="msg"></p>
+</div>
+
+<div id="progressbar">
+	<div id="loadIng" style="margin-top:20px">
+		<div class="progress-label"></div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	var backUrl = baseurl+'<?php echo $indexUrl;?>';
+	var ajaxUrl = baseurl+'<?php echo $editPostUrl.'/?id='. $id;?>'; 
+</script>
+
+<script type="text/javascript">
+//广告表单数据提交
+var editor;
+$(document).ready(function(){
+	KindEditor.ready(function(K) {
+	     K.token = '<?php echo $token;?>';
+	        editor = K.create('textarea[name="editor"]', {
+	        resizeType : 1,
+	        allowPreviewEmoticons : false,
+	        allowImageUpload : true,
+	        uploadJson : '<?php echo $uploadImgUrl;?>',
+	        items : EDITOR_ITEMS
+	   });
+     });
+	 
+})
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,44 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $listUrl;?>">vip图标列表</a></li>
+	    <li class="current"><a href="javascript:;">编辑vip图标</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑vip图标</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="vip" value="<?php echo $info['vip'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">vip等级(<span style="color: red">*</span>)</th>
+			<td class="td">Vip<?php echo $value;?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图片(<span style="color: red">*</span>)</th>
+			<td class="td">
+                <ul class="uploadImg">
+					<li id="img">
+						<img src="<?php echo $attachPath,$info['img'];?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>">
+					</li>
+				</ul>
+                <p style="clear:both;">
+	                <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=img';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $listUrl;?>');
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,32 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class=""><a href="<?php echo $winnerUrl; ?>">转盘中奖列表</a></li>
+			<li class="current"><a href="<?php echo $prizelistUrl; ?>">夺宝中奖列表</a></li>
+		</ul>
+	</div>
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+				<th class="th">用户名</th>
+				<th class="th">奖品ID</th>
+				<th class="th">获得金币数</th>
+				<th class="th">中奖时间</th>
+			</tr>
+			<?php foreach ($dataList as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['id'];?></td>
+					<td class="td" align="left"><?=$v['username'];?></td>
+					<td class="td"><?php echo $v['fk_earn_id']; ?></td>
+					<td class="td"><?php echo $v['affected_score'] ?></td>
+					<td class="td"><?php echo date('Y-m-d H:i:s', $v['add_time']); ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

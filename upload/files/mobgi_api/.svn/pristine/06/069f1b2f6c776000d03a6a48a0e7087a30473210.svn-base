@@ -1,0 +1,87 @@
+<script type="text/javascript">
+//接收数据
+var data = JSON.parse('{{result}}');
+var url = "{{siteUrl}}AppReport/app";
+</script>
+<!-- include 'inc' -->
+<div class="colMain">
+    <div class="title">
+        <p class="fl">应用</p>
+    </div>
+    <div class="filter">
+        <div class="plugin">
+            <div class="ta_date" id="div_date">
+                 <span class="date_title" id="date"></span>
+                 <a class="opt_sel" id="input_trigger" href="#"><i class="i_orderd"></i></a>
+            </div>
+        </div> 
+    </div>
+    <div class="main">
+        <div class="chart-title">
+            <span>概况</span>
+            <a class="index" href="javascript:void(0);" id="index-all">总况</a>
+            <a class="index" href="javascript:void(0);" id="index-active">活跃用户数</a>
+            <a class="index" href="javascript:void(0);"  id="index-startup">启动会话数</a>
+            <a class="index" href="javascript:void(0);"  id="index-effective">有效用户数</a>
+            <a class="index" href="javascript:void(0);"  id="index-ad_arrived">广告到达用户数</a>
+            <a class="index" href="javascript:void(0);"  id="index-register">注册数</a>
+            <a class="fr btn" id="desc" style="cursor:pointer;">说明</a>
+        </div>
+        <div id="hightchart" class="hightchart"></div>
+    </div>
+    <div class="main">
+        <div class="chart-title">
+            <span>有效转化率/填充率</span>
+        </div>
+        <div id="conversionRateChart" class="hightchart"></div>
+    </div>
+</div>
+<div id="desc-content">
+    <table>
+        <tr><td><b>活跃用户数</b></td><td>按广告宿主启动数去重eventtype=start_vector_app</td></tr>
+        <tr><td><b>启动会话数</b></td><td>按广告请求次数eventtype=start_vector_app</td></tr>
+        <tr><td><b>有效用户数</b></td><td>按广告请求用户数去重eventtype=requests</td></tr>
+        <tr><td><b>广告达到用户数</b></td><td>按广告展示用户数去重eventtype=impressions</td></tr>
+        <tr><td><b>注册数</b></td><td>广告产品的注册数</td></tr>
+    </table>
+</div>
+<script type="text/javascript">
+$(function(){
+    // 日期
+    var dateRange = new pickerDateRange('date', {
+        theme : 'ta', // 日期选择器TA主题
+        isTodayValid : 1,
+        startDate : data.url.startDate,
+        endDate : data.url.endDate,
+        monthRangeMax : 3,
+        minValidDate : 1379174400,
+        success : function (dateObj){
+            var date = {startDate:dateObj.startDate, endDate:dateObj.endDate};
+            request(date, data.url, url); // 请求服务器
+        }
+    });
+    // 分类
+    $(".index").removeClass('index-sel').live('click', function(){
+        var type = {type : $(this).attr('id')};
+        request(type, data.url, url);
+    });
+    $("#"+data.url.type).addClass('index-sel');
+    // 图表
+    var chart_data = makeChartData(data.chart, data.index, 'date');
+    $("#hightchart").empty().createChart({
+        chartType: 'area',
+        categories: chart_data.categories,
+        series : chart_data.series
+    });
+    var conversionChart = makeChartData(data.chart, data.conversionIndex, 'date');
+    $("#conversionRateChart").empty().createChart({
+        chartType: 'line',
+        categories: conversionChart.categories,
+        series : conversionChart.series,
+        dataFormat : 2,
+        chartOptions : {
+            tooltip : { valueSuffix: '%' }
+        }
+    });
+});
+</script>

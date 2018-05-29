@@ -1,0 +1,76 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">提现日志</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+			<th class="th">用户ID</th>
+			<td class="td"><input class="input wb" type="text" name="user_id" value="<?php echo $param['user_id'];?>"></td>
+			<th class="th">支付宝账号</th>
+			<td class="td"><input class="input wb" type="text" name="alipay" value="<?php echo $param['alipay'];?>"></td>
+		</tr>
+		<tr class="tr">
+			
+		</tr>
+		<tr class="tr">
+			<th class="th">提现时间</th>
+			<td class="td">
+			<input class="input" type="text" maxlength="30" id="start_time" name="start_time" value="<?php echo $param['start_time'];?>">
+			<input class="input" type="text" maxlength="30" id="end_time" name="end_time" value="<?php echo $param['end_time'];?>">
+			</td>
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+                <option  value="0">所有状态</option>
+				<option <?php if($param['status'] == 2) echo 'selected';?> value="2">成功</option>
+				<option <?php if($param['status'] == 1) echo 'selected';?> value="1">失败</option>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span><span style="float:left;">当前日志总数：<?php echo $total;?></span></div>
+
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">用户ID</td>
+			<td>支付宝账号</td>
+			<td>提现金额</td>
+			<td>积分</td>
+			<td>提现时间</td>
+			<td>提现状态</td>
+		</tr>
+<?php foreach($logs as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['user_id'];?></td>
+			<td><?php echo $value['alipay'];?></td>
+			<td><?php echo $value['money'];?></td>
+			<td><?php echo $value['point'];?></td>
+            <td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+			<td><?php echo $value['status'] ? '成功' : '失败';?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/admin/highcharts.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#start_time").datepicker({
+				dateFormat : 'yy-mm-dd'
+	});
+	$("#end_time").datepicker({
+		dateFormat : 'yy-mm-dd'
+});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

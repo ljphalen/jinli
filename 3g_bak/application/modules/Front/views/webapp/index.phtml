@@ -1,0 +1,292 @@
+<!DOCTYPE HTML>
+<?php if($cache) {?>
+<html manifest="/cache?cn=<?php echo $cn;?>">
+<?php } else {?>
+<html>
+<?php }?>
+<head>
+	<meta charset="utf-8">
+	<title><?php //echo $pageTitle ?></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<link rel="stylesheet" href="<?php echo $staticResPath;?>/app/v1/assets/css/gnapp.css?v=<?php echo $version;?>" /></head>		
+</head>
+<body>
+<!-- 页面加载状态Loading START -->
+<section id="loading" class="loading none">
+    <div class="loading_box pop_08">
+        <div class="con">
+            <p>为您全力加载中</p>
+            <p class="progressBar play" id="progressBar">
+            	<i></i><i></i><i></i><i></i><i></i><i></i>
+            </p>
+        </div>
+    </div>
+</section>
+<!-- 页面加载状态Loading END -->
+
+<!-- 首页 START -->
+<section id="index" class="page-tile none">
+	<header id="index-header">
+		<div class="topbar">
+			<div class="topbar-left">
+<!-- 				<a class="index-top-addlink btn" title="添加网址" id="gnMenu">
+					<i class="icon-addr"></i> 添加网址
+				</a> -->
+				<a class="index-top-bookmark" title="从书签添加" id="gnMenu">
+					<i class="icon-star"></i> <span>从书签添加</span>
+				</a>
+			</div>
+			<div class="from" id="index-more-keywords">
+				<span class="input" type="search" id="index-search-words">轻应用名称</span>
+				<a class="index-ico-search" id="index-search-btn" title="搜索"></a>
+			</div>
+		</div>
+	</header>
+	
+	<!-- 一级页面导航 START -->
+	<section id="app-menu">
+		<div class="app-menu-box"></div>
+	</section>
+	<!-- 一级页面导航 END -->
+
+	<!-- 推荐页面广告 START -->
+	<section id="app-banner">
+		<div class="app-banner-box"></div>
+		<div class="app-banner-line"></div>
+	</section>
+	<!-- 推荐页面广告 END -->
+
+	<!-- 应用列表 START -->
+	<section id="app-list">
+		<div class="app-list-box">
+			<div class="app-list J_app_list"></div>
+		</div>
+	</section>
+	<!-- 应用列表 END -->
+
+</section>
+<!-- 首页 END -->
+
+<!-- 分类详情 START -->
+<section id="app-cdetail-page" class="page-tile none">
+	<section id="app-top-back">
+		<div class="m-nav">
+			<section><a class="back" href="javascript:history.back(-1)"><span>返回</span></a></section>
+			<section><span class="J_backNavTitle"></span></section>
+			<section><a href="#~loop:svt=search" class="btn btn-search">搜索</a></section>
+		</div>
+	</section>
+	<section id="app-list">
+		<div class="app-list-box">
+			<div class="app-list J_app_list"></div>
+		</div>
+	</section>
+</section>
+<!-- 分类详情 END -->
+
+<!-- 专题列表 START -->
+<section id="app-topic-list" class="page-tile none">
+	<section id="app-top-back">
+		<div class="m-nav">
+			<section><a class="back" href="javascript:history.back(-1)"><span>返回</span></a></section>
+			<section><span class="J_backNavTitle"></span></section>
+			<section><a href="#~loop:svt=search" class="btn btn-search">搜索</a></section>
+		</div>
+	</section>
+	<section id="app-list">
+		<div class="app-list-box">
+			<div class="app-list J_app_list"></div>
+		</div>
+	</section>
+</section>
+<!-- 专题列表 END -->
+
+<!-- 专题详情 START -->
+<section id="app-topic-page" class="page-tile none">
+	<section id="app-top-back">
+		<div class="m-nav">
+			<section><a class="back" href="javascript:history.back(-1)"><span>返回</span></a></section>
+			<section><span class="J_backNavTitle"></span></section>
+			<section><a href="#~loop:svt=search" class="btn btn-search">搜索</a></section>
+		</div>
+	</section>
+	<section id="app-topic-box"></section>
+	<section id="app-list">
+		<div class="app-list-box">
+			<div class="app-list J_app_list"></div>
+		</div>
+	</section>
+</section>
+<!-- 专题详情 END -->
+
+<!-- 搜索 START -->
+<section id="app-search-page" class="page-tile none">
+	<section id="app-top-back">
+		<div class="m-nav">
+			<section><a class="back" href="javascript:history.back(-1)"><span>返回</span></a></section>
+			<section><span class="J_backNavTitle">搜索</span></section>
+		</div>
+	</section>
+	<section id="app-search-box">
+		<div class="app-search-box">
+			<form action="" method="post" id="form-search">
+				<input class="input-search" type="text" name="search" value="" />
+				<input class="input-search-btn" type="button" name="" />
+			</form>
+		</div>
+		<div id="pSearchTip" class="search-tip none">请输入搜索关键词</div>
+		<div id="pSearchNoData" class="nodata-txt none">抱歉!没找到您想要的结果，再来<span>试试手气</span>吧!</div>
+		<div id="pSearch1Words" class="nodata-txt none">关键字不能少于<span>两个</span>哦!</div>
+		<div class="app-search-hots">
+<!-- 			<ul>
+				<li><a href="#">广告入口入口入口</a></li>
+				<li><a href="#">广告入口</a></li>
+				<li><a href="#">广告入口入口</a></li>
+				<li><a href="#">广告入口</a></li>
+				<li><a href="#">广告入口</a></li>
+				<li><a href="#">广告入口入口</a></li>
+				<li><a href="#">广告入口</a></li>
+				<li><a href="#">广告入口</a></li>
+			</ul> -->
+		</div>
+	</section>
+	<section id="app-list" class="clearfix">
+		<div class="app-list-box">
+			<div class="app-list J_app_list"></div>
+		</div>
+	</section>
+</section>
+<!-- 搜索 END -->
+
+<!-- 搜索结果 START -->
+<section id="app-result-page" class="page-tile none">
+	<section id="app-top-back">
+		<div class="m-nav">
+			<section><a class="back" href="javascript:history.back(-1)"><span>返回</span></a></section>
+			<section><span>搜索结果</span></section>
+			<!-- <section><a class="btn btn-search">搜索</a></section> -->
+		</div>
+	</section>
+<!-- 	<section id="app-search-box">
+		<div class="app-search-box">
+			<input class="input-search" type="text" name="search" value="" placeholder="购物" />
+			<input class="input-search-btn" type="button" name="" />
+		</div>
+	</section> -->
+	<section id="app-list" class="clearfix">
+
+		<div class="app-list-box">
+			<div class="app-list J_app_list"></div>
+		</div>
+	</section>
+</section>
+<!-- 搜索结果 END -->
+
+<!-- 内容区域 END -->
+<!--*********************************************下面是页面模板 **************************************-->
+<!-- 推荐应用模板 -->
+<script id="J_itemView" type="text/template">
+	<section class="item-side">
+		<% if (status == 1) { %>
+			<div class="app-item-bton button"><span data-link="<%= link %>" data-appName="<%= name %>" data-appId="<%= id %>" data-addUrl="<%= addUrl %>" class="btn had-btn">已添加</span></div>
+		<% } else if (status == 0) { %>
+			<div class="app-item-bton button"><span data-link="<%= link %>" data-appName="<%= name %>" data-appId="<%= id %>" data-addUrl="<%= addUrl %>" class="btn add-btn">添加</span></div>
+		<% } else if (status == 200) { %>
+			<div class="app-item-bton button"><span data-link="<%= link %>" data-appName="<%= name %>" data-appId="<%= id %>" data-addUrl="<%= addUrl %>" class="open-arrow">打开</span></div>
+		<% } %>	
+	</section>
+	<section class="item-cont">
+        <dl class="clearfix">
+            <dt class="item-icon"><img class="lazyload" src="<%= no_img %>" data-src="<%= img %>" alt="" /></dt>
+            <dd class="item-title"><%= name %> <span class="app-item-type">| <%= appType %></span> <% if (is_new == '1') { %><span class="app-item-new">new</span><% } %></dd>
+            <dd class="item-star">
+                <span class="score-star score<%= star %>">
+                    <span class="star1"></span>
+                    <span class="star2"></span>
+                    <span class="star3"></span>
+                    <span class="star4"></span>
+                    <span class="star5"></span>
+                </span>
+            </dd>
+            <dd class="item-text"><%= descrip %></dd>
+        </dl>
+	</section>
+</script>
+<!-- 应用分类模板 -->
+<script id="J_appCateView" type="text/template">
+	<a onclick="_hmt.push(['_trackEvent','轻应用Webapp','分类栏目','分类－<%= name %>'])" href="#<%= link %>">
+	<div class="pic"><img class="lazyload" src="<%= no_img %>" data-src="<%= img %>" alt="" /></div>
+	<div class="txt">
+		<div id="cate-id-<%= id %>"><%= name %></div>
+		<div><%= descrip %></div>
+	</div>
+	</a>
+</script>
+<!-- 专题列表模板 -->
+<script id="J_topicView" type="text/template">
+	<section class="item-side">
+		<div class="app-item-bton button"><span onclick="_hmt.push(['_trackEvent','轻应用Webapp','专题栏目','专题－<%= name %>'])" data-link="#~loop:svt=topic/id/<%= id %>" data-appId="<%= id %>" class="open-arrow">打开</span></div>
+	</section>
+	<section class="item-cont">
+        <dl class="clearfix">
+            <dt class="item-icon"><img class="lazyload" src="<%= no_img %>" data-src="<%= img %>" alt="" /></dt>
+            <dd class="item-title"><%= name %></dd>
+        </dl>
+	</section>
+</script>
+<!-- 专题列表模板 -->
+<!-- 返回导航头部 -->
+<script id="J_backNavView" type="text/template">
+	<div class="m-nav">
+		<section><a class="back" href="#~loop:svt=index/tab/category"><span>返回</span></a></section>
+		<section><span id="J_backNavTitle"><%= cateName %></span></section>
+		<section></section>
+	</div>
+</script>
+<!-- 菜单导航模板 -->
+<script id="J_tabMenuView" type="text/template">
+	<ul class="in-tabs" id="app-tabs">
+		<li class="app-nav-item" onclick="_hmt.push(['_trackEvent','轻应用Webapp','导航栏目','推荐'])" data-link="#~loop:svt=index/tab/recommend" data-tid="1" data-type="url" data-target="recommend">
+			<i class="app-menu-txt">推荐</i>
+		</li>
+		<li class="app-nav-item" onclick="_hmt.push(['_trackEvent','轻应用Webapp','导航栏目','分类'])" data-link="#~loop:svt=index/tab/category" data-tid="2" data-type="url" data-target="category">
+			<i class="app-menu-txt">分类</i>
+		</li>
+		<li class="app-nav-item" onclick="_hmt.push(['_trackEvent','轻应用Webapp','导航栏目','排行'])" data-link="#~loop:svt=index/tab/rank" data-tid="3" data-type="url" data-target="rank">
+			<i class="app-menu-txt">排行</i>
+		</li>
+		<li class="app-nav-item" onclick="_hmt.push(['_trackEvent','轻应用Webapp','导航栏目','新品'])" data-link="#~loop:svt=index/tab/news" data-tid="4" data-type="url" data-target="news">
+			<i class="app-menu-txt">新品</i>
+		</li>
+	</ul>
+</script>
+
+<script id="J_slideView" type="text/template">
+	<div class="ui-slider" id="J_full_slider3">
+		<div class="ui-slider-wrap">
+			<div class="ui-slider-content">
+				<ul class="ui-slider-pic">
+					<% _.each(ads,function(val){ %>
+					<li>
+						<a href="<%= val['link'] %>" data-appId="<%= val['id'] %>"><img class="lazyload" src="<?php echo $staticResPath; ?>/app/v1/assets/img/blank.gif" data-src="<%= val['img'] %>" /></a>
+					</li>
+					<% }) %>
+				</ul>
+			</div>
+			<div class="ui-slider-handle ui-slider-handle-circle">
+				<% _.each(ads,function(val){ %>
+					<span></span>
+				<% }) %>
+			</div>
+		</div>
+	</div>
+</script>
+<script type="text/javascript">var token = '<?php echo $token;?>';</script>
+<script src="<?php echo $staticSysPath;?>/icat/1.1.5/icat.js?v=<?php echo $version;?>"></script>
+<script src="<?php echo $staticResPath;?>/app/v1/assets/js/gnapp.js?v=<?php echo $version;?>"></script>
+<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

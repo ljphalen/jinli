@@ -1,0 +1,183 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">游戏列表</a></li>
+    <li class="current"><a href="javascript:;">编辑游戏</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑游戏</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<input name="link" value="<?php echo $info['link'];?>" type="hidden" />
+<input name="company" value="<?php echo $info['company'];?>" type="hidden" />
+<input name="language" value="<?php echo $info['language'];?>" type="hidden" />
+<input name="version" value="<?php echo $info['version'];?>" type="hidden" />
+<input name="img" value="<?php echo $info['img'];?>" type="hidden" />
+<input name="descrip" value="<?php echo $info['descrip'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">名称</th>
+			<td class="td"><input type="text" class="input wc" name="name" value="<?php echo $info['name'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">简述</th>
+			<td class="td"><input type="text" class="input wc" name="resume" value="<?php echo $info['resume'];?>"></td>
+		</tr>
+			<th class="th">下载地址</th>
+			<td class="td"><?php echo $resource_games['link'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">公司</th>
+			<td class="td"><?php echo $resource_games['company'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">语言</th>
+			<td class="td"><?php echo $resource_games['language'];?></td>
+		</tr>
+		<tr class="tr" style="display:none;">
+			<th class="th">资费</th>
+			<td class="td">
+			   <select name="price">
+			   <option value="0">全部</option>
+				<?php foreach($prices as $key=>$value) { ?>
+				<option value="<?php echo $value['id'];?>"<?php if($info['price'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['name'];?></option>
+				<?php }?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">版本</th>
+			<td class="td"><?php echo $resource_games['version'];?></td>
+		</tr>
+		<tr class="tr" style="display:none;">
+			<th class="th">是否推荐</th>
+			<td class="td">
+				<label class="mr20"><input <?php if($resource_games['recommend'] == 1) echo 'checked';?>   name="recommend" value="1" type="radio">是</label>
+				<label class="mr20"><input <?php if($resource_games['recommend'] == 0) echo 'checked';?>   name="recommend" value="0" type="radio">否</label>
+            </td>
+		</tr>
+		<tr class="tr">
+			<th class="th">大小</th>
+			<td class="td"><input type="text" name="size" class="input" value="<?php echo $resource_games['size'];?>">M</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">系统版本</th>
+			<td class="td"><?php echo 'Android'.$sys_version[$resource_games['sys_version']];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">最小分辨率</th>
+			<td class="td"><?php echo $resolution[$resource_games['min_resolution']];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">最大分辨率</th>
+			<td class="td"><?php echo $resolution[$resource_games['max_resolution']];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">包名</th>
+			<td class="td"><?php echo $resource_games['package'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">资费</th>
+			<td class="td"><?php echo $price[$resource_games['price']];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">分类</th>
+			<td class="td">
+				<select name="category_id">
+				<?php foreach($categorys as $key=>$value) { 
+				?>
+					<option value="<?php echo $value['id'];?>"<?php if($info['category_id'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['title'];?></option>
+				<?php }?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">专题</th>
+			<td class="td">
+			<?php foreach($subjects as $key=>$value) {?>
+			<label class="mr20"><input type="checkbox" <?php if (in_array($value['id'], $subject_ids)) echo 'checked';?> name="subject[]" value="<?php echo $value['id'];?>"><?php echo $value['title'];?></label>
+			<?php }?>			
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图标</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="Img">
+						<img src="<?php echo $attachPath.$info['img'];?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				<select name="status" class="wa">
+                	<option value="1" <?php if($info['status'] == 1) echo 'selected';?>>开启</option>
+                	<option value="0" <?php if($info['status'] == 0) echo 'selected';?>>关闭</option>
+            	</select>
+            </td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏预览</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg">
+					<?php foreach($resource_imgs as $key=>$value) {?>
+						<img src="<?php echo $attachPath,$value['img'];?>"/>
+					<?php }?>
+					</li>
+				</ul>	
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">内容</th>
+			<td class="td"><textarea style="width: 800px; height: 500px" class="textarea" name="descrip" readonly="readonly"><?php echo $resource_games['descrip'];?></textarea>
+			</td>
+		</tr>             
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//游戏表单数据提交
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Game/index?s=1');
+	});
+
+	var imgc = 0;
+	addupload  = function() {
+		var al = $('<ul class="uploadImg"><li id="Img'+imgc+'"><img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/><input type="hidden" name="simg['+imgc+']" value=""></li></ul><p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>'+imgc+'" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>');
+		$('#imgs').append(al);
+		imgc++;
+	}
+	deleteImg = function(url, elid, e) {
+		showConfirm("确认删除该条信息？", function() {
+			$.ajax({
+						url : url,
+						type : 'POST',
+						dataType : 'json',
+						data : 'token='+token,
+						success : function(ret) {
+							if (ret.success) {
+								$('#'+elid).remove();
+							} else {
+								showError('', ret.msg);
+							}
+						}
+					});
+		}, e);
+	}
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

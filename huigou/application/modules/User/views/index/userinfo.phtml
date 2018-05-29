@@ -1,0 +1,63 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div id="page">
+		<header class="hd">
+			<h2>基本信息</h2>
+			<div class="back-page">
+				<a href="<?php echo $webroot,$indexUrl;?>"><img src="<?php echo $staticResPath;?>/pic/btn_backPage.png" alt="" /></a>
+			</div>
+		</header>
+		
+		<article class="ac">
+			<div class="form-box long-label">
+				<form class="form-box" method="post" action="<?php echo $webroot.$userinfoPostUrl; ?>" id="editForm">
+				<input type="hidden" name="token" value="<?php echo $token?>"/>
+					<ul>
+						<li>
+							<label for="">用户名：</label>
+							<input type="text" name="realname" value="<?php echo $user_info['realname']?>" />
+						</li>
+                        <li>
+							<label for="">性 别：</label>
+							<input for="man" type="radio" name="sex" value="2" id="man" <?php echo $user_info['sex'] == 2 ? 'checked=checked':'' ;?> /> 男
+                            <input for="woman" type="radio" name="sex" value="1" id="woman" <?php echo $user_info['sex'] == 1 ? 'checked=checked':'' ;?>/> 女
+						</li>
+                        <li>
+							<label for="">出生日月：</label>
+                            年 <span class="select">
+								<select name="year" id="">
+								<?php foreach($year_list as $key=>$value) {?>
+									<option value="<?php echo $value;?>" <?php echo $year == $value ? 'selected': '' ;?>><?php echo $value;?></option>
+								<?php }?>
+								</select>
+	                            <span></span>
+                            </span><br/>
+							月  <span class="select">
+								<select name="month" id="">
+								<?php foreach($month_list as $key=>$value) {?>
+									<option value="<?php echo $value;?>" <?php echo $month == $value ? 'selected': '' ;?>><?php echo $value;?></option>
+								<?php }?>
+								</select>
+	                            <span></span>
+                            </span><br/>
+                            日  <span class="select">
+								<select name="day" id="">
+								<?php foreach($day_list as $key=>$value) {?>
+									<option value="<?php echo $value;?>" <?php echo $day == $value ? 'selected': '' ;?>><?php echo $value;?></option>
+								<?php }?>
+								</select>
+	                            <span></span>
+                            </span>
+						</li>
+						<li class="btn"><button>保存</button></li>
+					</ul>
+				</form>
+			</div>
+		</article>
+	</div>
+	<div class="JS-dbMask"></div>
+    <div class="dialog-box J_dialogBox">
+    	<p></p>
+    	<div class="btn"><span>确定</span></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="edit_form">
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr>
+			<th>问题</th>
+			<td>
+				<input type="text" style="width:250px;" class="easyui-textbox" name="title" required="true" value="<?=$info['title']?>">
+			</td>
+		</tr>
+		<tr>
+			<th>内容</th>
+			<td>
+				<input name="content" class="easyui-textbox" data-options="multiline:true" style="width:250px;height:100px" required="true" value="<?=$info['content']?>">
+			</td>
+		</tr>
+		<tr>
+			<th>标签</th>
+			<td>
+				<input type="text" style="width:250px;" class="easyui-textbox" name="faq_tag" required="true" value="<?=$info['faq_tag']?>">&nbsp;(多个标签用#分割)
+			</td>
+		</tr>
+		<tr>
+			<th>渠道</th>
+			<td>
+				<?php
+				foreach ($types as $k => $name):
+					$checked = $info['type'] == $k ? 'checked="checked"' : '';
+					?>
+					<input type="radio" name="type" class="input" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+				<?php endforeach; ?>
+			</td>
+		</tr>
+		<tr>
+			<th>排序</th>
+			<td>
+				<input type="text" name="sort" class="easyui-numberspinner" style="width:80px" value="<?php echo $info['sort']; ?>">
+			</td>
+		</tr>
+	</table>
+</form>

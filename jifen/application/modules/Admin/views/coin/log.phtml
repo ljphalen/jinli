@@ -1,0 +1,50 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li class="current"><a href="<?php echo $logUrl;?>">流通日志</a></li>
+    	<li><a href="<?php echo $freezelogUrl;?>">冻结日志</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	<tr class="tr">
+			<th class="th">会员ID</th>
+			<td class="td"><input class="input wb" type="text" name="out_uid" value="<?php echo $param['out_uid'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">APPID</th>
+			<td class="td"><input class="input wb" type="text" name="appid" value="<?php echo $param['appid'];?>"></td>
+		</tr>		
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="280">UID</td>
+			<td>APPID</td>
+			<td>数量</td>
+			<td>类型</td>
+			<td width="400">收入支出原因</td>					
+			<td>时间</td>
+		</tr>
+<?php foreach($logs as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['out_uid'];?></td>
+			<td><?php echo $value['appid'];?></td>
+			<td><?php echo $value['coin'];?></td>
+			<td><?php echo $value['coin_type'] == 1 ? '金币' : '银币';?></td>
+			<td><?php echo $value['msg'];?></td>
+			<td><?php echo date('Y-m-d H:i:s',$value['create_time']);?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

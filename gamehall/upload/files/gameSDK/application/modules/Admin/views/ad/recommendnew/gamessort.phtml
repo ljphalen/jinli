@@ -1,0 +1,60 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li class="current"><a href="javascript:;">添加游戏</a></li>
+	</ul>
+</div>
+<form id="batchForm" action="<?php echo $gamesSortPostUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="id" value="<?php echo $id;?>" type="hidden" />
+
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">状态(<span style="color: red">*</span>)</th>
+			<td class="td">
+			   <select name="status" class="input">
+                	<option <?php if($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+                </select>
+            </td>
+		</tr>
+    </table>
+</div>
+
+<div class="h_a">
+	<span>共<?php echo count($list);?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="30">排序</td>
+			<td width="50">图标</td>
+			<td width="50">标题</td>
+			<td width="30">分类</td>
+			<td width="30">大小</td>
+		</tr>
+		<?php foreach($list as $key => $value) {?>
+		  <tr class="ct">
+			<td><input type="text" class="input" style="width:30px" name="sort[<?php echo $value['game_id'];?>]" value="<?php echo $value['sort'];?>"></td>
+			<td><img src="<?php echo $value['gameIcon']?>" style="width:70px;height:70px;"/></td>
+			<td><?php echo $value['gameName'];?></td>
+			<td><?php echo $value['gameCategory'];?></td>
+			<td><?php echo $value['gameSize'];?></td>
+		</tr>
+	   <?php } ?>
+	</table>
+</div>
+<div class="mb10 tac">
+    <span class="btn"><span><a href="javascript:history.go(-1);"><button type="button">返回</button></a></span></span>
+    <span class="btn"><span><button onfocus="blur();" type="submit">完成</button></span></span>
+</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $listEditUrl.'?day_id='.date('Y-m-d', $info['day_id']);?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

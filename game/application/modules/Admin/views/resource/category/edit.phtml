@@ -1,0 +1,74 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $indexUrl;?>">游戏分类列表</a></li>
+    <li class="current"><a href="javascript:;">编辑游戏主分类</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑游戏主分类</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort']?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">名称</th>
+			<td class="td"><input type="text" class="input" name="title" value="<?php echo $info['title']?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">旧版本图片(1.5.6之前使用)</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="oldimg">
+						<img src="<?php echo $attachPath,$info['img'];?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=oldimg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">新版本图片(1.5.6开始使用)</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="newimg">
+						<img src="<?php echo $attachPath,$info['img2'];?>"/>
+						<input type="hidden" name="img2" value="<?php echo $info['img2'];?>">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=newimg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="select">
+				<option <?php if ($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+				<option <?php if ($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//导购分类表单数据提交
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Resource_Category/index');
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

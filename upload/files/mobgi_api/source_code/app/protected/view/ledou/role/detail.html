@@ -1,0 +1,133 @@
+<script src="{{rootUrl}}/js/core.js" type="text/javascript"></script>
+<script src="{{rootUrl}}/js/app-type.js" type="text/javascript"></script>
+<style>
+.muti .iText{ width:190px;}
+.muti select { width:199px; height: 180px;}
+</style>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">{{title}}-角色信息</p>
+    <!-- if {{result.id}} -->
+        <a class="del" href="/role/delete?id={{result.id}}">删除</a>
+    <!-- endif -->
+    </div>
+    <div class="main">
+        <div class="app-detail">
+            <form action="../role/save" method="POST" >
+                <input type="hidden" name="id" value='{{result.id}}' />
+                <ul class="form">
+                    <li>
+                        <span class="label">角色名：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" required name="title" style="width:220px;" value="{{result.title}}" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">产品名称：</span>
+                        <table class="muti">
+                            <tr>
+                                <td><input type="text" class="iText muti_input" to="left" /></td>
+                                <td width="150px"></td>
+                                <td><input type="text" class="iText muti_input" to="right" /></td>
+                            </tr>
+                            <tr>
+                                <td><select class="muti_left" multiple="multiple"></select></td>
+                                <td align="center">
+                                    <input type="button" class="btn muti_add" to="right" value="添加->"/><br />
+                                    <input type="button" class="btn muti_add all" to="right" value="添加所有->"/><br />
+                                    <input type="button" class="cancel muti_add" to="left" value="<-删除"/><br />
+                                    <input type="button" class="cancel muti_add all" to="left" value="<-删除所有"/>
+                                </td>
+                                <td><select class="muti_right required" required multiple="multiple" name="product_id[]"></select></td>
+                            </tr>
+                        </table>
+                        <input type="hidden" name="dev_id" class="muti_data" value="{{result.dev_id}}" />
+                    </li>
+                    <!-- loop select -->
+                    <li>
+                        <span class="label">{{select' value.title}}</span>
+                        <div class="fc">
+                            {{select' value.option}}
+                        </div>
+                    </li>
+                    <!-- endloop -->
+                    <li>
+                        <div class="fc">
+                            <input type="submit" value="确定" class="submit" />
+                            <input type="button" value="取消" class="cancel" onclick="window.location.href='/role/index'" />
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    
+    function getPlatformCN(platform)
+    {
+        platformCn = '';
+        if(platform == 1)
+        {
+            platformCn = '(A)';
+        }
+        else if(platform == 2)
+        {
+            platformCn = '(I)';
+        }
+        return platformCn;
+    }
+    var mutiSel = function(target){
+    var input = $("."+target+"_input");
+    var lmuti = $("."+target+"_left"), rmuti = $("."+target+"_right");
+    var btn = $("."+target+"_add"), data = $("."+target+"_data");
+    // fill data to select
+    if ({{left}}){
+        $.each({{left}},function(){
+            lmuti.append("<option value='"+this.id+"'>"+ getPlatformCN(this.platform) + this.product_name+"</option>");
+        });
+    }
+    if ({{right}}){
+        $.each({{right}},function(){
+            rmuti.append("<option value='"+this.id+"'>"+ getPlatformCN(this.platform) + this.product_name+"</option>");
+        });
+    }
+    // live button action
+    btn.live("click", function(){
+        var to = $(this).attr('to');
+        if ($(this).hasClass('all')){
+            var opt = "option";
+        }else{
+            var opt = "option:selected";
+        }
+        if (to == 'left'){
+            rmuti.find(opt).each(function(){
+                lmuti.append($(this));
+            });
+        }else{
+            lmuti.find(opt).each(function(){
+                rmuti.append($(this));
+            });
+        }
+        var dataStr = "";
+        rmuti.find('option').each(function(){
+            dataStr += $(this).val()+",";
+        });
+        data.val(dataStr.replace(/\,$/g, ""));
+    });
+    // live input search action
+    input.live("keyup", function(){
+        var search = $(this).val();
+        var to = $(this).attr('to');
+        $("."+target+"_"+to).find("option").each(function(){
+            if ( $(this).text().indexOf(search) >= 0 ){ // 有匹配
+                $("."+target+"_"+to).prepend($(this));
+            }
+        });
+    });
+}
+$(function(){
+    mutiSel('muti');
+})
+</script>

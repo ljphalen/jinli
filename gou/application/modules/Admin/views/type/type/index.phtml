@@ -1,0 +1,91 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">分类列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加分类</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="get">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<div class="table_full">
+		<table width="100%">
+		<tr class="tr">
+				<th class="th">分类</th>
+				<td class="td">
+                    <select name="type_id" id="type">
+                        <option value="">请选择</option>
+                        <?php foreach ($type as $key => $value) { ?>
+                            <option <?php echo ($search['type_id'] == $value['id']) ? 'selected="selected"' : ''; ?>
+                              value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                        <?php } ?>
+                    </select>
+                    子分类
+                    <select name="ctype_id" id="child_type">
+                            <option value="">请选择</option>
+                        <?php foreach ($current_child_type as $key => $c) { ?>
+                            <option <?php echo ($search['ctype_id'] == $c['id']) ? 'selected="selected"' : ''; ?>
+                              value="<?php echo $c['id']; ?>"><?php echo $c['name']; ?></option>
+                        <?php } ?>
+                    </select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button type="submit">搜 索</button></span></span>
+	</div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">排序</td>
+			<td width="200">名称</td>
+			<td width="200">关键词</td>
+			<td width="100">分类</td>
+			<td width="100">子类</td>
+			<td width="100">图标</td>
+			<td width="100">状态</td>
+			<td width="100">是否推荐</td>
+			<td width="120">操作</td>
+		</tr>
+<?php foreach($list as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['name'];?></td>
+			<td><?php echo $value['keyword'];?></td>
+			<td><?php echo $types[$value['type_id']]['name'];?></td>
+			<td><?php echo $types[$value['ctype_id']]['name'];?></td>
+			<td><img src="<?php echo $attachPath,$value['img'];?>" width=52/></td>
+			<td><?php echo $value['status'] ? '开启':'关闭';?></td>
+			<td><?php echo $value['is_recommend'] ? '是':'否';?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script>
+    $(function(){
+        $("select#type").change(function(){
+            var child_type_data = <?php  echo $child_type ; ?>;
+            var type_id = $(this).val();
+            var opt = child_type_data[type_id];
+            if(opt==undefined){
+                $("select#child_type").html('<option value="">请选择</option>');
+                return true;
+            }
+            var tpl = '<option value="">请选择</option>';
+            $(opt).each(function (k, v) {
+                tpl += '<option value="' + v.id + '">' + v.name + '</option>';
+            });
+            $("select#child_type").html(tpl);
+        });
+    });
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

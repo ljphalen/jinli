@@ -1,0 +1,84 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li ><a href="<?php echo $listUrl;?>">账号列表</a></li>
+    <li class="current"><a href="javascript:;">账号详情</a></li>
+	</ul>
+</div>
+<div class="table_full">
+	<table width="100%" height="150">
+		<tr class="tr">
+			<th class="td" width="15%">金立UUID</th>
+			<th class="th" width="35%"><?php echo $user['uuid'];?></th>
+			<th class="td" width="15%">头像</th>
+			<th class="td" width="35%" rowspan="2"><?php echo $userInfo['avatar'] ? "<img src='{$attachPath}{$userInfo['avatar']}' style='width:7.2em;height:7.2em'/>" : '-';?></th>
+		</tr>
+		<tr class="tr">
+			<th class="td">VIP等级</th>
+			<th class="th"><?php echo $userInfo['vip'];?></th>
+		</tr>
+		<tr class="tr">
+			<th class="td">VIP成长值</th>
+			<th class="th"><?php echo ($userInfo['vip_mon_expr'] + $userInfo['vip_act_expr']);?></th>
+			<th class="td">VIP排名</th>
+			<th class="th"><?php echo $userInfo['vip_rank'];?></th>
+		</tr>
+	</table>
+    <hr />
+	<table width="100%" height="150">
+		<tr class="tr">
+			<th class="td" width="15%">昵称</th>
+			<th class="th" width="35%"><?php echo $userInfo['nickname'];?></th>
+			<th class="td" width="15%"></th>
+			<th class="td" width="35%"></th>
+		</tr>
+		<tr class="tr">
+			<th class="td">性别</th>
+			<th class="th"> <?php echo $userInfo['sex'] ? (($userInfo['sex']==1)?'男':'女') : '--' ;?></th>
+			<th class="td">生日</th>
+			<th class="th"> <?php echo $userInfo['birthday'] ? $userInfo['birthday'] : '' ;?></th>
+		</tr>
+		<tr class="tr">
+			<th class="td">注册时间</th>
+			<th class="th"> <?php echo date('Y-m-d H:i:s', $user['reg_time']) . "(" . $mode[$reglog['mode']] . ")";?></th>
+			<th class="td">最后登录时间</th>
+			<th class="th"> <?php echo date('Y-m-d H:i:s', $user['last_login_time']) . "(" . $mode[$lllog['mode']] . ")";?></th>
+		</tr>
+	</table>
+    <hr />
+	<table width="100%" height="150">
+		<tr class="tr">
+			<th class="td" width="15%">积分</th>
+			<th class="th" width="35%">累计获得 <?php echo $userInfo['gainPoints']; ?> 积分, 
+			累计消费 <?php echo $userInfo['consumePoints']; ?> 积分, 
+			当前剩余 <?php echo intval($userInfo['points']); ?> 积分 </div>
+			</th>
+			<th class="td" width="15%"></th>
+			<th class="td" width="35%"></th>
+		</tr>
+	   <tr class="tr">
+			<th class="td">喜欢的游戏分类</th>
+			<th class="th" colspan="3"><?php echo $userInfo['favorType'];?></th>
+		</tr>
+		 <tr class="tr">
+			<th class="td">关注的游戏</th>
+			<th class="th" colspan="3"><?php echo $userInfo['attentionGame']; ?></th>
+		</tr>
+	</table>
+    <hr />
+	<table width="100%" height="100">
+	   <tr class="tr">
+			<th class="td" width="15%">收货人</th>
+			<th class="th" width="35%"><?php echo $userInfo['receiver']; ?></th>
+			<th class="td" width="15%">联系电话</th>
+			<th class="th" width="35%"> <?php echo $userInfo['receiverphone']; ?></th>
+		</tr>
+		<tr class="tr">
+			<th class="td">收货地址</th>
+			<th class="th"><?php echo $userInfo['address']; ?></th>
+			<th class="td">QQ</th>
+			<th class="th"><?php echo $userInfo['qq']; ?></th>
+		</tr>
+	</table>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

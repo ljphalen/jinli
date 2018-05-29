@@ -1,0 +1,60 @@
+<{config_load file="site.conf"}>
+<{include file="public/pageHead.html"}>
+<link href="/template/default/css/validate.css" rel="stylesheet" type="text/css" />
+<script src="/template/default/js/jquery.validate.js" type="text/javascript"
+	language="javascript"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#theForm").validate({
+	});	
+});
+</script>
+<h1><span class="action-span"></span>
+<span class="action-span1">系統设置</span><span id="search_id"
+	class="action-span1"> - <{$actionText}></span>
+<div style="clear: both"></div>
+</h1>
+
+<div class="main-div">
+<form action="index.php?ac=<{$ac}>" method="post" enctype="multipart/form-data" name="theForm" id="theForm">
+<table width="100%">
+	<{if $error}>
+	<tr align="center">
+		<td colspan="2" style="color: red"><{$error}></td>
+	</tr>
+	<{/if}>
+	<tr>
+    <td colspan="3">
+    <div class="main-div">
+        <h1>
+            <div class="section_title">
+                <{$actionText}>            </div>
+        </h1>
+        <div>未设置费率的默认值与渠道号为0的相同</div>
+        <table id="list-table__" style="border:1px;">
+            <tbody>
+                <tr>
+                     <td align="center" nowrap="nowrap">渠道号</td>
+                      <td align="center" nowrap="nowrap">费率</td>
+                </tr>
+            <{foreach from=$configs key=key item=item}>
+                <tr>
+                  <td align="center" nowrap="nowrap"><input name="clientid[]" type="text" id="clientid" size="10" maxlength="4" value="<{if $item neq ''}><{$key}><{/if}>" onkeypress="return checkthenum(event);" /></td>
+                    <td align="center" nowrap="nowrap"><input name="rate[]" type="text" id="rate" maxlength="30" value="<{$item|default:''}>" /></td>
+                </tr>
+            <{/foreach}>
+            </tbody>
+        </table>
+    </div>    </td>
+    </tr>
+    <tr>
+        <td colspan="2"><input type="submit" name="smt" id="smt" value="保存配置"
+            class="button" /></td>
+    </tr>
+  </tbody>
+</table>
+</form>
+</div>
+
+<{include file="public/pageFoot.html"}>
+<script src="/template/default/js/common.js" type="text/javascript" language="javascript"></script>

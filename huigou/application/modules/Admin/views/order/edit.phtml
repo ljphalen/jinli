@@ -1,0 +1,119 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $indexUrl;?>">订单列表</a></li>
+    <li class="current"><a href="javascript:;">查看订单</a></li>
+	</ul>
+</div>
+<div class="h_a">订单信息</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">订单编号</th>
+			<td class="td" style="width:30%"><?php echo $order['trade_no'];?></td>
+			<th class="th">订单状态</th>
+			<td class="td" style="width:30%"><?php echo Gc_Service_Order::orderStatus($order['status']);?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">外部订单号</th>
+			<td class="td" style="width:30%"><?php echo $order['out_trade_no'];?></td>
+			<th class="th">商品价格</th>
+			<td class="td" style="width:30%"><?php echo $order['deal_price'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">生成时间</th>
+			<td class="td" style="width:30%"><?php echo date('Y-m-d H:i:s', $order['create_time']);?></td>
+			<th class="th">付款时间</th>
+			<td class="td" style="width:30%"><?php echo $order['pay_time'] ? date('Y-m-d H:i:s', $order['pay_time']) : '';?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">确认收货时间</th>
+			<td class="td" style="width:30%"><?php echo $order['take_time'] ? date('Y-m-d H:i:s', $order['take_time']) : '';?></td>
+			<th class="th">实付款</th>
+			<td class="td" style="width:30%"><?php echo $order['real_price'];?></td>
+		</tr>
+	</table>
+</div>
+
+
+<div class="h_a">商品信息</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">商品名称</th>
+			<td class="td" style="width:30%"><?php echo $goods['title'];?></td>
+			<th class="th">商品价格</th>
+			<td class="td" style="width:30%"><?php echo $goods['price'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">供应商</th>
+			<td class="td" style="width:30%"><?php echo $supplier['name']?></td>
+			<th class="th">市场价</th>
+			<td class="td" style="width:30%"><?php echo $goods['price'];?></td>
+		</tr>
+	</table>
+</div>
+
+<div class="h_a">优惠及配送</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">运送方式</th>
+			<td class="td" style="width:30%">卖家包邮</td>
+			<th class="th">优惠额</th>
+			<td class="td" style="width:30%"><?php echo Common::money($order['deal_price'] - $order['real_price']);?></td>
+		</tr>
+	</table>
+</div>
+
+<div class="h_a">收货信息</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">收货人</th>
+			<td class="td" style="width:30%"><?php echo $address['buyer_name'];?></td>
+			<th class="th">手机号码</th>
+			<td class="td" style="width:30%"><?php echo $address['mobile'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">邮编</th>
+			<td class="td" style="width:30%"><?php echo $address['postcode'];?></td>
+			<th class="th">收货地址</th>
+			<td class="td" style="width:30%"><?php echo $address['country'],$address['province'],$address['city'],$address['detail_address'];?></td>
+		</tr>
+	</table>
+</div>
+
+<div class="h_a">操作</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $order['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">订单状态</th>
+			<td class="td" style="width:30%">
+				<select name="status">
+					<option <?php if($order['status'] == 1) echo 'selected';?> value="1">未支付</option>
+					<option <?php if($order['status'] == 2) echo 'selected';?> value="2">已支付</option>
+					<option <?php if($order['status'] == 3) echo 'selected';?> value="3">买家已付款，卖家未发货</option>
+					<option <?php if($order['status'] == 4) echo 'selected';?> value="4">卖家已发货，买家未收货</option>
+					<option <?php if($order['status'] == 5) echo 'selected';?> value="5">订单成功</option>
+					<option <?php if($order['status'] == 6) echo 'selected';?> value="6">订单关闭</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+</div>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/admin/order/index');
+	});
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

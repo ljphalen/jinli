@@ -1,0 +1,186 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title><?=Lang::_('USER_CENTER')?></title>
+<link rel="shortcut icon" href="<?php echo $staticResPath;?>/call/img/favicon.png"/>
+<link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/call/css/style.min.css?v=<?php echo $version;?>" />
+</head>
+
+<body class="ui-app">
+<form id="setting-form" method="post" action="#">
+<input  type="hidden" name="token" value="<?=$token?>" />
+
+<div class="ui-top-bar">
+	<a class="ui-pos icon-back" href="<?php echo $webroot.'/user/index/index';?>"></a>
+	<span class="ui-top-txt">个人设置</span>
+	<?php if($type == 'edit'){?>
+	<input class="ui-pos link-logout" type="submit" value="保存" id="settingSaveBtn" />
+	<?php } else { ?>
+	<a href="<?php echo $webroot;?>/user/center/index?type=edit" class="ui-pos link-logout">编辑</a>
+	<?php }?>
+</div>
+
+<div class="ui-page page1 js-active">
+	<div class="ui-page-content">
+		<div class="ui-box">
+			<div class="ui-box-uinfo">
+				<div class="gn-uinfo-box">
+					<div class="gn-uinfo-l">
+						<p>
+						<span class="icon-avatar">
+						<a href="<?php echo $webroot;?>/user/center/index">
+								<img src="<?php echo $staticResPath;?>/call/img/avatar.png" /></a>
+							</span>
+						</p>
+						<p>
+							<?php
+							$uname = '';
+							if (!empty($userMsg['nickname'])) {
+								$uname = $userMsg['nickname'];
+							} else if (Common::checkIllPhone($userMsg['username'])) {
+								$uname = $userMsg['username'];
+							}
+							?>
+							<span><?=$uname?></span>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 个人设置信息 START-->
+		<div class="ui-box">
+			<div class="ui-box-setting">
+
+
+		<?php if($type =='edit'){?>
+			<div class="ui-form-filed">
+					<div class="ui-form-inbox">
+						<label>昵称</label>
+						<input class="inptxt" type="text" name="nickname" maxLength="20" placeholder="请输入有效格式"  value="<?php echo $userMsg['nickname'];?>" />
+					</div>
+					<div class="error-tips">昵称不能为空</div>
+				</div>
+				<div class="ui-form-filed">
+					<div class="ui-form-inbox">
+						<label>QQ</label>
+						<input class="inptxt" type="text" name="qq" maxLength="20" placeholder="请填写有效QQ号"  value="<?php echo $userMsg['qq'];?>"/>
+					</div>
+					<div class="error-tips">QQ号不能为空</div>
+				</div>
+				<div class="ui-form-filed">
+					<div class="ui-form-inbox">
+						<label>Email</label>
+						<input class="inptxt" type="text" name="email" placeholder="请输入邮箱地址"   value="<?php echo $userMsg['email'];?>"/>
+					</div>
+					<div class="error-tips">电子邮箱不能为空</div>
+				</div>
+				<div class="ui-form-filed">
+					<div class="ui-form-inbox">
+						<label>性别</label>
+						<div class="ui-list-radio">
+							<p><label class="ui-radio">男<input type="radio" name="sex" value="1"  <?php if($userMsg['sex'] == '1') echo 'checked';?>/></label></p>
+							<p><label class="ui-radio">女<input type="radio" name="sex" value="2"  <?php if($userMsg['sex'] == '2') echo 'checked';?>/></label></p>
+						</div>
+					</div>
+					<div class="error-tips"></div>
+				</div>
+				<div class="ui-form-filed">
+					<div class="ui-form-inbox">
+						<label>省份</label>
+						<select name="province_id" id="province_id" data-url="/user/center/ajaxGetAreaDataList">
+						<option value="0">请选择</option>
+						<?php foreach($provinces as $k=>$v){?>
+							<option value="<?php echo $v['id'];?>"  <?php if($userMsg['province_id'] == $v['id']) echo 'selected';?>><?php echo $v['name'];?></option>
+						<?php }?>
+						</select>
+					</div>
+					<div class="error-tips"></div>
+				</div>
+				<div class="ui-form-filed">
+					<div class="ui-form-inbox">
+						<label>城市</label>
+						<select name="city_id"  id="city_id">
+						<option value="0">请选择</option>
+						<?php foreach ($cities as $k=>$v){?>
+							<option value="<?php echo $v['id'];?>" <?php if($v['id'] == $areaInfo['city']['id']) echo 'selected';?>><?php echo $v['name'];?></option>
+						<?php }?>
+						</select>
+					</div>
+					<div class="error-tips"></div>
+				</div>
+				<div class="ui-form-filed">
+					<div class="ui-form-inbox">
+						<label>地址</label>
+						<input class="inptxt" type="text" name="address" maxLength="160" placeholder="请填写有效地址"   value="<?php echo $userMsg['address'];?>"/>
+					</div>
+					<div class="error-tips">地址不能为空</div>
+				</div>
+		
+			<?php }else{?>
+				<div class="ui-form-filed">
+					<div class="ui-form-inbox">
+						<label>昵称</label><?php echo $userMsg['nickname'];?>
+					</div>
+				</div>
+				<div class="ui-form-filed">
+					<div class="ui-form-inbox">
+						<label>QQ</label>
+						<?php echo $userMsg['qq'];?>
+					</div>
+				</div>
+				<div class="ui-form-filed">
+					<div class="ui-form-inbox">
+						<label>Email</label>
+						<?php echo $userMsg['email'];?>
+					</div>
+				</div>
+				<div class="ui-form-filed">
+					<div class="ui-form-inbox">
+						<label>性别</label>
+						<?php echo $userMsg['sex']==1?'男':($userMsg['sex']=='2'?'女':'');?>
+					</div>
+				</div>
+				<div class="ui-form-filed">
+					<div class="ui-form-inbox">
+						<label>城市</label>
+						<?php echo $areaInfo['province']['name'].' '.$areaInfo['city']['name'];?>
+					</div>
+				</div>
+				<div class="ui-form-filed">
+					<div class="ui-form-inbox">
+						<label>地址</label>
+						<?php echo $userMsg['address'];?>
+					</div>
+				</div>
+
+				<div class="ui-form-filed">
+					<a id="J_logout" href="/Front/Activity/logout" class="ui-button ui-block ui-button-gray">退出登录</a>
+				</div>
+				
+			<?php }?>
+			</div>
+		</div>
+		<!-- 个人设置信息 END-->
+		<!-- <div class="ui-bottom-bar">
+			<a class="ui-bottom-bar-link" href="http://3g.gionee.com/feedback">意见反馈</a>
+		</div> -->
+	</div>
+</div>
+</form>
+<div class="toast-wrap"><p></p></div>
+<script type="text/javascript">
+	var token = "<?php echo $token;?>";
+</script>
+<script id="main" data-baseurl="<?php echo $staticResPath;?>/call/js" data-version="<?php echo $version;?>" src="<?php echo $staticResPath;?>/call/js/lib/require.js?v=<?php echo $version;?>"></script>
+<script>
+    require(['<?php echo $staticResPath;?>/call/js/common.js?v=<?php echo $version;?>'],function(){
+        require(['page/setting']);
+    });
+</script>
+</body>
+</html>

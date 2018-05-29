@@ -1,0 +1,109 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li><a href="<?php echo $indexUrl;?>">商品列表</a></li>
+		<li class="current"><a href="<?php echo $searchUrl;?>">添加商品</a></li>
+		<li><a href="<?php echo $meilishuoStep1Url;?>">添加美丽说商品</a></li>
+	</ul>
+</div>
+<div class="step mb10">
+	<ul class="cc">
+		<li><span class="fl"><em></em></span>第一步：选择商品</li>
+		<li class="line"></li>
+		<li class="current">第二步：完善商品</li>
+	</ul>
+</div>
+
+<div class="h_a">添加商品</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<input name="title" value="<?php echo $info['title'];?>" type="hidden" />
+	<input name="category_name" value="<?php echo $info['category_name'];?>" type="hidden" />
+	<input name="img" value="<?php echo $info['img'];?>" type="hidden" />
+	<input name="link" value="<?php echo $info['link'];?>" type="hidden" />
+	<input name="market_price" value="<?php echo $info['market_price'];?>" type="hidden" />
+	<?php if($info['sale_price_min']>0): ?>
+	<input name="market_price_min" value="<?php echo $info['market_price_min'];?>" type="hidden" />
+	<?php endif; ?>
+	<input name="sale_price" value="<?php echo $info['sale_price'];?>" type="hidden" />
+	<?php if($info['sale_price_min']>0): ?>
+	<input name="sale_price_min" value="<?php echo $info['sale_price_min'];?>" type="hidden" />
+	<?php endif; ?>
+	<input name="supplier" value="<?php echo $supplier;?>" type="hidden" />
+	<input name="goods_id" value="<?php echo $supplier . '_' . $info['goods_id'];?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">商品名称</th>
+				<td class="td"><a href="<?php echo $info['link']?>" target="_blank"><?php echo $info['title'];?></a></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">商品分类</th>
+				<td class="td">
+					<select name="goods_type">
+						<?php foreach ($goods_type as $key=>$val): if($val['status']):?>
+						<option value="<?php echo $val['id'];?>" <?php if($goodsType == $val['id']) echo 'selected="selected"';?>><?php echo $val['title'];?></option>
+						<?php endif; endforeach;?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">价格</th>
+				<td class="td">市场价：<?php echo $info['market_price_min'].'~'.$info['market_price'];?> 销售价：<?php echo $info['sale_price'].'~'.$info['sale_price'];?></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">商品图片</th>
+				<td class="td"><img alt="" src="<?php echo $info['img'];?>" width="100"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">开始结束时间</th>
+				<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="" /></div>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input wa" name="sort" value="0"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td">
+					<select name="status">
+	                	<option value="1">&nbsp;&nbsp;上&nbsp;&nbsp;架&nbsp;&nbsp;</option>
+	                	<option value="2">&nbsp;&nbsp;下&nbsp;&nbsp;架&nbsp;&nbsp;</option>
+	           		</select>
+	           	</td>
+			</tr>
+			<tr class="tr">
+			<th class="th">模块-平台</th>
+			<td class="td">
+				<select name="module_id">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				
+				<select name="cid">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+			</td>
+		</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//商品表单数据提交
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+	$('#end_time').datetimepicker();
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Channelgoods/search?s=1&supplier=<?php echo $supplier;?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

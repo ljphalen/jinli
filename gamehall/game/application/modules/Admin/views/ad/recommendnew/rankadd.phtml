@@ -1,0 +1,38 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="javascript:;">添加排行榜</a></li>
+	</ul>
+</div>
+<div class="h_a">添加排行榜</div>
+<form method="post" action="<?php echo $postRankUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="day_id" value="<?php echo $day_id;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排行榜类型(<span style="color: red">*</span>)</th>
+			<td class="td">
+			  <select name="rank_type" class="input">
+			    <?php foreach($rank_type as $key=>$value) {?>
+    			    <option value="<?php echo $key;?>"><?php echo $value;?></option>
+    			    <?php }?>
+			  </select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac">
+    <span class="btn"><span><a href="javascript:window.history.go(-1);"><button type="button">返回</button></a></span></span>
+    <span class="btn"><span><button onfocus="blur();" type="submit">下一步</button></span></span>
+</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $listEditUrl . "?day_id=";?>' + ret.data);
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,98 @@
+<include file="Public:header" />
+
+<script type="text/javascript">
+		var swfu;
+
+		window.onload = function() {
+			var settings = {
+				flash_url : "{:cdn('PUBLIC')}/app/swfupload/swfupload.swf",
+				flash9_url : "{:cdn('PUBLIC')}/app/swfupload/swfupload_fp9.swf",
+				upload_url: "{:U("apps/appupload")}",
+				post_params: {"PHPSESSID" : "<?php echo session_id(); ?>"},
+				file_size_limit : "100 MB",
+				file_types : "*.*",
+				file_types_description : "All Files",
+				file_upload_limit : 100,
+				file_queue_limit : 0,
+				custom_settings : {
+					progressTarget : "fsUploadProgress",
+					cancelButtonId : "btnCancel"
+				},
+				debug: false,
+				// Button settings
+				button_image_url: "{:cdn('PUBLIC')}/app/swfupload/images/TestImageNoText_65x29.png",
+				button_width: "65",
+				button_height: "29",
+				button_placeholder_id: "spanButtonPlaceHolder",
+				//button_text: '<span class="theFont">上传新应用</span>',
+				button_text: '<span class="btn btn-lg btn-primary">上传应用</span>',
+				button_text_style: ".theFont { font-size: 16; }",
+				button_text_left_padding: 12,
+				button_text_top_padding: 3,
+				
+				// The event handler functions are defined in handlers.js
+				swfupload_preload_handler : preLoad,
+				swfupload_load_failed_handler : loadFailed,
+				file_queued_handler : fileQueued,
+				file_queue_error_handler : fileQueueError,
+				file_dialog_complete_handler : fileDialogComplete,
+				upload_start_handler : uploadStart,
+				upload_progress_handler : uploadProgress,
+				upload_error_handler : uploadError,
+				upload_success_handler : uploadSuccess,
+				upload_complete_handler : uploadComplete,
+				queue_complete_handler : queueComplete	// Queue plugin event
+			};
+
+			swfu = new SWFUpload(settings);
+	     };
+	</script>
+
+		<div class="row">
+			<div class="col-sm-3 col-md-3">
+				<ol class="nav nav-pills nav-stacked">
+					<li class="active"><a>我的应用</a></li>
+					<li><a href="{:U('apps/upload')}">应用上传</a></li>
+					<li><a href="{:U('apps/index')}">未提交</a></li>
+					<li><a href="{:U('apps/index')}">审核中</a></li>
+					<li><a href="{:U('apps/index')}">审核不通过</a></li>
+					<li><a href="{:U('apps/index')}">已上线</a></li>
+					<li><a href="{:U('apps/index')}">已下线</a></li>
+				</ol>
+			</div>
+			
+				
+			<div class="col-sm-9 col-md-9">
+						
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h3 class="panel-title">应用上传</h3>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-md-12">
+							
+									<div class="fieldset flash" id="fsUploadProgress">
+									<span class="legend">上传进度</span>
+									</div>
+									<div id="divStatus">0 Files Uploaded</div>
+									<div>
+										<span id="spanButtonPlaceHolder"></span>
+										<input id="btnCancel" type="button" value="Cancel All Uploads" onclick="swfu.cancelQueue();" disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;" />
+									</div>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+						
+		</div>	
+		</div>
+
+<load href="{:cdn('PUBLIC')}/app/swfupload/swfupload.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/swfupload/swfupload.queue.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/swfupload/fileprogress.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/swfupload/handlers.js?{:C('JS_VERSION')}" />
+
+
+<include file="Public:footer" />

@@ -1,0 +1,19 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body>
+<div id="page">
+		<div class="article">
+		<!-- 无中奖公告时不显示content div，有中奖公告时不显示annouce-tip div -->
+		    <?php if($info['placard']){?>
+			<div class="content intro ui-editor">
+				<?php echo html_entity_decode($info['placard']);?>
+			</div>
+			<?php } else {?>
+			<div class="announce-tip">
+				<div class="<?php echo strnatcmp($apk_version,'1.5.2') >= 0 ? 'pic-tip-v2' :'pic-tip';?>"></div>
+				<div class="text-tip">暂无公告 </div>
+			</div>
+			<?php }?>
+		</div>
+	</div>
+</body>
+</html>

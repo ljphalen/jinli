@@ -1,0 +1,76 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li class="current"><a href="<?php echo $taskListUrl;?>">异步任务</a></li>
+        <li><a href="<?php echo $splListUrl;?>">异步观察者</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">任务ID</th>
+			<td class="td"><input type="text" class="input wc" name="task_id" value="<?php echo $search['task_id'];?>"></td>
+			<th class="th">任务</th>
+			<td class="td"><input type="text" class="input wc" name="task" value="<?php echo $search['task'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">执行结果</th>
+			<td class="td"><input type="text" class="input wc" name="result" value="<?php echo $search['result'];?>"></td>
+			<th class="th">开始时间</th>
+			<td class="td">
+    			<div><input type="text" class="input" name="start_time" id="start_time" value="<?php echo $search['start_time'];?>"> 至 
+    			<input type="text" class="input" name="end_time" id="end_time" value="<?php echo $search['end_time'];?>"></div>
+    		</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="20"><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="20">ID</td>
+			<td width="50">任务ID</td>
+			<td width="50">任务</td>
+			<td width="50">执行方法</td>
+			<td width="50">参数</td>
+			<td width="50">开始时间</td>
+			<td width="50">结束时间</td>
+			<td width="50">耗时(毫秒)</td>
+			<td width="50">执行结果</td>
+			<td width="50">操作</td>
+		</tr>
+		<?php foreach($list as $key => $value) {?>
+		<tr class="ct">
+			<td><input class="checkbox" name="keys[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['task_id'];?></td>
+			<td><?php echo $value['task'];?></td>
+			<td><?php echo $value['method'];?></td>
+			<td><?php echo $value['args'];?></td>
+		    <td><?php echo date('Y-m-d H:i:s', $value['start_time']);?></td>
+		    <td><?php echo date('Y-m-d H:i:s', $value['end_time']);?></td>
+			<td><?php echo $value['use_time'];?></td>
+			<td><?php echo $value['result'];?></td>
+			<td>
+				<a href="<?php echo $splListUrl . "?" . "task_id=" . $value['task_id'];?>" class="mr10">观察者</a>
+			</td>
+		</tr>
+	 <?php } ?>
+	</table>
+</div>
+<div class="mr10 cc"><?php echo $pager;?></div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script>
+$(document).ready(function(){
+    $('#start_time').datetimepicker();
+    $('#end_time').datetimepicker();
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

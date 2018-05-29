@@ -1,0 +1,71 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">玩咖配置列表</a></li>
+		<li class="current"><a href="javascript:;">添加玩咖配置</a></li>
+	</ul>
+</div>
+<div class="h_a">添加玩咖配置</div>
+<form method="post" action="<?php echo $addPostUrl; ?>" id="addForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">机型</th>
+				<td class="td">
+						<select name="name">
+						    <option value="default">default</option>
+							<?php var_dump($modelList); foreach ($modelList as $key => $value) { ?>
+								<option value="<?php echo $value; ?>"><?php echo $value; ?></option>
+							<?php } ?>
+						</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">浏览器版本</th>
+				<td class="td"><input type="text" class="input" name="app_ver" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">wk_main_switch</th>
+				<td class="td"><select name="wk_main_switch">
+						<option value="1">开启</option>
+						<option value="0">关闭</option>
+					</select></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">wk_searchEngines_switch</th>
+				<td class="td"><select name="wk_searchEngines_switch">
+						<option value="1">开启</option>
+						<option value="0">关闭</option>
+					</select></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">wk_hotKeyword_switch</th>
+				<td class="td"><select name="wk_hotKeyword_switch">
+						<option value="1">开启</option>
+						<option value="0">关闭</option>
+					</select></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">wk_suggested_switch</th>
+				<td class="td"><select name="wk_suggested_switch">
+						<option value="1">开启</option>
+						<option value="0">关闭</option>
+					</select></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	//用户表单数据提交
+	$(document).ready(function () {
+		ajaxForm('addForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Wanka/add');
+		});
+	})
+
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

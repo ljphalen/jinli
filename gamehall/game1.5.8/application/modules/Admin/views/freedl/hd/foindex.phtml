@@ -1,0 +1,85 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $listUrl;?>">免流量活动</a></li>
+		<li><a href="<?php echo $ulistUrl;?>">用户统计</a></li>
+        <li><a href="<?php echo $flistUrl;?>">流量统计</a></li>
+        <li><a href="<?php echo $blistUrl;?>">黑名单</a></li>
+        <li class="current"><a href="<?php echo $foindexUrl;?>/?year_month=<?php echo $mon_info['year_month'];?>&month_consume=<?php echo $mon_info['month_consume'];?>">运营商明细</a></li>
+	</ul>
+</div>
+<div class="h_a"><a href="<?php echo $flistUrl;?>">返回流量统计</a></div>
+<div class="h_a"><?php echo $s['year_month'];?>, 累计消耗 <?php echo $mon_info['month_consume'];?>M &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数据截止: <?php echo $mon_info['refresh_time'] ? date('Y-m-d H:i:s', $mon_info['refresh_time']) : '无';?></div>
+<form action="<?php echo $foindexUrl.'?year_month='.$s['year_month'].'&month_consume='.$s['month_consume'];?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="year_month" type="hidden" value="<?php echo $s['year_month'];?>" />
+<input name="month_consume" type="hidden" value="<?php echo $s['month_consume'];?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">地区</th>
+			<td class="td">
+			<select name="region" class="select wa">
+			      <option  value="0">全部</option>
+				  <?php foreach($regions  as $key=>$value) {?>
+    			  <option <?php if($s['region'] == $key) echo 'selected';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+    			<?php }?>
+			</select>
+			</td>
+			<th class="th">运营商</th>
+			<td class="td">
+			<select name="operator" class="select wa">
+			      <option  value="0">全部</option>
+				  <?php foreach($operator as $k=>$v) {?>
+    			  <option value="<?php echo $k;?>" <?php if($s['operator'] == $k) echo 'selected';?>><?php echo $v;?></option>
+    			<?php }?>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+	<span class="btn2"><span><button type="button" id="extportBtn">导出数据</button></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<span>共　<?php echo $total;?>　条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td>地区</td>
+		    <td>运营商</td>
+			<td>本月消耗</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $regions[$value['region']];?></td>
+			<td><?php echo $operator[$value['operator']];?></td>
+			<td><?php echo $value['month_consume'];?>M</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<div class="mr10 cc">
+	<form action="<?php echo $fodexportUrl;?>" method="post" id="exportForm">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<input name="year_month" type="hidden" value="<?php echo $s['year_month'];?>" />
+	<input name="operator" type="hidden" value="<?php echo $s['operator'];?>" />
+	<input name="region" type="hidden" value="<?php echo $s['region'];?>" />
+	</form>
+</div>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Freedl_Hd/foindex');
+	});
+	$("#extportBtn").click(function(){
+			$("#exportForm").submit();
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

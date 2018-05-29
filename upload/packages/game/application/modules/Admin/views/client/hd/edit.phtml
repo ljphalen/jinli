@@ -1,0 +1,130 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">活动列表</a></li>
+    <li class="current"><a href="javascript:;">编辑活动</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑活动</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input wc" name="sort" value="<?php echo $info['sort']?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="select wa">
+				<option <?php if ($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+				<option <?php if ($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+			</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title']?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏ID</th>
+			<td class="td"><input type="text" class="input wc" name="game_id" value="<?php echo !$info['game_id'] ? '':$info['game_id']; ?>" id="game_id"><button type="button" id="test" style="margin-left:20px;">获取</button><br>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">游戏名称</th>
+			<td class="td"><input type="text" class="input wc" name="name" value="<?php echo $game_info['name']?>" value="" id="name"></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">活动开始结束时间</th>
+			<td class="td"><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $info['start_time'])?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s', $info['end_time'])?>" /></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="simg">
+						<img src="<?php echo $attachPath,$info['img'];?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=simg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+        <tr class="tr">
+				<th class="th">活动介绍</th>
+				<td class="td"><textarea style="width: 800px; height: 500px" class="textarea" name="content" value=""><?php echo $info['content'];?></textarea>
+				</td>
+		</tr>
+		<tr class="tr">
+				<th class="th">中奖公告</th>
+				<td class="td"><textarea style="width: 800px; height: 500px" class="textarea" name="placard" value=""><?php echo $info['placard'];?></textarea>
+				</td>
+		</tr>
+				
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor = K.create('textarea[name="content"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+var editor1;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor1 = K.create('textarea[name="placard"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+	$('#end_time').datetimepicker();      
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Hd/index');
+	},function(){
+		editor.sync();
+		editor1.sync();
+	});
+})
+$('#test').click(function(){
+		    $('#game_id,#name').html("");
+			$.ajax({
+				url : baseurl + "/Admin/Client_Hd/get_name",
+				type : 'POST',
+				dataType : 'json',
+				data : 'token='+'<?php echo $token;?>'+'&game_id='+$("#game_id").val(),
+				success : function(ret) {
+					 if (ret.success) {
+						var list = ret.data.list;
+						$('#name').val(list.name) ;
+					} else {
+						showError('', ret.msg);
+					}
+				}
+			});
+			return false;
+	})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

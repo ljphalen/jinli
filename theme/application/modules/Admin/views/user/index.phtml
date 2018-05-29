@@ -1,0 +1,45 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<section class="navigator" menuOn="zt_myThemes">
+
+</section>
+<section class="ajax_wrap">
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">用户列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加用户</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%" class="view_list_tb clear-fix">
+		<thead>
+			<tr class="hd">
+				<th width="60">UID</td>
+				<th>用户名</td>
+				<td>用户组</td>
+				<th>注册时间</td>
+				<th>状态</td>
+				<th>操作</td>
+			</tr>
+		</thead>
+<?php foreach($users as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['uid'];?></td>
+			<td><?php echo $value['username'];?></td>
+			<td><?php echo $value['groupid'] == 0 ? '超级管理员' : $groups[$value['groupid']]['name'];?></td>
+            <td><?php echo date('Y-m-d H:i:s', $value['registertime']);?></td>
+			<td><?php echo $status[$value['status']];?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?uid=<?php echo $value['uid'];?>" class="mr10">编辑</a>
+			<?php if($value['groupid'] !=0){ ?>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?uid=<?php echo $value['uid'];?>', '', event);">删除</a>
+			<?php } ?>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</section>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

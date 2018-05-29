@@ -1,0 +1,38 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">专题列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加专题</a></li>
+	</ul>
+</div>
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">编号id</td>
+			<td>专题名称</td>
+			<td width="100">点赞数</td>
+			<td width="100">点击量</td>
+			<td width="100">分享</td>
+			<td width="150">操作</td>
+		</tr>
+<?php foreach($topics as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $value['praise'];?></td>
+			<td><a href="/admin/stat/click?type_id=18&item_id=<?php echo $value['id'];?>" target="_blank"><?php echo $value['hits'];?></a></td>
+            <td><?php echo $value['share_times'];?></td>
+            <td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<a target="_blank" href="<?php echo ENV == 'product' ? 'http://gou.gionee.com' : $webroot;?>/topic?id=<?php echo $value['id'];?>" class="mr10">预览</a>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

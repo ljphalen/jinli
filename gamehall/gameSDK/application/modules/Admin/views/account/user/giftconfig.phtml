@@ -1,0 +1,57 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">账号列表</a></li>
+    <li class="current"><a href="<?php echo $giftUrl;?>">生日礼物</a></li>
+	</ul>
+</div>
+<form action="<?php echo $giftConfigPostUrl;?>" method="post" id="addForm">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">礼物类型</th>
+			<td class="td">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">A券 </th>
+					<td class="td">
+						<input type="text" class="input" name="acoupon" value="<?php echo $giftConfig['acoupon']['cost'];?>">
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						有效期
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="text" class="input" name="day" value="<?php echo $giftConfig['acoupon']['day'];?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">积分</th>
+					<td class="td">
+						<input type="text" class="input" name="point" value="<?php echo $giftConfig['point']['cost'];?>">
+					</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">开关</th>
+			<td class="td">
+				 <select name="status">
+                	<option <?php if($giftConfig['status'] == 1) echo 'selected="selected"';?> value="1">开启</option>
+                	<option <?php if($giftConfig['status'] == 0) echo 'selected="selected"';?>value="0">关闭</option>
+            	</select>
+            </td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">保存</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Account_User/gift');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,77 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body module-id="onlineSignup">
+    <div class="module">
+        <form class="layout-center user-edit-form" id="J_signupForm">
+            <input type="hidden" name="id" value="<?php echo $id;?>"/>
+            <ul class="form-list" class="form-list" data-attr-url="<?php echo $webroot;?>/api/job/attr">
+                <li>
+                    <label><em>*</em>姓&emsp;&emsp;名：</label>
+                    <div class="input-wrap">
+                        <input name="realname" value="<?php echo $user["realname"];?>" type="text" placeholder="请填写真实姓名" require data-verify="^[a-zA-Z\u4e00-\u9fa5]{2,20}$" data-msg="{'require':'请填写真实姓名','verify':'请输入2-20个中英文字符'}"/>
+                    </div>
+                </li>
+                <li class="J_listSelect" data-type="mysex" data-title="请选择性别">
+                    <label><em>*</em>性&emsp;&emsp;别：</label>
+                    <div class="flex">
+                        <span>请选择性别</span>
+                        <input type="hidden" value="<?php echo $user["sex"];?>" name="sex" require data-msg="{'require': '请选择性别'}"/>
+                    </div>
+                    <div class="side"><i class="icon-put-right"></i></div>
+                </li>
+                <li>
+                    <label><em>*</em>出生日期：</label>
+                    <div class="input-wrap">
+                        <input name="birthday" value="<?php echo $user["birthday"];?>" type="date" placeholder="请选择出生日期" data-verify="^(?:(?!0000)[0-9]{4}[-\/](?:(?:0[1-9]|1[0-2])[-\/](?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)$" data-msg="{'require': '请选择出生日期', 'verify': '日期格式为####/##/##或####-##-##'}"/>
+                    </div>
+                </li>
+                <li class="J_listSelect" data-type="education" data-title="请选择学历">
+                    <label><em>*</em>学&emsp;&emsp;历：</label>
+                    <div class="flex">
+                        <span>请选择学历</span>
+                        <input name="education" type="hidden" value="<?php echo $user["education"];?>"
+                            require data-msg="{'require': '请选择学历'}"/>
+                    </div>
+                    <div class="side"><i class="icon-put-right"></i></div>
+                </li>
+            </ul>
+            <div class="textarea-wrap">
+                <div class="title">&ensp;附加说明：</div>
+                <textarea name="description"></textarea>
+            </div>
+            <div class="btn-wrap">
+                <div class="btn btn-login-submit" id="J_submit" data-ajax="<?php echo $webroot;?>/api/job/signup">提交</div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal J_modal" id="J_templateModal" style="display:none;"></div>
+
+    <script type="text/template" id="J_listTemplate">
+        <div class="simple-list">
+            <div class="box-wrap">
+                <dl><dt><%=title%></dt></dl>
+                <dl>
+                    <%if(data instanceof Array){%>
+                        <%for(var i=0, len=data.length; i<len; i++){%>
+                            <dd class="J_select" data-id="<%=data[i].id%>" data-name="<%=data[i].title || data[i].name%>">
+                                <p><%=data[i].title || data[i].name%></p>
+                                <%if(val == data[i].id){%>
+                                <i class="icon-selected"></i>
+                                <%}%>
+                            </dd>
+                        <%}%>
+                    <%} else {%>
+                        <%for(var id in data){%>
+                            <dd class="J_select" data-id="<%=id%>" data-name="<%=data[id]%>">
+                                <p><%=data[id]%></p>
+                                <%if(val == id){%>
+                                <i class="icon-selected"></i>
+                                <%}%>
+                            </dd>
+                        <%}%>
+                    <%}%>
+                </dl>
+            </div>
+        </div>
+    </script>
+<?php echo $this->render("layout/footer.phtml");?>

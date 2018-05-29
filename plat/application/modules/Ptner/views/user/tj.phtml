@@ -1,0 +1,74 @@
+﻿<?php echo $this->render("user/header.phtml");?>
+<body>
+    <?php echo $this->render("user/top.phtml");?>
+	<div class="main-container">
+		<?php echo $this->render("user/nav.phtml");?>
+		<div class="container">
+			<ul class="nav nav-tabs" id="myTab">
+			  <li class="active"><a href="#home" data-toggle="tab">访问统计</a></li>
+              <li><a href="#user" data-toggle="tab">用户统计</a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div class="tab-pane active" id="home">
+					<table class="table table-striped table-advance table-hover">
+						<thead>
+							<tr>
+                                <th>SSID</th>
+								<th>日期</th>
+								<th>访问量</th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php foreach($rs as $key=>$value) {?>
+							<tr>
+                                <td><?php echo $device['wl_ssid'];?></td>
+								<td><?php echo $value['dateline'];?></td>
+							  	<td><?php echo $value['pv'];?></td>
+							</tr>
+						<?php }?>
+					  	</tbody>
+				 	</table>
+				</div>
+
+                <div class="tab-pane active" id="user" style="display: none">
+                    <table class="table table-striped table-advance table-hover">
+                        <thead>
+                        <tr>
+                            <th>手机号码</th>
+                            <th>最后登录日期</th>
+                            <th>登录次数</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach($users as $key=>$value) {?>
+                            <tr>
+                                <td><?php echo $value['phone'];?></td>
+                                <td><?php echo date('Y-m-d H-i-s', $value['last_visist']);?></td>
+                                <td><?php echo $value['hits'];?></td>
+                            </tr>
+                        <?php }?>
+                        </tbody>
+                    </table>
+                </div>
+			</div>
+
+		</div>
+	</div>	
+	<?php echo $this->render("user/footer.phtml");?>
+    <script type="text/javascript" src="/static/js/jquery.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $("#myTab li").click(function(){
+                var tab = $(this).children("a").attr("href");
+                $("#myTab").children("li").removeClass("active");
+                $(this).addClass("active");
+
+                $(".tab-content").children("div").hide();
+                $(tab).show();
+                return false;
+            });
+        })
+    </script>
+</body>
+</html>

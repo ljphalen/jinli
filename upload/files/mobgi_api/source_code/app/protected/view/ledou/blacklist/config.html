@@ -1,0 +1,116 @@
+<script src="{{rootUrl}}/js/core.js" type="text/javascript"></script>
+<script src="{{rootUrl}}/js/app-type.js" type="text/javascript"></script>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">配置修改</p>
+    </div>
+    <div class="main">
+        <div class="app-detail">
+        	<ul class="form">
+                    <form action="../blacklist/saveconfig" method="POST">
+                    <li>
+                        <span class="label">click_speed：</span>
+                        <div class="fc">
+                            <input type="number" class="iText" required step="0.1" id="click_speed" name="click_speed" style="width:220px;" value="{{result.click_speed}}" />
+                        	<input type="submit" value="保存" class="submit save" />点击次数/第一次点击时间-最后一次点击时间
+                        </div>
+                    </li>
+            	</form>
+            	<form action="../blacklist/saveconfig" method="POST">                
+                    <li>
+                        <span class="label">click_rate：</span>
+                        <div class="fc">
+                            <input type="number" class="iText" required step="0.1" id="click_rate" name="click_rate" style="width:220px;" value="{{result.click_rate}}" />
+                        	<input type="submit" value="保存" class="submit save" />点击次数/展示次数
+                        </div>
+                    </li>
+                    </form>
+                    <form action="../blacklist/saveconfig" method="POST">
+                    <li>
+                        <span class="label">ims_speed：</span>
+                        <div class="fc">
+                            <input type="number" class="iText" required step="0.1" id="ims_speed" name="ims_speed" style="width:220px;" value="{{result.ims_speed}}" />
+                        	<input type="submit" value="保存" class="submit save" />展示次数/第一次展示时间-最后一次展示击时间
+                        </div>
+                    </li>
+            	</form>
+                    <form action="../blacklist/saveconfig" method="POST">
+                    <li>
+                        <span class="label">ims_rate：</span>
+                        <div class="fc">
+                            <input type="number" class="iText" required step="0.1" id="ims_rate" name="ims_rate" style="width:220px;" value="{{result.ims_rate}}" />
+                        	<input type="submit" value="保存" class="submit save" />
+                        </div>
+                    </li>
+                    </form>
+                    <form action="../blacklist/saveconfig" method="POST">
+                    <li>
+                        <span class="label">install_speed：</span>
+                        <div class="fc">
+                            <input type="number" class="iText" required step="0.1" id="install_speed" name="install_speed" style="width:220px;" value="{{result.install_speed}}" />
+                        	<input type="submit" value="保存" class="submit save" />
+                        </div>
+                    </li>
+            	</form>
+                    <form action="../blacklist/saveconfig" method="POST">
+                    <li>
+                        <span class="label">install_rate：</span>
+                        <div class="fc">
+                            <input type="number" class="iText" required step="0.1" id="install_rate" name="install_rate" style="width:220px;" value="{{result.install_rate}}" />
+                        	<input type="submit" value="保存" class="submit save" />
+                        </div>
+                    </li>
+            	</form>
+            	<form action="../blacklist/saveconfig" method="POST">
+                    <li>
+                        <span class="label">blackusertime：</span>
+                        <div class="fc">
+                            <input type="number" class="iText" required step="1" id="blackusertime" name="blackusertime" style="width:220px;" value="{{result.blackusertime}}" />
+                        	<input type="submit" value="保存" class="submit save" />
+                        </div>
+                    </li>
+            	</form>
+            	<form action="../blacklist/saveconfig" method="POST">
+                    <li>
+                        <span class="label">holdexpire：</span>
+                        <div class="fc">
+                            <input type="number" class="iText" required step="1" id="holdexpire" name="holdexpire" style="width:220px;" value="{{result.holdexpire}}" />
+                        	<input type="submit" value="保存" class="submit save" />
+                        </div>
+                    </li>
+            	</form>
+            	<form action="../blacklist/saveconfig" id="all_form" method="POST">
+            		<li>
+            			<span class="label"></span>
+            			<div class="fc">
+            				<input type="hidden" class="iText" id="click_speed_all" name="click_speed" value="{{result.click_speed}}" />
+            				<input type="hidden" class="iText" id="click_rate_all" name="click_rate" value="{{result.click_rate}}" />
+            				<input type="hidden" class="iText" id="ims_speed_all" name="ims_speed" value="{{result.ims_speed}}" />
+            				<input type="hidden" class="iText" id="ims_rate_all" name="ims_rate" value="{{result.ims_rate}}" />
+            				<input type="hidden" class="iText" id="install_speed_all" name="install_speed" value="{{result.install_speed}}" />
+            				<input type="hidden" class="iText" id="install_rate_all" name="install_rate" value="{{result.install_rate}}" />
+							<input type="hidden" class="iText" id="blackusertime_all" name="blackusertime" value="{{result.blackusertime}}" />
+            			 	<input type="hidden" class="iText" id="holdexpire_all" name="holdexpire" value="{{result.holdexpire}}" />
+            				<input type="button" value="保存所有" class="submit saveall" />
+            			</div>
+            		</li>
+            	</form>
+         	</ul>
+        </div>
+    </div>
+</div>
+<script>
+$(function(){
+		$(".saveall").click(function(){
+			$("#click_speed_all").val($("#click_speed").val());
+			$("#click_rate_all").val($("#click_rate").val());
+			$("#ims_speed_all").val($("#ims_speed").val());
+			$("#ims_rate_all").val($("#ims_rate").val());
+			$("#install_speed_all").val($("#install_speed").val());
+			$("#install_rate_all").val($("#install_rate").val());
+			$("#blackusertime_all").val($("#blackusertime").val());
+			$("#holdexpire_all").val($("#holdexpire").val());
+			$("#all_form").submit();
+		});
+})
+</script>

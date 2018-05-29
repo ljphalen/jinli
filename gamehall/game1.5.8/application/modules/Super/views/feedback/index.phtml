@@ -1,0 +1,35 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div id="page">
+		<article class="ac">
+			<div class="feedback-text">
+				<p><?php echo $configs['game_react'];?></p>
+			</div>
+			<div class="feedback-form">
+				<form class="form-box" method="post" action="<?php echo $addPostUrl;?>">
+					<input type="hidden" name="token" value="<?php echo $token?>"/>
+					<dl>
+						<dt>反馈内容 <span>(不能少于6个字)</span></dt>
+						<dd><textarea name="react" pattern=".{6,500}" rqd="true" placeholder="请输入您的反馈意见（字数500字以内）" data-null="请先输入您的建议" data-error="反馈内容不能少于6个字" maxlength="500"></textarea></dd>
+						<dt>联系方式<span>(QQ号码为必填项)</span></dt>
+						<dd><input type="text" name="qq" pattern="^[1-9]\d{5,11}$" rqd="true" placeholder="请留下您的QQ号码" data-null="请输入您的QQ号码" data-error="QQ号码错误"><i>*<i/></dd>
+						<dd><input type="text" name="mobile" pattern="^1[3458]\d{9}$" placeholder="请留下您的手机号码" data-error="手机号码错误"></dd>
+					</dl>
+					<div class="submit-btn"><button class="btn J_submitBtn">提交</button></div>
+				</form>
+			</div>
+			<div class="contact-text">
+				<p>● 金立游戏大厅QQ群：189360286
+					<span>加群暗号：爱游戏</span></p>
+				<p>● 金立游戏大厅QQ：1732001808
+					<span>加QQ暗号：爱游戏</span></p>
+				<p>● 官方邮箱：game@gionee.com</p>
+			</div>
+		</article>
+	</div>
+	<div class="J_tipBox tip-box invisible">
+		<p></p>
+		<div class="mask"></div>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

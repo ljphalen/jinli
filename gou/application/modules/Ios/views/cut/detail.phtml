@@ -1,0 +1,104 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+
+<body data-pagerole="body">
+	<div class="module">
+		<section id="iScroll" class="cut-detail J_lazyload_img">
+			<div class="gotop">
+				<span>返回顶部</span>
+			</div>
+			<?php if(!$uid) {?>
+			<a href="javascript:;" class="cut-banner">
+				<img src="<?php echo $staticResPath;?>/pic/blank.gif" data-src="<?php echo $staticResPath?>/pic/cut-banner.jpg" alt="购物大厅">
+			</a>
+			<?php }?>
+			<div class="cut-goods">
+				<div class="pic">
+					<img src="<?php echo $staticResPath;?>/pic/blank.gif" data-src="<?php echo $store['pic_url'];?>"/>
+					<span id="J_info"></span>
+				</div>
+				<div class="desc">
+					<p><?php echo html_entity_decode($store['title']);?></p>
+					<?php if($uid && $is_client && (Common::getIosClientVersion() >= 130)) {?>
+					<a class="share J_iosShareToSns" id="J_share" href="javascript:;"
+						data-title="<?php echo html_entity_decode($store['share_title']);?>"
+						data-url="<?php echo $webroot.'/cut/detail?id='.$goods['id'].'&fuid='.Common::encrypt(urldecode($uid));?>"
+						data-pic="<?php echo $store['pic_url'];?>">
+						<i class="ico-share"></i>
+						<p>找人帮忙</p>
+					</a>
+					<?php }?>
+					<?php if(!$is_client || (Common::getIosClientVersion() < 130)) {?>
+					<a onclick="GOU.baiduStatic('砍价详情','砍价详情-下载客户端点击量')" href="<?php echo $download_url;?>" class="download">
+						<i class="ico-download"></i>
+						<p>下载客户端</p>
+					</a>
+					<?php }?>
+				</div>
+				<div class="price">
+					<span>￥<em id="J_price"><?php echo $goods['price'];?></em></span><label id="J_origPrice">￥<?php echo $store['price']; ?></label>
+				</div>
+				<div class="web-btn">
+					<a id="J_cutBtn" data-id="<?php echo $goods['id'];?>" data-code="" data-ajaxurl="<?php echo $webroot;?>/api/ios_cut/getstatus?id=<?php echo $goods['id'];?>&fuid=<?php echo $fuid;?>" href="javascript:;"></a>
+				</div>
+				<div class="legend" style="display:none;" id="J_legend">来购物大厅客户端砍价享受更多优惠</div>
+			</div>
+			<div class="divide"></div>
+			<div class="cut-rule">
+				<a class="desc" href="<?php echo $action['viewUrl'].'?id='.$goods['id']; ?>">商品详情描述<i class="ico-arrow-gray"></i></a>
+				<div class="rule">
+					<h3><i class="ico-i"></i>砍价规则</h3>
+					<p><?php echo $regular; ?></p>
+				</div>
+			</div>
+
+			<?php if($uid) {?>
+			<div class="goods-rec">
+				<div class="more-at">
+					<div class="line"></div>
+					<div class="wd">更多商品就在</div>
+					<div class="line"></div>
+				</div>
+				<a onclick="GOU.baiduStatic('砍价详情','砍价详情-商户店铺点击量')" href="<?php echo $shop['shop_url']; ?>" class="shop">
+					<div class="logo">
+						<img src="<?php echo $shop['logo']; ?>"/>
+					</div>
+					<div class="title">
+						<h3><?php echo $shop['shop_title']; ?></h3>
+						<p><?php echo $shop_type[$shop['shop_type']];?></p>
+					</div>
+					<div class="ico"><i class="ico-arrow-gray"></i></div>
+				</a>
+				<ul class="list">
+					<?php foreach($ext as $v){?>
+					<li>
+						<a href="<?php echo $convert[$v['num_iid']]['click_url']; ?>"><img src="<?php echo $v['img']; ?>"/></a>
+						<p>￥<?php echo $v['price']; ?></p>
+					</li>
+					<?php } ?>
+				</ul>
+			</div>
+			<?php }?>
+			<?php if(!$uid) {?>
+			<a href="<?php echo $download_url;?>" class="cut-download">
+				<img src="<?php echo $staticResPath;?>/pic/blank.gif" data-src="<?php echo $staticResPath?>/pic/cut-download.jpg" alt="购物大厅">
+			</a>
+			<?php }?>
+		</section>
+		<div style="display:none;" class="info" share-content="<?php echo html_entity_decode($store['title']);?>" share-pic="<?php echo $store['pic_url'];?>">
+		</div>
+		<div id="J_downModal" class="modal" style="display:none;">
+			<div class="weixin-dialog">
+				<div class="title">购物大厅</div>
+				<div class="content">立即下载购物大厅客户端，更多优质商品等你来砍</div>
+				<div class="btn">
+					<span class="J_modalCancel">取消</span>
+					<a class="line" onclick="GOU.baiduStatic('砍价详情','砍价详情-下载按钮点击量')" href="<?php echo $download_url;?>">
+						<div class="J_modalSure">下载</div>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/newfooter.phtml");?>

@@ -1,0 +1,171 @@
+<?php echo $this->render("layout/header.phtml");?>
+<style>
+	.ct_01 td{
+		padding: 7px 0px 9px;
+		color: #666;
+	}
+	.text{
+		border:1px solid gray ;
+		background: #fff;
+		min-height:40px; 
+		margin-bottom: 4px;
+	}
+	.icon_user{
+		background-position: -144px -96px;
+		width: 16px;height: 16px;
+	}
+	
+</style>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $listUrl;?>">积分商城</a></li>
+        <li><a href="<?php echo $pointPrizeIndexUrl;?>">积分抽奖</a></li>
+        <li><a href="<?php echo $presendIndexUrl;?>">人工发放</a></li>
+        <li class="current"><a href="<?php echo $exchangeDetailUrl;?>">兑换记录</a></li>
+        <li><a href="<?php echo $pointDescIndexUrl;?>">积分说明管理</a></li>
+	</ul>
+</div>
+<div class="h_a">兑换记录</div>
+<form action="<?php echo $exchangeDetailUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="category_id" type="hidden" value="<?php echo $s['category_id'];?>" />
+<input name="mall_id" type="hidden" value="<?php echo $s['mall_id'];?>" />
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr">
+	      <th class="th">状态</th>
+			<td class="td" colspan="1">
+			<select name="status" class="select wa">
+			    <option  value="0">全部</option>
+				<option <?php if($s['status'] == 1) echo 'selected';?> value="1">未发放</option>
+				<option <?php if($s['status'] == 2) echo 'selected';?> value="2">已发放</option>
+			</select>
+			</td>
+			<th class="th">账号</th>
+			<td class="td"><input type="text" class="input" name="uname" value="<?php echo $s['uname'];?>"></td>
+			
+			<th class="th">昵称</th>
+			<td class="td"><input type="text" class="input" name="nickname" value="<?php echo $s['nickname'];?>"></td>
+		</tr>
+		<tr class="tr">
+	    <tr class="tr">
+			<th class="th">时间</th>
+			<td class="td" colspan="2"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo $s['start_time'];?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo $s['end_time'];?>" /></div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="category_id" type="hidden" value="<?php echo $s['category_id'];?>" />
+<input name="mall_id" type="hidden" value="<?php echo $s['mall_id'];?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+    <span class="btn2"><span><a href="<?php echo $pointShopIndexUrl;?>/?category_id=<?php echo $s['category_id'];?>" style="text-decoration:none;color:#ffffff;height: 21px;margin: 0 -9px;padding: 0 10px;line-height: 21px;padding-bottom: 2px;">返回</a></span></span>
+    <span class="btn2"><span><button onclick="$('#action').val('send');" type="submit">批量发放完成</button></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="btn2"><span><button type="button" id="exportBtn">导出excel</button></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;共<?php echo $total;?>条结果</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   </div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+		    <td>账号</td>
+			<td>昵称</td>
+			<td>QQ号码</td>
+			<td>兑换时间</td>
+			<td>兑换数量</td>
+			<td>状态</td>
+			<td>发放时间</td>
+			<td>操作</td>
+			<td></td>
+		</tr>
+<?php foreach($logs as $key => $value) {?>
+<?php if($value['status'] == 0){
+	       $status = '未发放';
+      } else if($value['status'] == 1){
+      	   $status = '已发放';
+      }
+?>
+		<tr class="ct_01">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><?php echo $value['uname'];?></td>
+			<td><?php echo $nicknames[$value['uuid']];?></td>
+			<td><?php echo $value['qq'] ? $value['qq'] : '--';?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['exchange_time']);?></td>
+			<td><?php echo $value['exchange_num'];?></td>
+			<td><?php echo $status;?></td>		
+			<td><?php echo $value['send_time'] ? date('Y-m-d H:i:s', $value['send_time']) : '-';?></td>
+			<td>
+			<?php if($value['status'] == 0) { ?>
+			<a href="javascript:" onclick="sendgood(<?php echo $value['id'];?>)" class="mr10">发放完成</a> 
+			<?php } ?> 
+			</td>
+	    </tr>
+		<?php if($types[$value['id']] == 1){ ?>
+		<tr class="ct">
+			<td colspan="8">
+				<div class="text">
+				   收货人: <?php  echo $value['receiver']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;联系电话: <?php  echo $value['receiverphone']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;联系人地址: <?php  echo $value['address']; ?>
+				</div>
+			</td>
+			<?php if(!$value['status'] && $types[$value['id']] == 1){ ?>
+			<td style="width:110px;">
+    			<span class="btn2"><span><a href="<?php echo $addressUrl;?>/?mall_id=<?php echo $s['mall_id'];?>&id=<?php echo $value['id'];?>&page=<?php echo $page;?>&category_id=<?php echo $s['category_id'];?>" class="mr10" style="color:white;">编辑</a></span></span>
+			</td>
+			<?php } ?> 
+	    </tr>
+	    <?php } ?>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<div class="mr10 cc">
+	<form action="<?php echo $goodExportUrl;?>" method="post" id="exportForm">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<input type="hidden" name="mall_id" value="<?php echo $s['mall_id'];?>">
+	<input type="hidden" name="nickname" value="<?php echo $s['nickname'];?>">
+	<input type="hidden" name="uname" value="<?php echo $s['uname'];?>">
+	<input type="hidden" name="status" value="<?php echo $s['status'];?>">
+	<input type="hidden" name="start_time" value="<?php echo $s['start_time'];?>">
+	<input type="hidden" name="end_time" value="<?php echo $s['end_time'];?>">
+	<input type="hidden" name="category_id" value="<?php echo $s['category_id'];?>">
+	</form>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+    $('#end_time').datetimepicker();
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Mall_Goods/exchangeDetail?mall_id=<?php echo $s['mall_id'];?>&category_id=<?php echo $s['category_id'];?>');
+	});
+	$("#exportBtn").click(function(){
+		$("#exportForm").submit();
+    });
+})
+function sendgood(id){
+	$.ajax({
+		url : baseurl + "/Admin/Mall_Goods/send",
+		type : 'POST',
+		dataType : 'json',
+		data : 'token='+'<?php echo $token;?>'+'&id='+id,
+		success : function(ret) {
+			 if (ret.success) {
+				showMsg('', ret.msg);
+			} else {
+				showError('', ret.msg);
+			}
+			setTimeout(function() {
+					location.href = baseurl + "/Admin/Mall_Goods/exchangeDetail?mall_id=<?php echo $s['mall_id'];?>&category_id=<?php echo $s['category_id'];?>";
+			}, 500);
+		}
+	});
+}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,100 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">背景图列表</a></li>
+		<li class="current"><a href="javascript:;">添加背景图</a></li>
+	</ul>
+</div>
+<div class="h_a">添加背景图</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">标题</th>
+				<td class="td"><input type="text" class="input wc" name="title"
+					value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">类型</th>
+				<td class="td"><select name="ad_ptype" onchange='showtd()'>
+                    <?php foreach($ad_ptypes as $key=>$value) {?>				
+    					<option value="<?php echo $key;?>"><?php echo $value;?></option>
+                    <?php }?>
+				</select></td>
+			</tr>
+			<tr class="tr">
+                            <th class="th" id="th_day">白天图片<br>(607*285)</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="DayImg"><img
+							src="<?php echo $staticPath;?>/img/content/nopic.jpg" /> <input
+							type="hidden" name="img_day" value=""></li>
+					</ul>
+					<p style="clear: both;">
+						<iframe name="upload"
+							src="<?php echo $uploadUrl.'/?imgId=DayImg';?>"
+							style="height: 50px; width: 100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tr>
+			<tr class="tr" id="tr_night">
+				<th class="th">夜晚图片<br>(607*285)</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="NightImg"><img
+							src="<?php echo $staticPath;?>/img/content/nopic.jpg" /> <input
+							type="hidden" name="img_night" value=""></li>
+					</ul>
+					<p style="clear: both;">
+						<iframe name="upload"
+							src="<?php echo $uploadUrl.'/?imgId=NightImg';?>"
+							style="height: 50px; width: 100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">生效时间</th>
+				<td class="td"><div>
+						<input class="input" type="text" maxlength="30"
+							style="width: 143px;" id="start_time" name="start_time" value="" />
+						至 <input class="input" type="text" maxlength="30"
+							style="width: 143px;" id="end_time" name="end_time" value="" />
+					</div></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td"><select name="status">
+						<option value="1">开启</option>
+						<option value="0">关闭</option>
+				</select></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script
+	src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+function showtd(){
+	var value=$("select[name=ad_ptype]").val();
+	if (value == 1) {
+		 $("#th_day").html('白天图片');
+		 $("#tr_night").show();
+	} else if(value == 2){
+		$("#th_day").html('图片');
+		$("#tr_night").hide();
+	}
+}
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Account_Bgimg/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

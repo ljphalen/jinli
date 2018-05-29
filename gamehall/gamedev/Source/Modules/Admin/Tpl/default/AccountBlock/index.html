@@ -1,0 +1,94 @@
+<form id="pagerForm" action="__ACTION__" method="post">
+	<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+	<input type="hidden" name="numPerPage" value="{$_REQUEST.numPerPage}" />
+	<input type="hidden" name="orderField" value="{$_REQUEST.orderField}" />
+	<input type="hidden" name="orderDirection" value="{$_REQUEST.orderDirection}" />
+	<volist name="_search" key="name" id="field">
+		<input type="hidden" name="_search[{$key}]" value="{$field|safe}"/>
+	</volist>
+	<input type="hidden" name="account" value="{$_REQUEST.account}"/>
+</form>
+<div class="page">
+	<div class="pageHeader">
+		<form onsubmit="return navTabSearch(this);" action="__URL__/index/pid/{$_REQUEST.pid}/" method="post">
+		<div class="searchBar">
+			<ul class="searchContent">
+				<li>
+					<label>邮箱账号：</label>
+					<input type="text" name="_search[email]" class="medium" value="{$_search[email]}">
+				</li>
+				<li>
+					<label>账号状态：</label>
+					<select class="combox" name="_search[status]">
+					<option value="">所有</option>
+					<option value="0">封号</option>
+					<option value="1">正常</option>
+					</select>
+				</li>
+				<script type="text/javascript">
+					$("select[name='_search[status]']").val('{:$_search[status]}');
+				</script>
+
+				<div class="buttonActive"><div class="buttonContent"><button type="submit">查询</button></div></div>
+			</ul>
+		</div>
+		</form>
+	</div>
+	<div class="pageContent">
+
+		<table class="list" width="100%" layoutH="138">
+			<thead>
+			<tr>
+				<th width="50" orderField="id" class="{:orderField('id','asc')}">编号</th>
+				<th>审核通过日期</th>
+				<th>封停日期</th>
+				<th>注册帐号（邮箱）</th>
+				<th>帐号</th>
+				<th>结束封号时间</th>
+				<th>封号人</th>
+				<th>备注</th>
+				<th>提前解封</th>
+			</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="list">
+				<tr target="sid_user" rel="{$vo['id']}">
+					<td>{$vo['id']}</td>
+					<td>{$vo['audit_at']}</td>
+					<td><if condition="$vo['block_info']['add_time'] eq 0 ">--<else />{:date('Y-m-d H:i:s',$vo['block_info']['add_time'])}</if></td>
+					<td>{$vo['email']}</td>
+					<td>{:AccountsModel::getStatus($vo['status'])}</td>
+					<td><if condition="$vo['deblock_time'] eq 0 ">--<else />{:date('Y-m-d H:i:s',$vo['deblock_time'])}</if></td>
+					<td>{$vo['block_info']['admin_name']}</td>
+					<td>{$vo['block_info']['remarks']}</td>
+					<td>
+					<if condition="$vo['status'] eq AccountsModel::STATUS_PASS">
+						<a height="450" width="600" target="dialog" href="__URL__/doBlock/id/{$vo['id']}">封号</a>
+					<else />
+						<a  height="450" width="600" target="dialog" href="__URL__/deBlock/id/{$vo['id']}">解封</a>
+					</if>
+					</td>
+				</tr>
+			</volist>
+			</tbody>
+		</table>
+
+		<div class="panelBar">
+			<div class="pages">
+				<span>显示</span>
+				<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+					<option value="10" <eq name="numPerPage" value="10">selected</eq>>10</option>
+					<option value="20" <eq name="numPerPage" value="20">selected</eq>>20</option>
+					<option value="50" <eq name="numPerPage" value="50">selected</eq>>50</option>
+					<option value="100" <eq name="numPerPage" value="100">selected</eq>>100</option>
+					<option value="200" <eq name="numPerPage" value="200">selected</eq>>200</option>
+				</select>
+				<span>共{$totalCount}条</span>
+			</div>
+			<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="10" currentPage="{$currentPage}"></div>
+		</div>
+
+	</div>
+	
+</div>
+

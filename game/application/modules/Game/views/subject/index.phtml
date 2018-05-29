@@ -1,0 +1,93 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+</script>
+	<div id="page" >
+		<header class="hd">
+		    <?php if($bannel) {
+		       if( $bannel['ad_ptype'] == 1){
+		       	  $tid ='GID';
+		       } else if($bannel['ad_ptype'] == 2){
+		       	  $tid ='CID';
+		       } else if($bannel['ad_ptype'] == 3){
+		       	  $tid ='SID';
+		       }
+		    ?>
+		    <a style="display:none;" href="<?php echo Common::tjurl($tjUrl, $bannel['id'], 'AD11', $bannel['link'], '');?>&t_bi=<?php echo $source;?>"><img src="<?php echo $attachPath.$bannel['img'];?>" alt="">
+		    	<?php } ?>
+		    <div class="top-banner">
+		    <a class="search" href="<?php echo $webroot.'/search/index?stype=9&t_bi='.$source;?>"></a></a>
+		    </div>
+		    
+			<nav>
+				<ul>
+					<li><a href="<?php echo $webroot.'?t_bi='.$source;?>">首页</a></li>
+					<li><a href="<?php echo $webroot.'/category/?t_bi='.$source;?>">分类</a></li>
+					<li class="selected"><a href="<?php echo $webroot.'/subject/?t_bi='.$source;?>">专题</a></li>
+					<li><a href="<?php echo $webroot.'/rank/?flag='.$configs['game_client_rank'].'&t_bi='.$source;?>">排行</a></li>
+				</ul>
+			</nav>
+		</header>
+		
+		<section class="wrap">
+			<div class="subject-list J_topicItem">
+				<ul>
+					 <?php foreach($subjects as $key=>$value) {?>
+					 <?php 
+						 if($value['id'] < 10){
+						   $t_id = 'SUBJECT0'.$value['id'];
+						 } else {
+						   $t_id = 'SUBJECT'.$value['id'];
+						 }
+					 ?>
+					<li>
+						<a href="<?php echo Common::tjurl($tjUrl, $value['id'], $t_id, $webroot.'/subject/detail/?id='.$value['id'].'&intersrc='.$t_id);?>&t_bi=<?php echo $source;?>">
+							<div class="intro">
+								<span class="pic">
+									<img data-src="<?php echo $attachPath.$value['icon'];?>" src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="<?php echo $value['title'];?>">
+								</span>
+								<span class="title">
+									<b><?php echo $value['title'];?></b>
+									<em><?php echo date("Y-m-d",$value['start_time']);?></em>
+								</span>
+							</div>
+							<div class="content">
+								<span class="desc">
+								<?php echo strip_tags(html_entity_decode($value['resume'], ENT_QUOTES));?>
+								</span>
+							</div>
+						</a>
+					</li>
+					<?php }?>
+				</ul>
+				<?php if($hasnext) {?>
+				<div class="load-more J_loadMore" data-ajaxUrl="<?php echo $webroot.'/subject/more/?t_bi='.$source;?>" data-hasnext="<?php echo $hasnext;?>" data-curpage="<?php echo $page;?>">
+					<span>加载更多</span>
+				</div>
+		       <?php } ?>
+			</div>
+		</section>
+		
+
+		<div class="goTop J_gotoTop">
+			<a ></a>
+		</div>
+		<footer class="ft">
+			<div class="wchat" >
+				<img src="<?php echo $attachPath.$ami_web_weixin;?>" alt="" />
+				<div>
+				<p>欢迎关注我们的微信公众帐号！</p>
+				<p>微信号：gioneegame</p>
+			    </div>
+			</div>
+			<div class="quick-links">
+				<a href="<?php echo $webroot.'/contact?t_bi='.$source;?>">联系我们</a>
+				<a href="<?php echo $webroot.'/feedback?t_bi='.$source;?>">意见反馈</a>
+				<a href="<?php echo strpos($configs['game_link'], '?') == false ? $configs['game_link'].'&t_bi='.$source :$configs['game_link'].'?t_bi='.$source;?>"><?php echo $configs['game_title'];?></a>
+			</div>
+		</footer>
+	</div>
+</body>
+<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

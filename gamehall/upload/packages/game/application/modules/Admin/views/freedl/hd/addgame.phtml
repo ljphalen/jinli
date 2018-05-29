@@ -1,0 +1,145 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li class="current"><a href="<?php echo $listUrl.'?activity_id='.$activity_id.'&act='.$act;?>">免流量活动</a></li>
+		<li><a href="<?php echo $ulistUrl;?>">用户统计</a></li>
+        <li><a href="<?php echo $flistUrl;?>">流量统计</a></li>
+        <li><a href="<?php echo $blistUrl;?>">黑名单</a></li>
+	</ul>
+</div>
+<div class="step mb10" id='setcont'>
+		<ul class="cc">
+			<li style="width:33.3%"><?php echo $act == 'add' ? "创建" : "编辑";?>活动</li>
+			<li class="line" style="left:33%"></li>
+			<li class="current" style="width:32.3%" ><span ass="fl"><em></em></span>内容配置</li>
+			<li class="line" style="left:66%"></li>
+			<li style="width:33.3%"><span class="fl"><em></em></span>预警设置</li>
+		</ul>
+</div>
+<form action="<?php echo $addGameUrl.'?activity_id='.$activity_id.'&act='.$act;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="activity_id" type="hidden" value="<?php echo $activity_id;?>" />
+<input name="act" type="hidden" value="<?php echo $act;?>" />
+<input name="step_status" type="hidden" value="<?php echo $step_status;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input wb" name="name" value="<?php echo $s['name'];?>"></td>
+			<th class="th">ID</th>
+			<td class="td"><input type="text" class="input wb" name="id" value="<?php echo $s['id'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl.'?activity_id='.$activity_id.'&act='.$act;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="activity_id" type="hidden" value="<?php echo $activity_id;?>" />
+<input name="act" type="hidden" value="<?php echo $act;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<?php if(count($current_games)){?>
+<div class="h_a">
+    <?php foreach($current_games as $k=>$v){?>
+	<span><a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?game_id=<?php echo $k;?>&activity_id=<?php echo $activity_id;?>&user=<?php echo $user;?>', '', event);"><?php echo $v;?></a><a style="background: url(<?php echo $staticPath;?>/img/layout/tab.png);width: 7px;height: 7px;display: inline-block;background-position: -20px 20px;"></a></span>&nbsp;&nbsp;
+	<?php }?>
+</div>
+<div class="h_a">
+<span class="btn2" style="margin-left:55px;display:none;"><span><button type="button">下一步预警设置</button></span></span>
+<span class="btn2" style="margin-left:55px;"><span><a href="<?php echo $act == 'add' ? $addWarnUrl : $editWarnUrl;?>/?activity_id=<?php echo $activity_id.'&act='.$act;?>">下一步预警设置</a></span></span>
+</div>
+<?php }?>
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('add');" type="submit">添加</button></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+	<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已添加共<?php echo count($current_games);?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td>ID</td>
+			<td>标题</td>
+			<td>图标</td>
+			<td>分类</td>
+			<td>大小</td>
+			<td>版本</td>
+			<td>状态</td>
+		</tr>
+		<?php foreach($games as $key => $value) {?>
+		<tr class="ct">
+		    <td>
+		    <?php if (!in_array($value['id'], $currentIds)) {?>
+		    <input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox">
+		    <?php }else{?>
+		    <font color="green">√</font>
+		    <?php }?>
+		    </td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['name'];?></td>
+			<td><img src="<?php echo $value['img'];?>" style="width:7.2em;height:7.2em"/></td>
+        	<td><?php echo $value['category_title'];?></td>
+        	<td><?php echo $value['size'].'M';?></td>
+        	<td><?php echo $value['version'];?></td>
+        	<td><?php echo $value['status'] ? '已上线' : '已下线';?></td>
+		</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<div id="dialog" title="是否确认发布？">
+	</div>
+</form>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	//check();
+	ajaxForm('batchForm', function(ret) {
+		ajaxRedirect(ret, baseurl+'/Admin/Freedl_Hd/addgame?activity_id=<?php echo $activity_id;?>&act=<?php echo $act;?>');
+	});
+	$("#dialog").dialog({
+		autoOpen:false,
+		modal:true
+	})
+})
+function check1(){
+	$.ajax({
+		url : baseurl + "/Admin/Freedl_Hd/check",
+		type : 'POST',
+		dataType : 'json',
+		data : 'token='+'<?php echo $token;?>',
+		success : function(ret) {
+			 if (ret.success) {
+				 if(ret.msg) {
+				   showConfirm2(ret.msg);
+				 } else {
+					 location.href= baseurl+'/Admin/Freedl_Hd/addgame?activity_id=<?php echo $activity_id;?>&act=<?php echo $act;?>';
+				 }
+			} else {
+				showError('', ret.msg);
+			}
+			
+		}
+	});
+}
+
+function showConfirm2( msg) {
+	$("#dialog").html(msg);
+	$("#dialog").dialog({
+      buttons : {
+        "确定" : function() {
+         	 setTimeout(function() {
+		        location.href= baseurl+'/Admin/Freedl_Hd/addgame?activity_id=<?php echo $activity_id;?>&act=<?php echo $act;?>';
+			}, 500);
+        },
+        "取消" : function() {
+          $(this).dialog("close");
+        }
+      }
+    });
+     $("#dialog").dialog("open");
+}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

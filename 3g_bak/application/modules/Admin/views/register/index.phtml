@@ -1,0 +1,103 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<form id="addForm" method="post" action="/Admin/register/index">
+	<div>查询条件：</div>
+	<div class="table_full">
+		<table width="100%">
+            <input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<tr class="tr">
+				<td class="th">手机号：</td>
+				<td class="td">
+					<input id="mobile" name="mobile" type="text" class="input" width="100px;" value="<?php echo $params['mobile']; ?>">
+				</td>
+
+				<td>
+			</tr>
+            <tr class="tr">
+                <td class="th">呢称：</td>
+                <td class="td">
+                    <input id="nickname" name="nickname" type="text" class="input" width="100px;" value="<?php echo $params['nickname']; ?>">
+                </td>
+
+                <td>
+            </tr>
+			<tr class="tr">
+				<td class="th">是否为冻结账号</td>
+				<td class="td">
+                    <?php
+                    $radios = array(0 => '否', 1 => '是');
+                    foreach ($radios as $k => $name) {
+                        $checked = ($params['is_frozed'] == $k) ? 'checked="checked"' : '';
+                        echo sprintf('<input type="radio" name="is_frozed" %s value="%s">%s', $checked, $k, $name);
+                    }
+                    ?>
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<td class="th">是否为黑名单账号</td>
+				<td class="td">
+                    <?php
+                    $radios = array(0 => '否', 1 => '是');
+                    foreach ($radios as $k => $name) {
+                        $checked = ($params['is_black_user'] == $k) ? 'checked="checked"' : '';
+                        echo sprintf('<input type="radio" name="is_black_user" %s value="%s">%s', $checked, $k, $name);
+                    }
+                    ?>
+				</td>
+			</tr>
+
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+	<input type="hidden" id="hidden_export" name="export" value="0"/>
+</form>
+<div class="h_a">
+	&nbsp;总金币:<span id="total" style="color: red;font-size:13px"><?php echo $totalScore['total_scores']; ?></span> 总流通金币:<span style="color: red;font-size:13px"><?php echo $totalScore['total_remained_scores']; ?></span>
+	<span style="float:right;"><input type="button" value="导出" id="downLoad"></span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="">
+			<td width="">用户ID</td>
+			<td width="">手机号</td>
+			<td>呢称</td>
+			<td>Email</td>
+			<td>账号总金币</td>
+			<td>可用金币数</td>
+			<td>注册时间</td>
+            <td>登录时间</td>
+			<td>操作</td>
+		</tr>
+		<?php foreach ($data as $key => $value) {
+			?>
+			<tr class="ct">
+
+				<td><?php echo $value['id']; ?></td>
+				<td><?php echo $value['username']; ?></td>
+				<td><?php echo $value['nickname'] ? $value['nickname'] : '---'; ?></td>
+				<td><?php echo $value['email'] ? $value['email'] : '---'; ?></td>
+				<td><?php echo $value['total_score'] ? $value['total_score'] : '0'; ?></td>
+				<td><?php echo $value['remained_score'] ? $value['remained_score'] : '0'; ?></td>
+				<td class="td2"><?php echo date('Y-m-d H:i:s', $value['register_time']); ?></td>
+                <td class="td2"><?php echo date('Y-m-d H:i:s', $value['last_login_time']); ?></td>
+				<td><a href="/Admin/Register/edit?id=<?php echo $value['id']; ?>">查看详细</a>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?></div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#downLoad").bind('click', function () {
+			$("#hidden_export").val(1);
+			$("#addForm").submit();
+			$("#hidden_export").val(0);
+		});
+
+	});
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>
+

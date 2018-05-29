@@ -1,0 +1,8 @@
+<?php
+$str = '<div class="fun-piece-box">';
+foreach ($list as $val) {
+    $str .= sprintf('<div class="piece"><a href="%s">%s</a></div>', $val['link'], $val['ext']);
+}
+$url = Common::clickUrl('nav_fun:more', 'LABEL', Common::getCurHost() . '/nav/fun/index');
+$str .= sprintf('</div><div class="ui-gd-2 ui-border-tb"><div class="btn-wrap"><p id="js-fun-btn" data-mid="%s" data-pos="1"><span><i class="icon-switch"></i>再乐一个</span></p><p><a href="%s" onclick="local.navtive.event.log(\'card_checkmoreTheH5\',%s)"><i class="icon-more"></i>更多笑料</a></p></div></div><div class="ui-gd-shadown"></div>', $columnId, $url, $columnId);
+echo $str;

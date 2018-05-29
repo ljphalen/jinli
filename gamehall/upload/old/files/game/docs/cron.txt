@@ -1,0 +1,46 @@
+#2014-11-04 修正
+游戏大厅前台计划任务：
+*/10 * * * * /usr/local/php.5.4.13/bin/php /data/www/game/public/cron/tjpv.php
+#说明：用来累计每日的PV、UV到CACHE
+0	3	*	*	*	/usr/local/php.5.4.13/bin/php /data/www/game/public/cron/recommend.php
+#说明：用来从bi数据库获取游戏的相关推荐数据
+*/10 * * * * /usr/local/php.5.4.13/bin/php /data/www/game/public/cron/package.php > /dev/null 2>&1
+#说明：扫描上线游戏包跟差分包数据到CACHE
+
+游戏大厅后台计划任务：
+10	0	*	*	*	/usr/local/php.5.4.13/bin/php /data/www/game/public/cron/rank.php
+#说明：从BI 数据库拉去旧版下载最多排行榜数据
+*/1	*	*	*	*	/usr/local/php.5.4.13/bin/php /data/www/game/public/cron/collect.php
+#说明：从疯玩网抓取的新闻数据中图片本地化存储
+*/10	*	*	*	*	/usr/local/php.5.4.13/bin/php /data/www/game/public/cron/fwan.php
+#说明：采集疯玩网新闻资讯并入库
+* * * * * /usr/local/php.5.4.13/bin/php /data/www/game/public/cron/index_cache.php > /dev/null 2>&1
+#说明：客户端首页数据缓存刷取
+*/25 * * * * /usr/local/php.5.4.13/bin/php /data/www/game/public/cron/package.php
+#说明：扫描上线游戏包跟差分包数据到CACHE
+0 4-5/2 * * * /root/so/tools/php_gameguess.sh >> /root/so/tools/php_gameguess.log 2>&1 
+#01 04 * * * /usr/local/php.5.4.13/bin/php /data/www/game/public/cron/guess.php
+#说明：从bi数据库拉去用户的猜你喜欢数据
+01 02 * * * /usr/local/php.5.4.13/bin/php /data/www/game/public/cron/clientMonthRank.php
+#说明: 从bi数据库拉去月榜数据
+01 02 * * * /usr/local/php.5.4.13/bin/php /data/www/game/public/cron/clientWeekRank.php
+#说明：从bi数据库拉去老版本周榜数据。
+01 02 * * * /usr/local/php.5.4.13/bin/php /data/www/game/public/cron/clientWeekNewRank.php
+#说明：从bi数据库拉去新版周榜数据。
+01 02 * * * /usr/local/php.5.4.13/bin/php /data/www/game/public/cron/idxCategory.php
+#说明：更新游戏内容表、游戏分类索引表、猜你喜欢索引表、月榜索引表、中下载量数据
+*/5	*	*	*	*	/usr/local/php.5.4.13/bin/php /data/www/game/public/cron/phrase.php
+#说明：过滤并处理用户评论中的敏感词。
+0 0 * * * /usr/local/php.5.4.13/bin/php /data/www/game/public/cron/clientFastestRank.php   
+#说明：从bi数据库中拉去上升最快榜单数据
+0 0 * * * /usr/local/php.5.4.13/bin/php /data/www/game/public/cron/clientNewRank.php
+#说明：从bi数据库中拉去最新榜单数据
+0 0 * * * /usr/local/php.5.4.13/bin/php /data/www/game/public/cron/clientOlgRank.php
+#说明：从bi数据库中拉去网游榜单数据
+0 0 * * * /usr/local/php.5.4.13/bin/php /data/www/game/public/cron/clientSingleRank.php
+#说明：从bi数据库中拉去单机榜单数据
+*/3	*	*	*	*	/usr/local/php.5.4.13/bin/php /data/www/game/public/cron/userbind.php
+#说明：用来处理金立账号中心用户手机号换绑后的游戏大厅涉及用户的业务处理。
+
+0 1 * * * /usr/local/php.5.4.13/bin/php /data/www/game/public/cron/category_click.php
+#说明：从bi数据库中同步imei分类点击统计数据

@@ -1,0 +1,40 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+	<div class="module">
+		<section id="iScroll">
+			<form name="rechargeForm" id="recharge-form" class="recharge-form" channel-id ="<?php echo $channel_id;?>" action="<?php echo $webroot;?>/recharge/create">
+				<div class="txt">填写充值号码：</div>
+				<input name="phone"
+					class="j-phone"
+					id="j-phone"
+					type="tel"
+					placeholder="支持移动、联通、电信">
+				<div id="j-phone-clone" class="j-phone-clone" style="display:none;"></div>
+				<div id="j-error-msg" class="error-msg" style="display:none;">请输入正确的手机号码</div>
+				<div class="txt mt">选择充值金额：</div>
+				<div class="num-list-wrap">				
+					<ul class="num-list">
+					<?php 
+						$i=0; 
+						foreach ($prices as $key=>$value){
+						if($i > 0 && $i % 3 == 0) echo '</ul>
+						<ul class="num-list">';
+						?>
+						<li <?php if($i == 0) echo 'class="active"'?> data-num="<?php echo $value['price'];?>"><?php echo $value['price'];?>元</li>
+					<?php 				
+					$i++ ;
+					}?>
+					</ul>
+				</div>
+				<div class="num">
+					价格：<span id="j-price">￥<?php echo $prices[0]['range']?>元</span>
+				</div>
+				<div class="web-btn" id="j-recharge-submit"><button type="button">立即充值</button></div>
+				<input id="j-cardnum" name="cardnum" value="<?php echo $prices[0]['price']?>" type="hidden" >
+				<p class="remind"><?php echo $recharge_notice;?></p>
+			</form>		
+		</section>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

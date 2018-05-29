@@ -1,0 +1,40 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">阅读币列表</a></li>
+    <li class="current"><a href="javascript:;">添加阅读币</a></li>
+	</ul>
+</div>
+<div class="h_a">添加阅读币</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">	 	
+		<tr class="tr">
+			<th class="th">所属商品</th>
+			<td class="td">
+				<select name="goods_id" class="wa">
+				<?php foreach ($goods as $key=>$value) {?>
+					<option value="<?php echo $value['id'];?>"><?php echo $value['title'];?></option>
+				<?php }?>
+				</select>				
+			</td>
+		</tr>
+		<tr class="tr" id="descrip">
+				<th class="th">卡号</th>
+				<td class="td"><textarea class="textarea" name="card_number"></textarea> 可一次添加多个卡号，每行填写一个卡号
+				</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Readcoin/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

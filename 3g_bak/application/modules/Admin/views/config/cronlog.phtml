@@ -1,0 +1,49 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+
+<form action="<?php echo $baseUrl; ?>" method="post">
+	<input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">系列</th>
+				<td class="td">
+					<select name="type">
+						<?php foreach ($types as $value) { ?>
+							<option <?php echo ($value == $type) ? 'selected="selected"' : ''; ?> value="<?php echo $value; ?>"><?php echo $value; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">日期</th>
+				<td class="td">
+					<input type="text" class="input" name="date" value="<?php echo $date; ?>">
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button type="submit">搜 索</button></span></span>
+	</div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="150">时间</td>
+			<td width="100">类型</td>
+			<td>内容</td>
+		</tr>
+		<?php foreach ($list as $key => $value) { ?>
+			<tr class="ct">
+				<td><?php echo date('Y-m-d H:i:s', $value['created_at']); ?></td>
+				<td><?php echo $value['type']; ?></td>
+				<td><?php echo $value['msg']; ?></td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

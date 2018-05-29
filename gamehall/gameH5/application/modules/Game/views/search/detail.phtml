@@ -1,0 +1,86 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div id="page">
+		<header class="hd">
+			<h1><div class="omit">游戏详情</div></h1>
+			<div class="back-home"><a href="<?php echo $go ? $webroot :'javascript:history.go(-1)';?>">&lt;</a></div>
+		</header>
+		
+		<article class="ac">
+			<div class="detail-field">
+				<dl>
+					<dt><img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $info['img'];?>"></dt>
+					<dd class="desc">
+						<p class="name"><?php echo $info['name'];?></p>
+						<p class="info">
+							<?php $tmp=$from == 'baidu' ? $info['category'] : $info['category_title']; if($tmp){?>
+								<span><?php echo $from == 'baidu' ? $info['category'] : $info['category_title'];?></span><em>|</em>
+							<?php }?>
+							<span><?php echo $info['language'];?></span></p>
+						<p class="origin"><?php echo $info['developer'];?></p>
+					</dd>
+					
+				</dl>
+				<div class="download"><a href="<?php echo  Common::bdurl($tjUrl, $info['id'], $intersrc, $info['link'], '', $from, $info['name'], $keyword, $stype);?>&t_bi=<?php echo $source;?>" class="btn">下载(<?php echo $info['size'];?>M)</a></div>
+			</div>
+			<div class="detail-scrollPic" id="J_screenshot">
+			    <?php if($news){?>
+			    <div class="eva_link">
+				<ul>
+					<?php $intertype= array(1 =>'ZX',2 =>  'PC', 3 => 'HD');?>
+					<?php $ntype= array(1 =>'news',2 =>  'evaluation', 3 => 'news');?>
+					<?php foreach($news as $key=>$value){?>
+					<?php if($value['ntype'] != 4){?>
+					<li>
+						<a href="<?php echo Common::tjurl($tjUrl, $value['id'], ($info['id'] == 117 ? 'GAME': $intertype[$value['ntype']].$value['id']), $webroot."/{$ntype[$value['ntype']]}/detail?id=".$value['id'].'&intersrc='.$intertype[$value['ntype']].$value['id'], '');?>&t_bi=<?php echo $source;?>"><?php echo $value['title'];?></a>
+					</li>
+					<?php }}?>
+				</ul>
+			    </div>
+			    <?php }?>
+				<div class="pic-wrap">
+					<div class="wrap">
+					<?php foreach($info['simgs'] as $key=>$value){?>
+					<span><img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $value;?>"></span>
+					<?php }?>
+				</div>
+				</div>
+			</div>
+			<div class="detail-text ui-editor">
+				<?php if($info['tgcontent']){?>
+			    <h3 class="title">【小编八卦】</h3>
+				<div class="gossip-info">
+					<?php echo html_entity_decode($info['tgcontent']);?>
+				</div>
+				<?php } ?>
+				
+				<?php if($info['descrip']){?>
+				<h3 class="title">【游戏简介】</h3>
+				<div data-text class="desc-info">
+					<?php echo html_entity_decode($info['descrip']);?>
+				</div>
+				<div class="open J_openBtnWrap"><span>展开</span></div>
+				<?php } ?>
+			</div>
+		</article>
+
+		<div class="goTop J_gotoTop">
+			<a ></a>
+		</div>
+		<footer class="ft">
+			<div class="wchat" >
+				<img src="<?php echo $attachPath.$ami_web_weixin;?>" alt="" />
+				<div>
+				<p>欢迎关注我们的微信公众帐号！</p>
+				<p>微信号：gioneegame</p>
+			    </div>
+			</div>
+			<div class="quick-links">
+				<a href="<?php echo $webroot.'/contact?t_bi='.$source;?>">联系我们</a>
+				<a href="<?php echo $webroot.'/feedback?t_bi='.$source;?>">意见反馈</a>
+				<a href="<?php echo strpos($configs['game_link'], '?') == false ? $configs['game_link'].'&t_bi='.$source :$configs['game_link'].'?t_bi='.$source;?>"><?php echo $configs['game_title'];?></a>
+			</div>
+		</footer>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

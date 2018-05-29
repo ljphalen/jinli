@@ -1,0 +1,69 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">下载活动列表</a></li>
+		<li class="current"><a href="javascript:;">中奖记录</a></li>
+	</ul>
+</div>
+<form action="<?php echo $logUrl . '?id=' . $ac_id;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="ac_id" type="hidden" value="<?php echo $ac_id;?>" />
+<div class="table_full">
+	<table width="100%">	
+		 <tr>
+		   <th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			    <option  value="0">全部</option>
+			    <option <?php if($search['status'] == 1) echo 'selected';?> value="1">未中奖</option>
+				<option <?php if($search['status'] == 2) echo 'selected';?> value="2">已中奖</option>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="exportForm" action="<?php echo $exportLogUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="ac_id" type="hidden" value="<?php echo $ac_id;?>" />
+<input name="status" type="hidden" value="<?php echo $search['status'];?>" />
+<div class="h_a">
+	<span class="btn2"><span><button type="submit">导出excel</button></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>访客代码</td>
+			<td>抽奖时间</td>
+			<td>状态</td>
+			<td>联系方式（手机号）</td>
+			<td>奖品</td>
+		</tr>
+<?php $config = array('1'=>'一等奖','2'=>'二等奖','3'=>'三等奖');?>
+<?php foreach($data as $key => $value) {?>
+		<tr class="ct">
+		  	 <td><?php echo $value['uuid'];?></td>
+			 <td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+			 <td><?php echo $value['status'] == 1 ? '中奖' : '未中奖';?></td>
+			 <td><?php echo ($value['mobile']) ? $value['mobile'] : '';?></td>
+			 <td><?php echo ($value['prize']) ? $config[$value['prize']] : '';?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//表单数据提交
+$(document).ready(function(){
+	ajaxForm('exportForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/H5_Dlactivity/log'+<?php echo '?id=' . $ac_id;?> );
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,66 @@
+<include file="Public:header" />
+
+<div class="mainw clearfix">
+	<include file="nav_left" />
+    
+	<div class="rmain fl">
+   	  <h2 class="yyname">企业税务登记信息</h2>
+   	  <form class="form-horizontal taxfixfrom" id="editform" method="post" action="{:U("user/save_tax")}" enctype="multipart/form-data" role="form">
+      <div class="formd formd2">
+      	<div class="lid"><label class="tlab">税务登记证号：</label>
+        	<div class="colr fl">
+      	 	  <input type="text" class="w324 int" name="tax_number" value="{$info.tax_number}" placeholder="123456789" id="tax_number">
+         	  <span class="help-block">输入税务登记证号，长度为18位。</span>
+         	</div>
+         	<div class="col-sm-4">
+							<div id="contactTip" class="onCorrect"></div>
+						</div>
+      	</div>
+      	<div class="lid"><label class="tlab">税务登记证扫描件：</label>
+      		<div class="colr fl faxfixup">
+              <input type="text" id="taxfiximgurl" readOnly="true">
+              <span class="btn-sm">上传扫描件</span>
+              <input id="apkupload" type="file" name="tax_passport" onchange="document.getElementById('taxfiximgurl').value=this.value;" class="perfectfile"/>
+              <input type="hidden" name="tax_passport_old" value="{$info['tax_passport']}">
+	
+            	<span class="help-block">支持JPG，PNG两种格式的图片，图片大小在2M以下</span>
+                <notempty name="info.tax_passport">
+                  <div class="taxfiximg">
+                  <a href="{:Helper('Apk')->get_url('user')}{$info['tax_passport']}" target="_blank">
+                  	<img src="{:Helper('Apk')->get_url('user')}{$info['tax_passport']}" onload="javascript:resizeimg(this,330,200);" width="330" height="200" class="img-thumbnail" />
+                 	</a>
+                  </div>
+				</notempty>
+            </div>
+      	</div>
+      	<div class="btnw">
+      	<button type="submit" class="btnwbotg">修改资料</button></div>
+      </div>
+      </form>
+    </div>
+</div>
+<load href="{:cdn('PUBLIC')}/app/validate/formValidator-4.1.1.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/themes/126/js/theme.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/themes/126/style/style.css?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/formValidatorRegex.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/common/js/validate.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/common/js/resizeImg.js?{:C('JS_VERSION')}" />
+
+<script type="text/javascript">
+$.formValidator.initConfig({
+	theme : "126",
+	errorFocus : false,
+	formID : "editform",
+	mode:"AutoTip"
+});
+
+$("#tax_number").formValidator({}).inputValidator({
+	min : 0,
+	max : 18,
+	onError : "税务号长度不正确(限18个字符)"
+}).regexValidator({
+	regExp : "^([\\w]+)$",
+	onError : "只允许字母和数字"
+});
+</script>
+<include file="Public:footer" />

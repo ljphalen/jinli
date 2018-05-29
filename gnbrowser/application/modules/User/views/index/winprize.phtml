@@ -1,0 +1,34 @@
+<?php echo $this->render("../../Front/views/layout/header.phtml");?>
+	<div id="page">
+		<header class="hd">
+			<h1>兑奖</h1>
+			<div class="back">
+				<a href="<?php echo $webroot?>/user/index/signin"><span class="left-arrow"><i></i></span></a>
+			</div>
+		</header>
+		
+		<article class="ac exc-prize">
+			<div class="prize-list clearfix">
+				<ul>
+					<?php foreach($prizes as $key=>$value){?>
+					<li><span><img src="<?php echo $attachPath.$value['img'];?>" alt="" data-prizeId="<?php echo $value['id'];?>" /></span></li>
+					<?php }?>
+				</ul>
+			</div>
+			
+			<div class="btn-wrap"><a href="javascript:void(0);" id="J_prizeBtn" data-ajaxUrl="<?php echo $webroot; ?>/user/index/lottery" class="btn">兑奖</a></div>
+			<div class="sign-rule">
+				<p>点击兑奖，系统将随机选中其中一款奖项，祝您好运。</p>
+			</div>
+		</article>
+	</div>
+	<!-- 弹出层信息显示窗口 -->
+		<div class="JS-dbMask"></div>
+		<div class="dialog-box J_dialogBox">
+			<p></p>
+			<div class="btn-wrap">
+				<span class="btn">确定</span>
+			</div>
+		</div>
+		<!-- /弹出层信息显示窗口 -->
+<?php echo $this->render("../../Front/views/layout/footer.phtml");?>

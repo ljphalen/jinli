@@ -1,0 +1,131 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl.'?type='.$type;?>">游戏列表</a></li>
+		<li class="current"><a>版本管理</a></li>
+	</ul>
+</div>
+<div class="h_a">
+    <a href="<?php echo $step2editUrl.'?id='.$id.'&type='.$type;?>">
+    <input type="button" value="游戏版本列表"/>
+    </a> 
+    <div style=" position:absolute;right:20px;top:68px"><a href="<?php echo $step2Url.'?id='.$id.'&type='.$type;?>">
+   <input type="button" value=" 添加游戏版本" />
+    </a></div>
+</div>
+<div class="table_full">
+<dl style="display:-webkit-box">
+	<dt style="width:64px;height:64px; " >
+	<img style="height: 100%;width:auto;" src="<?php echo $attachPath.$info['img'];?>" alt="" >
+	</dt>
+	<dd style="padding-left: 64px">
+		<p><span class="name">游戏名称:<?php echo $info['name'];?></span></p>
+		<p><span class="id">游戏ID:<?php echo $id;?></span></p>
+		<p><span class="type">类型:<?php echo $category_titles;?></span></p>
+		<p><span class="name">游戏包名:<?php echo $info['package'];?></span></p>
+	</dd>
+</dl>
+</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $id;?>" type="hidden" />
+<input name="status" value="0" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr">
+			<th class="th">下载地址</th>
+			<td class="td">
+			   <input type="text" name="link" class="input wc" value="" id="link" style="width:660px;"><button type="button" id="test" style="margin-left:20px;">获取</button>
+			</td>
+	    </tr>
+		 <tr class="tr">
+			<th class="th">Version Code</th>
+			<td class="td"><input type="text" name="version_code" class="input wc" value="" id="version_code"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">版本号</th>
+			<td class="td"><input type="text" class="input wc" name="version" value="" id="version"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">MD5校验值</th>
+			<td class="td"><input type="text" name="md5_code" class="input wc" value="" id="md5_code"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">大小</th>
+			<td class="td"><input type="text" name="size" class="input" value="" id="size">M</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">系统最低版本要求</th>
+			<td class="td">
+				<select name="min_sys_version" class="wa">
+<?php foreach($sys_version as $key=>$value) {?>				
+					<option value="<?php echo $value['id'];?>"><?php echo 'Android'.$value['title'];?></option>
+<?php }?>
+				</select>
+				<select name="max_sys_version" class="wa" style="display:none;">
+<?php foreach($sys_version as $key=>$value) {?>				
+					<option value="<?php echo $value['id'];?>"><?php echo 'Android'.$value['title'];?></option>
+<?php }?>
+				</select>
+			</td>
+		</tr> 
+		 <tr class="tr">
+			<th class="th">分辨率</th>
+			<td class="td">
+				<select name="min_resolution" class="wa">
+<?php foreach($resolution as $key=>$value) {?>				
+					<option value="<?php echo $value['id'];?>"><?php echo $value['title'];?></option>
+<?php }?>
+				</select>
+				         
+				&nbsp;&nbsp;至&nbsp;&nbsp;
+				         
+				<select name="max_resolution" class="wa">
+<?php foreach($resolution as $key=>$value) {?>				
+					<option value="<?php echo $value['id'];?>"><?php echo $value['title'];?></option>
+<?php }?>
+				</select>
+			</td>
+		</tr>
+		<?php if($type == 2){ ?>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			   <input type="text" name="edit_status" class="input wc" value="未上线" <?php echo $type == 2 ? "readonly='true' style='color:gray;'" : '';?> >
+			</td>
+	    </tr> 
+		<?php }?>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">完成</button></span></span></div>
+</form>
+<script type="text/javascript">
+//游戏表单数据提交
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Resource_Games/edit_step2?id=<?php echo $id;?>&type=<?php echo $type;?>');
+	});
+})
+$('#test').click(function(){
+		    $('#version_code,#version,#md5_code,#size').html("");
+			$.ajax({
+				url : baseurl + "/Admin/Resource_Games/add_version",
+				type : 'POST',
+				dataType : 'json',
+				data : 'token='+'<?php echo $token;?>'+'&link='+$("#link").val(),
+				success : function(ret) {
+					 if (ret.success) {
+						var list = ret.data.list;
+						$('#version_code').val(list.version_code) ;
+						$('#version').val(list.version);
+						$('#md5_code').val(list.md5_code);
+						$('#size').val(list.size);
+					} else {
+						showError('', ret.msg);
+					}
+				}
+			});
+			return false;
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

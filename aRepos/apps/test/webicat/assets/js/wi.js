@@ -1,0 +1,1 @@
+(function(a){var b=(new Date()).getTime();a.app("WI");a.mix(WI,{fn:function(){$("span.sub-title").click(function(){alert("Hello, iCat library...")})}});$(function(){var c=(new Date()).getTime();WI.fn();})})(ICAT);

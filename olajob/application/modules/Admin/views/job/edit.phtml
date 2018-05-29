@@ -1,0 +1,98 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">职位列表</a></li>
+    <li class="current"><a href="javascript:;">编辑职位</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑会员</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editFrom">
+    <input name="id" value="<?php echo $info['id'];?>" type="hidden"/>
+    <input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">分类</th>
+			<td class="td"><?php echo $categorys[$info['category_id']]['title'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">用户id</th>
+			<td class="td"><?php echo $info['user_id'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">区域</th>
+			<td class="td"><?php echo $areas;?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">手机</th>
+			<td class="td"><?php echo $info['phone'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><?php echo $info['title'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">公司名称</th>
+			<td class="td"><?php echo $info['company_name'] ;?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">薪资待遇</th>
+			<td class="td"><?php echo $info['money']; ?>/<?php echo Ola_Service_Job::moneyType($info['money_type']);?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">结算方式</th>
+			<td class="td"><?php echo Ola_Service_Job::checkType($info['check_type']);?></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">性别限制</th>
+			<td class="td"><?php echo Ola_Service_Job::sex($info['sex']);?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">职位来源</th>
+			<td class="td"><?php echo Ola_Service_Job::jobType($info['job_type']);?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">详细地址</th>
+			<td class="td"><?php echo $info['address'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">负责人</th>
+			<td class="td"><?php echo $info['author'];?></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">职位描述</th>
+			<td class="td"><?php echo $info['description'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input wc" name="sort" value="<?php echo $info['sort'];?>"></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status">
+			<?php foreach($status as $key => $value) {?>
+			       <option <?php echo $info['status'] == $key ? 'selected="selected"' : '';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+			<?php }?>
+            </select>
+            </td>
+		</tr>
+	</table>
+</div>
+
+
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">保存</button></span></span></div>
+</form>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Job/index?s=1');
+	});
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

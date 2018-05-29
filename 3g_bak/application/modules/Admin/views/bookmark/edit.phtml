@@ -1,0 +1,201 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $listUrl; ?>">应用列表</a></li>
+			<li class="current"><a href="javascript:;">编辑应用</a></li>
+		</ul>
+	</div>
+	<div class="h_a">编辑应用</div>
+	<form method="post" action="<?php echo $editPostUrl; ?>" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+		<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+		<input name="ver" value="<?php echo $info['ver']; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">名称</th>
+					<td class="td"><input type="text" class="input" name="name" value="<?php echo $info['name']; ?>">
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">合作商</th>
+					<td class="td"><select name="parter_id" id="parter_id">
+							<?php foreach ($cooperators as $k => $v) { ?>
+								<option value="<?php echo $v['id'] ?>"  <?php if ($v['id'] == $urlInfo['pid']) echo 'selected'; ?>><?php echo $v['name']; ?></option>
+							<?php } ?>
+						</select></td>
+				</tr>
+				<tr class="tr" id="tr_business" style="display: <?php echo empty($blist) ? 'none' : '' ?>">
+					<th class="th">业务列表</th>
+					<td class="td">
+						<select id="bid" name="bid">
+							<option value="0">请选择</option>
+							<?php foreach ($blist as $k => $v) { ?>
+								<option value="<?php echo $v['id']; ?>"  <?php if ($v['id'] == $urlInfo['bid']) echo 'selected'; ?>><?php echo $v['name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr" id="tr_url" style="display:<?php echo empty($urlList) ? 'none' : '' ?>">
+					<th class="th">合作商链接</th>
+					<td class="td">
+						<select name="cp_id" id="cp_id">
+							<option value="0">请选择</option>
+							<?php foreach ($urlList as $k => $v) { ?>
+								<option value="<?php echo $v['id']; ?>"  <?php if ($v['id'] == $urlInfo['id']) echo 'selected'; ?>><?php echo "{$v['url_name']}:{$v['url']}"; ?></option>
+							<?php } ?>
+						</select></td>
+				</tr>
+
+				<tr class="tr" id="tr_link" style="display: <?php echo empty($info['cp_id']) ? '' : 'none' ?>">
+					<th class="th">地址</th>
+					<td class="td"><input type="text" class="input wc" name="url" value="<?php echo $info['url']; ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">背景颜色</th>
+					<td class="td">
+						<input type="text" class="input" name="backgroud" value="<?php echo $info['backgroud']; ?>">(填写颜色值，如:#1459A3,#0F8755,
+						                                                                                            不填写则显示为默认颜色)
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">图标</th>
+					<td class="td">
+						<ul class="uploadImg">
+							<li id="AppImg">
+								<img src="<?php echo $attachPath . $info['icon']; ?>"/>
+								<input type="hidden" name="icon" value="<?php echo $info['icon']; ?>">
+							</li>
+						</ul>
+						<p style="clear:both;">
+							<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=AppImg'; ?>"
+							        style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">是否可删除</th>
+					<td class="td">
+						<input type="hidden" name="is_delete" id="is_delete" value="<?php echo $info['is_delete']; ?>"/>
+						<input type="checkbox"
+						       onclick="if(this.checked){$('#is_delete').val(1);}else{$('#is_delete').val(0);}"
+							<?php echo $info['is_delete'] == 1 ? 'checked="checked"' : ''; ?> >(选中表示设置为可删除)
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">版本</th>
+					<td class="td">
+						<?php
+						foreach (Gionee_Service_Bookmark::$ver as $key => $val):
+							$checked = '';
+							if ($key & $info['ver']) {
+								$checked = 'checked="checked"';
+							}
+							?>
+							<input id="ver<?php echo $key; ?>" type="checkbox" class="input" name="filter_ver[]" <?php echo $checked; ?> value="<?php echo $key; ?>">
+							<label for="ver<?php echo $key; ?>"><?php echo $val; ?></label>
+						<?php endforeach; ?>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">排序</th>
+					<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort']; ?>">（填写一个数字，数字越大越靠前）
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">分类(3.1.2,4.0.4有效)</th>
+					<td class="td">
+						<?php
+						foreach (Gionee_Service_Bookmark::$opName as $k => $name) {
+							$checked = ($info['op_type'] & $k) > 0 ? 'checked="checked"' : '';
+							echo sprintf('<input type="checkbox" name="op_type[]" %s value="%s">%s', $checked, $k, $name);
+						}
+						?>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">状态</th>
+					<td class="td">
+						<?php
+						$operations = array(0 => '正常', 1 => '下线', 2 => '上线');
+						foreach ($operations as $k => $name) {
+							$checked = ($info['operation'] == $k) ? 'checked="checked"' : '';
+							echo sprintf('<input type="radio" name="operation" %s value="%s">%s', $checked, $k, $name);
+						}
+						?>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script type="text/javascript">
+		//表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Bookmark/index?ver=<?php echo $info['ver'];?>');
+			});
+		})
+
+
+		$("#parter_id").bind('change', function () {
+			var pid = $("#parter_id option:selected").val();
+			if (pid > 0) {
+				$.ajax({
+					'type': 'post',
+					'dataType': 'json',
+					'data': {'token': '<?php echo $token;?>', 'pid': pid},
+					'url': '/Admin/Parter/ajaxGetBussinessList',
+					'success': function (e) {
+						var html = "<option value='0'>请选择</option>";
+						$.each(e.data, function (i, m) {
+							html += "<option value='" + m.id + "'>" + m.name + "</option>";
+						});
+						$("#bid").html(html);
+						$("#tr_business").show();
+					}
+				});
+			} else {
+				$("#tr_business").hide();
+				$("#tr_url").hide();
+			}
+		});
+
+		$("#bid").bind('change', function () {
+			var bid = $("#bid option:selected").val();
+			if (bid > 0) {
+				$.ajax({
+					'type': 'post',
+					'dataType': 'json',
+					'data': {'token': '<?php echo $token;?>', 'bid': bid},
+					'url': '/Admin/Parter/ajaxGetUrlByBid',
+					'success': function (e) {
+						var html = "<option value='0'>请选择</option>";
+						$.each(e.data, function (i, m) {
+							html += "<option value='" + m.id + "'>" + m.url_name + " : " + m.url + "</option>";
+						});
+						$("#cp_id").html(html);
+						$("#tr_url").show();
+					}
+				});
+			} else {
+				$("#tr_url").hide();
+			}
+		});
+
+		$("#cp_id").bind('change', function () {
+			var id = $("#cp_id option:selected").val();
+			if (id > 0) {
+				$("#tr_link").hide();
+			} else {
+				$("#tr_link").show();
+			}
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

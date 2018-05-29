@@ -1,0 +1,44 @@
+<?php echo $this->render("layout/header.phtml");?>
+<section id="page">
+	<!-- 主体内容 -->
+	<section id="content">
+		<section class="product">
+			<section class="product-detail">
+				<section class="top-box">
+					<div class="mod-slide">
+						<div class="wrap">
+							<?php if(strpos($info['img'], 'http://') === false) {
+										$img = $attachPath.$info['img'];
+									}else{
+										$img = $info['img'].'_200x200.'.end(explode(".",  $info['img']));
+									};?>
+						    <ul class="pic">
+						    	<li><img src="<?php echo $img;?>" alt="" /></li>
+							</ul>
+						</div>
+					</div>
+					<div class="txtInfo"> 
+						<div class="txt">
+							<h3><?php echo $info['title'];?></h3>
+							<p>
+								<span><em><?php echo $info['price'];?>元</em></span>
+								<span>（可用<em><?php echo $info['silver_coin'];?>元</em>银币抵现）</span>
+							</p>
+						</div>
+					</div>
+				</section>
+				<article class="intro">
+					<?php echo html_entity_decode($info['descrip']);?>
+				</article>
+				<nav class="button gray-arrow">
+					<a class="btn-buy" href="<?php echo $webroot.'/order/detail/?id=',$info['id'];?>">
+					<span>立即购买</span>
+					</a>
+				</nav>
+			</section>
+		</section>
+	</section>
+	<!--  /主体内容 -->
+</section>
+</body>
+</html>

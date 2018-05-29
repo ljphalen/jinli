@@ -1,0 +1,141 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">资源列表</a></li>
+		<li class="current"><a href="javascript:;">编辑资源</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑资源</div>
+<form method="post" action="<?php echo $editPostUrl; ?>" id="editResourceForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">资源名称</th>
+				<td class="td"><input type="text" class="input" name="name" value="<?php echo $info['name']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">简述</th>
+				<td class="td">
+					<textarea class="input" name="summary" class="textarea wc" style="height:60px;width:900px"><?php echo $info['summary']; ?></textarea>(用于首页显示)
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">下载地址</th>
+				<td class="td">
+					<input type="text" class="input wc" name="down_url" value="<?php echo $info['down_url']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">公司名称</th>
+				<td class="td"><input type="text" class="input" name="company" value="<?php echo $info['company']; ?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">星级</th>
+				<td class="td"><input type="text" class="input" name="star" value="<?php echo $info['star']; ?>">(填写数字，1-5之间)
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">资源大小</th>
+				<td class="td"><input type="text" class="input" name="size" value="<?php echo $info['size']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td"><select name="status" min-width="100px">
+						<option <?php if ($info['status'] == 1) echo 'selected="selected"'; ?> value="1">开启</option>
+						<option <?php if ($info['status'] == 0) echo 'selected="selected"'; ?>value="0">关闭</option>
+					</select></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">图标</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="ResourceImg">
+							<img src="<?php echo $attachPath . $info['icon']; ?>" width="100"/>
+							<input type="hidden" name="icon"
+							       value="<?php echo $info['icon']; ?>"> <br/>
+							<a href="javascript:;">删除</a></li>
+					</ul>
+					<p style="clear: both;">
+						<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=ResourceImg'; ?>"
+						        style="height: 50px; width: 100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">资源图片</th>
+				<td class="td">
+					<?php foreach ($pimgs as $key => $value) { ?>
+						<div id="upimg<?php echo $value['id']; ?>">
+							<ul class="uploadImg">
+								<li id="upImg<?php echo $value['id']; ?>">
+									<img src="<?php echo $attachPath . $value['img']; ?>"/>
+									<input type="hidden" name="upImg[<?php echo $value['id']; ?>]" value="">
+								</li>
+								<li>
+									<a href="javascript:void(0)" onclick="deleteImg('<?php echo $deleteImgUrl; ?>?id=<?php echo $value['id']; ?>', 'upimg<?php echo $value['id']; ?>', event);">删除</a>
+								</li>
+							</ul>
+							<p style="clear:both;">
+								<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=upImg', $value['id']; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+							</p>
+						</div>
+					<?php } ?>
+					<div id="imgs"></div>
+					<div class="mb10">
+						<button onclick="addupload();" onfocus="blur();" type="button" 　class="btn">＋添加预览图片</button>
+					</div>
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">详情介绍</th>
+				<td class="td">
+					<textarea name="description" style="width: 800px; height: 400px;"><?php echo $info['description']; ?></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	$(document).ready(function () {
+		ajaxForm('editResourceForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Resource/index');
+		});
+
+		var imgc = 0;
+		addupload = function () {
+			var al = $('<ul class="uploadImg"><li id="Img' + imgc + '"><img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/><input type="hidden" name="simg[' + imgc + ']" value=""></li></ul><p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>' + imgc + '" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>');
+			$('#imgs').append(al);
+			imgc++;
+		}
+		deleteImg = function (url, elid, e) {
+			showConfirm("确认删除该条信息？", function () {
+				$.ajax({
+					url: url,
+					type: 'POST',
+					dataType: 'json',
+					data: 'token=' + token,
+					success: function (ret) {
+						if (ret.success) {
+							$('#' + elid).remove();
+						} else {
+							showError('', ret.msg);
+						}
+					}
+				});
+			}, e);
+		}
+
+	})
+
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

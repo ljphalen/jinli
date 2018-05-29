@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<?php $this->title='用户反馈';$this->hasSearch=false;?>
+	<meta charset="UTF-8">
+	<title>游戏大厅</title>
+	<?php echo $this->render("layout/cssInc.phtml");?>
+</head>
+<body>
+	<?php echo $this->render("layout/header.phtml");?>
+		<div id="container">
+			<div class="user-feedback">
+				<div class="icon-news">
+					<p>
+						<?php echo $configs['game_react'];?>
+					</p>
+				</div>
+				<textarea maxlength="500" rows="6" id="opinion" placeholder="请输入您的反馈意见（字数500字以内)"></textarea>
+				<div class="contact-info">
+					<h3>联系方式<span>（QQ号码或邮箱为必填项）</span></h3>
+					<input type="text" id="phone" placeholder="请留下您的手机号码" />
+					<input type="text" id="qq" placeholder="请留下您的QQ或邮箱" required="true"/>
+				</div>
+				<div class="but">
+					<input type="button" id="send" value="提交" />
+				</div>
+			</div>
+		</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+	<div class="alert" name="alertRadio" id="alert">
+		<span class="icon-alert-title failure" name="icon">
+			<span></span>
+		</span>
+		<h3 class="title" name="title">提交失败</h3>
+		<p class="info" name="info"></p>
+		<a href="javascript:" name="ok" class="alone-button">确定</a>
+	</div>
+	<div class="layer-bg-black" name="alertRadio">
+	</div>
+</body>
+<?php echo $this->render("layout/scriptInc.phtml");?>
+<script src="<?php echo "$appJs/validata.js$timestamp";?>"></script>
+<script src="<?php echo "$appJs/userFeedback.js$timestamp";?>"></script>
+</html>

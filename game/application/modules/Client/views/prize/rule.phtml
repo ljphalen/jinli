@@ -1,0 +1,49 @@
+<head>
+<title><?php echo $title?$title:'金立游戏大厅';?></title> 
+<meta charset="UTF-8">
+<meta name="keyword" content="金立, 金立游戏, 游戏大厅" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="format-detection" content="email=no" />
+<link rel="stylesheet" href="<?php echo $staticroot; ?>/apps/game/apkv1/assets/css/prize.source.css?v=<?php echo $version;?>" />
+</head>
+<script> var token = '<?php echo $token;?>'; </script>
+<body id="prize-rule-container">
+	<div class="rule-time-container">
+		<h1 class="rule-title">活动时间：</h1>
+		<span class="time"><?php echo date('Y-m-d H:i:s', $prize['start_time']);?> 到 <?php echo date('Y-m-d H:i:s', $prize['end_time']);?></span>
+	</div>
+	<hr class="line"/>
+	<div class="rule-info-container">
+		<h1 class="rule-title">活动说明：</h1>
+		<div class="ui-editor">
+			<?php echo html_entity_decode($prize['descript']);?>
+		</div>
+	</div>
+	<hr class="line"/>
+	<div class="rule-desc-container">
+		<h1 class="rule-title">奖品介绍：</h1>
+		<ul>
+		<?php foreach ($config as $item):?>
+			<?php if($item['type'] == 0){ continue; }?>
+				<li>
+					<div class="box">
+						<div class="content">
+							<img src="<?php echo $attachPath . $item['img'];?>" alt=""/>
+						</div>
+					</div>
+					<span class="name"><?php echo $item['title']?></span>
+				</li>
+		<?php endforeach;?>
+		</ul>
+	</div>
+	<hr class="line"/>
+	<div class="rule-phone-container">
+		<h1 class="rule-title">联系客服：</h1>
+		<span class="phone">客服电话：<?php echo $servicePhone; ?></span>
+		<span class="qq">客服QQ：<?php echo $serviceQq; ?></span>
+	</div>
+</body>
+</html>

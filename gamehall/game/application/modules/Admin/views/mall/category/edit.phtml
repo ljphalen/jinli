@@ -1,0 +1,58 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $listUrl;?>">积分商城</a></li>
+        <li><a href="<?php echo $pointPrizeIndexUrl;?>">积分抽奖</a></li>
+        <li><a href="<?php echo $presendIndexUrl;?>">人工发放</a></li>
+        <li><a href="<?php echo $pointDescIndexUrl;?>">积分说明管理</a></li>
+        <li class="current"><a href="<?php echo $pointDescIndexUrl;?>">添加商品分类</a></li>
+	</ul>
+</div>
+
+<div class="h_a">编辑商品分类</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<input name="goods_type" value="<?php echo $info['goods_type'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	   <tr class="tr">
+			<th class="th">商品分类名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title']?>" value="" id="name"></td>
+		</tr>
+		<tr class="tr" >
+			<th class="th">类型</th>
+			<td class="td">
+			<?php echo $type[$info['goods_type']];?>
+			<?php /*?><select name="goods_type" class="select wa">
+				<?php foreach($type as $key=>$val) {?>   
+				<option value="<?php echo $key;?>" <?php if($info['goods_type'] == $key) echo 'selected';?>><?php echo $val;?></option>					
+			  <?php }?> 
+			</select><?php */?>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input wc" name="sort" value="<?php echo $info['sort']?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="select wa">
+				<option <?php if ($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+				<option <?php if ($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+		ajaxForm('addFrom',function(ret){
+			ajaxRedirect(ret, baseurl+'/Admin/Mall_Category/index');
+	});
+})	
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

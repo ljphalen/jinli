@@ -1,0 +1,67 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div>V2.0.5以后的版本 兼容第三方客户端</div>
+<div class="nav">
+	<ul class="cc">
+		<li  class="current" ><a href="<?php echo $clientListUrl; ?>">CP_CLIENT管理</a></li>
+		<li><a href="<?php echo $clientEditUrl."?cp_id={$cpId}"; ?>">CP_CLIENT添加</a></li>
+	</ul>
+</div>
+
+<table width="100%">
+	<tr class="tr">
+		<th class="th" style="width: 40px;">CP:</th>
+		<td>
+			<select id="id" name="id" onchange="to_cp_list(this.value)">
+				<?php
+				foreach ($cps as $key => $val){
+					$selected = '';
+					if ($key == $cpId) {
+						$selected = ' selected ';
+					}
+					echo "<option value=\"{$key}\" {$selected}>{$val[0]}</option>";
+				}
+				?>
+			</select>
+		</td>
+	</tr>
+</table>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="40">编号</td>
+			<td width="120">source_name</td>
+			<td width="100">channel_name</td>
+			<td width="60">detail_id</td>
+
+			<td width="80">操作</td>
+		</tr>
+		<?php foreach ($list as $key => $value) { ?>
+			<tr class="ct">
+				<td><?php echo $value['id']; ?></td>
+				<td title="<?php echo $cps[$value['cp_id']][0]; ?>"><?php echo $cps[$value['cp_id']][1]."({$cps[$value['cp_id']][0]})"; ?></td>
+				<td><?php echo $value['channel_name']; ?></td>
+				<td><?php echo $value['detail_id'] ?></td>
+				<td>
+					<a href="<?php echo $clientEditUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+					<a href="javascript:"  onclick="deleteOne('<?php echo $clientDelUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+				</td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+
+<script type="text/javascript">
+	function verify(id) {
+		$.getJSON(baseurl + "<?php echo $verifyUrl;?>/?id=" + id, function (ret) {
+			showMsg('', ret.msg);
+		})
+	}
+	function to_cp_list(id) {
+		var url = "<?php echo $clientListUrl;?>?cp_id=" + id;
+		window.location.href=url; // 跳转
+	}
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

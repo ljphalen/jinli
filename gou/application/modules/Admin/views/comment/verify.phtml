@@ -1,0 +1,131 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $verifyUrl;?>">知物评论</a></li>
+	</ul>
+</div>
+
+<form action="<?php echo $verifyUrl;?>" method="get" id="searchForm" >
+    <input name="token" type="hidden" value="<?php echo $token;?>"/>
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">关键词</th>
+                <td class="td"><input type="text" class="input wc" name="content" value="<?php echo $param['content'];?>" placeholder="输入关键词"></td>
+                <th class="th">设备</th>
+                <td class="td"><select name="os" id="select">
+                        <option value="" >请选择</option>
+                        <option <?php if($param['os'] == 2) echo 'selected="selected"';?> value="2">iOS</option>
+                        <option <?php if($param['os'] == 1) echo 'selected="selected"';?> value="1">Android</option>
+                    </select></td></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">知物ID</th>
+                <td class="td"><input type="text" class="input wc" name="item_id"	value="<?php echo $param['item_id'];?>"></td>
+                <th class="th">UID</th>
+                <td class="td"><input type="text" class="input wc" name="uid"	value="<?php echo $param['uid'];?>"></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">时间</th>
+                <td class="td">
+                    <input class="input" type="text"  id="from_time" name="from_time" value="<?php echo $param['from_time'];?>">-
+                    <input class="input" type="text"  id="to_time" name="to_time" value="<?php echo $param['to_time'];?>"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac">
+		<span class="btn">
+			<span>
+				<button type="submit">搜 索</button>
+			</span>
+		</span>
+    </div>
+</form>
+<form id="checkForm" action="<?php echo $checkUrl ?>" method="post">
+    <input name="token" type="hidden" value="<?php echo $token;?>" />
+    <input name="status" id="status" type="hidden" value="">
+<div class="table_list">
+    <div class="h_a">
+        <span class="btn2"><span><button onclick="$('#status').val('0');" type="submit">取消审核</button></span></span>
+        <span class="btn2"><span><button onclick="$('#status').val('1');" type="submit">通过审核</button></span></span>
+        <span class="btn2"><span><button onclick="changeFormAction()" type="submit">删除选中</button></span></span>
+    </div>
+    <table width="100%">
+		<tr class="hd">
+			<td width="50"><input type="checkbox" onclick="checkAll('.checkbox')">ID</td>
+			<td width="50">知物</td>
+			<td width="50" >uid</td>
+			<td width="50" >设备</td>
+			<td width="50" >昵称</td>
+            <td width="80">赞</td>
+            <td width="120">内容</td>
+            <td width="120">原始内容</td>
+            <td width="80">时间</td>
+			<td width="80">区域</td>
+			<td width="60">状态</td>
+			<td width="80">操作</td>
+		</tr>
+<?php foreach($data as $key => $value) { ?>
+		<tr class="ct <?php if($value['status']) echo 'blue';?>">
+            <td width="50"><input class="checkbox" type="checkbox" name="id[]"  value="<?php echo $value['id'] ?>"/><?php echo $value['id'] ?></td>
+			<td><?php echo $value['item_id'];?></td>
+			<td><?php echo $value['uid'];?></td>
+			<td><?php echo $os_type[$value['os']];?></td>
+            <td><?php echo $uid[$value['uid']]['nickname'];?></td>
+            <td><?php echo $value['praise'];?></td>
+            <td><?php echo html_entity_decode($value['content']);?></td>
+			<td><?php echo html_entity_decode($value['old_content']);?></td>
+            <td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+            <td><?php echo $value['region'];?></td>
+            <td><?php echo $value['status'] == 1 ? '已审核' : '未审核';?></td>
+			<td>
+				<?php if(!$value['status']): ?><a href="javascript:" data-id="<?php echo $value['id']; ?>" data-status="<?php echo $value['status']?0:1; ?>" class="check_btn mr10">审核</a><?php endif; ?>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script>
+
+    function changeFormAction(){
+        $("#checkForm").attr('action','<?php echo $deleteUrl;?>');
+    }
+    $(function(){
+        ajaxForm('checkForm', function(data) {
+            ajaxRedirect(data,document.URL);
+        });
+
+    });
+    $(function(){
+        var btn = $('.check_btn');
+        btn.click(function(e){
+            $.ajax({
+                url:'<?php echo $checkUrl;?>',
+                type:'POST',
+                data:{id:btn.data('id'),status:btn.data('status'),token:'<?php echo $token;?>'},
+                dataType:'json',
+                success:function(data){
+                    ajaxRedirect(data,document.URL);
+                }
+            });
+        });
+
+    });
+    $(document).ready(function() {
+        $("#to_time").datepicker({
+            dateFormat : 'yy-mm-dd'
+        });
+
+        $("#from_time").datepicker({
+            dateFormat : 'yy-mm-dd'
+        });
+    });
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

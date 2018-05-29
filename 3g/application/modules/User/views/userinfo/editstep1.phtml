@@ -1,0 +1,50 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div id="page">
+	<div id="paccount">
+		<div class="mainWrap">
+			<!-- 公共头部 -->
+			<header class="hdWrap">
+				<div class="hd-l"><a href="<?php echo $webroot;?>/user/userinfo/index" class="l-arrow">back</a></div>
+				<div class="hd-r"><h1>基本资料</h1></div>	
+			</header>
+			<!-- 内容区域 START-->
+			<div class="module">
+				<div class="form">
+					<form name="account-form" id="J_saveForm" action="<?php echo $webroot.$editstep1PostUrl;?>">
+						<div class="form-field">
+							<div class="form-input form-text">
+								<div><label>账号：</label></div>
+								<div><?php echo $user_info['username'];?></div>
+							</div>
+						</div>
+						<div class="form-field">
+							<div class="form-input form-text">
+								<div><label>昵称：</label></div>
+								<div><input type="text" name="nickname" autocomplete="off" maxlength="20" value="<?php echo $user_info['realname'];?>" /></div>
+							</div>
+						</div>
+						<div class="form-field">
+							<div class="form-select">
+								<div><label for="">机型：</label></div>
+								<div>
+									<select name="model">
+										<option value="0">选择机型</option>
+										<?php foreach ($modles as $key=>$value) {?>
+										<option <?php if(!$user_info['model']) {if($model == $value['name']) echo 'selected=selected';}else{if($user_info['model'] == $value['id']) echo 'selected=selected';}?> value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
+										<?php }?>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="form-field">
+							<div class="button">
+								<input type="submit" name="submit" value="保存" class="btn gray" />
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

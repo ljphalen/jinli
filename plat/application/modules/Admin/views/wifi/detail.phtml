@@ -1,0 +1,97 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">设备列表</a></li>
+    <li class="current"><a href="javascript:;">详细信息</a></li>
+	</ul>
+</div>
+<div class="table_full">
+	<div class="h_a">详细信息</div>
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">ID</th>
+			<td class="td"><?php echo $info['id'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">Mac</th>
+			<td class="td"><?php echo $info['device_mac'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">ht</th>
+			<td class="td"><?php echo $info['ht'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">创建时间</th>
+			<td class="td"><?php echo date('Y-m-d H:i:s', $info['create_time']);?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">最后心跳时间</th>
+			<td class="td"><?php echo date('Y-m-d H:i:s', $info['hb_time']);?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">用户最后登录时间</th>
+			<td class="td"><?php echo date('Y-m-d H:i:s', $info['last_login_time']);?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">上传速度</th>
+			<td class="td"><?php echo $info['upload_speed'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">下载速度</th>
+			<td class="td"><?php echo $info['download_speed'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">是否开启认证</th>
+			<td class="td"><?php echo $info['hs_enable'] == 1 ? '是':'否';?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">认证强制登录时间</th>
+			<td class="td"><?php echo $info['hs_timeout'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">在线人数</th>
+			<td class="td"><?php echo $info['online_num'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">在线用户Mac</th>
+			<td class="td"><?php echo $info['online_list'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">totalram</th>
+			<td class="td"><?php echo $info['totalram'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">freeram</th>
+			<td class="td"><?php echo $info['freeram'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">shareram</th>
+			<td class="td"><?php echo $info['shareram'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">bufferram</th>
+			<td class="td"><?php echo $info['bufferram'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">cached</th>
+			<td class="td"><?php echo $info['cached'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">totalswap</th>
+			<td class="td"><?php echo $info['totalswap'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">freeswap</th>
+			<td class="td"><?php echo $info['freeswap'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">totalfreeram</th>
+			<td class="td"><?php echo $info['totalfreeram'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><?php echo ((Common::getTime() - $info['hb_time'] ) > 60) ? '<font color="red">离线</font>' : '<font color="green">在线</font>';?></td>
+		</tr>
+	</table>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

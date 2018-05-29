@@ -1,0 +1,213 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+
+<div class="mainw clearfix">
+	<include file="Union:nav_left" />
+	<script>$(".lnav #key_tab2").addClass("on");</script>
+    <div class="rmain fl">
+    	<h2 class="yyname">我的密钥 » {$key.name|safe}</h2>
+		<div class="panel">
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-6">
+						<div>{$key.package|safe} {$key.name|safe}</div>
+						<div>类型：{:$key["type"] ? "网游" : "单机"}</div>
+						<div>渠道：{$key.channel}</div>
+						<div>申请时间：{$key["created_at"]|date="Y-m-d H:i", ###}</div>
+						<gt name="key.authorized_at" value="0">
+						<div>审核时间：{$key["authorized_at"]|date="Y-m-d H:i", ###}</div>
+						</gt>
+					</div>
+					<div class="col-md-6">
+					<eq name="key.status" value="-1">
+						<h4><span class="label label-danger">审核不通过</span></h4>
+						<div>您的申请未通过审核，可能的原因如下:</div>
+						<div>{:D("UnionAuthorize")->get_log($key[id]);}</div>
+					</eq>
+					<eq name="key.status" value="0">
+						<h4><span class="label label-warning">申请审核中...</span></h4>
+						<div>1，资料审核需要1-3个工作日，请耐心等待</div>
+						<div>2，如有问题，请发送邮件至 dev.game@gionee.com</div>
+					</eq>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+		<div class="panel panel-primary keydetail">
+			<div class="panel-body">
+				<form class="form-horizontal" role="form" action="{:U("union/save_appkey")}" method="post">
+					<input type="hidden" name="id" value="{$key.id}">
+					<input type="hidden" name="act" value="update">
+					<div class="row">
+					    <div class="col-sm-12">
+					    	<h4>应用信息修改</h4>
+					    </div>
+					</div>
+
+					<div class="form-group">
+						<label for="developer" class="col-sm-2 control-label"><em>*</em>应用包名：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" name="package" value="{$key.package|safe}" placeholder="com.gionee.game">
+							<span class="help-block">填写后不可修改，作为应用的唯一标示（packagename)</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="developer" class="col-sm-2 control-label"><em>*</em>应用名称：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" name="name" value="{$key.name|safe}" placeholder="超级马力">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 col-md-2 control-label"><em>*</em>应用类型：</label>
+						<div class="col-sm-10">
+							<div class="col-sm-2">
+								<input type="radio" name="type" value="0"  <eq name="key.type" value="0" >checked</eq> >单机
+							</div>
+							<div class="col-sm-2">
+								<input type="radio" name="type" value="1" <eq name="key.type" value="1" >checked</eq>>网游
+							</div>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="developer" class="col-sm-2 control-label"><em>*</em>包体大小：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" name="apk_size" value="{$key.apk_size|safe}" placeholder="10M">
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="developer" class="col-sm-2 control-label"><em>*</em>应用阶段：</label>
+						<div class="col-sm-6">
+							<select class="form-controln control120" name="stage">
+		                      <option value="0">请选择</option>
+					          <option value="1">删档封测</option>
+					          <option value="2">不删档封测</option>
+					          <option value="3">删档内测</option>
+					          <option value="4">不删档内测</option>
+					          <option value="5">公测</option>
+							</select>
+						</div>
+						
+						<script>$("select[name=stage]").val('{$key[stage]|intval}');</script>
+					</div>
+					
+					<div class="form-group">
+						<label for="developer" class="col-sm-2 control-label"><em>*</em>首发情况：</label>
+						<div class="col-sm-6">
+							<select class="form-controln control120" name="public_mode">
+		                      <option value="0">请选择</option>
+					          <option value="1">独代首发</option>
+					          <option value="2">联合首发</option>
+							  <option value="3">非首发</option>
+							</select>
+						</div>
+						
+						<script>$("select[name=public_mode]").val('{$key[public_mode]|intval}');</script>
+					</div>
+					
+ 	                <div class="form-group">
+ 	                    <label class="col-sm-2 col-md-2 control-label"><em>*</em>期望上线时间：</label>
+ 	                    <div class="col-sm-10">
+ 	                    	<div class="row">
+								<div class="col-md-6">
+		 							<div class="input-group">
+		 								<span class="input-group-addon">
+										<input type="radio" name="public_time_type" id="public_time1" value="1" <eq name="key.public_time_type" value="1">checked="checked"</eq>>
+		 									指定时间
+		 								</span>
+										<input type="text" class="form-control" name="public_time1" <eq name="key.public_time_type" value="1">value="{$key.public_time|safe}"</eq> placeholder="{:date('Y-m-d', strtotime('+7 days'))}" onclick='$("#public_time1").attr("checked", true);'>
+		 							</div>
+		 						</div>
+		 						<div class="col-md-6">
+									<div class="input-group">
+										<span class="input-group-addon">
+											<input type="radio" name="public_time_type" id="public_time2" value="2" <eq name="key.public_time_type" value="2">checked="checked"</eq>> 大致时间
+										</span>
+										<input type="text" class="form-control" name="public_time2" <eq name="key.public_time_type" value="2">value="{$key.public_time|safe}"</eq> placeholder="{:date('n', strtotime('+31 days'))}月底" onclick='$("#public_time2").attr("checked", true);'>
+							 		</div>
+						 		</div>
+					 		</div>
+ 						</div>  
+ 	                </div>
+
+	                <div class="form-group">
+	                    <label for="developer" class="col-sm-2 control-label"><em>*</em>apk下载链接：</label>
+	                    <div class="col-sm-6">
+							<input type="text" name="apk_url" class="form-control" placeholder="http://gionee.com/v1.apk" value="{$key.apk_url|safe}" style="width:530px" />
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <label for="developer" class="col-sm-2 control-label"><em>*</em>密钥发送邮箱：</label>
+	                    <div class="col-sm-6">
+							<input type="text" name="email" class="form-control" placeholder="dev.game@gionee.com" value="{$key.email|safe}"/>
+	                    </div>
+	                </div>
+					
+					<div class="form-group">
+						<label class="col-sm-2 col-md-2 control-label"><em>*</em>申请渠道：</label>
+						<div class="col-sm-10">
+							<div class="row">
+							  <div class="col-md-6">
+							    <div class="input-group">
+							      <span class="input-group-addon">
+							        <input type="radio" name="channel" id="defaultChannel" value="1"> 默认渠道
+							      </span>
+							      <input type="text" class="form-control" value="游戏大厅" placeholder="" readonly="">
+							    </div><!-- /input-group -->
+							  </div><!-- /.col-lg-6 -->
+							  <div class="col-md-6">
+							    <div class="input-group">
+							      <span class="input-group-addon">
+							        <input type="radio" name="channel" id="userChannel" value="0"> 其它渠道
+							      </span>
+							      <input type="text" class="form-control" placeholder="请填写" name="userchannel">
+							    </div><!-- /input-group -->
+							  </div><!-- /.col-lg-6 -->
+							</div><!-- /.row -->
+							<span class="help-block">默认渠道为游戏大厅，如果不是提交到游戏大厅的版本，请勾选其他渠道后再填写</span>
+						</div>
+					</div>
+					
+					<script>
+					$("input[name='userchannel']").focus(function(){ $("#userChannel").attr("checked", true); });
+					</script>
+					<eq name="key.channel" value="游戏大厅">
+						<script>$("#defaultChannel").attr("checked", true);</script>
+					<else/>
+						<script>$("#userChannel").attr("checked", true);$("input[name=userchannel]").val("{:$key[channel]}")</script>
+					</eq>
+					<div class="btnw keydetailbnw"><button type="submit" class="btn-bred">重新提交</button></div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+function ajax_test(f)
+{
+	$.post(f.action, $( f ).serialize(), function(d){
+		if(d.status == 0){alert(d.info);return false;}
+		window.location="{:U('success')}";
+	});
+}
+
+$(function(){
+	$("[name=public_time1]").datetimepicker({
+		dateFormat:"yy-mm-dd",
+		timeFormat:"hh:mm",
+		regional: 'zh-CN',
+		minDate: new Date({:date('Y')}, {:date('m')} - 1, {:date('d')}, 0, 0),
+		maxDate: new Date(2015, 11, 31, 17, 30)
+		});
+})
+</script>
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/app/jui/css/smoothness/jquery-ui-1.9.1.custom.min.css">
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-1.9.1.custom.min.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/jui/development-bundle/ui/i18n/jquery.ui.datepicker-zh-CN.js"></script>
+
+
+<include file="Public:footer" />

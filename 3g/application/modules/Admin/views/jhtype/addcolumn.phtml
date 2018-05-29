@@ -1,0 +1,76 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listColumn . '/?parent_id=' . $parent_id; ?>">栏目列表</a></li>
+		<li class="current"><a href="<?php echo $addColumn . '/?parent_id=' . $parent_id; ?>">添加栏目</a></li>
+	</ul>
+</div>
+<div class="h_a">添加栏目</div>
+<form method="post" action="<?php echo $addColumnPostUrl; ?>" id="addForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="parent_id" value="<?php echo $parent_id; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">名称</th>
+				<td class="td"><input type="text" class="input" name="name" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">CP来源</th>
+				<td class="td">
+					<select name="source_id" class="select">
+						<?php foreach ($types as $key => $value) { ?>
+							<option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">颜色</th>
+				<td class="td"><input type="text" class="input" name="color" value="">(填写颜色值，如:#1459A3,#0F8755。)</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">是否推荐</th>
+				<td class="td">
+					<input type="radio" name="is_recommend" value="1" checked="checked"/>推荐
+					<input type="radio" name="is_recommend" value="0"/>不推荐
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input" name="sort" value="">(请填写整数，越大排序越前。)</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td"><select name="status" class="select">
+						<option value="1">开启</option>
+						<option value="0">关闭</option>
+					</select></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">广告标题</th>
+				<td class="td"><input type="text" class="input wc" name="ad" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">广告链接</th>
+				<td class="td"><input type="text" class="input wc" name="link" value="">(请以http://开头填写。)</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	//用户表单数据提交
+	$(document).ready(function () {
+		ajaxForm('addForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Jhtype/addcolumn/?parent_id=<?php echo $parent_id;?>');
+		});
+
+	})
+
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

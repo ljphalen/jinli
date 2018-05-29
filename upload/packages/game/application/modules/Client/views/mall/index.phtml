@@ -1,0 +1,28 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script src="<?php echo $staticroot; ?>/apps/game/apkv1/assets/js/sys/fastclick.js?v=<?php echo $version;?>"></script>
+<script>
+var token = '<?php echo $token;?>';
+var isLogin = '<?php echo $isLogin ? 'true': 'false';?>';
+window.onload=function(){
+	var gamehall=window.gamehall,
+		str=JSON.stringify({});
+	if((isLogin!=undefined)&&(isLogin=='false')&&gamehall){
+		gamehall.onEvent("gamehall.finish",str);
+		gamehall.onEvent("gamehall.clearlogin",str);
+		gamehall.onEvent("gamehall.account",str);
+	}
+	FastClick.attach(document.body);
+	if(document.getElementById("myPrize")){
+		document.getElementById("myPrize").addEventListener("click",function(){
+			if(window.gamehall){
+				window.gamehall.onEvent("gamehall.myprize",str);
+			}
+		},false);
+	}
+	
+}
+</script>
+<body id="mall" data-pagerole="body">
+	
+</body>
+</html>

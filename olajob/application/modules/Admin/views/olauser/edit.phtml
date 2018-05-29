@@ -1,0 +1,104 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $indexUrl;?>">会员列表</a></li>
+    <li class="current"><a href="javascript:;">编辑会员</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑会员</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editFrom">
+    <input name="id" value="<?php echo $userInfo['id'];?>" type="hidden"/>
+    <input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">姓名</th>
+			<td class="td"><?php echo $userInfo['realname'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">手机</th>
+			<td class="td"><?php echo $userInfo['phone'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">学历</th>
+			<td class="td"><?php echo $userInfo['education'] ? $education[$userInfo['education']] : '';?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">性别</th>
+			<td class="td"><?php echo $userInfo['sex'] ? $sex[$userInfo['sex']] : '';?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">生日</th>
+			<td class="td"><?php echo $userInfo['birthday'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">注册时间</th>
+			<td class="td"><?php echo date('Y-m-d H:i:s', $userInfo['register_time']);?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">最后登录时间</th>
+			<td class="td"><?php echo date('Y-m-d H:i:s', $userInfo['last_login_time']);?></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">发布数</th>
+			<td class="td"><?php echo $userInfo['favorite_num'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">报名数</th>
+			<td class="td"><?php echo $userInfo['signup_num'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">通过数</th>
+			<td class="td"><?php echo $userInfo['pass_num'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">拒绝数</th>
+			<td class="td"><?php echo $userInfo['refuse_num'];?></td>
+		</tr>
+		
+		
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status">
+			<?php foreach($status as $key => $value) {?>
+			       <option <?php echo $userInfo['status'] == $key ? 'selected="selected"' : '';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+			<?php }?>
+            </select>
+            </td>
+		</tr>
+		<tr class="tr">
+			<th class="th">用户类型</th>
+			<td class="td">
+			<select name="user_type">
+			       <option <?php if($userInfo['user_type'] == 1) echo 'selected="selected"';?> value="1">内部用户</option>
+			       <option <?php if($userInfo['user_type'] == 2) echo 'selected="selected"';?> value="2">真实用户</option>
+            </select>
+            </td>
+		</tr>
+	</table>
+</div>
+
+<div class="h_a">第三方账号</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="ct">
+			<td width="200">微信open_id</td>
+			<td><?php echo $userInfo['weixin_open_id'];?></td>
+		</tr>
+	</table>
+</div>
+
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">保存</button></span></span></div>
+</form>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Olauser/index?s=1');
+	});
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,71 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<form method="post" action="<?php echo $baseUrl; ?>" id="addFrom">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">时间</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="date" name="date" value="<?php echo $date; ?>">
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">领取金币数</th>
+					<td class="td">
+						<input class="input" type="text" id="min_scores" name="min_scores" value="<?php echo $postData['min_scores']; ?>">至
+						<input class="input" type="text" id="max_scores" name="max_scores" value="<?php echo $postData['max_scores']; ?>">
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+		<input type="hidden" id="hidden_export" name="export" value="0"/>
+	</form>
+
+	<div class="h_a">
+		&nbsp; <span id="total" style="color: red;font-size:14px"></span>
+		<span style="float:right;"><input type="button" value="导出" id="downLoad"></span>
+	</div>
+
+	<div class="table_list">
+		<table width="100%">
+			<tr class="ct">
+				<td class="td2">序号</td>
+				<td class="td2" width="80px">用户名</td>
+				<td class="td2">当天领取金币</td>
+				<td class="td2">截止当日领取金币数</td>
+				<td class="td2">当日完成任务数</td>
+				<td class="td2">截止当日完成任务总数</td>
+			</tr>
+			<?php
+			foreach ($data as $k => $v) { ?>
+				<tr class="ct">
+					<td><?php echo $k + 1; ?></td>
+					<td class="td2"><?php echo $v['username']; ?></td>
+					<td class="td2"><?php echo $v['total_scores'] ? $v['total_scores'] : 0; ?></td>
+					<td class="td2"><?php echo $v['deadline_scores'] ? $v['deadline_scores'] : 0; ?></td>
+					<td class="td2"><?php echo $v['tasks_number'] ? $v['tasks_number'] : 0; ?></td>
+					<td class="td2"><?php echo $v['deadline_tasks'] ? $v['deadline_tasks'] : 0; ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#date").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#downLoad").bind('click', function () {
+				$("#hidden_export").val(1);
+				$("#addFrom").submit();
+				$("#hidden_export").val(0);
+			});
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

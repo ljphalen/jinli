@@ -1,0 +1,286 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<script src="jquery-ui.js"></script>
+<script src="<?php echo $staticPath; ?>/js/common/jquery-ui.js?v=<?php echo $version; ?>"></script>
+<style type="text/css">
+    .select-box{width:600px; overflow:hidden;}
+    .select-box div{float:left; width:300px;}
+    .select-box ul{width:206px; height:300px; overflow-y:auto; overflow-x:hidden; border:1px solid; border-color: #999999 #e1e1e1 #e1e1e1 #999999;background:#fff; font-size:1em;color:#000;}
+    .select-box li{height:26px; line-height:26px; padding:0 10px;}
+    .select-box li:active{background-color:#09f;}
+    .select-box input[type=text]{display:block; width:200px; padding:5px 10px;border:1px solid; border-color: #999999 #e1e1e1 #e1e1e1 #999999;padding:3px;background:#fff; font-size:1em;color:#000;}
+
+    .uploadAdv{
+        width: 26%;float: left;
+        border: 1px solid #cca;
+        margin-left: 28px;
+    }
+    .uploadImgAdv .img{
+        width: 300px;
+        height: 300px;
+    }
+</style>
+<?php echo $this->render("subject/menu.phtml", array('current' => '添加专题')); ?>
+<div class="h_a">添加专题</div>
+<form method="post" action="<?php echo $addPostUrl; ?>" id="addFrom">
+    <input name="token" value="<?php echo $token; ?>" type="hidden" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">排序</th>
+                <td class="td"><input type="text" class="input" name="sort" value=""></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">标题</th>
+                <td class="td"><input type="text" class="input wc" name="title" value=""></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">置顶</th>
+                <td class="td">
+                    <?php foreach ($types as $key => $value) {
+                        ?>
+                        <input type="radio" name="type_id" value="<?php echo $key; ?>" <?php if ($key == 1) echo 'checked="true"' ?>  /><?php echo $value; ?>&nbsp;
+                    <?php } ?>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">图片</th>
+                <td class="td">
+                    <ul class="uploadImg">
+                        <li id="SubjectImg">
+                            <img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+                            <input type="hidden" name="img" value="">
+                        </li>
+                    </ul>
+                    <p style="clear:both;">
+                        <iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=SubjectImg'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                    </p></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">专题类别;</th>
+                <td class="td">
+                    <input class ="sub_type_id" type="radio" name="sub_type_id" value="-1" checked="true" />主题包专题&nbsp;
+                    <input class ="sub_type_id" type="radio" name="sub_type_id" value="9" />广告专题&nbsp;
+
+                </td>
+            </tr>
+            <tr class="tr" id="sub_images">
+                <th class="th" style=" width: 8%">选择文件</th>
+                <td class="td" style=" width: 88%">
+                    <div class="select-box" style=" width: 100%">
+                        <div class="J_supply"><!-- multiple="true"  -->
+                            <input type="text" value="" autocomplete="off"  />
+                            <ul></ul>
+                        </div>
+                        <div class="J_receive">
+                            <ul style="margin-top:25px;"></ul>
+                            <input type="hidden" name="value"/>
+                        </div>
+
+                    </div>
+                </td>
+            </tr>
+            <tr class="tr" style="display:none" id="sub_adv_files">
+                <th class="th" style=" width: 8%">广告图片</th>
+                <td class="td">
+                    <div class="uploadAdv">
+                        <ul class="uploadImgAdv">
+                            <li id="SubjectImg_01">
+                                <img src="<?php echo $staticPath; ?>/img/content/nopic.jpg" width="271" height="320"/>
+                                <input type="hidden" name="img_adv01" value="">
+                            </li>
+                        </ul>
+                        <p style="clear:both;">
+                            <iframe name="upload" src="<?php echo $uploadAdvUrl . '/?imgId=SubjectImg_01'; ?>" style="height:80px;width:90%;" frameborder="0" scrolling="no"></iframe>
+                        </p>
+                    </div>&nbsp;&nbsp;
+                    <div class="uploadAdv">
+                        <ul class="uploadImgAdv">
+                            <li id="SubjectImg_02">
+                                <img src="<?php echo $staticPath; ?>/img/content/nopic.jpg" width="271" height="320"/>
+                                <input type="hidden" name="img_adv02" value="">
+                            </li>
+                        </ul>
+                        <p style="clear:both;">
+                            <iframe name="upload" src="<?php echo $uploadAdvUrl . '/?imgId=SubjectImg_02'; ?>" style="height:80px;width:90%;" frameborder="0" scrolling="no"></iframe>
+                        </p>
+                    </div>
+                    <div class="uploadAdv">
+                        <ul class="uploadImgAdv">
+                            <li id="SubjectImg_03">
+                                <img src="<?php echo $staticPath; ?>/img/content/nopic.jpg" width="271" height="320"/>
+                                <input type="hidden" name="img_adv03" value="">
+                            </li>
+                        </ul>
+                        <p style="clear:both;">
+                            <iframe name="upload" src="<?php echo $uploadAdvUrl . '/?imgId=SubjectImg_03'; ?>" style="height:80px;width:90%;" frameborder="0" scrolling="no"></iframe>
+                        </p>
+                    </div>
+                </td>
+
+            </tr>
+            <tr class="tr" id="descrip">
+                <th class="th">简介</th>
+                <td class="td"><textarea style="width: 800px; height: 200px" class="textarea" name="descrip"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th class="th">发送push</th>
+                <td class="td"><input type="checkbox" value="1" name="is_publish"/>(勾选表示发送)&nbsp;&nbsp;&nbsp;<input type="text" name="publish_conn"></td>
+            </tr>
+            <tr>
+                <th class="th">发布时间</th>
+                <td class="td"><input type="text" name="pre_publish"/></td>
+            </tr>
+        </table>
+    </div>
+
+
+    <div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+
+        var SELECT_DATA = <?php echo $files; ?>, EXSIT_DATA = <?php echo $exsit ? $exsit : '""'; ?>;
+
+        var eChange = document.all ? 'keyup' : 'input', arrSupply = [], arrReceive = [], sData = SELECT_DATA,
+                supplyWrap = $('.J_supply ul'), receiveWrap = $('.J_receive ul'),
+                _hasItem = function(arr, item) {
+                    var hasItem = false;
+                    $.each(arr, function(i, v) {
+                        if (item == v)
+                            hasItem = true;
+                    });
+                    return hasItem;
+                },
+                _removeItem = function(arr, item) {
+
+                    if ($.isArray(item)) {
+                        $.each(item, function(ii, vv) {
+                            _removeItem(arr, vv);
+                        });
+                        return arr;
+                    } else {
+                        $.each(arr, function(i, v) {
+                            if (v == item)
+                                arr.splice(i, 1);
+                        });
+                        return arr;
+                    }
+                },
+                _noRepeat = function(arr) {
+                    var oArr = {};
+
+                    $.each(arr, function(i, v) {
+                        if (!oArr[v]) {
+                            oArr[v] = true;
+                        } else {
+                            arr.splice(i, 1);
+                        }
+                    });
+
+                    return arr;
+                },
+                _filterData = function(data, filter) {
+                    var arrGetData = [], isArray = $.isArray(filter),
+                            oReg = isArray ? filter : new RegExp(filter);
+                    $.each(data, function(i, v) {
+                        if (isArray) {
+                            if (_hasItem(oReg, v.id))
+                                arrGetData.push(v);
+                        } else {
+                            if (oReg.test(v.title))
+                                arrGetData.push(v);
+                        }
+                    });
+                    return arrGetData;
+                },
+                _renderItem = function(data, pNode) {
+                    var s = '';
+                    $.each(data, function(i, v) {
+                        s += '<li id="' + v.id + '">' + v.title + '</li>';
+                    });
+                    pNode.html(s);
+                };
+
+        $('.J_supply input').val('');
+        _renderItem(SELECT_DATA, supplyWrap);
+        _renderItem(EXSIT_DATA, receiveWrap);
+
+        $('.J_supply ul').sortable({
+            connectWith: 'ul',
+            update: function(evt, ui) {
+                //console.log(this.parentNode.className+':'+$(this).sortable('toArray'));
+                var item = $(this).sortable('toArray'), val = document.querySelector('.J_supply input').value;
+
+                if (val) {
+                    setTimeout(function() {//console.log(arrReceive);
+                        arrSupply = _removeItem(arrSupply, arrReceive);
+                        sData = _filterData(SELECT_DATA, arrSupply);
+                    }, 10);
+                    //arrSupply = _noRepeat(arrSupply.concat(item));
+                } else {
+                    arrSupply = item;
+                    sData = _filterData(SELECT_DATA, arrSupply);
+                }
+                //console.log(arrSupply);
+                //console.log(sData);
+            }
+        });
+        $('.J_receive ul').sortable({
+            connectWith: 'ul',
+            update: function(evt, ui) {
+                // console.log(this.parentNode.className + ':' + $(this).sortable('toArray'));
+                arrReceive = $(this).sortable('toArray');
+                $(this.parentNode).find('input').val(arrReceive.join(','));
+                // console.log(this.parentNode.className + ':' + $(this).sortable('toArray'));
+                //var vews_data = "datas=" + $(this).sortable('toArray');
+
+
+            }
+        });
+        $('.J_supply input').bind(eChange, function() {
+            //console.log(_filterData(SELECT_DATA, this.value));
+            this.value = this.value.replace(/\s|\n/g, '');
+            _renderItem(_filterData(sData, this.value), supplyWrap);
+            //$('.J_supply ul').sortable('option', 'disabled', this.value? true:false);
+        });
+
+        var editor;
+        KindEditor.ready(function(K) {
+            K.token = $('#token').val();
+            editor = K.create('textarea[name="descrip"]', {
+                resizeType: 1,
+                allowPreviewEmoticons: false,
+                allowImageUpload: false,
+                items: EDITOR_ITEMS
+            });
+        });
+
+        //专题表单数据提交
+        $(document).ready(function() {
+            ajaxForm('addFrom', function(ret) {
+                ajaxRedirect(ret, baseurl + '/Admin/Subject/index');
+            }, function() {
+                editor.sync();
+            });
+
+
+        })
+
+        $(function() {
+            $(".sub_type_id").change(function() {
+                var val = $('input:radio[name="sub_type_id"]:checked').val();
+
+                if (val == 9) {
+                    $("#sub_images").hide();
+                    $("#sub_adv_files").show();
+                }
+                if (val == -1) {
+                    $("#sub_images").show()
+                    $("#sub_adv_files").hide();
+                    $(".J_receive .ui-sortable").html("");
+                }
+            })
+        })
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

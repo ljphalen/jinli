@@ -1,0 +1,73 @@
+						
+						<div class="pageFormContent" layoutH="80">
+						
+							<script type="text/javascript">
+							var options = {
+								axis: "0 0 1 1", // Where to put the labels (trbl)
+								axisxstep: 11,
+								axisxlables: [{:implode(',',$date_arr)}],
+								axisystep: 20,
+								shade:false, // true, false
+								smooth:false, //曲线
+								symbol:"circle"
+							};
+							
+							$(function () {
+								
+								// Make the raphael object
+								var r = Raphael("chartHolder_app_{$_GET['is_jion']}"); 
+								
+								var lines = r.linechart(
+									20, // X start in pixels
+									10, // Y start in pixels
+									800, // Width of chart in pixels
+									400, // Height of chart in pixels
+									[0,1,2,3,4,5,6,7,8,9,10,11], // Array of x coordinates equal in length to ycoords
+									[[{:implode(',',$game_add)}], [{:implode(',',$game_check)}]], // Array of y coordinates equal in length to xcoords
+									options // opts object
+								).hoverColumn(function () {
+							        this.tags = r.set();
+							
+							        for (var i = 0, ii = this.y.length; i < ii; i++) {
+							            this.tags.push(r.tag(this.x, this.y[i], this.values[i], 160, 10).insertBefore(this).attr([{ fill: "#fff" }, { fill: this.symbols[i].attr("fill") }]));
+							        }
+							    }, function () {
+							        this.tags && this.tags.remove();
+							    });
+							
+							    lines.symbols.attr({ r: 6 });
+							});
+							</script>
+							
+							<div id="chartHolder_app_{$_GET['is_jion']}" style="width: 100%;height: 450px; min-width:650px"></div>
+							<style>
+							.style_my > div{ margin-bottom:10px; line-height:30px; }
+							</style>
+								<div  style="width:90px; position:absolute; right:10%; top:20px;" class="style_my">
+									<div style="width:30px; height:30px; background-color:#2f69bf; cursor:pointer;float:left"></div><div style="width:60px; height:30px;  cursor:pointer;float:left;text-align:center;">新增应用</div>
+									<div style="width:30px; height:30px; background-color:#a2bf2f; cursor:pointer;float:left"></div><div style="width:60px; height:30px;  cursor:pointer;float:left;text-align:center;">已审核</div>
+								</div>
+							
+							<br clear="all">
+							<table class="table" width="100%" layoutH="138">
+								<thead>
+									<tr>
+										<th>日期</th>
+										<th>新增应用</th>
+										<th>已审核</th>
+										<th>通过率</th>
+									</tr>
+								</thead>
+								<tbody>
+									<volist id="vo" key="key" name="date_arr">
+									<tr target="sid_user" rel="1">
+										<td>{$vo}</td>
+										<td>{$game_add[$key-1]}</td>
+										<td>{$game_check[$key-1]}</td>
+										<td>{$pass_rate[$key-1]}%</td>
+									</tr>
+									</volist>
+									</tbody>
+									</table>
+													
+						</div>

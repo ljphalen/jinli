@@ -1,0 +1,121 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript"
+src="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.js"></script>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <div id="pay_paymember_info">
+        <div class="content">
+        	<!--user detial start-->
+        	<div class="user_detail">
+        		<div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell">名称</label>
+                        <div class="tb_cont tb_cell">
+                            <?php echo $member['user_rname']; ?>
+                        </div>
+                    </div><!-- com_tb end -->
+                </div>
+                <div class="com_tb_wrap">
+                	<div class="com_tb">
+                		<label class="tb_cell">注册时间</label>
+                		<div class="tb_cont tb_cell">
+                			<?php echo date('Y.m.d', $member['register_time']); ?>
+                		</div>
+                	</div>
+                </div>
+                <div class="com_tb_wrap">
+                	<div class="com_tb">
+                		<label class="tb_cell">充值金额</label>
+                		<div class="tb_cont tb_cell">
+                			<div class="add_account bottom_icon">
+                				<span class="now_account">2400A币(剩余300币)</span></div>
+                			<div class="add_price none">
+                				<ul>
+                					<li><a>1000A币</a><span class="time fr">2015.06.10 9:56</span></li>
+                					<li><a>200A币</a><span class="time fr">2015.06.8 9:56</span></li>
+                					<li><a>400A币</a><span class="time fr">2015.06.6 9:56</span></li>
+                					<li><a>600A币</a><span class="time fr">2015.06.5 8:56</span></li>
+                					<li><a>200A币</a><span class="time fr">2015.06.3 9:56</span></li>
+                					<li><a>500A币</a><span class="time fr">2015.06.1 8:52</span></li>
+                				</ul>
+                			</div>
+                		</div>
+                	</div>
+                </div>
+                <div class="com_tb_wrap">
+                	<div class="com_tb">
+                		<label class="tb_cell">下载个数</label>
+                		<div class="tb_cont tb_cell">
+                            <div class="buyer_num bottom_icon"><span><?php echo $member['downlod_times']; ?></span></div>
+                            <div class="buyer_detail none"><p>显示下载次数的内容</p></div>
+                		</div>
+                	</div>
+                </div>
+                <div class="com_tb_wrap">
+                	<div class="com_tb">
+                		<label class="tb_cell">购买个数</label>
+                		<div class="tb_cont tb_cell">
+                			<div class="down_num bottom_icon"><span><?php echo count($products); ?></span></div>
+                            <div class="showdetail none"><p>显示购买次数的内容</p></div>
+                            <div class="userdetail">
+                                <ul>
+                                    <?php foreach($products as $product){ ?>
+                                    <li>
+                                    	<div class="li_img"><img src='<?php echo $staticPath ?>image/t_img03.jpg'></div>
+                                    	<div class="li_intro">
+                                            <p><?php echo $product['title']; ?></p>
+                                            <p><?php echo $product['price']; ?>A币</p>
+                                            <p><?php echo date('Y.m.d', $product['created_time']); ?></p>
+                                        </div>
+                                    </li>
+                                    <?php } ?>
+                                </ul>
+                            </div>
+                		</div>
+                	</div>
+                </div>
+        	</div><!--user detail end-->
+        </div><!-- content end -->
+    </div>
+</section>
+
+</body>
+<script type="text/javascript">
+	$(function(){
+		$('.add_account').on('click',function(){
+			if($(this).hasClass('bottom_icon')){
+				$(this).removeClass('bottom_icon').addClass('top_icon');
+				$('.add_price').removeClass('none'); 
+			}else 
+			if($(this).hasClass('top_icon')){
+				$(this).removeClass('top_icon').addClass('bottom_icon');
+				$('.add_price').addClass('none'); 
+			}
+		})
+		$('.buyer_num').on('click',function(){
+            if($(this).hasClass('bottom_icon')){
+                $(this).removeClass('bottom_icon').addClass('top_icon');
+                $('.buyer_detail').removeClass('none');
+
+            }else
+            if($(this).hasClass('top_icon')){
+                $(this).removeClass('top_icon').addClass('bottom_icon');
+                $('.buyer_detail').addClass('none');
+            }
+        });
+        $('.down_num').on('click',function(){
+            if($(this).hasClass('bottom_icon')){
+                $(this).removeClass('bottom_icon').addClass('top_icon');
+                $('.showdetail').removeClass('none');
+
+            }else
+            if($(this).hasClass('top_icon')){
+                $(this).removeClass('top_icon').addClass('bottom_icon');
+                $('.showdetail').addClass('none');
+            }
+        });
+})
+</script>
+</html>

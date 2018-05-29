@@ -1,0 +1,56 @@
+<li>
+    <span class="label" style="display: none">配置级别</span>
+    <div class="fc">
+        <div class="grid">
+            <div class="gridToolbar">
+                <p class="fl">
+                    <input type="hidden" id='config_detail_id' name='config_detail_id' class="iText" value="{{result.config_detail_id}}">
+                    <script>
+                         <!-- if {{result.config_detail_type}}==1 -->
+                            $(function(){
+                                $("#termGrid").hide();
+                                $("#addconfig").hide();
+                            })
+                         <!-- endif -->
+                    </script>
+                    <span><input type="radio" class="radio required" name="config_lelvel" value="1" <!-- if {{result.config_detail_type}}==1 -->checked<!-- endif --> /><label>初级配置</label></span>
+                    <span><input type="radio" class="radio required" name="config_lelvel" value="2" <!-- if {{result.config_detail_type}}==2 -->checked<!-- endif -->/><label>中级配置</label></span>
+                    <span><input type="radio" class="radio required" name="config_lelvel" value="3" <!-- if {{result.config_detail_type}}==3 -->checked<!-- endif -->/><label>高级配置</label></span>
+                    <a href="javascript:void(0)" class="cancel dzad" type="import_config">从其他配置导入</a>
+                    <input type="hidden" name="config_value" id="config_value" value='{{result.config_detail_condition.value}}' />
+                </p>
+                <p class="fr" id="addconfig">
+                    <a href="javascript:void(0)" id="addTerm" class="btn">新增</a>
+                </p>
+            </div>
+            <table id="termGrid">
+                <thead>
+                    <tr>
+                        <th>条件名</th>
+                        <th>条件判断式</th>
+                        <th>条件值</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- if {{result.config_detail_condition.json2value}} -->
+                    <!-- loop result.config_detail_condition.json2value -->
+                    <tr>
+                        <td><p class="blue"><a style="cursor: pointer" onmouseover="javascript:getConditionCount(this)">{{result.config_detail_condition.json2value' value.oper_type}}</a></p></td>
+                        <td>{{result.config_detail_condition.json2value' value.operator}}</td>
+                        <td>{{result.config_detail_condition.json2value' value.compare}}</td>
+                        <td>
+                            <a href="javascript:void(0)" name="systemTerm" class="edit" title="更新"></a>
+                            |
+                            <a href="javascript:void(0)" class="del" title="删除"></a>
+                        </td>
+                    </tr>
+                    <!-- endloop -->
+                    <!-- endif -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</li>
+<li class="line"></li>

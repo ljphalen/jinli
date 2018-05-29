@@ -1,0 +1,196 @@
+<div class="colMain">
+    <div class="title"><p class="fl">广告统计报表</p></div>
+    <div class="main">
+        <form class="app-detail" action="/Statis/adStatis" method="POST" >
+            <ul class="form">
+                <li>
+                    <span class="label">产品：</span>
+                    {{product}}
+                    <label style="padding: 0px 20px 0px 50px;">选择日期范围：</label>
+                    <input type="text" class="iText datepicker" name="sdate" value="{{params.sdate}}"  /> 至
+                    <input type="text" class="iText datepicker" name="edate" value="{{params.edate}}"   />
+                </li>
+
+                <li>
+                    <span class="label">选择广告内容：</span>
+                    <table>
+                        <tr>
+                            <td><input type="text" class="iText search_input" id="left"  style="width: 190px;" /></td>
+                            <td width="150px"></td>
+                            <td><input type="text" class="iText search_input" id="right"  style="width: 190px;" /></td>
+                        </tr>
+                        <tr>
+                            <td><select id="left_sel" class="multi" multiple="multiple" _target="right_sel" style="width: 300px;height: 100px;">
+                                <!-- loop adleft -->
+                                <option _name="{{adleft' value.name}}" _parent="{{adright' value.pid}}" value="{{adleft' key}}">{{adleft' value.name}}</option>
+                                <!-- endloop -->
+                            </select></td>
+                            <td align="center">
+                                <input type="button" class="btn selMove" _from="left_sel" _to="right_sel" value="添加->"/><br />
+                                <input type="button" class="cancel selMove" _from="right_sel" _to="left_sel" value="<-删除"/>
+                            </td>
+                            <td><select id="right_sel" name="ad_ids[]" class="multi" multiple="multiple" _target="left_sel" style="width: 300px;height: 100px;">
+                                <!-- loop adright -->
+                                <option _name="{{adright' value.name}}" _parent="{{adright' value.pid}}" value="{{adright' key}}">{{adright' value.name}}</option>
+                                <!-- endloop -->
+                            </select></td>
+                        </tr>
+                    </table>
+                </li>
+                <li>
+                    <div class="fc">
+                        <input type="submit" value="查询" class="submit" />
+                        <input type="button" value="导出" class="cancel export" />
+                    </div>
+                </li>
+            </ul>
+        </form>
+
+        <div class="grid export_table" style="margin-top:10px;">
+            <table class="stat_tbl tablesorter">
+                <thead class="pos_header"><tr>
+                        <th>广告</th>
+                        <th>展示数</th>
+                        <th>展示比例</th>
+                        <th>点击数</th>
+                        <th>点击率</th>
+                        <th>完成下载</th>
+                        <th>安装数</th>
+                </tr></thead>
+                <tbody>
+                    <!-- loop result -->
+                    <tr>
+                        <td>
+                            <a class="blue thickbox" href="{{siteUrl}}Statis/getOneByAdId?aid={{result' value.aid}}&pid={{params.pid}}&field=impressions&sdate={{params.sdate}}&edate={{params.edate}}&TB_iframe=true" title="广告-<?php echo $data['adListShow'][$v1['aid']];?>">
+                                <?php echo $data['adListShow'][$v1['aid']];?>
+                            </a>
+                            <span class='showInfo' _id="{{result' value.aid}}" style="cursor:pointer;background:url('{{rootUrl}}/css/img/core.png') -180px -118px;display:inline-block;height:12px;vertical-align:middle;width:12px;"></span>
+                        </td>
+                        <td>{{result' value.impressions}}</td>
+                        <td>{{result' value.impressions_rate}}%</td>
+                        <td>{{result' value.clicks}}</td>
+                        <td>{{result' value.clicks_rate}}%</td>
+                        <td>{{result' value.finish_downloads}}</td>
+                        <td>{{result' value.installed}}</td>
+                    </tr> 
+                    <!-- endloop -->
+                </tbody>
+                <tr>
+                    <td><span class="blue" >合计</span></td>
+                    <td>{{total.impressions}}</td>
+                    <td>{{total.impressions_rate}}%</td>
+                    <td>{{total.clicks}}</td>
+                    <td>{{total.clicks_rate}}%</td>
+                    <td>{{total.finish_downloads}}</td>
+                    <td>{{total.installed}}</td>
+                </tr> 
+            </table>
+        </div>
+    </div>
+</div>
+<div style="display: none">
+<select class='left_temp_option'></select>
+<select class='right_temp_option'></select>
+</div>
+<script type="text/javascript">
+$(function(){
+ 	// 排序
+    $(".stat_tbl").tablesorter();
+    var tab_pos = $(".pos_header").offset().top;
+    $(window).scroll( function() {
+        if(tab_pos < $(window).scrollTop()){
+            $(".pos_header").css('position','fixed').css('top', '0px').css('padding-right', '16px');
+            $(".pos_header > tr > th").each(function(i){
+                $(this).css('width', $(".stat_tbl > tbody").find("td").eq(i).css('width'));
+            });
+        }else{
+            $(".pos_header").css('position','static');
+        }
+    } );
+    $('.datepicker').datepicker({
+        changeMonth:true,
+        changeYear:true,
+        minDate:new Date(),
+        dateFormat : "yy-mm-dd",
+        minDate: "2013-01-01"
+    });
+    $("input[name=sdate]").change(function(){
+        $("input[name=edate]").datepicker('option','minDate',$(this).val());
+    });
+    $("form").submit(function(){
+        $("#right_sel").children("option").attr("selected","selected");
+    });
+    
+    changeSel(".selectPid");
+    $(".selectPid").live("change", function(){
+        changeSel(".selectPid");
+    });
+    
+    $(".export").click(function(){
+        var tbl = $(".export_table").html();
+        tbl = tbl.replace(/<span[^>]+>/g,"");
+        var file_name = "ad_stats";
+        $("body").append("<form method='POST' action='/Statis/export' id='export' style='display:none;'><input type='text' value='"+tbl+"' name = 'data' /><input type='text' value="+file_name+" name = 'file_name' /></form>");
+        $("#export").submit();
+    });
+    // 显示广告信息
+    $(".showInfo").live("click", function(){
+        var aid = $(this).attr("_id");
+        $.ajax({
+            type : "POST",
+            dataType : "json",
+            url : "../Statis/getAdInfo",
+            data : {aid : aid},
+            success : function(msg){
+                var html = "<div style='margin:20px;>";
+                html += "<div style='line-height:25px;margin:0px 20px;'>信息<hr /></div>";
+                html += "<div style='line-height:25px;margin:0px 20px;'>广告位："+msg.pos+"</div>";
+                html += "<div style='line-height:25px;margin:0px 20px;'>广告类型："+msg.stype+"</div>";
+                html += "<div style='line-height:25px;margin:0px 20px;'>屏幕支持方向："+msg.screen_type+"</div>";
+                html += "<div style='text-align:center;margin:0px 20px;'><img width='600px' height='250px' src="+msg.ad_pic_url+" /></div>";
+                html += "<div style='text-align:center;margin:0px 20px;'><input type=button value='关闭' class='btn clo' /></li>";
+                html += "</div>";
+                popg = jDialog({
+                    content: html,
+                    width:650,
+                    height:450
+                });
+            }
+        });
+    });
+    $(".clo").live('click', function(){
+        popg.close();
+    
+    });
+});
+
+function changeSel(psel){
+    var cid = $(psel).val();
+    $("#left_sel > option").each(function(){
+        if ($(this).attr("_parent") != cid){
+            $(this).remove();
+            $(".left_temp_option").append($(this));
+        }
+    });
+    $(".left_temp_option > option").each(function(){
+        if ($(this).attr("_parent") == cid){
+            $(this).remove();
+            $("#left_sel").append($(this));
+        }
+    });
+    $("#right_sel > option").each(function(){
+        if ($(this).attr("_parent") != cid){
+            $(this).remove();
+            $(".right_temp_option").append($(this));
+        }
+    });
+    $(".right_temp_option > option").each(function(){
+        if ($(this).attr("_parent") == cid){
+            $(this).remove();
+            $("#right_sel").append($(this));
+        }
+    });
+}
+</script>
+<script type="text/javascript" src="{{rootUrl}}/js/thickbox.js"></script>
+<link rel="stylesheet" href="{{rootUrl}}/css/thickbox.css" type="text/css" />

@@ -1,0 +1,255 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+
+<style type="text/css">
+    .addcolor{
+        background-color: #EBEBEf;
+    }
+</style>
+<!-- 导航栏Ajax加载 指向navagator.html  menuOn表示分别需要高亮的菜单栏id 用下划线_隔开 eg:bz_taotu_taotuPack-->
+
+
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- wp01-壁纸详情-->
+    <div id="bz_live">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">分类</label>
+                    <div class="tb_cont tb_cell">
+                        <ul class="tag_list tag_one"><!-- tag_one 一级标签 只能选中一个 -->
+                            <a href="/Admin/wallpaperadmin/livewallpaper">
+                                <li class="<?php if (!$tid) echo 'on'; ?>">全部</li></a>
+                            <?php foreach ($livewallpaperType as $k => $v) { ?>
+                                <a href="/Admin/wallpaperadmin/livewallpaper?tid=<?php echo $k ?>">
+                                    <li class="<?php if ($k == $tid) echo 'on'; ?>"><?php echo $v ?></li></a>
+                            <?php } ?>
+                        </ul>
+
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+
+
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <!--  <label class="tb_cell">状态</label>
+                      <div class="tb_cont tb_cell">
+                          <div class="select_box">
+                              <label class="select_val">默认</label>
+                              <ul class="select_option">
+                    <?php foreach ($status as $k => $v) { ?>
+                                                                                                                                                                                                          <li val = <?php echo $k; ?>><?php echo $v ?></li>
+                    <?php } ?>
+
+                              </ul>
+                          </div>
+                    <!-- <div class="select_box">
+                         <label class="select_val">默认</label>
+                         <ul class="select_option">
+                             <li>美女</li>
+                             <li>帅哥</li>
+                         </ul>
+                     </div> select_box -->
+                </div>
+                <div class="tb_cell">
+                    <ul class="tb_switch">
+                        <!--  <li class="txt_switch">批量管理</li>
+                          <li class="btn_switch switch_pics" openId="viewPics">宫格</li><!-- openId 表示点击时 显示哪个id下的内容 -->
+                        <li class="btn_switch switch_list on" openId="viewList">列表</li>
+                    </ul>
+                </div>
+            </div><!-- com_tb end -->
+        </div><!-- com_tb_wrap end -->
+
+
+        <!-- 宫格模式 admin_mode显示各子项目的管理按钮-->
+        <section class="view view_pics " id="viewPics">
+            <!-- 批量管理内容 默认隐藏 -->
+            <div class="view_admin view_pics_admin">
+                <!-- checkClass表示 点击后 哪些class要被选中 -->
+                <button class="btn_check btn_check_all" checkClass="btn_check_pics"></button><label>全选</label><span class="btn btn_s1 pack_del">批量删除</span>
+            </div>
+            <h1 class="block_name">全部壁纸</h1>
+            <ul class="view_pics_wrap "><!--  -->
+                <li class="view_pics_list">
+                    <div class="pic_cont">
+                        <img src="image/test_img02.png">
+                        <button class="btn_check btn_check_pics"></button>
+                        <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                    </div>
+                    <p class="pic_name">趣味生活</p>
+                </li>
+
+                <li class="view_pics_list">
+                    <div class="pic_cont">
+                        <img src="image/test_img02.png">
+                        <button class="btn_check btn_check_pics"></button>
+                        <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                    </div>
+                    <p class="pic_name">趣味生活</p>
+                </li>
+                <li class="view_pics_list">
+                    <div class="pic_cont">
+                        <img src="image/test_img02.png">
+                        <button class="btn_check btn_check_pics"></button>
+                        <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                    </div>
+                    <p class="pic_name">趣味生活</p>
+                </li>
+                <li class="view_pics_list">
+                    <div class="pic_cont">
+                        <img src="image/test_img02.png">
+                        <button class="btn_check btn_check_pics"></button>
+                        <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                    </div>
+                    <p class="pic_name">趣味生活</p>
+                </li>
+                <li class="view_pics_list">
+                    <div class="pic_cont">
+                        <img src="image/test_img02.png">
+                        <button class="btn_check btn_check_pics"></button>
+                        <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                    </div>
+                    <p class="pic_name">趣味生活</p>
+                </li>
+                <li class="view_pics_list">
+                    <div class="pic_cont">
+                        <img src="image/test_img02.png">
+                        <button class="btn_check btn_check_pics"></button>
+                        <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                    </div>
+                    <p class="pic_name">趣味生活</p>
+                </li>
+
+
+            </ul>
+            <div class="clear-fix"></div>
+        </section>
+
+        <!-- 列表模式 -->
+        <section class="view view_list show" id="viewList">
+            <!-- 批量管理内容 默认隐藏 -->
+            <div class="view_admin view_list_admin">
+                <!-- checkClass表示 点击后 哪些class要被选中 -->
+                <button class="btn_check btn_check_all" checkClass="btn_check_list"></button><label>全选</label><span class="btn btn_s1 pack_approve">批量通过</span><span class="btn btn_s1 pack_del">批量删除</span>
+            </div>
+            <table class="view_list_tb">
+                <thead>
+                    <tr><th>壁纸</th><th>名称</th>
+                        <th>上线时间</th>
+                        <th>上传时间</th>
+                        <th>下载量</th>
+                        <th>点赞</th>
+                        <?php if ($userinfo['groupid'] > 1) { ?>
+                            <th>操作</th>
+                        <?php } ?>
+                        <th>状态</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <?php foreach ($wallpaperlive as $v) { ?>
+                        <tr class="<?php if ($v['wallpaperlive_type'] == 2) echo "addcolor"; ?>">
+                            <td><button class="btn_check btn_check_list"></button>
+                                <img src="<?php echo $v['imgs'][0] ?>">
+                            </td>
+                            <td><?php echo $v['wallpaperlive_name'] ?></td>
+                            <td><?php if ($v['wallpaperlive_onlinetime']) echo date("Y-m-d H:i:s", $v['wallpaperlive_onlinetime']); ?></td>
+
+                            <td><?php echo date("Y-m-d H:i:s", $v['wallpaperlive_uploadtime']); ?></td>
+                            <td><?php echo $v['wallpaperlive_down']; ?></td>
+                            <td><?php echo $v['wallpaperlive_like']; ?></td>
+                            <?php if ($userinfo['groupid'] > 1) { ?>
+                                <td><a class="btn_txt"
+                                       href="/Admin/wallpaperadmin/livewallpaperedit?liveid=<?php echo $v['wallpaperlive_id'] ?>">编辑</a>
+                                    <a val="<?php echo $v['wallpaperlive_id'] ?>" class="btn_txt pop_btn delBtn" openPopId="fixTipView">删除</a></td>
+                            <?php } ?>
+                            <td>
+
+                                <div class="select_box">
+                                    <label class="select_val" val="<?php echo $v['wallpaperlive_status'] ?>"><?php echo $status[$v['wallpaperlive_status']] ?></label>
+                                    <ul class="select_option ch_status" sid="<?php echo $v['wallpaperlive_id'] ?>">
+
+                                        <?php if ($userinfo['groupid'] == 3) { ?>
+                                            <li val="4">已上线</li>
+                                            <li val="1">未上线</li>
+                                            <li val="5">已下线</li>
+                                        <?php } if ($userinfo['groupid'] == 2) { ?>
+                                            <li val="2">未通过</li>
+                                            <li val="3">已通过</li>
+                                        <?php } ?>
+                                    </ul>
+                                </div><!-- select_box end-->
+                            </td>
+                        </tr>
+                    <?php } ?>
+
+
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 分页模块 -->
+        <?php echo $this->render("common/pageshow.phtml"); ?>
+
+    </div><!-- content end -->
+
+</div>
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">是否删除该动态壁纸<span></span></p>
+                    <div class="tip_btns"><button class="btn_s2 del_ok">确定</button>
+                        <button class="btn_s2 btnCancel">取消</button></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+<script>
+    $(function () {
+        $(".ch_status >li ").click(function () {
+            var liveid = $(this).parent().attr("sid");
+            var status = $(this).attr("val");
+            var data = "liveid=" + liveid + "&status=" + status + "&token=" + token;
+            var url = "/Admin/Wallpaperadmin/upstatusLive";
+            if (confirm("你确定要修改该资源的状态?")) {
+                $.post(url, data, function (res) {
+                    if (res) {
+                        window.location.href = "/Admin/wallpaperadmin/livewallpaper"
+                    }
+                })
+            }
+
+        });
+
+        $(".delBtn").click(function () {
+            var liveId = $(this).attr("val");
+            $(".del_ok").click(function () {
+                var url = "/Admin/Wallpaperadmin/del_livewallpaper";
+                var data = "id=" + liveId + "&token=" + token;
+                $(".pop_wraper").removeClass("show");
+                $.post(url, data, function (d) {
+                    if (d) {
+                        window.location.href = "/Admin/Wallpaperadmin/livewallpaper" + "?" + urlpar[1];
+                    }
+                })
+            })
+        })
+    })
+</script>
+</body>
+</html>

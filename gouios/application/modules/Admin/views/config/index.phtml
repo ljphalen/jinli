@@ -1,0 +1,32 @@
+<?php echo $this->render("layout/header.phtml");?>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="h_a">配置管理</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">客服电话</th>
+				<td class="td">
+				   <input class="input wc"  name="gou_service_tel" value="<?php echo $configs['gou_service_tel'];?>"/>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">核心用户群</th>
+				<td class="td">
+				   <input class="input wc"  name="gou_qq_qun" value="<?php echo $configs['gou_qq_qun'];?>"/>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Config/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

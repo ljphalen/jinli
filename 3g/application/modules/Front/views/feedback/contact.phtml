@@ -1,0 +1,50 @@
+
+<?php echo $this->render("feedback/header.phtml"); ?>
+
+<div class="ui-pg-hd ui-border-b">
+    <a class="link-back" href="<?=$prev_url?>"></a>
+    <span>联系方式</span>
+</div>
+
+<div class="ui-pg-wrap">
+    <div class="feed-tips">
+        请在此留下联系方式，以便您的问题更快得到解决
+    </div>
+    <form id="js-contact-frm" class="call-form-box feed-form-box" method="post" action="#">
+        <input type="hidden" name="token" value="<?php echo $token;?>" />
+		<input type="hidden" name="type" value="<?php echo $type;?>" />
+        <ul>
+            <li>
+                <label>手机号码</label>
+				<span class="inp-wrap ui-border">
+					<input id="inp-mobile" class="inp-txt" type="tel" name="mobile" maxLength="11" autocomplete="off" placeholder="请输入您的手机号码" value="<?=$info['tel']?>" />
+				</span>
+            </li>
+            <li>
+                <label>QQ号</label>
+				<span class="inp-wrap ui-border">
+					<input id="inp-qq" class="inp-txt" type="tel" name="qq" maxLength="20" placeholder="请输入您的QQ号码" autocomplete="off" value="<?=$info['qq']?>" />
+				</span>
+            </li>
+            <li>
+                <label>邮箱地址</label>
+				<span class="inp-wrap ui-border">
+					<input id="inp-email" class="inp-txt" type="tel" name="email" maxLength="30" placeholder="请输入您的邮箱地址" autocomplete="off" value="<?=$info['email']?>" />
+				</span>
+            </li>
+            <li>
+                <?php
+                $class = '';
+                if (!empty($info['tel']) || !empty($info['qq']) || !empty($info['email'])) {
+                    $class = 'inp-btn-act';
+                }
+                ?>
+				<span id="js_btnsmt" class="inp-wrap inp-btn-wrap ui-border <?=$class?>">
+					<input class="inp-txt inp-btn" type="submit" value="提交" />
+				</span>
+            </li>
+        </ul>
+    </form>
+</div>
+<div class="toast-wrap"><p></p></div>
+<?php echo $this->render("feedback/footer.phtml"); ?>

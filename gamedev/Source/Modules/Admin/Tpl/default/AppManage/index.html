@@ -1,0 +1,155 @@
+<form id="pagerForm" action="__ACTION__" method="post">
+	<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+	<input type="hidden" name="numPerPage" value="{$_REQUEST.numPerPage}" />
+	<input type="hidden" name="orderField" value="{$_REQUEST.orderField}" />
+	<input type="hidden" name="orderDirection" value="{$_REQUEST.orderDirection}" />
+	<volist name="_REQUEST._search" key="name" id="field">
+		<input type="hidden" name="_search[{$key}]" value="{$field|safe}"/>
+	</volist>
+</form>
+
+<div class="page">
+
+	<!--查询开始-->
+	<div class="pageHeader">
+		<form onsubmit="return navTabSearch(this);" action="__URL__" method="post" name="myform" id = 'manage_myform'>
+		<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+        <input type="hidden" name="type" value="{$_REQUEST.type}"/>
+		<div class="searchBar">
+			<ul class="searchContent" style=" overflow:inherit;">
+				<li>
+					<label>应用状态：</label>
+					<select class="combox" name="_search[status]">
+					<option value="" selected>全部</option>
+					<option value="10">待上线</option>
+					<option value="3">已上线</option>
+					<option value="-2">已下线</option>
+					</select>
+					<script type="text/javascript">
+					$("select[name='_search[status]']").val({:$_search[status]});
+					</script>
+				</li>
+				<li>
+					<label>APPID：</label>
+					<input type="text" name="_search[id]" value="{$_REQUEST._search.id}"/>
+				</li>
+				<li>
+					<label>开发者：</label>
+					<input type="text" name="_search[author]" value="{$_REQUEST._search.author}"/>
+				</li>
+				<li>
+					<label>应用名称：</label>
+					<input type="text" name="_search[app_name]" value="{$_REQUEST._search.app_name}"/>
+				</li>
+				<li>
+					<label>应用包名：</label>
+					<input type="text" name="_search[package]" value="{$_REQUEST._search.package}"/>
+				</li>
+				<li>
+					<label>审核人：</label>
+					<input type="text" name="_search[account]" value="{$_REQUEST._search.account}"/>
+				</li>
+                <li>
+					<label>发布日期：</label>
+					<input type="text" name="_search[timeStart]" value="{$_REQUEST._search.timeStart}" class="date" yearstart="-10" yearend="0" pattern="yyyy-MM-dd" size="12" readonly/>
+					到<input type="text" name="_search[timeEnd]" value="{$_REQUEST._search.timeEnd}" class="date" yearstart="-10" yearend="0" pattern="yyyy-MM-dd" size="12" readonly/>
+				</li>
+                
+                <div class="buttonActive"><div class="buttonContent"><button type="button" id="manage_sub" >查询</button></div></div>
+                <div class="buttonActive"><div class="buttonContent"><button type="button" id="manage_export" >导出</button></div></div>
+				<script type="text/javascript">
+				$("#manage_export").click(function(){
+					$("#manage_myform").attr('action',"{:U('AppManage/export')}");
+					$("#manage_myform").attr('onsubmit','');
+					$("#manage_myform").submit();
+				})
+				
+				$("#manage_sub").click(function(){
+					$("#manage_myform").attr('action',"");
+					$("#manage_myform").attr('onsubmit','return navTabSearch(this);');
+					$("#manage_myform").submit();
+				})
+				</script>
+			</ul>
+
+		</div>
+		</form>
+	</div>
+	<!--查询结束-->
+	
+	<div class="pageContent">
+	
+		<!-- 列表开始 -->
+		<table class="list listW" width="100%" layoutH="138">
+			<thead>
+			<tr>
+				<!-- 这里不好做排序,只能是假象排序了^_^ -->
+				<th orderField="id" class="{:orderField('id','desc')}">ApkID</th>
+				<th orderField="id" class="{:orderField('id','desc')}">AppID</th>
+				<th>包名</th>
+				<th>版本</th>
+				<th>包大小</th>
+				<th>注册帐号</th>
+				<th>应用名称</th>
+				<th>应用状态</th>
+				<th>发布日期</th>
+				<th>版本</th>
+				<th>版本管理</th>
+				<th>应用详情</th>
+				<th>运营平台</th>
+			</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="list">
+				<php>
+					if(!empty($vo['main_apk_id']))
+						$apkWhere = array("id"=>$vo['main_apk_id']);
+					else
+						$apkWhere = array("app_id"=>$vo['id']);
+					$apkModel = D("Apks");
+					$apk = $apkModel->where($apkWhere)->order("id desc")->find();
+				</php>
+			
+				<tr target="sid_user" rel="{$vo['id']}">
+					<td>{$apk['id']}</td>
+					<td>{$vo['id']}</td>
+					<td class="package">{$apk['package']}</td>
+					<td class="tc4">{$apk['version_name']}({$apk['version_code']})</td>
+					<td>{$apk['file_size']|showsize|implode="",###}</td>
+					<td class="email">{:AccountsModel::listTxt($vo['author_id'])}</td>
+					<td class="app">{$vo['app_name']}<if condition="$apk['app_name'] != $vo['app_name']">({$apk['app_name']})</if></td>
+					<td class="tc4">{:$apkModel->getApkStatusByStatus($apk['status']);}</td>
+					<td class="time">{$vo['created_at']|date="Y-m-d H:i:s",###}</td>
+					<td>{:$apkModel->where(array("app_id"=>$vo['id']))->count();}</td>
+					<td><a href="{:U("AppManage/apks", array("app_id"=>$vo["id"]))}" id="nav_app_{$vo["id"]}" target="navTab">查看版本</a></td>
+					<td>
+						<a href="{:U('AppManage/detail', array('apk_id'=>$apk['id']))}" rel="app_detail_tab" target="navTab" mask="true" title="应用详情">应用详情</a>
+					</td>
+					<td><a href="{:U('AppManage/sync', array('apk_id'=>$apk['id'], 'app_id'=>$apk['app_id']))}" target="ajaxTodo">同步</a></td>
+				</tr>
+				
+			</volist>
+			</tbody>
+		</table>
+		<!-- 列表结束 -->
+		
+		<!-- 分页开始 -->
+		<div class="panelBar">
+			<div class="pages">
+				<span>显示</span>
+				<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+					<option value="10" <eq name="numPerPage" value="10">selected</eq>>10</option>
+					<option value="20" <eq name="numPerPage" value="20">selected</eq>>20</option>
+					<option value="50" <eq name="numPerPage" value="50">selected</eq>>50</option>
+					<option value="100" <eq name="numPerPage" value="100">selected</eq>>100</option>
+					<option value="200" <eq name="numPerPage" value="200">selected</eq>>200</option>
+				</select>
+				<span>共{$totalCount}条</span>
+			</div>
+			<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="10" currentPage="{$currentPage}"></div>
+		</div>
+		<!-- 分页结束 -->
+		
+	</div>
+	
+</div>

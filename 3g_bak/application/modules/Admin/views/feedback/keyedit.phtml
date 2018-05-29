@@ -1,0 +1,43 @@
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="edit_form" enctype="multipart/form-data">
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr>
+			<th>名称</th>
+			<td><input type="text" class="easyui-textbox" name="name" value="<?php echo $info['name']; ?>"></td>
+		</tr>
+		<tr>
+			<th>内容</th>
+			<td><textarea style="width: 300px;height: 100px" name="content"><?php echo $info['content']; ?></textarea>
+		</tr>
+		<tr>
+			<th>标签</th>
+			<td>
+				<input type="text" style="width:250px;" class="easyui-textbox" name="key_tag"  value="<?=$info['key_tag']?>">&nbsp;(多个标签用#分割)
+			</td>
+		</tr>
+		<tr>
+			<th>渠道</th>
+			<td>
+				<?php
+				foreach ($types as $k => $name):
+					$checked = $info['type'] == $k ? 'checked="checked"' : '';
+					?>
+					<input type="radio" name="type" class="input" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+				<?php endforeach; ?>
+			</td>
+		</tr>
+		<tr>
+			<td>状态</td>
+			<td>
+				<?php
+				$arr = array(0 => '关闭', 1 => '开启');
+				foreach ($arr as $k => $name):
+				$checked = $info['status'] == $k ? 'checked="checked"' : '';
+				?>
+				<label><input type="radio" name="status" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+					<?php endforeach; ?>
+			</td>
+		</tr>
+	</table>
+</form>

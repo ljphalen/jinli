@@ -1,0 +1,44 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class=""><a href="<?php echo $indexUrl; ?>">用户积分信息</a></li>
+			<li class=""><a href="<?php echo $scoreUrl; ?>">积分统计列表</a></li>
+			<li class="current"><a href="<?php echo $tasksUrl; ?>">任务统计</a></li>
+		</ul>
+	</div>
+	<div>
+		<table>
+			<tr class="hd">
+				<td class="td" style="font-size: 14px;padding-left:50px;padding-botton:20px;">截止目前用户完成总任务数：<span style="padding-left: 12px; font-size:13px; color:red;"><?php echo $all['tasks_amount']; ?></span>
+				</td>
+
+			</tr>
+			<tr class="hd">
+				<td class="td" style="font-size: 14px;padding-left:50px;padding-botton:20px;">截止目前完成任务的总用户数:<span style="padding-left: 12px; font-size:13px; color:red;"><?php echo $all['user_amount']; ?></span>
+				</td>
+			</tr>
+
+		</table>
+	</div>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="10%">日期</td>
+				<td width="10%">完成任务数</td>
+				<td width="12%">参与人数</td>
+				<td width="15%">查看详情</td>
+			</tr>
+			<?php foreach ($dataList as $key => $value) {
+				?>
+				<tr class="ct">
+					<td><?php echo $value['date']; ?></td>
+					<td><?php echo $value['done_tasks']; ?></td>
+					<td><?php echo $value['user_amount']; ?></td>
+					<td><a href="#">查看</a></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?></div>
+<?php echo $this->render("layout/footer.phtml"); ?>

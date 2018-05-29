@@ -1,0 +1,41 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li class="current"><a href="<?php echo $listUrl;?>">商户列表</a></li>
+        <li><a href="<?php echo $addUrl;?>">添加商户</a></li>
+	</ul>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">商户ID</td>
+			<td>用户名</td>
+			<td>手机号</td>
+			<td>商家名称</td>
+			<td>商家地址</td>
+			<td>创建时间</td>
+			<td>关联状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($partners as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['username'];?></td>
+			<td><?php echo $value['phone'];?></td>
+			<td><?php echo $value['s_name'];?></td>
+			<td><?php echo $value['s_detail'];?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+			<td><?php echo $value['status']==0?'<font color="red">未关联</font>':'<font color="greed">已关联</font>';?></td>
+			<td>
+			<a href="<?php echo $bindUrl;?>/?uid=<?php echo $value['id'];?>" class="mr10">关联设备</a>
+            <a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<a  onclick="deleteOne('<?php echo $deleteUrl;?>/?uid=<?php echo $value['id'];?>', '是否要删除该用户组？', event);" class="mr10">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

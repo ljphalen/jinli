@@ -1,0 +1,90 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">搜索配置列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加搜索配置</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">开始结束时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo $params['start_time'];?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo $params['end_time'];?>" /></div>
+			</td>
+		</tr>
+		<tr>
+		   <th class="th">类型</th>
+			<td class="td">
+			<select name="ktype" class="select wa">
+			    <option value="0">全部</option>
+				<option <?php if($params['ktype'] == 1) echo 'selected';?> value="1">热词</option>
+				<option <?php if($params['ktype'] == 2) echo 'selected';?> value="2">关键词</option>
+			</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input" name="name" value="<?php echo $params['name'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">开启</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">关闭</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('delete');" type="submit">删除</button></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="30">排序</td>
+			<td width="30">ID</td>
+			<td>标题</td>
+			<td>类型</td>
+			<td>开始时间</td>
+            <td>结束时间</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['name'];?></td>
+			<td><?php echo $ktypes[$value['ktype']];?></td>
+        	<td><?php echo date('Y-m-d H:i:s', $value['start_time']);?></td>
+        	<td><?php echo date('Y-m-d H:i:s', $value['end_time']);?></td>
+			<td><?php echo $value['status'] == 1 ? '开启' : '关闭';?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Resource_Keyword/index?s=1');
+	});
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

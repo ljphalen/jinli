@@ -1,0 +1,36 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="">应用分类列表</a></li>
+			<li><a href="<?php echo $cateeditUrl; ?>">添加应用分类</a></li>
+		</ul>
+	</div>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="50">ID</td>
+				<td width="50">排序</td>
+				<td width="240">名称</td>
+				<td width="100">图标</td>
+				<td>主题图片</td>
+				<td width="120">操作</td>
+			</tr>
+			<?php foreach ($types as $key => $value) { ?>
+				<tr class="ct">
+					<td><?php echo $value['id']; ?></td>
+					<td><?php echo $value['sort']; ?></td>
+					<td><?php echo $value['name']; ?></td>
+					<td><img src="<?php echo $value['icon'] ? $attachPath . $value['icon'] : ''; ?>" width="32"/></td>
+					<td><img src="<?php echo $value['img'] ? $attachPath . $value['img'] : ''; ?>" width="48"/></td>
+					<td>
+						<a href="<?php echo $cateeditUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+						<a href="javascript:" onclick="deleteOne('<?php echo $catedelUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

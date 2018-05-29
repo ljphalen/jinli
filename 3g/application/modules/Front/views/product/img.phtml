@@ -1,0 +1,31 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div id="page">
+	<header id="header">
+		<div class="m-nav">
+			<section><a class="back" href="<?php echo $webroot.'/product/detail?sid='.$series_id.'&id='.$id;?>"><span>返回</span></a></section>
+			<section><span>查看大图</span></section>
+			<section></section>
+		</div>
+	</header>
+	<div id="content">
+			<!--图片滑动模块-->
+			<div class="product-img">
+				<div class="in-slider pro-slider">
+					<div class="in-slider-cont">
+						<ul>
+							<?php foreach($img as $key=>$value){?>
+								<li><span href="#"><img src="<?php echo $attachPath.$value['img'];?>" alt=""></span></li>
+							<?php }?>
+						</ul>
+					</div>
+					<div class="in-slider-status">
+						<?php $i= 0;foreach($img as $key=>$value){?><span <?php echo ($i==0? 'class=on':'');?>></span><?php $i++;}?>
+					</div>
+					<div class="in-slider-prev"></div>
+					<div class="in-slider-next"></div>
+				</div>
+			</div>
+		</div>
+</div>
+<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/footer.phtml");?>

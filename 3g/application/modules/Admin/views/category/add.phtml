@@ -1,0 +1,193 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<style>
+	.iform {
+		width: 200px;
+	}
+</style>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $indexURL; ?>">分类列表</a></li>
+		<li class="current"><a href="<?php echo $addURL; ?>">添加分类</a></li>
+	</ul>
+</div>
+<div class="h_a">添加商品分类</div>
+<form method="post" action="<?php echo $addPostURL; ?>" id="addForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">名称</th>
+				<td class="td"><input type="text" class="input" name="name" value=""></td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">链接</th>
+				<td class="td"><input type="text" class="input" name="link" value=""></td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">商品类别</th>
+				<td class="td"><select name="group_id" id="group_id">
+						<option value="0">请选择商品类别</option>
+						<?php foreach ($groupType as $k => $v) { ?>
+							<option value="<?php echo $k; ?>"><?php echo $v['val'] ?></option>
+						<?php } ?>
+					</select>
+				</td>
+				<tbody style="display: none" id="score_action_flag">
+			<tr class="tr">
+				<th class="th">积分变化动作</th>
+				<td class="td"><select name="score_type" id="score_type"></select>
+				</td>
+			</tr>
+			</tbody>
+
+			<tbody style="display: none" id="max_tag">
+			<tr class="tr">
+				<th class="th">单天该类下物品次数限制</th>
+				<td class="td"><input type="text" name="max_number" class="input" id="max_number"></td>
+			</tr>
+			</tbody>
+
+			<tr class="tr">
+				<th class="th">是否需要指定特殊广告</th>
+				<td class="td">
+					<select name="special_ads" id="special_ads">
+						<option value="0" selected="selected">否</option>
+						<option value="1">是</option>
+					</select>
+				</td>
+			</tr>
+
+			<tbody id="tbody" style="display:none">
+			<tr class="tr">
+				<th class="th">选择特定广告位</th>
+				<td class="td">
+					<select name="pos_id" id="pos_id">
+						<option value="0">请选择</option>
+						<?php foreach ($pos as $k => $v) { ?>
+							<option value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">选择广告</th>
+				<td class="td"><select name="ad_id" id="ad_id"></select>
+			</tr>
+			</tbody>
+
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" name="sort" id="sort" class="input" value="1"></td>
+			<tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td"><select name="status" class="select">
+						<option value="1">开启</option>
+						<option value="0">关闭</option>
+					</select></td>
+			</tr>
+
+			<tbody id="image">
+			<tr class="tr">
+				<th class="th">分类图片</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="catImage">
+							<img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+							<input type="hidden" name="img" value="">
+						</li>
+					</ul>
+					<p style="clear:both;">
+						<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=catImage'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tbody>
+
+			<tr class="tr">
+				<th class="th">详细说明</th>
+				<td class="td">
+					<textarea rows="3" cols="3" name="description" style="width: 300px ;height:200px;"></textarea></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	//用户表单数据提交
+	$(document).ready(function () {
+		ajaxForm('addForm', function (ret) {
+			/* 	if(!$("#goods_type").val()){
+			 alert("请选择类别");
+			 return false;
+			 } */
+			ajaxRedirect(ret, baseurl + '/Admin/category/index');
+		});
+	})
+
+	$("#group_id").bind('change', function () {
+		var group_id = $("#group_id option:selected").val();
+		if (group_id != 0) {
+			$.ajax({
+				'url': '/Admin/Category/ajaxGetScoreActionType',
+				'type': 'post',
+				'dataType': 'json',
+				'data': {'group_id': group_id, 'token': '<?php echo $token;?>'},
+				'success': function (e) {
+					if (e.key == '-1') {
+						alert(e.msg);
+					} else {
+						var options = "<option value='0'>请选择动作</option>";
+						$.each(e.msg, function (i, m) {
+							options += "<option value='" + i + "'>" + m + "</option>";
+						});
+					}
+					$("#score_type").html(options);
+					$("#score_action_flag").show();
+				}
+			});
+
+			if (group_id == 2) {
+				$("#max_tag").show();
+			} else {
+				$("#max_tag").hide();
+			}
+		} else {
+			$("#score_action_flag").hide();
+			$("#max_tag").hide();
+		}
+	});
+
+	$("#special_ads").bind('change', function () {
+		var value = $("#special_ads option:selected").val();
+		if (value == 1) {
+			$("#tbody").show();
+		} else {
+			$("#tbody").hide();
+		}
+	});
+
+	$("#pos_id").bind('change', function () {
+		var pos_id = $("#pos_id option:selected").val();
+		if (pos_id > 0) {
+			$.ajax({
+				'url': '/Admin/Category/ajaxGetAdsByPosId',
+				'type': 'post',
+				'dataType': 'json',
+				'data': {'token': '<?php echo $token;?>', 'pos_id': pos_id},
+				'success': function (e) {
+					var msg = '<option value="0">请选择</option>';
+					$.each(e.data, function (i, m) {
+						msg += "<option value='" + m.id + "'>" + m.name + "</option>";
+					});
+					$("#ad_id").html(msg);
+				},
+			});
+		}
+	});
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

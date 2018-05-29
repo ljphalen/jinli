@@ -1,0 +1,78 @@
+<div class="page">
+
+	<php>
+		$results = D("Testin")->getResult(array("apk_md5"=>$_GET['md5']));
+	</php>
+	
+	<notempty name="results.pdf">
+		<!--查询开始-->
+		<div class="pageHeader">
+			<form onsubmit="return navTabSearch(this);" action="__URL__" method="post" name="myform" id = 'myform_veryfy'>
+			<div class="searchBar">
+				<ul class="searchContent">
+	                <div class="buttonActive">
+	                	<div class="buttonContent"><button type="button" onclick="window.open('{$results.pdf}')">下载PDF报告</button></div>
+					</div>
+					
+	                <div class="buttonActive">
+	                	<div class="buttonContent"><button type="button" onclick="window.open('{$results.report.excel}')">下载Excel报告</button></div>
+					</div>
+					
+				</ul>
+			</div>
+			</form>
+		</div>
+		<!--查询结束-->
+	</notempty>
+
+	<div class="pageContent">
+		<!-- 列表开始 -->
+		<table class="list listW" width="100%">
+			<thead>
+			<tr>
+				<th>提交日期</th>
+				<th>测试日期</th>
+				<th>设备名称</th>
+				
+				<th>安装测试</th>
+				<th>卸载测试</th>
+				<th>启动测试</th>
+				<th>启动时间</th>
+				
+				<th>最大内存消耗</th>
+				<th>最小内存消耗</th>
+				<th>平均内存消耗</th>
+				
+				<th>最大CPU消耗</th>
+				<th>最小CPU消耗</th>
+				<th>平均CPU消耗</th>
+				
+				<th>日志下载</th>
+
+			</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="results.detail_report">
+				<tr target="sid_user">
+					<td>{$results.create_at|date="Y-m-d H:i:s",###}</td>
+					<td>{$vo.reportTime|date="Y-m-d H:i:s",###}</td>
+					<td>{$vo.reportDevice}</td>
+					<td>{$vo.installCode}</td>
+					<td>{$vo.uninstallCode}</td>
+					<td>{$vo.runCode}</td>
+					<td>{$vo.launch}</td>
+					<td>{$vo.maxMem}</td>
+					<td>{$vo.minMem}</td>
+					<td>{$vo.avgMem}</td>
+					<td>{$vo.maxCpu}</td>
+					<td>{$vo.minCpu}</td>
+					<td>{$vo.avgCpu}</td>
+					<td><empty name="vo.logUrl">暂无日志<else/><a href="{$vo.logUrl}" target="_blank">点击下载</a></empty></td>
+				</tr>
+			</volist>
+			</tbody>
+		</table>
+		<!-- 列表结束 -->
+	</div>
+
+</div>

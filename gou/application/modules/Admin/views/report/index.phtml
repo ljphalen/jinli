@@ -1,0 +1,51 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">淘客报表</a></li>
+    <li><a href="<?php echo $bindUrl;?>">换绑帐号</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">日期</th>
+			<td class="td"><input class="input wb" type="text" id="date" name="date" value="<?php echo $date;?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>淘宝订单号</td>
+			<td>商品名称</td>
+			<td>out_code</td>
+			<td>价格</td>
+			<td>佣金</td>
+			<td>佣金比例</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['trade_id'];?></td>
+			<td><?php echo $value['item_title'];?></td>
+			<td><?php echo $value['outer_code'];?></td>
+			<td><?php echo $value['pay_price'];?></td>
+			<td><?php echo $value['commission'];?></td>
+			<td><?php echo $value['commission_rate'];?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	 $('#date').datetimepicker();
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

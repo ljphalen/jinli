@@ -1,0 +1,27 @@
+<?php
+$basePath = dirname(dirname(__DIR__));
+initLog($basePath);
+yafStart($basePath);
+
+for ($i = 0; $i < 1; $i++) {
+    Async_Task::execute('Async_Task_Adapter_GameInfo', 'update');
+}
+
+function initLog($basePath) {
+    require_once $basePath . '/log4php/Logger.php';
+    Logger_Center::configure($basePath . '/configs/log4php.properties');
+    Logger_Center::getLogger(__CLASS__)->info("AsynServer started...");
+}
+
+function yafStart($basePath) {
+    define("BASE_PATH", $basePath);
+    define ("APP_PATH", BASE_PATH . "/application/");
+    define("ENV", get_cfg_var('GIONEE_ENV'));
+
+    $application = new Yaf_Application(BASE_PATH. "/configs/application.ini", ENV);
+    $application->execute("started");
+}
+
+function started() {
+    echo "Yaf started" . PHP_EOL;
+}

@@ -1,0 +1,58 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $configUrl; ?>">基本配置</a></li>
+			<li><a href="<?php echo $indexUrl; ?>">信息列表</a></li>
+			<li><a href="<?php echo $addUrl; ?>">添加活动内容</a></li>
+			<li><a href="<?php echo $userUrl ?>">用户列表</a>
+			<li><a href="<?php echo $logUrl ?>">通话记录</a>
+			<li><a href="<?php echo $service; ?>">添加客服信息</a>
+			<li class="current"><a href="<?php echo $serviceList; ?>">客服信息列表</a>
+			<li><a href="<?php echo $tipsListUrl ?>">规则说明</a>
+		</ul>
+	</div>
+	<div class="table_list">
+		<form action="<?php echo $serviceEdit; ?>" method="post">
+			<input type="hidden" value="<?php echo $token; ?>" name="token">
+			<table width="100%">
+				<tr class="hd">
+					<td width="100">名称</td>
+					<td width="100">联系方式</td>
+					<td width="100">排序</td>
+					<td width="100">状态</td>
+				</tr>
+				<?php foreach ($list as $key => $value) {
+					?>
+					<tr class="ct">
+						<td><input value="<?php echo $value['name']; ?>" name="service[<?php echo $key + 1; ?>][name]">
+						</td>
+						<td>
+							<input value="<?php echo $value['contact']; ?>" name="service[<?php echo $key + 1; ?>][contact]">
+						</td>
+						<td><input value="<?php echo $value['sort']; ?>" name="service[<?php echo $key + 1; ?>][sort]">
+						</td>
+						<td>
+							<select name="service[<?php echo $key + 1; ?>][status]">
+								<option value="1" <?php if ($value['status'] == 1) echo 'selected'; ?>>开启</option>
+								<option value="0" <?php if ($value['status'] == 0) echo 'selected'; ?>>关闭</option>
+							</select>
+						</td>
+					</tr>
+				<?php } ?>
+			</table>
+			<tr>
+				<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+				</div>
+			</tr>
+		</form>
+	</div>
+	<script type="text/javascript">
+		//广告表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+					ajaxRedirect(ret, baseurl + '/Admin/VoIP/service');
+				}
+			);
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

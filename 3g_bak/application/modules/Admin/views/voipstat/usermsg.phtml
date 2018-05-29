@@ -1,0 +1,35 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $censusUrl; ?>">PV/UV统计</a></li>
+			<li class="current"><a href="<?php echo $userLogUrl ?>">新增激活用户</a></li>
+			<li><a href="<?php echo $newRegisterUrl; ?>">新增注册用户</a></li>
+			<li><a href="<?php echo $connectedUrl; ?>">接通统计</a></li>
+			<li><a href="<?php echo $periodUrl ?>">通话时段统计</a></li>
+		</ul>
+	</div>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="tr">
+				<td class="td">用户ID</td>
+				<td class="td">手机号</td>
+				<td class="td">活动期号</td>
+				<td class="td">状态</td>
+				<td class="td">获取时间</td>
+
+			</tr>
+			<?php foreach ($datList as $k => $v) { ?>
+				<tr class="ct">
+					<td class="td"><?php echo $v['id']; ?></td>
+					<td class="td"><?php echo $v['user_phone']; ?></td>
+					<td class="td"><?php echo $v['pid']; ?></td>
+					<td class="td"><?php echo $v['sta'] == '1' ? '有效' : '无效'; ?></td>
+					<td class="td"><?php echo date('Y-m-d H:i:s', $v['get_time']); ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

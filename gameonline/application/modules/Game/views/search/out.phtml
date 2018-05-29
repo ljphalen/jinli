@@ -1,0 +1,78 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+</script>
+<body>
+	<div data-pagerole="body" id="page">
+	   <header class="hd search_bg ">
+			<h1>搜索</h1>
+			<div class="back-home"><a href="<?php echo $go ? $webroot :'javascript:history.go(-1)';?>">&lt;</a></div>
+			<div class="search-bar">
+				<form action="<?php echo $outUrl.'?keyword='.$keyword;?>" method="get" id="searchFrom">
+					<input class='special'  name="keyword" type="text" rqd="true" data-error="" data-null="请输入关键字" placeholder="<?php echo $keyword;?>"  value="<?php echo $keyword;?>"  
+					onfocus="if(this.value==''){this.placeholder='';} " onblur="if(this.value==''){this.placeholder='';}"
+						 oninput="if(this.value==''){this.placeholder='';} if(this.value!=''){document.getElementById('intersrc').value='Isearch';}" maxlength="12"/>
+					 <input id="intersrc" name="intersrc" value="<?php echo $intersrc;?>" type="hidden" />
+					 <input  name="t_bi" value="<?php echo $source; ?>" type="hidden" />	
+				    <button type="button" class="search" ></button>
+				</form>
+			</div>
+		</header>
+		
+		<article class="ac search_bg" >
+		    <?php if(!count($games) || empty($games)){?>
+			<div class="search_nothing">
+				<img src="<?php echo $staticResPath; ?>/pic/pic_error.png" alt="">
+			</div>
+			<?php }?>
+			<?php if($from == 'baidu' && count($games)){?>
+				<div class="tips-num">共<?php echo $total;?>条结果来自百度应用：</div>
+				<div class="baiduSearch-tips">百度应用的游戏可能不适配您的手机</div>
+				<?php } else if($from == 'gn'){?>
+				<div class="tips-num">共搜索到<?php echo $total;?>条结果：</div>
+				<?php } ?>
+			 <div class="item-list J_resultItem">
+				<ul>
+					<?php if(count($games)){?>
+					<?php foreach($games as $key=>$value){?>
+					<?php 
+					     if(!$intersrc){
+                            $intersrc = 'SEARCH';
+					     } 
+					     $href = $webroot.'/search/detail/?stype='.$stype.'&from='.$value['from'].'&id='.$value['id'].'&gname='.$value['name'].'&keyword='.$keyword.'&intersrc='.$intersrc.'&t_bi='.$source;
+					?>
+					<li>
+						<a class="detail" href="<?php echo $href;?>">
+							<div class="pic">
+								<img class="pic" alt="" src="<?php echo $staticResPath; ?>/pic/blank.gif" data-src="<?php echo $value['img'];?>">
+							</div>
+							<div class="desc">
+								<h3><?php echo $value['name']; ?></h3>
+								<p><?php echo $value['resume']; ?></p>
+							</div>
+						</a>
+						<div class="download"><a class="btn" href="<?php echo Common::bdurl($tjUrl, $value['id'], $intersrc, $value['link'], '', $from, $value['name'], $keyword, $stype);?>&t_bi=<?php echo $source;?>">安装</a></div>
+						
+						
+						
+					</li>
+					<?php } } ?>
+				</ul>
+			</div>
+			<?php if($hasnext){ ?>
+			<div class="load-more J_loadMore" data-ajaxUrl="<?php echo $webroot.'/search/more/?stype='.$stype.'&keyword='.$keyword.'&intersrc='.$intersrc.'&t_bi='.$source;?>" data-hasnext="<?php echo $hasnext;?>" data-curpage="<?php echo $page;?>">
+			<span>加载更多</span>
+            </div>
+	       <?php } ?>
+		</article>		
+	</div>
+	<div class="J_tipBox tip-box invisible">
+		<p></p>
+		<div class="mask"></div>
+	</div>
+	<div class="goTop J_gotoTop">
+			<a ></a>
+    </div>
+   <?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

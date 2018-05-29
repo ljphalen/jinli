@@ -1,0 +1,177 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li><a href="<?php echo $listUrl;?>">退换货订单列表</a></li>
+    	<li class="current"><a href="javascript:;"><?php echo $info['type_id'] == 1 ? '退货' : '换货';?>单详情</a></li>
+	</ul>
+</div>
+<div class="h_a">原始订单信息</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">订单编号</th>
+			<td class="td" style="width:30%"><?php echo $order['trade_no'];?></td>
+			<th class="th">订单状态</th>
+			<td class="td" style="width:30%"><?php echo Gou_Service_Order::orderStatus($order['status']);?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">外部订单号</th>
+			<td class="td" style="width:30%"><?php echo $order['out_trade_no'];?></td>
+			<th class="th">商品价格</th>
+			<td class="td" style="width:30%"><?php echo $order['deal_price'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">生成时间</th>
+			<td class="td" style="width:30%"><?php echo date('Y-m-d H:i:s', $order['create_time']);?></td>
+			<th class="th">付款时间</th>
+			<td class="td" style="width:30%"><?php echo $order['pay_time'] ? date('Y-m-d H:i:s', $order['pay_time']) : '';?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">确认收货时间</th>
+			<td class="td" style="width:30%"><?php echo $order['take_time'] ? date('Y-m-d H:i:s', $order['take_time']) : '';?></td>
+			<th class="th">实付款</th>
+			<td class="td" style="width:30%"><?php echo $order['real_price'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">付款方式</th>
+			<td class="td" style="width:30%"><?php echo $order['pay_type'] == 1 ? '在线支付' : '货到付款';?></td>
+			<th class="th">商品数量</th>
+			<td class="td" style="width:30%"><?php echo $order['number'];?></td>
+		</tr>
+		<?php if($goods['is_virtual'] == 1) {?>
+		<tr class="tr">
+			<th class="th">手机号码</th>
+			<td class="td" colspan="3"><?php echo $order['phone'];?></td>			
+		</tr>
+		<?php }?>
+		<tr class="tr">
+			<th class="th">买家留言</th>
+			<td class="td" colspan="3"><?php echo $order['gbook'];?></td>			
+		</tr>
+	</table>
+</div>
+<div class="h_a">商品信息</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">商品名称</th>
+			<td class="td" style="width:30%"><?php echo $goods['title'];?></td>
+			<th class="th">商品价格</th>
+			<td class="td" style="width:30%"><?php echo $goods['price'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">供应商</th>
+			<td class="td" style="width:30%"><?php echo $supplier['name']?></td>
+			<th class="th">市场价</th>
+			<td class="td" style="width:30%"><?php echo $goods['price'];?></td>
+		</tr>
+	</table>
+</div>
+
+<div class="h_a">优惠及配送</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">运送方式</th>
+			<td class="td" style="width:30%">卖家包邮</td>
+			<th class="th">优惠额</th>
+			<td class="td" style="width:30%"><?php echo Common::money($order['deal_price'] - $order['real_price']);?></td>
+		</tr>
+	</table>
+</div>
+
+<div class="h_a">收货信息</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">收货人</th>
+			<td class="td" style="width:30%"><?php echo $address['buyer_name'];?></td>
+			<th class="th">手机号码</th>
+			<td class="td" style="width:30%"><?php echo $address['mobile'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">邮编</th>
+			<td class="td" style="width:30%"><?php echo $address['postcode'];?></td>
+			<th class="th">收货地址</th>
+			<td class="td" style="width:30%"><?php echo $address['adds'],$address['detail_address'];?></td>
+		</tr>
+	</table>
+</div>
+
+<div class="h_a"><?php echo $info['type_id'] == 1 ? '退货' : '换货';?>单信息</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th"><?php echo $info['type_id'] == 1 ? '退货' : '换货';?>单号</th>
+			<td class="td" style="width:30%"><?php echo $info['order_return_id'];?></td>
+			<th class="th">创建时间</th>
+			<td class="td" style="width:30%"><?php echo $info['create_time'] ? date('Y-m-d H:i:s',$info['create_time']) : '';?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">姓名</th>
+			<td class="td" style="width:30%"><?php echo $info['truename'];?></td>
+			<th class="th">电话</th>
+			<td class="td" style="width:30%"><?php echo $info['phone'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th"><?php echo $info['type_id'] == 1 ? '退货' : '换货';?>原因</th>
+			<td class="td" style="width:30%"><?php echo $reason;?></td>
+			<th class="th"><?php echo $info['type_id'] == 1 ? '退货' : '换货';?>留言</th>
+			<td class="td" style="width:30%"><?php echo $info['feedback'];?></td>
+		</tr>
+	</table>
+</div>
+
+<form method="post" action="<?php echo $optionUrl;?>" id="editFrom">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+	<div class="h_a">操作</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th" style="width:20%">状态</th>
+				<td class="td">
+					<select name='status' id='order_status'>
+						<?php foreach ($status as $key=>$val):?>
+						<option value="<?php echo $key?>" <?php echo $key==$info['status'] ? 'selected="selected"' : '';?> ><?php echo $val;?></option>
+						<?php endforeach;?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th" style="width:20%">备注</th>
+				<td class="td">
+					<textarea rows="5" style="width:98%" name="remark"><?php echo $info['remark'];?></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+
+<div class="h_a">订单操作日志</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>操作人</td>
+			<td>时间</td>
+			<td>操作内容</td>
+		</tr>
+		<?php foreach($log as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo Admin_Service_User::getUserNameByUID($value['uid']);?></td>
+			<td><?php echo $value['create_time']?date('Y-m-d H:i:s',$value['create_time']) : '';?></td>
+			<td><?php echo Amigo_Service_Orderreturn::formatLog($value['update_data']); ?></td>
+		</tr>
+		<?php } ?>
+	</table>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $listUrl;?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

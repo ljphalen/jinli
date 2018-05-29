@@ -1,0 +1,87 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div class="nav">
+		<ul class="cc">
+		<li ><a href="<?php echo $typeUrl?>">活动列表</a>
+		<li class="current"><a href="<?php echo $typeEditUrl?>">添加/编辑活动</a>
+	</ul>
+</div>
+<div class="h_a">基本配置：</div>
+<form method="post" action="<?php echo $typePostUrl;?>" id="addFrom">
+<input name="token" id="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">	
+	<tr class="tr">
+			<th class="th">活动名</th>
+			<td class="td"><input type="text" class="input" id="name" name="name" width="80px;" value="<?php echo $data['name']; ?>"></td>
+		</tr>
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">活动标识</th>
+                <td class="td"><input type="text" class="input" id="type_sign" name="type_sign" width="80px;" value="<?php echo $data["type_sign"]; ?>">（活动专用标识，请不要修改）</td>
+            </tr>
+		<tr class="tr">
+			<th class="th">开始时间</th>
+			<td class="td"><input type="text" class="input" id="start_time" name="start_time" width="80px;" value="<?php echo $data['start_time']?date("Y-m-d H:i:s",$data['start_time']):''; ?>"></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">结束时间</th>
+			<td class="td"><input type="text" class="input" id="end_time" name="end_time" width="80px;" value="<?php echo $data['end_time']? date("Y-m-d H:i:s",$data['end_time']):''; ?>"></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">每天可参加活动次数</th>
+			<td class="td"><input  type="text"  value="<?php echo max(1,$data['max_times']);?>"  name="max_times"  class="input"></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">奖品有限时长</th>
+			<td class="td"><input  type="text"  value="<?php echo $data['valid_minutes'];?>"  name="valid_minutes"  class="input">分钟</td>
+		</tr>
+		
+			<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" >
+			<option value="1"   <?php if($data['status'] == 1) echo 'selected';?>>开启</option>
+			<option value="0"    <?php if($data['status'] == 0) echo 'selected';?>>关闭</option>
+			</select>
+			</td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">规则说明</th>
+			<td class="td"><textarea rows="6" cols="10" name="rule"  style="width: 600px; height:400px;"><?php echo $data['rule'];?></textarea></td>
+		</tr>
+		<input type="hidden"  value="<?php echo $data['id'];?>"  name="id">
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+	<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+	$('#end_time').datetimepicker();
+	
+	 var editor;
+	 	KindEditor.ready(function(K) {
+	 		K.token = $('#token').val();
+	 	    editor = K.create('textarea[name="rule"]', {
+	 	        resizeType : 1,
+	 	        allowPreviewEmoticons : false,
+	 	        allowImageUpload : true,
+	 	        uploadJson : '<?php echo $uploadImgUrl;?>',
+	 	        items : EDITOR_ITEMS
+	 	    });
+	 	});
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Event/type');
+	},function(){
+  		editor.sync();
+  	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

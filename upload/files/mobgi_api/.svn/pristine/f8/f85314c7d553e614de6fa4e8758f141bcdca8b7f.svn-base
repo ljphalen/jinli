@@ -1,0 +1,154 @@
+<script type="text/javascript">
+//接收数据
+var data = JSON.parse('{{result}}');
+var url = "{{siteUrl}}AppReport/appActive";
+</script>
+<!-- include 'inc' -->
+<div class="colMain">
+    <div class="title"><p class="fl">活跃分析</p></div>
+    <div class="filter">
+        <div class="plugin">
+            <div class="ta_date" id="div_date">
+                 <span class="date_title" id="date"></span>
+                 <a class="opt_sel" id="input_trigger" href="#"><i class="i_orderd"></i></a>
+            </div>
+            &nbsp;
+            <a class="btn" id="btn_compare" href="javascript:void(0)">按时间对比</a>
+        </div>
+        <div class="plugin"><select name='appkey' class='choose-select'></select></div>
+        <div class="plugin"><a class="btn muti-select" href="javascript:void(0)">筛选</a></div>
+        &nbsp;
+        <div class="plugin">
+            <a class="pt-index ta_btn" id="index-active" href="javascript:void(0)">活跃用户数</a>
+            <a class="pt-index ta_btn" id="index-effective" href="javascript:void(0)">有效用户</a>
+            <a class="pt-index ta_btn" id="index-ad_arrived" href="javascript:void(0)">广告到达用户</a>
+        </div>
+    </div>
+    <div class="main">
+        <div class="chart-title">
+            <span>活跃分析</span>
+            <a class="index" href="javascript:void(0);" id="AnalysisDaus">日活跃DAU</a>
+            <a class="index" href="javascript:void(0);"  id="AnalysisWaus">周活跃WAU</a>
+            <a class="index" href="javascript:void(0);"  id="AnalysisMaus">月活跃MAU</a>
+            <a class="fr btn" id="desc" style="cursor:pointer;">说明</a>
+        </div>
+        <div id="hightchart" class="hightchart"></div>
+    </div>
+    <div class="main grid">
+        <table class="stat_tbl tablesorter">
+            <thead>
+                <tr>
+                    <th>日期</th>
+                    <th class='active'>活跃用户数</th>
+                    <th class='effective'>有效用户</th>
+                    <th class='ad_arrvied'>广告到达用户</th>
+                </tr>
+            </thead>
+            <tbody class="tbody_fill">
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="desc-content">
+    <table>
+        <tr><td><b>活跃用户数</b></td><td>按广告宿主启动数去重eventtype=start_vector_app</td></tr>
+        <tr><td><b>有效用户数</b></td><td>按广告请求用户数去重eventtype=requests</td></tr>
+        <tr><td><b>广告达到用户数</b></td><td>按广告展示用户数去重eventtype=impressions</td></tr>
+    </table>
+</div>
+<script type="text/javascript">
+$(function(){
+ // 表格
+    var tableHtml = "";
+    $.each(data.chart, function(i, tvalue){
+        if (data.url.needCompare == 0) {
+            tableHtml += "<tr><td><span class='blue'>"+tvalue.date+"</span></td>";
+            tableHtml += "<td class='active'>"+tvalue.active+"</td>";
+            tableHtml += "<td class='effective'>"+tvalue.effective+"</td>";
+            tableHtml += "<td class='ad_arrived'>"+tvalue.ad_arrived+"</td>";
+        }else{
+            if (typeof(tvalue.date_com) != 'undefined'){
+                tableHtml += "<tr><td><span class='blue'>"+tvalue.date+"/"+tvalue.date_com+"</span></td>";
+                if (parseFloat(tvalue.active) < parseFloat(tvalue.active_com)){
+                    tableHtml += "<td class='active'>"+tvalue.active+"/"+tvalue.active_com+"</td>";
+                }else{
+                    tableHtml += "<td class='active'>"+tvalue.active+"/<font color=red>"+tvalue.active_com+"↓</font></td>";
+                }
+                if (parseFloat(tvalue.effective) < parseFloat(tvalue.effective_com)){
+                    tableHtml += "<td class='effective'>"+tvalue.effective+"/"+tvalue.effective_com+"</td>";
+                }else{
+                    tableHtml += "<td class='effective'>"+tvalue.effective+"/<font color=red>"+tvalue.effective_com+"↓</font></td>";
+                }
+                if (parseFloat(tvalue.ad_arrived) < parseFloat(tvalue.ad_arrived_com)){
+                    tableHtml += "<td class='ad_arrived'>"+tvalue.ad_arrived+"/"+tvalue.ad_arrived_com+"</td>";
+                }else{
+                    tableHtml += "<td class='ad_arrived'>"+tvalue.ad_arrived+"/<font color=red>"+tvalue.ad_arrived_com+"↓</font></td>";
+                }
+            }else{
+                tableHtml += "<tr><td><span class='blue'>"+tvalue.date+"/ - </span></td>";
+                tableHtml += "<td class='active'>"+tvalue.active+"/ <font color=red>0 ↓</font></td>";
+                tableHtml += "<td class='effective'>"+tvalue.effective+"/ <font color=red>0 ↓</font></td>";
+                tableHtml += "<td class='ad_arrived'>"+tvalue.ad_arrived+"/ <font color=red>0 ↓</font></td>";
+            }
+        }
+    });
+    $(".tbody_fill").append(tableHtml);
+    var cur_td_class = data.url.ptype.split("-");
+    $("."+cur_td_class[1]).css({background:'#FFF8EB'});
+    $(".stat_tbl").tablesorter();
+    // 日期
+    var dateRange = new pickerDateRange('date', {
+        theme : 'ta', // 日期选择器TA主题
+        isTodayValid : 1,
+        startDate : data.url.startDate,
+        endDate : data.url.endDate,
+        monthRangeMax : 3,
+        needCompare : 1,
+        startCompareDate: data.url.startCompareDate || '',
+        endCompareDate: data.url.endCompareDate || '',
+        minValidDate : 1379174400,
+        success : function (dateObj){
+            var date = {
+                    startDate : dateObj.startDate, 
+                    endDate : dateObj.endDate,
+                    needCompare : dateObj.needCompare,
+            };
+            if (dateObj.needCompare == 1){
+                date.startCompareDate = dateObj.startCompareDate;
+                date.endCompareDate = dateObj.endCompareDate;
+            }else{
+                date.startCompareDate = '';
+                date.endCompareDate = '';
+            }
+            request(date, data.url, url); // 请求服务器
+        }
+    });
+    // 分类
+    $(".index").removeClass('index-sel').live('click', function(){
+        var type = {type : $(this).attr('id')};
+        request(type, data.url, url);
+    });
+    $("#"+data.url.type).addClass('index-sel');
+    $(".pt-index").removeClass('ta_btn_primary').live('click', function(){
+        var ptype = {ptype : $(this).attr('id') };
+        request(ptype, data.url, url);
+    });
+    $("#"+data.url.ptype).addClass('ta_btn_primary');
+
+    choosenPanel('choose-select', 'panel-channel', 'panel-version', null);
+    
+    $(".muti-select").click(function(){
+        var offset = $(this).offset();
+        var left = offset.left, top = offset.top + 32;
+        var panel = $('.filter-panel');
+        panel.css({ "left": left+"px", "top": top+"px"}).show();
+    });
+    // 图表
+    var chart_data = makeChartData(data.chart, data.index, 'date');
+    $("#hightchart").empty().createChart({
+        chartType: 'area',
+        categories: chart_data.categories,
+        series : chart_data.series
+    });
+});
+</script>

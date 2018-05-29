@@ -1,0 +1,60 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $indexUrl;?>?cate_id=<?php echo $cate_id;?>">API列表</a></li>
+	    <li class="current"><a href="javascript:;">添加API</a></li>
+	</ul>
+</div>
+<div class="h_a">添加渠API</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">名称</th>
+				<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">分类</th>
+				<td class="td">
+					<select name="cate_id">
+					<?php foreach ($category as $key=>$val):if ($val['id'] == $cate_id):?>
+						<option value="<?php echo $val['id'];?>"><?php echo $val['title'];?></option>
+					<?php endif; endforeach; ?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">标识串</th>
+				<td class="td"><input type="text" class="input wc" name="sign" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">描述</th>
+				<td class="td"><textarea class="input wc" name="remark" rows="3"></textarea></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">链接</th>
+				<td class="td"><textarea class="input wc" name="api_url">http://</textarea></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td">
+					<select class="wa" name="status">
+						<option value="1">开启</option>
+						<option value="0">关闭</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Partnerapi/index?cate_id=<?php echo $cate_id;?>');
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

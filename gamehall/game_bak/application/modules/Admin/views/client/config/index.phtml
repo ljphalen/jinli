@@ -1,0 +1,70 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	     <li class="current"><a href="<?php echo $editUrl;?>">猜你喜欢管理</a></li>
+	     <li><a href="<?php echo $guessUrl;?>">喜欢默认数据</a></li>
+	     <li><a href="<?php echo $addCtUrl;?>">添加默认数据</a></li>
+	     <li><a href="<?php echo $editCtUrl;?>">编辑默认数据</a></li>
+     </ul>
+</div>
+<div class="h_a">猜你喜欢管理</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr" style="height:250px;">
+				<th class="th">猜你喜欢图片</th>
+				<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg">
+					    <?php if(!$configs['game_img']){?>
+					    <img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+					    <?php } else {?>
+						<img src="<?php echo $attachPath.$configs['game_img'];?>"/>
+						<?php } ?>
+						<input type="hidden" name="img" value="<?php echo $configs['game_img'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:60px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+			</tr>
+			<tr class="tr" style="height:250px;display:none;" >
+				<th class="th">分类最新图片</th>
+				<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg1">
+					    <?php if(!$configs['category_img']){?>
+					    <img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+					    <?php } else {?>
+						<img src="<?php echo $attachPath.$configs['category_img'];?>"/>
+						<?php } ?>
+						<input type="hidden" name="img1" value="<?php echo $configs['category_img'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg1';?>" style="height:60px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">猜你喜欢开关</th>
+				<td class="td">
+					<label class="mr20"><input <?php if($configs['game_caini']) echo 'checked';?> name="game_caini" value="1" type="radio">开启</label>
+					<label class="mr20"><input <?php if(!$configs['game_caini']) echo 'checked';?> name="game_caini" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Config/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

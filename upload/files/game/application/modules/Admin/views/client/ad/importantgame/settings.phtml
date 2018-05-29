@@ -1,0 +1,33 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+    	<li><a href="<?php echo $listUrl;?>">重点游戏列表</a></li>
+    	<li><a href="<?php echo $addUrl;?>">添加重点游戏</a></li>
+    	<li class="current"><a href="<?php echo $settingsUrl;?>">设置</a></li>
+    </ul>
+</div>
+<form method="post" action="<?php echo $settingsPostUrl;?>" id="editFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">开关(清洗第三方软件商店的游戏)</th>
+                <td class="td"><select name="state">
+                    <option value="1" <?php if ($state== 1) echo 'selected="selected"';?>>开启</option>
+                    <option value="0" <?php if ($state== 0) echo 'selected="selected"';?>>关闭</option>
+                </select></td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac">
+        <span class="btn"><span><button onfocus="blur();" type="submit">保存</button></span></span>
+    </div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+    ajaxForm('editFrom',function(ret){
+        ajaxRedirect(ret, baseurl+'/Admin/Client_Ad_Importantgame/settings');
+    });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

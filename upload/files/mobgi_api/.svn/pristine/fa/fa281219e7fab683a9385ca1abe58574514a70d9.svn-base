@@ -1,0 +1,328 @@
+<script type="text/javascript" src="{{rootUrl}}/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.tablednd.0.8.min.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/float.js"></script>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">产品导量权重设置</p>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="app-detail" style="">
+                <form method="POST" action="/push/weight_save" style="">
+                    <ul class="form" style="">
+                        <li>
+                            <input type="hidden" name="id" value="{{weight.id}}">
+                            <input type="hidden" name="copy" value="{{copy}}">
+                            <!-- if !{{weight.id}} --><input type="hidden" name="config_id"  id="config_id" value="{{config_id}}"><!-- endif -->
+                            <!-- if {{copy}} --><input type="hidden" name="config_id" id="config_id" value="{{weight.config_id}}"><!-- endif -->
+                            <span class="label">设置名称：</span>
+                            <div class="fc">
+                                <input type="text" class="iText" name="config_name" id="config_name" value="<!-- if !{{copy}} -->{{weight.config_name}}<!-- endif -->">
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label">生效时间：</span>
+                            <div class="fc">
+                                <input type="text" name="start_time" id="start_time" value="<!-- if {{weight.id}} -->{{weight.stime}}<!-- else -->{{stime}}<!-- endif -->" class="iText required"/> 到 <input type="text" name="end_time" id="end_time" value="<!-- if {{weight.id}} -->{{weight.etime}}<!-- else -->{{etime}}<!-- endif -->" class="iText required"/>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label">导量产品：</span>
+                            <div class="fc">
+                                <div class="grid">
+                                    <div class="gridToolbar">
+                                        <p class="fl">
+                                            <a href="javascript:void(0)" class="cancel dzad" type="dz">从其他配置导入</a>
+                                            <input type="hidden" name="product_combo" value='{{result.product_combjson}}' />
+                                        </p>
+                                        <p class="fr">
+                                            <a href="javascript:void(0)" id="averaged" class="cancel">全部平均</a>
+                                            <a href="javascript:void(0)" id="addAD" class="btn">新增</a>
+                                        </p>
+                                    </div>
+                                    <table id="adList">
+                                        <thead>
+                                            <tr>
+                                                <th>产品ID</th>
+                                                <th>产品名称</th>
+                                                <th>权重值</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- if {{weight.product_combo_arr}} -->
+                                                <!-- loop weight.product_combo_arr -->
+                                                    <tr name="1">
+                                                        <td>{{weight.product_combo_arr' value.pid}}</td>
+                                                        <td>{{weight.product_combo_arr' value.product_name}}</td>
+                                                        <td><input type="text" class="iText required" value="{{weight.product_combo_arr' value.weight}}"></td>
+                                                        <td>
+                                                            <a href="javascript:void(0)" class="del" title="删除"></a>
+                                                        </td>
+                                                    </tr>
+                                                <!-- endloop -->
+                                            <!-- endif -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <li class="line"></li>
+                        <li>
+                            <div class="fc">
+                                <input type="submit" class="submit" value="确定" id="submit">
+                                <input type="button" onclick="window.location.href = '/push/weight'" class="cancel" value="取消">
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(function(){
+    var startDateTextBox = $('#start_time');
+    var endDateTextBox = $('#end_time');
+    startDateTextBox.datetimepicker({
+            dateFormat: 'yy-mm-dd', 
+            timeFormat: 'HH:mm:ss',
+            stepHour: 1,
+            stepMinute: 1,
+            stepSecond: 1,
+            //numberOfMonths: 2,
+            minDate: -1,
+            onClose: function(dateText, inst) {
+		if (endDateTextBox.val() != '') {
+			var testStartDate = startDateTextBox.datetimepicker('getDate');
+			var testEndDate = endDateTextBox.datetimepicker('getDate');
+			if (testStartDate > testEndDate)
+				endDateTextBox.datetimepicker('setDate', testStartDate);
+		}
+		else {
+			endDateTextBox.val(dateText);
+		}
+            },
+            onSelect: function (selectedDateTime){
+                    endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
+            }
+    });
+    endDateTextBox.datetimepicker({
+            dateFormat: 'yy-mm-dd', 
+            timeFormat: 'HH:mm:ss',
+            stepHour: 1,
+            stepMinute: 1,
+            stepSecond: 1,
+            //numberOfMonths: 2,
+            minDate: 0,
+            onClose: function(dateText, inst) {
+            if (startDateTextBox.val() != '') {
+                var testStartDate = startDateTextBox.datetimepicker('getDate');
+                var testEndDate = endDateTextBox.datetimepicker('getDate');
+                if (testStartDate > testEndDate)
+                    startDateTextBox.datetimepicker('setDate', testEndDate);
+            }
+            else {
+                startDateTextBox.val(dateText);
+                }
+            },
+            onSelect: function (selectedDateTime){
+                    startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
+            }
+    });
+    
+    //全部平均
+    $("#averaged").click(function() {
+        var num = $(this).parents(".grid").find("table").find("input:text");
+        var numlength=num.length;
+        if(numlength>0){
+             var i=1;
+             var totalrate_num=0;
+             $.each(num,function(){
+                  rate_num=Number((1000/numlength).toFixed(0));
+                  if(i==numlength){
+                      rate_num=1000 - totalrate_num;
+                  }else{
+                      totalrate_num=totalrate_num+rate_num;
+                  }
+                  //console.log(totalrate_num);
+                  $(this).val((rate_num/1000)).change();
+                  i++;
+             });
+        }
+        initData();
+    });
+    
+    //导入
+    function addpz(type) {
+        var id = id || "";
+        var $content = $('<div class="grid"></div>');
+        var PopUp = jDialog({
+            width: 800,
+            height: 500,
+            content: $content
+        });
+        $content.load("{{weight_pop}}", {id: id}, function() {
+            if (type == "dz" || type=="import_config") {
+                $content.find(".gridToolbar").children(".fr").hide();
+                $content.find("#pzListPopUp").find("input:checkbox").hide();
+            }
+            $content.find("#cancel").click(function() {
+                if (PopUp) {
+                    PopUp.close();
+                }
+            });
+            $content.find("#ok").click(function() {
+                var r = null;
+                if (type == "dz") {
+                    r = confirm("确定要导入吗？");
+                    if (r) {
+                        var _str = "";
+
+                        $.each($content.find("#pzListPopUp").find("input:checked").parents("tr").children(":eq(1)").children("p"), function() {
+                            weight='<input type="text" class="iText required" value="'+$(this).attr("weight")+'">';
+                            _str += '<tr>' +
+                                    '<td>' + $(this).attr("id") + '</td>' +
+                                    '<td>' + $(this).text() + '</td>' +
+                                    '<td>'+weight+'</td>' +
+                                    '<td>' +
+                                    '<a title="删除" class="del" href="javascript:void(0)"></a>' +
+                                    '</td>' +
+                                    '</tr>';
+                        });
+                        $("#adList").find("tbody").html(_str);
+                        initData();
+                        if (PopUp) {
+                            PopUp.close();
+                        }
+                    }
+                }
+            });
+        }, "txt");
+    }
+    
+     //新增广告 
+    function addAD(id) {
+        var id = id || "";
+        var $content = $('<div class="grid"></div>');
+        var PopUp = jDialog({
+            width: 800,
+            height: 600,
+            content: $content
+        });
+        $content.load("{{product_pop}}", {id: id}, function() {
+            $content.find("#cancel").click(function() {
+                if (PopUp) {
+                    PopUp.close();
+                }
+            });
+            $content.find("#ok").click(function() {
+                var data = $.parseJSON($("input[name='product_combo']").val()) || {};
+                var _str = "";
+                var isSame = false;
+                var theSame = [];
+                $content.find("#adListPopUp").find("input:checkbox[checked]").each(function() {
+                    var productID = $(this).parents("tr").children(":eq(0)").text();
+                    var productName = $(this).parents("tr").children(":eq(1)").text();
+                    if (data.product_combo) {
+                        $.each(data.product_combo, function(i, v) {
+                            if (v.pid == productID) {
+                                theSame.push(productID);
+                                isSame = true;
+                            }
+                        });
+                    }
+                    if($("input[name='config_lelvel']").val()!="-1"){
+                        var weight='<input type="text" class="iText required" value="">';
+                    }else{
+                        var weight='<input type="hidden" class="iText">';
+                    }
+                    _str += '<tr name="1">' +
+                            '<td>' + productID + '</td>' +
+                            '<td>' + productName + '</td>' +
+                            '<td>'+weight+'</td>'+
+                            '<td><a title="删除" class="del" href="javascript:void(0)"></a>' +
+                            '</td>' +
+                            '</tr>';
+                });
+                if (isSame) {
+                    jAlert(theSame + "是重复的产品.");
+                } else {
+                    $("#adList").find("tbody").append(_str);
+                    $("#adList").find("input:text").change(function() {
+                        initData();
+                    })
+                    initData();
+                    if (PopUp) {
+                        PopUp.close();
+                    }
+                }
+            });
+        });
+    }
+    $("#addAD").click(function() {
+        addAD();
+    });
+    $("#adList").find(".del").unbind("click").live("click", function() {
+        $(this).parents("tr").remove();
+        initData();
+    });
+    $(".dzad").click(function() {
+        addpz($(this).attr("type"));
+    }); 
+    
+    //读取产品信息为json
+    function initData() {
+        var data = {"product_combo": []};
+        $("#adList").find("tbody").children().each(function() {
+            var obj = {};
+            obj['pid'] = $(this).children(":eq(0)").text();
+            obj['weight'] = $(this).children(":eq(2)").find("input").val();
+            data.product_combo.push(obj);
+        });
+        $("input[name='product_combo']").val(obj2str(data)).change();
+        $("#adList").tableDnD();
+    }
+    
+    $("form").submit(function(){
+        initData()
+        if($("#config_name").val()==null || $("#config_name").val()==""){
+            jAlert("请填写配置名称");
+            $("#config_name").focus();
+            return false;
+        }
+        if($("#start_time").val()==null|| $("#start_time").val()==""){
+            jAlert("请设置开始生效时间");
+            $("#start_time").focus();
+            return false;
+        }
+        if($("#end_time").val()==null|| $("#end_time").val()==""){
+            jAlert("请设置结束生效时间");
+            $("#end_time").focus();
+            return false;
+        }
+        
+        var ok = true; 
+        $("#adList").each(function(){
+            var num = 0;
+            $(this).find("input:text").each(function(){
+               num = FloatAdd(num,$(this).val());
+            });
+            if(num != 1){
+                jAlert("权重比例总和必须等于1");
+                ok = false;
+                return false;
+            }
+        });
+        
+        if(!ok){
+            return false;
+        }
+        return true;
+    })
+})
+</script>

@@ -1,0 +1,35 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+    <div class="module credit-edit">
+        <section class="banner J_lazyload_img">
+            <img src="<?php echo $staticResPath?>/pic/blank.gif" data-src="<?php echo $staticResPath?>/pic/credit-mine-bg.png">
+        </section>
+        <form id="J_editFrom" action="/api/apk_user/saveUid" method="POST" name="credit-edit">
+            <p class="legend">为了保证客服人员为您发奖，请完善联系信息,手机号码仅用于联系您发奖，活动结束后自动删除</p>
+            <dl class="input-wrap">
+                <dt>昵<em></em>称：</dt>
+                <dd><input type="text" name="nickname"
+                    require 
+                    data-verify="^.{2,24}$" 
+                    placeholder="请输入2-24位字符"
+                    data-msg="{'requre':'请输入', 'verify':'请输入2-24位字符'}" value="<?php echo $nickname; ?>"></dd>
+            </dl>
+            <dl class="input-wrap">
+                <dt>手机号：</dt>
+                <dd><input type="tel" name="mobile" 
+                    require 
+                    data-verify="\d{11}" 
+                    placeholder="请输入11位手机号码"
+                    data-msg="{'verify':'请输入11位手机号码'}" value="<?php echo $mobile; ?>"></dd>
+            </dl>
+            <div class="btn-wrap" id="J_submitBtn">
+                <a class="btn">提交</a>
+            </div>
+            <p class="rank"><i class="divide"></i>
+                您目前排名<em><?php echo $rank; ?></em>名，前10名可以获得100-200话费，前3名可以获得金立ELIFE S5.1手机！
+            </p>
+        </form>
+    </div>
+
+<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/newfooter.phtml");?>

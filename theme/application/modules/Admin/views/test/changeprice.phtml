@@ -1,0 +1,147 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript"
+src="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.js"></script>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <div id="zt_ucenter_edit">
+        <div class="content">
+        	<div class="upload_zt_detail">
+        		<div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell">名称</label>
+                        <div class="tb_cont tb_cell">
+                           <p class="zt_name">可爱淘</p>
+                        </div>
+                    </div><!-- com_tb end -->
+                </div>
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell">作者</label>
+                        <div class="tb_cont tb_cell">
+                            <p class="zt_author">作者</p>
+                        </div>
+                    </div><!-- com_tb end -->
+                </div>
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell">预览图</label>
+                            <div class="cell_img_detial" id="cell_img_detial">
+                                <!-- 已经存在了的预览图 start-->
+                                <a><img src='<?php echo $staticPath ?>image/t_img03.jpg'></a>
+                                <a><img src='<?php echo $staticPath ?>image/t_img03.jpg'></a>
+                                <a><img src='<?php echo $staticPath ?>image/t_img03.jpg'></a>
+                                <!-- 已经存在了的预览图 end-->
+                            </div>
+                    </div>
+                </div>
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell">一级标签</label>
+                         <div class="tb_cont tb_cell">
+                            <ul class="tag_list tag_one">
+                                <li>风景</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell align_top">二级标签</label>
+                        <div class="tb_cont tb_cell">
+                            <ul class="tag_add_wrap">
+                                <li class="btn_tag"><span>风景</span><i class="tag_del"></i></li>
+                                <li class="btn_tag"><span>美女</span><i class="tag_del"></i></li>
+                                <li class="btn_tag"><span>室外</span><i class="tag_del"></i></li>
+                                <li class="btn_tag_add pop_btn" openPopId="DetialTagView"><span>+</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell align_middle">主题介绍</label>
+                        <div class="tb_cont tb_cell txt_editor_wrap">
+                        <textarea class="txt_editor" placeholder="填写主题介绍"></textarea></div>
+                    </div>
+                </div>
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell">价格变动</label>
+                        <div class="tb_cont tb_cell">
+                            <p><span class="now_price">目前价格为2A币</span><span class="recent_price">修改后的价格为3A币</span></p>
+                        </div>
+                    </div><!-- com_tb end -->
+                </div><!-- com_tb_wrap end -->
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell top">状态</label>
+                        <div class="tb_cont fl">
+                            <div class="select_box">
+                                <label class="select_val">通过</label>
+                                <ul class="select_option">
+                                    <li>不通过</li>
+                                    <li>未审批</li>
+                                </ul>
+                            </div><!-- select_box -->
+                        </div>
+                        <div class="tb_cont fl">
+                             <textarea class="txt_editor" placeholder="请填写修改的理由及原因"></textarea>
+                        </div>
+                    </div><!-- com_tb end -->
+                </div><!-- com_tb_wrap end -->
+            <div class="bnts_wrap">
+                <button class="btn_s2 pop_btn" openPopId="fixTipView" id="ztUsrUploadDone">完成</button>
+            </div>
+        </div><!-- content end -->
+    </div>
+<!-- 弹窗 添加标签-->
+    <div class="pop_wraper" id="DetialTagView">
+        <div class="pop_outer">
+            <div class="pop_inner">
+                <div class="pop_content">
+                    <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                    <div class="pop_cont_tags">   
+                        <ul class="tag_add_wrap tag_list">
+                            <li class="btn_tag">风景</li>
+                            <li class="btn_tag">美女</li>
+                            <li class="btn_tag">室外</li>
+                            <li class="btn_tag">风景</li>
+                            <li class="btn_tag">美女</li>
+                            <li class="btn_tag">室外</li>    
+                        </ul>   
+                        <div class="tag_btns"><button class="btn_s2 btn_tag_add_confirm">确定</button><button class="btn_s2 btn_tag_add_cancel">取消</button></div>
+                        <div class="pop_close"></div>
+                        
+                    </div>
+                        
+                </div><!-- pop_content 结束 -->
+            </div><!-- pop-inner 结束 -->
+        </div><!-- pop-outer 结束 -->
+    </div><!-- pop-wraper 结束 -->
+</section>
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">价格已修改,是否保存</p>
+                    <div class="tip_btns"><button class="btn_s2 save_ok " id="upload02ViewList">确定</button>
+                        <button class="btn_s2 btnCancel " >取消</button></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+<script type="text/javascript">
+	$(function(){
+
+})
+</script>
+</body>
+</html>

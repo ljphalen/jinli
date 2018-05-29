@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="stylesheet" href="<?php echo $staticResPath;?>/elife/assets/css/elife.3g.css?v=<?php echo $version;?>" />
+<script src="<?php echo $staticPath;?>/??/sys/icat/1.1.4/icat.js,/apps/3g/elife/assets/js/elife_3g.js?v=<?php echo $version;?>"></script>
+<title>elife产品服务页</title>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<header>
+		<div class="menu-panel">
+            <h2 class="menu-panel-logo"><img src="<?php echo $staticResPath.'/elife/pic/top.jpg';?>" /></h2>
+            <div class="menu-panel-drapbox">
+                <div class="drapdown J_drapdown"><span class="label">更多产品</span><i class="icon"></i></span></div>
+                <ul>
+                <?php foreach($elife as $key=>$value){?>
+                    <li><a href="<?php echo $webroot.'/elife/index?id='.$value['id'];?>"><?php echo $value['name'];?></a></li>
+                <?php }?>
+                </ul>
+            </div>
+		</div>
+	</header>
+	<div class="container fullscreen">
+		<section class="content">
+			<!-- Banner轮播区域 -->
+			<div class="module">
+				<div class="ui-slider showpic" id="J_full_slider">
+					<div class="ui-slider-wrap">
+						<div class="ui-slider-content">
+							<ul class="ui-slider-pic">
+							<?php foreach($images as $k=>$v){?>
+								<li>
+									<img src="<?php echo $attachPath.$v['img'];?>" >
+								</li>
+							<?php }?>	
+							</ul>
+						</div>
+						<div class="ui-slider-handle">
+							<?php for($i = 0; $i < $total; $i++){ ?>
+							<span class="<?php if($i == 0) echo 'on';?>"></span>
+							<?php } ?>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 内容展示区域 -->
+		  	<div class="module ui-tab-wrap">
+				<div class="ui-tab-title">
+					<ul>
+						<li><a href="javascript:void(0);" id="param" class="sel">功能</a></li>
+						<li><a href="javascript:void(0);" id="show">外观</a></li>
+					</ul>
+				</div>
+				<div class="ui-tab-content">
+					<div class="ui-tb-list">
+						<?php echo html_entity_decode($one['function']);?>
+					</div>
+					<div class="ui-tb-list">
+						<div class="ui-tb-title">规格参数</div>
+						<?php echo html_entity_decode($one['parameter']);?>	
+					</div>
+				</div>
+				<!-- 外观 -->
+				<div class="ui-show-pic">
+					<?php echo html_entity_decode($one['outward']);?>
+			  	</div>
+			</div>
+		</section>
+	</div>
+	<footer>
+		<p><img src="<?php echo $staticResPath.'/elife/pic/icon-sina.png';?>" width="22" height="19" />
+		<a href="http://e.weibo.com/gioneelife">@智能手机e-life</a></p>
+	</footer>
+</div>
+<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

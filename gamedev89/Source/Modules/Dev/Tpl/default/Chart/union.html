@@ -1,0 +1,64 @@
+<include file="Public:header" />
+
+<div class="mainw clearfix">
+	<div class="lnav fl">
+    	<include file="Chart:nav_left" />
+    </div>
+    <div class="rmain fl">
+   	  <h2 class="yyname">联运数据</h2>
+        <div class="datac">
+        	<div class="formdiv">
+                <form action="{:U("chart/union")}" method="post">
+                <p>
+                    <input class="btn-green fr" type="submit" value="查询" />
+                时间：
+                <input name="start_time" class="Wdate" type="text" onfocus="calenderCancel();HS_setDate(this);" value="{:date('Y-m-d',$start_time)}">
+                到
+                <input name="end_time" class="Wdate" type="text" onfocus="calenderCancel();HS_setDate(this);" value="{:date('Y-m-d',$end_time)}">
+                &nbsp;&nbsp;
+                应用名称：
+                <select name="app_id" class="chartselect">
+                <option value="" >     --选择--    </option>
+                <volist name="applist" id="data">
+	                <option value="{$data.id}" <if condition="$data['id'] eq $_POST['app_id']" >selected</if> >
+	                {$data.name}
+	                </option>
+                </volist>
+                </select>
+                
+                </p>
+                </form>
+            </div>
+       	  <table class="tab">
+        	 <tr>
+        	    <th width="10%">时间</th>
+                <th width="10%">游戏ID</th>
+                <th width="12%">游戏名称</th>
+                <th width="12%">新增设备数</th>
+                <th width="12%">新增帐号数</th>
+                <th width="12%">登陆帐号数</th>
+                <th width="12%">付费帐号数</th>
+                <th width="10%">付费金额</th>
+                <th width="10%">付费ARPU</th>
+      	    </tr>
+      	    
+      	    <volist name="unioninfo" id="data">
+	            <tr>
+	        	    <td>{$data.day}</td>
+	        	    <td>{$data.gameId}</td>
+	        	    <td>{$data.gameName}</td>
+	        	    <td>{$data.newMachine}</td>
+	        	    <td>{$data.newAccount}</td>
+	        	    <td>{$data.loginAccount}</td>
+	        	    <td>{$data.payedAccount}</td>
+	        	    <td>{$data.payFee}</td>
+	        	    <td>{:round($data['payArpu'], 2)}</td>
+	      	    </tr>
+      	     </volist>
+      	     
+      	  </table>
+        </div>
+    </div>
+</div>
+
+<include file="Public:footer" />

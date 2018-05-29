@@ -1,0 +1,83 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $listUrl; ?>">产品列表</a></li>
+		<li><a href="<?php echo $addUrl; ?>">添加产品</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl; ?>" method="post">
+	<input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">系列</th>
+				<td class="td">
+					<select name="series_id" onchange="setmodels(this.value, 0)">
+						<option value="">所有系列</option>
+						<?php foreach ($series as $key => $value) { ?>
+							<option <?php echo ($search['series_id'] == $value['id']) ? 'selected="selected"' : ''; ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">机型</th>
+				<td class="td">
+					<select name="model_id"></select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button type="submit">搜 索</button></span></span>
+	</div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">排序</td>
+			<td width="100">编号</td>
+			<td width="100">系列</td>
+			<td width="100">机型</td>
+			<td>名称</td>
+			<td width="100">价格</td>
+			<td width="100">操作</td>
+		</tr>
+		<?php foreach ($products as $key => $value) { ?>
+			<tr class="ct">
+				<td><?php echo $value['sort']; ?></td>
+				<td><?php echo $value['id']; ?></td>
+				<td><?php echo $seriess[$value['series_id']]['name']; ?></td>
+				<td><?php echo $modelss[$value['model_id']]['name']; ?></td>
+				<td><?php echo $value['title']; ?></td>
+				<td><?php echo $value['price']; ?></td>
+				<td>
+					<a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+					<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+				</td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+<script type="text/javascript">
+	$(document).ready(function () {
+		var models = <?php echo json_encode($models);?>;
+		setmodels = function (series, chval) {
+			var options = '<option value="">所有机型</option>';
+			$.each(models, function (index, data) {
+				var s = '';
+				if (data.series_id == series) {
+					if (data.id == chval) s = 'selected';
+					options += '<option value="' + data.id + '" ' + s + '>' + data.name + '</option>';
+				}
+			});
+			$("select[name='model_id']").html(options);
+		}
+		setmodels(<?php echo $search['series_id'] ? $search['series_id'] : 0;?>, <?php echo $search['model_id'] ? $search['model_id'] : 0;?>);
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

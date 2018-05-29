@@ -1,0 +1,220 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li class="current"><a href="<?php echo $indexUrl;?>">问贴列表</a></li>
+        <li><a href="<?php echo $addUrl;?>">添加问贴</a></li>
+    </ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="get">
+    <input name="token" type="hidden" value="<?php echo $token;?>" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">标题</th>
+                <td class="td">
+                    <input class="input wc" type="text" name="title"  value="<?php echo $param['title'];?>" >
+                </td>
+                <th class="th" width="60">状态</th>
+                <td class="td">
+                    <select name="status">
+                        <option value="0" <?php if ($param['status'] == 0) echo 'selected="selected"';?>>所有</option>
+                        <?php foreach ($status as $key=>$val): ?>
+                            <option value="<?php echo $key+1;?>" <?php if($param['status'] == $key+1) echo 'selected="selected"';?>><?php echo $val;?></option>
+                        <?php endforeach;?>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">时间</th>
+                <td class="td">
+                    <input class="input" type="text" maxlength="30" id="from_time" name="from_time" value="<?php echo $param['from_time'];?>">
+                    <input class="input" type="text" maxlength="30" id="to_time" name="to_time" value="<?php echo $param['to_time'];?>">
+                </td>
+                <th class="th">隐藏(但可被搜索)</th>
+                <td class="td">
+                    <select name="is_hidden">
+                        <option value="0" <?php if ($param['is_hidden'] == 0) echo 'selected="selected"';?>>所有</option>
+                        <option value="1" <?php if ($param['is_hidden'] == 1) echo 'selected="selected"';?>>否</option>
+                        <option value="2" <?php if ($param['is_hidden'] == 2) echo 'selected="selected"';?>>是</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">UID</th>
+                <td class="td">
+                    <input class="input wc" type="text" name="uid"  value="<?php echo $param['uid'];?>" >
+                </td>
+                <th class="th">用户类型</th>
+                <td class="td">
+                    <select name="is_admin">
+                        <option value="">所有</option>
+                        <option value="1" <?php if ($param['is_admin'] == 1) echo 'selected="selected"';?>>真实用户</option>
+                        <option value="2" <?php if ($param['is_admin'] == 2) echo 'selected="selected"';?>>虚拟用户</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th" style="display: none;">ScoreID</th>
+                <td class="td" style="display: none;">
+                    <input class="input " type="text" name="scoreid"  value="<?php echo $param['scoreid'];?>" >
+                </td>
+                <th class="th">推荐</th>
+                <td class="td">
+                    <select name="recommend">
+                        <option value="0" <?php if ($param['recommend'] == 0) echo 'selected="selected"';?>>所有</option>
+                        <option value="1" <?php if ($param['recommend'] == 1) echo 'selected="selected"';?>>否</option>
+                        <option value="2" <?php if ($param['recommend'] == 2) echo 'selected="selected"';?>>是</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr" style="display: none;">
+                <th class="th">用户昵称</th>
+                <td class="td">
+                    <input class="input " type="text" name="nickname"  value="<?php echo $param['nickname'];?>" >
+                </td>
+                <th class="th">&nbsp;</th>
+                <td class="td">&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac">
+		<span class="btn">
+			<span>
+				<button type="submit">搜 索</button>
+			</span>
+		</span>
+    </div>
+</form>
+<form id="checkForm" action="" method="post">
+    <input name="token" type="hidden" value="<?php echo $token;?>" />
+    <input name="status" id="status" type="hidden" value="">
+    <div class="table_list">
+        <div class="h_a">
+<!--            <span class="btn2"><span><button onclick="chkFormAction(0);" type="submit">取消审核</button></span></span>-->
+            <span class="btn2"><span><button onclick="chkFormAction(2);" type="submit">审核通过</button></span></span>
+<!--            <span class="btn2"><span><button onclick="delFormAction();" type="submit">删除选中</button></span></span>-->
+        </div>
+        <table width="100%">
+            <tr class="hd">
+                <td width="8%"><input type="checkbox" onclick="checkAll('.checkbox')">ID</td>
+                <td width="18%">问题</td>
+                <td width="10%">作者</td>
+                <td width="10%">状态</td>
+                <td width="5%">推荐</td>
+                <td width="5%">隐藏</td>
+                <td width="5%">回帖数</td>
+                <td width="8%">创建时间</td>
+                <td width="35%">操作</td>
+            </tr>
+            <?php foreach($data as $key => $value) {?>
+                <tr class="ct <?php if($value['status']) echo 'blue';?>">
+                    <td width="40"><input class="checkbox" type="checkbox" name="id[]"  value="<?php echo $value['id'] ?>"/><?php echo $value['id'] ?></td>
+                    <td><?php echo $value['title'];?></td>
+                    <td><?php echo $value['author'];?></td>
+                    <td><?php echo $value['status_label'];?></td>
+                    <td><?php echo $value['recommend_label'];?></td>
+                    <td><?php echo $value['is_hidden_label'];?></td>
+                    <td><?php echo $value['total'];?></td>
+                    <td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+                    <td>
+                        <a href="<?php echo $editUrl;?>/?backurl=index&id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+                        <a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?type=1&id=<?php echo $value['id'];?>', '', event);" class="mr10">删除</a>
+                        <a href="<?php echo $webroot.$previewUrl;?>?id=<?php echo $value['id'];?>" class="mr10" target="_blank">预览</a>
+                        <a href="<?php echo $answerUrl;?>/?item_id=<?php echo $value['id'];?>" class="mr10">查看回帖</a>
+                        <?php if($value['status'] != 2): ?><a href="javascript:" data-id="<?php echo $value['id']; ?>" data-status="2" class="check_btn mr10">审核通过</a><?php endif; ?>
+                        <?php if(!$value['recommend']): ?>
+                            <a href="javascript:;" data-type="1"  data-id="<?php echo $value['id']; ?>" class="mr10 recommend_btn" target="_blank">推荐</a>
+                        <?php else: ?>
+                            <a href="javascript:;" class="mr10 recommend_btn" data-type="0" data-id="<?php echo $value['id']; ?>" target="_blank">取消推荐</a>
+                        <?php endif; ?>
+                        <?php if(!$value['is_hidden']): ?>
+                            <a href="javascript:;" data-type="1"  data-id="<?php echo $value['id']; ?>" class="mr10 hidden_btn" target="_blank">隐藏</a>
+                        <?php else: ?>
+                            <a href="javascript:;" class="mr10 hidden_btn" data-type="0" data-id="<?php echo $value['id']; ?>" target="_blank">取消隐藏</a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php } ?>
+        </table>
+    </div>
+</form>
+<div class="mr10 cc">
+    <?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script>
+    function chkFormAction(status){
+        $("#status").val(status);
+        $("#checkForm").attr('action', '<?php echo $checkUrl;?>');
+    }
+    function delFormAction(){
+        $("#checkForm").attr('action', '<?php echo $deleteUrl;?>');
+    }
+    $(function(){
+        ajaxForm('checkForm', function(data) {
+            ajaxRedirect(data, document.URL);
+        });
+    });
+
+    $(function(){
+        $('a.hidden_btn').click(function(){
+            var data = {};
+            data.id  = $(this).data('id');
+            data.token  = '<?php echo $token; ?>';
+            data.type  = $(this).data('type');
+            $.ajax({
+                url:'<?php echo $hiddenUrl ?>',
+                type:'post',
+                data:data,
+                dataType:'json',
+                success:function(res){
+                    if(res.success==true){
+                        window.location.reload();
+                    }
+                }
+            });
+        });
+        $('a.recommend_btn').click(function(){
+            var data = {};
+            data.id  = $(this).data('id');
+            data.token  = '<?php echo $token; ?>';
+            data.type  = $(this).data('type');
+            $.ajax({
+                url:'<?php echo $recommendUrl ?>',
+                type:'post',
+                data:data,
+                dataType:'json',
+                success:function(res){
+                    if(res.success==true){
+                        window.location.reload();
+                    }
+                }
+            });
+        });
+
+        $('a.check_btn').click(function(){
+            $.ajax({
+                url:'<?php echo $checkUrl;?>',
+                type:'POST',
+                data:{id:$(this).data('id'), status:$(this).data('status'), token:'<?php echo $token;?>'},
+                dataType:'json',
+                success:function(data){
+                    ajaxRedirect(data, document.URL);
+                }
+            });
+        });
+
+    });
+
+    $(document).ready(function() {
+        $("#to_time").datepicker({
+            dateFormat : 'yy-mm-dd'
+        });
+
+        $("#from_time").datepicker({
+            dateFormat : 'yy-mm-dd'
+        });
+    });
+</script>
+<?php echo $this->render("layout/footer.phtml");?>
+

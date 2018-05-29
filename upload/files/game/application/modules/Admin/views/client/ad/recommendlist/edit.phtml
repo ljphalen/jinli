@@ -1,0 +1,290 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<?php
+$imgUrl = "{$staticPath}/game/assets/img";
+echo <<<HTML
+<script type="text/javascript" src="{$staticPath}/game/assets/js/template-native-debug.js"></script>
+<link rel="stylesheet" href="{$staticPath}/game/assets/css/page-recommend.css?v=$version" />
+<script type="text/javascript" src="{$staticPath}/game/assets/js/setRecommend.js?v=$version"></script>
+    
+<script id="sameDayHtml" type="text/html">
+	<h2>每日一荐：<%= name?"":"无"%></h2>
+	<span><%= name%></span>
+	<div class="mgn-t-10">
+		<%if(href){%>
+			<img src="<%= href %>" />
+			<div class="line-elements">
+				<p class="qing-font12"><%= size?size+"M":''%></p>
+				<p><%= info%></p>
+			</div>
+			<div class="download">
+				<div class="round">
+					<img src="<%= imgUrl%>/u830.png" />
+				</div>
+				<span class="gray-font12">下载</span>
+			</div>
+		<%}%>
+	</div>
+</script>
+<script id="rollHtml" type="text/html">
+	<% 
+		var length = supplies.length;
+		for(var i=0; i<length; i++) {%>
+		   <div class="bg <%= i==0?"on ":"" %>"><img src=<%= supplies[i].href %>></div>
+
+		<% } %>
+		<% 
+			for(var i =length;i<4;i++ ){%>
+			<div class="bg <%= i==0?"on":"" %>">Banner：空</div>
+		<%}
+	%>
+</script>
+<script id="sameDayHtmlSet" type="text/html">
+	<div class="msg mgn-t-10">
+		<div class="inline-block">
+			<% if(name){%>
+				<h2><% if(status==0){ %><span style="color:red;"><%}%><%= typeName %><% if(status==0){ %></span><%}%></h2>
+				<p>游戏ID：<%= gameId %> &nbsp;&nbsp; 名称：<%= gameName%> &nbsp;&nbsp;	分类：<%= type%><p>
+				<p>标题：<%= name%></p>
+				<p>广告ID：<%= adId %> </p>
+			<%}else{%>
+				<h2 style="height:63px"><%= typeName %>：空</h2>
+			<%}%>
+		</div>
+		<div class="right">
+			<% if(name){ %>
+				<input name="add" val="{$dailyEditUrl}?day_id={$day_id}" class="gray-button" type="button" value="编辑" />
+				<input class="gray-button" type="button" val="{$dailyDeleteUrl}?day_id={$day_id}" name="del" value="删除" />
+			<%} else{%>
+				<input name="add" val="{$dailyAddUrl}?day_id={$day_id}" class="gray-button" style="margin-top:15px;" type="button" value="添加" />
+			<%}%>
+		</div>
+	</div>
+	<hr class="gray-hr mgn-t-10" />
+</script>
+<script id="noticeHtmlSet" type="text/html">
+	<div class="msg mgn-t-10">
+		<div class="inline-block">
+			<% if(name){%>
+				<h2><% if(status==0){ %><span style="color:red;"><%}%><%= typeName %><% if(status==0){ %></span><%}%></h2>
+				<p>类型：<%= type %> (ID:<%= linkId %>)<p>
+				<p>标题：<%= name %></p>
+				<p>广告ID：<%= adId %> </p>
+			<%}else{%>
+				<h2 style="height:63px"><%= typeName %>：空</h2>
+			<%}%>
+		</div>
+		<div class="right">
+			<% if(name){ %>
+				<input name="add" val="{$textEditUrl}?day_id={$day_id}" class="gray-button" type="button" value="编辑" />
+				<input class="gray-button" type="button" val="{$textDeleteUrl}?day_id={$day_id}" name="del" value="删除" />
+			<%} else{%>
+				<input name="add" val="{$textAddUrl}?day_id={$day_id}" class="gray-button" style="margin-top:15px;" type="button" value="添加" />
+			<%}%>
+		</div>
+	</div>
+	<hr class="gray-hr mgn-t-10" />
+</script>
+<script id="fileHtml" type="text/html">
+	<% 
+		var length = supplies.length;
+		for(var i=0; i<length; i++) {%>
+			<li value="<%= supplies[i].id %>">
+				<span<% if(supplies[i].status==0){ %> style="color:red;"<%}%> ><%= supplies[i].name?supplies[i].name:"&nbsp;" %></span>
+				<div class="bg-file">
+					<a href="javascript:" name="add" val="{$bannerEditUrl}?day_id={$day_id}&id=<%= supplies[i].id %>"><img style="width:100%;height:100%" src="<%= supplies[i].href %>" /></a>
+				</div> 
+				<div class="but-del-file">
+					<img name="left" src="<%= imgUrl %>/u793.png"/>
+					<input type="button" name="del" val="{$bannerDeleteUrl}?day_id={$day_id}&id=<%= supplies[i].id %>" value="删除"  >
+					<img name="right" src="<%= imgUrl %>/u791.png"/>
+				</div>
+			</li>
+		<% } %>
+		<% 
+		for(var i =length;i<4;i++ ){%>
+			<li value="" class="<%= i==length?"":"no-file" %>">
+				<span>&nbsp;</span>
+				<% if(i==length){ %>
+    				<a href="javascript:">
+    					<div name="add" val="{$bannerAddUrl}?day_id={$day_id}" class="bg-file">点击添加</div>
+    				</a>
+				<%}else{%>
+					<div class="bg-file">点击添加</div>
+				<%}%>
+			</li>
+		<%}%>
+</script>
+<script id="recommendHtmlSet" type="text/html">
+	<% 
+		var length = supplies.length;
+	%>
+		<h2 class="mgn-t-10" >推荐列表<%= length?"":"：空" %></h2>
+	<%
+		for(var i=0; i<length; i++) {
+	%>
+			<div name="list" value="<%= supplies[i].id%>" class="mgn-t-10 list">
+				<div class="sort">
+					<img name="top" src="<%= imgUrl  %>/u969.png"/>
+					<img name="bottom" src="<%= imgUrl  %>/u781.png"/>
+				</div>
+				<div class="info">
+					<div class="inline-block">
+						<h3><%= (i+1)+'.' %>
+						<% if(supplies[i].status==0){ %><span style="color:red;"><%}%>
+						<%= ' '+supplies[i].name %>
+						<% if(supplies[i].status==0){ %></span><%}%>
+						</h3>
+						<span class="qing-font12"><%= supplies[i].typeName?"类型："+supplies[i].typeName:"" %> <% if(!supplies[i].list){ %>(ID:<%= supplies[i].linkId %>)<%}%> </span>
+						<p ><%= supplies[i].names %></p>
+						<p class="qing-font12">广告ID：<%= supplies[i].adId %> </p>
+					</div>
+					<div class="right">
+						<input type="button" name="edit" val="{$recommendEditUrl}?day_id={$day_id}&id=<%= supplies[i].id %>" class="gray-button" value="编辑" />
+						<input type="button" class="gray-button" val="{$recommendDeleteUrl}?day_id={$day_id}&id=<%= supplies[i].id %>" name="del" value="删除" />
+					</div>
+				</div>
+			</div>
+	<%}%>
+</script>
+<script id="recommendHtml" type="text/html">
+	<% 
+		var length = supplies.length;
+		if(!length){%>
+			<div name="list" class="download-area mgn-t-b-10">
+				<divclass="header"><h2>推荐列表：空</h2></div>
+			</div>
+		<%}%>
+		
+		<%for(var i=0; i<length; i++) {%>
+			<% if(!supplies[i].list){ %>
+				<div  name="list" class="advert  mgn-t-10" >
+					<img src="<%= supplies[i].href %>" />
+				</div>
+			<% continue; }%>
+			<% var jlength = supplies[i].list.length;%>
+			<div name="list" class="download-area <%= jlength>4?"double-deck":"" %> mgn-t-b-10">
+				<div class="header">
+					<h2><%= supplies[i].name %></h2> <span class="sees">查看全部></span>
+					<hr class="gray-hr" />
+				</div>
+				<ul>
+					<% 
+						supp = supplies[i].list;
+						for(var j=0; j<jlength; j++) {%>
+						<li>
+							<img src="<%= supp[j].href %>" />
+							<h3><%= supp[j].name||'&nbsp;' %></h3>
+							<p>
+						    <% if(! supp[j].name){ %>  
+				            <span style="color:red;" >已下线</span>
+						    <%}%>
+						    <% if(supp[j].name){ %>
+						    <span class="qing-font12"><%= supp[j].type %>|<%= supp[j].size?supp[j].size+"M":"&nbsp;" %></span>
+						    <%}%>
+						    </p>
+							<input type="button" class="<%= supp[j].butType%>" value="<%=supp[j].butName%>" />
+						</li>
+					<% } %>
+				</ul>
+			</div>
+		<% } %>
+</script>
+								    
+<script type="text/javascript">
+
+HTML;
+    echo 'var pageData = ' . json_encode($data) . ';';
+echo <<<HTML
+	var imgUrl = '{$imgUrl}';
+	var toUrl = baseurl+'{$listUrl}';
+</script>
+HTML;
+?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $listUrl;?>">首页推荐日程</a></li>
+	    <li class="current"><a href="javascript:;">编辑首页推荐</a></li>
+	</ul>
+</div>
+
+<div class="h_a">编辑首页推荐信息</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="saveForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="day_id" value="<?php echo $day_id;?>" type="hidden" />
+<?php 
+$date = date("Y年m月d日", $day_id);
+echo <<<HTML
+<div class="page-recommend-deit">
+	<header>
+		<h1>{$date}首页推荐</h1>
+		<div>
+			<input type="button" id="save" class="gray-button" value="保存当前配置" />
+			<a href="{$editlogUrl}?day_id={$day_id}"><input type="button" class="gray-button" value="查看编辑记录" /></a>
+    		<span style="margin-left:30px;color:red;font-size:18px">“保存当前配置”才会生效,否则退出“编辑首页推荐信息”后数据丢失。同一天的推荐信息同时只能由一个用户编辑!</span>
+		</div>
+        <p class='gray-font12'>
+HTML;
+if($log) {
+    $editTime = date("Y-m-d H:i:s", $log['create_time']);
+    echo "最后一次编辑由<span>{$log['username']}</span>于<span>{$editTime}</span>";
+}
+echo <<<HTML
+		</p>
+	</header>
+	<hr class="gray-hr" />
+	<div class="content">
+		<div id="preview" class="preview">
+			<div name="rollContainer" class="roll">
+				
+			</div>
+			<ul name="file" class="roll">
+				<li data-value="0">1</li>
+				<li data-value="1">2</li>
+				<li data-value="2">3</li>
+				<li data-value="3">4</li>
+			</ul>
+			<p class="msg gray-font12" id="notice"></p>
+			<div id="sameDay" class="daily-recommended mgn-t-b-10">
+				
+			</div>
+			<div id="previewRecommend" class="mgn-t-30 ">
+				
+			</div>
+		</div>
+		<div class="deit">
+			<h2>Banner</h2>
+			<div class="fild">
+				<ul name="file" id="file">
+					
+				</ul>
+			</div>
+			<hr class="gray-hr mgn-t-10" />
+			<div id="setSameDay">
+				
+			</div>
+			<div id="recommend">
+				<h2 class="mgn-t-10">推荐列表</h2>
+			</div>
+			<div class="add">
+				<input type="button" name="edit" val="{$recommendAddUrl}?day_id={$day_id}" class="gray-button" value="添加新推荐" />
+			</div>
+		</div>
+	</div>
+</div>
+HTML;
+?>
+</form>
+<div id="alert">
+	<p name="msg" style="text-align: center; padding-top:10px ">删除失败!</p>
+</div>
+<script type="text/javascript">
+var confirmInfo="<?php echo $from == 1 ? "“保存当前配置”才会生效,否则您刚编辑的数据会丢失。" : ""; ?>";
+$(window).bind('beforeunload', function(){
+    if(!confirmInfo) {
+        return;
+    }
+	return confirmInfo;
+});
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title><?php echo $gift['title'];?></title>
+	<?php echo $this->render("layout/header.phtml");?>
+</head>
+<body id="gift-page" data-isWin="<?php echo $giftCodeStr ? 'true' : 'false'?>" data-giftId="<?php echo $gift['id'];?>">
+	<div class="gift-header-wrapper">
+		<h1>礼包刮刮乐</h1>
+		<div id="Scratch_Holder" data-ajaxUrl="<?php echo $giftCodePostUrl?>">
+		<?php if ($status == 0 || $status == 1) {?>
+			<!-- 不需要刮奖 -->
+			<div class="status-container scratch-container">
+				<p><?php echo $msg;?></p>
+			</div>
+        <?php } else {?>
+			<!-- 需要刮奖 -->
+			<div class="scratch-container">
+				<canvas id="scratcher" width="218" height="59"></canvas>
+			</div>
+			<?php }?>
+		</div>
+	</div>
+	<div class="info-container">
+		<div class="J_codeContainer code <?php if($status != 1) echo 'hidden';?>">
+			<i class="icon-gift"></i>
+			<div>
+				<table>
+					<tr>
+						<td>您中了 ： </td>
+						<td><em id="giftName"><?php echo $gift['title'];?></em></td>
+					</tr>
+					<tr>
+						<td style="vertical-align:top">激活码 ：</td>
+						<td style="vertical-align:top">
+							<em id="codeName"><?php echo $giftCodeStr;?></em>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="gift-info">
+			<h3>礼包名称：</h3>
+			<div><?php echo $gift['title'];?></div>
+            <?php $format = 'Y年m月d日 H:i'?>
+			<h3>兑换时间：</h3>
+			<div><?php if($gift) echo date($format, $gift['exchange_start_time']).'  -  '.date($format, $gift['exchange_end_time']);?></div>
+			<h3>礼包信息：</h3>
+			<div class="ui-editor">
+			 <?php echo html_entity_decode($gift['content']);?>
+			</div>
+		</div>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+	<script src="<?php echo "$appJs/scratcher$source.js$timestamp";?>"></script>
+</body>
+</html>

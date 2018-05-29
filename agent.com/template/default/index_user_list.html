@@ -1,0 +1,98 @@
+<{config_load file="site.conf"}> <{include file="public/pageHead.html"}>
+<link rel="stylesheet" href="template/default/css/page.css" />
+<script type="text/javascript" src="/template/default/js/common.js"></script>
+<script type="text/javascript" src="/template/default/js/page.js"></script>
+<h1><span class="action-span"><a href="/index.php?ac=user_add">添加管理员</a></span>
+<span class="action-span1">用户管理</span><span id="search_id"
+	class="action-span1"> - 
+    <{if $channeltype eq 1}>
+    自主渠道商管理员列表
+    <{elseif $channeltype eq 2}>
+    移动渠道商管理员列表
+    <{else}>
+    管理员列表
+    <{/if}>
+    </span>
+<div style="clear: both"></div>
+</h1>
+
+<div class="form-div">
+  <form action="/index.php?ac=user_list" name="searchForm" id="searchForm" method="get">
+    <img src="/template/default/img/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" />
+    渠道号/公司名称：
+    <input type="text" name="condition" id="condition" value="<{$smarty.get.condition}>" />
+    <input type="hidden"value="user_list"  name="ac" />
+    <input type="hidden" value="<{$channeltype}>"  name="channeltype" />
+    <input type="submit" value="搜索" class="button" name="search" />
+  </form>
+</div>
+<div class="list-div" id="listDiv">
+<table width="100%" cellspacing="1" cellpadding="2" id="list-table">
+	<tr align="center">
+		<th>渠道号</th>
+                <th>子渠道号</th>
+		<th>公司名称</th>
+		<th>用户名</th>
+		<th>姓名</th>
+		<th>邮箱</th>
+		<th>角色类型</th>
+		<th>最后登录时间</th>
+		<th>最后登录IP</th>
+		<th>是否可用</th>
+		<th width="100">操作</th>
+	</tr>
+        <{foreach item=one from=$userList}>
+	<tr align="center">
+        <td><{$one.clientid|default:'未知'}></td>
+		<td><{$one.clientids|default:'未知'}></td>
+		<td><a href="/index.php?ac=user_edit&method=edit&uid=<{$one.userid}>&channeltype=<{$channeltype}>" title="点击查看公司"><{$one.name}></a></td>
+		<td><{$one.username}></td>
+		<td><{$one.nickname}></td>
+		<td><{$one.email}></td>
+        <td><{$role[$one.levels]}></td>
+        <td><{$one.dateline|date_format:"%Y-%m-%d %H:%M"}></td>
+        <td><{$one.logonip}></td>
+        <td><{if $one.available==1}>是<{else}>否<{/if}></td>
+		<td align="center">
+        <{if $admin.userid|default:0!=$one.userid}>
+        <a href="/index.php?ac=user_edit&method=edit&uid=<{$one.userid}>&channeltype=<{$channeltype}>"
+			title="编辑"><img src="/template/default/img/icon_edit.gif" border="0" />编辑</a>&nbsp;&nbsp;
+		<a href="/index.php?ac=user_edit&method=del&uid=<{$one.userid}>&channeltype=<{$channeltype}>" title="删除"
+			onclick="return delPrompt()"><img
+			src="/template/default/img/icon_drop.gif" border="0" />删除</a>
+        <{else}>
+        <{#loginstate#}>
+        <{/if}>
+        </td>
+	</tr>
+	<{/foreach}>
+</table>
+<div style="text-align:center"></div>
+
+
+</div>
+<div class="wrapper inb ml">
+    <div class="page mb20" id="page-js-2"></div>
+    <script type="text/javascript">
+        var curpage = <{$curpage}>;
+        var pages = <{$pages}>;
+        var channeltype = "<{$channeltype}>";
+        var condition = "<{$condition}>";
+        PPage("page-js-2",curpage,pages,"hoho2.go",true);
+        function hoho2(){};
+        hoho2.go=function(pageNum){
+            window.location.href = encodeURI("/index.php?ac=user_list&channeltype="+channeltype+"&condition="+condition+"&page=" + pageNum);
+            PPage("page-js-2",pageNum,pages,"hoho2.go",true);
+        }
+    </script>
+</div>
+<{include file="public/pageFoot.html"}>
+<script>
+	$(function(){
+		$(".page-txt").keyup(function(event){
+			if(event.keyCode ==13){
+				$(".page-btn").trigger("click");
+			}
+		 });
+	});
+</script>

@@ -1,0 +1,101 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $indexUrl;?>">敏感词列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加敏感词</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="get">
+    <input name="token" type="hidden" value="<?php echo $token;?>" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">关键词</th>
+                <td class="td">
+                    <input class="input" type="text"   name="kwd"  value="<?php echo $param['kwd'];?>" >
+                </td>
+                <td><input type="checkbox" name="show" value="1" <?php if($param['show']==1) echo "checked";?> >显示命中</td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac">
+        <span style="float:left;">关键词总数：<?php echo $total;?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 命中总数：<?php echo $count;?></span>
+		<span class="btn">
+			<span>
+				<button type="submit">搜 索</button>
+			</span>
+		</span>
+    </div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+            <td width="8">字</td>
+            <td width="240">关键词</td>
+		</tr>
+<?php foreach($data as $key => $value) {?>
+		<tr class="ct <?php if($value['status']) echo 'blue';?>">
+            <td><?php echo $key;?></td>
+            <td><?php echo implode('  |  ',$value['list']) ?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script>
+$(function(){
+    $('a.active_btn').click(function(){
+        var data = {};
+        data.id  = $(this).data('id');
+        data.token  = '<?php echo $token; ?>';
+        data.status  = $(this).data('status');
+        $.ajax({
+            url:'<?php echo $activeUrl ?>',
+            type:'post',
+            data:data,
+            dataType:'json',
+            success:function(res){
+                if(res.success==true){
+                    window.location.reload();
+                }
+            }
+        });
+    });
+   $('a.top_btn').click(function(){
+       var data = {};
+       data.id  = $(this).data('id');
+       data.token  = '<?php echo $token; ?>';
+       data.type  = $(this).data('type');
+       $.ajax({
+           url:'<?php echo $topUrl ?>',
+           type:'post',
+           data:data,
+           dataType:'json',
+           success:function(res){
+               if(res.success==true){
+                    window.location.reload();
+               }
+           }
+       });
+   });
+
+});
+
+
+$(document).ready(function() {
+    $("#to_time").datepicker({
+        dateFormat : 'yy-mm-dd'
+    });
+
+    $("#from_time").datepicker({
+        dateFormat : 'yy-mm-dd'
+    });
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>
+

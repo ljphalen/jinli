@@ -1,0 +1,49 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+	<div class="module">
+	<?php if($hasheader){?>
+		<header id="iHeader" class="hd">
+			<div class="top-wrap">
+				<div class="title">
+					<a href="<?php echo $webroot;?>/amigo/order/search" class="back"></a>
+					<h1>订单列表</h1>
+					<span class="voice"></span>
+				</div>
+			</div>
+		</header>
+	<?php }?>
+
+		<section id="iScroll">
+			<div class="select-order J_proDetail" data-ajaxurl="<?php echo $dataUrl;?>">
+				<div class="wrap"></div>
+				<script id="J_dtemplate" type="text/icat-template">
+				<%if(data.list.length){%>
+					<ul>
+						<%for(var i=0, len=data.list.length; i<len; i++){%>
+						<li>
+							<a href="<%=data.list[i].detail_url%>">
+								<time>下单时间：<%=data.list[i].create_time%></time>
+								<figure class="item-pictext">
+									<div class="pic">
+										<span><img src="<%=data.list[i].img%>" alt="<%=data.list[i].title%>"></span>
+									</div>
+									<div class="desc">
+										<h3><%=data.list[i].title%></h3>
+										<p class="price">￥<%=data.list[i].price%></p>
+										<p class="text">收货地址：<%=data.list[i].address%></p>
+									</div>
+								</figure>
+							</a>
+						</li>
+						<%}%>
+					</ul>
+				<%} else {%>
+					<div class="no-order">未查询到订单</div>
+				<%}%>
+				</script>
+			</div>
+		</section>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

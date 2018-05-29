@@ -1,0 +1,194 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript"
+src="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.js"></script>
+<!-- 导航栏Ajax加载 指向navagator.html  menuOn表示分别需要高亮的菜单栏id 用下划线_隔开 eg:bz_taotu_taotuPack-->
+<section class="navigator" menuOn="sz_isz">
+
+</section>
+
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!--wp02-壁纸编辑-->
+    <div id="bz_usr_wp02">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <span id = "clockid" style="display:none" clockid="<?php echo $clockedit[0]["id"] ?>"></span>
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">序号</label>
+                    <div class="tb_cont tb_cell"><?php echo $clockedit[0]['c_sort'] ?></div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">名称</label>
+                    <div class="tb_cont tb_cell"><?php echo $clockedit[0]['c_filename'] ?></div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">作者</label>
+                    <div class="tb_cont tb_cell"><?php echo $clockedit[0]["c_author"] ?></div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">缩略图</label>
+                    <!-- openPopId表示要打开指定id的弹窗 -->
+                    <div class="tb_cont tb_cell"><a><img src="<?php echo $clockedit[0]['c_imgthumb']; ?>" class="tb_cell_img pop_btn" openPopId="fixPicView"></a></div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">时钟介绍</label>
+                    <!-- openPopId表示要打开指定id的弹窗 -->
+                    <div class="tb_cont tb_cell"><a><img src="<?php echo $clockedit[0]['c_imgdetail']; ?>" class="tb_cell_img pop_btn" openPopId="fixPicViewpro"></a></div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap no_border">
+                <div class="com_tb">
+                    <label class="tb_cell">审核结果</label>
+                    <div class="tb_cont tb_cell">
+                        <div class="select_box">
+                            <label class="select_val check_data" val="<?php echo $clockedit[0]['c_status'] ?>"><?php echo $status[$clockedit[0]['c_status']] ?></label>
+                            <ul class="select_option" id="wp02Approve">
+                                <?php foreach ($selstatus as $k => $v) { ?>
+                                    <li val="<?php echo $k; ?>"><?php echo $v; ?></li>
+                                <?php } ?>
+                            </ul>
+                        </div><!-- select_box -->
+                    </div>
+
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <!-- 富文本编辑器 -->
+            <div class="txt_editor_wrap " id="wp02Editor">
+                <textarea class="txt_editor">
+                    <?php echo $clockedit[0]['c_note']; ?>
+                </textarea>
+            </div>
+
+            <?php if ($groupid == 3) { ?>
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell">上线时间</label>
+                        <div class="tb_cont tb_cell">
+                            <input type="text" onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" readonly  value="<?php echo date('Y-m-d H:i:s', $clockedit[0]['c_onlinetime']); ?>" class="laydate-icon datepicker"/>
+                        </div>
+                    </div><!-- com_tb end -->
+                </div><!-- com_tb_wrap end -->
+            <?php } ?>
+
+            <div class="bnts_wrap"><button class="btn_s2 pop_btn" openPopId="fixTipView">保存</button></div>
+        </div><!-- content end -->
+
+    </div>
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">时钟详情已修改，是否保存</p>
+                    <div class="tip_btns">
+                        <button class="btn_s2  edit_ok">确定</button>
+                        <button class="btn_s2 btnCancel">取消</button>
+                    </div>
+                    <div class="pop_close"></div>
+                </div><!-- pop_cont_tip 结束 -->
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+<!-- 弹窗 图片 pop_style_img表示是图片 带该class的 点击页面其它区域会关闭该图片-->
+<div class="pop_wraper pop_style_img" id="fixPicView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_img" >
+                    <div class="pop_img_src"><img src="<?php echo $clockedit[0]['c_imgthumb'] ?>"></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+<!-- 弹窗 图片 pop_style_img表示是图片 带该class的 点击页面其它区域会关闭该图片-->
+<div class="pop_wraper pop_style_img" id="fixPicViewpro">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_img" >
+                    <div class="pop_img_src"><img src="<?php echo $clockedit[0]['c_imgdetail'] ?>"></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+<script type="text/javascript">
+    var token = "<?php echo $token; ?>"
+    $(".delBtn").click(function () {
+        var clockid = $(this).attr("value");
+        $(".del_ok").click(function (e) {
+            var data = "id=" + clockid + "&token=" + token;
+            var url = "/Admin/Clockres/delclock";
+            $(".pop_wraper").removeClass("show");
+            $.post(url, data, function (d) {
+                if (d) {
+                    history.go(-1);
+                }
+            });
+            stopPropagation(e)
+        })
+    });
+
+    $(".edit_ok").click(function () {
+        $(".pop_wraper").removeClass("show");
+        var clockid = $("#clockid").attr("clockid");
+        var note = $(".txt_editor").val();
+        var p_time = $(".datepicker").val();
+        var status = $(".check_data").attr("val");
+        if (p_time = 'undefined') {
+            p_time = '';
+        }
+
+        if (status == 2 && note == '') {
+            alert("请填写不通过原因");
+            return 0;
+        }
+        var url = "/Admin/clockres/up_status";
+        var data = "clockid=" + clockid + "&note=" + note + "&publishtime=" + p_time + "&status=" + status + "&token=" + token;
+        $.post(url, data, function (d) {
+            if (d) {
+                history.go(-1);
+            } else {
+                alert("提交失败！请重新操作");
+                return 0;
+            }
+        });
+
+    });
+
+</script>
+</body>
+</html>

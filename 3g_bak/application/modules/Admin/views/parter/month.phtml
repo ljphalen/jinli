@@ -1,0 +1,156 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="table_full">
+	<form action="<?php echo $baseUrl; ?>" method="POST" id="form">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+		<table width="100%" cellspacing="0" cellpadding="0">
+			<tr class="tr">
+				<th class="th">日期:</th>
+				<td class="td">
+					<input class="input" type="text" maxlength="30" id="sdate" name="year" value="<?php echo $params['year']; ?>"> 年
+					<input class="input" type="text" id="edate" maxlength="30" name="month" value="<?php echo $params['month']; ?>">月
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">所属CP:</th>
+				<td class="td">
+					<select name="pid" id="pid">
+						<option value="0">请选择</option>
+						<?php foreach ($parters as $k => $v) { ?>
+							<option <?php echo ($v['id'] == $params['pid']) ? 'selected="selected"' : ''; ?> value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">业务名称:</th>
+				<td class="td">
+					<select name="bid" id="bid">
+						<option value="0">请选择</option>
+						<?php foreach ($bussiness as $k => $v) { ?>
+							<option value="<?php echo $v['id']; ?>" <?php if ($v['id'] == $params['bid']) echo 'selected'; ?>><?php echo $v['name']; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">收款状态:</th>
+				<td class="td">
+					<select name="receipt_status">
+						<option value="-1"  <?php if ($params['receipt_status'] == -1) echo 'selected'; ?>>请选择</option>
+						<?php foreach ($payStatus as $k => $v) { ?>
+							<option value="<?php echo $k; ?>" <?php if ($k == $params['receipt_status']) echo 'selected'; ?>><?php echo $v; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+		</table>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+		<input type="hidden" id="hidden_export" name="export" value="0"/>
+	</form>
+</div>
+<style type="text/css">
+	table {
+		empty-cells: show;
+		border-collapse: collapse;
+	}
+
+	table th {
+		white-space: nowrap;
+	}
+
+</style>
+
+<div class="h_a">
+	<span>累计收入: </span>&nbsp;&nbsp;<span id="amount" style="color: red"></span>
+	<span style="padding-left:90px"><input type="button" value="导出数据" id="checkout"></span>
+</div>
+<div class="table_list">
+	<table cellspacing="0" cellpadding="0" width="100%">
+		<tbody>
+		<tr class="ct">
+			<th class="th">序号</th>
+			<th class="th">月份</th>
+			<th class="th">业务名称</th>
+			<th class="th">合作商</th>
+			<th class="th">PV值</th>
+			<th class="th">结算方式</th>
+			<th class="th">后台结算金额</th>
+			<th class="th">实际结算金额</th>
+			<th class="th">修改原因</th>
+			<th class="th">审核对账</th>
+			<th class="th">收款状态</th>
+			<th class="th">审核</th>
+		</tr>
+
+		<?php
+		$sum = 0.00;
+		foreach ($data as $k => $v) {
+			$sum += $v['real_money'];
+			?>
+			<tr class="ct">
+				<td class="td2"><?php echo $v['id'];?></td>
+				<td class="td2"><?php echo $v['date'];?></td>
+				<td class="td2"><?php echo $v['businessName'];?></td>
+				<td class="td2"><?php echo $v['parterName'];?></td>
+				<td class="td2"><?php echo $v['pv'];?></td>
+				<td class="td2" style="color: blue"><?php echo $v['price_type'] == 1 ? 'pv*' . $v['price'] : '按月计价';?></td>
+				<td class="td2" style="color: red"><?php echo $v['money'];?></td>
+				<td class="td2" style="color: red"><?php echo $v['real_money'] ? $v['real_money'] : 0.00;?></td>
+				<td class="td2" style="color: blue"><?php echo $v['reason'];?></td>
+				<td class="td2" style="color: red"><?php echo $v['check_status'] == 1 ? $checkStatus[$v['check_status']] . "," . $confirmStatus[$v['confirm_status']] : $checkStatus[$v['check_status']];?></td>
+				<td class="td2" style="color: red"><?php echo $payStatus[$v['receipt_status']];?></td>
+				<td class="td2"><a href="/Admin/Parter/auth?id=<?php echo $v['id'];?>">操作</a></td>
+			</tr>
+		<?php } ?>
+		</tbody>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#year").datepicker({
+			dateFormat: 'yy'
+		});
+		$("#month").datepicker({
+			dateFormat: 'mm'
+		});
+
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>
+<script>
+	$("#amount").text('<?php echo $sum?>');
+	$("#checkout").bind('click', function () {
+		$("#hidden_export").val(1);
+		$("#form").submit();
+		$("#hidden_export").val(0);
+	})
+	$("#sdate").datepicker({
+		dateFormat: 'yy'
+	});
+
+	$("#edate").datepicker({
+		dateFormat: 'mm'
+	});
+
+	$("#pid").bind('change', function () {
+		var pid = $("#pid option:selected").val();
+		$.ajax({
+			'url': '/Admin/Parter/ajaxGetBussinessList',
+			'type': 'post',
+			'dataType': 'json',
+			'data': {'token': '<?php echo $token;?>', 'pid': pid},
+			'success': function (e) {
+				var html = '<option value="0">请选择</option>';
+				$.each(e.data, function (i, m) {
+					html += '<option value="' + m.id + '">' + m.name + '</option>';
+				});
+				$("#bid").html(html);
+			}
+		})
+	})
+</script>

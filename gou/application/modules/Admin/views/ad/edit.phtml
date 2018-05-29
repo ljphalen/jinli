@@ -1,0 +1,174 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>?channel_id=<?php echo $info['channel_id'];?>">广告列表</a></li>
+    <li class="current"><a href="javascript:;">编辑广告</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑广告</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">分类</th>
+			<td class="td">
+				<select name="ad_type"  id="select">
+					<?php foreach($ad_types as $key=>$value) { ?>
+					<option value="<?php echo $key;?>" <?php if($info['ad_type'] == $key) echo 'selected="selected"';?>><?php echo $value;?></option>
+					<?php }?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr"  id="ptype_id" style="<?php if(($info['ptype_id'] == '6' && $info['channel_id'] == '2') || ($info['ptype_id'] == '4' && $info['channel_id'] == '6')) 'display:'?>">
+			<th class="th">搜索分类</th>
+			<td class="td">
+				<select name="ptype_id">
+				    <option value="">选择分类</option>
+					<?php foreach($ptype as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($info['ptype_id'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">模块-平台</th>
+			<td class="td">
+				<select name="module_id">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($info['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				
+				<select name="cid">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($info['cid'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">渠道号</th>
+			<td class="td"><input type="text" class="input" name="channel_code" value="<?php echo $info['channel_code'];?>"></td>
+		</tr>
+		<tr class="tr" id="link">
+			<th class="th">链接</th>
+			<td class="td"><input type="text" name="link" class="input wc" value="<?php echo $info['link'];?>"></td>
+		</tr>
+        <tr class="tr" id="activity_item">
+            <th class="th">Activity</th>
+            <td class="td">
+                <input type="text" name="activity" class="input wc" value="<?php echo $info['activity'];?>">
+                <input type="number" name="clientver" class="input" value="<?php echo $info['clientver'];?>">(客户端版本号, 例如:252)
+            </td>
+        </tr>
+		<tr class="tr" id="action">
+			<th class="th">本地打开页面</th>
+			<td class="td">
+				<select name="action">
+				<option value="">选择页面</option>
+					<?php foreach($actions as $key=>$value) { ?>
+					<option value="<?php echo $key;?>" <?php if($info['action'] == $key) echo 'selected="selected"';?>><?php echo $value;?></option>
+					<?php }?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg">
+						<img src="<?php echo $attachPath.$info['img'];?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">开始结束时间</th>
+			<td class="td"><div><input class="input" type="text" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $info['start_time']);?>" /> 至 <input class="input" type="text" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s', $info['end_time']);?>" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status" min-width="100px">
+                	<option <?php if($info['status'] == 1) echo 'selected="selected"';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 0) echo 'selected="selected"';?> value="0">关闭</option>
+            </select></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">是否推荐</th>
+			<td class="td"><select name="is_recommend" min-width="100px">
+                	<option <?php if($info['is_recommend'] == 1) echo 'selected="selected"';?> value="1">是</option>
+                	<option <?php if($info['is_recommend'] == 0) echo 'selected="selected"';?> value="0">否</option>
+            </select></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Ad/index?channel_id=<?php echo $info['channel_id'];?>&s=1');
+	});
+
+	channel_id = '<?php echo $info['channel_id'];?>';
+	ptype_id = '<?php echo $info['ptype_id'];?>';
+	ad_type = '<?php echo $info['ad_type'];?>';
+	if(ptype_id == 0)  $('#ptype_id').hide(); 
+	if(ad_type == '1' && channel_id == '2') {
+		 $('#action').show();
+	}else {
+		$('#action').hide();
+	}
+	$('#select').change(function(){
+		option = $(this).children('option:selected').val();
+		
+		if((option == '6' && channel_id == '2') || (option == '4' && channel_id == '6')){
+        	$('#ptype_id').show();
+        }else{
+        	$('#ptype_id').hide(); 
+        }        
+
+		if(option == '1' && channel_id == '2') $('#action').show();
+    });
+
+    var option = '<?php echo $ad_type;?>';
+    var channel_id = '<?php echo $channel_id;?>';
+
+    if(option == '9' && channel_id == '2'){
+        $('#activity_item').show();
+    }else{
+        $('#activity_item').hide();
+    }
+    $('#select').change(function(){
+        option = $(this).children('option:selected').val();
+        if(option == '9' && channel_id == '2'){
+            $('#activity_item').show();
+        }else{
+            $('#activity_item').hide();
+        }
+    });
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

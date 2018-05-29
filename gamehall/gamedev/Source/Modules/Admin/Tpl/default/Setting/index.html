@@ -1,0 +1,105 @@
+<form id="pagerForm" action="__URL__" method="post">
+	<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+	<input type="hidden" name="numPerPage" value="{$_REQUEST.numPerPage}" />
+	<input type="hidden" name="orderField" value="{$_REQUEST.orderField}" />
+	<input type="hidden" name="orderDirection" value="{$_REQUEST.orderDirection}" />
+	<volist name="_search" key="name" id="field">
+		<input type="hidden" name="_search[{$key}]" value="{$field|safe}"/>
+	</volist>
+</form>
+
+<div class="page">
+	<div class="pageHeader">
+		<form onsubmit="return navTabSearch(this);" action="__URL__/" method="post">
+		<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+		<div class="searchBar">
+			<ul class="searchContent">
+				<li>
+					<label>标题：</label>
+					<input type="text" name="_search[title]" value="{$_search[title]}"/>
+				</li>
+				<li>
+					<label>状态：</label>
+					<select class="combox" name="_search[status]">
+						<option value="">请选择</option>
+						<option value="1">启用</option>
+						<option value="0">关闭</option>
+					</select>
+					<script type="text/javascript">
+					$("select[name='_search[status]']").val({:$_search[status]});
+					</script>
+				</li>
+                <div class="buttonActive"><div class="buttonContent"><button type="submit">查询</button></div></div>
+			</ul>
+		</div>
+		</form>
+	</div>
+	
+	<div class="pageContent">
+		<div class="panelBar">
+			<ul class="toolBar">
+				<li><a class="add" href="__URL__/add" target="dialog" mask="true"><span>新增</span></a></li>
+				<li><a class="edit" href="__URL__/edit/id/{sid_user}" target="dialog" mask="true" warn="请选择操作对象"><span>编辑</span></a></li>
+				<li><a class="delete" href="__URL__/foreverdelete/id/{sid_user}/navTabId/__MODULE__" target="ajaxTodo" title="你确定要删除吗？" warn="请选择用户"><span>删除</span></a></li>
+			</ul>
+		</div>
+
+		<table class="list" width="100%" layoutH="138">
+			<thead>
+			<tr>
+				<th width="50" orderField="id" class="{:orderField('id','asc')}">编号</th>
+				<th width="50" orderField="sort" class="{:orderField('sort','asc')}">排序</th>
+				<th>标题</th>
+				<th>图片</th>
+				<th>管理员</th>
+				<th>开始时间</th>
+				<th>结束时间</th>
+				<th width="40">状态</th>
+				<th width="30">操作</th>
+				<th>时间</th>
+			</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="list">
+				<tr target="sid_user" rel="{$vo['id']}">
+					<td class="center">{$vo['id']}</td>
+					<td><input size="5" value="{$vo['sort']|default="0"}" onblur="sort({$vo['id']},this);"></td>
+					<td>{$vo['title']}</td>
+					<td>
+						<notempty name="vo.image">
+							<a href="{$vo['url']}" target="_blank"><img src="{$vo['image']}" width="240" height="60"/></a>
+						</notempty>
+					</td>
+					<td>{:D("Admin")->where(array("id"=>$vo['admin_id']))->getField('account')}</td>
+					<td>{$vo['start_time']|date="Y-m-d H:i:s",###}</td>
+					<td>{$vo['end_time']|date="Y-m-d H:i:s",###}</td>
+					<td>{:$vo['status'] ? "开启中" : "已关闭" }</td>
+					<td>{$vo['status']|showStatus=$vo['id']}</td>
+					<td>{$vo['create_at']|date="Y-m-d H:i:s",###}</td>
+				</tr>
+			</volist>
+			</tbody>
+		</table>
+
+		<div class="panelBar">
+			<div class="pages">
+				<span>显示</span>
+				<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+					<option value="10" <eq name="numPerPage" value="10">selected</eq>>10</option>
+					<option value="20" <eq name="numPerPage" value="20">selected</eq>>20</option>
+					<option value="50" <eq name="numPerPage" value="50">selected</eq>>50</option>
+					<option value="100" <eq name="numPerPage" value="100">selected</eq>>100</option>
+					<option value="200" <eq name="numPerPage" value="200">selected</eq>>200</option>
+				</select>
+				<span>共{$totalCount}条</span>
+			</div>
+			<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="10" currentPage="{$currentPage}"></div>
+		</div>
+	</div>
+</div>
+<script>
+function sort(id, sort)
+{
+	$.get("__URL__/sort/id/"+id+"/sort/"+sort.value);
+}
+</script>

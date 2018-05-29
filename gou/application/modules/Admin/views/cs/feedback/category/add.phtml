@@ -1,0 +1,47 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+    <ul class="cc">
+        <li><a href="<?php echo $indexUrl; ?>">归类列表</a></li>
+        <li class="current"><a href="javascript:;">添加归类</a></li>
+    </ul>
+</div>
+<div class="h_a">添加归类</div>
+<form method="post" action="<?php echo $addPostUrl; ?>" id="addForm">
+    <input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">排序</th>
+                <td class="td"><input type="text" class="input" name="sort" value="0"></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">一级归类</th>
+                <td class="td">
+                    <select name="parent_id" id="parent">
+                        <option value=0>请选择</option>
+                        <?php foreach ($parent as $k => $v): ?>
+                            <option value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">名称</th>
+                <td class="td"><input type="text" class="input wc" name="name" value=""></td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+    </div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+    //广告表单数据提交
+    $(document).ready(function () {
+        ajaxForm('addForm', function (ret) {
+            ajaxRedirect(ret, '<?php echo Util_Http::getServer("HTTP_REFERER"); ?>');
+        });
+    })
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

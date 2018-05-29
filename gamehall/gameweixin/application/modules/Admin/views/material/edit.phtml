@@ -1,0 +1,154 @@
+<?php echo $this->render("layout/admin_header.phtml");?>
+	<div class="body">
+		<h1 class="page-title">创建图文消息</h1>
+		<?php echo $this->render("layout/side.phtml");?>
+		<div class="col-main">
+			<div class="J_gift_error_tips error-pop-tips hidden">
+			</div>
+			<div class="stuff-body">
+				<div class="app-msg-container">
+					<div class="preview_area">
+						<h2>显示区</h2>
+                        <?php if($dataType == $dataTypes[0]) {?>
+						<!-- 单条图文 -->
+						<div id="single_appmsg_preview" data-id="<?php echo $info['id'];?>" class="appmsg">
+						  <?php $items = $itemsList[0];?>
+							<div id="appmsgItem1" 
+							     data-id="<?php echo $items['id'];?>" data-bagId="<?php echo $items['gift_bag_id'];?>" data-title="<?php echo $items['title'];?>" data-author="<?php echo $items['author'];?>" data-imgSrc="<?php echo $items['image'];?>" data-desc="<?php echo $items['digest'];?>" data-linkType="<?php echo $items['type'];?>"  data-link="<?php echo $items['content_url'];?>" 
+							     data-giftName="<?php echo $items['gift_bag_id'] ? $giftNameList[$items['gift_bag_id']] : "";?>"
+							     class="js_appmsg_item appmsg-content">
+								<h4 class="J_appmsg_title appmsg_title">
+									<a><?php echo $items['title'];?></a>
+								</h4>
+								<div class="appmsg_info">
+									<em class="J_appmsg_date appmsg_date"></em>
+								</div>
+								<div class=" appmsg_thumb_wrp">
+									<img src="<?php echo $attachroot.$items['image'];?>" class="js_appmsg_thumb appmsg_thumb  has_thumb">
+								</div>
+								<p class="J_appmsg_desc appmsg_desc"><?php echo $items['digest']?></p>
+								<div class="appmsg_edit_mask">
+							        <a class="edit_gray js_edit"   href="javascript:void(0);"></a>
+							    </div>
+								
+							</div>
+						</div>
+						<?php }?>
+                        <?php if($dataType == $dataTypes[1]) {?>
+						<!-- 多条图文 -->
+						<div id="multi_appmsg_preview" data-id="<?php echo $info['id'];?>" data-token="<?php echo $token;?>" class="appmsg multi">
+						   <?php $items = $itemsList[0];?>
+							<div id="appmsgItem1" 
+							     data-id="<?php echo $items['id'];?>" data-bagId="<?php echo $items['gift_bag_id'];?>" data-title="<?php echo $items['title'];?>" data-author="<?php echo $items['author'];?>" data-imgSrc="<?php echo $items['image'];?>" data-desc="<?php echo $items['digest'];?>" data-linkType="<?php echo $items['type'];?>"  data-link="<?php echo $items['content_url'];?>" 
+							     data-giftName="<?php echo $items['gift_bag_id'] ? $giftNameList[$items['gift_bag_id']] : "";?>"
+							     class="js_appmsg_item appmsg-content">
+								<div class="appmsg_info">
+					                <em class="appmsg_date"></em>
+					            </div>
+								<div class="cover_appmsg_item">
+									<h4 class="J_appmsg_title appmsg_title">
+									       <a ><?php echo $items['title'];?></a>
+									</h4>
+									<div class=" appmsg_thumb_wrp">
+										<img src="<?php echo $attachroot.$items['image'];?>" class="js_appmsg_thumb appmsg_thumb  has_thumb">
+									</div>
+								</div>
+								<div class="appmsg_edit_mask">
+							        <a class="edit_gray js_edit"   href="javascript:void(0);"></a>
+							    </div>
+								
+							</div>
+							
+							<?php 
+							$count = count($itemsList);
+							for($index=1; $index<$count; $index++) {
+                            $items = $itemsList[$index];
+                            ?>
+							<div id="appmsgItem<?php echo ($index+1);?>" 
+							     data-id="<?php echo $items['id'];?>" data-bagId="<?php echo $items['gift_bag_id'];?>" data-title="<?php echo $items['title'];?>" data-author="<?php echo $items['author'];?>" data-imgSrc="<?php echo $items['image'];?>" data-desc="<?php echo $items['digest'];?>" data-linkType="<?php echo $items['type'];?>"  data-link="<?php echo $items['content_url'];?>" 
+							     data-giftName="<?php echo $items['gift_bag_id'] ? $giftNameList[$items['gift_bag_id']] : "";?>"
+							     class="js_appmsg_item appmsg_item">
+								<img src="<?php echo $attachroot.$items['image'];?>" class="js_appmsg_thumb appmsg_thumb  has_thumb">
+				                <h4 class="J_appmsg_title appmsg_title"> <a><?php echo $items['title'];?></a></h4>
+				                <div class="appmsg_edit_mask">
+							        <a class="edit_gray js_edit"   href="javascript:void(0);"></a>
+							        <a class="del_gray js_del  <?php if($count <= 2) echo 'hidden';?>"   href="javascript:void(0);"></a>
+							    </div>
+				                
+				            </div>
+				            <?php }?>
+				            <a onclick="return false;" class="create_access_primary appmsg_add" id="js_add_appmsg" href="javascript:void(0);">
+							    <i class="icon-add">+</i>
+							</a>
+							 <?php }?>
+						</div>
+		        	</div>
+					<div class="edit-area">
+						<h2>编辑区</h2>
+						<div class="J_editing_area editing-container">
+							<div class="edit-column-container">
+								<span class="text">标题<em class="asterisk">*</em>:</span>
+								<input id="imgTextTitle" class="input" />
+							</div>
+
+							<div class="edit-column-container">
+								<span class="text">作者<em class="asterisk invisible">*</em>:</span>
+								<input id="imgTextAuthor" class="input" />
+							</div>
+
+							<div class="edit-column-container">
+								<span class="text">封面<em class="asterisk ">*</em>:</span>
+								<div class="album-container">
+									<span class="text-tips dark">（图片格式：PNG、JPG、jpeg，建议图片尺寸为<em id="resolution">900*500</em>）</span>
+									<a href="javascript:;" class="btn-upload">
+										<input id="appMsgPic" type="file" name="appMsgPic"  >添加图片
+										
+									</a>
+									<a id="startUploadPic" data-ajaxUrl="<?php echo $fileUploadUrl;?>" href="javascript:;" class="btn-upload">开始上传</a>
+									<img src="" class="album hidden" id="album" alt=""/>
+								</div>
+							</div>
+                        <?php if($dataType == $dataTypes[0]) {?>
+							<!-- 如果是多条图文，无摘要，即无下面对应的div -->
+							<div class="edit-column-container">
+								<span class="text">摘要<em class="asterisk invisible">*</em>:</span>
+								<textarea id="imgTextAbstract"  class="input textarea" ></textarea>
+							</div>
+						<?php }?>
+							<div class="edit-column-container">
+								<span class="text">地址<em class="asterisk">*</em>:</span>
+								<div class="J_appmsg_address address-container">
+									<input id="giftType" class="radio" name="address" checked value="gift" type="radio"/>礼包
+									<input id="linkType" class="radio" name="address" value="link" type="radio"/>链接
+									<br/>
+									<input id="giftAdd" class="btn-upload btn-gift " type="button" value="选择礼包"/>
+									<input id="linkAddress" class="input input-link hidden " type="text" />
+									<span id="giftName" class="giftName hidden"></span>
+								</div>
+							</div>
+						</div>
+						<i class="arrow arrow_out" ></i>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+				<div class="btn-container">
+					<button id="imgTextSave" class="btn" data-ajaxUrl="<?php echo $editPostUrl;?>" >保存</button>
+					<a href="<?php echo $listUrl;?>" class="btn">取消</a><!-- 回到上一页 -->
+				</div>
+			</div>
+		</div>
+				
+<div class="J_dialog hidden">
+	<div id="mask" ></div>
+	<div id="gift_Dialog" >
+		<iframe width="800" height="540" frameborder="0" name="gift_Iframe"  src="<?php echo $giftDialogUrl;?>"></iframe>
+		<div class="btn-container iframe-Dialog-btn no-topborder">
+			<button id="chooseGift" class="btn">确定</button>
+			<button id="chooseGiftCancel" class="btn">取消</button>
+		</div>
+	</div>
+</div>
+
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<?php extract($pageData);
+if ($ch) {
+	$t_bi = $t_bi."&ch=".$ch;
+}
+?>
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="Keywords" content="手机网址导航大全,手机网站导航,手机阅读,智能手机网址导航,手机视频,手机资讯">
+<title>手机网址导航大全</title>
+<link rel="stylesheet" href="<?php echo $staticResPath;?>/navi/assets/css/navi.css?v=<?php echo $version;?>" />
+<script type="text/javascript">
+	var token = '<?php echo $token;?>';
+</script>
+<script type="text/javascript">
+	var t_bi = '<?php echo $t_bi;?>';
+	var typeData = <?php echo json_encode($data);?>;
+</script>
+</head>
+
+<body>
+<input type="hidden" value="<?php echo $webroot.'/api/ng/baidu';?>" id="api-nav-hotwords">
+<input type="hidden" value="<?php echo date('Ymd');?>" id="nowtime">
+<section id="wrapper">
+	<?php if($_COOKIE['navTopAds'] != date('Ymd')){?>
+	<div id="J_nav_top_ads" class="gn-ad">
+		<a onclick="report2baidu(1,'导航Banner广告')" href="<?php echo Common::clickUrl($top_ad['id'], 'NAV', $top_ad['link'], $t_bi);?>"><img src="<?php echo $attachPath.$top_ad['img'];?>"></a>
+		<span class="close J_close"></span>
+	</div>
+	<?php }?>
+	<section class="module nav-search-wrap J_button_drapdown">
+		<form name="search-form" method="get" action="http://m.baidu.com/s?from=<?php echo $baidu_num;?>">
+			<input type="hidden" name="from" value="<?php echo $baidu_num;?>" />
+			<div class="nav-search border1px-sh">
+				<input type="text" name="word" class="form-input" autocomplete="off" placeholder="<?php echo "请输入搜索关键词"/*$keywords[1]*/;?>" />
+				<input type="submit" name="channel_11" class="form-button" value="" />
+			</div>
+		</form>
+		<div class="hot-words-box">
+			<div class="baidu-hot-words">
+				<?php foreach($baidu_hotword as $v){
+					if(empty($v['url'])){?>
+						<span><a onclick="report2baidu(2,'导航百度热词搜索')" href="http://m.baidu.com/s?from=<?php echo $baidu_num;?>&word=<?php echo $v['text'];?>"><?php echo $v['text'];?></a></span>
+				<?php }else{?>
+						<span><a onclick="report2baidu(2,'导航百度热词搜索')" href="<?php echo $v['url'];?>"><?php echo $v['text'];?></a></span>
+				<?php } }?>
+			</div>
+			<span onclick="report2baidu(3,'导航搜索-换一换')" id="J_convert" class="btn-convert">换一换</span>
+		</div>
+	</section>
+	<section class="module nav-recommend-wrap">
+		<div class="nav-recommend-box border1px-sh">
+			<ul class="nav-recommend">
+			<?php foreach($hot_nav as $key => $value){?>
+				<li class="border1px-rb">
+					<a class="aText" appId="<?php echo $value['id'];?>" onclick="report2baidu(4,'<?php echo $value["title"] . "-hot"; ?>')"
+				       src="<?php echo Common::clickUrl($value['id'], 'NAV', $value['link'], $t_bi); ?>" appTxt="<?php echo $value['title'] ?>">
+				       <i><img src="<?php echo $attachPath . $value['img']; ?>" /></i>
+				       <span><?php echo $value['title'] ?></span>
+				   </a>
+				</li>
+			<?php }?>
+			</ul>
+		</div>
+	</section>
+
+<section class="module nav-drapdown-wrap nav-world-cup">
+      <section class="nav-drapdown border1px-sh">
+         <div class="nav-drapdown-box">
+            <div class="nav-drapdown-title btn-touch" data-wrap="cinner100">
+               <div class="inner">
+                  <i class="icon-head"><img src="<?php echo $staticResPath;?>/nav/pic/96/icon-footbar.png" width="16" height="16" /></i>
+                  <h2>2014巴西世界杯</h2>
+               </div>
+            </div>
+            <div class="nav-drapdown-content">
+               <div id="cinner100" class="inner border1px-b">
+                    
+               </div>
+            </div>
+         </div>
+      </section>
+    </section>
+
+	<section class="module nav-drapdown-wrap">
+		<section class="nav-drapdown border1px-sh">
+			<?php  $i=1; foreach($types as $key => $value){?>
+			<div class="nav-drapdown-box">
+				<div class="nav-drapdown-title btn-touch"  data-wrap="cinner<?php echo $i; ?>">
+					<div class="inner border1px-b">
+						<i><img src="<?php echo $attachPath.$value['icon'];?>" width="16" height="16" /></i>
+						<h2 <?php if($value['color']) echo 'style="color:'.$value["color"].'"';?>><?php echo $value['name'];?></h2>
+						<span <?php if($value['desc_color']) echo 'style="color:'.$value["desc_color"].'"';?>><?php echo $value['description'];?></span>
+					</div>
+				</div>
+				<div class="nav-drapdown-content">
+					<div id="cinner<?php echo $i;?>" class="inner border1px-b">
+					
+					</div>
+				</div>
+			</div>
+			<?php $i++;}?>
+			<div id="index-hist" class="nav-drapdown-box none">
+				<div class="nav-drapdown-title btn-touch" data-wrap="cinner6">
+					<div class="inner">
+						<i class="icon-fav"><img src="<?php echo $staticResPath;?>/nav/pic/96/006.png" /></i>
+						<h2>最近访问</h2>
+						<span><!-- 音乐频道新上线 --></span>
+					</div>
+				</div>
+				<div class="nav-drapdown-content">
+					<div id="cinner60"  class="inner">
+						
+					</div>
+				</div>
+			</div>
+		</section>
+	</section>
+	<!-- bottom link ads START -->
+	<div id="J_nav_btm_link" class="gn-ad-link center"></div>
+	<!-- bottom link ads END -->
+</section>
+<footer id="footer">
+<div class="copyright">
+	<a href="<?php echo $ch ? $webroot.'/feedback?ch='.$ch :  $webroot.'/feedback';?>">提建议>></a><br/>
+	<span style="font-family:Arial;">Copyright © 2012 -
+<script>document.write(new Date().getFullYear());</script><a target="_blank" href="http://www.miitbeian.gov.cn/">粤ICP备05087105号</a></span>
+</div>
+</footer>
+<!-- load script start -->
+<script type="text/javascript" src="<?php echo $staticPath;?>??/sys/lib/zepto/zepto.js,/apps/3g/navi/assets/js/tempcore.js,/apps/3g/navi/assets/js/fastclick.js,/apps/3g/navi/assets/js/navi.js?v=<?php echo $version;?>"></script>
+<!-- load script done -->
+<script id="tmpl_img1" type="text/html">
+	<div class="drapdown-ads-img1">
+		<%for(var i = 0; i < list.length; i++) {%>
+			<%if(i == 0){%>
+				<a href="<%=list[i]['link']%><%=t_bi%>"  onclick="report2baidu('<%=stat['column']%>','<%=stat['column']%>_<%=list[i]['pos']%>')">
+               <img class="util-lazyload" src="<%=list[i]['img']%>" alt="">
+            </a>
+			<%}%>
+		<%}%>
+	</div>
+</script>
+<script id="tmpl_img2" type="text/html">
+	<div class="drapdown-ads-img2">
+		<%for(var i = 0; i < list.length; i++) {%>
+			<%if(i < 2){%>
+				<a href="<%=list[i]['link']%><%=t_bi%>" onclick="report2baidu('<%=stat['column']%>','<%=stat['column']%>_<%=list[i]['pos']%>')">
+            <img class="util-lazyload" src="<%=list[i]['img']%>" alt="">
+            </a>
+			<%}%>
+		<%}%>
+	</div>
+</script>
+<script id="tmpl_img3" type="text/html">
+	<ul class="hot-movie">
+		<%for(var i = 0; i < list.length; i++) {%>
+			<%if (i < 3){%>
+				<li>
+					<a href="<%=list[i]['link']%><%=t_bi%>" onclick="report2baidu('<%=stat['column']%>','<%=stat['column']%>_<%=list[i]['pos']%>')">
+						<img class="util-lazyload" src="<%=list[i]['img']%>" width="86" height="118" />
+						<p><%=list[i]['title']%></p>
+					</a>
+				</li>
+			<%}%>
+		<%}%>
+	</ul>
+</script>
+<script id="tmpl_words3" type="text/html">
+	<div class="movie-link">
+		<p>
+		<%for(var i = 1; i <= list.length; i++) {%>
+			<a class="aText" appId="<%=list[i-1]['id']%>" src="<%=list[i-1]['link']%><%=t_bi%>" onclick="report2baidu('<%=stat['column']%>','<%=stat['column']%>_<%=list[i-1]['pos']%>')"><%=list[i-1]['title']%></a>
+			<%if(i%3 == 0){%>
+				</p>
+				<%if( i != list.length){%><p><%}%>
+			<%}%>
+		<%}%>
+	</div>
+</script>
+<script id="tmpl_words5" type="text/html">
+	<div class="words5-link">
+		<p>
+		<%for(var i = 1; i <= list.length; i++) {%>
+			<a class="aText" appId="<%=list[i-1]['id']%>" src="<%=list[i-1]['link']%><%=t_bi%>" onclick="report2baidu('<%=stat['column']%>','<%=stat['column']%>_<%=list[i-1]['pos']%>')"><%=list[i-1]['title']%></a>
+			<%if(i%5 == 0){%>
+				</p>
+				<%if( i != list.length){%><p><%}%>
+			<%}%>
+		<%}%>
+	</div>
+</script>
+<script id="tmpl_news_list" type="text/html">
+   <div class="tabs">
+      <div class="tab-nav">
+         <nav>
+         <%for(var i = 1; i <= list.length; i++) {%>
+            <%if( i == 1){%>
+               <a class="active" onclick="report2baidu('今日头条Tab切换','今日头条Tab-<%=names[i-1]%>')"><%=names[i-1]%></a>
+            <%} else {%>
+               <a onclick="report2baidu('今日头条Tab切换','今日头条Tab-<%=names[i-1]%>')"><%=names[i-1]%></a>
+            <%}%>
+         <%}%>
+         </nav>
+      </div>
+      <%for(var i = 1; i <= list.length; i++) {%>
+         <%if( i == 1){%>
+         <div class="tab-con">
+         <%} else {%>
+         <div class="tab-con none">
+         <%}%>
+            <ul class="hot-news">
+                <%for(var j = 1, res = list[i-1]; j <= res.length; j++) {%>
+               <li><a onclick="report2baidu('今日头条-<%=names[i-1]%>','今日头条-<%=names[i-1]%>_<%=list[i-1][j-1]['pos']%>')"><i class="num"><%=j%></i><span class="aText txt" appId="<%=list[i-1][j-1]['id']%>" src="<%=list[i-1][j-1]['link']%><%=t_bi%>"><%=list[i-1][j-1]["title"]%><span></a></li>
+                <%}%>
+            </ul>
+            <div class="news_more"><a class="aText" src="<%=mores[i-1]%>" onclick="report2baidu('今日头条,'今日头条_新闻_More<%=i-1%>')">更多新闻...</a></div>
+         </div>
+      <%}%>
+   </div>
+</script>
+<script id="tmpl_like" type="text/html">
+    <div class="movie-link">
+        <p>
+            <%for(var i = 1; i <= list.length; i++) {%>
+                <a href="<%=list[i-1]['link']%><%=t_bi%>" onclick="report2baidu('<%=stat['column']%>','<%=stat['column']%>_<%=list[i-1]['pos']%>')" style="color:<%=list[i-1]['color']%>"><%=list[i-1]['title']%></a>
+            <%if(i%3 == 0){%>
+        </p>
+            <%if( i != list.length){%><p><%}%>
+            <%}%>
+        <%}%>
+    </div>
+</script>
+
+<script id="tmpl_bread" type="text/html">
+    <div class="drapdown-mod">
+        <div class="title"><h3><span><%=list[0]['title']%></span></h3></div>
+    </div>
+</script>
+
+<script id="tmpl_ads_link" type="text/html">
+    <div class="drapdown-ads-link">
+        <a class="aText" appId="<%=list[0]['id']%>" src="<%=list[0]['link']%>" appTxt="<%=list[0]['title']%>">
+            <i class="icon-hot">hot</i>
+            <%=list[0]['title']%>
+        </a>
+    </div>
+</script>
+
+<script id="tmpl_cup_notice" type="text/html">
+    <div class="block">
+        <div class="title">比赛预告 <a onclick="report2baidu('世界杯栏目','比赛预告_More')" href="<%=more['url']%><%=t_bi%>" class="fr"><span>更多赛程 <i>more</i></span></a></div>
+        <ul class="cup-notice">
+            <%for(var i = 1; i <= list.length; i++) {%>
+            <li><a onclick="report2baidu('世界杯栏目','比赛预告_直播')" href="<%=list[i-1]['url']%><%=t_bi%>" class="yel">直播</a><img src="<?php echo $attachPath;?>/<%=list[i-1]['img1']%>" alt=""> <%=list[i-1]['name'][0]%><span class="red">VS</span><img src="<?php echo $attachPath;?>/<%=list[i-1]['img2']%>" alt=""> <%=list[i-1]['name'][1]%><span class="yel time"><%=list[i-1]['boardcast']%></span></li>
+            <%}%>
+        </ul>
+    </div>
+</script>
+<script id="tmpl_cup_news" type="text/html">
+    <div class="block">
+        <div class="title">比赛要点 <a onclick="report2baidu('世界杯栏目','比赛要点_More')" href="<%=more['url']%><%=t_bi%>" class="fr"><span>更多要点 <i>more</i></span></a></div>
+        <ul class="cup-news">
+            <%for(var i = 1; i <= list.length; i++) {%>
+            <li><a onclick="report2baidu('世界杯栏目','比赛要点_新闻')" href="<%=list[i-1]['url']%><%=t_bi%>"><%=list[i-1]["title"]%></a></li>
+            <%}%>
+        </ul>
+    </div>
+</script>
+<script id="tmpl_cup_video" type="text/html">
+    <div class="block">
+        <div class="title">精彩瞬间 <a onclick="report2baidu('世界杯栏目','精彩瞬间_More')" href="<%=more['url']%><%=t_bi%>" class="fr"><span>更多瞬间 <i>more</i></span></a></div>
+        <ul class="cup-video">
+            <%for(var i = 1; i <= list.length; i++) {%>
+            <li><a onclick="report2baidu('世界杯栏目','精彩瞬间_视频')" href="<%=list[i-1]['url']%><%=t_bi%>">
+                <img src="<%=list[i-1]['img']%>" />
+                <span class="icon-play"></span>
+                <span class="txt"><%=list[i-1]["title"]%></span>
+            </a></li>
+            <%}%>
+        </ul>
+    </div>
+</script>
+<script id="tmpl_cup_links" type="text/html">
+    <div class="block">
+        <ul class="cup-links">
+            <%for(var i = 1; i <= list.length; i++) {%>
+            <li><a onclick="report2baidu('世界杯栏目','相关链接_<%=list[i-1]["name"]%>')" href="<%=list[i-1]['url']%><%=t_bi%>">
+                <%=list[i-1]["name"]%>
+            </a></li>
+            <%}%>
+        </ul>
+    </div>
+</script>
+
+<script type="text/javascript">
+   function report2baidu(id,label){
+      var _hmt = window._hmt || [], actions = ['','顶部Banner广告点击','导航搜索-百度热词','导航搜索-切换','热门推荐点击'];
+      var act = typeof id === Number ? actions[id] : id;
+
+      _hmt.push(['_trackEvent', 'GNnavi数据', act, label]);
+   }
+</script>
+<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

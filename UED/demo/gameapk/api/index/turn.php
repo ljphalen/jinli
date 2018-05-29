@@ -1,0 +1,1 @@
+{"success":true,"msg":"","data":[{"img":"http://game.3gtest.gionee.com/attachs/game/ad/201310/142646.jpg","data-infpage":"\u52a8\u4f5c\u5c04\u51fb,detail.php"}]}

@@ -1,0 +1,104 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $listUrl; ?>">会员列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl; ?>" method="post">
+	<input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">会员ID</th>
+				<td class="td"><input class="input " type="text" name="id" value="<?php echo $param['id']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">用户名</th>
+				<td class="td">
+					<input class="input " type="text" name="username" value="<?php echo $param['username']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">手机号</th>
+				<td class="td"><input class="input " type="text" name="mobile" value="<?php echo $param['mobile']; ?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">姓名</th>
+				<td class="td">
+					<input class="input " type="text" name="realname" value="<?php echo $param['realname']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">QQ</th>
+				<td class="td"><input class="input " type="text" name="qq" value="<?php echo $param['qq']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">注册时间</th>
+				<td class="td">
+					<input class="input" type="text" maxlength="30" id="register_date" name="register_date" value="<?php echo $param['register_date']; ?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td">
+					<select name="status">
+						<option value="">所有状态</option>
+						<?php foreach ($status as $key => $value) { ?>
+							<option <?php echo ($param['status'] == $key) ? 'selected="selected"' : ''; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">ID</td>
+			<td>用户名</td>
+			<td>手机号</td>
+			<td>姓名</td>
+			<td>QQ</td>
+			<td>注册时间</td>
+			<td>最近登录时间</td>
+			<td>机型</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+		<?php foreach ($users as $key => $value) { ?>
+			<tr class="ct">
+				<td><?php echo $value['id']; ?></td>
+				<td><?php echo $value['username']; ?></td>
+				<td><?php echo $value['mobile']; ?></td>
+				<td><?php echo $value['realname']; ?></td>
+				<td><?php echo $value['qq']; ?></td>
+				<td><?php echo date('Y-m-d H:i:s', $value['register_time']); ?></td>
+				<td><?php echo date('Y-m-d H:i:s', $value['last_login_time']); ?></td>
+				<td><?php echo $models[$value['model']]['name']; ?></td>
+				<td><?php echo $status[$value['status']]; ?></td>
+				<td>
+					<a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+				</td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+
+<div class="mb10 tac">
+	会员总数：<?php echo $userCount; ?> &nbsp;&nbsp;签到总数：<?php echo $signCount; ?> &nbsp;&nbsp;人均签到数：<?php echo $averageSign; ?>
+</div>
+<script src="<?php echo $staticPath; ?>/js/admin/highcharts.js"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#register_date").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,47 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $editUrl; ?>">添加日志记录</a></li>
+			<li class="current"><a href="<?php echo $listUrl; ?>">上线日志列表</a></li>
+		</ul>
+	</div>
+
+	<div class="table_list">
+		<form id="form1" name="form1" method="post" action="<?php echo $this->baseUrl; ?>">
+			<input type="hidden" name="token" value="<?php echo $token; ?>">
+			<table width="100%">
+				<tr class="hd">
+					<td>上线日期</td>
+					<td class="td">
+						<input type="text" id="online_date" name="online_date" style="width: 360px" value="<?php echo $info['online_date']; ?>"/>
+					</td>
+				</tr>
+
+				<tr class="hd">
+					<td>上线内容</td>
+					<td>
+						<input name="title" type="text" class="input" style="width: 360px" value="<?php echo $info['title']; ?>">
+					</td>
+				</tr>
+
+				<tr class="hd">
+					<td>详细说明</td>
+					<td>
+						<textarea name="content" style="width: 360px;height:200px"><?php echo $info['content']; ?></textarea>
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+			<input type="hidden" name="id" value="<?php echo $id; ?>">
+		</form>
+	</div>
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#online_date').datetimepicker();
+			ajaxForm('form1', function (ret) {
+				ajaxRedirect(ret, '<?php echo $listUrl;?>');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

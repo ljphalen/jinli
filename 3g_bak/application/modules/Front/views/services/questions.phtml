@@ -1,0 +1,41 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div id="page">
+		<header class="hd">
+			<h1>常见问题</h1>
+			<div class="back">
+				<a href="<?php echo $webroot?>/services/index"><span class="left-arrow"><i></i></span></a>
+			</div>
+		</header>
+		
+		<article class="ac qa">
+			<div class="item-list">
+				<ul class="J_itemWrap" data-ajaxUrl="<?php echo $webroot.$questions_moreUrl;?>">
+				<li id="curInfo" class="hidden" curpage="1" hasnext="<?php echo $hasnext;?>"></li>
+					<?php foreach ($questions as $key=>$value){?>
+					<li>
+						<a href="<?php echo $webroot,"/services/question_detail?t_bi=",$t_bi,"&qid=".$value['id'];?>" class="wrap">
+							<dl>
+								<dt>问题<?php echo $value['num'];?>：</dt>
+								<dd><?php echo html_entity_decode($value['question']);?></dd>
+							</dl>
+						</a>
+					</li>
+					<?php }?>
+				</ul>
+			</div>
+		</article>
+	</div>
+	<script id="J_itemView" type="template">
+		{each data.list}
+		<li>
+			<a href="<?php echo $webroot,"/services/question_detail?t_bi=",$t_bi;?>&qid={$value.id}" class="wrap">
+				<dl>
+					<dt>问题{$value.num}：</dt>
+					<dd>{$value.question}</dd>
+				</dl>
+			</a>
+		</li>
+		{/each}
+	</script>
+<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/footer.phtml");?>

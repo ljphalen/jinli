@@ -1,0 +1,28 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li ><a href="<?php echo $listUrl;?>">免流量游戏列表</a></li>
+		<li class="current"><a href="javascript:;">添加免流量游戏</a></li>
+	</ul>
+</div>
+<form action="<?php echo $addPostUrl;?>" method="post" id="addFrom">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">	
+		 <tr class="tr"> 
+		   <th class="th">游戏id</th>
+		   <td class="td"><input type="text" class="input" name="gid" value=""></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">添加</button></span></span></div>
+</form>
+<script type="text/javascript">
+//ajax数据提交
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Freedl_Cugd/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

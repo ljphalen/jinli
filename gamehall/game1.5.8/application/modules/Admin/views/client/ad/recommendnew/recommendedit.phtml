@@ -1,0 +1,50 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="javascript:;">编辑游戏推荐</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑游戏推荐</div>
+<form method="post" action="<?php echo $recommendEditPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="day_id" value="<?php echo $day_id;?>" type="hidden" />
+<input name="id" value="<?php echo $id;?>" type="hidden" />
+<div class="table_full">
+    <table width="100%">
+		<tr class="tr">
+			<th class="th">推荐方式(<span style="color: red">*</span>)</th>
+			<td class="td"><?php echo $rec_type[$info['rec_type']];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">标题(<span style="color: red">*</span>)</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">描述</th>
+			<td class="td"><textarea rows="3" cols="30" class="input" name="content"><?php echo $info['content'];?></textarea></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">机组(<span style="color: red">*</span>)</th>
+			<td class="td">
+			 <select name="pgroup" class="input">
+					<?php foreach($groups as $key=>$value) {?>
+    			    <option <?php if($info['pgroup'] == $value['id']) echo 'selected';?> value="<?php echo $value['id'];?>"><?php echo $value['title'];?></option>
+    			    <?php }?>
+			  </select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac">
+    <span class="btn"><span><a href="<?php echo $listEditUrl.'?dayId='.$day_id;?>"><button type="button">返回</button></a></span></span>
+    <span class="btn"><span><button onfocus="blur();" type="submit">下一步</button></span></span>
+</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $recommendGamesUrl . "?day_id=".$day_id."&id=".$id;?>');
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

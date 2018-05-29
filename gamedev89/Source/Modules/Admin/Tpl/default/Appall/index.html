@@ -1,0 +1,157 @@
+<form id="pagerForm" action="__ACTION__" method="post">
+	<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+	<input type="hidden" name="numPerPage" value="{$_REQUEST.numPerPage}" />
+	<input type="hidden" name="orderField" value="{$_REQUEST.orderField}" />
+	<input type="hidden" name="orderDirection" value="{$_REQUEST.orderDirection}" />
+	<volist name="_REQUEST._search" key="name" id="field">
+		<input type="hidden" name="_search[{$key}]" value="{$field|safe}"/>
+	</volist>
+</form>
+
+<div class="page">
+
+	<!--查询开始-->
+	<div class="pageHeader">
+		<form onsubmit="return navTabSearch(this);" action="__URL__" method="post" name="myform" id='all_myform'>
+		<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+        <input type="hidden" name="type" value="{$_REQUEST.type}"/>
+		<div class="searchBar">
+			<ul class="searchContent" style=" overflow:inherit;">
+				<li>
+					<label>应用状态：</label>
+					<select class="combox" id="appall_status" name="_search[status]">
+					<option value="all">全部</option>
+					<option value="passed">审核通过</option>
+					<option value="online">已上线</option>
+					<option value="offline">已下线</option>
+					</select>
+					<script>$("#appall_status").val('{$_search[status]}')</script>
+				</li>
+				<li>
+					<label>开发者：</label>
+					<input type="text" name="_search[author]" value="{$_REQUEST._search.author}"/>
+				</li>
+				<li>
+					<label>应用名称：</label>
+					<input type="text" name="_search[app_name]" value="{$_REQUEST._search.app_name}"/>
+				</li>
+				<li>
+					<label>应用包名：</label>
+					<input type="text" name="_search[package]" value="{$_REQUEST._search.package}"/>
+				</li>
+				<li>
+					<label>审核人：</label>
+					<input type="text" name="_search[account]" value="{$_REQUEST._search.account}"/>
+				</li>
+                <li>
+					<label>测试日期：</label>
+					<input type="text" name="_search[timeStart]" value="{$_REQUEST._search.timeStart}" class="date" yearstart="-10" yearend="0" pattern="yyyy-MM-dd" readonly/>
+					到<input type="text" name="_search[timeEnd]" value="{$_REQUEST._search.timeEnd}" class="date" yearstart="-10" yearend="0" pattern="yyyy-MM-dd" readonly/>
+				</li>
+                
+                <div class="buttonActive"><div class="buttonContent"><button type="button" id="all_sub" >查询</button></div></div>
+                <div class="buttonActive"><div class="buttonContent"><button type="button" id="all_export" >导出</button></div></div>
+ <script type="text/javascript">
+$("#all_export").click(function(){
+	$("#all_myform").attr('action',"{:U('Appall/export')}");
+	$("#all_myform").attr('onsubmit','');
+	$("#all_myform").submit();
+	
+})
+
+$("#all_sub").click(function(){
+	$("#all_myform").attr('action',"");
+	$("#all_myform").attr('onsubmit','return navTabSearch(this);');
+	$("#all_myform").submit();
+})
+</script>
+			</ul>
+
+		</div>
+		</form>
+	</div>
+	<!--查询结束-->
+	
+	
+	<div class="pageContent">
+	
+		<!-- 列表开始 -->
+		<table class="list" width="100%" layoutH="138">
+			<thead>
+			<tr>
+				<th orderField="id" class="{:orderField('id','desc')}">ApkID</th>
+				<th orderField="app_id" class="{:orderField('app_id','desc')}">AppID</th>
+				<th>提交日期</th>
+				<th>测试日期</th>
+				<th>上线日期</th>
+				<th>开发者帐号</th>
+				<th>应用名称</th>
+				<th>包名</th>
+				<th>版本名称</th>
+				<th>应用状态</th>
+				<th>测试人员</th>
+				<th>测试记录</th>
+				<th>历史记录</th>
+				<th>上线人员</th>
+			</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="list">
+				<php>
+					$con['package'] = $vo['package'];
+					$con['version_code'] = $vo['version_code'];
+					$testlog_info = D("Testlog")->where($con)->order('created_at desc')->find();
+					$test_admin = D("Admin")->find($testlog_info['admin_id']);
+					$admin_info = D("Admin")->find($vo['admin_id']);
+				</php>
+			
+				<tr target="sid_user" rel="{$vo['id']}">
+					<td>{$vo['id']}</td>
+					<td>{$vo['app_id']}</td>
+					<td>{$vo['created_at']|date="Y-m-d H:i:s",###}</td>
+					<td>{$vo['checked_at']|date="Y-m-d H:i:s",###}</td>
+					<td>{:empty($vo['onlined_at']) ? "" : date("Y-m-d H:i:s",$vo['onlined_at'])}</td>
+					<td>{:AccountsModel::listTxt($vo['author_id'])}</td>
+					<td>{$vo['app_name']}</td>
+					<td>{$vo['package']}</td>
+					<td>{$vo['version_name']}</td>
+					<td>
+					 <php>
+					 echo $apkStatus[$vo['status']];
+				      </php>
+					</td>
+					<td>{$test_admin.account}</td>
+					<td>
+					<a href="{:U("@admin")}testlog/index/apk_id/{$vo['id']}" target="navTab" mask="true">测试记录</a>
+					</td>
+					<td>
+					<a href="{:U("@admin")}optlog/index/apk_id/{$vo['id']}" target="navTab" mask="true">历史记录</a>
+					</td>
+					<td>{$test_admin.account}</td>
+				</tr>
+				
+			</volist>
+			</tbody>
+		</table>
+		<!-- 列表结束 -->
+		
+		<!-- 分页开始 -->
+		<div class="panelBar">
+			<div class="pages">
+				<span>显示</span>
+				<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+					<option value="10" <eq name="numPerPage" value="10">selected</eq>>10</option>
+					<option value="20" <eq name="numPerPage" value="20">selected</eq>>20</option>
+					<option value="50" <eq name="numPerPage" value="50">selected</eq>>50</option>
+					<option value="100" <eq name="numPerPage" value="100">selected</eq>>100</option>
+					<option value="200" <eq name="numPerPage" value="200">selected</eq>>200</option>
+				</select>
+				<span>共{$totalCount}条</span>
+			</div>
+			<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="10" currentPage="{$currentPage}"></div>
+		</div>
+		<!-- 分页结束 -->
+		
+	</div>
+	
+</div>

@@ -1,0 +1,388 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title>大声说出你的爱，你表白我买单</title>
+<style type="text/css">
+	*{
+		margin:0;
+		padding: 0;
+	}
+	ul,li{
+		list-style: none;
+	}
+
+	body {
+	  	font: 14px/1.5 \5FAE\8F6F\96C5\9ED1,Helvetica;
+	  	font-family: "Helvetica Neue", Helvetica, STHeiTi, sans-serif;
+		background: #f8c901;
+		color: #4d2c01;
+	  	-webkit-user-select: none;
+	}
+	.banner{
+		min-height: 200px;
+		margin-bottom: 10px;
+	}
+	.banner img{
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	.mainWrap{
+		width: 320px;
+		margin:0 auto;
+	}
+
+	.mainWrap .block{
+		background: #fdd74a;
+		margin:0 6px 10px;
+		border-radius: 4px;
+		border: 1px solid #f2c400;
+	}
+
+	.mainWrap .block-box1 .pic{
+		position: relative;
+		height: 200px;
+		padding: 6px;
+		border-bottom: 1px solid #f3c504;
+		overflow: hidden;
+		line-height: 0;
+	}
+
+	.mainWrap .block-box1{
+		position: relative;
+	}
+
+	.mainWrap .block-box1 .txt{
+		position: absolute;
+		left: 6px; right: 6px;
+		bottom: 50px;
+		z-index: 100;
+		padding: 10px 0 10px 10px;
+		color:#fffeff;
+		font-size: 13px;
+		text-shadow:1px 1px rgba(0,0,0,.2);
+	}
+
+
+	.mainWrap #marq1{
+		height: 150px;
+		overflow: hidden;
+	}
+
+	.mainWrap .block-box1 .button{
+		padding: 10px 0;
+	}
+
+	.mainWrap .block-box1 .audio-start,
+	.mainWrap .block-box1 .audio-end{
+		position: absolute;
+		bottom: 27px;
+		font-size: 12px;
+		color:#4d2c01;
+	}
+	.mainWrap .block-box1 .audio-start{
+		left: 7px;
+	}
+	.mainWrap .block-box1 .audio-end{
+		right: 7px;
+	}
+
+	.mainWrap .block-box2{
+		height: 206px;
+	}
+
+	.mainWrap .block-box2 .pic{
+		padding: 25px 0 20px;
+		text-align: center;
+	}
+
+	.mainWrap .tabs img{
+		display: block;
+	}
+
+	.mainWrap .button{
+		text-align: center;
+	}
+
+	.mainWrap .btn{
+		display: block;
+		width: 248px;
+		height: 48px;
+		line-height: 48px;
+		background: #4d2c01;
+		border-radius: 2px;
+		font-size: 16px;
+		color:#fff;
+		text-align: center;
+		text-decoration: none;
+		margin: 0 auto;
+	}
+
+	.mainWrap .btn:active{
+		background: #623800;
+	}
+
+	.mainWrap .tabs{
+		padding: 16px;
+	}
+
+	.mainWrap .tabs-nav span{
+		width: 50%;
+		float: left;
+		display: block;
+		text-align: center;
+		border-bottom: 1px solid #eec001;
+		font-size: 16px;
+	}
+
+	.mainWrap .tabs-nav span.active{
+		border-bottom: 1px solid #4d2c01;
+	}
+
+	.mainWrap .tabs-con{
+		clear:both;
+		padding-top: 16px;
+	}
+
+	.mainWrap .copyright{
+		text-align: center;
+		padding: 10px 0 20px;
+		color: #9f5b02;
+	}
+
+	.mainWrap .button .btn-play,
+	.mainWrap .button .btn-pause{
+		width: 28px;
+		height: 28px;
+		text-indent: -999px;
+		overflow: hidden;
+		border: 0; outline: 0;
+		border-radius: 14px;
+		background: #4d2c01 url('<?php echo $staticResPath;?>/act/youxin/img/audio-play.png') no-repeat center;
+		background-size: 28px auto;
+	}
+
+	.mainWrap .button .btn-pause{
+		background: #4d2c01 url('<?php echo $staticResPath;?>/act/youxin/img/audio-pause.png') no-repeat center;
+		background-size: 28px auto;
+	}
+
+	.none{
+		display: none;
+	}
+
+	.processBar{
+		position: absolute;
+		height: 1px;
+		bottom: 48px;
+		background: #4d2c01;
+	}
+
+	.processBar:after{
+		content: "";
+		position: absolute;
+		width: 1px;
+		height: 5px;
+		right: 0;
+		top:-2px;
+		background: #4d2c01;
+	}
+</style>
+</head>
+
+<body>
+<div id="wrapper">
+	<div class="banner">
+		<img src="<?php echo $staticResPath;?>/act/youxin/pic/banner.jpg" />
+	</div>
+	<div class="mainWrap">
+		<div class="block block-box1">
+			<div class="pic">
+				<img src="<?php echo $staticResPath;?>/act/youxin/pic/audio-bg.jpg" width="294" height="200" />
+			</div>
+			<div class="txt">
+				<div id="marq1">
+					<div id="marq2" class="" style="height:150px;"></div>
+					<div id="marq3">
+						从记忆开始的时候，<br>
+						你们就一直在我的身后，<br>
+						守候着我成长，不离不弃。<br>
+						亲情的距离那么近，<br>
+						近到一转身就能得到你们的拥抱，<br>
+						又那么远，我只能在远方勾勒你们的微笑。<br>
+						夜很凉，很长。又是一个中秋，一个电话，<br>
+						一声问候，亲爱的爸爸妈妈，愿你们一切安好。
+					</div>
+				</div>
+			</div>
+			<div id="process" class="processBar" style="height:1px;"></div>
+			<div class="button">
+				<span id="startTime" class="audio-start">00:00</span>
+				<span id="totalTime" class="audio-end">00:43</span>
+				<audio id="media" src="<?php echo $staticResPath;?>/act/youxin/res/815.mp3" preload="auto"></audio>
+				<button id="med_start" class="btn-play">播放</button>
+			</div>
+		</div>
+
+		<div class="block block-box2">
+			<div class="pic">
+				<img src="<?php echo $staticResPath;?>/act/youxin/pic/0001.png" width="276" height="84" />
+			</div>
+			<div class="button">
+				<a href="<?php echo $webroot;?>/Front/Activity/cindex" class="btn">开始拨打</a>
+			</div>
+		</div>
+
+		<div class="block tabs">
+			<div class="tabs-nav">
+				<span id="tabs-nav1" class="active">规则</span>
+				<span id="tabs-nav2">教程</span>
+			</div>
+			<div class="tabs-con">
+				<div id="tabs-con1">
+					<ul>
+						<li>活动时间：9月4日-8日</li>
+						<li>活动规则：</li>
+						<li>1、注册账号并成功激活畅聊后，即可拨打免费电话；</li>
+						<li>2、活动期间，不限次数，不限时长，国内电话任意拨打。</li>
+					</ul>
+				</div>
+
+				<div id="tabs-con2" class="none">
+					<p>畅聊使用指南</p>
+					<p>
+						<img src="<?php echo $staticResPath;?>/act/youxin/pic/teach_01.jpg" />
+						<img src="<?php echo $staticResPath;?>/act/youxin/pic/teach_02.jpg" />
+						<img src="<?php echo $staticResPath;?>/act/youxin/pic/teach_03.jpg" />
+					</p>
+					<ul>
+						<li>小伙伴们，注意啦！</li>
+						<li>1、拨出号码后要先接听来自畅聊的电话，接通后才表示拨通对方的号码哦！至于为什么号码这么奇怪，咳咳，请不要在意这些细节。</li>
+						<li>2、畅聊默认接通，拨号后请务必选择接听。</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="copyright">活动最终解释权归<?=Lang::_('PRODUCT_TEAM_NAME')?>所有</div>
+	</div>
+</div>
+<script type="text/javascript">
+	function $(id){
+		return document.getElementById(id);
+	}
+
+	var marquee1 = $('marq1'),
+		marquee2 = $('marq2'),
+		marquee3 = $('marq3');
+	var marquee_tid, speed = 200;
+
+	function marquee(){
+		//marquee3.innerHTML = marq2.innerHTML;
+
+		marquee_tid=setInterval(marqsc,speed);
+
+		// marquee1.onmouseover=function() {
+		// 	clearInterval(marquee_tid);
+		// };
+
+		// marquee1.onmouseout=function() {
+		// 	marquee_tid=setInterval(marqsc,speed);
+		// };
+	}
+
+	function marqsc(){
+		if(marquee3.offsetTop-marquee1.scrollTop<=0){
+		   marquee1.scrollTop-=marquee1.offsetHeight;
+		}
+		else{
+		   marquee1.scrollTop++;
+		}
+	}
+
+
+
+
+	var media = $('media');
+	// 播放操作、暂停操作
+	$('med_start').onclick = function(){
+		if(this.className == 'btn-play'){
+			media.play();
+			TimeSpan();
+			this.className = 'btn-pause';
+			marquee();
+		} else {
+			media.pause();
+			clearInterval(marquee_tid);
+			this.className = 'btn-play';
+		}
+	}
+	// 播放结束状态改变
+	media.addEventListener('ended',function(){
+		$('med_start').className = 'btn-play';
+		clearInterval(marquee_tid);
+		marq1.scrollTop = 0;
+	},false);
+
+	//播放进度条的转变事件
+	function DurationProcessRange(rangeVal) {
+	    media.currentTime = rangeVal * audio.duration;
+	    $('totalTime').innerHTML = media.currentTime;
+	    audio.play();
+	}
+
+	//时间进度处理程序
+	function TimeSpan() {
+	    var ProcessYet = 0;
+	    var tid = setInterval(function () {
+	        var ProcessYet = (media.currentTime / media.duration) * 500;
+	        var currentTime = timeDispose(media.currentTime);
+	        var timeAll = timeDispose(TimeAll());
+	        if(currentTime == timeAll){
+	        	clearInterval(tid);
+	        }
+	        $("process").style.width = ProcessYet/5+'%';
+	        $("startTime").innerHTML = currentTime;
+	    }, 1000);
+	}
+
+
+	//时间处理，因为时间是以为单位算的，所以这边执行格式处理一下
+	function timeDispose(number) {
+	    var minute = parseInt(number / 60);
+	    var second = parseInt(number % 60);
+
+	    minute = minute >= 10 ? minute : "0" + minute;
+	    second = second >= 10 ? second : "0" + second;
+
+	    return minute + ":" + second;
+	}
+
+	//当前歌曲的总时间
+	function TimeAll() {
+	    return media.duration;
+	}
+
+	//Tab状态切换
+	$('tabs-nav1').onclick = function(){
+		this.className = 'active';
+		$('tabs-nav2').className = 'none';
+		$('tabs-con2').className = 'none';
+		$('tabs-con1').className = '';
+	}
+
+	$('tabs-nav2').onclick = function(){
+		this.className = 'active';
+		$('tabs-nav1').className = 'none';
+		$('tabs-con1').className = 'none';
+		$('tabs-con2').className = '';
+	}
+</script>
+</body>
+</html>

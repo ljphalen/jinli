@@ -1,0 +1,76 @@
+<div class="colMain">
+    <div class="title">
+        <p class="fl">{{title}}-开发者信息</p>
+    <!-- if {{result.dev_id}} -->
+        <a class="del" href="/developer/delete?dev_id={{result.dev_id}}">删除</a>
+    <!-- endif -->
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="toolbar tabs">
+                <ul class="fl">
+                    <li class="cur"><a href="../developer/edit?dev_id={{result.dev_id}}">基本信息</a></li>
+                    <li><a href="../financials/edit?dev_id={{result.dev_id}}">财务信息</a></li>
+                    <li><a href="../developer/dev_app?dev_id={{result.dev_id}}">应用信息</a></li>
+                </ul>
+            </div>
+            <div class="devInfo">
+            <form action="../developer/save" method="POST">
+                <input type="hidden" value="{{result.dev_id}}" name="dev_id" />
+                <ul class="form">
+                    <li>
+                        <span class="label">注册邮箱：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" required <!-- if {{result.dev_id}} --> readonly<!-- endif --> value="{{result.email}}" name="email"  style="width:220px;"  />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">密码：</span>
+                        <div class="fc">
+                            <input type="password" class="iText <!-- if !{{result.dev_id}} -->required<!-- endif -->" <!-- if !{{result.dev_id}} -->required<!-- endif --> name="" style="width:220px;" />
+                            <!-- if {{result.dev_id}} --><span class="sign">不填则表示不修改密码</span><!-- else --><span class="red">*</span><span class="sign">长度不能少于6位</span><!-- endif -->
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">用户名：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" value="{{result.user_name}}" name="user_name" style="width:220px;" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">手机：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" value="{{result.mobile}}" name="mobile" style="width:220px;" />
+                            <span class="red">*</span>
+                            <span class="sign">请输入11位手机号</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">QQ：</span>
+                        <div class="fc">
+                            <input type="text" class="iText required" required value="{{result.qq}}" name="qq" style="width:220px;" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li class="line"></li>
+                    <li>
+                        <div class="fc">
+                            <input type="submit" value="保存" class="submit" />
+                            <input type="button" value="取消" class="cancel" onclick="window.location.href='/developer/index'" />
+                        </div>
+                    </li>
+                </ul>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function(){
+        $("input[type=password]").focus(function(){
+            $(this).attr("name", "password");
+        });
+    });
+</script>

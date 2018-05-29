@@ -1,0 +1,34 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl . '?show_type=' . $show_type;?>">供应商列表</a></li>
+    <li class="current"><a href="javascript:;">添加供应商</a></li>
+	</ul>
+</div>
+<div class="h_a">添加分类</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="show_type" value="<?php echo $show_type;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="0"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">供应商名称</th>
+			<td class="td"><input type="text" class="input wc" name="name" value=""></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Supplier/index?show_type=<?php echo $show_type;?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

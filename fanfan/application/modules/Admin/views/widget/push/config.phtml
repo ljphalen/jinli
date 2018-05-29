@@ -1,0 +1,28 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<form method="post" action="<?php echo $baseUrl; ?>" id="editForm">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">PUSH帐号</th>
+					<td class="td">
+						帐号:<input name="push_appid" type="text" class="input wc" value="<?php echo $configs['push_appid']; ?>">
+						<br>
+						密码:<input name="push_appwd" type="text" class="input wc" value="<?php echo $configs['push_appwd']; ?>">
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac">
+			<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			ajaxForm('editForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Widget/Push/config');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

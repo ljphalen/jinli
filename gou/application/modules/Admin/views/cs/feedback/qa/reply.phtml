@@ -1,0 +1,311 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li><a href="<?php echo $indexUrl;?>">反馈用户列表</a></li>
+        <li class="current"><a href="javascript:;">添加回复</a></li>
+    </ul>
+</div>
+<div class="h_a">添加回复</div>
+<form method="post" action="<?php echo $replyPostUrl;?>" id="addForm">
+    <input name="token" value="<?php echo $token;?>" type="hidden" />
+    <input name="uid" value="<?php echo $uid;?>" type="hidden" />
+    <div>UID:<?php echo $uid; ?></div>
+    <div class="table_list">
+        <table width="100%">
+            <tr class="hd">
+                <td width="150">反馈时间</td>
+                <td width="32">类型</td>
+                <td width="120">归类/客服</td>
+                <td width="200">机型/版本</td>
+                <td>内容</td>
+            </tr>
+            <?php foreach($data as $key => $value) {?>
+                <?php if($value['type']==0): ?>
+                    <tr class="ct">
+                        <td><?php echo date('Y-m-d H:i:s',$value['create_time'])?></td>
+                        <td>反馈</td>
+                        <td><?php echo $cates[$value['cat_id']]['name']; ?> </td>
+                        <td><?php echo $value['model'].'/'.$value['version'];?></td>
+                        <td><?php echo $value['content'];?></td>
+                    </tr>
+                <?php else: ?>
+                    <tr class="ct">
+                        <td><?php echo date('Y-m-d H:i:s',$value['create_time'])?></td>
+                        <td><font color="red">回复</font></td>
+                        <td>
+                            <img src="<?php echo $value['kf']['avatar']; ?>" alt="" width="15"/><?php echo $value['kf']['nickname']; ?>
+                        </td>
+                        <td>系统</td>
+                        <td><?php echo $value['content'];?></td>
+                    </tr>
+                <?php endif; ?>
+            <?php } ?>
+        </table>
+    </div>
+    <div class="table_list">
+        <table width="100%">
+            <tr class="hd">
+                <td width="120">反馈时间</td>
+                <td width="180">机型/版本</td>
+                <td>回复内容</td>
+                <td width="120">一级归类</td>
+                <td width="120">二级归类</td>
+            </tr>
+            <?php foreach($rows as $key => $value) {?>
+                <tr class="ct">
+                    <td><?php echo date('Y-m-d H:i:s',$value['create_time'])?></td>
+                    <td><?php echo $value['model'].'/'.$value['version'];?></td>
+                    <td><?php echo $value['content'];?></td>
+                    <td class="td">
+                        <select name="items[<?php echo $value['id']; ?>][parent_id]" data-pid="<?php echo $value['id']; ?>" class="parent_id">
+                            <?php foreach($parent as $p): ?>
+                            <option value="<?php echo $p['id']; ?>"><?php echo $p['name']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="items[<?php echo $value['id']; ?>][cat_id]"  class="cat_id" id="<?php echo 'cat_id_'.$value['id']; ?>">
+                            <option value="0">请选择</option>
+                            <?php foreach($child as $cat): ?>
+                                <option value="<?php echo $cat['id']; ?>"><?php echo $cat['name']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                </tr>
+            <?php } ?>
+        </table>
+    </div>
+    <div class="table_full">
+
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">选择客服</th>
+                <td class="td">
+                    <select  name="kf_id" id="user_combo">
+                        <?php foreach($user as $u): ?>
+                        <option value="<?php echo $u['id']; ?>"><?php echo $u['nickname']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">快速回复</th>
+                <td class="td">
+                    <select  id="quick_combo">
+                        <option value=" ">请选择</option>
+                        <?php foreach($quick as $q): ?>
+                        <option value="<?php echo $q['answer']; ?>"><?php echo $q['name']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">回复内容</th>
+                <td class="td">
+                    <textarea name="content" id="content" cols="120" rows="10"></textarea>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">跳转链接</th>
+                <td class="td">
+                    <select id="link_combo" name="link_id">
+                        <option value="0">请选择</option>
+                        <?php foreach($link as $l): ?>
+                            <option value="<?php echo $l['id']; ?>" data-url="<?php echo $l['url']; ?>" data-name="<?php echo $l['name']; ?>"><?php echo $l['name']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<style>div#edui1 {z-index: 0 !important;}</style>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        ajaxForm('addForm',function(ret){
+            ajaxRedirect(ret, '<?php echo Util_Http::getServer("HTTP_REFERER"); ?>');
+        });
+    });
+
+    $(function(){
+        $('select#quick_combo').change(function () {
+            $("#content").val($(this).find('option:selected').val());
+        });
+//        var editor = UE.getEditor('editor', {'textarea': 'content'});
+//        $('select#quick_combo').change(function(){
+//            editor.setContent($(this).val());
+//            editor.focus(true)
+//        });
+//        $('select#link_combo').change(function(){
+//            var opt = $(this).find('option:selected');
+//            var a ='<a href="javascript;" data-url="'+opt.data('url')+'" >'+opt.data('name')+'</a>';
+//            editor.execCommand('insertHtml', a);
+//        });
+
+//        var links = [];
+//        $("#add_link_btn").click(function(){
+//            var opt = $('select#link_combo').find('option:selected');
+//            if(opt.data('name')==undefined){
+//                alert("请先选择链接");
+//                return false;
+//            }
+//            if (links.indexOf(opt.val())!=-1) {
+//                alert("请勿重复添加");
+//                return false;
+//            }
+//            links[links.length] = opt.val();
+//            html = '<input type="checkbox" value="' + opt.val() + '" name="link_id[]" checked=checked />' + opt.data('name');
+//            $("#link_con").append(html);
+//        });
+
+        $('select.parent_id').change(function(){
+                var cat_id = $(this).val();
+                var cur_id = $(this).data('pid');
+                var id = "cat_id_"+cur_id;
+                $.ajax({
+                    url:'<?php echo $catUrl; ?>',
+                    type:'get',
+                    dataType:'json',
+                    data:{cat_id:cat_id},
+                    success:function(ret){
+                        var data = ret.data;
+                        var opt = '<option value="0">请选择</option>';
+                        $.each(ret.data, function (k,v) {
+                            opt +='<option value="'+ v.id+'">'+ v.name+'</option>';
+                        });
+                        $("select#"+id).html(opt);
+                    }
+                });
+            }
+        );
+    });
+</script>
+<style>
+    .ui-button { margin-left: -1px; }
+    .ui-button { top :1.2px; }
+    .ui-button-icon-only .ui-button-text { padding: 0.36em; }
+    .ui-autocomplete-input { margin: 0; padding: 0.48em 0 0.47em 0.45em;width:275px; left:0px }
+</style>
+<script>
+    (function( $ ) {
+        $.widget( "ui.combobox", {
+            _create: function() {
+                var self = this,
+                    select = this.element.hide(),
+                    selected = select.children( ":selected" ),
+                    value = selected.val() ? selected.text() : "";
+                var input = this.input = $( "<input>" )
+                    .insertAfter( select )
+                    .val( value )
+                    .autocomplete({
+                        delay: 0,
+                        minLength: 0,
+                        source: function( request, response ) {
+                            var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+                            response( select.children( "option" ).map(function() {
+                                var text = $( this ).text();
+                                if ( this.value && ( !request.term || matcher.test(text) ) )
+                                    return {
+                                        label: text.replace(
+                                            new RegExp(
+                                                "(?![^&;]+;)(?!<[^<>]*)(" +
+                                                $.ui.autocomplete.escapeRegex(request.term) +
+                                                ")(?![^<>]*>)(?![^&;]+;)", "gi"
+                                            ), "<strong>$1</strong>" ),
+                                        value: text,
+                                        option: this
+                                    };
+                            }) );
+                        },
+//                        select: function( event, ui ) {
+//                            ui.item.option.selected = true;
+//                            self._trigger( "selected", event, {
+//                                item: ui.item.option
+//                            });
+//                        },
+                        //change event
+                        select: function( event, ui ) {
+                            ui.item.option.selected = true;
+                            self._trigger( "selected", event, {
+                                item: ui.item.option
+                            });
+                            select.trigger("change");
+                        },
+                        //change event
+                        change: function( event, ui ) {
+                            if ( !ui.item ) {
+                                var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( $(this).val() ) + "$", "i" ),
+                                    valid = false;
+                                select.children( "option" ).each(function() {
+                                    if ( $( this ).text().match( matcher ) ) {
+                                        this.selected = valid = true;
+                                        return false;
+                                    }
+                                });
+                                if ( !valid ) {
+                                    // remove invalid value, as it didn't match anything
+                                    $( this ).val( "" );
+                                    select.val( "" );
+                                    input.data( "autocomplete" ).term = "";
+                                    return false;
+                                }
+                            }
+                        }
+                    })
+                    .addClass( "ui-widget ui-widget-content ui-corner-left" );
+
+                input.data( "autocomplete" )._renderItem = function( ul, item ) {
+                    return $( "<li></li>" )
+                        .data( "item.autocomplete", item )
+                        .append( "<a>" + item.label + "</a>" )
+                        .appendTo( ul );
+                };
+
+                this.button = $( "<button type='button'>&nbsp;</button>" )
+                    .attr( "tabIndex", -1 )
+                    .attr( "title", "Show All Items" )
+                    .insertAfter( input )
+                    .button({
+                        icons: {
+                            primary: "ui-icon-triangle-1-s"
+                        },
+                        text: false
+                    })
+                    .removeClass( "ui-corner-all" )
+                    .addClass( "ui-corner-right ui-button-icon" )
+                    .click(function() {
+                        // close if already visible
+                        if ( input.autocomplete( "widget" ).is( ":visible" ) ) {
+                            input.autocomplete( "close" );
+                            return;
+                        }
+
+                        // work around a bug (likely same cause as #5265)
+                        $( this ).blur();
+
+                        // pass empty string as value to search for, displaying all results
+                        input.autocomplete( "search", "" );
+                        input.focus();
+                    });
+            },
+            destroy: function() {
+                this.input.remove();
+                this.button.remove();
+                this.element.show();
+                $.Widget.prototype.destroy.call( this );
+            }
+        });
+    })( jQuery );
+</script>
+<script>
+    //auto complete
+    $('#quick_combo').combobox();
+    $('#user_combo').combobox();
+    $('#link_combo').combobox();
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,292 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+      <li class="current"><a href="javascript:;">添加游戏</a></li>
+	</ul>
+</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<td class="td">
+			<input type="text" class="input wc" id="title" name="title" value="">&nbsp;<button id="searchBtn" onfocus="blur();" type="button">搜索</button>
+            <input id="curPage" name="curPage" value="1" type="hidden" />
+			<span style="color:red;">不支持特殊符号的搜索</span>
+			</td>
+		</tr>
+	</table>
+</div>
+<form method="post" id="addForm" >
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="addGameId" value="<?php echo $addGameId;?>" type="hidden" />
+<div class="table_list">
+	<table id="table" width="100%">
+        <tr class="tr">
+			<td width="45%"  valign="top">
+                <div class="h_a">游戏列表(<span id="querySize" style="color: red">0</span>条记录)</div>
+				<div style="width:100%; height: 350px; border:1px solid #ccc; overflow :auto;">
+					<table id="from" width="100%"  border="1" cellpadding="0" cellspacing="0" bordercolor="#ccc" style="border-collapse: collapse">
+    					<thead>
+    					   <tr class="hd">
+        						<td><input id="all_move" type="checkbox"></td>
+        						<td>ID</td>
+        						<td>图标</td>
+        						<td>标题</td>
+        						<td>分类</td>
+        						<td>大小</td>
+    						</tr>
+    					</thead>
+    					<tbody>
+    					</tbody>
+    				</table>
+				</div>
+				<div id="pages" class="pages"></div>
+			</td>
+			<td width="10%" style="text-align: center;">
+                <div class="mb10 tac"><span><button id="move" onfocus="blur();" type="button"> &nbsp;>&nbsp;>&nbsp; </button></span></div>
+                <div class="mb10 tac"><span><button id="delete" onfocus="blur();" type="button"> &nbsp;<&nbsp;<&nbsp; </button></span></div>
+			</td>
+			<td width="45%"  valign="top">
+                <div class="h_a">已选择(<span id="selectSize" style="color: red"><?php echo count($games);?></span>条记录)</div>
+				<div style="width:100%; height: 350px; border:1px solid #ccc; overflow :auto;">
+					<table id="to" width="100%"  border="1" cellpadding="0" cellspacing="0" bordercolor="#ccc" style="border-collapse: collapse">
+    					<thead>
+    					   <tr class="hd">
+        						<td ><input id="all_delete" type="checkbox"></td>
+        						<td>ID</td>
+        						<td>图标</td>
+        						<td>标题</td>
+        						<td>分类</td>
+        						<td>大小</td>
+    						</tr>
+    					</thead>
+    					<tbody>
+		               <?php foreach($games as $key => $value) {?>
+    					<tr class="ct">
+    					     <td name="check">
+    					       <input onclick="this.checked = !this.checked" type="checkbox">
+    					       <input type="hidden" name="gameIds[]" value="<?php echo $value['gameId'];?>">
+    					       <input type="hidden" name="gameNames[]" value="<?php echo $value['gameName'];?>">
+     					     </td>
+							<td><?php echo $value['gameId']?></td>
+							<td><img src="<?php echo $value['gameIcon']?>" style="width:70px;height:70px;"/></td>
+							<td><?php echo $value['gameName']?></td>
+							<td><?php echo $value['gameCategory']?></td>
+							<td><?php echo $value['gameSize']?></td>
+						</tr>
+	                    <?php } ?>
+    					</tbody>
+    				</table>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac">
+    <span class="btn"><span><button type="submit"> 完成 </button></span></span>
+</div>
+</form>
+<script type="text/javascript">
+function initChooseGames(gameIds, token){
+	if(gameIds.replace(/(^s*)|(s*$)/g, "").length !=0){
+		$.post("/Admin/Common/getGameList",
+				{
+			       token : token,
+			       gameIds: gameIds,
+				},
+			    function(result, status){
+			       if(result.success) {
+				        $("#to tbody").empty();
+			    	    var str = "";
+				        var size = result.data.list.length;
+			    		for(var i = 0; i < size; i++) {
+			    			var info = result.data.list[i];
+				    	    str += '<tr class="ct"><td name="check"><input onclick="this.checked = !this.checked" type="checkbox"><input type="hidden" name="gameIds[]" value="'+info['id']+'"><input type="hidden" name="gameNames[]" value="'+info['gameName']+'"></td>'+
+							'<td>'+info['id']+'</td>'+
+							'<td><img src="'+info['gameIcon']+'" style="width:70px;height:70px;"/></td>'+
+							'<td>'+info['gameName']+'</td>'+
+							'<td>'+info['gameCategory']+'</td>'+
+							'<td>'+info['gameSize']+'</td></tr>';
+			    		}
+			    	    $("#to tbody").append(str);
+			    	    $("#selectSize").text($("#to tbody :checkbox").length);
+			    	    
+			    	}else{
+			    		showMsg("提示", data.msg);
+			    	}
+	});
+   }
+}
+
+$(document).ready(function(){
+	
+	$( "#addForm" ).submit(function( event ) {
+		var nameArr=[]; idArr=[]; addGameId='';
+		var gameIds = $("input[name='gameIds[]']");
+		var gameNames = $("input[name='gameNames[]']");
+		var addGameId = $("input[name='addGameId']").val();
+		$("#from tbody").empty();
+		if(gameIds.length < 1 || gameNames.length < 1){
+			window.parent.cancelAddGames(addGameId);
+			return;
+		}
+		gameIds.each(function(){
+			idArr.push($(this).val());
+	    });
+		gameNames.each(function(){
+			nameArr.push($(this).val());
+	    });
+		window.parent.showAddGames(addGameId , nameArr.join(','), idArr.join(','));
+	});
+	
+	$("#all_move").click(function() {
+		var checkboxArr = $("#from tbody :checkbox");
+		for(var i = 0; i < checkboxArr.length; i++) {
+			checkboxArr[i].checked = this.checked;
+		}
+	});
+	
+	$("#all_delete").click(function() {
+		var checkboxArr = $("#to tbody :checkbox");
+		for(var i = 0; i < checkboxArr.length; i++) {
+			checkboxArr[i].checked = this.checked;
+		}
+	});
+    
+	$("#move").click(function() {
+		var toBody = $("#to tbody");
+		var checkboxArr = $("#from tbody :checkbox");
+		var moveLength = 0;
+		for(var i = 0; i < checkboxArr.length; i++) {
+			if(checkboxArr[i].checked) {
+				moveLength++;
+			    var td = checkboxArr[i].parentNode;
+			    td.childNodes[1].name="gameIds[]";
+			    td.childNodes[2].name="gameNames[]";
+				toBody.append(td.parentNode);
+			}
+		}
+	    
+		checkboxArr = $("#to tbody :checkbox");
+		for(var i = 0; i < checkboxArr.length; i++) {
+			checkboxArr[i].checked = false;
+		}
+	    $("#querySize").text(parseInt($("#querySize").text()) - moveLength);
+	    $("#selectSize").text($("#to tbody :checkbox").length);
+	    
+		$("#all_move").attr("checked",false);
+		$("#all_delete").attr("checked",false);
+		if($("#from tbody :checkbox").length == 0) {
+			search();
+		}
+	});
+	
+	$("#delete").click(function() {
+		var toBody = $("#from tbody");
+		var checkboxArr = $("#to tbody :checkbox");
+		var moveLength = 0;
+		for(var i = 0; i < checkboxArr.length; i++) {
+			if(checkboxArr[i].checked) {
+				moveLength++;
+			    var td = checkboxArr[i].parentNode;
+			    td.childNodes[1].name="gameId[]";
+			    td.childNodes[2].name="gameName[]";
+				toBody.append(td.parentNode);
+			}
+		}
+	    
+		checkboxArr = $("#from tbody :checkbox");
+		for(var i = 0; i < checkboxArr.length; i++) {
+			checkboxArr[i].checked = false;
+		}
+		
+	    $("#querySize").text(parseInt($("#querySize").text()) + moveLength);
+	    $("#selectSize").text($("#to tbody :checkbox").length);
+	    	    
+		$("#all_move").attr("checked",false);
+		$("#all_delete").attr("checked",false);
+	});
+
+	$("#searchBtn").click(function(){
+		var title = getTitle();
+		if(title.length==0){
+			alert("请输入要查找的游戏名称");
+			return false;
+		}
+		search();
+	});
+	
+    $('#table').on('click','td[name="check"]', function(){        
+        var $checkbox = $(this).find('input[type="checkbox"]');
+        $checkbox.prop('checked',(! $checkbox.prop('checked')));
+    });
+    
+});
+
+function page(page) {
+	$("#curPage").val(page);
+	search();
+}
+
+function getTitle() {
+	var title = $("#title").val();
+	title = title.replace(/(^\s*)|(\s*$)/g, "");
+	return title;
+}
+
+function search() {
+	var title = getTitle();
+	if(title.length==0){
+		return false;
+	}
+	$("#title").val(title);
+	var selectedArr = $("#to tbody input[name='gameIds[]']");
+    var selectedId = [];
+	for(var i = 0; i < selectedArr.length; i++) {
+		selectedId[i] = selectedArr[i].value;
+	}
+	$.post("/Admin/Common/queryGameList",
+		{
+	       token:"<?php echo $token;?>",
+	       name: $("#title").val(),
+	       page: $("#curPage").val(),
+	       selected: selectedId
+		},
+	    function(result, status){
+	       if(result.success) {
+		        var total = result.data.total;
+	    	    $("#querySize").text(total);
+		        var page = result.data.page;
+	    	    $("#curPage").val(page);
+		        var pageSize = result.data.pageSize;
+		        var pageStr = "";
+	    		for(var i = 1; i <= pageSize; i++) {
+		    		if(i == page) {
+		    			pageStr += "<b>"+i+"</b>";
+			    	}else{
+			    		pageStr += "<a href='javascript:void(0);' onclick='page("+i+");'>"+i+"</a>";
+			    	}
+	    		}
+	    	    $("#pages").html(pageStr);
+	    	    
+	    	    $("#from tbody").empty();
+	    		$("#all_move").attr("checked",false);
+	    	    var str = "";
+		        var size = result.data.list.length;
+	    		for(var i = 0; i < size; i++) {
+	    			var info = result.data.list[i];
+		    	    str += '<tr class="ct"><td name="check"><input onclick="this.checked = !this.checked" type="checkbox"><input type="hidden" name="gameId[]" value="'+info['id']+'"><input type="hidden" name="gameName[]" value="'+info['gameName']+'"></td>'+
+					'<td>'+info['id']+'</td>'+
+					'<td><img src="'+info['gameIcon']+'" style="width:70px;height:70px;"/></td>'+
+					'<td>'+info['gameName']+'</td>'+
+					'<td>'+info['gameCategory']+'</td>'+
+					'<td>'+info['gameSize']+'</td></tr>';
+	    		}
+	    	    $("#from tbody").append(str);
+	    	}else{
+	    		showMsg("提示", data.msg);
+	    	}
+	});
+}
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

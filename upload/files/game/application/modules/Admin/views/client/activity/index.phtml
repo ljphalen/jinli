@@ -1,0 +1,88 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $lotterylogUrl;?>">抽奖记录</a></li>
+		<li><a href="<?php echo $editlotterylogUrl;?>">奖品管理</a></li>
+        <li class="current"><a href="<?php echo $listUrl;?>">活动列表</a></li>
+        <li><a href="<?php echo $addUrl;?>">添加活动</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">	
+		 <tr>
+		   <th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			    <option  value="0">全部</option>
+				<option <?php if($s['status'] == 2) echo 'selected';?> value="2">开启</option>
+				<option <?php if($s['status'] == 1) echo 'selected';?> value="1">关闭</option>
+			</select>
+			</td>
+			<th class="th">活动名称</th>
+			<td class="td"><input type="text" class="input" name="name" value="<?php echo $s['name'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">ID</th>
+			<td class="td"><input type="text" class="input" name="id" value="<?php echo $s['id'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2" style="display: none;"><span><button onclick="$('#action').val('sort');" type="submit">重新排序</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">开启</button></span></span>
+    <span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">关闭</button></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="60" style="display: none;">排序</td>
+			<td>活动ID</td>
+			<td>活动名称</td>
+			<td>抽奖开始时间</td>
+			<td>最后更新时间</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($activityies as $key => $value) {?>
+		<tr class="ct">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td style="display: none;"><input type="text" class="input" style="width:30px" name="sort[<?php echo $value['id'];?>]" value="<?php echo $value['sort'];?>"></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['name'];?></td>
+		    <td><?php echo date('Y-m-d H:i:s', $value['start_time']);?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['update_time']);?></td>
+			<td><?php echo $value['status'] == 1 ? '开启' : '关闭';?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<a href="<?php echo $editLotteryUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑奖项</a>
+			<a href="<?php echo $lotterylogUrl;?>/?id=<?php echo $value['id'];?>" class="mr10" style="display: none;">中奖记录</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Activity/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

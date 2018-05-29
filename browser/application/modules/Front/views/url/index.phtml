@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="en-us" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=8" />
+        <title>地址转换</title>
+        <script src="NewTabPageScripts.js" language="javascript" type="text/javascript"> </script>
+        <style type="text/css">
+            body {
+                background-color: #FEFEFE;
+                font-family: "Microsoft YaHei", "宋体", "Segoe UI", sans-serif;
+                font-size: 80%;
+                margin: 0em;
+                padding: 0em;
+                width: 64em;
+            }            
+        </style>
+    </head>
+    <body>
+       <form method="post" action="<?php echo $indexUrl;?>" id="searchForm">
+		<input name="token" value="<?php echo $token;?>" type="hidden" />
+       	<select name="type">
+		<option value="server">服务器跳转</option>
+		<option value="bookmark">浏览器书签页</option>
+		</select>
+		<br/>需转化的地址：<input type="text" name="url" value="" style="width:600px;"/>
+		<input type="submit" name="submit" class="btn" value="提交"></input>
+		<?php if($url) {?>
+		<br/>转换后的地址：<input type="text" name="urlencode" value="<?php echo $url;?>" style="width:600px;"/>
+		<?php }?>
+        </form>
+    </body>
+</html>

@@ -1,0 +1,41 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $editSourceUrl; ?>">指定数据来源</a></li>
+		</ul>
+	</div>
+
+	<form action="<?php echo $editSourceUrl; ?>" method="post" id="editForm">
+		<input name="token" type="hidden" value="<?php echo $token; ?>">
+
+		<div class="table_full">
+			<table width="100%">
+				<tbody>
+				<tr class="tr">
+					<th class="th" style="width: 40px;">来源</th>
+					<td>
+						<?php foreach ($cpurl as $key => $value) { ?>
+							<div style="height: 24px; width:200px; display:inline-block;">
+								<input
+									type="checkbox" <?php if (in_array($value['id'], $urlIds)) echo 'checked="checked"'; ?>
+									name="url_id[<?php echo $value['id']; ?>]"
+									value="<?php echo $value['id']; ?>"/><?php echo $value['title']; ?>
+							</div>
+						<?php } ?>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="mb10 tac">
+			<span class="btn"><span><button type="submit">更新</button></span></span>
+		</div>
+	</form>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			ajaxForm('editForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Widget/editSource');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

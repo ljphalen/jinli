@@ -1,0 +1,188 @@
+{{pagerCss}}
+<link media="screen" href="{{rootUrl}}/css/table.css" rel="stylesheet" type="text/css">
+<link media="screen" href="{{rootUrl}}/css/gri.controls.css" rel="stylesheet" type="text/css">
+<div class="colMain">
+    <div class="title"><p class="fl">应用列表</p></div>
+    <div class="main">
+        <div class="toolbar">
+            <div class="search fl">
+                <form action="/apps/index" method="GET">
+                <span>{{search}}</span>
+                <span>
+                    <select name="state" id="state">
+                        <option value=''>全部应用</option>
+                        <option value='0' <?php if($_GET['state']==="0") echo "selected"; ?> >关闭广告的应用</option>
+                        <option value='1' <?php if($_GET['state']==="1") echo "selected"; ?> >开启广告的应用</option>
+                    </select>
+                    <input type="hidden" name="ischeck" value="<?php echo $_GET['ischeck'];?>">
+                    <input type="hidden" name="screatedate"  id="screatedate" value="">
+                    <input type="hidden" name="ecreatedate" id="ecreatedate" value="">
+                    <input edate="" sdate="" id="date_range" class="mui-filter-group iText"  style="width:150px" value=""/>
+                    <input typt="text" class="iText" name='app_name' value='{{params.app_name}}' />
+                    <input type="submit" class="submit" value="" onclick="confirmSubmit();"/>
+                    <span class="sign">可输入应用名称查询</span>
+                </span>
+                
+                </form>
+            </div>
+            <a href="../apps/edit" class="fr add">新增</a> &nbsp;
+            <a href="/apps/versionList" class="fr add">应用版本</a>
+        </div>
+        <div class="content">
+            <div class="grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>平台</th>
+                            <th>应用名</th>
+                            <th>Appkey</th>
+                            <th>开发者邮箱</th>
+                            <th>应用状态</th>
+                            <th>广告位信息</th>
+                            <th>创建时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- loop result -->
+                        <tr>
+                            <!-- if {{result' value.platform}} == 1 -->
+                            <td>Android</td>
+                            <!-- else -->
+                            <td>IOS</td>
+                            <!-- endif -->
+                            <td><span class="blue">{{result' value.app_name}}</span></td>
+                            <td>{{result' value.appkey}}</td>
+                            <td>{{result' value.developer.email}}</td>
+                            <td>
+                                <p class="onfbk" style="width:80px;">
+                                    <a class="aon setAppstateOn <!-- if {{result' value.state}} == 1 -->cur<!-- else --><!-- endif -->" app_id="{{result' value.app_id}}">ON</a>
+                                    <a class="aoff setAppstateOFF <!-- if {{result' value.state}} == 0 -->cur<!-- else --><!-- endif -->" app_id="{{result' value.app_id}}">OFF</a>
+                                </p>
+                            </td>
+                            <td>{{result' value.pos}}</td>
+                            <td>
+                            <?php echo format_time($v1['createdate']); ?>
+                            </td>
+                            <td>
+                                <a href="edit?app_id={{result' value.app_id}}" class="edit" title="编辑"></a>
+                                |
+                                <a href="../apps/delete?app_id={{result' value.app_id}}" class="del" title="删除"></a>
+                                |
+                                <a href="/apps/adManager?appkey={{result' value.appkey}}&config_name=''" class="edit" title="管理"></a>
+                            </td>
+                        </tr> 
+                        <!-- endloop -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">{{pager.pages}}</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{{rootUrl}}/js/gri.dateRange.js"></script>
+<script type="text/javascript">
+$(function(){
+    var nc = false;
+    var dateRange = new pickerDateRange("date_range",'date', {
+        theme : 'ta', // 日期选择器TA主题
+        isTodayValid : 1,
+        startDate : "<?php echo $_GET['screatedate'];?>",
+        endDate : "<?php echo $_GET['ecreatedate'];?>",
+        minValidDate : 1379174400,
+        needCompare : 1,
+        success : function (dateObj){
+            $("#date_range").attr("sdate", dateObj.startDate);
+            $("#date_range").attr("edate", dateObj.endDate);
+            if(dateObj.needCompare == 1)
+            {
+            	$("#date_range").attr("csdate", dateObj.startCompareDate);
+                $("#date_range").attr("cedate", dateObj.endCompareDate);
+                nc = true;
+            }else
+            {
+            	$("#date_range").attr("csdate", "");
+                $("#date_range").attr("cedate", "");
+                nc = false;
+            }
+        }
+    });
+    var screatedate = "<?php echo $_GET['screatedate'];?>";
+    var ecreatedate = "<?php echo $_GET['ecreatedate'];?>";
+    if(screatedate!=''&ecreatedate!=''){
+        $("#date_range").val("<?php echo $_GET['screatedate'].' 至 '.$_GET['ecreatedate'];?>")
+    }
+   $(".radio").click(function(){
+       var val = $(this).val();
+       var app_id = $(this).attr('name').replace("ischeck", "");
+       $.ajax({
+           type : "POST",
+           data : { ischeck : val, app_id : app_id},
+           url : "/apps/ischeck",
+           success : function(result){
+               var ret = JSON.parse(result);
+               if (ret.retCode == 1){
+                   if(val == 1){
+                       $(".states_"+app_id).html("开启");
+                   }else{
+                       $(".states_"+app_id).html("关闭");
+                   }
+                   alert('更新成功');
+               }else{
+                   alert('更新失败');
+               }
+           }
+       });
+   }); 
+
+$(".setAppstateOn").click(function(){
+        if($(this).hasClass('cur')){
+            return;
+        }
+        if(!confirm("您确认要打开这个应用吗？")){
+            return;
+        }
+        $(this).parent().find('input').val(1);
+        $(this).addClass("cur");
+        $(this).parent().find(".aoff").removeClass('cur');
+        set_appstate($(this).attr("app_id"), 1);
+    });
+
+$(".setAppstateOFF").click(function(){
+        if($(this).hasClass('cur')){
+            return;
+        }
+        if(!confirm("您确认要关闭这个应用吗？")){
+            return;
+        }
+        $(this).parent().find('input').val(0);
+        $(this).addClass("cur");
+        $(this).parent().find(".aon").removeClass('cur');
+        set_appstate($(this).attr("app_id"), 0);
+    });
+
+
+});
+
+function set_appstate(appid, state)
+{
+    ajaxGET("/apps/setAppState", "appid=" + appid + "&state=" + state, function(data) {
+        if (data.code == 0) {
+            //jAlert(data.result)
+        } else {
+            alert(data.msg)
+        }
+    })
+}
+
+function confirmSubmit()
+{
+    sdate = $("#startDate").val()
+    edate = $("#endDate").val()
+    $("#screatedate").attr("value",sdate);
+    $("#ecreatedate").attr("value",edate);
+    return true;
+}
+
+
+</script>

@@ -1,0 +1,45 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body id="storyList">
+	<div class="gotop">
+		<span>返回顶部</span>
+	</div>
+	<div class="module gray-bg webapp">
+		<header class="header" id="J_header">
+			<div class="wrap">
+				<div class="title">
+					<a href="<?php echo $webroot;?>" class="back"></a>
+					<h1>大红帽购物资讯列表</h1>
+				</div>
+			</div>
+		</header>
+		<div class="iScroll" id="J_scrollWrap">
+			<section id="J_listWrap" class="layout-center" data-ajaxUrl="<?php echo $webroot;?>/api/info/index?type=0"></section>
+		</div>
+
+		<script type="text/template" id="J_template">
+			<% for (var i=0, len=list.length; i<len; i++) {%>
+			<div class="story-list">
+				<a href="<%=list[i].url%>" onclick="baiduStatic('大红帽资讯列表', '大红帽资讯列表-资讯列表', '大红帽资讯列表-资讯列表-资讯<%=list[i].id%>点击次数')">
+					<%if(list[i].is_hot){%>
+					<h3 class="hot"><%=list[i].title%></h3>
+					<%} else {%>
+					<h3><%=list[i].title%></h3>
+					<%}%>
+					<h4><%=list[i].summary%></h4>
+					<ul>
+						<%for(var j=0, max=list[i].images.length; j<max; j++) {%>
+						<li>
+							<div class="pic">
+								<img src="<?php echo $staticRoot;?>/apps/dhm/asset/img/blank.gif" data-src="<%=list[i].images[j]%>">
+							</div>
+						</li>
+						<%}%>
+					</ul>
+					<div class="publish-date"><%=list[i].date%></div>
+				</a>
+			</div>
+			<% } %>
+		</script>
+	</div>
+
+<?php echo $this->render("layout/footer.phtml");?>

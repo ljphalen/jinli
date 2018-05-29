@@ -1,0 +1,42 @@
+<?php echo $this->render("layout/singleheader.phtml");?>
+<body id="recommend" data-pagerole="body">
+    <div class="module recommend-lottory">
+        <div class="top-banner"></div>
+        <div class="btn-wrap">
+            <a id="J_shareToWeixin" href="objc://shareToWechat" class="btn">分享给微信好友</a>
+        </div>
+        <div class="wrap">
+            <div class="wrap-top" id="J_wrapTop">
+                <?php if(empty($phone)): ?>
+                <div class="input-wrap">
+                    <input type="tel" id="J_tel" placeholder="填写你的推荐人手机号">
+                    <a id="J_submit" data-ajaxurl="<?php echo $webroot . $recommendUrl; ?>" href="javascript:;" class="btn">提交</a>
+                    <p>每人只能填写一次，请谨慎填写</p>
+                </div>
+                <?php else: ?>
+                <p>每人只能填写一次，请谨慎填写</p>
+                <div class="remind-wrap">
+                    <span>您填写的推荐人手机号</span>
+                    <div class="tel"><i></i><?php echo $phone; ?></div>
+                </div>
+                <p>请关注我们微信号公众号@购物大厅</p>
+                <?php endif;?>
+            </div>
+            <div class="rule-wrap">
+                <h2></h2>
+                <div class="item">
+                    <i>1</i><p>推荐有理，推荐朋友安装iOS版购物大厅</p>
+                </div>
+                <div class="item">
+                    <i>2</i><p>安装后在此处填写推荐人手机号</p>
+                </div>
+                <div class="item">
+                    <i>3</i><p>与朋友一起欢乐购物，购物齐分享</p>
+                </div>
+                <div class="item">
+                    <i>4</i><p>关注微信服务号@购物大厅有更多惊喜哟！</p>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php echo $this->render("layout/newfooter.phtml");?>

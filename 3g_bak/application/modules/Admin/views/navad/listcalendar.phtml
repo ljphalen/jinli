@@ -1,0 +1,135 @@
+<?php echo $this->render("layout/header3.phtml");
+$_listUrl = $this->listcalendarUrl;
+$_editUrl = $this->editcalendarUrl;
+$_delUrl  = $this->delUrl;
+?>
+<script type="text/javascript" src="<?php echo $staticPath; ?>/v2/easyui/datagrid-filter.js"></script>
+
+<div data-options="region:'center',split:true,border:false" style="overflow: hidden;">
+
+	<div id="datagrid_toolbar" style="padding:5px;">
+		<div style="float: left;">
+			<form method="post" id="search_form" style="padding: 0px;" onsubmit="search(dg,'#search_form');return false;">
+				位置:<select name="filter[position]">
+					<option value="">全部</option>
+					<?php foreach ($posArr as $key => $value) { ?>
+						<option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+					<?php } ?>
+				</select>
+				开始:<input id="st" name="filter[start_time]" style="width: 100px" class="easyui-datebox" value="">
+				结束:<input id="et" name="filter[end_time]" style="width: 100px" class="easyui-datebox" value="">
+				状态:<select name="filter[status]">
+					<option value="">不限</option>
+					<option value="1">开启</option>
+					<option value="0">关闭</option>
+				</select>
+				<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+				<input name="togrid" value="1" type="hidden"/>
+				<a href="javascript:search(dg,'#search_form');" class="easyui-linkbutton" iconCls="icon-search" plain="true">查 询</a>
+			</form>
+
+		</div>
+		<div align="left">
+			<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="add()">新增</a>
+			<span class="toolbar-btn-separator"></span>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
+			<span class="toolbar-btn-separator"></span>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">删除</a>
+			<block name="button"></block>
+			<a href="#"></a>
+		</div>
+	</div>
+	<table id="datagrid" toolbar="#datagrid_toolbar" border="false"></table>
+</div>
+
+
+<script>
+	var token = "<?php echo $token;?>";
+	var edit_W = 500;
+	var edit_H = 400;
+	var dg;
+	$(function () {
+		$('#type').combobox({
+			valueField: 'value',
+			textField: 'text',
+			url: '<?= $optionUrl ?>?_skip=1&t=1',
+			onSelect: function (rec) {
+				var url = '<?= $optionUrl ?>?_skip=1&t=2&id=' + rec.value;
+				$('#column').combobox('reload', url);
+				$('#column').combobox('setValue', '');
+			}
+		});
+		//数据列表
+		dg = $("#datagrid").datagrid({
+			url: '<?php echo $_listUrl;?>',
+			queryParams: {'togrid': 1, 'token': token},
+			fit: true,
+			autoRowHeight: false, //自动行高
+			border: false,
+			pagination: true, //分页栏
+			pagePosition: 'bottom', //分页栏位置
+			rownumbers: true,//显示行数
+			striped: true,//显示条纹
+			showFooter: true, //显示统计行
+			pageSize: 20,//每页记录数
+			remoteSort: true,//是否通过远程服务器对数据排序
+			singleSelect: false,//只允许选择单行
+			remoteFilter: true,
+			// main content
+
+			sortName: 'id',//默认排序字段
+			sortOrder: 'desc',//默认排序方式 'desc' 'asc'
+			idField: 'id',
+			columns: [[
+				{field: 'ck', checkbox: true},
+				{field: 'id', title: 'ID', sortable: true, align: 'center', width: 60},
+				{field: 'title', title: '标题', sortable: false, align: 'left', width: 200},
+				{
+					field: 'img', title: '图片', sortable: false, align: 'center', width: 100,
+					formatter: function (value, row, index) {
+						var hasImg = row.img.indexOf('.jpg') > -1 || row.img.indexOf('.png') > -1 || row.img.indexOf('.gif') > -1;
+						if (hasImg) {
+							return '<img style="width:50px;height:50px" src="' + row.img + '">';
+						}
+					}
+				},
+				{field: 'pos', title: '位置', sortable: false, align: 'center', width: 80},
+				{field: 'link', title: '链接', sortable: false, align: 'left', width: 200},
+				{field: 'start_time', title: '开始时间', sortable: false, align: 'center', width: 100},
+				{field: 'end_time', title: '结束时间', sortable: false, align: 'center', width: 100},
+				{field: 'status', title: '状态', sortable: false, align: 'center', width: 60},
+				{field: 'sort', title: '排序', sortable: false, align: 'center', width: 50},
+			]],
+
+			onLoadSuccess: function () {
+				$(this).datagrid('clearSelections');//取消所有的已选择项
+				$(this).datagrid('unselectAll');//取消全选按钮为全选状态
+			},
+			onRowContextMenu: function (e, rowIndex, rowData) {
+				e.preventDefault();
+				$(this).datagrid('unselectAll');
+				$(this).datagrid('selectRow', rowIndex);
+				$('#datagrid_menu').menu('show', {
+					left: e.pageX,
+					top: e.pageY
+				});
+			},
+			onDblClickRow: function (rowIndex, rowData) {
+				edit(rowIndex, rowData);
+			}
+		});
+	});
+
+
+	function add() {
+		addData("添加", "#edit_form", dg, "<?php echo $_editUrl;?>", edit_W, edit_H);
+	}
+	function edit(rowIndex, rowData) {
+		editData(rowIndex, rowData, "编辑", '#edit_form', dg, "<?php echo $_editUrl;?>", edit_W, edit_H, 'id');
+	}
+	function del() {
+		delData(dg, "<?php echo $_delUrl;?>");
+	}
+
+</script>
+<?php echo $this->render("layout/footer3.phtml"); ?>

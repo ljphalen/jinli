@@ -1,0 +1,211 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<!-- 导航栏Ajax加载 指向navagator.html  menuOn表示分别需要高亮的菜单栏id 用下划线_隔开-->
+
+
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- 页面唯一id标识符  上传壁纸 上传壁纸01-->
+    <div id="zt_usr_upload01">
+        <div class="content">
+            <div class="upload_wrap">
+                <div class="upload_btn">
+                    <button class="btn_s2">点击上传主题</button>
+                    <input type="file" id="fileLoader" name="file" multiple>
+                </div>
+                <p>或将主题拖到这里<br/>上传注意事项：允许上传的主题格式为：GNZ，单次只可上传一个主题</p>
+            </div>
+            <div class="upload_status">
+                <span><em class="upload_num">0</em>个文件，共<em class="upload_size">0</em>M</span>
+                <!-- disable 按钮灰化 不可点击效果 -->
+
+                <?php if ($themeid) { ?>
+                    <h3>主题替换</h3>
+                <?php } else { ?>
+                    <button class="btn_s3 disable upload_next">下一步</button>
+                <?php } ?>
+            </div>
+            <table class="view_list_tb">
+                <thead>
+                    <tr><th>主题</th><th>名称</th><th>大小</th><th>操作</th><th>状态</th></tr>
+                </thead>
+                <tbody class="tb_upload">
+
+    <!-- <tr>
+           <td><img src="image/test_img01.png"></td>
+           <td>趣味生活</td>
+           <td>1.2M</td>
+           <td><a class="btn_txt uppop_btn" openpoploadid="fixTipView">删除</a></td>
+           <td>
+                   <div class="progress">
+                   <div class="progress-bar progress-bar-success"></div>
+           </div>
+    </td>
+    </tr> -->
+
+
+                </tbody>
+            </table>
+
+        </div><!-- content end -->
+    </div>
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">确定删除？</p>
+                    <div class="tip_btns"><button class="btn_s2" id="uploadConfirm">确定</button><button class="btn_s2 btnCancel">取消</button></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/vendor/load-image.all.min.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-image.js"></script>
+
+<!-- The File Upload validation plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-validate.js"></script>
+
+<!-- The File Upload validation plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-validate.js"></script>
+
+<script type="text/javascript">
+    // var url = '<?php echo $staticPath ?>jssdk/plugins/jqfile/server/php/index2.php';
+
+    var path = "<?php echo $path ?>";
+    // var url = '/Admin/File/upload_post?token=' + token;
+    var url = path + 'token=' + token;
+    var imgIdx = 0, uploadNum = 0, uploadSize = 0, barIdx = 0;
+
+    $(".upload_next").on("click", function () {
+        var isActive = $(this).hasClass("disable");
+        if (!isActive) {
+            window.location.href = "/Admin/File/addtwo?themeId=" + themeid;
+        }
+    });
+
+    $('#fileLoader').fileupload({
+        dropZone: $(".upload_wrap"), //拖拽上传区域
+        //dropZone:null,
+        url: url,
+        dataType: 'json',
+        previewMaxWidth: 100, //预览图片宽
+        previewMaxHeight: 100, //预览图片高
+        previewCrop: true,
+        //acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+        sequentialUploads: true
+    }).on('fileuploaddone', function (e, data) {
+        themeid = data.result;
+
+
+        //激活下一步按钮，绑定相关事件
+        $(".upload_next").removeClass("disable");
+
+
+    }).on('fileuploadprocessalways', function (e, data) {
+        var overallProgress = $('#fileLoader').fileupload('progress');
+        var index = data.index;
+        var file = data.files[index];
+        $.each(data.files, function (index, file) {
+            console.log(file);
+            imgIdx++;
+            var imgId = "img" + imgIdx, bar = "bar" + imgIdx, progress = "progress" + imgIdx;
+            var row = '';
+            var fileSize = (file.size / 1048567).toFixed(2);
+            var tempNameArr = file.name.split(".");
+            //文件名超过8个字符时截取显示
+            if (tempNameArr[0].length <= 8) {
+                fileName = file.name;
+            }
+            else {
+                fileName = tempNameArr[0].substr(0, 8) + "...";
+            }
+            row += '<tr>';
+            row += '<td class="img_prev" id="' + imgId + '"></td>';
+            row += '<td>' + fileName + '</td>';
+            row += '<td>' + fileSize + 'M</td>';
+            row += '<td></td>';
+            // row += '<td><a class="btn_txt pop_btn row_del" id="del' + imgId + '" openPopId="fixTipView">删除</a></td>';
+            //文件格式不对时报错
+            if (file.error) {
+                row += '<td><span class="upload_error">文件格式错误</span></td>';
+            }
+            else {
+                row += '<td><div class="progress" id="' + progress + '"><div class="progress-bar progress-bar-success" id="' + bar + '"></div></div></td>';
+            }
+
+
+            row += '</tr>';
+            $(row).prependTo('.tb_upload');
+            $(file.preview).appendTo("#" + imgId);//显示预览图
+            uploadSize += parseFloat(fileSize);
+            uploadNum += 1;
+
+        });
+        $(".upload_size").text(uploadSize);
+        $(".upload_num").text(uploadNum);
+
+    }).on("fileuploadprogress", function (e, data) {
+        //console.log(data);
+        // barIdx++;
+
+        console.log(data.loaded);
+        console.log(data.total);
+        var barId = "bar1";// + barIdx;
+        //更新上传进度条
+        var progress = parseInt(data.loaded / data.total * 100, 10);
+
+        $("#" + barId).css(
+                'width',
+                progress + '%'
+                );
+        $("#" + barId).text(progress + '%');
+    }).on('fileuploadfail', function (e, data) {
+        $.each(data.files, function (index) {
+            var error = $('<span class="upload_error"/>').text('上传失败');
+            $(".progress").replaceWith("<span class='upload_error'>文件上传失败</span></br><span>不是正确的资源格示</span><br/><a class='btn_txt a_reload'>重新上传</a>");
+            console.log(data);
+        });
+
+    });
+
+    $(".view_list_tb").on("click", ".a_reload", function () {
+        window.location.href = "/Admin/file/add";
+        // $("#fileLoader").trigger("click");
+        // $(this).parents("tr").remove();
+    });
+
+//删除上传的图片
+    $(".view_list_tb").on("click", ".row_del", function () {
+        var flagId = $(this).attr("id");
+        $(".pop_wraper").attr("flags", flagId);
+        $("#uploadConfirm").on("click", function () {
+            var del = $(".pop_wraper").attr("flags");
+            //删除成功的后续代码写在这里 删除页面html 隐藏弹出框
+            $("#" + del).parents("tr").remove();
+            $(".pop_wraper").removeClass("show");
+        });
+    });
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<include file="Public:header" />
+<script src="{:cdn('PUBLIC')}/common/js/select2.js?{:C('JS_VERSION')}"></script>
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/common/css/select2.css?{:C('JS_VERSION')}" type="text/css" rel="stylesheet" />
+<script>
+    $(document).ready(function() { $("#app_id").select2(); });
+</script>
+<div class="mainw clearfix">
+	<div class="lnav fl">
+    	<include file="Help:nav_left" />
+    </div>
+    <div class="rmain fl">
+   	  <h2 class="yyname">文档搜索</h2>
+        <div class="datac">
+        	<div class="formdiv">
+                <form action="{:U("Help/search")}" method="get">
+                <!-- <form action="{:U("Help/index")}" method="post"> -->
+	                <p>
+	                	<input type="text" name="search_word" value="{$search_word}" 
+	                	class="medium" placeholder="请输入关键字" width="60%">
+		                <input class="btn-green fr" type="submit" value="搜索" />
+		                <br>热门关键字:
+		                <volist name="search_list" id="data">
+		                	&nbsp;&nbsp;
+		                	<!-- <a href="{:U('Help/search?search_word=SDK')}" >{$data}</a>&nbsp;&nbsp; -->
+		                	<a href="{:U('Help/search', array("search_word"=>$data))}" >{$data}</a>&nbsp;&nbsp;
+		                </volist>
+		            </p>
+                </form>
+        	</div>
+        	
+			<table class="tab">
+				<p>
+					如果文档内容对您没有帮助，请将你的问题邮件至dev.game@gionee.com，
+					我们稍后回复您。回复可能比较缓慢，建议先通过关键字搜索答案。
+				</p>
+				<volist name="info" id="data">
+					<h2>
+					<a href="{:U('Help/page', array("id"=>$data.id))}" >{$data.title}</a>&nbsp;&nbsp;
+					</h2>
+			        <div>
+			        {$data.content}
+					</div>
+				</volist>
+		   	    <!-- <empty name="comminfo">
+		   	    	<div class="nodata">
+		   	    		<tr>
+		   	    			<td colspan="4">没有找到数据<notempty name="errorInfo">({$errorInfo})</notempty></td>
+		   	    		</tr>
+		   	    	</div>
+		   	    </empty> -->
+      	  </table>
+        </div>
+    </div>
+</div>
+
+<include file="Public:footer" />

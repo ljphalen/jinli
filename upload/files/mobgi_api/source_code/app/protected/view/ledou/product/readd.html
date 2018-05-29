@@ -1,0 +1,365 @@
+<style>
+#gamelist{width:30%;background:#fff;border:1px solid #dedede;padding:5px;}
+#gamelist li{width:100%;height:25px;line-height:25px;text-indent:15px;
+             border-bottom:1px dashed #ccc;color:#666;cursor:pointer;}
+</style>
+<script src="{{rootUrl}}/js/games.js?ver={{staticVer}}" type="text/javascript"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/float.js"></script>
+<div class="colMain">
+            <div class="title"><p class="fl">产品信息</p></div>
+            <form action="/product/reupdsave" method="post" name="form" id="product">
+            <div class="main">
+                <div class="app-detail">
+                    <ul class="form">
+                      <li> 基本信息</li>
+                        <li>
+                            <span class="label">客户名称：</span>
+                            <div class="fc">
+                                <select name="customer" class="required" required id="customer">
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">平台类型：</span>
+                            <div class="fc">
+                                <select name="platform" class="required" required id="platform">
+                                    <option value="0" <!-- if {{products.platform}}==0 -->selected<!-- endif -->>通用</option>
+                                    <option value="1" <!-- if {{products.platform}}==1 -->selected<!-- endif -->>Android</option>
+                                    <option value="2" <!-- if {{products.platform}}==2 -->selected<!-- endif -->>IOS</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">产品名：</span>
+                            <div class="fc">
+                                <input type="hidden" name="product_id" value="{{products.id}}"/>
+                                <input type="text" id="pname" name="pname" value="{{products.product_name}}" class="iText required" />
+                                <span class="red">*</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">APPKEY：</span>
+                            <div class="fc">
+                                <input type="text" id="appkey" onkeyup="getGameinfo('gametype','pappkey')" onfocus="getGameinfo('gametype','pappkey')" name="pappkey" value="{{products.appkey}}" class="iText required" />
+                                 <select id="gametype" onchange="getGameinfo('gametype','pappkey')">
+                                     <option value="1" selected>名称</option>
+                                     <option value="2">APPKEY</option>
+                                 </select>
+                                <input type="hidden" name="appkey_is_right" value="1">
+                                <span class="red">*</span>
+                                <ul id="gamelist" style="display:none;">
+
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="line"></li>
+                        <li> 评分信息</li>
+                        <li>
+                        <span class="label">星级：</span>
+                        <div class="fc">
+                            <input type="text" name="star" id="star" value="{{products.star}}" onblur="javascript:if(Number(this.value)%0.5!=0||Number(this.value)>5){alert('星级需为0.5的倍数并小于等于5');this.focus();this.value=''}" class="iText" />
+                        </div>
+                    	</li>
+	                    <li>
+	                        <span class="label">玩家人数：</span>
+	                        <div class="fc">
+	                            <input type="text" name="playering" id="playering" onkeyup="javascript:if(!isNumber(this.value))this.value=''" value="{{products.playering}}" class="iText" />
+	                        </div>
+	                    </li>
+	                    <li>
+	                        <span class="label">推荐：</span>
+	                        <div class="fc">
+	                            <input type="checkbox" name="promote_type_new" id="promote_type_new" onchange="javascript:if($(this).is(':checked')){$('#promote_type').val(this.value);$(this).next('input').attr('disabled',true)}else{$('#promote_type').val(0);$(this).next('input').attr('disabled',false)}" value="1"/>New
+	                            <input type="checkbox" name="promote_type_hot" id="promote_type_hot" onchange="javascript:if($(this).is(':checked')){$('#promote_type').val(this.value);$(this).prev('input').attr('disabled',true)}else{$('#promote_type').val(0);$(this).prev('input').attr('disabled',false)}"  value="2"/>Hot
+	                            <input type="hidden" name="promote_type" id="promote_type" value="{{products.promote_type}}"/>
+	                            <script>
+	                                var promote_type="{{products.promote_type}}";
+	                                if(promote_type=="1"){
+	                                    $("#promote_type_new").click();
+	                                }else if(promote_type=="2"){
+	                                    $("#promote_type_hot").click();
+	                                }
+	                            </script>
+	                        </div>
+                        </li>
+                        <li class="line"></li>
+                        <li>
+                            <span class="label">订单详情：</span>
+                            <div class="fc">
+                                <div class="content">
+                                    <div class="grid">
+                                        <div class="gridToolbar">
+                                            <p class="fr">
+                                                <a href="javascript:void(0)" id="addOrder" class="btn">新增</a>
+                                            </p>
+                                        </div>
+                                        <table id="orderlist">
+                                            <thead>
+                                                <tr>
+                                                    <th>序号</th>
+                                                    <th>订单号</th>
+                                                    <th>合同编号</th>
+                                                    <th>合同周期</th>
+                                                    <th>结算方式</th>
+                                                    <th>单价</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- loop orders -->
+                                                        <tr orderid="{{orders' value.orderid}}">
+                                                            <td><input type="hidden" name="index[]" value="{{orders' value.index}}"/>
+                                                                <input type="hidden" name="oid[]" value="{{orders' value.id}}"/>{{orders' value.index}}</td>
+                                                            <td><input type="hidden" name="orderid[]" value="{{orders' value.orderid}}"/>{{orders' value.orderid}}</td>
+                                                            <td><input type="hidden" name="agreementid[]" value="{{orders' value.agreementid}}"/>{{orders' value.agreementid}}</td>
+                                                            <td class="agreement_time" startTime="<?php echo format_time($v1['startdate'], 'Y-m-d'); ?>" endTime="<?php echo format_time($v1['enddate'], 'Y-m-d'); ?>">
+                                                                <input type="hidden" name="startdate[]" value="<?php echo format_time($v1['startdate'], 'Y-m-d'); ?>"/>
+                                                                <input type="hidden" name="enddate[]" value="<?php echo format_time($v1['enddate'], 'Y-m-d'); ?>"/>
+                                                                <?php echo format_time($v1['startdate'], 'Y-m-d'); ?> 至 <?php echo format_time($v1['enddate'], 'Y-m-d'); ?> </td>
+                                                            <td>
+                                                                <select name="paymethod[]" class="required" required >
+                                                                    <option value="1" <!-- if {{orders' value.paymethod}}== 1 -->selected<!-- endif -->>CPM</option>
+                                                                    <option value="2" <!-- if {{orders' value.paymethod}}== 2 -->selected<!-- endif -->>CPC</option>
+                                                                    <option value="5" <!-- if {{orders' value.paymethod}}== 5 -->selected<!-- endif -->>CPD</option>
+                                                                    <option value="4" <!-- if {{orders' value.paymethod}}== 4 -->selected<!-- endif -->>CPI</option>
+                                                                    <option value="3" <!-- if {{orders' value.paymethod}}== 3 -->selected<!-- endif -->>CPA</option>
+                                                                    <option value="6" <!-- if {{orders' value.paymethod}}== 6 -->selected<!-- endif -->>CPS</option>
+                                                                    <option value="7" <!-- if {{orders' value.paymethod}}== 7 -->selected<!-- endif -->>CPT</option>
+                                                                </select>
+                                                            </td>
+                                                            <td><input type="hidden" name="price[]" value="{{orders' value.price}}"/>{{orders' value.price}}</td>
+                                                            <td>
+                                                                <a href="javascript:void(0)" class="edit editOrder" title="编辑" 
+                                                                   index="{{orders' value.index}}" 
+                                                                   orderid="{{orders' value.orderid}}" oid="{{orders' value.id}}" agreementid="{{orders' value.agreementid}}" 
+                                                                   startdate="<?php echo format_time($v1['startdate'], 'Y-m-d'); ?>" enddate="<?php echo format_time($v1['enddate'], 'Y-m-d'); ?>" paymethod="{{orders' value.paymethod}}" 
+                                                                   price="{{orders' value.price}}"></a>
+                                                            </td>
+                                                        </tr>
+                                                <!-- endloop -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="pagination">{{pager.pages}}</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="fc">
+                                <input type="button" onclick="javascript:$('form').submit();" value="确定" class="submit" />
+                                <input type="button" value="取消" onclick="javascript:location.href='relist'" class="cancel" />
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+        </div>
+<script language="javascript" >
+product_id = "{{products.id}}";
+if(product_id){
+    $("#platform").attr("disabled", "disabled")
+}else{
+    $("#platform").val("1");
+}
+
+    /*
+    *比较时间段一与时间段二是否有交集
+    */
+   function isMixTime(begintime1, endtime1, begintime2, endtime2) {
+        $status = begintime2 - begintime1;
+        if ($status > 0) {
+            $status2 = begintime2 - endtime1;
+            if ($status2 > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            $status2 = begintime1 - endtime2;
+            if ($status2 > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    function autoCustomer(customerid) {
+        ajaxPOST("/customer/autoCustomer", {}, function(data) {
+            var length = data.length;
+            str = '<option value="">所有</option>';
+            for (i=0; i<length; i++)
+            {
+                if_selecte='';
+                if(customerid == data[i].id)
+                {
+                    if_selecte =  'selected="selected"';
+                }   
+                str += '<option value="'+data[i].id+'" '+if_selecte+'>'+data[i].compay+'</option>'
+            }
+            $("#customer").html(str);
+        })
+    }
+    
+    function getPaymethodSelect(paymethod){
+        str = '';
+        str = '<select name="paymethod" class="required" required >'+
+            '<option value="1"'+ ((paymethod=="1")?" selected ": "") +' >CPM</option>'+
+            '<option value="2"'+ ((paymethod=="2")?" selected ": "") +' >CPC</option>'+
+            '<option value="5"'+ ((paymethod=="5")?" selected ": "") +' >CPD</option>'+
+            '<option value="4"'+ ((paymethod=="4")?" selected ": "") +' >CPI</option>'+
+            '<option value="3"'+ ((paymethod=="3")?" selected ": "") +' >CPA</option>'+
+            '<option value="6"'+ ((paymethod=="6")?" selected ": "") +' >CPS</option>'+
+            '<option value="7"'+ ((paymethod=="7")?" selected ": "") +' >CPT</option>'+
+            '</select>'
+        return str;
+    }
+    
+    $(function(){
+        var customerid = "{{products.publishid}}";
+        autoCustomer(customerid);
+    })
+    
+    /**
+     * 获取新行的索引
+     * @returns {Number|newIndex}
+     */
+    function getTrIndex(){
+        if($("#orderlist tr:last td:eq(0) input:eq(0)").length == 0){
+            return 1;
+        }
+        maxIndex = $("#orderlist tr:last td:eq(0) input:eq(0)").val();
+        newIndex = parseInt(maxIndex) + 1;
+        return newIndex;
+    }
+    
+    
+         //新增广告 
+    function addOrder(index,oid, orderid, agreementid, startdate, enddate, paymethod, price) {
+        var id = id || "";
+        var $content = $('<div class="grid"></div>');
+        var PopUp = jDialog({
+            width: 800,
+            height: 450,
+            content: $content
+        });
+        $content.load("/product/showOrderPop", {index: index,oid: oid,orderid: orderid,agreementid: agreementid,startdate: startdate,enddate: enddate,paymethod: paymethod,price: price}, function() {
+            newIndexFlag = false;
+            if(typeof(index) == 'undefined'){
+                newIndexFlag =true;
+                index = getTrIndex();
+            }
+            $content.find("#cancel").click(function() {
+                if (PopUp) {
+                    PopUp.close();
+                }
+            });
+            
+            $content.find("#orderid").click(function() {
+                ajaxGET("/order/createOrderKey", "appkey=" + appkey, function(data) {
+                    if (data.result == 0) {
+                        $("#orderid").val(data.key);
+                    } else {
+                        alert("生成订单号失败,请重试")
+                    }
+                });
+            });
+            
+            $content.find("#ok").click(function() {
+                newStartTime = Date.parse($("#startdate").val().replace(/-/g,"/").replace(" ",""))
+                newEndTime = Date.parse($("#enddate").val().replace(/-/g,"/").replace(" ",""))
+                oldStartTime = '';
+                oldEndTime = '';
+                interTimeFlag = false;
+                $(".agreement_time").each(function(){
+                    if($(this).parent('tr').attr("orderid") != $("#orderid").val()){
+                        startTime= Date.parse($(this).attr("startTime").replace(/-/g,"/"))
+                        endTime= Date.parse($(this).attr("endTime").replace(/-/g,"/"))
+                        if(isMixTime(newStartTime, newEndTime, startTime, endTime)){
+                            oldStartTime =  $(this).attr("startTime");
+                            oldEndTime = $(this).attr("endTime");
+                            interTimeFlag = true;
+                            return false;
+                        }
+                    }
+                });
+                if(interTimeFlag){
+                    jAlert('合同时间：'+$("#startdate").val()+"~"+$("#enddate").val()+'与以前的合同时间：'+oldStartTime+"~"+oldEndTime+' 有交集');
+                    return false;
+                }
+                
+                if(!isfloat($("#price").val())){
+                    jAlert("单价请输入数值");
+                    return false;
+                 }
+                
+                if($("#orderid").val()==''){
+                    jAlert('订单号不能为空');
+                    return false;
+                }
+
+                if(!newIndexFlag){
+                    _str = '';
+                    _str += '<td><input type="hidden" name="index[]" value="'+index+'"/>' + '<input type="hidden" name="oid[]" value="'+$("#oid").val()+'"/>' +index + '</td>' +
+                            '<td><input type="hidden" name="orderid[]" value="'+$("#orderid").val()+'"/>' +$("#orderid").val() + '</td>' +
+                            '<td><input type="hidden" name="agreementid[]" value="'+$("#agreementid").val()+'"/>' + $("#agreementid").val() + '</td>' +
+                            '<td class="agreement_time" endtime="'+$("#enddate").val()+'" starttime="'+$("#startdate").val()+'"><input type="hidden" name="startdate[]" value="'+$("#startdate").val()+'"/><input type="hidden" name="enddate[]" value="'+$("#enddate").val()+'"/>'+$("#startdate").val() +' 至 '+ $("#enddate").val() +'</td>' +
+                            '<td>'+getPaymethodSelect($("#paymethod").val())+'</td>'+
+                            '<td><input type="hidden" name="price[]" value="'+$("#price").val()+'"/>'+$("#price").val()+'</td>'+
+                            '<td>' +
+                            '<a href="javascript:void(0)" class="edit editOrder" title="编辑" index="'+index+'" orderid="'+$("#orderid").val()+'" oid="'+$("#oid").val()+'" agreementid="' + $("#agreementid").val() + '" startdate="'+$("#startdate").val()+'" enddate="'+$("#enddate").val() +'" paymethod="'+$("#paymethod").val()+'"price="'+$("#price").val()+'"></a>'+
+                            '</td>';
+                    $("#orderlist").find("tr[orderid="+$("#orderid").val()+"]").html(_str);
+                }else{
+                    _str = '';
+                    _str += '<tr orderid="'+$("#orderid").val()+'">' +
+                            '<td><input type="hidden" name="index[]" value="'+index+'"/>' + '<input type="hidden" name="oid[]" value="'+$("#oid").val()+'"/>' +index + '</td>' +
+                            '<td><input type="hidden" name="orderid[]" value="'+$("#orderid").val()+'"/>' +$("#orderid").val() + '</td>' +
+                            '<td><input type="hidden" name="agreementid[]" value="'+$("#agreementid").val()+'"/>' + $("#agreementid").val() + '</td>' +
+                            '<td  class="agreement_time" endtime="'+$("#enddate").val()+'" starttime="'+$("#startdate").val()+'"><input type="hidden" name="startdate[]" value="'+$("#startdate").val()+'"/><input type="hidden" name="enddate[]" value="'+$("#enddate").val()+'"/>'+$("#startdate").val() +' 至 '+ $("#enddate").val() +'</td>' +
+                            '<td>'+getPaymethodSelect($("#paymethod").val())+'</td>'+
+                            '<td><input type="hidden" name="price[]" value="'+$("#price").val()+'"/>'+$("#price").val()+'</td>'+
+                            '<td>' +
+                            '<a href="javascript:void(0)" class="edit editOrder" title="编辑" index="'+index+'" orderid="'+$("#orderid").val()+'" oid="'+$("#oid").val()+'" agreementid="' + $("#agreementid").val() + '" startdate="'+$("#startdate").val()+'" enddate="'+$("#enddate").val() +'" paymethod="'+$("#paymethod").val()+'"price="'+$("#price").val()+'"></a>'+
+                            '</td>' +
+                            '</tr>';
+                    $("#orderlist").find("tbody").append(_str);
+                }
+                
+                if (PopUp) {
+                    PopUp.close();
+                }
+                $(".editOrder").unbind("click").click(function(){
+                    index = $(this).attr('index');
+                    oid = $(this).attr('oid');
+                    orderid = $(this).attr('orderid');
+                    agreementid = $(this).attr('agreementid');
+                    startdate = $(this).attr('startdate');
+                    enddate = $(this).attr('enddate');
+                    paymethod = $(this).attr('paymethod');
+                    price = $(this).attr('price');
+                    addOrder(index, oid, orderid, agreementid, startdate, enddate, paymethod, price);
+                });
+            });
+        });
+    }
+    $("#addOrder").click(function() {
+        addOrder();
+    });
+    
+    $(".editOrder").click(function(){
+        index = $(this).attr('index');
+        oid = $(this).attr('oid');
+        orderid = $(this).attr('orderid');
+        agreementid = $(this).attr('agreementid');
+        startdate = $(this).attr('startdate');
+        enddate = $(this).attr('enddate');
+        paymethod = $(this).attr('paymethod');
+        price = $(this).attr('price');
+        addOrder(index, oid, orderid, agreementid, startdate, enddate, paymethod, price);
+    });
+    
+</script>
+

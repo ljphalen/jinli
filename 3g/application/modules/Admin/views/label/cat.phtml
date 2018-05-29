@@ -1,0 +1,66 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $indexUrl; ?>">标签列表</a></li>
+			<li class=""><a href="<?php echo $editUrl; ?>">添加标签</a></li>
+			<li class="current"><a href="<?php echo $catUrl; ?>">标签分组</a></li>
+			<li class=""><a href="<?php echo $editCatUrl; ?>">添加分组</a></li>
+			<li class=""><a href="<?php echo $importUrl; ?>">数据导入</a></li>
+		</ul>
+	</div>
+	<div class="table_full">
+		<form action="<?php echo $indexUrl; ?>" method="POST" id="form">
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<table width="100%" cellspacing="0" cellpadding="0">
+
+				<tr class="tr">
+					<th class="th">标签类型：</th>
+					<td class="td">
+						<select name="type" id="type">
+							<option value="0">请选择</option>
+							<?php foreach ($types as $k => $v) { ?>
+								<option <?php echo ($k == $params['type']) ? 'selected="selected"' : ''; ?> value="<?php echo $k; ?>"><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+		</form>
+	</div>
+
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="5%">序号</td>
+				<td width="10%">名称</td>
+				<td width="10%">分类</td>
+				<td width="8%">状态</td>
+				<td width="12%">时间</td>
+			</tr>
+			<?php foreach ($data as $key => $value) {
+				?>
+				<tr class="ct">
+					<td><?php echo $value['id']; ?></td>
+					<td><?php echo $value['name']; ?></td>
+					<td><?php echo $value['cat_name']; ?></td>
+					<td><?php echo $value['content']; ?></td>
+					<td><?php echo $value['status'] == 1 ? '开启' : "关闭" ?></td>
+					<td><?php echo date('Y-m-d H:i:s', $value['add_time']); ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?></div>
+
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#start_time').datetimepicker();
+			$('#end_time').datetimepicker();
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

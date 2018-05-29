@@ -1,0 +1,238 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript"
+src="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.js"></script>
+<!-- 导航栏Ajax加载 指向navagator.html  menuOn表示分别需要高亮的菜单栏id 用下划线_隔开-->
+<section class="navigator" menuOn="zt_special_specialAdd">
+
+</section>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- 页面唯一id标识符 -->
+    <div id="zt_operation_07">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">专题标题</label>
+                    <div class="tb_cont tb_cell"><input type="text" class="rd_1 subjectname" value=""></div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">屏序</label>
+
+                    <div class="tb_cont tb_cell">
+                       <!-- <input type="text" class="rd_1 screenid" value="12">-->
+                        <ul class="radio_wrap" id="screenid">
+                            <li class="radio on" value="1">屏序1</li>
+                            <li class="radio " value="2">屏序2</li>
+                            <li class="radio " value="4">屏序4</li>
+                            <li class="radio " value="5">屏序5</li>
+                            <li class="radio " value="8">屏序8（仅V3)</li>
+                            <li class="radio " value="#"></li>
+
+                            <li class="radio " value="page_1">页面屏序1</li>
+                            <li class="radio " value="page_2">页面屏序2</li>
+                            <li class="radio " value="page_3">页面屏序3</li>
+                            <li class="radio " value="page_4">页面屏序4</li>
+                            <li class="radio " value="page_5">页面屏序5</li>
+                            <li class="radio " value="page_6">页面屏序6</li>
+
+                            <!--  <li class="radio " value="9">屏序9(wp风格)</li>-->
+                        </ul>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle zt_labelname1">广告图</label>
+                    <label class="tb_cell align_middle zt_labelname2 none">轮播图</label>
+                    <div class="tb_cont tb_cell cell_upload_wrap">
+                        <div class="cell_img_canvas" id="cell_img_canvas1"></div>
+                        <div class="cell_upload" id="cell_drag1">
+                            <div class="cell_upload_btn">
+                                <input type="hidden" class="subjectimg" value=""/>
+                                <button class="btn_s3">选择文件</button><input type="file" id="fileLoader" name="files"></div>
+                            <span class="cell_upload_tip">允许上传图片格式为：png jpeg jpg gif 且图片大小不能超过2M</span>
+                        </div>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">专题类型</label>
+                    <div class="tb_cont tb_cell">
+                        <ul class="radio_wrap" id="seminarType">
+                            <li class="radio on" value="1">主题专题</li>
+                            <li class="radio" value="9">广告专题</li>
+                        </ul>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle">专题简介</label>
+                    <div class="tb_cont tb_cell txt_editor_wrap"><textarea class="txt_editor"></textarea></div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap none" id="seminarAdvertisment">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle">广告图</label>
+                    <div class="tb_cont tb_cell cell_upload_wrap">
+                        <div class="cell_img_canvas" id="cell_img_canvas2"></div>
+                        <div class="cell_upload" id="cell_drag2">
+
+                            <div class="cell_upload_btn">
+                                <input type="hidden" class="adv_img" value="" >
+                                <button class="btn_s3">选择文件</button><input type="file" id="fileLoader2" name="files"></div>
+                            <span class="cell_upload_tip">允许上传图片格式为：png jpeg jpg gif 且图片大小不能超过2M</span>
+                        </div>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="line_title zt_specialNone">选择主题</div>
+
+
+
+
+            <div class="drag_sort_wrap zt_specialNone">
+                <div class="drag_sort">
+                    <label>待选主题</label>
+                    <ul class="drag_sort_list" id="dragSortTxtPack">
+
+                        <!--<li role="txtPack" targetImg="img04" data-url="image/t_img04.jpg">壁纸四</li>-->
+                    </ul>
+                    <div class="clear-fix"></div>
+                    <div><button class="btn_s3" id="packBzAdd">添加</button></div>
+                </div><!-- drag_sort end -->
+
+                <div class="drag_sort">
+                    <label>已选主题</label>
+                    <ul class="drag_sort_list" id="dragSortTxtPack2">
+
+                    </ul>
+                    <div class="clear-fix"></div>
+                    <div><button class="btn_s3" id="packBzDel">删除</button></div>
+                </div><!-- drag_sort end -->
+
+                <div class="drag_sort">
+                    <label>缩略图</label>
+                    <ul class="drag_sort_img" id="dragSortImgPack">
+                        <!-- 广告图片 不能被拖拽 -->
+                        <li class="fixed_elem">
+                            <img src="<?php echo $imageurl ?>">
+                            <p>文字.....</p>
+
+                        </li>
+
+                    </ul>
+                </div><!-- drag_sort end -->
+
+                <div class="clear-fix"></div>
+            </div><!-- drag_sor_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">创建时间</label>
+                    <div class="tb_cont tb_cell">
+						<input type="text" onClick="laydate({istime:   true, format: 'YYYY-MM-DD hh:mm:ss'})" readonly class="laydate-icon datepicker">
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="bnts_wrap"><button class="btn_s2" id="bzSeminarAdd02Prev">上一步</button> <button class="btn_s2 pop_btn" openPopId="fixTipView">保存</button></div>
+
+
+        </div><!-- content end -->
+
+    </div>
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">您确定添加专题?</p>
+                    <div class="tip_btns">
+                        <button class="btn_s2 save_ok" id="bzSeminarAdd02GoList">确定返回专题列表</button>
+                        <button class="btn_s2 btnCancel" id="">取消保存</button></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/vendor/load-image.all.min.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-image.js"></script>
+
+<!-- The File Upload validation plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-validate.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".save_ok").click(function () {
+            var sname = $(".subjectname").val();
+            var screeid = $("#screenid").find(".on").attr("value");
+
+            var subject_img = $(".subjectimg").val();
+
+            var txt_editor = $(".txt_editor").val();
+
+            var adv_img = $(".adv_img").val();
+            var ids = $("#dragSortImgPack > li ").not(".fixed_elem").map(function () {
+                return $(this).attr("targetimg");
+            }).get().join("_");
+
+            var ctime = $(".datepicker").val();
+
+            var data = "sname=" + sname + "&screeid=" + screeid + "&subject_img=" + subject_img +
+                    "&descrip=" + txt_editor + "&ctime=" + ctime + "&token=" + token;
+
+
+            var subjecttype = $("#seminarType").find(".on").attr("value");
+            if (subjecttype == 1) {
+                data += "&ids=" + ids + "&type=" + subjecttype;
+
+            }
+            if (subjecttype == 9) {
+                data += "&adv_img=" + adv_img + "&type=" + subjecttype;
+            }
+            //alert(data);
+            var url = "/Admin/Subject/addSubject";
+            $(".pop_wraper").removeClass("show");
+            $.post(url, data, function (d) {
+                if (d) {
+                    history.go(-2);
+                }
+            });
+        })
+    })
+</script>
+
+
+
+</body>
+</html>

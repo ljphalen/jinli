@@ -1,0 +1,88 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li ><a href="<?php echo $listUrl;?>">福利任务</a></li>
+		<li><a href="<?php echo $dlistUrl;?>">连续登录</a></li>
+		<li ><a href="<?php echo $dailyTaskUrl;?>">每日任务</a></li>
+		<li><a href="<?php echo $taskInfoConfigUrl;?>">任务说明</a></li>
+		<li class="current"><a href="javascript:void();">每日任务编辑</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑每日任务</div>
+<form method="post" action="<?php echo $dailyTaskEditPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">任务名称</th>
+			<td class="td"><input type="text" class="input" name="task_name" value="<?php echo $info['task_name'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">任务简述</th>
+			<td class="td"><input type="text" class="input wc" name="resume" value="<?php echo $info['resume'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">每天上限</th>
+			<td class="td"><input type="text" class="input" name="daily_limit" value="<?php echo $info['daily_limit'];?>">次</td>
+		</tr>
+	
+		<tr class="tr">
+			<th class="th">任务条件</th>
+			<td class="td"><input type="text" class="input wc" name="descript" value="<?php echo $info['descript'];?>"></td>
+		</tr>
+		<tr class="tr">
+				<th class="th">任务奖励</th>
+			    <td class="td">
+		            <div>
+		             	<input type="radio"  name="send_object" value="1" <?php echo ($info['send_object'] == 1)?'checked':'';?> >积分
+		            	<input class="input"  name="points" value="<?php echo ($info['send_object'] == 1)?$info['points']:'';?>"  />  			            
+		            </div>
+			         <div> 
+			            <input type="radio" name="send_object" value="2" <?php echo ($info['send_object'] == 2)?'checked':'';?>>A券
+			            <?php if($info['send_object'] == 2){?>
+				            <?php foreach($award_json as $key=>$value){ ?>
+				             <div id ='prize<?php echo $key;?>'>
+				             <?php echo $key +1 ;?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A券 <input class="input"  name="award[]" value="<?php echo $value['denomination'];?>" /> 元&nbsp;&nbsp;&nbsp;&nbsp;有效期&nbsp;&nbsp;第 <input type="text" class="input" name="date[]" value="<?php echo $value['section_start'];?>"> 天到  <input type="text" class="input" name="deadline[]" value="<?php echo $value['section_end'];?>"> <button onclick="deleteImg('<?php echo $key;?>');" onfocus="blur();" type="button"　class="btn"> 删除这张A券</button>
+				             </div>
+				            <?php } ?>
+			             <?php } ?>
+			         </div>
+			         <div id="award"></div>
+			         <div><button onclick="addupload();" onfocus="blur();" type="button"　class="btn">＋添加A券</button></div>
+			    </td>
+		</tr>
+		<tr class="tr" >
+			<th class="th">状态</th>
+			<td class="td">		
+				<select name="status" class="select wa" >
+				<option <?php if ($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+				<option <?php if ($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//导购标签表单数据提交
+$(document).ready(function(){
+	var imgc = <?php echo $award_json ? count($award_json) + 1 : 1 ;?>;
+	addupload  = function() {
+		var al = $('<div id="prize'+imgc+'">'+imgc+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A券 <input class="input" name="award[]" value=" "> 元&nbsp;&nbsp;&nbsp;&nbsp;有效期 &nbsp;&nbsp;第 <input type="text" class="input" name="date[]" value=" "> 天到 <input type="text" class="input" name="deadline[]" value=" "> <button onclick="deleteImg('+imgc+');" onfocus="blur();" type="button" 　class="btn"> 删除这张A券</button></div>');
+		$('#award').append(al);
+		imgc++;
+	},
+	deleteImg = function(elid) {
+		$('#prize'+elid).remove();
+	},
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Wealtaskconfig/dailyTask');
+	});
+	
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

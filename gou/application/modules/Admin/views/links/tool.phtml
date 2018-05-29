@@ -1,0 +1,44 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="#">首页链接管理</a></li>
+	</ul>
+</div>
+<form method="post" action="<?php echo $editToolPostUrl;?>" id="editForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" /> <input
+		name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="h_a">百宝箱管理</div>
+	<div class="table_full">
+		<table width="100%">
+			<?php 
+			$i=0;
+			foreach ($tool as $key=>$value) {
+			?>
+			<tr class="tr">
+				<th class="th">
+					<input name="tool[<?php echo $i;?>]['name']" value="<?php echo $value['name'];?>" class="input wa"/></th>
+				<td class="td">
+				   <input <?php if($value['hot']) echo 'checked';?> name="tool[<?php echo $i;?>]['hot']" type="checkbox" value="1">
+				</td>
+				<td class="td">
+				   <textarea class="input" name="tool[<?php echo $i;?>]['link']" class="textarea wc" style="height:60px;width:900px"><?php echo $value['link'];?></textarea>
+				</td>
+			</tr>
+			<?php 
+			$i++;
+			}
+			?>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/links/tool');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

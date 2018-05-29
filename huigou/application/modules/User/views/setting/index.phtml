@@ -1,0 +1,47 @@
+<?php echo $this->render("../../Front/views/layout/header.phtml");?>
+<section id="page">
+	<!-- 主体内容 -->
+	<section id="content">
+		<section class="account">
+			<section class="psetting">
+				<ul class="mod-text-list">
+					<li><h3>基本信息：</h3></li>
+					<li>
+						<a href="<?php echo $webroot.$userinfoUrl.'?id=',$user['id'];?>" class="r-arrow">
+							<dl class="mod-dl-list">
+								<dd>账  号：<?php echo $user['username'];?></dd>
+								<dd>用户名：<?php echo $user['realname'];?></dd>
+								<dd>性 别：<?php echo $user['sex'] == 0 ? '男':'女';?></dd>
+								<dd>生 日：<?php echo $user['birthday'] == '0000-00-00' ? '' : $user['birthday'] ;?></dd>
+							</dl>
+						</a>
+					</li>
+				</ul>
+
+				<ul class="mod-text-list">
+					<li><h3>第三方账号绑定：</h3></li>
+					<li>
+						<a href="<?php echo $webroot.$getauthcodeUrl;?>" class="r-arrow">淘宝账号：<?php echo urldecode($user['taobao_nick']);?> </a>
+					</li>
+				</ul>
+
+				<ul class="mod-text-list">
+					<li><h3>收货人信息：</h3></li>
+					<li>
+						<a href="<?php echo $webroot . ($address ? ($editaddressUrl . '?id=' . $address['id']) : '/user/address/add');?>" class="r-arrow">
+							<dl class="mod-dl-list">
+								<dd>收 货 人：<?php echo $address['realname'];?></dd>
+								<dd>手机号码：<?php echo $address['mobile'];?></dd>
+								<dd>收货地址：<?php echo $address['country'],$address['province'],$address['city'],$address['detail_address'];?></dd>
+								<dd>邮   编：<?php echo $address['postcode'];?></dd>
+							</dl>
+						</a>
+					</li>
+				</ul>
+			</section>
+		</section>
+	</section>
+	<!--  /主体内容 -->
+</section>
+</body>
+</html>

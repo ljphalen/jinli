@@ -1,0 +1,85 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $siteUrl . '?type=' . $type; ?>">站点列表</a></li>
+		<li class="current"><a href="javascript:;">编辑站点</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑站点</div>
+<form method="post" action="<?php echo $editSiteUrl; ?>" id="editForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<input name="type" value="<?php echo $type; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">标题</th>
+				<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title']; ?>">
+				</td>
+			</tr>
+
+			<?php if ($type == 'site'): ?>
+				<tr class="tr">
+					<th class="th">分类</th>
+					<td class="td">
+						<select id="group_name" name="group_name">
+							<?php foreach (Gionee_Service_RecWebsite::$groupNames as $value) { ?>
+								<option value="<?php echo $value; ?>" <?php if ($info['group_name'] == $value) echo 'selected="selected"'; ?>><?php echo $value; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+			<?php endif; ?>
+			<tr class="tr">
+				<th class="th">链接地址</th>
+				<td class="td"><input type="text" class="input wc" name="url" value="<?php echo $info['url']; ?>"></td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">图标</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="ResourceImg">
+							<img src="<?php echo $attachPath . $info['icon']; ?>" width="100"/>
+							<input type="hidden" name="icon" value="<?php echo $info['icon']; ?>"> <br/>
+							<a href="javascript:;">删除</a></li>
+					</ul>
+					<p style="clear: both;">
+						<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=ResourceImg'; ?>" style="height: 50px; width: 100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort']; ?>"></td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td">
+					<select name="status" min-width="100px">
+						<option <?php if ($info['status'] == 1) echo 'selected="selected"'; ?> value="1">开启</option>
+						<option <?php if ($info['status'] == 0) echo 'selected="selected"'; ?>value="0">关闭</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+	$('#ontime').datetimepicker();
+	$('#start_time').datetimepicker();
+	$(document).ready(function () {
+		ajaxForm('editForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Recwebsite/listsite?type=<?php echo $type;?>');
+		});
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,135 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $msgUrl; ?>">图文列表</a></li>
+		<li class="current"><a href="javascript:;">添加图文</a></li>
+	</ul>
+</div>
+<div class="h_a">添加信息</div>
+<form method="post" action="<?php echo $msgeditUrl; ?>" id="addFrom">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table class="editTable">
+			<tr>
+				<th>名称</th>
+				<td>
+					<select name="key">
+						<?php
+						foreach ($keys as $k => $name):
+							$select = ($info['key'] == $k) ? 'selected="selected"' : '';
+							?>
+							<option value="<?php echo $k; ?>"  <?php echo $select; ?>><?php echo $name; ?></option>
+						<?php endforeach; ?>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>标题</th>
+				<td>
+					<input style="width: 300px" type="text" class="input" name="title" value="<?php echo $info['title']; ?>">
+				</td>
+			</tr>
+			<tr>
+				<th>描述</th>
+				<td><textarea style="width: 300px" name="desc"><?php echo $info['desc']; ?></textarea>
+			</tr>
+
+			<tr>
+				<th>地址</th>
+				<td>
+					<input type="text" style="width: 300px" class="input" name="url" value="<?php echo $info['url']; ?>">
+				</td>
+			</tr>
+
+			<tr>
+				<th class="th">图片</th>
+				<td class="td">
+					<ul class="uploadImg">
+						<li id="NgImg">
+							<img src="<?php if (!$info['img']) {
+								echo $staticPath . '/img/content/nopic.jpg';
+							} elseif (strpos($info['img'], 'http') !== false) {
+								echo $info['img'];
+							} else {
+								echo $attachPath . $info['img'];
+							} ?>"/>
+							<input type="hidden" name="img" value="<?php echo $info['img']; ?>">
+						</li>
+					</ul>
+					<p style="clear:both;">
+						<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=NgImg'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+					</p>
+				</td>
+			</tr>
+
+			<tr>
+				<th class="th">子消息</th>
+				<td class="td">
+
+					<?php
+					for ($i = 1; $i <= 5; $i++):
+						$val = $info['sub_msg'][$i];
+						?>
+						<table class="editTable">
+							<tr>
+								<th>标题</th>
+								<td>
+									<input style="width: 300px" type="text" class="input" name="sub_msg[<?php echo $i; ?>][title]" value="<?php echo $val['title']; ?>">
+								</td>
+							</tr>
+							<tr>
+								<th>描述</th>
+								<td>
+									<textarea style="width: 300px" name="sub_msg[<?php echo $i; ?>][desc]"><?php echo $val['desc']; ?></textarea>
+							</tr>
+							<tr>
+								<th>地址</th>
+								<td>
+									<input type="text" style="width: 300px" class="input" name="sub_msg[<?php echo $i; ?>][url]" value="<?php echo $val['url']; ?>">
+								</td>
+							</tr>
+							<tr>
+								<th class="th">图片</th>
+								<td class="td">
+									<ul class="uploadImg">
+										<li id="NgImg<?php echo $i; ?>">
+											<img src="<?php if (!$val['img']) {
+												echo $staticPath . '/img/content/nopic.jpg';
+											} elseif (strpos($val['img'], 'http') !== false) {
+												echo $val['img'];
+											} else {
+												echo $attachPath . $val['img'];
+											}?>"/>
+											<input type="hidden" name="sub_msg[<?php echo $i; ?>][img]" value="<?php echo $val['img'];?>">
+										</li>
+									</ul>
+									<p style="clear:both;">
+										<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=NgImg' . $i;?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+									</p>
+								</td>
+							</tr>
+						</table>
+					<?php endfor; ?>
+				</td>
+			</tr>
+		</table>
+
+
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	//表单数据提交
+	$(document).ready(function () {
+		ajaxForm('addFrom', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Weixin/msg');
+		});
+	});
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>
+
+
+

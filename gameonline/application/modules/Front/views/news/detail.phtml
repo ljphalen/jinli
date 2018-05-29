@@ -1,0 +1,26 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="wrap">
+	<div class="content">
+		<div class="main">
+        	<div class="bread_crumbs">当前位置： <a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', 'newslist', 'newsdetail'.($val['ntype']==1?'_zx':'_hd').$news_info['id'], $webroot.'/Front/News/index/?ntype='.$news_info['ntype']);?>"><?php echo $ntype[$news_info['ntype']] ;?></a><span class="gt">&gt;</span><a href="javascript:void(0)"><?php echo $news_info['title'];?></a></div>
+			<!-- 公告内容 s-->
+			<div class="mod_box noticeIntro_box">
+				<div class="bt"><h2 class="page_title">【<?php echo $ntype[$news_info['ntype']];?>】<?php echo $news_info['title']; ?></h2><span><?php echo date('Y-m-d',$news_info['end_time']); ?></span></div>
+				<div class="con">
+						<?php echo html_entity_decode($news_info['content']); ?>
+				</div>
+			</div>
+			<!-- 分享至好友 s-->
+		    <?php echo $this->render("layout/share.phtml");?>
+		</div>
+		<div class="aside martop30">
+			   <!-- 本周排行 s-->
+	          <?php echo $this->render("layout/download.phtml");?> 
+	        <!-- 本周排行 e-->  
+		</div>
+		 <?php echo $this->render("layout/right.phtml");?>
+	</div>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

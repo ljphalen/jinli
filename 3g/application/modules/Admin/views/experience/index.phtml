@@ -1,0 +1,38 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $indexUrl; ?>">商品列表</a></li>
+			<li><a href="<?php echo $editUrl; ?>">添加信息</a></li>
+		</ul>
+	</div>
+
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+				<th class="th">名称</th>
+				<th class="th">用户等级</th>
+				<th class="th">赠送信息</th>
+				<th class="th">状态</th>
+				<th class="th">添加时间</th>
+				<th class="th">操作</th>
+			</tr>
+			<?php foreach ($data as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['id'];?></td>
+					<td class="td" align="left"><?=$v['name'];?></td>
+					<td class="td" align="left" style="color:  blue">等级<?=$v['level'];?></td>
+					<td class="td"><?php echo $v['reward']; ?></td>
+					<td class="td"><?php echo $v['status'] ? '开启' : '关闭'; ?></td>
+					<td class="td"><?php echo date('Y-m-d H:i:s', $v['add_time']); ?></td>
+					<td class="td"><a href="<?php echo $editUrl; ?>/?id=<?php echo $v['id']; ?>">编辑</a>&nbsp;
+						<a href="javascript:void(0);" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $v['id']; ?>', '', event);">删除</a>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

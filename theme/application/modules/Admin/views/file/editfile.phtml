@@ -1,0 +1,218 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- 页面唯一id标识符 -->
+    <div id="zt_usr_upload02">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">名称</label>
+                    <div class="tb_cont tb_cell">
+                        <input type="text" readonly="readonly" class="rd_1 cname" value="<?php echo $themeinfo["title"] ?>">
+                        <input type="hidden" class="themeid" value="<?php echo $themeinfo["id"] ?>">
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">英文名称</label>
+                    <div class="tb_cont tb_cell"><input type="text" readonly="readonly" class="rd_1 ename" value="<?php echo $themeinfo["Ename"] ?>"></div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell"><a href="/Admin/File/add?themeid=<?php echo $themeinfo["id"] ?>">更换主题包</a></label>
+
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+
+
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">作者</label>
+                    <div class="tb_cont tb_cell"><input type="text" readonly="readonly" class="rd_1" value="<?php echo $themeinfo['designer'] ?>"></div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle"><!-- 首页 -->缩略图</label>
+                    <div class="tb_cont tb_cell cell_upload_wrap">
+
+                        <div class="cell_img_canvas" id="cell_img_canvas1">
+                            <!-- 已经存在了的预览图 start-->
+                            <a><img src="<?php echo $imageurl . $imgs[0]['img'] ?>" class="tb_cell_img" style="height: auto;"></a>
+                            <!-- 已经存在了的预览图 end-->
+                        </div>
+                        <!-- <div class="cell_upload" id="cell_drag1">
+                        <div class="cell_upload_btn"><button class="btn_s3">选择文件</button><input type="file" id="fileLoader"></div>
+                    <span class="cell_upload_tip">允许主题大小不能超过2M</span>
+            </div> -->
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle">预览图</label>
+                    <div class="tb_cont tb_cell cell_upload_wrap">
+
+                        <div class="cell_img_canvas" id="cell_img_canvas1">
+                            <!-- 已经存在了的预览图 start-->
+                            <?php foreach ($imgs as $v) { ?>
+                                <a><img src="<?php echo $imageurl . $v['img'] ?>" class="tb_cell_img" style="height: auto;"></a>
+                            <?php } ?>
+                            <!-- 已经存在了的预览图 end-->
+                        </div>
+                        <!-- <div class="cell_upload" id="cell_drag1">
+                        <div class="cell_upload_btn"><button class="btn_s3">选择文件</button><input type="file" id="fileLoader"></div>
+                    <span class="cell_upload_tip">允许主题大小不能超过2M</span>
+            </div> -->
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell tb_tag">分类标签</label>
+                    <div class="tb_cont tb_cell">
+                        <div class="select_box">
+                            <label class="select_val" val="<?php echo $selecttype[0] ?>" >
+                                <?php if ($selecttype[1]) echo $selecttype[1]; ?></label>
+
+                            <ul class="select_option" style="display: none;">
+                                <?php foreach ($filetype as $v) { ?>
+                                    <li val="<?php echo $v['id'] ?>"><?php echo $v['name'] ?></li>
+                                <?php } ?>
+                            </ul>
+                        </div><!-- select_box -->
+                    </div>
+                </div><!-- com_tb end -->
+            </div>
+            <div class="com_tb_wrap fix_price">
+                <div class="com_tb">
+                    <label class="tb_cell">定价</label>
+                    <div class="tb_cont tb_cell txt_editor_wrap">
+                        <ul class="radio_wrap" id="priceType">
+                            <li class="radio price_free <?php if($themeinfo['price'] == 0) echo 'on'; ?>"  val="free" >免费主题</li>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <li class="radio price_fee <?php if($themeinfo['price'] != 0) echo 'on'; ?>" val="fee" >收费主题</li>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <li class="price_select" style="display:<?php if($themeinfo['price'] != 0){ echo 'inline-block'; }else { echo 'none';} ?>;vertical-align:middle">
+                                <div class="tb_cont tb_cell">
+                                    <div class="select_box" id="price">
+                                    <?php if($themeinfo['price']){ ?>
+                                    <label class="select_val" val="<?php echo $themeinfo['price']; ?>"><?php echo $themeinfo['price']; ?>A币</label>
+                                    <?php } else {?>
+                                    <label class="select_val" val="1">1A币</label>
+                                    <?php } ?>
+                                        <ul class="select_option">
+                                            <li val="2">2A币</li>
+                                            <li val="3">3A币</li>
+                                        </ul>
+                                    </div>
+									<span class="prompt_txt">(调整价格以后需要再次审核，请耐心等待)</span>
+                                </div>
+                                
+                            </li>
+                        </ul>
+                        <textarea class="txt_editor price_txt" id="price_comment"><?php echo $themeinfo['comment']; ?></textarea>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle">主题介绍</label>
+                    <div class="tb_cont tb_cell txt_editor_wrap">
+                        <textarea class="txt_editor" id="description"><?php echo $themeinfo['descript'] ?></textarea></div>
+                </div><!-- com_tb end -->
+                <div class="com_tb">
+                    <label class="tb_cell"></label>
+                    <div class="tb_cont tb_cell">
+                        <?php echo $themeinfo['reason'] ?>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+
+            <div class="bnts_wrap">
+                <button class="btn_s2 pop_btn" openPopId="fixTipView" id="ztUsrUploadDone">完成</button>
+            </div>
+
+        </div><!-- content end -->
+
+    </div>
+
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">确定对主题的编辑？</p>
+                    <div class="tip_btns"><button class="btn_s2 save_ok " id="upload02ViewList">确定</button>
+                        <button class="btn_s2 btnCancel " >取消</button></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+
+<script type="text/javascript">
+    $(function () {
+        $(".price_free").click(function(){
+            $(".price_select").hide();
+        });
+        $(".price_fee").click(function(){
+            $(".price_select").css("display", "inline-block");
+        });
+
+        $(".save_ok").click(function () {
+            $(".pop_wraper").removeClass("show");
+            var themeid = $(".themeid").val();
+            var typeid = $(".select_val").attr("val");
+            var txt_editor = $.trim($("#description").val());
+
+            var priceType = $("#priceType").find('.radio').filter(".on").attr("val");
+            var price = $("#price").find(".select_val").attr('val');
+
+            var price_comment = $("#price_comment").val();
+            var is_edit = 1;
+
+            var data = {
+                'themeid' : themeid,
+                'typeid' : typeid,
+                'token' : token,
+                'txt_editor' : txt_editor,
+                'priceType' : priceType,
+                'price' : price,
+                'price_comment' : price_comment,
+                'is_edit' : is_edit
+            };
+
+            var url = "/Admin/File/updatetype";
+            $.post(url, data, function (d) {
+                if (d) {
+                    window.location.href = "/Admin/File/index"
+                }
+            })
+        })
+
+
+
+    })
+
+</script>
+</body>
+</html>

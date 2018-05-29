@@ -1,0 +1,108 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $indexUrl; ?>">标签列表</a></li>
+		<li class="current"><a href="<?php echo $editUrl; ?>"><?php echo $data ? '编辑' : '添加' ?>标签</a></li>
+		<li class=""><a href="<?php echo $importUrl; ?>">数据导入</a></li>
+	</ul>
+</div>
+<div class="table_full">
+	<form action="<?php echo $editPostUrl; ?>" method="POST" id="addForm">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+		<table width="100%" cellspacing="0" cellpadding="0">
+
+		<?php if(!intval($info['id'])){?>
+			<tr class="tr"  id="tr_label_first">
+				<th class="th">一级分类：</th>
+				<td class="td">
+					<select name="label[1]"  id="label_first">
+						<option value="0">请选择</option>
+						<?php foreach ($firstLevel as $k => $v) { ?>
+							<option   value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+	<?php }else{
+		//$labelNames = array('1'=>'一级分类','2'=>'二级分类','3'=>'三级分类','4'=>'四级分类','5'=>'五级分类');
+		//$trNames = array('1'=>'label_first','2'=>'label_second','3'=>'label_three','4'=>'label_four','5'=>'label_five');
+		$i = 1;
+		 foreach($data as $k=>$v){?>
+				<tr class="tr"  id="tr_<?php echo $trNames[$i]; ?>">
+				<th class="th"><?php echo $labelNames[$i];?>：</th>
+				<td class="td">
+					<select name="label[<?php echo $i;?>]"  id="label_first">
+						<option value="0">请选择</option>
+						<?php foreach ($v as $m => $n) { ?>
+							<option   value="<?php echo $n['id']; ?>"  <?php if($k == $n['id']) echo 'selected';?>><?php echo $n['name']; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+	<?php  
+		$i++;
+	}
+	}?>
+			<tr class="tr">
+				<th class="th">名称</th>
+				<td class="td"><input class="input" name="name" value="<?php echo $info['name']; ?>"></td>
+			</tr>
+			<input type="hidden" value="<?php echo $info['id']; ?>" name="id">
+		</table>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+</div>
+<script>
+	$(document).ready(function () {
+		ajaxForm('addForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/label/index');
+		});
+	});
+	
+	
+	$("#label_first").bind('change', function () {
+			var pid = $("#label_first").val();
+			parseData(pid,'label_second',  'label[2]', 'label_first','二级分类');
+		});
+
+		$("#label_second").live('change', function () {
+			var pid = $("#label_second  option:selected").val();
+			parseData(pid,'label_three',  'label[3]', 'label_second','三级分类');
+		});
+
+		$("#label_three").live('change', function () {
+			var pid = $("#label_three option:selected").val();
+			parseData( pid,'label_four',  'label[4]', 'label_three','四级分类');
+		});
+
+		$("#label_four").live('change', function () {
+			var pid = $("#label_four option:selected").val();
+			parseData(pid,'label_five',  'label[5]', 'label_four','五级分类');
+		});
+
+		function parseData( pid, label,selected_name, pre_label,name) {
+			if(pid <=0) return false;
+			$.ajax({
+				'type': 'post',
+				'dataType': 'json',
+				'url': '/Admin/Label/ajaxGetCategoryData',
+				'data': {'token': '<?php echo $token;?>', 'pid': pid},
+				'success': function (e) {
+					if (e.data) {
+						var html = '<tr class="tr"  id="tr_' + label + '"><th class="th">'+name+'</th><td class="td"><select name="' + selected_name + '" id="' + label + '"><option value="0">请选择</option><option value="-1">全部子标签</option>';
+						$.each(e.data, function (i, m) {
+							html += '<option value="' + m.id + '">' + m.name + '</option>';
+						})
+						html += '</select></td></tr>';
+						console.log(html);
+						if ($("#tr_" + label)[0]) {
+							$("#tr_" + label).html(html);
+						} else {
+							$("#tr_" + pre_label).after(html);
+						}
+					}
+				}
+			});
+		}
+</script>

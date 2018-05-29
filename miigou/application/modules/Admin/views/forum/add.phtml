@@ -1,0 +1,88 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">帖子列表</a></li>
+    <li class="current"><a href="javascript:;">发布帖子</a></li>
+	</ul>
+</div>
+<div class="h_a">发布帖子</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+<input name="token" id="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">分类</th>
+			<td class="td"><select name="category_id">
+<?php foreach($category as $key => $value) {?>
+                <option value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php }?>
+            </select></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图片</th>
+			<td class="td">
+				<div id="imgs">				
+				</div>
+				<div class="mb10"><button onclick="addupload();" onfocus="blur();" type="button"　class="btn">＋添加图片</button></div>
+			</td>
+		</tr>
+		<tr class="tr">
+				<th class="th">是否置顶</th>
+				<td class="td">
+				<input type="hidden" name="is_top" id="is_top" value="0"/>
+				<input type="checkbox" onclick="if(this.checked){$('#is_top').val(1);}else{$('#is_top').val(0);}">(选中表示设置为置顶)
+				</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status">
+<?php foreach($status as $key => $value) {?>
+                <option value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php }?>
+            </select></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">内容</th>
+			<td class="td">
+				<textarea name="content" style="width: 800px; height: 400px;"></textarea>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	var editor;
+	KindEditor.ready(function(K) {
+		K.token = $('#token').val();
+	    editor = K.create('textarea[name="content"]', {
+	        resizeType : 1,
+	        allowPreviewEmoticons : false,
+	        allowImageUpload : true,
+	        uploadJson : '<?php echo $uploadImgUrl;?>',
+	        items : EDITOR_ITEMS
+	    });
+	});
+
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Forum/index');
+	},function(){
+		editor.sync();
+	});	
+
+	var imgc = 1;
+	addupload  = function() {
+		var al = $('<ul class="uploadImg"><li id="Img'+imgc+'"><img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/><input type="hidden" name="simg['+imgc+']" value=""></li></ul><p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>'+imgc+'" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>');
+		$('#imgs').append(al);
+		imgc++;
+	}
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

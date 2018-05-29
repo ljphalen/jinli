@@ -1,0 +1,44 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body module-id="userInfo">
+<div class="module">
+    <section class="layout-center signup-info">
+        <div class="signup-header">
+            <div class="side">
+                <div class="pic">
+                    <img src="<?php echo Common::getAttachPath().$user['headimgurl'] ;?>" />
+                </div>
+            </div>
+            <div class="main"><?php echo $user["realname"];?></div>
+        </div>
+        <div class="signup-detail">
+            <ul class="basic">
+                <li><label>性&emsp;&emsp;别：</label><?php echo $user["sex"];?></li>
+                <li><label>出生日期：</label><?php echo $user["birthday"];?></li>
+                <li><label>学&emsp;&emsp;历：</label><?php echo $user["education"];?></li>
+                <li><label>联系电话：</label><?php echo $user["phone"];?></li>
+            </ul>
+            <?php if($signup["description"]) { ?>
+            <div class="add-info">
+                <div class="title"><div class="circle"></div>附加信息</div>
+                <p><?php echo $signup["description"];?></p>
+            </div>
+            <?php }?>
+            <?php if($user["description"]) {?>
+            <div class="add-info">
+                <div class="title"><div class="circle"></div>个人简介</div>
+                <p><?php echo $user["description"];?></p>
+            </div>
+            <?php } ?>
+            <div class="circle"></div>
+        </div>
+    </section>
+    <div class="signup-status">
+        <ul class="signup-check" style="display: <?php echo ($signup["status"] == 2 ? "":"none");?>">
+            <li id="J_reject" data-ajax="<?php echo $webroot;?>/api/user/refuse?id=<?php echo $signup['id'];?>">拒绝</li>
+            <li id="J_pass" data-ajax="<?php echo $webroot;?>/api/user/accept?id=<?php echo $signup['id'];?>">通过</li>
+        </ul>
+        <div id="J_rejected" style="display: <?php echo ($signup["status"] == 1 ? "":"none");?>" class="btn btn-submit-gray">已拒绝</div>
+        <a id="J_contact" style="display: <?php echo ($signup["status"] == 3 ? "":"none");?>;" href="tel:<?php echo $user["phone"];?>" class="btn btn-login-submit">联系TA</a>
+    </div>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

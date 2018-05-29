@@ -1,0 +1,69 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div>V1.0 - V2.0.5以前的版本 兼容第三方客户端</div>
+<div class="nav">
+	<ul class="cc">
+
+		<li class="current"><a>CP管理</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑接口</div>
+<form method="post" action="<?php echo $manageUrl; ?>" id="addFrom">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+
+			<?php
+			foreach ($cp as $key => $value) {
+			?>
+
+				<tr class="tr">
+					<th class="th"><?php echo $value[0]; ?></th>
+					<td class="td">
+
+						<table>
+							<tr class="tr">
+								<th width="80">action:</th>
+								<td class="td"><input type="text" class="input wc"
+								                      name="cpaction[<?php echo $key; ?>][action]"
+								                      value="<?php echo $act[$key]['action']; ?>"></td>
+							</tr>
+							<tr class="tr">
+								<th width="80">type:</th>
+								<td class="td"><input type="text" class="input"
+								                      name="cpaction[<?php echo $key; ?>][type]"
+								                      value="<?php echo $act[$key]['type']; ?>"></td>
+							</tr>
+							<tr class="tr">
+								<th width="80">version:</th>
+								<td class="td"><input type="text" class="input"
+								                      name="cpaction[<?php echo $key; ?>][version]"
+								                      value="<?php echo $act[$key]['version']; ?>"></td>
+							</tr>
+							<tr class="tr">
+								<th width="80">extra_key:</th>
+								<td class="td"><input type="text" class="input"
+								                      name="cpaction[<?php echo $key; ?>][extra_key]"
+								                      value="<?php echo $act[$key]['extra_key']; ?>"></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			<?php } ?>
+
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	//广告表单数据提交
+	$(document).ready(function () {
+		ajaxForm('addFrom', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Widget_Cp/index');
+		});
+	})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,79 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">帖子列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">发布帖子</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">帖子分类</th>
+			<td class="td">
+			<select name="category_id" class="wa">
+				<option value="0">所有</option>
+				<?php foreach($category as $key=>$value) {?>				
+                	<option <?php if($key == $search['category_id']) echo 'selected';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php } ?>
+			</select>
+			</td>
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+				<option value="">所有状态</option>
+<?php foreach($status as $key => $value) {?>
+                <option <?php if($search['status'] == $key) echo 'selected';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php }?>
+			</select>
+			</td>
+			<th class="th">置顶状态</th>
+			<td class="td">
+			<select name="is_top" min-width="100px">
+				<option <?php if($search['is_top'] == 0) echo 'selected="selected"';?> value="0">所有</option>
+              <option <?php if($search['is_top'] == 1) echo 'selected="selected"';?> value="1">置顶</option>
+            </select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>ID</td>
+			<td>标题</td>
+			<td>所属分类</td>
+			<td>发布时间</td>
+			<td>用户</td>
+			<td>状态</td>
+			<td>是否置顶</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($forums as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $category[$value['category_id']];?></td>
+	        <td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+	        <td><?php echo $value['user_name'];?></td>
+			<td><?php echo $status[$value['status']];?></td>
+			<td><?php echo $value['is_top'] == 1 ? '是' : '否';?></td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

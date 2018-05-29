@@ -1,0 +1,92 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $indexUrl;?>?brand_id=<?php echo $brand_id;?>">品牌商品列表</a></li>
+    <li class="current"><a href="<?php echo $step1Url;?>">添加品牌商品</a></li>
+	</ul>
+</div>
+<div class="step mb10">
+	<ul class="cc">
+		<li><span class="fl"><em></em></span>第一步：选择商品</li>
+		<li class="line"></li>
+		<li class="current">第二步：完善商品</li>
+	</ul>
+</div>
+<?php if ($isExist):?>
+<div class="h_a" style="background-color: red; color:#FFFFFF; font-weight:300;">请注意，该商品之前已经添加过。</div><br/>
+<?php endif;?>
+<div class="h_a">添加商品</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="num_iid" value="<?php echo $info['num_iid'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input wa" name="sort" value="0"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">商品名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">价格</th>
+			<td class="td">售价：<?php echo $info['price'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">所属品牌</th>
+			<td class="td">
+			<select name="brand_id">
+				<option value="">请选择品牌</option>
+				<?php foreach($brand_list as $value) {?>				
+                <option value="<?php echo $value['id'];?>" <?php if($brand_id == $value['id']) echo 'selected="selected"';?>><?php echo $value['title'];?></option>
+				<?php }?>
+           	</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">商品图标</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="img">
+						<img src="<?php echo $info['pic_url'],'_120x120.',end(explode(".",  $info['pic_url']));?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['pic_url'];?>">
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">起止时间</th>
+			<td class="td">
+				<div>
+					<input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="" /> 至 
+					<input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="" />
+				</div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				<select name="status">
+                	<option value="1">&nbsp;&nbsp;上&nbsp;&nbsp;架&nbsp;&nbsp;</option>
+                	<option value="2">&nbsp;&nbsp;下&nbsp;&nbsp;架&nbsp;&nbsp;</option>
+           		</select>
+           	</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//商品表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $step1Url?>?brand_id=<?php echo $brand_id;?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

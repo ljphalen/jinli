@@ -1,0 +1,63 @@
+<include file="Public:header" />
+
+<div class="mainw clearfix">
+	<include file="nav_left" />
+    
+	<div class="rmain fl">
+   	  <h2 class="yyname">联系人管理</h2>
+      <a class="contactaddb btn-green" href="{:U('user/contact_add')}">
+            添加联系人
+      </a>
+      <table class="contacttable tab">
+          <tr>
+              <th>负责业务</th>
+			  <th>负责应用</th>
+			  <th>联系姓名</th>
+			  <th>联系电话</th>
+			  <th>邮箱地址</th>
+			  <th>QQ</th>
+			  <th>操作</th>
+          </tr>
+          <volist id="vo" name="list">
+          <tr>
+              <td><span title="{$vo.contact_business}">{$vo.contact_business|utf_substr=10}</span></td>
+              <td><span title="{$vo.own_app}">{$vo.own_app|utf_substr=10}</span></a></td>
+              <td><span title="{$vo.contact_name}">{$vo.contact_name|utf_substr=10}</span></td>
+              <td>{$vo.contact_mobile|utf_substr=10}</td>
+              <td>{$vo.contact_email|utf_substr=10}</td>
+              <td>{$vo.contact_qq|utf_substr=11}</td>
+              <td>
+              	<a href="{:U('user/contact_edit',array('id'=>$vo['id']))}">修改</a>&nbsp;&nbsp;
+              	<a href="{:U('user/contact_del',array('id'=>$vo['id']))}" onclick="return confirm('确认要删除吗?');">删除</a>
+              </td>
+          </tr>
+          </volist>
+      </table>
+   	 
+    </div>
+</div>
+<load href="{:cdn('PUBLIC')}/app/validate/formValidator-4.1.1.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/themes/126/js/theme.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/themes/126/style/style.css?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/formValidatorRegex.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/common/js/validate.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/common/js/resizeImg.js?{:C('JS_VERSION')}" />
+
+<script type="text/javascript">
+$.formValidator.initConfig({
+	theme : "126",
+	errorFocus : false,
+	formID : "editform",
+	mode:"AutoTip"
+});
+
+$("#tax_number").formValidator({}).inputValidator({
+	min : 0,
+	max : 18,
+	onError : "税务号长度不正确(限18个字符)"
+}).regexValidator({
+	regExp : "^([\\w]+)$",
+	onError : "只允许字母和数字"
+});
+</script>
+<include file="Public:footer" />

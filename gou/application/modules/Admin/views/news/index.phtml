@@ -1,0 +1,73 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">新闻列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加新闻</a></li>
+	</ul>
+</div>
+
+<form action="<?php echo $listUrl;?>" method="post">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<div class="table_full">
+		<table width="100%">
+		<tr class="tr">
+				<th class="th">分类</th>
+				<td class="td">
+				<select name="type_id">
+				<option value="">全部分类</option>
+<?php foreach($newstype as $key => $value) {?>
+                <option <?php echo ($search['type_id'] == $key) ? 'selected="selected"' : '';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php }?>
+	            </select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button type="submit">搜 索</button></span></span>
+	</div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="50">排序</td>
+			<td width="150">分类</td>
+			<td>标题</td>
+			<td>图片</td>
+			<td width="120">开始时间</td>
+			<td width="120">发布时间</td>
+			<td width="80">渠道号</td>
+			<td width="60">状态</td>
+			<td width="60">点击量</td>
+			<td width="80">操作</td>
+		</tr>
+<?php foreach($news as $key => $value) { 
+    list($module_id, $channel_id) = explode("_", $value['module_channel']);
+?>
+		<tr class="ct <?php if($value['status']) echo 'blue';?>">
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $newstype[$value['type_id']]; echo ((!empty($value['category'])) && ($value['type_id']=='1')) ? "({$value['category']})" :''; ?></td>
+			<td><a href="<?php echo $value['link'];?>" target="_blank"><?php echo $value['title']?></a></td>
+			<td><?php if($value['img']) {?><img src="<?php echo $attachPath.$value['img']; ?>" width="100" /><?php }?></td>
+            <td><?php echo date('Y-m-d H:i:s', $value['start_time']);?></td>
+            <td><?php echo date('Y-m-d H:i:s', $value['pub_time']);?></td>
+            <td><?php echo $value['channel_code'];?></td>
+            <td><?php echo $value['status'] == 1 ? '开启' : '关闭';?></td>
+            <td>
+            <a href="/admin/stat/thirdpart?version_id=<?php echo Stat_Service_Log::V_H5;?>&module_id=<?php echo $module_id;?>&channel_id=<?php echo $channel_id;?>&item_id=<?php echo $value['id'];?>" target="_blank"><?php echo $value['hits'];?></a>
+            </td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<?php if($news) {?>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php }?>
+<?php echo $this->render("layout/footer.phtml");?>
+

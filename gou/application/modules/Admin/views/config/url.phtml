@@ -1,0 +1,317 @@
+<?php echo $this->render("layout/header.phtml");?>
+<form method="post" action="<?php echo $urlPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="h_a">货到付款搜索配置</div>
+	<div class="table_full">
+		<table width="100%">				
+			<tr class="tr">
+				<th class="th">h5搜索</th>
+				<td class="td">
+				   <input class="input wc" name="h5_cod_search[url]" value="<?php echo $configs['h5_cod_search']['url'];?>"/>
+				<select name="h5_cod_search[module_id]">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['h5_cod_search']['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>				
+				<select name="h5_cod_search[cid]">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['h5_cod_search']['channel_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				渠道号<input type="text" class="input" name="h5_cod_search[channel_code]" value="<?php echo $configs['h5_cod_search']['channel_code'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">apk搜索</th>
+				<td class="td">
+				   <input class="input wc" name="apk_cod_search[url]" value="<?php echo $configs['apk_cod_search']['url'];?>"/>
+				<select name="apk_cod_search[module_id]">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['apk_cod_search']['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>				
+				<select name="apk_cod_search[cid]">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['apk_cod_search']['channel_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				渠道号<input type="text" class="input" name="apk_cod_search[channel_code]" value="<?php echo $configs['apk_cod_search']['channel_code'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">channel搜索</th>
+				<td class="td">
+				   <input class="input wc" name="channel_cod_search[url]" value="<?php echo $configs['channel_cod_search']['url'];?>"/>
+				<select name="channel_cod_search[module_id]">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['channel_cod_search']['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>				
+				<select name="channel_cod_search[cid]">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['channel_cod_search']['channel_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				渠道号<input type="text" class="input" name="channel_cod_search[channel_code]" value="<?php echo $configs['channel_cod_search']['channel_code'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">market搜索</th>
+				<td class="td">
+				   <input class="input wc" name="market_cod_search[url]" value="<?php echo $configs['market_cod_search']['url'];?>"/>
+				<select name="market_cod_search[module_id]">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['market_cod_search']['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>				
+				<select name="market_cod_search[cid]">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['market_cod_search']['channel_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				渠道号<input type="text" class="input" name="market_cod_search[channel_code]" value="<?php echo $configs['market_cod_search']['channel_code'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">app搜索</th>
+				<td class="td">
+				   <input class="input wc" name="app_cod_search[url]" value="<?php echo $configs['app_cod_search']['url'];?>"/>
+				<select name="app_cod_search[module_id]">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['app_cod_search']['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>				
+				<select name="app_cod_search[cid]">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['app_cod_search']['channel_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				渠道号<input type="text" class="input" name="app_cod_search[channel_code]" value="<?php echo $configs['app_cod_search']['channel_code'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">ios搜索</th>
+				<td class="td">
+				   <input class="input wc" name="ios_cod_search[url]" value="<?php echo $configs['ios_cod_search']['url'];?>"/>
+				<select name="ios_cod_search[module_id]">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['ios_cod_search']['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>				
+				<select name="app_cod_search[cid]">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['ios_cod_search']['channel_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				渠道号<input type="text" class="input" name="ios_cod_search[channel_code]" value="<?php echo $configs['ios_cod_search']['channel_code'];?>">
+				</td>
+			</tr>
+		</table>
+	</div>	
+	
+	<div class="h_a">头部淘宝搜索配置</div>
+	<div class="table_full">
+		<table width="100%">				
+			<tr class="tr">
+				<th class="th">h5搜索</th>
+				<td class="td">
+				   <input class="input wc" name="h5_taobao_search[url]" value="<?php echo $configs['h5_taobao_search']['url'];?>"/>
+				<select name="h5_taobao_search[module_id]">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['h5_taobao_search']['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>				
+				<select name="h5_taobao_search[cid]">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['h5_taobao_search']['channel_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				渠道号<input type="text" class="input" name="h5_taobao_search[channel_code]" value="<?php echo $configs['h5_taobao_search']['channel_code'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">Ami搜索</th>
+				<td class="td">
+				   <input class="input wc" name="ami_taobao_search[url]" value="<?php echo $configs['ami_taobao_search']['url'];?>"/>
+				<select name="ami_taobao_search[module_id]">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['ami_taobao_search']['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				<select name="ami_taobao_search[cid]">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['ami_taobao_search']['channel_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				渠道号<input type="text" class="input" name="ami_taobao_search[channel_code]" value="<?php echo $configs['ami_taobao_search']['channel_code'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">apk搜索</th>
+				<td class="td">
+				   <input class="input wc" name="apk_taobao_search[url]" value="<?php echo $configs['apk_taobao_search']['url'];?>"/>
+				<select name="apk_taobao_search[module_id]">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['apk_taobao_search']['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>				
+				<select name="apk_taobao_search[cid]">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['apk_taobao_search']['channel_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				渠道号<input type="text" class="input" name="apk_taobao_search[channel_code]" value="<?php echo $configs['apk_taobao_search']['channel_code'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">channel搜索</th>
+				<td class="td">
+				   <input class="input wc" name="channel_taobao_search[url]" value="<?php echo $configs['channel_taobao_search']['url'];?>"/>
+				<select name="channel_taobao_search[module_id]">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['channel_taobao_search']['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>				
+				<select name="channel_taobao_search[cid]">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['channel_taobao_search']['channel_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				渠道号<input type="text" class="input" name="channel_taobao_search[channel_code]" value="<?php echo $configs['channel_taobao_search']['channel_code'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">market搜索</th>
+				<td class="td">
+				   <input class="input wc" name="market_taobao_search[url]" value="<?php echo $configs['market_taobao_search']['url'];?>"/>
+				<select name="market_taobao_search[module_id]">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['market_taobao_search']['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>				
+				<select name="market_taobao_search[cid]">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['market_taobao_search']['channel_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				渠道号<input type="text" class="input" name="market_taobao_search[channel_code]" value="<?php echo $configs['market_taobao_search']['channel_code'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">app搜索</th>
+				<td class="td">
+				   <input class="input wc" name="app_taobao_search[url]" value="<?php echo $configs['app_taobao_search']['url'];?>"/>
+				<select name="app_taobao_search[module_id]">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['app_taobao_search']['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>				
+				<select name="app_taobao_search[cid]">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['app_taobao_search']['channel_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				渠道号<input type="text" class="input" name="app_taobao_search[channel_code]" value="<?php echo $configs['app_taobao_search']['channel_code'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">ios搜索</th>
+				<td class="td">
+				   <input class="input wc" name="ios_taobao_search[url]" value="<?php echo $configs['ios_taobao_search']['url'];?>"/>
+				<select name="ios_taobao_search[module_id]">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['app_taobao_search']['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>				
+				<select name="app_taobao_search[cid]">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['ios_taobao_search']['channel_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				渠道号<input type="text" class="input" name="ios_taobao_search[channel_code]" value="<?php echo $configs['ios_taobao_search']['channel_code'];?>">
+				</td>
+			</tr>
+		</table>
+	</div>	
+	
+	<div class="h_a">分类搜索配置</div>
+	<div class="table_full">
+		<table width="100%">				
+			<tr class="tr">
+				<th class="th">APK分类搜索</th>
+				<td class="td">
+				   <input class="input wc" name="type_taobao_search[url]" value="<?php echo $configs['type_taobao_search']['url'];?>"/>
+				<select name="type_taobao_search[module_id]">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['type_taobao_search']['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>				
+				<select name="type_taobao_search[cid]">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['type_taobao_search']['channel_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				渠道号<input type="text" class="input" name="type_taobao_search[channel_code]" value="<?php echo $configs['type_taobao_search']['channel_code'];?>">
+				</td>
+			</tr>		
+			<tr class="tr">
+				<th class="th">Ios分类搜索</th>
+				<td class="td">
+				   <input class="input wc" name="ios_type_taobao_search[url]" value="<?php echo $configs['ios_type_taobao_search']['url'];?>"/>
+				<select name="ios_type_taobao_search[module_id]">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['ios_type_taobao_search']['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>				
+				<select name="ios_type_taobao_search[cid]">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($configs['ios_type_taobao_search']['channel_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				渠道号<input type="text" class="input" name="ios_type_taobao_search[channel_code]" value="<?php echo $configs['ios_type_taobao_search']['channel_code'];?>">
+				</td>
+			</tr>				
+		</table>
+	</div>	
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Config/url');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,24 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div id="page">
+	<header id="header">
+		<div class="m-nav">
+			<section><a class="back" href="<?php echo $webroot;?>/product"><span>返回</span></a></section>
+			<section><span><?php echo $series['name'];?></span></section>
+			<section></section>
+		</div>
+	</header>
+	<div id="content">
+		<div class="module">
+			<ul class="product-list clearfix">
+				<?php foreach($product as $key=>$value){?>
+				<li class="item" data-link="<?php echo $webroot.'/product/detail'.'?id='.$value['id'].'&sid='.$series['id'];?>" data-type="url">
+					<section class="item-pic"><img src="<?php echo $attachPath.$value['img'];?>" alt="" /></section>
+					<section class="item-txt"><?php echo $value['title'];?></section>
+				</li>
+				<?php }?>
+			</ul>
+		</div>
+	</div>
+</div>
+<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/footer.phtml");?>

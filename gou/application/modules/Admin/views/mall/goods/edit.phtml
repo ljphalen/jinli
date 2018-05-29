@@ -1,0 +1,134 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+    <ul class="cc">
+        <li><a href="<?php echo $listUrl; ?>">商品列表</a></li>
+        <li class="current"><a href="javascript:;">编辑商品</a></li>
+    </ul>
+</div>
+<div class="h_a">编辑商品</div>
+<form method="post" action="<?php echo $editPostUrl; ?>" id="addForm">
+    <input name="token" value="<?php echo $token; ?>" type="hidden"/>
+    <input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+    <input name="price" value="<?php echo $info['price']; ?>" type="hidden"/>
+    <input name="num_iid" value="<?php echo $info['num_iid']; ?>" type="hidden"/>
+    <input name="commission" value="<?php echo $info['commission']; ?>" type="hidden"/>
+    <input name="category_id" value="<?php echo $info['category_id'] ?>" type="hidden"/>
+
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">排序</th>
+                <td class="td"><input type="text" class="input wa" name="sort" value="<?php echo $info['sort'] ?>"></td>
+            </tr>
+            <tr class="tr">
+                <th class="th">商品名称</th>
+                <td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title']; ?>">
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">价格</th>
+                <td class="td">
+                    售价：<?php echo $info['price']; ?>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">商品图标</th>
+                <td class="td">
+                    <ul class="uploadImg">
+                        <li id="gimg">
+                            <img src="<?php if (strpos($info['img'], 'http://') === false) {
+                                echo $attachPath, $info['img'];
+                            } else {
+                                echo $info['img'];
+                            }; ?>"/>
+                            <input type="hidden" name="img" value="<?php echo $info['img']; ?>">
+                        </li>
+                    </ul>
+                    <p style="clear:both;">
+                        <iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=gimg'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+                    </p>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">商品图片</th>
+                <td class="td">
+                    <ul class="uploadImg">
+                        <li id="AdImg">
+                            <?php foreach ($info['item_imgs'] as $key => $img) { ?>
+                                <img src="<?php echo $img['url'], '_120x120.', end(explode(".", $img['url'])); ?>"/>
+                            <?php } ?>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">开始时间</th>
+                <td class="td">
+                    <div>
+                        <input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $info['start_time']); ?>"/>
+                    </div>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">状态</th>
+                <td class="td">
+                    <select name="status">
+                        <option <?php if ($info['status'] == 1) echo 'selected'; ?> value="1">&nbsp;&nbsp;上&nbsp;&nbsp;架&nbsp;&nbsp;</option>
+                        <option <?php if ($info['status'] == 0) echo 'selected'; ?> value="0">&nbsp;&nbsp;下&nbsp;&nbsp;架&nbsp;&nbsp;</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr" id="descrip">
+                <th class="th">内容</th>
+                <td class="td"><textarea
+                        style="width: 800px; height: 500px" class="textarea"
+                        name="descrip"><?php echo $info['descrip']; ?></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+    </div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js?v=<?= $version ?>"></script>
+<script src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js?v=<?= $version ?>"></script>
+<script type="text/javascript">
+    var editor;
+    KindEditor.ready(function (K) {
+        K.token = token;
+        editor = K.create('textarea[name="descrip"]', {
+            resizeType: 1,
+            allowPreviewEmoticons: false,
+            allowImageUpload: true,
+            uploadJson: '<?php echo $adminroot.$uploadImgUrl;?>',
+            items: EDITOR_ITEMS
+        });
+        showContent('<?php echo $info['ad_ptype']?>');
+    });
+    get_subject = function () {
+        var subject_name = $("input[name=subject_name]").val();
+        $.ajax({
+            url: baseurl + '/Admin/Subject/get/?id=' + subject_name,
+            dataType: 'json',
+            success: function (data) {
+                if (data.success) {
+                    $("input[name=subject_id]").val(data.data.id);
+                    $("input[name=subject_name]").val(data.data.title);
+                } else {
+                    showError('提示', '查询失败或者信息不存在.');
+                }
+            }
+        });
+    }
+    //商品表单数据提交
+    $(document).ready(function () {
+        $('#start_time').datetimepicker();
+        $('#end_time').datetimepicker();
+        ajaxForm('addForm', function (ret) {
+            ajaxRedirect(ret, baseurl + '/Admin/Mall_Goods/index?s=1');
+        });
+    })
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml"); ?>

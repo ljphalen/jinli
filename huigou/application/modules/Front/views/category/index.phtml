@@ -1,0 +1,34 @@
+<?php echo $this->render("../../Front/views/layout/header.phtml");?>
+<section id="page">
+	<!-- 主体内容 -->
+	<section id="content">
+		<section class="goods">
+			<section class="mod-search">
+				<div class="long">
+					<form action="<?php echo $webroot.'/search/csearch';?>" method="get" name="form-search" id="J_form_search">
+						<input type="text" name="keyword" autocomplete="off" placeholder="请输入商品或分类名" class="inp" />
+						<input type="submit" name="search-btn" value="" />
+					</form>
+				</div>
+			</section>
+
+			<section class="category">
+				<ul>
+					<?php foreach($categorys as $key=>$value){ ?>
+					<li>
+						<a href="<?php echo $webroot,'/category/search?category_id=',$value['id'];?>">
+							<dl>
+								<dd><img src="<?php echo $attachPath,$value['img'];?>" alt="" width="129" height="129" /></dd>
+								<dt><?php echo $value['title'];?></dt>
+							</dl>
+						</a>
+					</li>
+					<?php }?>
+				</ul>
+			</section>
+		</section>
+	</section>
+	<!--  /主体内容 -->
+</section>
+</body>
+</html>

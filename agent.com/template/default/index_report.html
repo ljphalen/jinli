@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>分销后台</title>
+<link rel="stylesheet" type="text/css" href="/template/default/css/general.css" />
+<link rel="stylesheet" type="text/css" href="/template/default/css/main.css" />
+<link rel="stylesheet" type="text/css" href="/template/default/css/page.css" />
+
+<script type="text/javascript" src="/template/default/js/common.js"></script>
+<script type="text/javascript" src="/template/default/js/jquery-1.4.2-min.js"></script>
+<script type="text/javascript" src="/template/default/js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="/template/default/js/page.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#form1").submit(function(){
+		$("#selectDate").val('');
+	});
+	
+	$("#find-btn").click(function(){
+		var str = $("#form1").serialize();
+		//window.location.href = "/index.php?ac=<{$ac}>&channeltype=<{$channeltype}>&"+str+"&graph=1";
+		//alert(111);
+		//$.post("/index.php?ac=<{$ac}>&channeltype=<{$channeltype}>&graph=1",str,function(){});
+		//alert(3333);
+	});
+	
+	var $tab_list = $("#tab-list li");
+	$("#tab-list li a").click(function(){
+		$tab_list.removeClass("cur");
+		$(this).parent().addClass("cur");
+	});
+	
+	$("#btn_excel").click(function(){
+		document.location.href= '<{$pageurl}>&toexcel=1&detail=1';
+	});
+	$("#s").click(function(){
+		/*$("#detail").val('');
+		
+		if(btnDisabled())
+		$("#form2").submit();*/
+		document.location.href= '<{$pageurl}>&toexcel=1';
+	});
+	
+});
+
+function formatdate(t)
+{	
+	if(isNaN(t)){t=0;}
+	t=parseInt(t);
+	var d=parseInt(t/(60*60*24));
+	var h=parseInt((t-d*60*60*24)/(60*60));
+	var M=parseInt((t-d*(60*60*24)-h*60*60)/60);
+	var s=parseInt(t-d*(60*60*24)-h*60*60-M*60);
+	var str="";
+	if(d>0){str=str+d+"天";}
+	if(h>0){str=str+h+"小时";}
+	if(M>0){str=str+M+"分";}
+	if(s>0){str=str+s+"秒";}
+	document.write(str);
+}
+function selectAll(obj){
+	var $checkboxs=$("#list-table input:checkbox");
+	
+	if(obj.checked===true){
+		
+		$checkboxs.attr("checked",true);
+	}else{
+		
+		$checkboxs.attr("checked",false);
+	}
+}
+function btnDisabled(){
+	var detail=$("#detail").val();
+	if(detail=='1'){
+		var t=false;
+		$("#list-table input:checkbox").each(function(){
+			if(this.checked){
+				$("#btn_excel").val("正在导出Excel...").attr("disabled",true);
+				t=true;		
+				return false;
+			}
+		});
+		
+		if(t){setTimeout('$("#btn_excel").val("导出详细Excel").attr("disabled",false);',5000);}else {alert("请选择您要导出的数据行");}
+		return t;			
+	}else{
+		var t=false;
+		$("#list-table input:checkbox").each(function(){
+			if(this.checked){
+				$("#s").val("正在导出Excel...").attr("disabled",true);
+				t=true;		
+				return false;
+			}
+		});
+		
+		if(t){setTimeout('$("#s").val("导出Excel").attr("disabled",false);',5000);}else {alert("请选择您要导出的数据行");}
+		return t;			
+	}
+}
+
+function showpaydetail(dateStart,dateEnd,name,clientid,subclientid,gameid){
+	/*asyncbox.open({
+	　　　url : '/index.php?ac=report_paydetail&dateStart='+dateStart+'&dateEnd='+dateEnd+'&clientid='+clientid+'&subclientid='+subclientid+'&gameid='+gameid+'&name='+name+'',
+	　　　width : 450,
+	　　　height : 600,
+		 title : '消费金额明细'
+	});*/
+	return false;
+	var url = '/index.php?ac=report_paydetail&dateStart='+dateStart+'&dateEnd='+dateEnd+'&clientid='+clientid+'&subclientid='+subclientid+'&gameid='+gameid+'&name='+encodeURIComponent(name)+'';
+	window.open(url,'paydetail');
+}
+
+</script>
+
+<style>
+#list-table td,#list-table2 td{
+	text-align:center;
+}
+
+#period_count{
+	font-weight:bold;
+	line-height:150%;
+	padding-left:5px;
+}
+#tab-list {
+	position:relative;
+	z-index:10;
+}
+#tab-list ul { position:relative; overflow:hidden; position:relative; list-style:none; padding:0px; margin:0px; margin-bottom:-1px; height:30px;}
+#tab-list ul li { float:left; zoom:1; border:1px solid #BBDDE5; margin-right:1px;}
+#tab-list ul li.cur { float:left; border-bottom:1px solid #F4FAFB; background:#F4FAFB;}
+#tab-list ul li a { display:inline-block; zoom:1; _display:inline; height:28px; padding:0 20px; text-decoration:none; color:#335B64; font-weight:bold; line-height:28px;}
+
+.tab-content { background:#F4FAFB; padding-top:10px; border:1px solid #BBDDE5; padding:5px; }
+</style>
+</head>
+
+<body>
+<h1>
+<span class="action-span1">查询统计报表</span><span id="search_id"
+	class="action-span1"> - 
+    <{if $channeltype eq 1 && $levels>=200}>
+    自主渠道商统计报表
+    <{elseif $channeltype eq 2 && $levels>=200}>
+    移动渠道商统计报表
+    <{else}>
+    查询统计报表
+    <{/if}>
+    </span>
+<div style="clear: both"></div>
+</h1>
+<div id="tab-list">
+	<ul>
+	    <li <{if $gameid eq 0}>class="cur"<{/if}> ><a href="/index.php?ac=<{$ac}>&channeltype=<{$channeltype}>&gameid=0&keyword=<{$keyword}>&dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>&selectDate=<{$selectDate}>" hidefocus="ture">综合统计</a></li>
+        <{foreach item=item key=key from=$games}>
+	    <li <{if $gameid eq $key}>class="cur"<{/if}> ><a href="/index.php?ac=<{$ac}>&channeltype=<{$channeltype}>&gameid=<{$key}>&keyword=<{$keyword}>&dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>&selectDate=<{$selectDate}>" hidefocus="ture"><{$item}>统计</a></li>
+        <{/foreach}>
+	</ul>
+</div>
+<div class="tab-content">
+
+<!-- 三级渠道的数据 -->
+<{if $levels eq "10"}>
+<form name="form1" method="get" action="">
+<div class="form-div">
+  日期:从
+  <!--<input name="dateStart" type="text" id="dateStart" value="<{$dateStart}>" size="16" maxlength="19" onClick="return showCalendar('dateStart', '%Y-%m-%d', '24', false,'dateStart');" readonly />-->
+  <input name="dateStart" id="dateStart" value="<{$dateStart}>" class="Wdate" type="text" onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'dateEnd\')||\'2020-10-01\'}'})"/> 
+  到
+  <input name="dateEnd" id="dateEnd" value="<{$dateEnd}>" class="Wdate" type="text" onFocus="WdatePicker({minDate:'#F{$dp.$D(\'dateStart\')}',maxDate:'2020-10-01'})"/>
+<!--  <input type="text" name="dateEnd" id="dateEnd" value="<{$dateEnd}>" size="16" maxlength="19" onClick="return showCalendar('dateEnd', '%Y-%m-%d', '24', false,'dateEnd');" readonly />
+  <input type="hidden"  name="selectDate" value="<{$smarty.request.selectDate|default:''}>" id="selectDate" />-->
+  <input type="submit" name="button" class="btn" id="button" value="查询">
+  <input type="button" name="button2" class="btn" id="button2" value="昨天" onClick="location.href='/index.php?ac=<{$ac}>&channeltype=&selectDate=yesterday'">
+  <input type="button" name="button3" class="btn" id="button3" value="最近7天"  onclick="location.href='/index.php?ac=<{$ac}>&channeltype=&selectDate=hebdomad'">
+  <input type="button" name="button4" class="btn" id="button4" value="本月"  onclick="location.href='/index.php?ac=<{$ac}>&channeltype=&selectDate=month'">
+  <input type="hidden" name="gameid" class="btn" value="<{$gameid}>"  >	
+  <input type="hidden" name="ac" class="btn" value="<{$ac}>">	
+</div>
+
+<div id="period_count">
+    注册人数总计：<span class="red"><{$period_count['registerusers']|default:0|number_format}></span><br>
+    付费人数总计：<span class="red"><{$period_count['consumeusers']|default:0|number_format}></span><br>
+    消费金额总计：<span class="red"><{$period_count['consumemoney']|default:0|number_format}></span><br>
+</div>
+<div>
+  <table width="100%" border="0">
+    <tr style="background:none;">
+      <td><{$dataPrompt}> </td>
+      <td width="120">
+      
+      <{if !empty($list)}>
+      <select name="pagesize" id="pagesize" onChange="this.form.submit();">
+          <option value="10">每页显示10条</option>
+          <option value="15">每页显示15条</option>
+          <option value="20">每页显示20条</option>
+          <option value="50">每页显示50条</option>
+        </select>
+        <script>document.getElementById("pagesize").value='<{$pagesize}>'</script>
+        <{/if}>
+      </td>
+    </tr>
+  </table>
+  </div>
+</form>
+<{if $totalrow eq 0}>
+没有数据
+<{else}>
+<form id="form2" name="form2" method="post" action="/index.php/reportnewDown"  onSubmit="return btnDisabled()">
+<input type="hidden"  name="thedates" value="<{$thedates}>" />
+<input type="hidden"  name="selectDate" value="<{$smarty.request.selectDate|default:''}>" id="selectDate" />
+  <input type="hidden" name="gameid" value="<{$gameid}>">	
+   <div class="list-div" id="listDiv">
+     <div class="list-com-name"><{$agentname}>报表</div>
+<table width="100%" cellspacing="1" cellpadding="2" id="list-table">
+    <tr>
+      <!--<th>日期</th>-->
+       <th>子渠道号</th>      
+      <th>公司名称</th>
+      <th>新注册用户数</th>
+      <th>登录用户数</th>
+      <th>消费订单数</th> 
+      <th>消费用户数</th>
+      <th>消费金额</th>
+      <{if $channeltype neq 2}>
+      <th>爱贝的消费金额</th>
+      <th>移动的消费金额</th>
+      <{/if}>
+      <th>人均充值次数</th>
+      <th>付费率</th>
+      <th>ARPPU值</th>
+      <th>用户价值</th>
+      
+    </tr>
+    <{foreach item=i from=$list}>
+    <tr>
+      <!--<td><{$thedates}> </td>-->
+      <td><{$i['clientids']}></td>      
+      <td style="text-align:center"><a href="/index.php?ac=report_count&channeltype=<{$channeltype}>&clientid=<{$i['clientid']}>&subclientid=<{$i['clientids']}>&dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>&gameid=<{$gameid}>" target="_blank"><{$i['name']}></a></td>
+      <td><{$i['registerusers']}></td>
+      <td><{$i['loginusers']}></td>
+      <td><{$i['consumeorders']}></td>
+      <td><{$i['consumeusers']}></td>
+      <td><{$i['consumemoney']}></td>
+      <!--<td><{$i['consumemoney']*$i['intoratio']/10}></td>-->
+      <{if $channeltype neq 2}>
+      <td><{$i['consumemoneyipay']}></td>
+      <td><{$i['consumemoneyyd']}></td>
+      <{/if}>
+      <td><{$i['avgpaymenttime']}></td>
+      <td><{$i['paymentrate']}></td>
+      <td><{$i['ARPPU']}></td>
+      <td><{$i['registerusersvalue']}></td>
+    </tr>
+    <{/foreach}>
+  </table>
+  </div>
+  <table width="100%" border="0">
+    <tr style="background:none;">
+      <td width="300"><input type="button" name="button5"  class="btn" id="s" value="导出Excel" /> </td>
+      <td></td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+</form>
+<{/if}>
+<{/if}>
+ 
+<!-- 二级渠道的数据 --> 
+<{if $levels eq "30"}>
+<form name="form1" id="form1" method="get" action=""><div class="form-div">
+  子渠道号/公司
+  <input name="keyword" type="text" id="keyword" value="<{$keyword}>">
+  日期:从
+  <!--<input name="dateStart" type="text" id="dateStart" value="<{$dateStart}>" size="16" maxlength="19" onClick="return showCalendar('dateStart', '%Y-%m-%d', '24', false,'dateStart');" readonly />-->
+  <input name="dateStart" id="dateStart" value="<{$dateStart}>" class="Wdate" type="text" onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'dateEnd\')||\'2020-10-01\'}'})"/> 
+  到
+  <input name="dateEnd" id="dateEnd" value="<{$dateEnd}>" class="Wdate" type="text" onFocus="WdatePicker({minDate:'#F{$dp.$D(\'dateStart\')}',maxDate:'2020-10-01'})"/>
+<!--  <input type="text" name="dateEnd" id="dateEnd" value="<{$dateEnd}>" size="16" maxlength="19" onClick="return showCalendar('dateEnd', '%Y-%m-%d', '24', false,'dateEnd');" readonly />
+  <input type="hidden"  name="selectDate" value="<{$smarty.request.selectDate|default:''}>" id="selectDate" />-->
+  <input type="submit" name="button" class="btn" id="button" value="查询">
+  <input type="button" name="button2" class="btn" id="button2" value="昨天" onClick="location.href='/index.php?ac=<{$ac}>&channeltype=&selectDate=yesterday&keyword='+this.form.keyword.value">
+  <input type="button" name="button3" class="btn" id="button3" value="最近7天"  onclick="location.href='/index.php?ac=<{$ac}>&channeltype=&selectDate=hebdomad&keyword='+this.form.keyword.value">
+  <input type="button" name="button4" class="btn" id="button4" value="本月"  onclick="location.href='/index.php?ac=<{$ac}>&channeltype=&selectDate=month&keyword='+this.form.keyword.value">
+    <input type="button" name="button10" class="btn" id="find-btn" value="<{$show_graph}>" onclick="location.href='/index.php?sac=<{$ac}>&shape=1&ac=graph_show&channeltype=<{$channeltype}>&gameid=<{$gameid}>&dateStart='+this.form.dateStart.value+'&dateEnd='+this.form.dateEnd.value+'&selectDate=<{$smarty.request.selectDate|default:''}>&keyword='+this.form.keyword.value" >
+  <input type="hidden" name="gameid" class="btn" value="<{$gameid}>">
+  <input type="hidden" name="ac" class="btn" value="<{$ac}>">	
+</div>
+  
+
+<div id="period_count">
+    注册人数总计：<span class="red"><{$period_count['registerusers']|default:0|number_format}></span><br>
+   登录人数总计：<span class="red"><{$period_count['loginusers']|default:0|number_format}></span><br>     
+    付费人数总计：<span class="red"><{$period_count['consumeusers']|default:0|number_format}></span><br>
+    消费金额总计：<span class="red"><{$period_count['consumemoney']|default:0|number_format}></span><br>
+</div>
+<div>
+  <table width="100%" border="0">
+    <tr style="background:none;">
+      <td><{$dataPrompt}> </td>
+      <td width="120">
+      
+      <{if !empty($list)}>
+      <select name="pagesize" id="pagesize" onChange="this.form.submit();">
+          <option value="10">每页显示10条</option>
+          <option value="15">每页显示15条</option>
+          <option value="20">每页显示20条</option>
+          <option value="50">每页显示50条</option>
+        </select>
+        <script>document.getElementById("pagesize").value='<{$pagesize}>'</script>
+        <{/if}>
+      </td>
+    </tr>
+  </table>
+  </div>
+  <div class="list-div" id="listDiv">
+     <div class="list-com-name"><{$agentname}>报表</div>
+<table width="100%" cellspacing="1" cellpadding="2" id="list-table2">
+    <tr>
+      <!--<th>日期</th>-->
+      <th>渠道号</th>
+      <th>公司名称</th>
+      <th>新注册用户数</th>
+      <th>登录用户数</th>
+      <th>消费订单数</th>
+      <th>消费用户数</th>
+      <th>消费金额</th>
+      <{if $channeltype neq 2}>
+      <th>爱贝的消费金额</th>
+      <th>移动的消费金额</th>
+      <{/if}>
+      <th>人均充值次数</th>
+      <th>付费率</th>
+      <th>ARPPU值</th>
+      <th>用户价值</th>
+    </tr>
+    <{foreach item=i from=$lists}>
+    <tr>
+      <!--<td><{$thedates}> </td>-->
+      <td><{$i['clientid']}></td>
+      <td style="text-align:center"><a href="/index.php?ac=report_count&channeltype=<{$channeltype}>&clientid=<{$i['clientid']}>&subclientid=-1&dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>&gameid=<{$gameid}>" target="_blank"><{$i['name']}></a></td>
+      <td><{$i['registerusers']}></td>
+      <td><{$i['loginusers']}></td>
+      <td><{$i['consumeorders']}></td>
+      <td><{$i['consumeusers']}></td>
+      <td><a href="javascript:;" onClick=" showpaydetail('<{$dateStart}>','<{$dateEnd}>','<{$i['name']}>',<{$i['clientid']}>,'',<{$gameid}>);"><{$i['consumemoney']}></a></td>
+      <!--<td><{$i['consumemoney']*$i['intoratio']/10}></td>-->
+       <{if $channeltype neq 2}>
+      <td><{$i['consumemoneyipay']}></td>
+      <td><{$i['consumemoneyyd']}></td>
+      <{/if}>
+      <td><{$i['avgpaymenttime']}></td>
+      <td><{$i['paymentrate']}></td>
+      <td><{$i['ARPPU']}></td>
+      <td><{$i['registerusersvalue']}></td>
+    </tr>
+    <{/foreach}>
+  </table>
+  </div>
+</form>
+<br>
+<{if $totalrow eq 0 && $totalrows|default:1 eq 0}>
+子渠道没有数据
+<{else}>
+<form id="form2" name="form2" method="post" action="/index.php/reportnewDown" onSubmit="return btnDisabled()">
+<input type="hidden"  name="thedates" value="<{$thedates}>" />
+<input type="hidden"  name="selectDate" value="<{$smarty.request.selectDate|default:''}>" id="selectDate" />
+  <input type="hidden" name="gameid" value="<{$gameid}>">	
+   <div class="list-div" id="listDiv">
+     <div class="list-com-name">子渠道列表</div>
+<table width="100%" cellspacing="1" cellpadding="2" id="list-table">
+    <tr>
+      <!--<th>日期</th-->
+      <th>子渠道号</th>
+      <th>公司名称</th>
+      <th>新注册用户数</th>    
+      <th>登录用户用户数</th>
+      <th>消费订单数</th>
+      <th>消费用户数</th>
+      <th>消费金额</th>
+      <{if $channeltype neq 2}>
+      <th>爱贝的消费金额</th>
+      <th>移动的消费金额</th>
+      <{/if}>
+      <th>人均充值次数</th>
+      <th>付费率</th>
+      <th>ARPPU值</th>
+      <th>用户价值</th>
+    </tr>
+    <{foreach item=i from=$list}>
+    <tr>
+      <!--<td><{$thedates}></td>-->
+      <td><{$i['clientids']}></td>
+      <td style="text-align:center"><a href="/index.php?ac=report_count&channeltype=<{$channeltype}>&clientid=<{$i['clientid']}>&subclientid=<{$i['clientids']}>&dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>&gameid=<{$gameid}>" target="_blank"><{$i['name']}></a></td>
+      <td><{$i['registerusers']}></td>
+      <td><{$i['loginusers']}></td>
+      <td><{$i['consumeorders']}></td>
+      <td><{$i['consumeusers']}></td>
+      <td><a href="javascript:;" onClick="showpaydetail('<{$dateStart}>','<{$dateEnd}>','<{$i['name']}>',<{$i['clientid']}>,<{$i['clientids']}>,<{$gameid}>);"><{$i['consumemoney']}></a></td>
+      <!--<td><{$i['consumemoney']*$i['intoratio']/10}></td>-->
+      <{if $channeltype neq 2}>
+      <td><{$i['consumemoneyipay']}></td>
+      <td><{$i['consumemoneyyd']}></td>
+      <{/if}>
+      <td><{$i['avgpaymenttime']}></td>
+      <td><{$i['paymentrate']}></td>
+      <td><{$i['ARPPU']}></td>
+      <td><{$i['registerusersvalue']}></td>
+    </tr>
+    <{/foreach}>
+  </table>
+</div>
+<div class="wrapper inb ml">
+    <div class="page mb20" id="page-js-2"></div>
+    <script type="text/javascript">
+        var curpage = <{$page}>;
+        var pages = <{$pages}>;
+        PPage("page-js-2",curpage,pages,"hoho2.go",true);
+        function hoho2(){};
+        hoho2.go=function(pageNum){
+            window.location.href = "<{$pageurl}>&page=" + pageNum;
+            PPage("page-js-2",pageNum,pages,"hoho2.go",true);
+        }
+    </script>
+</div>
+  <table width="100%" border="0">
+    <tr style="background:none;">
+      <td width="300"><input type="button" name="button5"  class="btn" id="s" value="导出Excel" /> </td>
+      <td></td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+</form>
+<{/if}>
+<{/if}>
+ 
+ 
+ <!-- 管理员级别的数据-->
+  <{if $levels eq "200"}>
+<form name="form1" id="form1" method="get" action=""><div class="form-div">
+<{if $table == 2 || $table == 3}>
+二级渠道：<select name="companys" id="companys">
+			<option>请选择</option>
+			<{foreach from=$companys key=ckey item=citem}>
+				<OPTGROUP LABEL="<{$ckey}>">
+				<{foreach from=$citem key=sckey item=scitem}>
+					<option><{$scitem}></option>;
+				<{/foreach}>
+			<{/foreach}>
+		</select>
+三级渠道：<span id="subcompanys"></span>
+<{/if}>
+  渠道号/公司
+  <input name="keyword" type="text" id="keyword" value="<{$keyword}>">
+  日期:从
+  <!--<input name="dateStart" type="text" id="dateStart" value="<{$dateStart}>" size="16" maxlength="19" onClick="return showCalendar('dateStart', '%Y-%m-%d', '24', false,'dateStart');" readonly />-->
+  <input name="dateStart" id="dateStart" value="<{$dateStart}>" class="Wdate" type="text" onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'dateEnd\')||\'2020-10-01\'}'})"/> 
+  到
+  <input name="dateEnd" id="dateEnd" value="<{$dateEnd}>" class="Wdate" type="text" onFocus="WdatePicker({minDate:'#F{$dp.$D(\'dateStart\')}',maxDate:'2020-10-01'})"/>
+<!--  <input type="text" name="dateEnd" id="dateEnd" value="<{$dateEnd}>" size="16" maxlength="19" onClick="return showCalendar('dateEnd', '%Y-%m-%d', '24', false,'dateEnd');" readonly />
+  <input type="hidden"  name="selectDate" value="<{$smarty.request.selectDate|default:''}>" id="selectDate" />-->
+  <input type="submit" name="button" class="btn" id="button" value="查询">
+  <input type="button" name="button2" class="btn" id="button2" value="昨天" onClick="location.href='/index.php?ac=<{$ac}>&channeltype=<{$channeltype}>&gameid=<{$gameid}>&selectDate=yesterday&keyword='+this.form.keyword.value">
+  <input type="button" name="button3" class="btn" id="button3" value="最近7天"  onclick="location.href='/index.php?ac=<{$ac}>&channeltype=<{$channeltype}>&gameid=<{$gameid}>&selectDate=hebdomad&keyword='+this.form.keyword.value">
+  <input type="button" name="button4" class="btn" id="button4" value="本月"  onclick="location.href='/index.php?ac=<{$ac}>&channeltype=<{$channeltype}>&gameid=<{$gameid}>&selectDate=month&keyword='+this.form.keyword.value">
+  <input type="button" name="button10" class="btn" id="find-btn" value="<{$show_graph}>" onclick="location.href='/index.php?sac=<{$ac}>&shape=1&ac=graph_show&channeltype=<{$channeltype}>&gameid=<{$gameid}>&dateStart='+this.form.dateStart.value+'&dateEnd='+this.form.dateEnd.value+'&selectDate=<{$smarty.request.selectDate|default:''}>&keyword='+this.form.keyword.value" >
+  <input type="hidden" name="gameid" class="btn" value="<{$gameid}>">	
+  <input type="hidden" name="ac" class="btn" value="<{$ac}>">	
+  <input type="hidden" name="channeltype" class="btn" value="<{$channeltype}>">	
+</div>
+
+<div id="period_count">
+    注册人数总计：<span class="red"><{$period_count['registerusers']|default:0|number_format}></span><br>
+    登录人数总计：<span class="red"><{$period_count['loginusers']|default:0|number_format}></span><br>  
+    付费人数总计：<span class="red"><{$period_count['consumeusers']|default:0|number_format}></span><br>
+    消费金额总计：<span class="red"><{$period_count['consumemoney']|default:0|number_format}></span><br>
+</div>
+<div>
+  <table width="100%" border="0">
+    <tr style="background:none;">
+      <td><{$dataPrompt}> </td>
+      <td width="120">
+      
+      <{if !empty($list)}>
+      <select name="pagesize" id="pagesize" onChange="this.form.submit();">
+          <option value="10">每页显示10条</option>
+          <option value="15">每页显示15条</option>
+          <option value="20">每页显示20条</option>
+          <option value="50">每页显示50条</option>
+        </select>
+        <script>document.getElementById("pagesize").value='<{$pagesize}>'</script>
+        <{/if}>
+      </td>
+    </tr>
+  </table>
+  </div>
+</form>
+
+<{if $totalrow eq 0}>
+没有数据
+<{else}>
+<form id="form2" name="form2" method="post" action="/index.php/reportnewDown"  onSubmit="return btnDisabled()">
+<input type="hidden"  name="thedates" value="<{$thedates}>" />
+<input type="hidden"  name="selectDate" value="<{$smarty.request.selectDate|default:''}>" id="selectDate" />
+  <input type="hidden" name="gameid" value="<{$gameid}>">	
+  <input type="hidden" name="detail" id="detail" value="">	
+  <div class="list-div" id="listDiv">
+<table width="100%" cellspacing="1" cellpadding="2" id="list-table">
+    <tr>      <!--<th>日期</th>-->
+      <!--<th>子渠道号</th>-->
+      <th>渠道号</th>
+      <th>公司名称</th>
+      <th>新注册用户数</th>
+      <th>登录用户数</th>
+      <th>消费订单数</th>
+      <th>消费用户数</th>
+      <th>消费金额</th>
+      <{if $channeltype neq 2}>
+      <th>爱贝的消费金额</th>
+      <th>移动的消费金额</th>
+      <{/if}>
+      <th>人均充值次数</th>
+      <th>付费率</th>
+      <th>ARPPU值</th>
+      <th>用户价值</th>
+      <!--<th>分成收益总金额</th>
+      <{if $smarty.request.selectDate|default:'' eq 'month'}>
+      <th>本月活跃登录用户数</th>
+      <th>本月用户平均游戏时长</th>
+      <{/if}>-->
+      <th>操作</th>
+    </tr>
+    <{foreach item=i from=$list}>
+    <tr>      <!--<td><{$thedates}> </td>-->
+      <!--<td><{$i['clientids']}></td>-->
+      <td><{$i['clientid']}></td>
+      <td style="text-align:center"><a href="/index.php?ac=report_count&channeltype=<{$channeltype}>&clientid=<{$i['clientid']}>&subclientid=-1&dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>&gameid=<{$gameid}>" target="_blank"><{$i['name']}></a></td>
+      <td><{$i['registerusers']}></td>
+      <td><{$i['loginusers']}></td>
+      <td><{$i['consumeorders']}></td>
+      <td><{$i['consumeusers']}></td>
+      <td><a href="javascript:;" onClick="showpaydetail('<{$dateStart}>','<{$dateEnd}>','<{$i['name']}>',<{$i['clientid']}>,'',<{$gameid}>);"><{$i['consumemoney']}></a></td>
+      <!--<td><{$i['consumemoney']*$i['intoratio']/10}></td>
+      <{if $smarty.request.selectDate|default:'' eq 'month'}>
+      <td><{$i['activeusermonth']}></td>
+      <td><{$i['avgplaygamemonth']}></td>
+      <{/if}>-->
+       <{if $channeltype neq 2}>
+      <td><{$i['consumemoneyipay']}></td>
+      <td><{$i['consumemoneyyd']}></td>
+      <{/if}>
+       <td><{$i['avgpaymenttime']}></td>
+      <td><{$i['paymentrate']}></td>
+      <td><{$i['ARPPU']}></td>
+      <td><{$i['registerusersvalue']}></td>
+      <td>
+      <{if $i['clientids'] eq 0}>
+      <a href="/index.php?ac=report_sub&channeltype=<{$channeltype}>&clientid=<{$i['clientid']}>&selectDate=<{$smarty.request.selectDate|default:''}>&dateStart=<{$dateStart}>&dateEnd=<{$dateEnd}>&gameid=<{$gameid}>">查看子渠道</a>
+      <{/if}>
+      </td>
+    </tr>
+    <{/foreach}>
+  </table>
+</div>
+<div class="wrapper inb ml">
+    <div class="page mb20" id="page-js-2"></div>
+    <script type="text/javascript">
+        var curpage = <{$page}>;
+        var pages = <{$pages}>;
+        PPage("page-js-2",curpage,pages,"hoho2.go",true);
+        function hoho2(){};
+        hoho2.go=function(pageNum){
+            window.location.href = "<{$pageurl}>&page=" + pageNum;
+            PPage("page-js-2",pageNum,pages,"hoho2.go",true);
+        }
+    </script>
+</div>
+  <table width="100%" border="0">
+    <tr style="background:none;">
+      <td width="300" nowrap><input type="button" name="button5"  class="btn" id="s" value="导出Excel" /> 
+        <input type="button" name="btn_excel"  class="btn" id="btn_excel" value="导出详细Excel" />
+      </td>
+      <td><{$pagination}></td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+</form>
+<{/if}>
+<{/if}>
+<br><br>
+</div>
+<style type="text/css">
+tr.over td {
+	background: #bcd4ec; /*这个将是鼠标高亮行的背景色*/
+	cursor: pointer;
+}
+</style>
+<script language="javascript" type="text/javascript">
+$(document).ready(function(){
+	 $("#list-table tr").mouseover(function(){$(this).addClass("over");}).mouseout(function(){$(this).removeClass("over");});
+	 $("#list-table2 tr").mouseover(function(){$(this).addClass("over");}).mouseout(function(){$(this).removeClass("over");})
+	 $("#companys").change(function (){
+		$("#subcompanys").load('/index.php/reportnew/get_sub_company/'+(this.value?this.value:-1)+'/'+Math.random())
+	 });
+});
+
+
+</script>
+</body>
+</html>

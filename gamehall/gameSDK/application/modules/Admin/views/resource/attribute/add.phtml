@@ -1,0 +1,73 @@
+<?php echo $this->render("layout/header.phtml");?>
+
+<div class="nav">
+	<ul class="cc">
+        <li><a class="current" href="<?php echo $addUrl;?>">添加属性</a></li>
+	</ul>
+</div>
+<div class="h_a">添加属性</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr">
+			<th class="th">类型</th>
+			<td class="td">
+				<select name="at_type" onchange='showtd()'>
+<?php foreach($at_ptypes as $key=>$value) {?>				
+					<option value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php }?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+		</tr>
+		<tr class="tr" id="tdimg">
+			<th class="th">分类图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="simg">
+						<img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/>
+						<input type="hidden" name="img" value="">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=simg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr" style="display:none;" id="tdstatus">
+			<th class="th">状态</th>
+			<td class="td"><select name="status">
+                	<option value="1">开启</option>
+                	<option value="0">关闭</option>
+            </select></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//广告表单数据提交
+function showtd(){
+	var value=$("select[name=at_type]").val();
+	if(value == 1 || value == 7) {
+		$('#tdimg').show();
+		if(value == 1){
+			$('#tdstatus').show();
+		}
+		
+	} else {
+		$('#tdimg').hide();
+		$('#tdstatus').hide();
+	}
+}
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Resource_Attribute/add');
+	});
+	showtd();
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

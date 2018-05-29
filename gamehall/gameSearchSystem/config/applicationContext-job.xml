@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="indexPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+		   <list>
+		       <value>classpath:index_path.properties</value>
+		   </list>
+		</property>
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+	</bean>
+	
+
+	<bean id="gameIndexJob" class="com.gionee.game.search.index.job.GameIndexJob"
+	    init-method="init" destroy-method="destroy">
+	    <property name="indexPath" value="${dir.game.resource}"></property>
+	    <property name="gameDao" ref="gameDao"></property>
+	</bean>
+	
+	
+	
+	<bean id="gameIndexJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="gameIndexJob" />
+		</property>
+		<property name="targetMethod">
+			<value>execute</value>
+		</property>
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	
+	
+	<bean id="gameIndexJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="gameIndexJobDetail" />
+		</property>
+		<property name="cronExpression">
+		    <!-- <value>0 0/5 * * * ?</value> -->
+			<value>0/5 * * * * ?</value>
+		</property>
+	</bean>
+
+	
+	
+	<!-- 定时任务项  -->
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+			   <!-- <ref bean="gameIndexJobTrigger" /> -->
+			</list>
+		</property>
+	</bean>
+</beans>

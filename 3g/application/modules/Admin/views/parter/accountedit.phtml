@@ -1,0 +1,56 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $accountUrl; ?>">数据列表</a></li>
+			<li class="current"><a href="javascript:;"><?php echo $v['id'] ? '编辑' : '添加'; ?>信息</a></li>
+		</ul>
+	</div>
+	<div class="h_a"><?php echo $v['id'] ? '编辑' : '添加'; ?>信息</div>
+	<form method="post" action="<?php echo $accountEditPostUrl; ?>" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+		<input name="id" value="<?=$v['id'];?>" type="hidden">
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">合作商名</th>
+					<?php if (empty($v)) { ?>
+						<td class="td"><input type="text" name="name" id="name"></td>
+					<?php } else { ?>
+						<td class="td"><?php echo $v['name'] ?></td>
+					<?php } ?>
+				</tr>
+				<tr class="tr">
+					<th class="th">帐号:</th>
+					<td class="td"><input type="text" name="account" value="<?php echo $v['account']; ?>"/></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">密码:</th>
+					<td class="td"><input type="text" name="password" value="<?php echo $v['password']; ?>"/></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">状态:</th>
+					<td class="td">
+						<select name="status">
+							<option value="0"  <?php if ($v['status'] == 0) echo 'selected' ?>>暂停合作</option>
+							<option value="1"  <?php if ($v['status'] == 1) echo 'selected'; ?>>合作中</option>
+
+						</select>
+					</td>
+				</tr>
+			</table>
+			<input type="hidden" value="<?php echo $v['id']; ?>" id="id" name="id">
+			<span style="padding-left:260px;margin-top:20px;"><input type="submit" class="btn" value="提交"></span>
+		</div>
+
+	</form>
+
+	<script type="text/javascript">
+		//表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Parter/account');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

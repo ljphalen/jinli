@@ -1,0 +1,56 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">机型列表</a></li>
+		<li class="current"><a href="javascript:;"><?php if (empty($info['id'])): ?>添加<?php else: ?>编辑<?php endif; ?>
+				机型</a></li>
+	</ul>
+</div>
+<div class="h_a"></div>
+<form method="post" action="<?php echo $postUrl; ?>" id="addFrom">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">机型</th>
+				<td class="td"><input type="text" class="input" name="name" value="<?php echo $info['name']; ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">机型系列</th>
+				<td class="td"><input type="text" class="input" id="type" name="type" value="<?php echo $info['type']; ?>"></td>
+			</tr>
+			<!--
+			<tr class="tr">
+				<th class="th">下载链接</th>
+				<td class="td">
+					<table width="100%">
+						<?php
+						foreach ($cp as $key => $value):
+						?>
+							<tr>
+								<th width="80"><?php echo $value[0]; ?></th>
+								<td class="td"><input type="text" class="input wc" name="url[<?php echo $key; ?>]" value="<?php echo $info['url'][$key]; ?>"></td>
+							</tr>
+						<?php endforeach; ?>
+					</table>
+				</td>
+			</tr>
+			-->
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	//广告表单数据提交
+	$(document).ready(function () {
+		ajaxForm('addFrom', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Widget_Spec/index?type='+$('#type').val());
+		});
+	})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml"); ?>

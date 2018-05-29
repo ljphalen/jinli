@@ -1,0 +1,141 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body>
+    <div class="module webapp dhm-orders">
+        <div class="iScroll">
+            <form id="J_orderForm" action="/order/create" edit-ajaxurl="<?php echo $webroot;?>/order/edit" data-ajaxurl="<?php echo $webroot;?>/api/cart/info">
+                <input type="hidden" name="trade_no" value="<?php echo $order['trade_no']; ?>">
+                <ul class="orders-status layout-center">
+                    <li><span>订单号：<i><?php echo $order['trade_no']; ?></i></span></li>
+                    <li><span>提货码：<i><?php echo $order['get_token']; ?></i></span></li>
+                    <li><span>订单状态：<em><?php echo $order['statusMsg']; ?></em></span></li>
+                </ul>
+                <dl class="dl-orders layout-center">
+                    <dt>提货地址</dt>
+                    <dd id="J_addressWrap">
+                        <em>请选择提货地址</em>
+                        <i class="icon-arrow-right float-right"></i>
+                        <input type="hidden" name="address_id" value="<?php echo $order['address_id'];?>">
+                    </dd>
+                    <dt>提货日期</dt>
+                    <dd class="date">
+                        <input type="hidden" name="date" value="<?php echo $order['get_date'];?>">
+                        <ul id="J_dateWrap"></ul>
+                    </dd>
+                    <dt>提货时间段</dt>
+                    <dd id="J_timeSelect" class="text-align-center">
+                        <em></em><i class="icon-arrow-right float-right"></i>
+                        <input type="hidden" name="time_id" value="<?php echo $order['get_time_id'];?>">
+                    </dd>
+                    <dt>购物清单</dt>
+                    <dd class="cat-list">
+                        <ul class="goods-list">
+                            <?php foreach($goods as $item): ?>
+                            <li>
+                                <ul class="goods-item">
+                                    <li>
+                                        <img src="<?php echo $staticPath;?>/assets/img/blank.gif" data-src="<?php echo Common::getAttachPath() . $item['img']; ?>">
+                                    </li>
+                                    <li>
+                                        <p class="title"><?php echo $item['title']; ?></p>
+                                    </li>
+                                    <li>
+                                        <p class="price">￥<?php echo $item['deal_price']; ?></p>
+                                        <p>X<?php echo $item['goods_num']; ?></p>
+                                    </li>
+                                </ul>
+                            </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </dd>
+                </dl>
+                <div class="total-bar layout-center">
+                    <span>共<em><?php echo $order['total_goods_num']; ?></em>件商品</span>
+                    <span>合计：<em>￥<?php echo $order['real_price']; ?></em></span>
+                </div>
+            </form>
+        </div>
+        <div class="pay-bill-bar layout-center">
+            <span id="J_cancelOrder" class="btn btn-submit-white float-left cancel" data-ajaxurl="<?php echo $webroot;?>/order/cancel?trade_no=<?php echo $order['trade_no']; ?>">取消订单</span>
+            <a id="J_weixinPay" href="<?php echo $webroot;?>/front/order/pay?trade_no=<?php echo $order['trade_no'];?>" class="btn btn-submit float-right">去支付</a>
+        </div>
+    </div>
+
+    <div class="modal J_modal" id="J_templateModal" style="display:none;"></div>
+    
+    <!-- 选择提货地址 -->
+    <script type="text/template" id="J_addressTemplate">
+        <div class="address-list simple-list">
+            <div class="box-wrap">
+                <dl>
+                    <dt>请选择提货地址</dt>
+                </dl>            
+                <dl>
+                    <%for(var i=0, len=address.length; i<len; i++) {%>
+                        <dd data-post="1" data-address="<%=address[i].detail_address%>" data-address-id="<%=address[i].id%>" class="J_selectAddress <%=address.selected==address[i].id ? 'selected': ''%>">
+                            <p><%=address[i].detail_address%></p>
+                            <i style="display:none;" class="icon-selected"></i>
+                        </dd>
+                    <%}%>
+                </dl>
+            </div>
+        </div>
+    </script>
+    <!-- 选择提货时间 -->
+    <script type="text/template" id="J_timeSelectTemplate">
+        <div class="date-list simple-list">
+            <div class="box-wrap">
+                <dl>
+                    <dt>请选择提货时间
+                        <span class="float-right"></span>
+                    </dt>
+                </dl>
+                <dl>
+                    <% var key; for(key in time) {%>
+                        <% if (key!='selected'){%>
+                        <dd data-post="1" data-timeid="<%=key%>" data-time="<%=time[key]%>" class="J_selectTime <%=time.selected==key?'selected':''%>">
+                            <p class="text-align-center"><%=time[key]%></p>
+                            <i style="display:none;" class="icon-selected"></i>
+                        </dd>
+                        <%}%>
+                    <%}%>
+                </dl>
+            </div>
+        </div>
+    </script>
+    <!-- 选择提货日期 -->
+    <script type="text/template" id="J_dateSelectTemplate">
+        <%for(var i=0, len=date.length; i<len; i++) { %>
+            <li data-post="1" data-date="<%=date[i].value%>" class="J_dateItem <%=date.selected==date[i].value?'selected':''%>">
+                <div class="date-item">
+                    <span class="week"><%=date[i].week%></span>
+                    <p class="month-day"><%=date[i].date%></p>
+                    <i style="display:none" class="icon-selected"></i>
+                </div>
+            </li>
+        <%}%>
+    </script>
+
+    <!-- 是否取消订单 -->
+    <script type="text/template" id="J_cancelOrderTemplate">
+        <div class="simple-dialog">
+            <div class="title">是否取消订单？</div>
+            <div class="wrap">
+                <div class="modal-cancel J_modalCancel">否</div>
+                <div id="J_modalClose" class="modal-ensure J_modalCancel">是</div>
+            </div>
+        </div>
+    </script>
+
+    <!-- 提示还不能支付 -->
+    <!-- <script type="text/template" id="J_payTemplate">
+        <div class="simple-dialog">
+            <div class="title J_modalCancel">微信支付功能暂未开通，<br>客服会尽快与您联系。</div>
+        </div>
+    </script> -->
+    
+<?php echo $this->render("layout/footer.phtml");?>
+<script>
+    require(['ordersDetail']);
+</script>
+</body>
+</html>

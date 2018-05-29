@@ -1,0 +1,1 @@
+pureftpd.sql 只在建立FtpServer的时候使用

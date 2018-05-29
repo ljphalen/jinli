@@ -1,0 +1,108 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+<style>
+	.mainw2{*z-index: 20}
+	.mainzindex{*z-index: 10;}
+</style>
+<div class="mainw mainw2  clearfix">
+	<div class="rmain fl col-md-11 mainwk">
+		<div class="panel">
+			<h2 class="yyname"><a href="{:U('apps/index')}">我的应用</a> » {$appinfo.app_name}</h2>
+			<div class="panel-body">
+				<include file="_uploadModal" />
+				<div class="row yymain">
+					<div class="col-md-9">
+						 <div class="caption">
+							<h4>{$appinfo.app_name}</h4>
+							<h6>应用名称：{$appinfo.app_name}</h6>
+							<h6>包名称：{$appinfo.package}</h6>
+							<h6>AppID：{$appinfo.id}</h6>
+							<notempty name="$appinfo['union']['api_key']">
+							<h6>API-Key：{$appinfo['union']['api_key']}</h6>
+							<h6>Secret-Key：{$appinfo['union']['secret_key']}</h6>
+							</notempty>
+							<hr>
+							<h6>状态：{$apkinfo[0].status_desc}</h6>
+							<h6>版本号：{$apkinfo[0].version_name}</h6>
+							<h6>上传日期：{$apkinfo[0].created_at|date='Y-m-d H:i:s',###}</h6>
+							<h6>审核日期：<php> echo !empty($apkinfo[0]['checked_at'])?date('Y-m-d H:i:s',$apkinfo[0]['checked_at']):""; </php></h6>
+							<h6>上线日期：<php> echo !empty($apkinfo[0]['onlined_at'])?date('Y-m-d H:i:s',$apkinfo[0]['onlined_at']):""; </php></h6>
+							<h6>下线日期：<php> echo !empty($apkinfo[0]['offlined_at'])?date('Y-m-d H:i:s',$apkinfo[0]['offlined_at']):""; </php></h6>
+							
+							<if condition="$apkinfo[0]['status'] eq '-1'">
+	                    	<php>
+	                    	$verifyRes = D("Admin://Testlog")->where(array("apk_id"=>$apkinfo[0][id],"result_id"=>2))->field("reason_id, remarks")->order("id desc")->find();
+	                    	$reason_info = D("Reason")->order('reason_id')->where(array("type"=>1,"reason_id"=>$verifyRes['reason_id']))->field("reason_content")->find();
+	                    	</php>
+	                    	<hr>
+		                    	<div style="color:#f00;font-size:12px">
+		                    	<h6 class="nopass-reason">审核未通过的原因：</h6>
+			                    	<div class="nopass-reason" title="<if condition="$reason_info['reason_content'] eq '其它' || $verifyRes[reason_id] == 0">{$verifyRes.remarks|trim}<else />{$reason_info.reason_content|trim}</if>">
+			                    	<if condition="$reason_info['reason_content'] eq '其它' || $verifyRes[reason_id] == 0">
+			                    	{$verifyRes.remarks|nl2br}
+			                    	<else />
+			                    	{$reason_info.reason_content|trim}
+			                    	</if>
+			                    	</div>
+		                    	<div>
+	                    	</if>
+						 </div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="mainw mainw2 clearfix mainzindex">
+	<div class="rmain fl col-md-11 mainwk">
+		<div class="panel">
+			<h2 class="yyname">操作功能</h2>
+			<div class="panel-body oldapkrow">
+			
+				<div class="col-md-6">
+					 <div class="caption">
+					 	<div class="captionci captionci1">
+					 		更新<br />游戏包
+					 	</div>
+					 	<h6 class="captk"><em>发布的游戏包 </em></h6>
+						<h6><a href="{:U('history', array('id'=>$apkinfo[0][id]))}" class="btn btn-default btn-sm">历史版本</a></h6>
+						<h6><a href="javascript:void(0);" id="apkupload" class="btn btn-default btn-sm">更新游戏包</a>
+						<a href="{:U('apps/ftpupload')}" class="btn btn-default btn-sm">ftp上传更新</a></h6>
+						<div>
+							<input type="hidden" id="app_id" name="app_id" value="{$appinfo.id}" >
+							<input type="hidden" id="type" name="type" value="1" />
+						</div>
+					 </div>
+				</div>
+				
+				<div class="col-md-6">
+					 <div class="caption">
+					 <div class="captionci captionci2">
+					 		修改<br />游戏资料
+					 	</div>
+					 	<h6 class="captk"><em>配置游戏简介、图标、截图</em></h6>
+					 	<h6 class="captk"></h6>
+						<h6><a href="{:U('edit', array('id'=>$apkinfo[0][id]))}" class="btn btn-default btn-sm">修改游戏资料</a></h6>
+					 </div>
+				</div>
+				
+				<div class="col-md-6">
+					 <div class="caption">
+					 <div class="captionci captionci3">
+					 	接入SDK
+					 </div>
+						<h6><a href="/help/page/id/7.html" class="btn btn-default btn-sm">联运流程</a></h6>
+						<h6><a href="/help/page/id/10.html" class="btn btn-default btn-sm">sdk下载</a></h6>
+						<h6><a href="/help/page/id/6.html" class="btn btn-default btn-sm">帮助文档</a></h6>
+					 </div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	
+</div>
+
+<include file="Public:footer" />

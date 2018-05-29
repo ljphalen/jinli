@@ -1,0 +1,65 @@
+<?php echo $this->render("layout/header2.phtml");?>
+
+<div id="page">
+		<div class="papps wrapper" id="J_scrollWrap">
+			<div class="mainWrap">
+				<!-- 内容区域 START-->
+				<header class="hdWrap">
+					<div class="hd-l"><a href="<?php echo $webroot.$indexUrl;?>" class="l-arrow">back</a></div>
+					<div class="hd-r"><h1><?php echo $type['name'];?></h1></div>	
+				</header>
+
+				<div class="module">
+					<section id="default-tab" data-ajaxUrl="<?php echo $webroot.$listMoreUrl;?>?type_id=<?php echo $type['id'];?>">
+						<div id="app-cont">
+							<!-- 分类列表 START -->
+							<div data-tab="app-reco" id="app-recoWrap">
+								<div class="app-list">
+									<!-- 列表 -->
+									<?php foreach ($app as $key=>$value){?>
+										<div class="app-item-list">
+											<div class="app-item-img">
+												<img src="<?php echo $attachPath.$value['img'];?>" />
+											</div>
+											<div class="app-item-info">
+												<div class="app-item-title"><?php echo $value['name'];?></div>
+												<div class="star" data-star="<?php echo $value['star'];?>"></div>
+												<div class="app-item-text"><?php echo html_entity_decode($value['descrip']);?> | <?php echo $type['name'];?></div>
+											</div>
+											<div class="app-item-bton button"><a href="<?php echo Common::clickUrl($value['id'], 'APP', $value['link'], $t_bi);?>" data-addUrl="<?php echo $webroot;?>/api/app/index?id=<?php echo $value['id'];?>" class="btn open-btn">打开</a></div>
+										</div>
+									<?php }?>
+								</div>
+								<div id="pullUp">
+									<span class="pullUpIcon"></span>
+									<span class="pullUpLabel">上拉加载更多应用</span>
+								</div>
+							</div>
+							<!-- 分类列表 END -->
+						</div>
+					</section>
+				</div>
+				<!-- 内容区域 END-->
+			</div>
+		</div>
+	</div>
+<!-- 分类模板 START -->
+<script id="J_itemView" type="text/template">
+	{each data.list}
+		<div class="app-item-list">
+			<div class="app-item-img">
+				<img src="{$value.img}" />
+			</div>
+			<div class="app-item-info">
+				<div class="app-item-title">{$value.title}</div>
+				<div class="start star{$value.star}"></div>
+				<div class="app-item-text">{$value.appInfo} | {$value.appType}</div>
+			</div>
+			<div class="app-item-bton button"><a href="{$value.link}" class="btn open-btn">打开</a></div>
+		</div>
+	{/each}
+</script>
+<!-- 分类模板 END -->
+
+<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/footer2.phtml");?>

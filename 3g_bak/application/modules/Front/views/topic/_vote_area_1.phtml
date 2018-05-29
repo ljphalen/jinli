@@ -1,0 +1,57 @@
+<!-- 二选一投票区域 -->
+<?php
+
+$voted1 = $hasVote?'topic-vote-done':'';
+$voted2 = $hasVote?'':'none';
+foreach($optionResult as $k => $v) {
+	$txt = explode('，',$v['txt']);
+	$opTxtb[$k] = implode('<br>',$txt);
+	$opTxtt[$k] = $txt[0];
+}
+?>
+<div class="topic-vote-two <?=$voted1?>" >
+	<div class="vtitle"><?=$info['feedback_title']?></div>
+	<div class="main">
+		<?php if($hasVote):
+			$ck1 = $ck2 = '';
+			if ($info['option_num'] == 1) {
+				$ck1 = 'like-selected';
+			} else {
+				$ck2 = 'like-selected';
+			}
+			?>
+		<div class="txt">
+			<p data-index="1"><i class="icon-zan <?=$ck1?>"></i><?=$opTxtb[1]?></p>
+			<p>VS</p>
+			<p data-index="2"><i class="icon-zan <?=$ck2?>"></i><?=$opTxtb[2]?></p>
+		</div>
+		<?php else:?>
+		<div class="txt" data-url='<?php echo $webroot.$feedbackUrl;?>'>
+			<p data-index="1"><i class="icon-zan"></i><span class="plusOne">+1</span><?=$opTxtb[1]?></p>
+			<p>VS</p>
+			<p data-index="2"><i class="icon-zan"></i><span class="plusOne">+1</span><?=$opTxtb[2]?></p>
+		</div>
+		<?php endif;?>
+	</div>
+	<!-- 二选一投票结果 -->
+	<div class="opposite <?=$voted2?>">
+		<p>
+			<span style="width:<?=$optionResult[1]['percent']?>%;"></span>
+			<span style="width:<?=$optionResult[2]['percent']?>%;"></span>
+		</p>
+		<div>
+			<div>
+				<span class='people_num'><?=$optionResult[1]['val']?>人</span>
+				<span class="words"><?=$opTxtt[1]?></span>
+			</div>
+			<div>
+				<span class="words"><?=$opTxtt[2]?></span>
+				<span class='percent'><?=$optionResult[2]['val']?>人</span>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+
+

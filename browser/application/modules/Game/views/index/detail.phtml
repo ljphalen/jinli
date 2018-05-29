@@ -1,0 +1,44 @@
+<?php echo $this->render("layout/game_header.phtml");?>
+	<div id="page" data-role="page" data-theme="no" class="detail">
+		<header>
+			<h2><strong><?php echo $info['name'];?></strong></h2>
+			<div class="back"><a href="/index" data-ajax="false"><span>返回</span></a></div>
+		</header>
+		<div class="game-title clearfix">
+			<div class="inf">
+				<h1><strong>游戏名称：<?php echo $info['name'];?></strong></h1>
+				<p><span>公司：<?php echo $info['company'];?></span></p>
+				<p><span>大小：<?php echo $info['size'];?></span></p>
+			</div>
+			<div class="pic">
+				<div class="icon"><img src="<?php echo $attachPath,$info['img'];?>" alt="" /></div>
+				<a tj-cr="true" href="<?php echo $info['link'];?>" class="download"><span>下载</span></a>
+			</div>
+		</div>
+		<div class="game-intro">
+			<h2><strong>详细介绍</strong></h2>
+			<?php if(Util_String::strlen($info['descrip']) > 100){ ?>
+			<p><span><?php echo Util_String::substr($info['descrip'], 0, 100);?>...</span></p>
+			<p class="JS-hide"><span><?php echo $info['descrip'];?></span></p>
+			<div class="JS-readMore"><span class="link"><span>展开<i>&gt;&gt;</i></span></span></div>
+			<?php } else {?>
+			<p><span><?php echo $info['descrip'];?></span></p>
+			<?php }?>
+		</div>
+		<div class="game-pic JS-swapPic">
+			<div class="pic-wrap">
+				<ul>
+					<?php foreach($gimgs as $key=>$value) {?>
+					<li><a href=""><img src="<?php echo $attachPath,$value['img'];?>" alt="" /></a></li>
+					<?php }?>
+				</ul>
+			</div>
+			<?php $j=count($gimgs);if($j>1) {?>
+			<?php }?>
+		</div>
+		<div class="contact">
+            <p><a href="#">客服邮箱：game@gionee.com</a><br/>客服QQ:1732001808</p>
+        </div>
+	</div>
+</body>
+</html>

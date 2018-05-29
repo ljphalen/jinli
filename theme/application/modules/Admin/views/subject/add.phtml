@@ -1,0 +1,233 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<!-- 导航栏Ajax加载 指向navagator.html  menuOn表示分别需要高亮的菜单栏id 用下划线_隔开 eg:bz_taotu_taotuPack-->
+
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- 壁纸详情-wp01-->
+    <div id="zt_operation_03">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">一级标签</label>
+                    <div class="tb_cont tb_cell">
+                        <ul class="tag_list tag_one"><!-- tag_one 一级标签 只能选中一个 -->
+                            <li class="<?php if (!$tid) echo 'on'; ?>" tid="0">
+                                全部
+                            </li>
+
+                            <?php foreach ($maintype as $k => $v) { ?>
+                                <li class="<?php if ($tid == $k) echo 'on'; ?>" tid="<?php echo $k ?>">
+                                    <?php echo $v; ?>
+                                </li>
+                            <?php } ?>
+
+                        </ul>
+
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+            <!--
+                        <div class="com_tb_wrap">
+                            <div class="com_tb">
+                                <label class="tb_cell">二级标签</label>
+                                <div class="tb_cont tb_cell">
+                                    <ul class="tag_list">
+                                        <li>家具</li>
+                                        <li>情感</li>
+                                        <li class="on">分割</li>
+                                        <li>和风</li>
+                                        <li>不懂</li>
+                                        <li>事情</li>
+
+                                        <li>抽象</li>
+                                        <li>风格</li>
+                                        <li>东东</li>
+                                        <li class="on">灯光</li>
+                                        <li>款式</li>
+                                        <li>帅哥</li>
+
+                                        <li>构图</li>
+                                        <li class="on">光影</li>
+                                        <li>一图</li>
+                                        <li>方式</li>
+                                        <li>美女</li>
+                                        <li>德萨</li>
+                                    </ul>
+
+                                </div>
+                            </div><!-- com_tb end -->
+            <!--</div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <div class="com_tb">
+                        <label class="tb_cell">搜索:</label>
+                        <div class="tb_cont tb_cell">
+                            <input type="text" style="width:350px;" class="rd_1 search_name" value="<?php echo $search ?>">
+                            <button class="btn_s2 search_btn">搜索主题</button>
+                        </div>
+                    </div><!-- com_tb end -->
+
+                    <div class="tb_cell">
+                        <ul class="tb_switch">
+                            <!-- <li class="btn_switch switch_pics" openId="viewPics">宫格</li><!-- openId 表示点击时 显示哪个id下的内容 -->
+                            <li class="btn_switch switch_list on" openId="viewList">列表</li>
+                        </ul>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+
+            <!-- 宫格模式 admin_mode显示各子项目的管理按钮-->
+            <section class="view view_pics viewons admin_mode" id="viewPics">
+                <!-- 批量管理内容 默认隐藏 -->
+                <!--  <div class="view_admin view_pics_admin">
+                <!-- checkObj表示 点击后 哪些class要被选中 -->
+                <!--  <button class="btn_check btn_check_all" checkClass="btn_check_pics"></button>
+                  <label>全选</label>
+            </div>-->
+                <h1 class="block_name">全部主题</h1>
+                <ul class="view_pics_wrap "><!--  -->
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+                    <li class="view_pics_list">
+                        <div class="pic_cont">
+                            <img src="image/test_img02.png">
+                            <button class="btn_check btn_check_pics"></button>
+                            <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                        </div>
+                        <p class="pic_name">趣味生活</p>
+                    </li>
+
+
+                </ul>
+
+                <div class="clear-fix"></div>
+            </section>
+
+            <!-- 列表模式 -->
+            <section class="view view_list show viewons admin_mode" id="viewList">
+                <!-- 批量管理内容 默认隐藏 -->
+                <div class="view_admin view_list_admin">
+                    <!-- checkObj表示 点击后 哪些class要被选中 -->
+                    <!-- <button class="btn_check btn_check_all on" checkClass="btn_check_list"></button><label>全选</label>-->
+                </div>
+                <table class="view_list_tb">
+                    <thead>
+                        <tr><th>主题</th><th>名称</th><th>一级标签</th><th>二级标签</th><th>上传时间</th><th>包类别</th><th>图片上线次数</th><th>状态</th></tr>
+                    </thead>
+                    <tbody id="viewTbody">
+                        <!--
+                        <tr><td><button class="btn_check btn_check_list check_data" data-img-src="image/t_img02.jpg" data-img-name="趣味生活2"></button><img src="image/t_img02.jpg"></td><td>趣味生活2</td><td>风景</td><td>风景</td><td>2014-09-17</td><td>1920×1680</td><td>6</td><td>已通过</td></tr>
+                        <tr><td><button class="btn_check btn_check_list check_data" data-img-src="image/t_img03.jpg" data-img-name="趣味生活3"></button><img src="image/t_img03.jpg"></td><td>趣味生活3</td><td>风景</td><td>风景</td><td>2014-09-17</td><td>1920×1680</td><td>5</td><td>已通过</td></tr>
+                        <tr><td><button class="btn_check btn_check_list check_data" data-img-src="image/t_img04.jpg" data-img-name="趣味生活4"></button><img src="image/t_img04.jpg"></td><td>趣味生活4</td><td>风景</td><td>风景</td><td>2014-09-17</td><td>1920×1680</td><td>6</td><td>已通过</td></tr>
+                        <tr><td><button class="btn_check btn_check_list check_data" data-img-src="image/t_img05.jpg" data-img-name="趣味生活5"></button><img src="image/t_img05.jpg"></td><td>趣味生活5</td><td>风景</td><td>风景</td><td>2014-09-17</td><td>1920×1680</td><td>5</td><td>已通过</td></tr>
+                        <tr><td><button class="btn_check btn_check_list check_data" data-img-src="image/t_img06.jpg" data-img-name="趣味生活6"></button><img src="image/t_img06.jpg"></td><td>趣味生活6</td><td>风景</td><td>风景</td><td>2014-09-17</td><td>1920×1680</td><td>6</td><td>已通过</td></tr>
+                        -->
+                    </tbody>
+                    <tfoot>
+                        <tr class="none" id="demoTr"><td><button class="btn_check btn_check_list check_data" data-img-src="image/t_img01.jpg" data-img-name="趣味生活1"></button><img src="image/t_img01.jpg"></td><td>趣味生活1</td><td>风景</td><td>风景</td><td>2014-09-17</td><td>1920×1680</td><td>5</td><td>已通过</td></tr>
+
+                    </tfoot>
+                </table>
+
+            </section>
+
+            <div class="com_tb_page">
+                <div id="pager">
+
+                </div>
+                <div class="pager_expand">
+                    <span class="pageFont">到第</span>
+                    <span class="pageFont"><input class="pageInput" id="goPageNum" type="text"></span>
+                    <span class="pageFont">页</span>
+                    <span class="pageFont"><button class="pageOk" id="pageOk">确定</button></span>
+                    <span class="pageFont"><em id="recordCount">0</em>条记录，共<em id="pageCount">0</em>页</span>
+                </div>
+
+
+            </div>
+
+            <!-- 添加btn -->
+            <div class="zt_operation_btn">
+                <!-- 添加class=on 出现角标 -->
+                <button class="btn_s2 zt_operBtn on" id="pack01Add">添加<i class="icon_num">0</i>
+                </button>
+                <span class="zt_operBtn" id="ztSeminarAddNext">下一步</span>
+            </div>
+
+        </div><!-- content end -->
+
+    </div>
+</section>
+<script type="text/javascript">
+    $(function () {
+
+        var next = " <?php echo $next; ?>";
+
+
+        $("#ztSeminarAddNext").click(function () {
+            if (next == 1) {
+                history.go(-1);
+            } else {
+                window.location.href = "/Admin/subject/addtwo";
+            }
+        })
+        $(".tag_one >li").click(function () {
+            var tid = $(this).attr("tid");
+
+            zt_operation_03.dataFetch(1, tid);
+            zt_operation_03.initPagerDataFetch();
+        });
+
+        $(".search_btn").click(function () {
+            var tid = $(".tag_one>li").filter(".on").attr("tid");
+            var search_name = $(".search_name").val();
+            zt_operation_03.dataFetch(1, tid, search_name);
+            zt_operation_03.initPagerDataFetch();
+
+        })
+    })
+</script>
+</body>
+</html>

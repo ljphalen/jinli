@@ -1,0 +1,98 @@
+<?php echo $this->render("layout/admin_header.phtml");?>
+
+	<div class="body">
+	<h1 class="page-title" >关键字回复</h1>
+		<?php echo $this->render("layout/side.phtml");?>
+		<div class="col-main">
+			<div class="J_gift_error_tips error-pop-tips hidden">
+			</div>
+			<div class="keyword-body">
+				<ul class="J_hash_container hash-container">
+					<li><a class="spanBtn" href="#J_hash_reply">被添加回复</a></li>
+					<li><a class="spanBtn" href="#J_hash_keyword">关键字回复</a></li>
+				</ul>
+				<div id="J_hash_reply" class="J_hash_content">
+					<div class="replayContainer">
+						<div class="msgTypeContainer">
+						<?php $isCheckedText = !$autoMsg || $autoMsg['opt_type'] == 3;?>
+							<span >消息类型:</span>
+							<input id="textType" type="radio" name="msgType" <?php if($isCheckedText) echo 'checked';?> value="text" ><label for="textType">&nbsp;文本消息&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+							<input id="appMsgType" type="radio" name="msgType"  <?php if(!$isCheckedText) echo 'checked';?> value="imgText" ><label for="appMsgType">&nbsp;图文消息&nbsp;&nbsp;</label>
+						</div>
+						<div class="msgTypeBox">
+							<textarea id="textTypeArea" val="" class=""><?php echo $autoMsg['text_content'];?></textarea>
+							<div class="J_reply_appMsg appMsg-container hidden">
+								<span>请选择图文消息：</span>
+								<a id="reply-chooseMsg" class="btn-upload">选择图文</a>
+								<br/>
+								<span id="reply-appMsgName" class="name dark" data-id="<?php echo $materialId?>">已选择：<?php echo $materialTitle;?></span>
+							</div>
+							<button id="replySave" class="btn" data-ajaxUrl="<?php echo $saveAutoMsgUrl;?>">保存</button>
+						</div>
+
+					</div>
+				</div>
+				<div id="J_hash_keyword" class="J_hash_content hidden">
+					<a href="<?php echo $addUrl;?>" class="btn">添加关键字</a>
+					<table class="J_table table" data-ajaxUrl="<?php echo $deletePostUrl;?>">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>关键字</th>
+								<th>类型</th>
+								<th>回复内容</th>
+								<th>操作</th>
+								
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ($list as $item){?>
+							<tr>
+								<td><?php echo $item['id'];?></td>
+								<td><?php echo $item['keyword'];?></td>
+								<td><?php echo $item['match_type'] == 1 ? '完全匹配' : '模糊匹配';?></td>
+								<td>
+									<div class="content">
+										<?php echo $optType[$item['opt_type']];?>
+									</div>
+								</td>
+								<td>
+									<a href="<?php echo $editUrl.'?id='.$item['id'];?>" class="edit">编辑</a>
+									<a  href="javascript:void(0);" class="J_keywordDel delete"  data-keywordId="<?php echo $item['id'];?>">删除</a>
+								</td>
+							</tr>
+							<?php }?>
+						</tbody>
+					</table>
+					<?php echo $pager;?>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	<div class="J_dialog mask  hidden">
+		<div class="dialog-error-container">
+			<h1>提示</h1>
+			<p><i class="icon-info"></i>是否确认删除？</p>
+			<input id="keywordDelConfirm" class="btn-ok btn-small" type="button" value="是" />
+			<input id="operateCancel" class="btn-ok btn-small" type="button" value="否" />
+		</div>
+	</div>
+
+	<div class="J_appMsg_dialog hidden">
+		<div id="mask" ></div>
+		<div id="appMsg_Dialog" >
+			<div class="title-container">
+				<span>选择素材</span>
+				<i class="J_reply_close icon-close">X</i>
+			</div>
+			<iframe width="800" height="512" frameborder="0" name="appMsg_Iframe"  src="<?php echo $materialDialogUrl;?>"></iframe>
+			<div class="btn-container iframe-Dialog-btn no-topborder">
+				<button id="reply_chooseAppMsg" class="btn">确定</button>
+				<button  class="J_reply_close btn">取消</button>
+			</div>
+		</div>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

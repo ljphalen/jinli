@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title><?php echo $title;?></title>
+	<meta name="description" content="">
+	<meta name="Keywords" content="">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="format-detection" content="email=no" />
+	
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <META HTTP-EQUIV="expires" CONTENT="<?php echo gmdate ("l d F Y H:i:s",strtotime("+1 day"))." GMT";?>"> 
+    <meta http-equiv="expires" content="0">	
+
+	<link type="text/css" rel="stylesheet" href="<?php echo $staticRoot;?>/sys/reset/phonecore.css?t=<?php echo $version;?>">
+	<link type="text/css" rel="stylesheet" href="<?php echo $staticRoot;?>/apps/findjoy/assets/css/page.css?t=<?php echo $version;?>">
+	<script type="text/javascript">var token= '<?php echo $token;?>';</script>
+	<script>
+		(function(global) {
+			// 窗口适配
+			var doc = global.document,
+				root = doc.documentElement,
+				currentW = 320, maxWidth = 540, minWidth = 320, timer,
+				flexible = function() {
+					currentW = root.getBoundingClientRect().width;
+					currentW = currentW > maxWidth ? maxWidth : (currentW < minWidth ? minWidth : currentW);
+					root.style.fontSize = currentW / 16 + 'px';
+				};
+			global.addEventListener('resize', function(){
+				if (timer) clearTimeout(timer);
+				timer = setTimeout(function() { flexible() }, 0);
+			}, false)
+			flexible();
+		})(this);
+	</script>
+</head>

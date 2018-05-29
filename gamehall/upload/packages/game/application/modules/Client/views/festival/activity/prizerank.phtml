@@ -1,0 +1,29 @@
+<?php echo $this->render("festival/activity/header.phtml");?>
+<body>
+	<acrticle class="ac">
+		<div class="pic-container-1">
+			<?php $config = json_decode($festivalInfo['config'], true);?>
+			<img data-src="<?php echo $attachPath. $config['img3']; ?>" src="<?php echo $staticroot; ?>/apps/game/events/medalEvent/pic/blank.gif" alt=""/>
+		</div>
+		<div class="notice-container" style="margin-bottom:10px;">
+			<span class="title">奖品兑换榜</span>
+			<ul class="notice-list">
+				<li>
+					<div class="sub-title nickname">昵称</div>
+					<div class="sub-title prop"><?php echo $festivalInfo['prop_name']?></div>
+					<div class="sub-title prize">奖品</div>
+				</li>
+				<?php foreach($prizeRank as $key => $item){ ?>
+				<li>
+					<div class="omit"><?php echo $item['nickname']; ?></div>
+					<div><?php echo $item['consumeNum'] . '个'; ?></div>
+					<div class="omit"><?php echo $item['prizeName']; ?></div>
+				</li>
+				<?php } ?>
+			</ul>
+		</div>	
+		
+	</acrticle>
+	
+</body>
+</html>

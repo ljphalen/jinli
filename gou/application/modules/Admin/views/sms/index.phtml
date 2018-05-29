@@ -1,0 +1,34 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $indexUrl;?>">短信平台</a></li>
+		<li><a href="<?php echo $logUrl;?>">短信日志</a></li>
+	</ul>
+</div>
+<form method="post" action="<?php echo $postUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">手机号码</th>
+			<td class="td"><textarea class="textarea wc" name="mobile"></textarea></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">短信内容</th>
+			<td class="td"><textarea class="textarea wc" name="content"></textarea></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//链接表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Sms/index');
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

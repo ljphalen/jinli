@@ -1,0 +1,163 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<link href="<?php echo $staticPath;?>/js/admin/kindeditor/themes/default/default.css" rel="stylesheet">
+<link rel="stylesheet" href="<?php echo $staticPath;?>/game/assets/css/holiday-task.css" />
+<script type="text/javascript" src="<?php echo $staticPath;?>/game/assets/js/Form.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath;?>/game/assets/js/validate.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath;?>/game/assets/js/holidayTaskPrize.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath;?>/game/assets/js/template/prizeAllocation.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script>
+	var holidayTaskData = {
+	}
+	var imgPath = "<?php echo $attachPath; ?>";
+</script>
+
+<style>
+.step2 li{
+    width: 23%;
+}
+.step2 li.line{
+	position: static;
+}
+
+
+</style>
+
+<div class="nav">
+	<ul class="cc">
+       <li class="current"><a href="javascript:;">添加活动</a></li>
+	</ul>
+</div>
+<div class="step step2 mb10">
+	<ul class="cc">
+		<li ><span class="fl"><em></em></span>添加活动</li>
+		<li class="line"></li>
+		<li ><span class="fl"><em></em></span>添加任务</li>
+		<li class="line"></li>
+		<li class="current">添加奖品</li>
+	</ul>
+</div>
+<div id="prizeForm">
+	<table class="holiday-task-border prize-task">
+		<tr>
+			<td class="space-left" rowspan="2">
+				活动配置
+			</td>
+			<td class="space-left" colspan="2">
+				活动名称<input type="test" id="name" />
+				
+			</td>
+		</tr>
+		<tr>
+			<td  class="space-left"  colspan="2">
+				活动说明<textarea name="editor" style="width: 800px; height: 308px; "></textarea>
+			</td>
+		</tr>
+		
+		<?php for($i = 0; $i < 3; $i++) { ?>
+		<tr>
+			<td class="space-left" rowspan="4">
+				抽奖<?php echo $i+1;?>
+			</td>
+			<td  class="space-left" colspan="2">
+				奖项名称 <input name="prizeName" type="text" />
+			</td>
+		</tr>
+		<tr>
+			<td  class="space-left" colspan="2">
+				奖项描述<input type="text" name="prizeDescript" style="width:380px" />
+			</td>
+		</tr>
+		<tr>
+			<td style="width:40%">
+				<table class="remove-border" style="width:100%">
+                                    <tr><td ><h3>图片<br>(300*276)</h3></td></tr>
+					<tr>
+						<td>
+							<ul class="uploadImg">
+								<li id="img<?php echo $i;?>">
+									<img src="<?php echo $staticPath;?>/img/content/nopic.jpg" />
+									<input type="hidden" name="poster" value="">
+								</li>
+							</ul>
+							<iframe name="upload" src="<?php echo $uploadUrl."/?imgId=img{$i}";?>" style="height:50px;width:95%;" frameborder="0" scrolling="no"></iframe>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table class="remove-border">
+					<tr><td><h3>参与条件</h3></td></tr>
+					<tr>
+						<td  class="space-left">
+							<select name="task">
+								<option value="<?php echo Activity_Service_SummerHoliday::REWARD_CONDITION_DAILY;?>">完成每日任务</option>
+								<option value="<?php echo Activity_Service_SummerHoliday::REWARD_CONDITION_CONTINUE_FINISHED;?>">连续完成任务</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div name="taskDay" class="task-day">
+								连续完成<input type="text" name="continue"/>天
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="space-left" name="news-prize">
+				<div class="add-news-prize">
+					<input name="add" type="button" data-type='<?php echo $i?>' class="but-yellow but-blue" value="添加新奖品" />
+				</div>
+			</td>
+		</tr>
+		<?php } ?>
+	</table>
+	<div class="ok">
+		<input value="提交" id="submit" type="button" class="but-yellow" />
+		<?php
+		if (Activity_Service_SummerHoliday::CFG_APCU_CACHE_TIME) { 
+		?>
+		提交后，配置将在<?php echo Activity_Service_SummerHoliday::CFG_APCU_CACHE_TIME;?>秒内生效
+		<?php
+		} 
+		?>
+	</div>
+</div>
+
+<div id="alert">
+	<p name="msg"></p>
+</div>		
+
+<div id="progressbar">
+	<div id="loadIng" style="margin-top:20px">
+		<div class="progress-label"></div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	var backUrl = baseurl+'<?php echo $indexUrl;?>';
+	var ajaxUrl = baseurl+'<?php echo $addPostUrl;?>'; 
+</script>
+
+<script type="text/javascript">
+//广告表单数据提交
+var editor;
+$(document).ready(function(){
+	KindEditor.ready(function(K) {
+	     K.token = '<?php echo $token;?>';
+	        editor = K.create('textarea[name="editor"]', {
+	        resizeType : 1,
+	        allowPreviewEmoticons : false,
+	        allowImageUpload : true,
+	        uploadJson : '<?php echo $uploadImgUrl;?>',
+	        items : EDITOR_ITEMS
+	   });
+     });
+	 
+})
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

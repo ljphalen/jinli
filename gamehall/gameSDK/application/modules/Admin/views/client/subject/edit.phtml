@@ -1,0 +1,126 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">专题列表</a></li>
+    <li class="current"><a href="javascript:;">编辑专题</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑专题</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $id;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">专题名称(<span style="color: red">*</span>)</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">专题简述(<span style="color: red">*</span>)</th>
+			<td class="td">
+			     <textarea style="width: 800px; height: 200px" class="textarea" name="resume"><?php echo $info['resume'];?></textarea>
+			</td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">机组(<span style="color: red">*</span>)</th>
+			<td class="td">
+			 <select name="pgroup" class="wa">
+					<?php foreach($groups as $key=>$value) {?>
+    			    <option value="<?php echo $value['id'];?>" <?php if($info['pgroup'] == $value['id']) echo 'selected';?>><?php echo $value['title'];?></option>
+    			    <?php }?>
+			  </select>
+			</td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">模板(<span style="color: red">*</span>)</th>
+			<td class="td"><?php echo $subType[$info['sub_type']];?></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">专题图标(<span style="color: red">*</span>)</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="sicon">
+						<img src="<?php echo $attachPath,$info['icon'];?>"/>
+						<input type="hidden" name="icon" value="<?php echo $info['icon'];?>">
+					</li>
+				</ul>			
+                <p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=sicon';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">专题图片(<span style="color: red">*</span>)</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="simg">
+						<img src="<?php echo $attachPath,$info['img'];?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>">
+					</li>
+				</ul>			
+                <p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=simg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">开始结束时间(<span style="color: red">*</span>)</th>
+			<td class="td">
+				<div>
+					<input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $info['start_time']);?>" /> 
+					至 
+					<input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s', $info['end_time']);?>" />
+				</div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">详细说明<br>(<span style="color: red">1.5.8及以上版本自定义专题不显示详细说明</span>)</th>
+			<td class="td">
+			     <textarea style="width: 800px; height: 200px" class="textarea" name="hdinfo"><?php echo $info['hdinfo'];?></textarea>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">下一步</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//专题表单数据提交
+$(document).ready(function(){
+	var editor;
+	KindEditor.ready(function(K) {
+		K.token = '<?php echo $token;?>';
+	    editor = K.create('textarea[name="hdinfo"]', {
+	        resizeType : 1,
+	        allowPreviewEmoticons : false,
+	        allowImageUpload : true,
+	        uploadJson : '<?php echo $uploadImgUrl;?>',
+	        items : EDITOR_ITEMS
+	    });
+	});
+
+	$('#start_time').datetimepicker({
+        timeFormat: "hh:00:00",
+        dateFormat: "yy-mm-dd"
+    });
+    $('#end_time').datetimepicker({
+        timeFormat: "hh:00:00",
+        dateFormat: "yy-mm-dd"
+    });
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $gamesAddUrl . "?id=" . $id;?>');
+	},function(){
+		editor.sync();
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

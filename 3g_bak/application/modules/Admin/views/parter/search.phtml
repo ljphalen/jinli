@@ -1,0 +1,127 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="table_full">
+	<form action="<?php echo $baseUrl; ?>" method="POST">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+		<table width="100%" cellspacing="0" cellpadding="0">
+			<tr class="tr">
+				<th class="th">日期:</th>
+				<td class="td">
+					<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $params['sdate']; ?>"> 至
+					<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $params['edate']; ?>">
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">所属CP:</th>
+				<td class="td">
+					<select name="pid" id="pid">
+						<option value="0">请选择</option>
+						<?php foreach ($parters as $k => $v) { ?>
+							<option <?php echo ($v['id'] == $params['pid']) ? 'selected="selected"' : ''; ?> value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">业务名称:</th>
+				<td class="td">
+					<select name="bid" id="bid">
+						<option value="0">请选择</option>
+					</select>
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">关键字:</th>
+				<td class="td">
+					<input class="input" type="text" id="keywords" maxlength="100" name="keywords" value="<?php echo $params['keywords']; ?>"><span color="blue">备注：可查询CP或业务</span>
+				</td>
+			</tr>
+		</table>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+		<input type="hidden" id="hidden_export" name="export" value="0"/>
+	</form>
+</div>
+<style type="text/css">
+	table {
+		empty-cells: show;
+		border-collapse: collapse;
+	}
+
+	table th {
+		white-space: nowrap;
+	}
+
+</style>
+
+<div class="h_a"><span>累计收入: </span>&nbsp;&nbsp;<span id="amount" style="color: red"></span>
+	<span style="padding-left:900px"><input type="button" value="导出数据" id="checkout"></span>
+</div>
+<div class="table_list">
+	<table cellspacing="0" cellpadding="0" width="100%">
+		<tbody>
+		<tr class="ct">
+			<th class="th">业务名称</th>
+			<th class="th">所属CP</th>
+			<th class="th">所属页面</th>
+			<?php foreach ($date as $d): ?>
+					<th class="td2" style="width: 100px;"><?php echo $d; ?></td>
+				<?php endforeach; ?>
+			<th class="td2" style="width: 70px;">总和
+			</td>
+		</tr>
+		<?php
+		$sum = 0;
+		foreach ($lineData as $k => $v) {
+			?>
+			<tr class="ct">
+				<td><?php echo $hashVal[$k]; ?></td>
+				<td class="td2"><?php echo $k; ?></td>
+				<?php
+				$total = 0;
+				foreach ($date as $d):
+					?>
+					<td class="td2"><?php echo $v[$d]; ?></td>
+					<?php
+					$total += $v[$d];
+					$sum += $v[$d];
+				endforeach;
+				?>
+				<td class="td2"><?php echo $total; ?></td>
+			</tr>
+		<?php } ?>
+		</tbody>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+
+<script src="<?php echo $staticPath; ?>/js/admin/highcharts.js"></script>
+<script src="<?php echo $staticPath; ?>/js/admin/exporting.js"></script>
+<script src="<?php echo $staticPath; ?>/js/admin/stat.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		$("#sdate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+		$("#edate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>
+<script>
+	$("#amount").text('<?php echo $sum?>');
+
+	$("#checkout").bind('click', function () {
+		var sdate = $("#sdate").val();
+		var edate = $("#edate").val();
+		var uval = $("#url_val").val();
+		location.href = '<?php echo $baseUrl;?>' + "?sdate=" + sdate + "&edate=" + edate + "&url_val=" + uval + "&export=1";
+	})
+</script>

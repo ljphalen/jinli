@@ -1,0 +1,235 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript"
+src="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.js"></script>
+
+
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- 页面唯一id标识符 -->
+    <div id="sz_operation_szsubject_add02">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">专题名称</label>
+                    <div class="tb_cont tb_cell">
+                        <input type="hidden" class="sid" value="<?php echo $subject['id'] ?>"/>
+                        <input type="text" class="rd_1 sname" value="<?php echo $subject['cs_name'] ?>">
+
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <!--<div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">屏序</label>
+                    <div class="tb_cont tb_cell"><input type="text" class="rd_1 screenid" value="<?php echo $subject['cs_screenque'] ?>"></div>
+                </div><!-- com_tb end -->
+            <!--</div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle">轮播图</label>
+                    <div class="tb_cont tb_cell cell_upload_wrap">
+                        <input type="hidden"  id="loadurl" value="<?php echo $subject['cs_image_face'] ?>"/>
+                        <div class="cell_img_canvas" id="cell_img_canvas1">
+                            <img src="<?php echo $imgsaveurl . $subject['cs_image_face'] ?>" width="200"/>
+                        </div>
+                        <div class="cell_upload" id="cell_drag1">
+                            <div class="cell_upload_btn"><button class="btn_s3">选择文件</button><input type="file" id="fileLoader" name="files"></div>
+                            <span class="cell_upload_tip">允许上传图片格式为：png jpeg jpg gif 且图片大小不能超过2M</span>
+                        </div>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">专题类型</label>
+                    <div class="tb_cont tb_cell">
+                        <ul class="radio_wrap" id="szsubjectType">
+                            <?php if ($subject['cs_type'] == 9) { ?>
+                                <li class="radio on" val="9" >广告专题</li>
+                            <?php } ?>
+
+                            <?php if ($subject['cs_type'] == 1) { ?>
+                                <li class="radio on" val="1">时钟专题</li>
+                            <?php } ?>
+
+
+                        </ul>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle">专题简介</label>
+                    <div class="tb_cont tb_cell txt_editor_wrap">
+                        <textarea class="txt_editor"><?php echo $subject['cs_detail'] ?></textarea>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap <?php if ($subject['cs_type'] == 1) echo 'none' ?>">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle">广告图</label>
+                    <div class="tb_cont tb_cell cell_upload_wrap">
+                        <input type="hidden" class="upload_adv" name="upload_adv" value="<?php echo $imginfo ?>"/>
+                        <div class="cell_img_canvas" id="cell_img_canvas2">
+                            <img src="<?php echo $imgsaveurl . $imginfo ?>" width="200"/>
+                        </div>
+                        <div class="cell_upload" id="cell_drag2">
+                            <div class="cell_upload_btn"><button class="btn_s3">选择文件</button>
+                                <input type="file" id="fileLoader2" name="files"></div>
+                            <span class="cell_upload_tip">允许上传图片格式为：png jpeg jpg gif 且图片大小不能超过2M</span>
+                        </div>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="sz_block_wrap <?php if ($subject['cs_type'] == 9) echo 'none' ?>">
+                <div class="line_title">选择时钟</div>
+
+                <div class="drag_sort_wrap">
+                    <div class="drag_sort">
+                        <label>待选时钟</label>
+                        <ul class="drag_sort_list" id="dragSortTxtPack">
+
+                        </ul>
+                        <div class="clear-fix"></div>
+                        <div><button class="btn_s3" id="packBzAdd">添加</button></div>
+                    </div><!-- drag_sort end -->
+
+                    <div class="drag_sort">
+                        <label>已选时钟</label>
+                        <ul class="drag_sort_list" id="dragSortTxtPack2">
+
+                            <?php foreach ($imginfo as $v) { ?>
+                                <li role="txtPack2" targetimg="<?php echo $v['id'] ?>" data-url="<?php echo $v['url'] ?>" data-cursor="pointer">
+                                    <?php echo $v['c_filename'] ?>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                        <div class="clear-fix"></div>
+                        <div><button class="btn_s3" id="packBzDel">删除</button></div>
+                    </div><!-- drag_sort end -->
+
+                    <div class="drag_sort">
+                        <label>缩略图</label>
+                        <ul class="drag_sort_img" id="dragSortImgPack">
+                            <!-- 广告图片 不能被拖拽 -->
+                            <li class="fixed_elem">
+                                <img src="<?php echo $imgsaveurl . $subject['cs_image_face'] ?>">
+                                <!--<p>一人消费.没有拖累.独立自主.拍板干脆；
+                                所有收入.自己支配.花钱潇洒.单价绝对；
+                                人生短暂.自由可贵.单身无罪.脱光万岁！</p>-->
+                            </li>
+
+                            <?php foreach ($imginfo as $v) { ?>
+                                <li targetimg="<?php echo $v['id'] ?>" class="img_list" style="width: calc(50% - 2px); float: left; margin-top: 2px; margin-left: 2px;">
+                                    <img src="<?php echo $v['url'] ?>" style="width: 100%;">
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </div><!-- drag_sort end -->
+
+                    <div class="clear-fix"></div>
+                </div><!-- drag_sor_wrap end -->
+
+            </div><!-- sz_block_wrap end 壁纸专题内容 -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">上线时间</label>
+                    <div class="tb_cont tb_cell">
+                        <input type="text"  value='<?php echo date('Y-m-d H:i:s', $subject["cs_pushlish_time"]) ?>'  readonly  class="laydate-icon datepicker" onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})"  >
+                       <!--<input type="text" class="datepicker rd_2 publish" readonly>-->
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="bnts_wrap">
+                <!--<button class="btn_s2" id="szSeminarAdd02Prev">上一步</button>-->
+                <button class="btn_s2 pop_btn" openPopId="fixTipView">提交</button></div>
+        </div><!-- content end -->
+
+    </div>
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">您确定保存专题?</p>
+                    <div class="tip_btns">
+                        <button class="btn_s2 save_ok" id="bzSeminarAdd02GoList">确定</button>
+                        <!--<button class="btn_s2 pop_close" id="bzSeminarAdd02AddMore">取消</button>-->
+                    </div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/vendor/load-image.all.min.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-image.js"></script>
+
+<!-- The File Upload validation plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-validate.js"></script>
+
+<script type="text/javascript">
+                            $(function () {
+                                $(".save_ok").click(function () {
+                                    var sid = $(".sid").val();
+                                    var sname = $(".sname").val();
+                                    var screenid = $(".screenid").val();
+                                    var loadurl = $("#loadurl").val();
+                                    var txt_editor = $(".txt_editor").val();
+                                    var p_time = $(".datepicker").val();
+                                    var url_adv = $(".upload_adv").val();
+                                    var subjecttype = $("#szsubjectType >li").attr("val");
+
+
+                                    var ids = $("#dragSortImgPack > li ").not(".fixed_elem").map(function () {
+                                        return $(this).attr("targetimg");
+                                    }).get().join("_");
+
+                                    var data = "sid=" + sid + "&sname=" + sname + "&screenid=" + screenid + "&loadurl=" + loadurl
+                                            + "&txt_editor=" + txt_editor + "&p_time=" + p_time + "&token=" + token;
+                                    if (subjecttype == 9) {
+                                        data += "&url_adv=" + url_adv + "&subjecttype=" + subjecttype;
+                                    } else {
+                                        data += "&imgids=" + ids + "&subjecttype=" + subjecttype;
+                                    }
+
+                                    var url = "/Admin/Clocksubject/updatesubject"
+
+                                    $.post(url, data, function (d) {
+                                        if (d) {
+                                            window.location.href = "/Admin/Clocksubject/index"
+                                        }
+                                    })
+                                });
+                            })
+</script>
+</body>
+</html>

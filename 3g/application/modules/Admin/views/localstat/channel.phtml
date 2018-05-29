@@ -1,0 +1,89 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<form method="post" action="<?php echo $baseUrl; ?>" id="addFrom">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">时间范围</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="sdate"
+						       value="<?php echo $searchParam['sdate']; ?>"> 至
+						<input class="input" type="text" id="edate" maxlength="30" name="edate"
+						       value="<?php echo $searchParam['edate']; ?>">
+
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">任务名称</th>
+					<td class="td">
+						<?php array_unshift($names, '全部'); ?>
+						<select name="goods_id">
+							<?php foreach ($names as $id => $v):
+								$checked = ($id == $searchParam['goods_id']) ? 'selected="selected"' : '';
+								?>
+								<option value="<?php echo $id; ?>" <?php echo $checked; ?>><?php echo $v; ?></option>
+							<?php endforeach; ?>
+						</select>
+
+					</td>
+				</tr>
+
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+		<input type="hidden" id="hidden_export" name="export" value="0"/>
+	</form>
+
+	<div class="h_a">
+		&nbsp; <span id="total" style="color: red;font-size:14px"></span>
+		<span style="float:right;"><input type="button" value="导出" id="downLoad"></span>
+	</div>
+	<style type="text/css">
+		table {
+			empty-cells: show;
+			border-collapse: collapse;
+		}
+
+		table th {
+			white-space: nowrap;
+		}
+
+		table td {
+			white-space: nowrap;
+		}
+	</style>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="ct">
+				<?php foreach ($headers as $header): ?>
+					<td class="td2"><?php echo $header; ?></td>
+				<?php endforeach; ?>
+			</tr>
+			<?php foreach ($bodyRow as $vList) : ?>
+				<tr class="ct">
+					<?php foreach ($vList as $v): ?>
+						<td class="td2"><?php echo $v; ?></td>
+					<?php endforeach; ?>
+				</tr>
+			<?php endforeach; ?>
+		</table>
+	</div>
+
+	<div>
+
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#sdate").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#edate").datepicker({dateFormat: 'yy-mm-dd'});
+
+			$("#downLoad").bind('click', function () {
+				$("#hidden_export").val(1);
+				$("#addFrom").submit();
+				$("#hidden_export").val(0);
+			});
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,183 @@
+<?php echo $this->render("layout/header.phtml");?>
+<style>
+.step2 li{
+    width: 23%;
+}
+.step2 li.line{
+	position: static;
+}
+.medal-container {
+	overflow: hidden;
+}
+.medal-lists {
+	 margin-top: 20px;
+}
+.medal-lists li {
+	float: left;
+	width: 48%;
+	border: 1px solid #eee;
+	padding: 6px;
+	background: #fff;
+}
+.medal-lists li:nth-child(2n) {
+    float: right;
+}
+.add-medal {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.addBtn{
+    padding: 95px 200px;
+}
+.medal-list {
+	position: relative;
+}
+.input-container {
+    display: inline-block;
+    margin-left: 10px;
+}
+.input-container p {
+	margin-bottom: 10px;
+}
+.uploadImg {
+	height: 130px;
+	width: 130px;
+	display: inline-block;
+}
+.uploadImg img {
+	width: 130px;
+	height: 130px;
+}
+iframe {
+	 width: 100%;
+	 height: 80px;
+}
+
+iframe.iframe2{
+	height: 590px;
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    margin: 0 auto;
+    top: 25px;
+    width: 980px;
+}
+
+.red {
+	color: red;
+}
+.mask {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	min-height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	z-index: 99;
+	font-size: 14px;
+}
+.clear {
+    clear: both;
+}
+.hidden {
+    display: none !important;
+}
+</style>
+<div class="nav">
+	<ul class="cc">
+	   <li ><a href="<?php echo $indexUrl;?>">道具兑换</a></li>
+       <li class="current"><a href="javascript:;">编辑兑换活动</a></li>
+	</ul>
+</div>
+<div class="step step2 mb10">
+		<ul class="cc">
+			<li ><span class="fl"><em></em></span>编辑活动</li>
+			<li class="line"></li>
+			<li ><span class="fl"><em></em></span>编辑道具</li>
+			<li class="line"></li>
+			<li class="current">编辑游戏</li>
+			<li class="line"></li>
+			<li><span class="fl"><em></em></span>编辑奖品</li>
+		</ul>
+</div>
+<div style="clear: both;"></div>
+<form method="post" action="<?php echo $editStep3PostUrl.'/?id='. $infoData['id'];?>" id="addFrom">
+<input name="festivalId" value="<?php echo $infoData['id'];?>" type="hidden" />
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+    	 <?php foreach ($groupData as $groupKey => $groupItem):?>
+    	 <?php $index = $groupKey+1;?>
+			<tr class="tr J_seriesContainer">
+				<th class="th">系列<span class="J_index"><?php echo $groupKey+1; ?></span></th>
+				<td class="td medal-container">
+					<div style="position:relative">
+						<span>系列<?php echo $index; ?> 名称&nbsp;&nbsp;<?php echo $groupItem['data']['name'];?></span>
+						<input name="propsGroup[<?php echo $index; ?>][groupId]" value="<?php echo $groupItem['data']['id'];?>" type="hidden" />
+					</div>
+					<ul class="J_medalLists medal-lists">
+						<li>
+							<div class="medal-list">
+								<div class="uploadImg">
+									<div class="J_img" id="simg<?php echo $index; ?>">
+										<img src="<?php echo $attachPath . $groupItem['data']['img'];?>">
+										<input type="hidden" name="propsGroup[<?php echo $index; ?>][groupImg]" value="<?php echo $groupItem['data']['img']; ?>">
+									</div>
+								</div>
+								<iframe src="<?php echo $uploadUrl.'/?imgId=simg'.$index;?>"  frameborder="0" scrolling="no"></iframe>
+							</div>
+						</li>
+						<li>
+							<div class="medal-list">
+							  <div class="addBtn"><span class="btn"><span><button type="button" onclick="openAddGames(<?php echo $index?>);return false;">添加游戏</button></span></span></div> 
+							</div>
+						</li>
+					</ul>
+				</td>
+			</tr>
+			<tr class="J_addSeries tr">
+				<th class="th"></th>
+				<td class="td">
+				<span id ="addGame<?php echo $index?>_tips"><?php echo $groupItem['gameNames'];?></span>
+				<div id="dialog<?php echo $index?>" class="mask hidden" >
+                    <div id="addGame<?php echo $index?>">
+                        <input type="hidden" name="propsGroup[<?php echo $index?>][gameIds]" value="<?php echo $groupItem['data']['game_ids'];?>">
+                    </div>
+                    <iframe id="iframeGame<?php echo $index?>" class="iframe2" src="<?php echo "{$addGamesUrl}/?addGameId=addGame{$index}&groupId={$groupItem['data']['id']}";?>"  frameborder="0" scrolling="no" ></iframe>
+                </div>
+				</td>
+			</tr>
+			<?php endforeach;?>
+		</table>
+    </div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">下一步</button></span></span></div>
+</form>
+
+<script type="text/javascript">
+function showAddGames(id, gameNames, gameIds) {
+	$('#'+id+'_tips').html(gameNames);
+	$('#'+id).children('input').attr('value', gameIds);
+	$('#'+id).parent('div').addClass('hidden');
+}
+
+function cancelAddGames(id){
+	$('#'+id).parent('div').addClass('hidden');
+}
+
+function openAddGames(id){
+	var dialog = $('#dialog'+id);
+	var gameIds = dialog.find('input').val();
+	$('#iframeGame'+id)[0].contentWindow.initChooseGames(gameIds, token);
+	dialog.height($('body').height());
+	dialog.removeClass('hidden');
+}
+
+//广告表单数据提交
+$(document).ready(function(){
+	 ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $editStep4Url.'/?id='. $infoData['id'];?>');
+	 });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

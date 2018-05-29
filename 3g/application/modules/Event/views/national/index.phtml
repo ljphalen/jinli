@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>金立浏览器十一特别活动</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/events/css/guoqin.min.css?ver=<?php echo $version;?>"/>
+   <script type="text/javascript">
+      var token = "<?php echo $token;?>";
+        var initConfig = {
+        	cf_js:<?php 				echo $data['activity'] ; ?>,	//是否活动已经结束  1：已经结束 ，0：未结束
+        	cf_login:<?php 			echo $data['login']; ?>, //是否已经登陆 1：已经登陆  0：未登陆
+        	cf_lingjiang: <?php 	echo $data['chance']; ?>, 	//是否有领奖机会 0：没有   1:有
+        	cf_gqsj:<?php 			echo $data['expireSeconds']; ?>,	//领奖过期时间 单位/秒
+        	status: <?php 			echo $data['prizeStatus']; ?>,	//是否有未领取的奖品  0表示没有未领取的奖品，1表示有未领取的奖品
+        	cf_ljUrl: "<?php 			echo $data['prizeUrl']; ?>",//领奖页面地址
+        	cf_sysj: <?php 			echo $data['remainedSeconds']; ?>,	//未领取奖品的剩余时间  单位/秒
+        	cf_cjurl:"<?php 			echo $webroot.'/event/national/ajaxDrawing'; ?>",
+        	cf_loginUrl:"<?php 	echo $data['loginUrl']; ?>",	//要跳转的登陆页
+        };
+
+        <?php if(!empty($prize) && $prize['prize_status'] ==0){?>
+	        var jiangping = {
+	        	"err_msg":"恭喜您,获得<?php echo $data['prizeName']; ?>!",
+				"prize_id":"<?php echo $prize['id']; ?>",
+				"prize_image":"<?php echo $attachPath.$data['prizeImageUrl']; ?>",
+				'prize_type':"<?php echo $data['prize_type'];?>",
+	        }
+        <?php }?>
+    </script>
+</head>
+<body>
+	
+	<div id="content" class="content">
+		<div class="main-bg">
+			<i style="-webkit-transform: translate(42px,147px) scale(1.2);transform: translate(42px,147px) scale(1.2);"></i>
+			<i style="-webkit-transform: translate(76px,157px) scale(0.8);transform: translate(76px,157px) scale(0.8);"></i>
+			<i style="-webkit-transform: translate(353px,147px) scale(0.7) rotateZ(290deg);transform: translate(353px,147px) scale(0.7) rotateZ(290deg);"></i>
+			<i style="-webkit-transform: translate(250px,241px) scale(1) rotateZ(20deg);transform: translate(250px,241px) scale(1) rotateZ(20deg);"></i>
+		</div>
+        <div class="main-bg2"></div>
+		<div class="main-title">
+		</div>
+		<div class="main-guize">
+			<ol class="main-guize-ol">
+				<li>活动期间，每个账号每天只能参与一次活动。</li>
+				<li>红包30分钟内有效，超时后无法领取不予补发。</li>
+			</ol>
+		</div>
+		<div class="main-qiandai">
+			<div class="main-qiandai-wrap">
+				<button id="js-qhongb-btn" class="main-btn"><a class="btn-txt txt-qhb"></a></button>
+				<div class="main-endmsg" style="display: none;">
+					本次活动已结束，请加入下方官方QQ群随时获得动态信息
+				</div>
+				<div class="main-footertxt">本活动最终解释权归金立浏览器所有<br/>如有问题请联系官方QQ群：274289481</div>
+			</div>
+		</div>	
+			
+	</div>
+	
+	
+	<div id="js-alert-page" class="alert-page">
+		<div class="alert-block">
+			<div class="alert-block-msg">
+				<div id="js-alert-pic" class="alert-pic"><img /></div>
+				<span id="js-alert-msg">该账号今天已领过奖啦！</span>
+			</div>
+			<div class="alert-block-button">
+				<div id="js-alert-tishi" class="alert-tishi">活动期间每个账号只能参与一次活动</div>
+				<div class="alert-block-btn">
+					<button id="js-alert-btn" type="button" class="main-btn"><a class="btn-txt txt-wylj"></a></button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="<?php echo $staticResPath;?>/events/js/zepto.min.js?ver=<?php echo $version;?>"></script>
+	<script src="<?php echo $staticResPath;?>/events/js/guoqin.min.js?ver=<?php echo $version;?>"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<?php echo $this->render("../../Front/views/layout/header.phtml");?>
+<section id="page">
+	<!-- 主体内容 -->
+	<section id="content">
+		<section class="account">
+			<section class="coin-detail">
+				<ul class="mod-text-list record">
+					<li><h3>银币流通记录：</h3></li>
+					<?php foreach($logs as $key=>$value){?>
+					<li>
+						<dl class="mod-dl-list">
+							<dd><?php 
+								if (strlen($value['msg']) == 20) {
+									$value['msg'] = '购买积分换购商品，使用了'.abs($value['coin']).'银币。';
+								}
+								echo $value['msg'];
+							?></dd>
+							<dd><?php echo date('Y-m-d H:i:s',$value['create_time']);?></dd>
+						</dl>
+					</li>
+					<?php } ?>
+				</ul>
+			</section>
+		</section>
+	</section>
+	<!--  /主体内容 -->
+</section>
+</body>
+</html>

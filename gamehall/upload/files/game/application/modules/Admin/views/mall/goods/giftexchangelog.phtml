@@ -1,0 +1,104 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li class="current"><a href="<?php echo $listUrl;?>">积分商城</a></li>
+        <li><a href="<?php echo $pointPrizeIndexUrl;?>">积分抽奖</a></li>
+        <li><a href="<?php echo $presendIndexUrl;?>">人工发放</a></li>
+        <li class="current"><a href="javascript:;">兑奖码管理</a></li>
+	</ul>
+</div>
+<form action="<?php echo $logUrl;?>/?id=<?php echo $input['id'];?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="id" type="hidden" value="<?php echo $input['id'];?>" />
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr">
+		   <th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			    <option  value="0">全部</option>
+				<option <?php if($input['status'] == 2) echo 'selected';?> value="2">已领取</option>
+				<option <?php if($input['status'] == 1) echo 'selected';?> value="1">未领取</option>
+			</select>
+			</td>
+			<th class="th">发放开始结束时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo $input['start_time'];?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo $input['end_time'];?>" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">账号</th>
+			<td class="td"><input class="input" type="text" maxlength="30" style="width:143px;" name="uname" value="<?php echo $input['uname'];?>" /> </td>
+			<th class="th">昵称</th>
+			<td class="td"><input class="input" type="text" maxlength="30" style="width:143px;" name="nickname" value="<?php echo $input['nickname'];?>" /> </td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_full">
+<dl style="display:-webkit-box">
+	<dt style="width:64px;height:64px; " >
+	<img style="height: 100%;height:64px;" src="<?php echo $attachPath.$info['img'];?>" alt="" >
+	</dt>
+	<dd style="padding-left: 64px">
+		<p><span class="name">商品名称:<?php echo $info['title'];?></span></p>
+		<p><span class="id">商品分类名称:<?php echo $goodCategory['title'];?></span></p>
+		<p><span class="type">礼包激活码数量（剩余/总）:<?php echo $remainGiftCount."/".($remainGiftCount + $exchangeGiftCount);?></span></p>
+	</dd>
+	<dd style="padding-left: 64px">
+		<p><span class="name">商品ID:<?php echo $info['id'];?></span></p>
+		<p><span class="id">商品分类ID:<?php echo $goodCategory['id'];?></span></p>
+		<p><span class="type">生效时间:<?php echo date('Y-m-d H:i:s', $info['start_time']);?> 
+		至 <?php echo date('Y-m-d H:i:s', $info['end_time']);?></span></p>
+	</dd>
+</dl>
+</div>
+<div class="h_a">
+    <a href="<?php echo $indexUrl.'?category_id='.$goodCategory['id'];?>"><input type="button" value="返回"/></a>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="65">ID</td>
+		    <td width="100">发放顺序</td>
+			<td width="120">激活码</td>
+			<td width="120">账号</td>
+			<td width="250">IMEI</td>
+			<td width="130">发放时间</td>
+			<td width="65">状态</td>
+			<td width="65">操作</td>
+		</tr>
+<?php foreach($logs as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['send_order'];?></td>
+			<td><?php echo $value['activation_code'];?></td>
+			<td><?php echo $value['uname'];?></td>
+			<td><?php echo $value['imei'];?></td>
+			<td><?php echo !$value['create_time'] ? " " : date('Y-m-d H:i:s', $value['create_time']);?></td>
+			<td><?php echo $value['status'] ? '已领取' : '未领取';?></td>
+			<td>
+			<?php if(!$value['status']){?>
+			  <?php if($info['gift_num_type'] != $singleGiftType){?>
+			  <a href="<?php echo $editExchangeCodeUrl;?>/?giftExchangeCodeId=<?php echo $value['id'];?>&goodId=<?php echo $info['id'];?>" class="mr10">编辑</a>
+			  <?php }?>
+			  <?php  if($info['total_num'] > 1){?>
+			  <a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?giftExchangeCodeId=<?php echo $value['id'];?>&goodId=<?php echo $info['id'];?>', '', event);">删除</a>
+			  <?php }}?>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

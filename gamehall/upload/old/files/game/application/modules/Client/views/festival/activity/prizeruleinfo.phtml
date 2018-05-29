@@ -1,0 +1,25 @@
+<?php echo $this->render("festival/activity/header.phtml");?>
+<body>
+	<acrticle class="ac">
+		<div class="pic-container-1">
+		<?php $config = json_decode($festivalInfo['config'], true);?>
+			<img data-src="<?php echo $attachPath. $config['img1']; ?>" src="<?php echo $staticroot; ?>/apps/game/events/medalEvent/pic/blank.gif" alt=""/>
+		</div>
+		<div class="rule-container">
+			<h1 class="title">奖品兑换规则</h1>
+			<ul class="rule-list">
+				<?php foreach ($prizesInfo as $item):?>	
+					<li>
+						<img data-src="<?php echo $attachPath. $item['prizeIcon']; ?>" src="<?php echo $staticroot; ?>/apps/game/events/medalEvent/pic/blank.gif" alt="" />
+						<div class="text-info">
+								<span class="rule-name"><?php echo $item['name'] . ':' . $item['total'] . '个'?></span>
+								<span class="rule-desc"><em>兑换条件：</em><?php echo $item['condition']?></span>
+						</div>
+					</li>
+				<?php endforeach;?>
+			</ul>
+		</div>
+	</acrticle>
+	
+</body>
+</html>

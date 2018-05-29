@@ -1,0 +1,190 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $listUrl; ?>">应用列表</a></li>
+			<li class="current"><a href="javascript:;">编辑应用</a></li>
+		</ul>
+	</div>
+	<div class="h_a">编辑应用</div>
+	<form method="post" action="" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+		<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">分类</th>
+					<td class="td">
+						<select name="type_id" onchange="setTheme(this.options[this.selectedIndex].innerHTML, 0)">
+							<?php foreach ($types as $key => $value) { ?>
+								<option <?php if ($info['type_id'] == $value['id']) echo 'selected'; ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+							<?php } ?>
+						</select></td>
+				</tr>
+				<tr class="tr" id="theme">
+					<th class="th">专题类型</th>
+					<td class="td"><select name="theme_id">
+							<?php foreach ($themes as $key => $value) { ?>
+								<option <?php if ($info['theme_id'] == $value['id']) echo 'selected'; ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+							<?php } ?>
+						</select></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">名称</th>
+					<td class="td"><input type="text" class="input wc" name="name" value="<?php echo $info['name']; ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">标签</th>
+					<td class="td"><input type="text" class="input wc" name="tag" value="<?php echo $info['tag']; ?>">(填写多个标签用半角”,“号分隔)
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">链接地址</th>
+					<td class="td"><input type="text" class="input wc" name="link" value="<?php echo $info['link']; ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">星级</th>
+					<td class="td"><input type="text" class="input" name="star" value="<?php echo $info['star']; ?>">(填写数字，1-5之间)
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">描述</th>
+					<td class="td">
+						<input type="text" class="input wc" name="descrip" value="<?php echo $info['descrip']; ?>"></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">站点图片</th>
+					<td class="td">
+						<ul class="uploadImg">
+							<li id="AppImg">
+								<img src="<?php echo !empty($info['img'])?$attachPath . $info['img']:''; ?>"/>
+								<input type="hidden" name="img" value="<?php echo $info['img']; ?>">
+							</li>
+						</ul>
+						<p style="clear:both;">
+							<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=AppImg'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">书签页图标</th>
+					<td class="td">
+						<ul class="uploadImg">
+							<li id="AppIcon">
+								<img src="<?php echo ($info['icon']) ? $attachPath . $info['icon'] : $staticPath . '/img/content/nopic.jpg'; ?>"/>
+								<input type="hidden" name="icon" value="<?php echo $info['icon']; ?>">
+							</li>
+						</ul>
+						<p style="clear:both;">
+							<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=AppIcon'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">书签页ICON底色</th>
+					<td class="td">
+						<input type="text" class="input" name="color" value="<?php echo $info['color']; ?>">（填写颜色值，如:#1459A3,#0F8755, 不填写则显示为默认颜色）
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">书签页图标2</th>
+					<td class="td">
+						<ul class="uploadImg">
+							<li id="AppIcon2">
+								<img src="<?php echo ($info['icon2']) ? $attachPath . $info['icon2'] : $staticPath . '/img/content/nopic.jpg'; ?>"/>
+								<input type="hidden" name="icon2" value="<?php echo $info['icon2']; ?>">
+							</li>
+						</ul>
+						<p style="clear:both;">
+							<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=AppIcon2'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">是否默认图标</th>
+					<td class="td">
+						<input type="hidden" name="default_icon" id="default_icon" value="<?php echo $info['default_icon']; ?>"/>
+						<input type="checkbox" onclick="if(this.checked){$('#default_icon').val(1);}else{$('#default_icon').val(0);}"
+							<?php echo $info['default_icon'] == 1 ? 'checked="checked"' : ''; ?> >(选中表示应用显示默认图标)
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">排序</th>
+					<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort']; ?>">（填写一个数字，数字越大越靠前）
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">点击量</th>
+					<td class="td"><input type="text" class="input" name="hits" value="<?php echo $info['hits']; ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">状态</th>
+					<td class="td"><select name="status" min-width="100px">
+							<option <?php if ($info['status'] == 1) echo 'selected="selected"'; ?> value="1">开启</option>
+							<option <?php if ($info['status'] == 0) echo 'selected="selected"'; ?>value="0">关闭</option>
+						</select></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">发布时间</th>
+					<td class="td">
+						<input class="input" type="text" style="width:143px;" id="sub_time" name="sub_time" value="<?php echo date('Y-m-d H:i:s', $info['sub_time']); ?>"/>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">是否新品</th>
+					<td class="td">
+						<input type="hidden" name="is_new" id="is_new" value="<?php echo $info['is_new']; ?>"/>
+						<input type="checkbox" onclick="if(this.checked){$('#is_new').val(1);}else{$('#is_new').val(0);}"
+							<?php echo $info['is_new'] == 1 ? 'checked="checked"' : ''; ?> >(选中表示设置为新品)
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">是否必备</th>
+					<td class="td">
+						<input type="hidden" name="is_must" id="is_must" value="<?php echo $info['is_must']; ?>"/>
+						<input type="checkbox" onclick="if(this.checked){$('#is_must').val(1);}else{$('#is_must').val(0);}"
+							<?php echo $info['is_must'] == 1 ? 'checked="checked"' : ''; ?> >(选中表示设置为必备)
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">是否推荐</th>
+					<td class="td">
+						<input type="hidden" name="is_recommend" id="is_recommend" value="<?php echo $info['is_recommend']; ?>"/>
+						<input type="checkbox" onclick="if(this.checked){$('#is_recommend').val(1);}else{$('#is_recommend').val(0);}"
+							<?php echo $info['is_recommend'] == 1 ? 'checked="checked"' : ''; ?> >(选中表示设置为推荐)
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+	<script type="text/javascript">
+		//广告表单数据提交
+		$(document).ready(function () {
+			$('#sub_time').datetimepicker();
+			if ('<?php echo $name;?>' == '专题') {
+				$('#theme').show();
+			} else {
+				$('#theme').hide();
+			}
+
+			setTheme = function (name, chval) {
+				if (name == '专题') {
+					$('#theme').show();
+				} else {
+					$('#theme').hide();
+				}
+			}
+
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/h5game/list');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

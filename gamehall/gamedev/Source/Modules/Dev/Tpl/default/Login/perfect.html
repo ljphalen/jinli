@@ -1,0 +1,190 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+<div class="mainw mainw2 clearfix">
+<style>	
+#perfectForm .form-control{*width: 291px;*height: 20px;}
+.form-horizontal .controlzh{*text-align: left;}
+.perfectfile{*height: 30px;z-index: 999}
+#taxPassport,#companyPassport{display: none;}
+</style>
+	<div class="rmain fl regm">
+		<div class="panel panelzl">
+			<h2 class="yyname">提交资料</h2>
+			<div class="flow-w flow-w1">
+				<div class="">
+                    <div class="flow-w flow-w3">
+                        <div class="flow"><span>注册帐号</span><span>激活帐号</span><span class="on">提交资料</span><span>提交成功</span></div>
+                    </div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<form class="form-horizontal perfectfrome" id="perfectForm" action="__URL__/prefectsub/" enctype="multipart/form-data" method="post">
+					<div class="zzmsg">
+						基本信息
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">帐户：</label>
+						<p class="col-sm-4 controlzh">&nbsp;&nbsp;{$email}</p>
+					</div>
+					
+					<div class="form-group">
+						<label for="nickname" class="col-sm-2 control-label"><em>* </em>企业简称：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" id="nickname" name="account[nickname]" tabindex="1" placeholder="长度请不要超过40个字" maxlength="40">
+							<span class="help-block">作为开发者（企业）昵称，显示在帐户信息中</span>
+						</div>
+						<div class="col-sm-4">
+							<div id="nicknameTip" class="onCorrect"></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="contact" class="col-sm-2 control-label"><em>* </em>联系人：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" id="contact" tabindex="1" name="account[contact]">
+							<span class="help-block">业务对接使用，可更改</span>
+						</div>
+						<div class="col-sm-4">
+							<div id="contactTip" class="onCorrect"></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="phone" class="col-sm-2 control-label"><em>* </em>手机号：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" id="phone" tabindex="1" name="account[phone]">
+							<span class="help-block">业务对接使用，非中国大陆用户请在手机号码前添加国别码，可更改</span>
+						</div>
+						<div class="col-sm-4">
+							<div id="phoneTip" class="onCorrect"></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="authcode" class="col-sm-2 control-label"><em>* </em>验证码：</label>
+						<div class="col-sm-6 outphoto">
+							<input type="text" class="form-control" maxlength="6" tabindex="1" style="width:100px;padding-right:20px;" id="authcode" name="account[authcode]">
+							<a href="javascript:void(0);" id="fetchAuthcode" class="btn btn-success">获取验证码</a>
+							<div id="cms_note">
+							<span class="help-block">请输入手机收到的验证码，若您5分钟内未收到验证码，请和我们的客服联系：0755-83211672</span>
+							</div>
+						</div>
+						<style>
+							#authcode, #fetchAuthcode{display:inline; float:left; margin-right:5px;}
+							
+						</style>
+						<div class="perfecttip">
+							<div id="authcodeTip" class="onCorrect"></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="contactEmail" class="col-sm-2 control-label"><em>* </em>邮箱：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" id="contactEmail" tabindex="1" name="account[contact_email]">
+							<span class="help-block">审核结果、上线通知、密钥信息等发送至此邮箱，可在个人中心更改邮箱</span>
+						</div>
+						<div class="col-sm-4">
+							<div id="contactEmailTip" class="onCorrect"></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="address" class="col-sm-2 control-label"><em>* </em>联系地址：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" id="address" tabindex="1" name="account[address]">
+							<span>&nbsp;</span>
+						</div>
+						<div class="col-sm-4">
+							<div id="addressTip" class="onCorrect"></div>
+						</div>
+					</div>
+					<div class="zzmsg">
+						资质信息
+					</div>
+					<div class="form-group">
+						<label for="companyName" class="col-sm-2 control-label"><em>* </em>公司注册名称：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" id="companyName" name="account[company]" 
+								maxlength="50" tabindex="1" placeholder="长度请不要超过50个字">
+							<span class="help-block">用以审核确认开发者身份，资料审核后将不可更改</span>
+						</div>
+						<div class="col-sm-4">
+							<div id="companyNameTip" class="onCorrect"></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="passportNum" class="col-sm-2 control-label"><em>* </em>营业执照注册号：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" id="passportNum" name="account[passport_num]" 
+								maxlength="15" tabindex="1" placeholder="长度请不要超过15个字符">
+							<span class="help-block">用以审核确认开发者身份、资料审核后将不可更改</span>
+						</div>
+						<div class="col-sm-4">
+							<div id="passportNumTip" class="onCorrect"></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="companyPassport" class="col-sm-2 control-label"><em>* </em>营业执照扫描件：</label>
+						<div class="col-sm-6">
+							<input type="text" id="zzimgurl" readOnly="true" >
+							<input type="file" class="form-control perfectfile" id="companyPassport" tabindex="1" 
+								name="company_passport" onchange="document.getElementById('zzimgurl').value=this.value;">
+							<a class="formimg yyup" >点击上传</a>
+							<span class="help-block">上传小于1MB的jpg或png格式图片</span>
+						</div>
+						<div class="col-sm-4">
+							<div id="companyPassportTip" class="onCorrect"></div>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="taxNumber" class="col-sm-2 control-label"><em>* </em>税务号：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" id="taxNumber" tabindex="1" name="account[tax_number]">
+							<span class="help-block">使用金立支付SDK应用需填写</span>
+						</div>
+						<div class="col-sm-4">
+							<div id="taxNumberTip" class="onCorrect"></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="taxPassport" class="col-sm-2 control-label"><em>* </em>税务登记证扫描件：</label>
+						<div class="col-sm-6">
+							<input type="text" id="swimgurl" readOnly="true">
+							<input type="file" class="form-control perfectfile" id="taxPassport" tabindex="1"
+								name="tax_passport" onchange="document.getElementById('swimgurl').value=this.value;">
+							<a class="formimg swup" >点击上传</a>
+							<span class="help-block">支持JPG，PNG两种格式的图片，不大于2MB</span>
+						</div>
+						<div class="col-sm-4">
+							<div id="taxPassportTip" class="onCorrect"></div>
+						</div>
+					</div>
+	
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<button type="submit" id="subVerify" class="btn btn-success col-sm-5" tabindex="1">同意开发协议并注册</button><br>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<load href="{:cdn('PUBLIC')}/app/validate/formValidator-4.1.1.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/themes/126/js/theme.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/themes/126/style/style.css?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/formValidatorRegex.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/common/js/validate.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/common/js/form/perfect.js?{:C('JS_VERSION')}" />
+<script type="text/javascript">
+if ($ != jQuery) {
+    $ = jQuery.noConflict();
+}
+jQuery(document).ready(function($) {
+	$("#subVerify").removeAttr('disabled')
+});
+$(".yyup").on('click', function(event) {
+    return  $("#companyPassport").click();
+});
+$(".swup").on('click', function(event) {
+    return  $("#taxPassport").click();
+});
+</script>
+<include file="Public:footer" />

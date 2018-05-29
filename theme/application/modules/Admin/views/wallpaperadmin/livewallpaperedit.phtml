@@ -1,0 +1,198 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- 页面唯一id标识符 -->
+    <div id="zt_usr_upload02">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">名称</label>
+                    <div class="tb_cont tb_cell">
+                        <input type="text"  class="rd_1 cname" value="<?php echo $wallpaperlive["wallpaperlive_name"] ?>">
+                        <input type="hidden" class="liveid" value="<?php echo $wallpaperlive["wallpaperlive_id"] ?>">
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <!--   <div class="com_tb_wrap">
+                   <div class="com_tb">
+                       <label class="tb_cell">英文名称</label>
+                       <div class="tb_cont tb_cell"><input type="text" readonly="readonly" class="rd_1 ename" value="<?php echo $themeinfo["Ename"] ?>"></div>
+                   </div><!-- com_tb end -->
+            <!-- </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb" style="width: 210px;">
+                    <label class="tb_cell">包作者:</label>
+                    <div class="select_box" style="display: inline-block;">
+                        <?php if ($wallpaperlive['wallpaperlive_type']) { ?>
+                            <label class = "select_val">
+                                <?php echo $wallpaperType[$wallpaperlive['wallpaperlive_type']]; ?>
+                            </label>
+                            <ul class="select_option ch_statusval">
+                                <li val="1">微乐</li>
+                                <li val="2">梦向</li>
+                            </ul>
+                        <?php } else { ?>
+                            <label class = "select_val">
+                                包类型
+                            </label>
+                            <ul class="select_option ch_statusval">
+                                <li val="1">微乐</li>
+                                <li val="2">梦向</li>
+                            </ul>
+                        <?php } ?>
+
+                    </div>
+                </div><!-- select_box end-->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle"><!-- 首页 -->缩略图</label>
+                    <div class="tb_cont tb_cell cell_upload_wrap">
+
+                        <div class="cell_img_canvas" id="cell_img_canvas1">
+                            <!-- 已经存在了的预览图 start-->
+                            <a><img src="<?php echo $imageurl . '/livepaper/' . $wallpaperlive['imgs'][0] ?>" class="tb_cell_img" style="height: auto;"></a>
+                            <!-- 已经存在了的预览图 end-->
+                        </div>
+                        <!-- <div class="cell_upload" id="cell_drag1">
+                        <div class="cell_upload_btn"><button class="btn_s3">选择文件</button><input type="file" id="fileLoader"></div>
+                    <span class="cell_upload_tip">允许主题大小不能超过2M</span>
+            </div> -->
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle">预览图</label>
+                    <div class="tb_cont tb_cell cell_upload_wrap">
+                        <div class="cell_img_canvas" id="cell_img_canvas1">
+                            <!-- 已经存在了的预览图 start-->
+                            <a><img src="<?php echo $imageurl . '/livepaper/' . $wallpaperlive['imgs'][1] ?>" class="tb_cell_img" style="height: auto;"></a>
+
+                            <!-- 已经存在了的预览图 end-->
+                        </div>
+                        <!-- <div class="cell_upload" id="cell_drag1">
+                        <div class="cell_upload_btn"><button class="btn_s3">选择文件</button><input type="file" id="fileLoader"></div>
+                    <span class="cell_upload_tip">允许主题大小不能超过2M</span>
+            </div> -->
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <!--   <div class="com_tb_wrap">
+                   <div class="com_tb">
+                       <label class="tb_cell">分类标签</label>
+                       <div class="tb_cont tb_cell">
+                           <div class="select_box">
+                               <label class="select_val" val="<?php echo $selecttype[0] ?>" >
+            <?php if ($selecttype[1]) echo $selecttype[1]; ?></label>
+
+                               <ul class="select_option" style="display: none;">
+            <?php foreach ($filetype as $v) { ?>
+                                                                                                                                                                                                                                                   <li val="<?php echo $v['id'] ?>"><?php echo $v['name'] ?></li>
+            <?php } ?>
+
+                               </ul>
+                           </div><!-- select_box -->
+            <!--      </div>
+              </div>
+          </div><!-- com_tb end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle">介绍</label>
+                    <div class="tb_cont tb_cell txt_editor_wrap">
+                        <textarea class="txt_editor"><?php echo trim($wallpaperlive['wallpaperlive_conn']) ?></textarea></div>
+                </div><!-- com_tb end -->
+
+
+                <div class="com_tb">
+                    <label class="tb_cell"></label>
+                    <div class="tb_cont tb_cell">
+                        <!--  因为xxxx原因，所以审核结果不通过.-->
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+
+            <div class="bnts_wrap">
+                <button class="btn_s2 pop_btn" openPopId="fixTipView" id="ztUsrUploadDone">完成</button>
+            </div>
+
+        </div><!-- content end -->
+
+    </div>
+
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">确定对动态壁纸的编辑？</p>
+                    <div class="tip_btns"><button class="btn_s2 save_ok " id="upload02ViewList">确定</button>
+                        <button class="btn_s2 btnCancel " >取消</button></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+
+<script type="text/javascript">
+    $(function () {
+
+        $(".save_ok").click(function () {
+            $(".pop_wraper").removeClass("show");
+
+            var livename = $(".cname").val();
+            var liveid = $(".liveid").val();
+
+            var txt_editor = $.trim($(".txt_editor").val());
+
+            var data = "liveid=" + liveid + "&livename=" + livename +
+                    "&token=" + token + "&txt_editor=" + txt_editor;
+
+
+            var url = "/Admin/wallpaperadmin/updatelive";
+            $.post(url, data, function (d) {
+                if (d) {
+                    //window.location.href = "/Admin/wallpaperadmin/livewallpaper"
+                    history.go(-1);
+                }
+
+            })
+        });
+
+        $(".ch_statusval >li").click(function () {
+            var liveid = $(".liveid").val();
+            var liveType = $(this).attr("val");
+
+            var data = "liveid=" + liveid + "&liveType=" + liveType + "&token=" + token;
+
+
+            var url = "/Admin/wallpaperadmin/updateliveType";
+            $.post(url, data, function (d) {
+                if (d) {
+                    location.reload();
+                }
+            });
+        })
+
+
+
+    })
+
+</script>
+</body>
+</html>

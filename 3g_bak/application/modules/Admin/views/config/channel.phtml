@@ -1,0 +1,63 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<style>
+		.iform {
+			width: 200px;
+		}
+	</style>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $channelUrl; ?>">渠道号信息</a></li>
+			<li class=""><a href="<?php echo $hotwordsUrl; ?>">首页热词模块</a></li>
+		</ul>
+	</div>
+
+	<div class="h_a">基本信息</div>
+	<form method="post" action="<?php echo $channelUrl; ?>" id="addForm">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th" align="center">位置</th>
+					<th class="th" align="center">CP名称</th>
+					<th class="th" align="center">链接</th>
+					<th class="th" align="center">导航渠道ID</th>
+					<th class="th" align="center">本地化渠道ID</th>
+					<th class="th" align="center">外发版渠道ID</th>
+				</tr>
+				<?php foreach ($config as $k => $v) { ?>
+					<tr class="tr">
+						<th class="th"><?php echo $v['name']; ?></th>
+						<th class="th">
+							<input name="<?php echo $v['key'] . '[cp]'; ?>" class="input text" style="width:85%" value="<?php echo $result[$v['key']]['cp']; ?>">
+						</th>
+						<th class="th">
+							<input name="<?php echo $v['key'] . '[link]' ?>" class="input text" style="width:85%" value="<?php echo $result[$v['key']]['link']; ?>">
+						</th>
+						<th class="th">
+							<input name="<?php echo $v['key'] . '[local_nav]'; ?>" class="input text" style="width:85%" value="<?php echo $result[$v['key']]['local_nav']; ?>">
+						</th>
+						<th class="th">
+							<input name="<?php echo $v['key'] . '[local_channel]' ?>" class="input text" style="width:85%" value="<?php echo $result[$v['key']]['local_channel']; ?>">
+						</th>
+						<th class="th">
+							<input name="<?php echo $v['key'] . '[out_channel]'; ?>" class="input text" style="width:85%" value="<?php echo $result[$v['key']]['out_channel']; ?>">
+						</th>
+					</tr>
+				<?php } ?>
+			</table>
+		</div>
+
+		<div class="mb10 tac">
+			<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script type="text/javascript">
+		//用户表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/uprivilege/base');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

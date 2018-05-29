@@ -1,0 +1,65 @@
+<?php
+
+class Swoole_Socket_Swoole {
+    private $handler;
+    private $server;
+
+    public function __construct(array $config) {
+        if (! extension_loaded('swoole')) {
+            exit("no swoole extension. get: https://github.com/matyhtf/swoole");
+        }
+        $this->server = new swoole_server($config['host'], $config['port'], $config['work_mode']);
+        $this->server->set(array(
+            'reactor_num' => empty($config['reactor_num']) ? 2 : $config['reactor_num'],
+            'worker_num' => empty($config['worker_num']) ? 2 : $config['worker_num'],
+            'task_worker_num' => empty($config['task_worker_num']) ? 2 : $config['task_worker_num'],
+            'task_ipc_mode ' => empty($config['task_ipc_mode']) ? 3 : $config['task_ipc_mode'],
+            'backlog' => empty($config['backlog']) ? 128 : $config['backlog'],
+            'max_request' => empty($config['max_request']) ? 1000 : $config['max_request'],
+            'max_conn' => empty($config['max_conn']) ? 1000 : $config['max_conn'],
+            'dispatch_mode' => empty($config['dispatch_mode']) ? 2 : $config['dispatch_mode'],
+            'log_file' => empty($config['run_log']) ? '/tmp/swoole.log' : $config['run_log'],
+            'daemonize' => empty($config['daemonize']) ? 0 : 1,
+            'open_length_check' => empty($config['open_length_check']) ? false : $config['open_length_check'],
+            'package_length_offset' => empty($config['package_length_offset']) ? 0 : $config['package_length_offset'],
+            'package_body_offset' => empty($config['package_body_offset']) ? 4 : $config['package_body_offset'],
+            'package_length_type' => empty($config['package_length_type']) ? 'N' : $config['package_length_type']
+        ));
+        $this->server->table = $this->createTable();
+    }
+    
+    private function createTable() {
+        $table = new swoole_table(1024);
+        $table->column(Swoole_Socket_Util::TABLE_COLUMN_INTVALUE, swoole_table::TYPE_INT);
+        $table->create();
+        return $table;
+    }
+    
+    public function setHandler($handler) {
+        $this->handler = $handler;
+    }
+
+    public function run() {
+        $this->server->on('Start', array($this->handler, 'onStart'));
+        $this->server->on('Connect', array($this->handler, 'onConnect'));
+        $this->server->on('Receive', array($this->handler, 'onReceive'));
+        $this->server->on('Close', array($this->handler, 'onClose'));
+        $handlerArray = array(
+            'onTimer', 
+            'onWorkerStart', 
+            'onWorkerStop', 
+            'onWorkerError',
+            'onTask', 
+            'onFinish',
+        );
+        foreach ($handlerArray as $handler) {
+            if (method_exists($this->handler, $handler)) {
+                $this->server->on(str_replace('on', '', $handler), array(
+                    $this->handler,
+                    $handler
+                ));
+            }
+        }
+        $this->server->start();
+    }
+}

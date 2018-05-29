@@ -1,0 +1,77 @@
+{{pagerCss}}
+<link media="screen" href="{{rootUrl}}/css/table.css" rel="stylesheet" type="text/css">
+<link media="screen" href="{{rootUrl}}/css/gri.controls.css" rel="stylesheet" type="text/css">
+<div class="colMain">
+    <div class="title"><p class="fl">视频聚合配置列表</p></div>
+    <div class="main">
+        <div class="toolbar">
+            <div class="search fl">
+                <form action="/VideoAds/index" method="GET">
+                <span>{{search}}</span>
+                <span>
+              	   <select id="platform" name="platform">
+	                   <option value="1" <!-- if {{params.platform}}==1 || {{params.platform}}=='' --> selected <!-- endif --> >Android</option>
+	                   <option value="2" <!-- if {{params.platform}}==2 --> selected <!-- endif --> > IOS</option>
+                    </select>
+                    <input typt="text" class="iText" name='name' value='{{params.name}}' />
+                    <input type="submit" class="submit" value="" onclick="confirmSubmit();"/>
+                    <span class="sign">可输入配置项名称查询</span>
+                </span>
+                
+                </form>
+            </div>
+            <a href="../VideoAds/edit" class="fr add">新增</a> &nbsp;
+        </div>
+        <div class="content">
+            <div class="grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>平台类型</th>
+                            <th>配置项名称</th>
+                            <th>应用</th>
+                            <th>视频广告商</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- loop result -->
+                        <tr>
+                            <td><span class="blue"><!-- if {{result' value.platform}}==1 --> Android <!-- elseif {{result' value.platform}}==2 --> IOS <!-- endif --></span></td>
+                            <td>{{result' value.name}}</td>
+                            <td>
+                            	<!-- if {{result' value.app}} -->
+                                    <!-- loop result' value.app -->
+                                        <p>{{result' app' value.platformCn}} {{result' app' value.app_name}}（{{result' app' value.appkey}}）</p>
+                                    <!-- endloop -->
+                                <!-- endif -->
+                            </td>
+                            <td>
+                            	<!-- if {{result' value.video_ads_com_conf_arr}} -->
+                            		<!-- loop result' value.video_ads_com_conf_arr -->
+                            			<p>{{result' video_ads_com_conf_arr' key}} （{{result' video_ads_com_conf_arr' value}}）</p>
+                            		<!-- endloop -->
+                            	<!-- endif -->
+                            </td>
+                            <td>
+                                <a href="edit?id={{result' value.id}}" class="edit" title="编辑"></a>
+                                |
+                                <a href="../VideoAds/delete?id={{result' value.id}}" class="del" title="删除"></a>
+                            </td>
+                        </tr> 
+                        <!-- endloop -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">{{pager.pages}}</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{{rootUrl}}/js/gri.dateRange.js"></script>
+<script type="text/javascript">
+$(function(){
+function confirmSubmit()
+{
+    return true;
+}
+</script>

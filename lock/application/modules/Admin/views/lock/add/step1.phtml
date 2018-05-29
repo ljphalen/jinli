@@ -1,0 +1,58 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">锁屏列表</a></li>
+		<li class="current"><a href="<?php echo $step1Url;?>">添加锁屏</a></li>
+	</ul>
+</div>
+<div class="step mb10">
+		<ul class="cc">
+			<li class="current">第一步：选择锁屏类型</li>
+			<li class="line"></li>
+			<li><span class="fl"><em></em></span>第二步：完善内容</li>
+		</ul>
+</div>
+<form action="<?php echo $step1Url;?>" method="get">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">商品类型</th>
+			<td class="td">
+			<select name="channel_id">
+<?php foreach($channels as $key=>$value) {?>
+				<option <?php if($channel_id == $key) echo 'selected';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+<?php }?>
+			</select>
+			</td>
+			<th class="th">名称</th>
+			<td class="td"><input type="text" class="input wc" name="keyword" value="<?php echo $keyword;?>"></td>
+			<td class="td"><span class="btn"><span><button type="submit">搜 索</button></span></span></td>
+		</tr>
+	</table>
+</div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="120">ID</td>
+			<td width="250">名称</td>
+			<td>ICON</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($list as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><img src="<?php if(strpos($value['icon'], 'http://') === false) {echo $attachPath,$value['icon'];}else{echo $value['icon'];};?>" width="120"/></td>
+			<td>
+			<?php if(!$has_list[$value['id']]){ ?><a href="<?php echo $step2Url;?>/?file_id=<?php echo $value['id']?>&channel_id=<?php echo $channel_id;?>" class="btn btn_success">添加</a><?php }?>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

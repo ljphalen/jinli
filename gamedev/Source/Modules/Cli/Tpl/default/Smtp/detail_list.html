@@ -1,0 +1,61 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>金立游戏开发者中心</title>
+</head>
+<body>
+<volist name="chkapps_type" id="type">
+	<if condition="!empty($chkapps[$key])">
+	<table class="app_report">
+		<tr>
+			<th colspan="11" style="text-align:left;font-size:16px;">{$type}</th>
+		</tr>
+		<tr>
+			<td>游戏名称</td>
+			<td>游戏版本</td>
+			<td>应用包名</td>
+			<td>公司名称</td>
+			<td>开发者账号</td>
+			<td>模式</td>
+			<td>联网类型（网游/单机）</td>
+			<td>新游戏/更新游戏</td>
+			<td>差分包</td>
+			<td>提交时间</td>
+			<td>审核时间</td>
+			<td>上线时间</td>
+			<td>备注</td>
+		</tr>
+		<volist name="chkapps[$key]" id="vo">
+			<php>
+				$lb_id = D("Label")->where(array("name"=>"联网类型"))->getField('id');
+				if(empty($lb_id))
+					$lb_id = 103;
+				$lables = D("Label")->where(array("parent_id"=>$lb_id))->getField('id,name', true);
+				$label = json_decode($vo['label'], true);
+			</php>
+			<tr>
+				<td>{$vo['app_name']}</td>
+				<td>{$vo['version_name']}</td>
+				<td>{$vo['package']}</td>
+				<td>{:M("account_infos")->where(array("account_id"=>$vo['author_id']))->getField('company')}</td>
+				<td>{:M("accounts")->where(array("id"=>$vo['author_id']))->getField('email')}</td>
+				<td><eq name="vo.is_join" value="2">普通<else/>联运</eq></td>
+				<td>{$lables[$label[$lb_id][0]]}</td>
+				<td>{:D("Dev://Apks")->getReleaseStatus($vo['app_id'], $vo['id'])}</td>
+				<td><eq name="vo.bsdiff" value="0">未申请<else/>申请</eq></td>
+				<td class="time"><gt name="vo.created_at" value="0">{$vo['created_at']|date="Y-m-d H:i:s",###}</gt></td>
+				<td class="time"><gt name="vo.checked_at" value="0">{$vo['checked_at']|date="Y-m-d H:i:s",###}</gt></td>
+				<td class="time"><gt name="vo.onlined_at" value="0">{$vo['onlined_at']|date="Y-m-d H:i:s",###}</gt></td>
+				<td>{$vo.remarks}</td>
+			</tr>
+		</volist>
+	</table>
+	</if>
+</volist>
+<style>
+	.app_report,.app_report tr,.app_report th,.app_report td{border:1px gray; text-align: left;}
+	.app_report th{width:150px}
+	.app_report td {border: 1px rgb(240, 164, 155);border-bottom-style: inset;}
+</style>
+</body>
+<html>

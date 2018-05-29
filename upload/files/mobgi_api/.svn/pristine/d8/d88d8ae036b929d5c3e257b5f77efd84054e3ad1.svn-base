@@ -1,0 +1,102 @@
+<div id="video"  style="display:none;">
+     <ul class="">
+     	<!-- include "video_product_target" -->
+     	<li>
+             <span class="label">产品目标：</span>
+             <div class="fc">
+                 <input type="text" class="iText required"    name="video_product_url" value="{{product.video_product_url}}" style="width:500px;" />
+             </div>
+       </li>			    
+       <li class="line"></li>
+         <p> <span  style="font-size:18px">策略管理</span>   
+         <li>
+             <span class="label">是否支持视频重看:</span>
+             <div class="fc">
+                 <input type="radio" class="  required"     name="video_again"   value="1"   <!-- if {{product.video_again}}==1 -->checked="checked" <!-- endif --> />是
+                  <input type="radio" class="  required"     name="video_again"    value="0"    <!-- if {{product.video_again}}==0 -->checked="checked" <!-- endif --> />否
+                 <span class="red">*</span>
+             </div>
+        </li>		
+		 <li>
+             <span class="label">播放是否显示关闭按钮</span>
+             <div class="fc">
+                 <input type="radio" class="  required"     name="video_show_close_btn"   value="1"      <!-- if {{product.video_show_close_btn}}==1 -->checked="checked" <!-- endif --> />是
+                  <input type="radio" class="  required"     name="video_show_close_btn"    value="0"   <!-- if {{product.video_show_close_btn}}==0 -->checked="checked" <!-- endif -->  />否
+                 <span class="red">*</span>
+             </div>
+        </li>       
+         <li>
+             <span class="label">播放是否显示下载按钮</span>
+             <div class="fc">
+                 <input type="radio" class=" required"     name="video_show_download_btn"   value="1"   <!-- if {{product.video_show_download_btn}}==1 -->checked="checked" <!-- endif -->  />是
+                  <input type="radio" class=" required"     name="video_show_download_btn"    value="0"  <!-- if {{product.video_show_download_btn}}==0 -->checked="checked" <!-- endif -->  />否
+                 <span class="red">*</span>
+             </div>
+        </li>
+          <li>
+             <span class="label">视频播放到多少触发奖励(1-100的数字)</span>
+             <div class="fc">
+                <input type="text" class="iText " id="purl" name="video_play_per" value="{{product.video_play_per}}" />
+             </div>
+        </li>
+        <li class="line"></li>
+        
+          <li>
+             <span class="label">素材管理：</span>
+             <span style="display:none" class="label">分配比率：</span>
+             <div class="fc">
+                 <div class="grid" id="adVideoList">
+             
+                     <div id="ad_title_video"  class="tablebox">
+                     <div class="gridTtitle"><span class="fl">广告素材</span>
+	                     <a class="btn fr" id="select_material" href="javascript:open_resource('/resource/material_pic?product_name={{product.product_name}}&platform={{product.platform}}')">选择素材</a> 
+	                  <a class="btn fr videoAveraged" href="javascript:void(0)">全部平均</a>
+                     </div>
+                         <table><thead><tr><th>素材ID</th><th>素材类型</th><th>素材名称</th><th>广告状态</th><th>分配比例</th><th>操作</th></tr></thead>
+                             <tbody>
+                                 <!-- loop product.videoAds -->        
+                                 <tr <!-- if {{product.videoAds' value.state}}==0 -->style="color:#ccc"<!-- endif -->>
+                                     <td>
+                                             <input type="hidden" class="iText" name="incentive_video_ad_id[]" value="<?php echo $v1['id']; ?>"><?php echo $v1['id']; ?> 
+                                             <input type="hidden" class="iText" name="incentive_video_id[]" value="<?php echo $v1['r_id']; ?>">     
+                                     </td>
+                                     <td>
+                                         视频广告
+                                     </td>
+                             <td>
+                             		   <input type="hidden" class="iText" name="incentive_video_name[]" value="<?php echo $v1['ad_name']; ?>">  {{product.videoAds'  value.ad_name}}
+                             </td>
+                             <td>
+                                 <input type="hidden" class="iText" name="incentive_video_state[]"  id="video_istate_pic_<?php echo $v1['id'];?>"  value="<?php echo $v1['state']; ?>"  style="width:40px"> 
+                                 <span>
+                                         <input type="radio" checked="" onclick="javascript:$('#video_istate_pic_<?php echo $v1['id'];?>').val(this.value)" name="incentive_video_state_radio_<?php echo $v1['id'];?>" value="1" <!-- if {{product.videoAds' value.state}}==1 -->checked<!-- endif --> class="radio">
+                                     <lable>on</lable>
+                                 </span>
+                                 <span>
+                                          <input type="radio" onclick="javascript:$('#video_istate_pic_<?php echo $v1['id'];?>').val(this.value)" name="incentive_video_state_radio_<?php echo $v1['id'];?>" value="0" <!-- if {{product.videoAds' value.state}}==0 -->checked<!-- endif --> class="radio">
+                                            <lable>off</lable>
+                                 </span>
+                             </td>
+                             <td>
+                                     <input type="text" class="iText required" name="incentive_video_rate[]" value="<?php echo $v1['rate']; ?>" style="width:40px">
+                             </td>      
+                             <td>               
+                                  <a title="删除" class="delete" href="javascript:void(0)"></a>
+                             </td>
+                             </tr>
+                             <!-- endloop -->
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
+             </div>
+         </li>
+                    
+      
+           <li>
+               <div class="fc">
+                   <input type="button" onclick="javascript:autoProductForVedio()" value="更新素材" class="cancel" />        
+               </div>
+           </li>
+     </ul>
+ </div>

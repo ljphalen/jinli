@@ -1,0 +1,86 @@
+{{pagerCss}}
+<div class="colMain">
+    <div class="title"><p class="fl">站内信列表</p></div>
+    <div class="main">
+        <div class="toolbar">
+            <a href="../SiteMsg/edit" class="fr add">新增</a>
+        </div>
+        <div class="content">
+            <div class="grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>发送开始时间</th>
+                            <th>信息类型</th>
+                            <th>标题</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- loop result -->
+                        <tr>
+                            <td><span class="blue">{{result' value.senddate}}</span></td>
+                            <td>系统信息</td>
+                            <td>{{result' value.title}}</td>
+                            <td>
+                            <!-- if {{result' value.senddate}} >= {{current_time}} -->
+                                <a href="../SiteMsg/edit?id={{result' value.id}}" class="edit" title="编辑"></a>
+                                |
+                                <a href="../SiteMsg/delete?id={{result' value.id}}" class="del" title="删除"></a>
+                            <!-- else -->
+                                <a _id="{{result' value.id}}"  class="edit view" title = "查看"></a>
+                            <!-- endif -->
+                            </td>
+                        </tr> 
+                        <!-- endloop -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">{{pager.pages}}</div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="DLgridPopUp">
+<div style="text-align:center;padding:10px 0;">
+    <a href="javascript:void(0)" class="btn" id="ok">确定</a>
+    <a href="javascript:void(0)" class="cancel">取消</a>
+</div>
+</script>
+<script>
+$(function(){
+    $(".view").click(function(){
+        var id = $(this).attr("_id");
+        $.ajax({
+            type : "POST",
+            data : { id : id },
+            url : "../SiteMsg/show",
+            success : function(result){
+                var ret = JSON.parse(result);
+                if (ret.retCode == -1){
+                    alert("读取数据错误");
+                }else{
+                    var html = "<div style='margin:20px;'>";
+                    html += "<div style='font-size:24px;font-weight:bold;text-align:center;line-height:35px;'>"+ret.msg.title+"</div>";
+                    html += "<div style='width:80%;text-align:right;margin:0px auto;'><i>发送时间："+getLocalTime(ret.msg.senddate)+"</i></div>";
+                    html += "<hr style='width:80%; margin:10px auto;' />";
+                    html += "<div style='line-height:25px;height:300px; width:80%;margin:0px auto;'>"+ret.msg.msg+"</div>";
+                    html += "<div style='text-align:center;margin:0px 20px;'><input type=button value='关闭' class='btn clo' /></li>";
+                    html += "</div>";
+                    popg = jDialog({
+                        content: html,
+                        width:650,
+                        height:450
+                    });
+                }
+            }
+        });
+    });
+    $(".clo").live('click', function(){
+        popg.close();
+    
+    });
+});
+function getLocalTime(nS) {  
+    return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');  
+}
+</script>

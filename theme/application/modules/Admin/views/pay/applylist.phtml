@@ -1,0 +1,66 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <div id="pay_payapply_apply">
+        <div class="content">
+        	<div class="user_apply_detial">
+
+        		<div class="com_tb_wrap view_list_app">
+        			<ul>
+        				<li id="apply_btn">申请</li>
+        				<li class="hover">历史</li>
+        			</ul>
+        		</div>
+        		<div class="apply_cont">
+	        		<div class="com_tb_wrap history">
+	        			<div class="tb_cont">
+	        				<p>历史提现详情：</p>
+	        				<table>
+	        					<thead>
+	        						<tr>
+	        							<td>提现单号</td>
+	        							<td>提取金额（元）</td>
+	        							<td>扣税（元）</td>
+	        							<td>实际提现（元）</td>
+	        							<td>状态</td>
+	        							<td>申请时间</td>
+	        						</tr>
+	        					</thead>
+	        					<tbody>
+	        						<?php foreach($applys as $apply){?>
+	        						<tr>
+	        							<td><?php echo $apply['id']; ?></td>
+	        							<td><?php echo $apply['total']; ?></td>
+	        							<td><?php echo $apply['add_value_tax']; ?></td>
+	        							<td><?php echo $apply['income']; ?></td>
+	        							<td><?php echo $status[$apply['status']]; ?></td>
+	        							<td><?php echo date('Y.m.d', $apply['created_time']); ?></td>
+	        						</tr>
+	        						<?php } ?>
+	        					</tbody>
+	        				</table>
+	        			</div>
+	        			<?php if($designer['designer_type'] == 0){?>
+		        		<p>个人所得税计算说明：（劳动报酬X）</p>
+		        		<p> <i class="tax_intro">X<800</i><em>个税为0</em></p>
+		        		<p> <i class="tax_intro">X>=800,X=<4000</i><em>个税为（X-800）*20%</em></p>
+		        		<p>	<i class="tax_intro">X>4000</i><em>个税为X*80%*20% </em></p>
+		        		<?php } ?>
+	        		</div>
+	        		<?php echo $this->render("common/pageshow.phtml"); ?>
+	        		
+	        		
+        		</div>
+        	</div>
+        </div><!-- content end -->
+    </div>
+</section>
+<script type="text/javascript">
+	$(function(){
+		$("#apply_btn").click(function(){
+			window.location.href="/Admin/pay/apply";
+		});
+	});
+</script>
+</body>
+</html>

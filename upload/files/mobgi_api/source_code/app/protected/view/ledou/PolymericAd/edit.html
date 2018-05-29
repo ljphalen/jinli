@@ -1,0 +1,158 @@
+<link media="screen" href="{{rootUrl}}/css/reset.css" rel="stylesheet" type="text/css">
+<link media="screen" href="{{rootUrl}}/css/layout.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="{{rootUrl}}/css/zTreeStyle.css" type="text/css">
+<link media="screen" href="{{rootUrl}}/css/jquery-ui-1.8.22.custom.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{{rootUrl}}/js/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.tablednd.0.8.min.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/common.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/Categorywidget_sdk.js"></script>
+<script src="{{rootUrl}}/js/jquery-ui-1.8.22.custom.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/core.js"></script>
+<script src="{{rootUrl}}/js/validate.js" type="text/javascript"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/float.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>
+<link media="screen" href="{{rootUrl}}/css/chosen.css" rel="stylesheet" type="text/css">
+<style>
+#gamelist{width:30%;background:#fff;border:1px solid #dedede;padding:5px;}
+#gamelist li{width:100%;height:25px;line-height:25px;text-indent:15px;
+             border-bottom:1px dashed #ccc;color:#666;cursor:pointer;}
+</style>
+<div class="colMain">
+    <div class="title">
+        <p class="fl">{{title}}-聚合广告配置</p>
+    </div>
+    <div class="main">
+        <div class="app-detail">
+            <form action="../PolymericAd/save" method="POST" >
+                <input type="hidden" name="id" id="polymeric_ad_id" value='{{result.id}}' />
+                <ul class="form">
+                    <li>
+                        <span class="label">聚合广告商的名称：</span>
+                        <div class="fc">                                                      
+                            <select id="name"  name="name">
+                                 <!-- loop adsList -->
+                                	<option value="{{adsList' key}}"  <!-- if {{result.name}}=={{adsList' key}} --> selected <!-- endif --> >{{adsList' value}}</option>
+                                <!-- endloop -->
+                            </select>
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">平台类型：</span>
+                        <div class="fc">
+                            <select id="platform"  name="platform">
+                                <option value="1" <!-- if {{result.platform}}==1 --> selected <!-- endif -->>Android</option>
+                                <option value="2" <!-- if {{result.platform}}==2 --> selected <!-- endif -->>IOS</option>
+                            </select>
+                        </div>
+                    </li>
+                      <li>
+                        <span class="label">密钥：</span>
+                        <div class="fc Menu2">
+                            <input type="text" id="secret_key" class="iText" name="secret_key" required style="width:220px;" value="{{result.secret_key}}" />
+                        </div>
+                    </li> 
+                     <li>
+                        <span class="label">第三方appkey：</span>
+                        <div class="fc Menu2">
+                            <input type="text" id="third_party_appkey" class="iText required" name="third_party_appkey" required style="width:220px;" value="{{result.third_party_appkey}}" />
+                        	 <span class="red">*</span>
+                        </div>
+                    </li> 
+                    <li>
+                        <span class="label">描述：</span>
+                        <div class="fc Menu2">
+                            <input type="text" id="conf_desc" class="iText" name="conf_desc" required style="width:220px;" value="{{result.conf_desc}}" />
+                        </div>
+                    </li>   
+                    <li>
+                       <span class="label">应用：</span>
+                         <div class="fc">
+                         <select id="app_key"  name="app_key" onchange="add_pos(this.value)">
+                         <!-- loop appList -->
+                           <option value="{{appList' value.appkey}}"  <!-- if {{result.app_key}}=={{appList' value.appkey}} --> selected <!-- endif --> >{{appList' value.app_name}}</option>
+                         <!-- endloop -->
+                        </select>
+                        </div>
+                    </li>
+                     <li>
+                        <span class="label">广告位：</span>
+                        <div class="fc">
+                            <table width="80%" id="pos_tb_box" boder='1'>
+                                <tr><td>广告位</td><td>广告位名称</td><td>广告位状态</td><td>广告显示概率</td><td>第三方bolck_id</td></tr>
+                                <!-- loop result.pos -->
+                                <tr id="{{result.pos' value.id}}" >
+                                    <td>{{result.pos' value.dever_pos_key}}    
+                                    </td>
+                                    <td>{{result.pos' value.dever_pos_name}}</td>                         
+                                    <td>
+                                        <input type="radio" name="pos_state_{{result.pos' value.id}}[]"  <!-- if {{result.pos' value.state}} == 1  -->checked<!-- endif --> value="1"><label>开</label>
+                                        <input type="radio" name="pos_state_{{result.pos' value.id}}[]"  <!-- if {{result.pos' value.state}} == 0 -->checked<!-- endif --> value="0"><label>关</label>
+                                    </td>                               
+                                    <td><input type="text" class="iText" style="width:20%" name="rate[]" value="{{result.pos' value.rate}}"></td>                                    
+                                    <td>
+                                    	<input type="text" class="iText" style="width:100%" name="other_block_id[]" value="{{result.pos' value.other_block_id}}">
+                                        <input type="hidden" name="pos_name[]" value="{{result.pos' value.dever_pos_name}}">
+                                        <input type="hidden" name="pos_key_type[]" value="{{result.pos' value.pos_key}}">
+                                        <input type="hidden" name="pos_key[]" value="{{result.pos' value.dever_pos_key}}">
+                                        <input type="hidden" name="pos_id[]" value="{{result.pos' value.id}}">
+                                    </td>       
+                                </tr>
+                                <!-- endloop -->
+                            </table>
+                        </div>
+                    </li>                    
+                    <li>
+                        <div class="fc">
+                            <input type="button" onclick="confirmSubmit();" value="确定" class="submit" />
+                            <input type="button" value="取消" class="cancel" onclick="window.location.href='/PolymericAd/index'" />
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+	$(function(){
+	    $('#app_key').chosen();
+	});
+    function confirmSubmit()
+    {
+        $("form").submit();
+    }
+    function add_pos(appkey){
+    	 $.getJSON("/PolymericAd/getAdPosInfo?appkey="+appkey,function(data){
+    		 $("#pos_tb_box").empty();
+    		 var html = ' <tr><td>广告位</td><td>广告位名称</td><td>广告位状态</td><td>广告显示概率</td><td>第三方bolck_id</td></tr>';
+    		 $.each(data,function(key,value){   
+    		     html +='<tr id="'+value['id']+'">';
+    		     html +='<td>'+value['dever_pos_key'];    		
+    		     html +='</td>';
+    		     html +='<td>'+value['dever_pos_name']+'</td>';                         
+    		     html +='<td>';
+    			 if(value['state'] ==  '1'){
+    			     html +='<input type="radio" name="pos_state_'+value['id']+'[]"  value="1" checked ><label>开</label>';
+        		     html +='<input type="radio" name="pos_state_'+value['id']+'[]"  value="0"  ><label>关</label>';
+    			 }else{
+    				 html +='<input type="radio" name="pos_state_'+value['id']+'[]"  value="1" ><label>开</label>';
+          		     html +='<input type="radio" name="pos_state_'+value['id']+'[]"  value="0" checked ><label>关</label>';
+    			 }
+    		     html +='</td>';                               
+    		     html +='<td><input type="text" class="iText" style="width:20%" name="rate[]" value="'+value['rate']+'"></td>'; 
+    		     html +='<td>';
+    		     html +='<input type="text" class="iText" style="width:100%" name="other_block_id[]" value="">'
+    		     html +='<input type="hidden" name="pos_name[]" value="'+value['dever_pos_name']+'">';
+    		     html +='<input type="hidden" name="pos_key[]" value="'+value['dever_pos_key']+'">';
+    		     html +='<input type="hidden" name="pos_id[]" value="'+value['id']+'">';
+    		     html +='<input type="hidden" name="pos_key_type[]" value="'+value['pos_key']+'">';
+    		     html +='</td>';       
+    		     html +='</tr> '; 
+    		}); 
+    		 $("#pos_tb_box").append(html);
+    	});   
+    }
+</script>

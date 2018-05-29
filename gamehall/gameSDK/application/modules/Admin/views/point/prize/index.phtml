@@ -1,0 +1,86 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $pointShopIndexUrl;?>">积分商城</a></li>
+        <li class="current"><a href="javascript:;">积分抽奖</a></li>
+        <li><a href="<?php echo $presendIndexUrl;?>">人工发放</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post" >
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">	
+	   <tr class="tr">
+			<th class="th">活动名称</th>
+			<td class="td"><input type="text" class="input" name="title" value="<?php echo $search['title'];?>"></td>
+			<th class="th">活动状态</th>
+			<td class="td">
+			 <select name="status" class="select wa">
+			    <option  value="0">全部</option>
+				<option <?php if ($search['status'] == 1) echo 'selected';?> value="1">未开始</option>
+				<option <?php if ($search['status'] == 2) echo 'selected';?> value="2">进行中</option>
+				<option <?php if ($search['status'] == 3) echo 'selected';?> value="3">已结束</option>
+			 </select>
+		   </td>
+		</tr>
+		<tr class="tr">
+		    <th class="th">活动起始时间</th>
+			<td class="td" colspan="2"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo $search['start_time'] ;?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo $search['end_time'] ;?>" /></div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+	<span class="btn2"><span><button><a href="<?php echo $addUrl;?>" class="mr10" style="color:white;">添加抽奖</a></button></span></span>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="btn2"><span><button><a href="<?php echo $configUrl;?>" class="mr10" style="color:white;">默认配置</a></button></span></span>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="btn2"><span><button><a href="<?php echo $blackListUrl;?>" class="mr10" style="color:white;">黑名单</a></button></span></span>
+
+    <span style="float: right">共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="50">ID</td>
+			<td width="100">名称</td>
+			<td width="120">开始时间</td>
+			<td width="120">结束时间</td>
+			<td width="80">参与人数</td>
+			<td width="80">中奖人数</td>
+			<td width="80">活动状态</td>
+			<td width="50">开关</td>
+			<td width="120">操作</td>
+		</tr>
+		<?php foreach ($data as $item):?>
+			<tr class = "ct">
+		    	<td> <?php echo $item['id'];?> </td>
+				<td> <?php echo html_entity_decode($item['title']);?> </td>
+				<td> <?php echo date('Y-m-d  H:i:s', $item["start_time"]);?> </td>
+				<td> <?php echo date('Y-m-d  H:i:s', $item["end_time"]);?> </td>
+				<td> <?php echo $item["join_num"];?> </td>
+				<td> <?php echo $item["win_num"];?> </td>
+				<td> <?php echo ($item["end_time"] < time()) ? '已结束' : (($item["start_time"] < time()) ? '进行中' : '未开始');?> </td>
+				<td> <?php echo $item["status"] ? '开启' : '关闭';?> </td>
+				<td>
+					<a href="<?php echo $editUrl;?>/?id=<?php echo $item['id'];?>" class="mr10">编辑</a>
+					<a href="<?php echo $logUrl;?>/?id=<?php echo $item['id'];?>" class="mr10">中奖记录</a>
+				</td>
+			</tr>
+		<?php endforeach;?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

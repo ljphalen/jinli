@@ -1,0 +1,61 @@
+<?php echo $this->render("layout/webheader.phtml"); ?>
+    <body>
+    <div class="module">
+        <section class="layout-center award-record-form">
+            <div class="input-info">
+                <form action="<?php echo $webroot;?>/Winprizeorder/create" method="post">
+                    <input type="hidden" name="goods_id" value="<?php echo $goods_id; ?>">
+
+                    <div class="legend">
+                        <h3>为顺利领取大礼，请填写正确的信息!</h3>
+                        <a onclick="GOU.addBaiduStatic('CUTGAME_AWARD_RESET')" href="javascript:;" id="J_reset">重置</a>
+                    </div>
+                    <fieldset>
+                        <ul>
+                            <li>
+                                <label>收<b></b>货<b></b>人：</label>
+                                <input name="buyer_name" require maxlength="20" type="text"
+                                       data-msg="{'require':'请输入收货人姓名', 'maxlength':'字符个数不能大于20'}"
+                                       placeholder="请输入收货人姓名" value="<?php echo $info['buyer_name']; ?>"/>
+                            </li>
+                            <li>
+                                <label>手<b></b><b></b><b></b><b></b>机：</label>
+                                <input name="mobile" require data-verify="\d{11}" type="tel"
+                                       value="<?php echo $info['mobile']; ?>"
+                                       data-msg="{'require':'请输入手机号码', 'verify':'格式错误，请重新填写'}"
+                                       placeholder="请输入手机号码"/>
+                            </li>
+                            <li class="J_areaWrap" old-aNode="<?php echo end(explode('|',$info['country']));?>">
+                                <label>收货地区：</label>
+                                <select require name="province" id="J_province"
+                                        data-msg="{'require': '请选择省份'}"></select>
+                                <select require name="city" id="J_city" data-msg="{'require': '请选择城市'}"></select>
+                                <select require name="country" id="J_country" data-msg="{'require': '请选择地区'}"></select>
+                            </li>
+                            <li>
+                                <label>街道地址：</label>
+                                <input name="detail_address" require maxlength="100" type="text"
+                                       value="<?php echo $info['detail_address']; ?>"
+                                       data-msg="{'require': '请输入街道地址'}"
+                                       placeholder="请输入街道地址"/>
+                            </li>
+                            <li>
+                                <label>邮政编码：</label>
+                                <input name="postcode" require data-verify="\d{6}" type="number"
+                                       value="<?php echo $info['postcode']; ?>"
+                                       data-msg="{'require': '请输入邮编'}"
+                                       placeholder="请输入邮编"/>
+                            </li>
+                        </ul>
+                    </fieldset>
+                    <div class="btn-wrap">
+                        <div class="web-btn">
+                            <a id="J_formSubmit" data-direct-url="<?php echo $webroot;?>/winprize/awardlist" href="javascript:;" >提交</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+<?php echo $this->render("layout/tj.phtml"); ?>
+<?php echo $this->render("layout/newfooter.phtml"); ?>

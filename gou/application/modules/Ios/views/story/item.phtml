@@ -1,0 +1,63 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body>
+<div class="module">
+    <section id="iScroll">
+        <div id="J_story_detail" class="story-detail">
+        	<div class="gotop">
+        		<span>返回顶部</span>
+        	</div>
+            <h1><?php echo $data['title'] ?></h1>
+            <div class="sub">
+            
+            <?php 
+            if(date('Y-m-d',$data['start_time'])!=date("Y-m-d")) {
+                 echo date('Y-m-d',$data['start_time']);
+             }  else {
+                echo date('Y-m-d H:i',$data['start_time']);
+                }
+             ?>
+                 <span><?php echo $data['author']; ?></span></div>
+            <div class="detail">
+                <?php  echo html_entity_decode($data['content']); ?>
+            </div>
+        </div>
+        <article id="J_story_comments" class="story-comments ios-story-comments">
+            <div class="title-bar">
+                <h2><i class="icon-message-orange"></i>热门回复</h2>
+            </div>
+            <article class="comments-list J_proDetail" data-ajaxurl="/api/ios_comment/list?item_id=<?php echo $data['id'];?>&type=story">
+                <div class="wrap"></div>
+            </article>
+        </article>
+        <script id="J_dtemplate" type="text/icat-template">
+        <%if(data.list.length){%>
+            <%for(var i=0, len=data.list.length; i<len; i++){%>
+            <div class="comments-item">
+                <ul>
+                    <li>
+                        <h3><%=data.list[i].nickname%></h3>
+                        <span class="date"><%=data.list[i].create_time%></span>
+                    </li>
+                    <li>
+                        <%if (GOU.isVailableVersion('1.4.0')) {%>
+                        <div data-praise="<%=data.list[i].praise%>" data-item-id="<%=data.list[i].id%>" class="praise-wrap J_praise">
+                            <span class="praise-count J_praiseCount"><%=data.list[i].praise?(data.list[i].praise*1>=10000?Math.floor(data.list[i].praise*1/10000)+'万+':data.list[i].praise):''%></span>
+                            <i class="icon-praise"></i>
+                        </div>
+                        <%}%>
+                    </li>
+                </ul>
+                <p><%=data.list[i].content%></p>
+            </div>
+            <%}%>
+        <%} else {%>
+            <div class="comment-blank">
+                <img src="<?php echo $staticResPath;?>/assets/img/comment-blank.png">
+            </div>
+        <%}%>
+        </script>
+    </section>
+    <?php echo $this->render("layout/tj.phtml");?>
+</div>
+</body>
+</html>

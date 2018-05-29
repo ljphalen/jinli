@@ -1,0 +1,138 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $qualificationUrl; ?>">数据列表</a></li>
+			<li class="current"><a href="javascript:;"><?php echo $data['id'] ? '编辑' : '添加'; ?>信息</a></li>
+		</ul>
+	</div>
+	<div class="h_a"><?php echo $data['id'] ? '编辑' : '添加'; ?>信息</div>
+	<form method="post" action="<?php echo $postQualificationUrl; ?>" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+		<input name="id" value="<?=$v['id'];?>" type="hidden">
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">合作商名称</th>
+					<td class="td">
+						<select name="parter_id">
+							<option value="0">选择合作商</option>
+							<?php foreach ($parters as $k => $v) { ?>
+								<option value="<?php echo $v['id']; ?>"  <?php if ($data['parter_id'] == $v['id']) echo ' selected'; ?>><?php echo $v['name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">公司名称:</th>
+					<td class="td">
+						<input type="text" name="company_name" value="<?php echo $data['company_name']; ?>" class="input"/>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">开户银行:</th>
+					<td class="td">
+						<input type="text" name="bank_name" class="input" value="<?php echo $data["bank_name"]; ?>"/>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">银行账号:</th>
+					<td class="td">
+						<input type="text" name="bank_number" class="input" value="<?php echo $data['bank_number']; ?>"/>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">税务登记证号:</th>
+					<td class="td">
+						<input type="text" name="tax_number" class="input" value="<?php echo $data['tax_number']; ?>"/>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">公司地址:</th>
+					<td class="td">
+						<input type="text" name="company_address" class="input" value="<?php echo $data['company_address']; ?>"/>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">电话:</th>
+					<td class="td">
+						<input type="text" name="company_tel" class="input" value="<?php echo $data['company_tel']; ?>"/>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">发票类型:</th>
+					<td class="td">
+						<input type="text" name="bill_type" class="input" value="<?php echo $data['bill_type']; ?>"/>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">发票内容:</th>
+					<td class="td">
+						<input type="text" name="bill_content" class="input" value="<?php echo $data['bill_content']; ?>"/>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">收件人姓名:</th>
+					<td class="td">
+						<input type="text" name="receiver_name" class="input" value="<?php echo $data['receiver_name']; ?>"/>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">收件人电话:</th>
+					<td class="td">
+						<input type="text" name="receiver_tel" class="input" value="<?php echo $data['receiver_tel']; ?>"/>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">收件人地址:</th>
+					<td class="td">
+						<input type="text" name="receiver_address" class="input" value="<?php echo $data['receiver_address']; ?>"/>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">联系邮件:</th>
+					<td class="td"><input type="text" name="email" class="input" value="<?php echo $data['email']; ?>"/>
+					</td>
+				</tr>
+
+				<tbody id="image">
+				<tr class="tr">
+					<th class="th">图片</th>
+					<td class="td">
+						<ul class="uploadImg">
+							<li id="imgId">
+								<img src="<?php echo $data['tax_image'] ? $attachPath . $data['tax_image'] : $staticPath . '/img/content/nopic.jpg'; ?>"/>;
+								<input type="hidden" name="tax_image" value="<?php echo $data['tax_image'] ? $attachPath . $data['tax_image'] : ''; ?>">
+							</li>
+						</ul>
+						<p style="clear:both;">
+							<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=imgId'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+			<span style="padding-left:260px;margin-top:20px;"><input type="submit" class="btn" value="提交"></span>
+		</div>
+		<input type="hidden" value="<?php echo $data['id']; ?>" id="id" name="id">
+	</form>
+
+	<script type="text/javascript">
+		//表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Parter/qualification');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

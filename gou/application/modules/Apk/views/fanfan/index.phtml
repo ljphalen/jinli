@@ -1,0 +1,58 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+	<div class="module">
+		<section id="iScroll">
+			<div class="ff-banner">
+				<div class="pic">
+					<img src="<?php echo $attachPath.$topic['img'];?>" alt="">
+				</div>
+				<div class="desc">
+					<?php echo html_entity_decode($topic['topic_desc']);?>
+				</div>
+			</div>
+			
+			<div class="ff-three">
+				<?php if($goods && $total > 2) {?>
+				<div class="pic">
+					<dl>
+						<dt>
+							<a href="<?php echo $webroot.'/fanfan/goods_redirect?id='.$goods[0]['id'];?>"><img src="<?php echo $attachPath.$goods[0]['img'];?>" alt=""></a>
+						</dt>
+						<dd>
+							<a href="<?php echo $webroot.'/fanfan/goods_redirect?id='.$goods[1]['id'];?>"><img src="<?php echo $attachPath.$goods[1]['img'];?>" alt=""></a>
+							<a href="<?php echo $webroot.'/fanfan/goods_redirect?id='.$goods[2]['id'];?>"><img src="<?php echo $attachPath.$goods[2]['img'];?>" alt=""></a>
+						</dd>
+					</dl>
+				</div>
+				<?php }?>
+				<div class="desc">
+					<?php echo html_entity_decode($topic['goods_desc']);?>
+				</div>
+			</div>
+			<div class="ff-list">
+			<?php if($goods && $total > 3) {?>
+				<ul>
+				<?php for ($i = 3; $i < $total; $i++) {?>
+					<li><a href="<?php echo $webroot.'/fanfan/goods_redirect?id='.$goods[$i]['id'];?>"><img src="<?php echo $attachPath.$goods[$i]['img'];?>" alt=""></a></li>
+				<?php }?>
+				</ul>
+			<?php }?>
+			</div>
+			<div class="ff-foot">
+				<div class="web-btn">
+				<a href="<?php echo $webroot.'/fanfan/keyword_redirect?keyword='.urlencode(html_entity_decode($topic['search_btn'])).'&t_bi='.$this->t_bi;?>">更多<?php echo html_entity_decode($topic['search_btn']);?> &gt;&gt;</a>
+				</div>
+				<div class="more-links">
+					<h3>更多精彩内容</h3>
+					<div>
+					<?php foreach ($keywords as $key=>$value) {?>
+						<a href="<?php echo $webroot.'/fanfan/keyword_redirect?keyword='.urlencode($value);?>"><?php echo $value?></a>
+					<?php }?>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

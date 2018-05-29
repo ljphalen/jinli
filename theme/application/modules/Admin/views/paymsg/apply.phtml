@@ -1,0 +1,91 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath ?>appjs/payment/paylist.js"></script>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <div id="pay_paymsg_paymsgapply">
+        <div class="content">
+            <div class="message_apply">
+                <?php echo $this->render("pay/filter.phtml"); ?>
+                <div class="com_tb_wrap" style="border-bottom:0px;">
+                    <div class="com_tb">
+                        <div class="tb_cell">
+                            <ul class="tb_switch">
+                                <li class="btn_txt"><a href="?outExcl=true">导出Excel</a></li>
+                            </ul>
+                        </div>
+                    </div><!-- com_tb end -->
+                </div><!-- com_tb_wrap end -->
+                <div class="apply_money_List">
+                    <div class="user_view_list">
+                        <table class="view_list_tb toggle_icon">
+                            <thead>
+                                <tr>
+                                    <th>设计师</th>
+                                    <th class="on <?php if ($_GET['sort'] == 'income' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="income">提现金额(元)</th>
+                                    <th class="on <?php if ($_GET['sort'] == 'tax' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="tax">个税(元)</th>
+                                    <th class="on <?php if ($_GET['sort'] == 'final_income' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="final_income">实际提现金额(元)</th>
+                                    <th class="on <?php if ($_GET['sort'] == 'created_time' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="created_time">申请时间</th>
+                                    <th>审核</th>
+                                    <th>备注</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($applys as $apply) { ?>
+                                    <tr>
+                                        <td><?php echo $apply['nick_name']; ?></td>
+                                        <td><?php echo $apply['income']; ?></td>
+                                        <td><?php echo $apply['tax']; ?></td>
+                                        <td><?php echo $apply['final_income']; ?></td>
+                                        <td><?php echo date('Y.m.d', $apply['created_time']); ?></td>
+                                        <th>
+                                            <div class="select_box check_apply">
+                                                <?php if($apply['status'] == 1){?>
+                                                <label class="select_val" val="1" data-id="<?php echo $apply['id'];?>">已通过</label>
+                                                <?php } elseif($apply['status'] == 2) {?>
+                                                <label class="select_val" val="2" data-id="<?php echo $apply['id'];?>">未通过</label>
+                                                <?php } else {?>
+                                                <label class="select_val" val="0" data-id="<?php echo $apply['id'];?>">待审核</label>
+                                                <?php } ?>
+                                                <ul class="select_option">
+                                                    <li val="1">已通过</li>
+                                                    <li val="2">未通过</li>
+                                                </ul>
+                                            </div>
+                                        </th>
+                                        <th><textarea name="reason" class="reason"><?php echo $apply['reason']; ?></textarea></th>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div><!-- content end -->
+    </div>
+</section>
+<script type="text/javascript">
+    $(function () {
+        //搜索关键词
+        $("#search_btn").click(function () {
+            var keyword = $(".search_name").val();
+            var url = '/admin/paymsg/apply?keyword=' + keyword;
+            window.location.href = url;
+        });
+
+        $(".check_apply").find('li').click(function(){
+            var url = '/admin/paymsg/checkapply';
+            var applyId = $(this).parent().parent().find('.select_val').attr('data-id');
+            var status = $(this).attr('val');
+            var reason = $(this).closest('tr').find('.reason').val();
+            var data = {applyId: applyId, 'status': status, 'reason': reason, 'token': token};
+            var location = '/admin/paymsg/apply';
+            $.post(url, data, function(d){
+                window.location.href = location;
+            });
+        });
+    });
+</script>
+</body>
+</html>

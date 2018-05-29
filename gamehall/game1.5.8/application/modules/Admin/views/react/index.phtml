@@ -1,0 +1,84 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	   <li><a href="<?php echo $feedbakcListUrl;?>">意见反馈</a></li>
+	    <li ><a href="<?php echo $gameFeedbackUrl;?>">游戏反馈</a></li>
+       <li class="current"><a href="<?php echo $listUrl;?>">H5反馈</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	   <tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status">
+				<option  value="0">全部</option>
+				<option <?php if($search['status'] == 2) echo 'selected';?> value="2">已审核</option>
+				<option <?php if($search['status'] == 1) echo 'selected';?> value="1">未审核</option>
+			</select>
+		</tr>
+		<tr class="tr">
+			<th class="th">结论</th>
+			<td class="td">
+			<select name="result">
+				<option  value="0">结论</option>
+				<option <?php if($search['result'] == 2) echo 'selected';?> value="2">采纳</option>
+				<option <?php if($search['result'] == 1) echo 'selected';?> value="1">未采纳</option>
+			</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">手机号码</th>
+			<td class="td"><input class="input" type="text" name="mobile" value="<?php echo $search['mobile'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">QQ</th>
+			<td class="td"><input class="input" type="text" name="qq" value="<?php echo $search['qq'];?>"></td>
+		</tr>
+		
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="60">编号</td>
+			<td width="100">手机号码</td>
+			<td width="100">qq</td>
+			<td width="100">email</td>
+			<td>反馈内容</td>
+			<td>回复内容</td>
+			<td>反馈时间</td>
+			<td>结论</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($reacts as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['mobile'];?></td>
+			<td><?php echo $value['qq'];?></td>
+			<td><?php echo $value['email'];?></td>
+			<td><?php echo Util_String::substr($value['react'], 0, 20);?></td>
+			<td><?php echo $value['reply'];?></td>
+			<td><?php echo date('Y-m-d H:i:s',$value['create_time']);?></td>
+			<td><?php if($value['result'] == 0) {echo '未采纳';} else { echo '采纳';};?></td>
+			<td><?php if($value['status'] == 0) {echo '未审核';} else { echo '已审核';};?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">审核</a>
+			<a onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '是否要删除该用户组？', event);" href='javascript:'>删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

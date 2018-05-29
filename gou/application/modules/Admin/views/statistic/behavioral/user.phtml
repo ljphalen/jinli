@@ -1,0 +1,68 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li class="current"><a href="<?php echo $indexUrl;?>">行为列表</a></li>
+        <li class="current"><a href="javascript:;">用户日志</a></li>
+    </ul>
+</div>
+<form action="<?php echo $userUrl;?>" method="get" id="logForm">
+    <input name="token" type="hidden" value="<?php echo $token;?>" />
+    <input name="uid" type="hidden" value="<?php echo $uid;?>" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">URL关键词</th>
+                <td class="td">
+                    <input type="text" class="input wb" name="module" value="<?php echo $param['module'];?>"/>
+                </td>
+                <th class="th">操作时间</th>
+                <td class="td">
+                    <input class="input" type="text"  id="from_time" name="from_time" value="<?php echo $param['from_time'];?>">-
+                    <input class="input" type="text"  id="to_time" name="to_time" value="<?php echo $param['to_time'];?>">
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">&nbsp;</th>
+                <td class="td" colspan="3">
+                    <span class="btn"><span><button type="submit">搜 索</button></span></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+<div class="table_list">
+    <table width="100%">
+        <tr class="hd">
+            <td width="5%">用户ID</td>
+            <td width="8%">用户名</td>
+            <td width="8%">用户组</td>
+            <td width="45%">URL</td>
+            <td width="10%">Action</td>
+            <td width="15%">操作时间</td>
+            <td width="10%">操作</td>
+        </tr>
+        <r>
+            <?php foreach($logs as $key => $value) {?>
+                <tr class="ct">
+                    <td><?php echo $value['uid'];?></td>
+                    <td><?php echo $value['username'];?></td>
+                    <td><?php echo isset($groups[$value['groupid']]) ? $groups[$value['groupid']]['name']: '-';?></td>
+                    <td><?php echo $value['url'];?></td>
+                    <td><?php echo $value['type'];?></td>
+                    <td><?php echo date('Y-m-d H:i:s', $value['time']);?></td>
+                    <td><a href="<?php echo $detailUrl;?>/?id=<?php echo $value['_id'];?>">查看</a></td>
+                </tr>
+            <?php } ?>
+    </table>
+</div>
+<div class="mr10 cc">
+    <?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script>
+    $(document).ready(function() {
+        $("#to_time").datetimepicker();
+        $("#from_time").datetimepicker();
+    });
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

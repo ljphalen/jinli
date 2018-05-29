@@ -1,0 +1,176 @@
+<link media="screen" href="{{rootUrl}}/css/chosen.css" rel="stylesheet" type="text/css">
+<div class="colMain">
+    <div class="title">
+        <p class="fl">网页素材管理</p>
+    </div>
+    <div class="main" data-tabs-name="view">
+        <div class="content">
+            <!-- include 'menu' -->
+            <div class="devInfo" data-tabs-name="video">
+                <!-- include 'meterial_menu' -->
+                <form action="../resource/material_incentive_video" method="GET" enctype="multipart/form-data" style="margin-top:20px;">
+                    <input type="hidden" value="{{result.dev_id}}" name="dev_id" />
+                    <ul class="form">
+                        <li>
+                            <span class="label">平台类型：</span>
+                            <div class="fc">
+                                <select name="platform" id="platform"   onchange="autoPlatform()">
+                                    <option value="">所有(默认)</option>
+                                    <option value="1">Android</option>
+                                    <option value="2">IOS</option>
+                                </select>   
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label">所属产品：</span>
+                            <div class="fc">
+                                <select name="product_name" id="product_name">
+                                 <option value="">全部产品</option>
+                                    <!-- loop product -->
+                                    <option value="{{product' value.product_name}}">{{product' value.product_name}}</option>
+                                    <!-- endloop -->
+                                </select>
+                            </div>
+                            
+                        </li>
+                         <li>
+                            <span class="label">上传时间：</span>
+                            <div class="fc">
+                                <input typt="text" class="iText datepicker" name='sdate' id='sdate' value='{{date('Y-m-d',sdate)}}' /> -
+                                <input typt="text" class="iText datepicker" name='edate' id='edate' value='{{date('Y-m-d',edate)}}' />
+                                <span style="margin-left:100px;">
+                                </span><input type="submit" value="查询" class="submit"/>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">素材的名称：</span>
+                            <div class="fc">
+                              		      <input typt="text" class="iText " name='video_name'   value='{{result.video_name}}' />
+                            </div>
+                        </li>
+                        </ul>
+                </form>
+                <div class="grid">
+                    <table>
+                        <!-- loop pic -->
+                        <!-- if {{i}}%3 == 0 -->
+                        <tr>
+                            <!-- endif -->
+                            <td style="padding-top:20px;cursor: pointer" <!-- if {{pic' value.ad_type}}==10 -->ondblclick="selectIcon('{{pic' value.pic_url}}')"<!-- else -->ondblclick="selectPic({{pic' value.id}})"<!-- endif -->>
+                                <div align="left">
+                                   <p><span>视频名称  :   {{pic' value.video_name}}</span></p>
+                                    <p><span>平台类型：<!-- if {{pic' value.platform}}==1 -->Android<!-- elseif {{pic' value.platform}}==2 -->IOS<!-- else -->通用<!-- endif --></span></p>
+                                    <p><span>所属产品：{{pic' value.product_name}}</span></p>
+                                     <p><span>视频大小：{{pic' value.video_size}}</span></p>  
+                                    <p><span>上传时间：{{date('Y-m-d H:i:s',pic' value.updatetime)}}</span></p>
+                                   <p><span>视频路径:<a href="{{pic' value.video_url}}" target="_blank">{{pic' value.video_url}}</a></span></p>
+                                  <p><span>H5路径::<a href="{{pic' value.h5_url}}" target="_blank">{{pic' value.h5_url}}</a></span></p>
+                                   <a class="btnstyle btndel" href="/resource/delete?op=incentive_video&id={{pic' value.id}}" title="删除素材">删除素材</a>                                
+                                </div>      
+                            <!-- if ({{i}}++)%3 == 2 -->      	
+                        </tr>     
+                        <!-- endif -->
+                        <!-- endloop -->
+                        <!-- if ({{i}})%4 != 2 -->
+                        </tr>
+                        <!-- endif -->
+                    </table>
+                    <div class="pagination">{{pager.pages}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="imgFrame" style="position:absolute; top:40%; left:40%; z-index:1000; display:none;">
+        <div style="float:right"><a id="imgFrameHide">关闭</a></div>
+        <div id="imgbox"></div>
+    </div>
+</div>
+<script>
+var now= new Date();
+
+var year=now.getFullYear();
+
+var month=now.getMonth()+1;
+
+var date=now.getDate();
+	$(function(){
+	    $('.datepicker').datepicker({
+	        changeMonth:true,
+	        changeYear:true,
+	        minDate:new Date(),
+	        dateFormat : "yy-mm-dd",
+	        minDate: "2014-01-01",
+	        maxDate:year+"-"+month+"-"+date
+	    });
+	    $('#sdate').change(function(){
+		    	var time = $(this).val();
+				var date1 = new Date($('#sdate').val()).getTime();
+				var date2 = new Date($('#edate').val()).getTime();
+				if(date2 < date1)
+				{
+					alert("错误，结束日期不能比开始日期早");
+				}
+		    });
+	    $('#edate').change(function(){
+			var date1 = new Date($('#sdate').val()).getTime();
+			var date2 = new Date($('#edate').val()).getTime();
+			if(date2 < date1)
+			{
+				alert("错误，结束日期不能比开始日期早");
+				return false;
+			}
+	    });
+        
+        //要先触发自动平台
+        $("#platform").val("{{result.platform}}");
+        autoPlatform("{{result.product_name}}");
+        
+	    $("#product_name").val("{{result.product_name}}");
+//        $("#product_id").val("{{result.product_id}}");
+	    $("#ad_type").val("{{result.ad_type}}");
+		 
+	})
+        function selectPic(id){
+            if(window.opener != null)
+            {
+                window.opener.select_resource(id, 6)
+                window.close();
+            }
+        }
+        function selectIcon(icon_url){
+            if(window.opener != null)
+            {
+                window.opener.select_icon(icon_url)
+                window.close();
+            }
+        }
+
+function autoPlatform(productname) {
+    ajaxPOST("/reproduct/autoPlatform", {"platform": $("#platform").val()}, function(data) {
+        var length = data.length;
+        str = '';
+        if(productname == '')
+        {
+             str ='<option value="" selected="selected">所有产品</option>';
+        }else{
+            str ='<option value="">所有产品</option>';
+        }
+        for (i=0; i<length; i++)
+        {
+            if_selecte = ""
+            if(productname == data[i].product_name)
+            {
+                if_selecte =  'selected="selected"';
+            }   
+            str += '<option value="'+data[i].product_name+'" '+if_selecte+'>'+data[i].platform_product_name+'</option>'
+        }
+        $("#product_name").html(str);
+        //重新绑定select的选择组件
+        $("#product_name").removeClass("chzn-done");
+        $("#product_name_chzn").remove();
+        $("#product_name").chosen({});
+    })
+}
+</script>
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>

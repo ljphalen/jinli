@@ -1,0 +1,75 @@
+<?php echo $this->render("vod/header.phtml"); ?>
+
+
+<body>
+
+<!--header begin-->
+<div class="v_header_logo">
+	<h1><a href="/vod/list">金立直播</a></h1>
+</div>
+<!--header end-->
+
+
+
+<!--播放器 begin-->
+<div class="v_topic_video">
+	<div id="playerDiv">
+		<?php
+		$now       = time();
+		$playerUrl = '';
+		foreach ($list as $val) {
+			$tmp       = json_decode($val['play_url'], true);
+			$playerUrl = $tmp[1];
+			if ($now <= strtotime($val['end_time']) && $now >= strtotime($val['start_time'])) {
+				break;
+			}
+		}
+		?>
+		<video width="320" height="180" id="player" poster="<?=$staticResPath?>/vod/tvplay.png" controls="controls" autoplay="autoplay" src="<?=$playerUrl?>"></video>
+	</div>
+</div>
+<!--播放器 end-->
+
+<!--分享 begin-->
+<div class="m_share_download_box js_mobile_share_con">
+    <div class="m_share_download">
+        <div class="m_share_box">
+        </div>
+        <div class="m_download_box"><a href="/vod/list" target="_self"></a></div>
+    </div>
+</div>
+<!--分享 end-->
+
+<!-- 节目单 begin -->
+<div class="playlistbox">
+	<h3><?= $info['name'] ?>今日节目单</h3>
+	<ul>
+		<?php
+		$now = time();
+		$out = array();
+		$i = 0;
+		foreach ($list as $val) {
+			$d    = date('H:i', strtotime($val['start_time']));
+			$name = $val['name'];
+			if ($now >= strtotime($val['end_time'])) {
+				$class = 'class="played"';
+			} else if ($now <= strtotime($val['end_time']) && $now >= strtotime($val['start_time'])) {
+				$n=$i;
+				$class = 'class="playing"';
+			} else {
+				$class = '';
+			}
+			$i++;
+			$out[] = sprintf('<li %s><em>%s</em><i class="icon_playing"></i><span>%s</span></li>',$class,$d,$name);
+		}
+
+		foreach($out as $k => $v) {
+			echo (($n - $k) < 3) ? $v : '';
+		}
+		?>
+	</ul>
+</div>
+<!-- 节目单 end -->
+
+
+<?php echo $this->render("vod/footer.phtml"); ?>

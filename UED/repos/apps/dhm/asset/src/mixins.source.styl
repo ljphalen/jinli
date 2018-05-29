@@ -1,0 +1,50 @@
+px(num){ (num/3.375/20)*1rem }
+px1080(num){ (num/3.375/20)*1rem }
+px720(num){ (num/2.25/20)*1rem }
+px640(num){ (num/2/20)*1rem }
+vendor(prop, args) {
+	-webkit-{prop}: args;
+	-moz-{prop}: args;
+	-o-{prop}: args;
+	-ms-{prop}: args;
+	{prop}: args;
+}
+display-box() { display: -webkit-box; display: -moz-box; display: -o-box; display: box; }
+size(w, h) {width: px(w); height: px(h); }
+table-cell-middle() {
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+}
+adaptive-img(maxWidth, maxHeight) {
+	width: auto;
+	height: auto;
+	max-width: px(maxWidth);
+	max-height: px(maxHeight);
+}
+text-ellipsis() {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+multi-text-ellipsis(line) {
+	display-box();
+	vendor(line-clamp, line);
+	vendor(box-orient, vertical);
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+input-placeholder(prop, args) {
+	input::-webkit-input-placeholder {
+		{prop}: args;
+	}
+	input::-moz-input-placeholder {
+		{prop}: args;
+	}
+	input::-ms-input-placeholder {
+		{prop}: args;
+	}
+	input::-moz-input-placeholder {
+		{prop}: args;
+	}
+}

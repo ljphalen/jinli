@@ -1,0 +1,58 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $taskListUrl;?>">异步任务</a></li>
+        <li class="current"><a href="<?php echo $splListUrl;?>">异步观察者</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">	
+		<tr class="tr">
+			<th class="th">任务id</th>
+			<td class="td"><input type="text" class="input wc" name="task_id" value="<?php echo $search['task_id'];?>"></td>
+			<th class="th">观察者</th>
+			<td class="td"><input type="text" class="input wc" name="observer" value="<?php echo $search['observer'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">执行结果</th>
+			<td class="td"><input type="text" class="input wc" name="result" value="<?php echo $search['result'];?>"></td>
+			<th class="th">主题</th>
+			<td class="td"><input type="text" class="input wc" name="subject" value="<?php echo $search['subject'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="30"><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="50">ID</td>
+			<td width="50">任务id</td>
+			<td width="50">主题</td>
+			<td width="50">观察者</td>
+			<td width="50">参数</td>
+			<td width="50">执行结果</td>
+			<td width="50">耗时(毫秒)</td>
+		</tr>
+		<?php foreach($list as $key => $value) {?>
+		<tr class="ct">
+			<td><input class="checkbox" name="keys[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['task_id'];?></td>
+			<td><?php echo $value['subject'];?></td>
+			<td><?php echo $value['observer'];?></td>
+			<td><?php echo $value['args'];?></td>
+			<td><?php echo $value['result'];?></td>
+			<td><?php echo $value['use_time'];?></td>
+		</tr>
+	 <?php } ?>
+	</table>
+</div>
+<div class="mr10 cc"><?php echo $pager;?></div>
+<?php echo $this->render("layout/footer.phtml");?>

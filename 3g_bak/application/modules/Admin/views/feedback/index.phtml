@@ -1,0 +1,58 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $listUrl; ?>">反馈列表</a></li>
+		</ul>
+	</div>
+	<form action="<?php echo $listUrl; ?>" method="post">
+		<input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">专题ID</th>
+					<td class="td">
+						<input class="input" type="text" name="topic_id" value="<?php echo $param['topic_id']; ?>"></td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+	</form>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="50">编号</td>
+				<td width="50">专题ID</td>
+				<td width="100">用户t_bi</td>
+				<td width="100">联系方式</td>
+				<td width="100">选项号</td>
+				<td width="100">其他原因</td>
+				<td width="100">IP地址</td>
+				<td width="100">创建时间</td>
+			</tr>
+			<?php foreach ($reacts as $key => $value) { ?>
+				<tr class="ct">
+					<td><?php echo $value['id']; ?></td>
+					<td><?php echo $value['topic_id']; ?></td>
+					<td><?php echo $value['user_flag']; ?></td>
+					<td><?php echo $value['contact']; ?></td>
+					<td><?php
+						$optTemp = array();
+						foreach ($topic[$value['topic_id']]['option'] as $k => $v) {
+							if (pow(2, $k) & $value['option_num']) {
+								$optTemp[] = $k + 1;
+							}
+						}
+						echo implode(',', $optTemp);
+						?></td>
+					<td><?php echo $value['answer']; ?></td>
+					<td><?php echo $value['ip']; ?></td>
+					<td><?php echo date('Y-m-d h:i:s', $value['create_time']); ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

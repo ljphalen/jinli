@@ -1,0 +1,43 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+
+	<div class="h_a">设置</div>
+	<form method="post" action="<?php echo $confUrl; ?>" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">归属地</th>
+					<td class="td">
+						<input type="text" class="input wc" name="area" value="<?php echo implode(',', $info['area']); ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">语言</th>
+					<td class="td">
+						<input type="text" class="input wc" name="lang" value="<?php echo implode(',', $info['lang']); ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">分辨率</th>
+					<td class="td">
+						<input type="text" class="input wc" name="dpi" value="<?php echo implode(',', $info['dpi']); ?>">
+					</td>
+				</tr>
+
+			</table>
+		</div>
+
+
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script type="text/javascript">
+		//表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Browserurl/conf');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

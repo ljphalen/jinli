@@ -1,0 +1,84 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+
+<div class="mainw clearfix">
+	<include file="Union:nav_left" />
+	<script>$(".lnav #key_tab2").addClass("on");</script>
+    <div class="rmain fl">
+    	<h2 class="yyname">我的Key » {$key.name|safe}</h2>
+		<div class="panel">
+			<div class="panel-body">
+				<div class="row">
+					<div class="downsdk">
+						<a href="{:U("Help/sdk")}" class="btn btn-warning">下载SDK</a>
+						1. 请前往下载SDK文档&nbsp;&nbsp;&nbsp;2. 如果是网游，请填写交易结果通知地址
+					</div>
+					<div class="col-md-7">
+						<div>{$key.package|safe}</div>
+						<div>申请时间：{$key["created_at"]|date="Y-m-d H:i", ###}</div>
+						<div>审核时间：{$key["authorized_at"]|date="Y-m-d H:i", ###}</div>
+						<div>APPID：{$key.appid|safe}</div>
+						<div>API Key：{$key.api_key|safe}</div>
+						<div>Secret Key：{$key.secret_key|safe}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel paymt">
+			<div class="sdktitle">
+				支付信息配置
+			</div>
+			<div class="panel-body">
+				<form action="{:U("notityurl")}" method="post">
+				<input type="hidden" name="id" value="{$key.id}" />
+				<div class="row">
+					<div class="col-md-10">
+						<span class="help-block">notityURL</span>
+						<input class="form-control" id="focusedInput" name="notity_url" placeholder="http://pay.gionee.com/v3/" type="text" value="{$key.notity_url|safe}">
+						<span class="help-block">交易结果通知地址，单机游戏可不填</span>
+					</div>
+					<div class="col-md-2" style="margin-top:34px;">
+						<button type="submit" class="btn btn-success">更新地址</button>
+					</div>
+				</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="panel">
+			<div class="sdktitle">
+				支付密钥
+			</div>
+			<div class="panel-body">
+				<form action="{:U("reset_paykey")}" method="post">
+					<input type="hidden" name="id" value="{$key.id}" />
+					<div class="row">
+						<div class="col-md-10">
+							<span class="help-block">支付私钥</span>
+							<textarea class="form-control" rows="3">{$key.pay_key|safe}</textarea>
+						</div>
+						<div class="col-md-2" style="margin-top:40px;">
+							<button type="submit" class="btn btn-success">更新私钥</button>
+						</div>
+					</div>
+				</form>
+				<div class="row">
+					<div class="col-md-10">
+						<span class="help-block help-blockhi">支付notify公钥</span>
+						<textarea class="form-control" rows="3">{$key.notify_key|safe}</textarea>
+						<span class="help-block">交易结果通知地址，单机游戏可不填</span>
+					</div>
+				</div>
+				
+				<div class="row apkrisk">
+					<div class="col-md-12">
+						风险： <br>
+						1. 私钥更新后将覆盖原密钥，原私钥将失效，新私钥将立即生效；<br>
+						2. 不建议单机游戏更改
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<include file="Public:footer" />

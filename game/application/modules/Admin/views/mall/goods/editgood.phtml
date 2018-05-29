@@ -1,0 +1,97 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li style="display:none;"><a href="<?php echo $listUrl;?>">积分概况</a></li>
+		<li><a href="<?php echo $presendIndexUrl;?>">人工发放</a></li>
+        <li class="current"><a href="<?php echo $indexUrl;?>">积分商城</a></li>
+        <li><a href="<?php echo $pointDescIndexUrl;?>">积分说明管理</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑商品</div>
+<form method="post" action="<?php echo $editGoodPostUrl;?>" id="editFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<input name="type" value="<?php echo $info['type'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">商品名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">商品图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="simg">
+						<img src="<?php echo $attachPath,$info['img'];?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=simg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">商品icon</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="iconImg">
+						<img src="<?php echo $attachPath,$info['icon'];?>"/>
+						<input type="hidden" name="icon" value="<?php echo $info['icon'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=iconImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		 <tr class="tr">
+			<th class="th">商品类型</th>
+			<td class="td">
+				<?php echo $type[$info['type']];?>
+				<?php if($info['type'] == 2) {?> &nbsp;&nbsp;&nbsp;<span id="effectime">有效期:<input type="text" class="input" name="effect_time" value="<?php echo $info['effect_time'];?>"></span><?php }?>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">总数量</th>
+			<td class="td"><input type="text" class="input" name="total_num" value="<?php echo $info['total_num'];?>"></td>
+		     
+		</tr>
+		<tr class="tr">
+			<th class="th">每人兑换数量</th>
+			<td class="td"><input type="text" class="input" name="preson_limit_num" value="<?php echo $info['preson_limit_num'];?>"></td>
+		     
+		</tr>
+		<tr class="tr">
+			<th class="th">兑换1件商品消耗积分</th>
+			<td class="td"><input type="text" class="input" name="consume_point" value="<?php echo $info['consume_point'];?>"></td>
+		     
+		</tr>
+		<tr class="tr">
+			<th class="th">生效时间</th>
+			<td class="td"><div><input class="input" type="text" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $info['start_time']);?>" /> 至 <input class="input" type="text" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s', $info['end_time']);?>" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status" min-width="100px">
+                	<option <?php if($info['status'] == 1) echo 'selected="selected"';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 0) echo 'selected="selected"';?>value="0">关闭</option>
+            </select></td>
+		</tr>
+		
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+    $('#end_time').datetimepicker();
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Mall_Goods/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

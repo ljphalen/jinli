@@ -1,0 +1,84 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $listUrl; ?>">新闻列表</a></li>
+		<li><a href="<?php echo $addUrl; ?>">添加新闻</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl; ?>" method="post">
+	<input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">分类</th>
+				<td class="td">
+					<select name="type_id">
+						<?php foreach ($newstype as $key => $value) { ?>
+							<option <?php echo ($param['type_id'] == $key) ? 'selected="selected"' : ''; ?> value="<?php echo $key; ?>"><?php echo $value['name']; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button type="submit">搜 索</button></span></span>
+	</div>
+</form>
+<form action="<?php echo $editStatusPostUrl; ?>" method="post" id="statusForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="100">是否开启</td>
+				<td width="100">排序</td>
+				<td width="100">编号</td>
+				<td>分类</td>
+				<td>标题</td>
+				<td width="100">状态</td>
+				<td width="100">是否广告</td>
+				<td width="100">是否置顶</td>
+				<td width="100">操作</td>
+			</tr>
+			<?php foreach ($news as $key => $value) { ?>
+				<tr class="ct <?php if ($value['status']) echo 'blue'; ?>">
+					<td><?php if ($value['status']) { ?>
+							<input name="oids[]" value="<?php echo $value['id'] ?>" type="hidden"><?php } ?>
+						<input type="checkbox" name="ids[]" value="<?php echo $value['id']; ?>" <?php echo $value['status'] == 1 ? 'checked="checked"' : ''; ?> >
+					</td>
+					<td><?php echo $value['sort']; ?></td>
+					<td><?php echo $value['id']; ?></td>
+					<td><?php echo $newstype[$value['type_id']]['name']; ?></td>
+					<td><?php echo $value['title']; ?></td>
+					<td><?php echo $value['status'] == 1 ? '开启' : '关闭'; ?></td>
+					<td><?php echo $value['is_ad'] ? '<font color="red">是</font>' : '否'; ?></td>
+					<td><?php echo $value['istop'] ? '<font color="green">是</font>' : '否'; ?></td>
+					<td>
+						<a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+						<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<?php if ($news) { ?>
+	<div class="mb10 tac">
+		<span class="btn"><span><button type="submit">提 交</button></span></span>
+	</div>
+</form>
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		ajaxForm('statusForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Jhnews/index?type_id=<?php echo $type;?>');
+		});
+	})
+	<?php }?>
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

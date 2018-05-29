@@ -1,0 +1,62 @@
+<include file="Public:header" />
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/common/css/myPage.css?{:C('JS_VERSION')}" type="text/css" rel="stylesheet" />
+<div class="mainw clearfix">
+	<include file="Union:nav_left" />
+    <div class="rmain fl">
+    	<h2 class="yyname">我的Key</h2>
+        <div class="farea farea-key">
+            <div class="numsub">
+            
+            <div class="fl">您当前共有<em class="fblue"> {$total_count} </em> 个应用申请了Key</div>
+            
+            <a href="{:U("Help/page", array("id"=>6))}" target="_help" class="btn-green fr">联运流程</a>
+            <a href="{:U("Union/add")}" class="btn-green fr">申请Key</a>
+            </div>
+        </div>
+    	<div class="qhsub">
+        	<div class="qhsm">
+        		<a href="{:U("key", array('status'=>1))}"<eq name="status" value="1">class="on"</eq>>{$_all_status['1']|default=0}个审核通过</a>
+        		<a href="{:U("key", array('status'=>0))}"<eq name="status" value="0">class="on"</eq>>{$_all_status['0']|default=0}个审核中</a>
+        		<a href="{:U("key", array('status'=>-1))}"<eq name="status" value="-1">class="on"</eq>>{$_all_status['-1']|default=0}个审核失败</a>
+        	</div>
+            <div class="qhsc mt17">
+      			<table class="tab">
+    				<tbody>
+						<volist name="list" id="vo">
+							<php>
+							$icon = CDN("PUBLIC")."/common/images/no_photo.png";
+							if(!empty($vo[appid])){
+								$icon = D("Dev://Apks")->getFieldById($vo[appid], "icon");
+								$icon = Helper("Apk")->get_url("icon").$icon['file_path'];
+							}
+							</php>
+                         <tr>
+                            <td width="12%" valign="top">
+                                <div class="tc"><span class="thumbnail"><img src="{$icon}" alt="" width="64" height="64"></span></div>
+                            </td>
+                            <td width="60%">
+                                <div class="caption">
+                                    <h6 class="f14 h6t">{$vo.name} <span>{$vo.package}</span></h6>
+                                    <h6>类型：{:$vo["type"] ? "网游" : "单机"}</h6>
+                                    <h6>渠道：{$vo["channel"]}</h6>
+                                    <h6>申请日期：<notempty name="vo.updated_at">{$vo['updated_at']|date="Y-m-d H:i",###}<else/>{$vo['created_at']|date="Y-m-d H:i",###}</notempty></h6>
+                                    <gt name="vo.authorized_at" value="0">
+									<h6>审核日期：{$vo["authorized_at"]|date="Y-m-d H:i", ###}</h6>
+									</gt>
+                                </div>
+                            </td>
+                            <td width="28%">
+                                <a href="{:U("key_detail", array("id"=>$vo["id"]))}" class="btn-xq keymore">详细信息</a>
+                            </td>
+                        </tr>
+						</volist>
+                      </tbody>
+                 </table>
+            </div>
+            <div class="tabw mt30">
+				<div class="page">{$pagenav}</div>
+      		</div>
+        </div>
+    </div>
+</div>
+<include file="Public:footer" />

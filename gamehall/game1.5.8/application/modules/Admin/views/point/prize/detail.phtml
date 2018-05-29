@@ -1,0 +1,221 @@
+<?php echo $this->render("layout/header.phtml");?>
+<style type="text/css">
+.block {
+	width:95%;
+ 	height:20px; 
+ 	line-height:20px; 
+	margin:2px;
+ 	border:1px solid #e5e3e3;
+	text-align:center;
+}
+.block2{
+	color:red;
+}
+#prize_layout td{
+	background: #f9f9f9;
+}
+</style>
+<div class="nav">
+	<ul class="cc">
+	     <li><a href="<?php echo $indexUrl;?>">积分抽奖</a></li>
+        <li class="current"><a href="javascript:void();">编辑抽奖活动</a></li>
+	</ul>
+</div>
+<div class="table_full">
+	<table width="100%">	
+	   <tr class="tr">
+			<th class="th">名称</th>
+			<td class="td"><?php echo $prize['title'];?></td>
+		</tr>
+		<tr class="tr">
+		    <th class="th">抽奖时间</th>
+			<td class="td" colspan="2">
+			<div>
+				<?php echo date('Y-m-d H:i:s', $prize['start_time']);?> 至 <?php echo date('Y-m-d H:i:s', $prize['end_time']);?> 
+			</div>
+			</td>
+		</tr>
+		<tr class="tr">
+		    <th class="th">活动图片</th>
+			<td class="td" colspan="2">
+			<ul class="uploadImg">
+					<li id="AdImg">
+						<img src="<?php echo $attachPath.$prize['img'];?>"/>
+					</li>
+				</ul>			
+				<p style="clear:both;">
+				</p>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">最低版本</th>
+			<td class="td"><?php echo $prize['version'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">消耗积分</th>
+			<td class="td"><?php echo $prize['point'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动说明</th>
+			<td class="td">	<?php echo $prize['descript'];?> </td>
+		</tr> 
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">	<?php echo $prize['status']?'开启':'关闭';?> </td>
+		</tr> 
+		</table>
+		<div id ="prize_config">
+		<table width="100%">
+		<tr class="tr">
+			<td colspan="2"><div class="h_a">配置奖项</div></td>
+		</tr> 
+		<?php foreach ($config as $item):?>
+		<tr class="tr">
+			    <th class="th">
+				 <table width ="100px;" id="prize_layout">
+					<tr>
+					 <td width ="33%"><div class="block <?php echo ($item['pos'] == '1') ? 'block2' : '';?>"><span><?php echo ($item['pos'] == '1') ? '添加' : '1';?></span></div></td>
+					 <td width ="33%"><div class="block <?php echo ($item['pos'] == '2') ? 'block2' : '';?>"><span><?php echo ($item['pos'] == '2') ? '添加' : '2';?></span></div></td>
+					 <td width ="33%"><div class="block <?php echo ($item['pos'] == '3') ? 'block2' : '';?>"><span><?php echo ($item['pos'] == '3') ? '添加' : '3';?></span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block <?php echo ($item['pos'] == '8') ? 'block2' : '';?>"><span><?php echo ($item['pos'] == '8') ? '添加' : '8';?></span></div></td>
+					 <td width ="33%"><div class="block"><span></span></div></td>
+					 <td width ="33%"><div class="block <?php echo ($item['pos'] == '4') ? 'block2' : '';?>"><span><?php echo ($item['pos'] == '4') ? '添加' : '4';?></span></div></td>
+					</tr>
+					<tr>
+					 <td width ="33%"><div class="block <?php echo ($item['pos'] == '7') ? 'block2' : '';?>"><span><?php echo ($item['pos'] == '7') ? '添加' : '7';?></span></div></td>
+					 <td width ="33%"><div class="block <?php echo ($item['pos'] == '6') ? 'block2' : '';?>"><span><?php echo ($item['pos'] == '6') ? '添加' : '6';?></span></div></td>
+					 <td width ="33%"><div class="block <?php echo ($item['pos'] == '5') ? 'block2' : '';?>"><span><?php echo ($item['pos'] == '5') ? '添加' : '5'?></span></div></td>
+					</tr>
+			    </table>
+			   </th>
+			   <td class="td">
+				<div class="table_full" width ="500px;">
+					<table width="100%">
+					<?php switch($item['type']){ 
+						case '1': ?>	
+	   						<tr class="tr">
+								<th class="th">奖品类型</th>
+								<td class="td">实体</td>
+							</tr>
+							<tr class="tr">
+								<th class="th">奖品名称 </th>
+								<td class="td">	<?php echo $item['title']?>	</td>
+							</tr>
+							<tr class="tr">
+		   					 	<th class="th">奖品图片</th>
+									<td class="td" colspan="2">
+										<ul class="uploadImg">
+											<li>
+												<img src="<?php echo $attachPath.$item['img'];?>"/>
+											</li>
+										</ul>			
+								   </td>
+							</tr>
+							<tr class="tr">
+								<th class="th">中奖概率</th>
+								<td class="td"> ( <?php echo $item['probability']?> )  <span><font color="#FF0000"> 此处为【0-1000000】的整数。</font></span> </td>
+							</tr>
+							<tr class="tr">
+								<th class="th">发放最小间隔</th>
+								<td class="td"><?php echo $item['min_space']?> 秒</td>
+							</tr>
+							<tr class="tr">
+								<th class="th">每日发放最大数量</th>
+								<td class="td"> <?php echo $item['max_win']?> 个/天</td>
+							</tr>							 		
+						<?php break; ?>
+						<?php case '2': ?>
+							<tr class="tr">
+								<th class="th">奖品类型</th>
+								<td class="td">A券 ( <?php echo $item['amount']?> ) </td>
+							</tr>
+							<tr class="tr">
+								<th class="th">有效期</th>
+								<td class="td">( <?php echo $item['day']?> ) 天 </td>
+							</tr>
+							<tr class="tr">
+								<th class="th">奖品名称</th>
+								<td class="td">	<?php echo $item['title']?>	</td>
+							</tr>
+							<tr class="tr">
+		   					 	<th class="th">奖品图片</th>
+									<td class="td" colspan="2">
+										<ul class="uploadImg">
+											<li>
+												<img src="<?php echo $attachPath.$item['img'];?>"/>
+											</li>
+										</ul>			
+								   </td>
+							</tr>
+							<tr class="tr">
+								<th class="th">中奖概率</th>
+								<td class="td"> ( <?php echo $item['probability']?> ) <span><font color="#FF0000"> 此处为【0-1000000】的整数。</font></span> </td>
+							</tr>
+							<tr class="tr">
+								<th class="th">发放最小间隔</th>
+								<td class="td"><?php echo $item['min_space']?> 秒</td>
+							</tr>
+							<tr class="tr">
+								<th class="th">每日发放最大数量</th>
+								<td class="td"> <?php echo $item['max_win']?> 个/天</td>
+							</tr>							 		
+							<?php break; ?>
+							<?php case '3': ?>
+							<tr class="tr">
+								<th class="th">奖品类型</th>
+								<td class="td">积分 ( <?php echo $item['amount']?> ) </td>
+							</tr>
+							<tr class="tr">
+								<th class="th">奖品名称</th>
+								<td class="td">	<?php echo $item['title']?>	</td>
+							</tr>
+							<tr class="tr">
+		   					 	<th class="th">奖品图片</th>
+									<td class="td" colspan="2">
+										<ul class="uploadImg">
+											<li>
+												<img src="<?php echo $attachPath.$item['img'];?>"/>
+											</li>
+										</ul>			
+								   </td>
+							</tr>
+							<tr class="tr">
+								<th class="th">中奖概率</th>
+								<td class="td"> ( <?php echo $item['probability']?> ) <span><font color="#FF0000"> 此处为【0-1000000】的整数。</font></span> </td>
+							</tr>
+							<tr class="tr">
+								<th class="th">发放最小间隔</th>
+								<td class="td"><?php echo $item['min_space']?> 秒</td>
+							</tr>
+							<tr class="tr">
+								<th class="th">每日发放最大数量</th>
+								<td class="td"> <?php echo $item['max_win']?> 个/天</td>
+							</tr>							 		
+							<?php break; ?>
+							<?php default: ?>
+							<tr class="tr">
+								<th class="th">奖品类型</th>
+								<td class="td">不中 </td>
+							</tr>
+							<tr class="tr">
+		   					 	<th class="th">奖品图片</th>
+									<td class="td" colspan="2">
+										<ul class="uploadImg">
+											<li>
+												<img src="<?php echo $attachPath.$item['img'];?>"/>
+											</li>
+										</ul>			
+								   </td>
+							</tr>
+							<?php }?>
+					</table>
+				  </div>
+			     </td>
+		         </tr> 
+		      <?php endforeach;?>   
+		    </table>
+  		</div>
+  </div>
+<?php echo $this->render("layout/footer.phtml");?>

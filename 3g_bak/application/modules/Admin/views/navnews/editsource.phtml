@@ -1,0 +1,71 @@
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="edit_form">
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="group" value="<?php echo $group; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr>
+			<th>名称</th>
+			<td>
+				<input type="text" style="width:250px;" class="easyui-textbox" name="title" required="true" value="<?php echo $info['title']; ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>链接</th>
+			<td>
+				<input type="text" style="width:250px;" class="easyui-textbox" name="url" required="true" value="<?php echo $info['url']; ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>栏目</th>
+			<td>
+				<select class="easyui-combobox" name="column_id">
+					<?php
+					foreach ($columns as $key=>$v):
+						$select = $info['column_id'] == $key ? 'selected="selected"' : '';
+						?>
+						<option value="<?php echo $key; ?>" <?php echo $select;?>><?php echo $v; ?></option>
+					<?php
+					endforeach;
+					?>
+				</select>
+		</tr>
+		<tr>
+			<th>CP</th>
+			<td>
+				<select class="easyui-combobox" name="cp_id">
+					<?php
+					foreach ($cps as $k => $v):
+						$select = $info['cp_id'] == $k ? 'selected="selected"' : '';
+						?>
+						<option value="<?=$k?>" <?php echo $select;?>><?=$v?></option>
+					<?php
+					endforeach;
+					?>
+				</select>
+		</tr>
+		<tr>
+			<th>状态</th>
+			<td>
+				<?php
+				foreach (Common::$status as $k => $name):
+					$checked = $info['status'] == $k ? 'checked="checked"' : '';
+					?>
+					<input type="radio" name="status" class="input" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+				<?php endforeach; ?>
+			</td>
+		<tr>
+			<th>跳转状态</th>
+			<td>
+				<?php
+				foreach (Common::$status as $k => $name):
+					$checked = $info['skip_status'] == $k ? 'checked="checked"' : '';
+					?>
+					<input type="radio" name="skip_status" class="input" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+				<?php endforeach; ?>
+			</td>
+		</tr>
+
+
+		</tr>
+	</table>
+</form>

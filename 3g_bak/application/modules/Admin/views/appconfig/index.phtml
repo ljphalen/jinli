@@ -1,0 +1,84 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<form method="post" action="<?php echo $editPostUrl; ?>" id="editForm">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="h_a">配置管理</div>
+		<div class="table_full">
+			<table width="100%">
+
+				<tr class="tr">
+					<th class="th">必备应用数量</th>
+					<td class="td">
+						<input name="must_num" type="text" class="input" value="<?php echo $configs['must_num']; ?>">（请填写大于零的整数）
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">推荐应用数量</th>
+					<td class="td">
+						<input name="recommend_num" type="text" class="input" value="<?php echo $configs['recommend_num']; ?>">（请填写大于零的整数）
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">排行应用数量</th>
+					<td class="td">
+						<input name="ranking_num" type="text" class="input" value="<?php echo $configs['ranking_num']; ?>">（请填写大于零的整数）
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">新品应用数量</th>
+					<td class="td">
+						<input name="new_num" type="text" class="input" value="<?php echo $configs['new_num']; ?>">（请填写大于零的整数）
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">分类应用数量</th>
+					<td class="td">
+						<input name="type_num" type="text" class="input" value="<?php echo $configs['type_num']; ?>">（请填写大于零的整数）
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">专题应用数量</th>
+					<td class="td">
+						<input name="theme_num" type="text" class="input" value="<?php echo $configs['theme_num']; ?>">（请填写大于零的整数）
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">搜索应用数量</th>
+					<td class="td">
+						<input name="search_num" type="text" class="input" value="<?php echo $configs['search_num']; ?>">（请填写大于零的整数）
+					</td>
+				</tr>
+				</tr>
+				<th class="th">搜索推荐数量</th>
+				<td class="td">
+					<input name="user_num" type="text" class="input" value="<?php echo $configs['user_num']; ?>">（请填写大于零的整数）
+				</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">应用默认图标</th>
+					<td class="td">
+						<ul class="uploadImg">
+							<li id="AppIcon">
+								<img src="<?php echo ($configs['default_icon']) ? $attachPath . $configs['default_icon'] : $staticPath . '/img/content/nopic.jpg'; ?>"/>
+								<input type="hidden" name="default_icon" value="<?php echo $configs['default_icon']; ?>">
+							</li>
+						</ul>
+						<p style="clear:both;">
+							<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=AppIcon'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac">
+			<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			ajaxForm('editForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Appconfig/index');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

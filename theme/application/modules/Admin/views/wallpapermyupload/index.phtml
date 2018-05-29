@@ -1,0 +1,173 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<!-- 导航栏Ajax加载 指向navagator.html  menuOn表示分别需要高亮的菜单栏id 用下划线_隔开-->
+<section class="navigator" menuOn="bz_bzUpload">
+
+</section>
+
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- 页面唯一id标识符  上传壁纸 上传壁纸01-->
+    <div id="bz_usr_upload01">
+        <div class="content">
+            <div class="upload_wrap">
+                <div class="upload_btn">
+                    <button class="btn_s2">点击选择图片</button>
+                    <input type="file" id="fileLoader" name="files[]" multiple>
+                </div>
+                <p>或将图片拖动到这里<br/>允许上传的图片格式为：png jpeg jpg gif 分辨率需为：800X960、854X960、960X1280、1280X1440 、1920X2160、2880X2560</p>
+            </div>
+            <div class="upload_status">
+               <!-- <span><em class="upload_num">0</em>个文件，共<em class="upload_size">0</em>M</span>
+                <!-- disable 按钮灰化 不可点击效果 -->
+                <button class="btn_s3 disable upload_next">下一步</button>
+            </div>
+            <table class="view_list_tb">
+                <thead>
+                    <tr><th>壁纸</th><th>壁纸名称</th><th>大小</th><th>操作</th><th>状态</th></tr>
+                </thead>
+                <tbody class="tb_upload" id="tb_upload">
+
+                    <tr id="cloneTr" class="none">
+                        <td class="imgPreview"></td>
+                        <td class="imgName">趣味生活</td>
+                        <td class="imgSize">1.2M</td>
+                        <td><!--<a class="btn_txt pop_btn row_del" openPopId="fixTipView">删除</a>--></td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success"></div>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+
+        </div><!-- content end -->
+    </div>
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">确定删除？</p>
+                    <div class="tip_btns"><button class="btn_s2" id="uploadConfirm">确定</button><button class="btn_s2 btnCancel">取消</button></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/vendor/load-image.all.min.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-image.js"></script>
+
+<!-- The File Upload validation plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-validate.js"></script>
+
+<script type="text/javascript">
+    //文件的上传路径 请根据实际文件地址进行调整
+    var token = "<?php echo $token; ?>"
+    var url = '/Admin/wallpapermyUpload/uploadfiles?token=' + token;
+    // var url = 'plugins/jqfile/server/php/index.php';
+    var imgIdx = 0, uploadNum = 0, uploadSize = 0, barIdx = 0;
+
+    $(".upload_next").on("click", function () {
+        var isActive = $(this).hasClass("disable");
+        if (!isActive) {
+            window.location.href = "/Admin/wallpapermyupload/indextwo";
+        }
+    });
+
+    $('#fileLoader').fileupload({
+        dropZone: $(".upload_wrap"), //拖拽上传区域
+        //dropZone:null,
+        url: url,
+        dataType: 'json',
+        previewMaxWidth: 100, //预览图片宽
+        previewMaxHeight: 100, //预览图片高
+        previewCrop: true,
+        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+        sequentialUploads: true,
+        //autoUpload:false
+    }).on('fileuploaddone', function (e, data) {
+
+
+        //激活下一步按钮，绑定相关事件
+        $(".upload_next").removeClass("disable");
+
+    }).on("fileuploadadd", function (e, data) {
+        imgIdx++;
+        console.log(data);
+        //添加文件基本信息
+        var fileSize = (data.files[0].size / 1048567).toFixed(2);
+        var tempNameArr = data.files[0].name.split(".");
+
+        //文件名超过8个字符时截取显示
+        if (tempNameArr[0].length <= 8) {
+            fileName = tempNameArr[0];
+        }
+        else {
+            fileName = tempNameArr[0].substr(0, 8) + "...";
+        }
+        var cloneTr = $("#cloneTr").clone().removeClass("none").removeAttr("id");
+        data.context = cloneTr.appendTo($("#tb_upload"));
+        data.context.find(".imgName").text(fileName);
+        data.context.find(".imgSize").text(fileSize + "Mb");
+        data.context.find(".row_del").attr("id", "del" + imgIdx);
+
+
+    }).on('fileuploadprocessalways', function (e, data) {
+        if (data.files.error) {//如果文件格式不对
+            data.context.find(".progress").replaceWith("<span class='upload_error'>文件格式错误</span>");
+        }
+        else {
+            //添加预览图 必须在此处添加否则对象不能被识别
+            var preview = data.files[0].preview;
+            data.context.find(".imgPreview").html(preview);
+        }
+
+
+
+    }).on("fileuploadprogress", function (e, data) {
+        //更新上传进度
+        var progress = parseInt(data.loaded / data.total * 100, 10);
+        data.context.find(".progress-bar").css("width", progress + "%");
+    }).on('fileuploadfail', function (e, data) {
+        //出错时的显示信息
+        data.context.find(".progress").replaceWith("<span class='upload_error'>文件上传失败</span></br><span>分辨率过低</span><br/><a class='btn_txt a_reload'>重新上传</a>");
+    });
+
+    $(".view_list_tb").on("click", ".a_reload", function () {
+        $("#fileLoader").trigger("click");
+        $(this).parents("tr").remove();
+    });
+    //删除上传的图片
+    $(".view_list_tb").on("click", ".row_del", function () {
+        var flagId = $(this).attr("id");
+        $(".pop_wraper").attr("flags", flagId);
+        $("#uploadConfirm").on("click", function () {
+            var del = $(".pop_wraper").attr("flags");
+            //删除成功的后续代码写在这里 删除页面html 隐藏弹出框
+            $("#" + del).parents("tr").remove();
+            $(".pop_wraper").removeClass("show");
+        });
+    });
+</script>
+</body>
+</html>

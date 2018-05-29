@@ -1,0 +1,143 @@
+<div class="page">
+	<div class="pageContent">
+	<form method="post" action="__URL__/updateDetails/navTabId/__MODULE__/callbackType/closeCurrent" enctype="multipart/form-data" class="pageForm required-validate" onsubmit="return iframeCallback(this, dialogAjaxDone);">
+		<input type="hidden" name="id" value="{$account.id}" >
+		
+		<div class="pageFormContent" layoutH="58">
+			<div class="unit">
+				<label>注册帐号：</label>
+				{$account.email}
+			</div>
+			<div class="unit">
+				<label>简称：</label>
+				{$account.nickname}
+			</div>
+		
+			<div class="unit">
+				<label>公司注册名称：</label>
+				{$account_infos.company}
+			</div>
+			
+			<div class="unit">
+				<label>营业执照注册号：</label>
+				{$account_infos.passport_num}
+			</div>
+			
+			<div class="unit">
+				<label>营业执照扫描件：</label>
+				<a href="{:Helper("Apk")->get_url('user')}{$account_infos['company_passport']}" target="_blank">
+				<img src='{:Helper("Apk")->get_url('user')}{$account_infos.company_passport}' width="100" height="100" />
+				</a>
+			</div>
+			 
+			<div class="unit">
+				<hr>
+			</div>
+			
+			<eq name="vo.channel" value="游戏大厅">
+				<div class="unit">
+					<label>渠道：</label>
+					<label>{$vo.channel}</label>
+				</div>
+				
+				<div class="unit">
+					<label>应用名称：</label>
+					<label>{$vo.name}</label>
+				</div>
+			</eq>
+			
+			<div class="unit">
+				<label>apk包体大小：</label>
+				<label>{$vo.apk_size}</label>
+			</div>
+			
+			<div class="unit">
+				<label>应用阶段：</label>
+				<label>{:D("Union")->getStage($vo['stage'])}</label>
+			</div>
+			
+			<div class="unit">
+				<label>首发情况：</label>
+				<label>{:D("Union")->getPublicMode($vo['public_mode'])}</label>
+			</div>
+			
+			<div class="unit">
+				<label>期望上线时间：</label>
+				<label>{$vo.public_time}</label>
+			</div>
+			
+			<div class="unit">
+				<label>apk下载链接：</label>
+				<label><a href="{$vo.apk_url}" target="_blank">{$vo.apk_url}</a></label>
+			</div>
+			
+			<div class="unit">
+				<label>密钥发送邮箱：</label>
+				<label>{$vo.email}</label>
+			</div>
+			
+			<div class="unit">
+				<hr>
+			</div>
+          
+			<div class="unit">
+				<label>联系人姓名</label>
+				{$account_infos.contact}
+			</div>
+			
+			<div class="unit">
+				<label>联系手机：</label>
+				{$account_infos.phone}
+			</div>
+            
+			<div class="unit">
+				<label>联系邮箱：</label>
+				{$account_infos.contact_email}
+			</div>
+			
+			<div class="unit">
+				<label>联系地址：</label>
+				{$account_infos.address}
+			</div>
+
+			<div class="unit">
+				<hr>
+			</div>
+
+			<div class="unit">
+				<label>税务登记证号：</label>
+				    <if condition="$do eq 'edit' "><input name="tax_number" class="require" type="text" value="{$account_infos.tax_number}" size="50" />
+					<else />
+						{$account_infos.tax_number}
+					</if>
+			</div>
+			
+			<div class="unit">
+				<label>税务登记证扫描件：</label>
+					<if condition="$do eq 'edit' ">
+						<input type="file" class="form-control" id="tax_passport" tabindex="1" name="tax_passport">
+					<else />
+						<a href="{:Helper("Apk")->get_url('user')}{$account_infos['tax_passport']}" target="_blank">
+							<img src='{:Helper("Apk")->get_url('user')}{$account_infos.tax_passport}' width="100" height="100" />
+						</a>
+					</if>
+			</div>
+			
+			<if condition="$do eq 'edit' ">
+				<div class="formBar">
+					<ul>
+						<li><div class="buttonActive"><div class="buttonContent"><button type="submit">提交</button></div></div></li>
+						<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+					</ul>
+				</div>
+			 <else />
+				<div class="unit">
+					<label>&nbsp;</label>
+					<a  class="button"  height="450" width="600" target="dialog" href="__URL__/details/id/{$vo['id']}/account_id/{$account_infos['account_id']}/do/edit"><span>修改</span></a>
+				</div>
+			</if>
+		</div>
+	
+	</form>
+	</div>
+</div>

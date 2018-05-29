@@ -1,0 +1,1 @@
+alter table ad_product_info change appkey `appkey` varchar(32) NOT NULL COMMENT '产品KEY,对应sdkfeed中的产品key' after product_package

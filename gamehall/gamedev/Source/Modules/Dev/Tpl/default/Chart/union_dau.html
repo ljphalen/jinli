@@ -1,0 +1,75 @@
+<include file="Public:header" />
+<script src="{:cdn('PUBLIC')}/common/js/select2.js?{:C('JS_VERSION')}"></script>
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/common/css/select2.css?{:C('JS_VERSION')}" type="text/css" rel="stylesheet" />
+<script>
+    $(document).ready(function() { $("#app_id").select2(); });
+</script>
+
+<div class="mainw clearfix">
+	<div class="lnav fl">
+    	<include file="Chart:nav_left" />
+    </div>
+    <div class="rmain fl">
+   	  <h2 class="yyname">联运数据</h2>
+        <div class="datac">
+        	<div class="formdiv">
+                <form action="{:U("chart/union_dau")}" method="post">
+                <p>
+                    <input class="btn-green fr" type="submit" value="查询" />
+                时间：
+                	<input name="start_time" class="Wdate" type="text" value="{:date('Y-m-d',$start_time)}">
+                到
+                	<input name="end_time" class="Wdate" type="text" value="{:date('Y-m-d',$end_time)}">
+                &nbsp;&nbsp;
+                应用名称：
+                <select name="app_id" class="chartselect  controlib" id="app_id" >
+                <option value="" >     --选择--    </option>
+                <volist name="applist" id="data">
+	                <option value="{$data.id}" <if condition="$data['id'] eq $_POST['app_id']" >selected</if> >
+	                {$data.name}
+	                </option>
+                </volist>
+                </select>
+                
+                </p>
+				<p>
+					<input name="export" class="btn-green fr" type="submit" value="导出" />
+				</p>
+                </form>
+            </div>
+       	  <table class="tab">
+        	 <tr>
+        	    <th width="10%">时间</th>
+                <th width="10%">游戏ID</th>
+                <th width="">游戏名称</th>
+                <th width="10%">新增账号数</th>
+                <th width="10%">次日留存</th>
+                <th width="10%">3日留存</th>
+                <th width="10%">7日留存</th>
+      	    </tr>
+      	    
+      	    <volist name="unioninfo" id="data">
+	            <tr>
+	        	    <td>{$data.day}</td>
+	        	    <td>{$data.gameId}</td>
+	        	    <td>{$data.gameName}</td>
+	        	    <td>{$data.newAccount|default=0}</td>
+	        	    <td>{$data.nextkeepUp|default=0}</td>
+					<td>{$data.thirdkeepUp|default=0}</td>
+					<td>{$data.sevenkeepUp|default=0}</td>
+	      	    </tr>
+      	     </volist>
+
+      	     <empty name="unioninfo">
+      	     	<div class="nodata">
+      	     		<tr>
+      	     			<td colspan="9">没有找到数据<notempty name="errorInfo">({$errorInfo})</notempty></td>
+      	     		</tr>
+      	     	</div>
+      	     </empty>
+      	  </table>
+        </div>
+    </div>
+</div>
+
+<include file="Public:footer" />

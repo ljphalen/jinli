@@ -1,0 +1,41 @@
+<?php echo $this->render("festival/activity/header.phtml");?>
+<body>
+	<acrticle class="ac">
+		<div class="pic-container-ac">
+			<img data-src="<?php echo $attachPath . $propGroupInfo['img']; ?>" src="<?php echo $staticroot; ?>/apps/game/events/medalEvent/pic/blank.gif" alt=""/>
+		</div>
+		<span class="game-info-tips" >
+			下载安装下面任意游戏，既有机会获得下面任意一个<?php echo $festivalInfo['prop_name'];?>，每个游戏只能参与1次
+		</span>
+		<div class="medal-wrapper">
+			<ul >
+				<?php foreach ($propInfoList as $val){?>
+				<li >
+					<div class="pic">
+						<img data-src="<?php echo $attachPath . $val['propImg']; ?>" src="<?php echo $staticroot; ?>/apps/game/events/medalEvent/pic/blank.gif" alt="" />
+					</div>
+					<span class="omit"><?php echo $val['propName'];?></span>
+				</li>
+				<?php }?>
+			</ul>
+		</div>
+		<div class="clearfix"></div>
+		<div class="game-list-container">
+			<ul class="game-list">
+				<?php foreach ($gameInfoList as $val){?>
+					<li class="J_openDetailView" data-gameId="<?php echo $val['gameid']?>" data-source="">
+						<a>
+							<div class="pic">
+								<img data-src="<?php echo $val['img'];?>" src="<?php echo $staticroot; ?>/apps/game/events/medalEvent/pic/blank.gif" alt="" />
+							</div>
+							<span class="name omit"><?php echo $val['name'];?></span>
+							<span class="info"><?php echo $val['category'];?>|<?php echo $val['size'];?></span>
+						</a>
+					</li>
+				<?php }?>
+			</ul>
+		</div>
+	</acrticle>
+	
+</body>
+</html>

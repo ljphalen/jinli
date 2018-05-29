@@ -1,0 +1,165 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+
+<div class="clearfix ">
+	<div class="col-sm-12 col-md-12 fupld">
+		<div class="panel panel-primary ">
+			<div class="panel-heading">
+				<h3 class="panel-title"><span class="st">第一步：</span><span>您的ftp帐号 (建议在您的应用大于200M时，使用ftp上传)</span></h3>
+			</div>
+			<empty name="ftpaccount">
+				<span class="btn btn-info" id="get_ftpaccount">申请FTP上传帐号</span>
+			<else/>
+				<span class="btn btn-info" id="get_ftpaccount" reset="1">重设FTP上传密码</span>
+			</empty>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-9">
+						<empty name="ftpaccount">
+						
+						<div id="ftpaccount" style="display:none;">
+							<div>FTP地址(主机)：<span id="server">{$ftpaccount['server']}</span></div>
+							<div>用户名：<span id="account">{$ftpaccount['account']}</span></div>
+							<div>密码：<span id="pwd">{$ftpaccount['pwd']}</span></div> 	
+							<div>端口：<span id="port">{$ftpaccount['port']}</span></div>
+						</div>
+						<else/>
+						<div>FTP地址(主机)：<span id="server">{$ftpaccount['server']}</span></div>
+						<div>用户名：<span id="account">{$ftpaccount['account']}</span></div>
+						<div>密码：<span id="pwd">{$ftpaccount['pwd']}</span></div> 	
+						<div>端口：<span id="port">{$ftpaccount['port']}</span></div>
+						</empty>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<span class="st">第二步：</span><span>下载ftp工具及使用教程
+					<a href="http://dlsw.baidu.com/sw-search-sp/soft/ff/13432/FileZilla_3.8.0_win32-setup.1397635728.exe" target="_blank" class="fetchApk">(点击下载ftp工具)</a>
+					<a href="http://wenku.baidu.com/view/c8dc0ac7aa00b52acfc7ca11.html" target="_blank" class="fetchApk">(使用教程)</a>
+					</span>
+				</h3>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						注意:文件名称只能字母与数字组合，不可包含+、/、\、*、&、 等特殊字符及中文，不能打包或者压缩上传
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title"><span class="st">第三步：</span><span>上传应用到<font color="red">ftp根目录</font>，并获取包数据，确认包正常</span></h3>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						输入ftp上传的apk文件名称：<input type="text" name="filename" id="filename" style="width:400px; display:inline;" maxlength="100"
+							placeholder="输入文件名，如：GameCenterV1.1.apk，不能创建目录" class="form-control"/>&nbsp;&nbsp;
+						<a  href="javascript:void(0);" id="fetchApk" class="fetchApk">点击获取apk文件信息</a>
+					</div>
+				</div>
+				<div class="row" id="apkInfo">
+					<div class="col-md-12">
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title"><span class="st">第四步：</span><span>确认提交发布应用</span></h3>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						<span class="btn btn-success" id="comfirmSub">提交</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+jQuery(function(){
+	$("#fetchApk").click(function(){
+		var filename = $.trim($("#filename").val());
+		var ftppath = $("#ftp_path").val();
+		if(ftppath==""){
+			alert("请获取ftp帐号");
+			return false;
+		}
+		if(filename==""){
+			alert("请输入文件名称");
+			return false;
+		}
+		var _data = {'filename':filename,"ftppath":ftppath};
+		$.ajax({type:"POST",url:"/apps/ftpapp",data:_data,success:function(data){
+			if(data.status==1){
+				var content = '<p class="form-control-static">包名称：'+data.info.pcg+'</p>';
+				content += '<p class="form-control-static">应用名称：'+data.info.name+'</p>';
+				content += '<p class="form-control-static">版本：'+data.info.version_name+'</p>';
+				content += '<p class="form-control-static">系统支持：'+data.info.minSDK+'</p>';
+				content += '<p class="form-control-static">文件大小：'+data.info.file_size+'</p>';
+				$("#apkInfo").show().find(".col-md-12").html(content);
+			}else{
+				alert(data.info);
+				return false;
+			}
+		}});
+	});
+	
+	$("#comfirmSub").click(function(){
+		var filename = $.trim($("#filename").val());
+		var ftppath = $("#ftp_path").val();
+		if(ftppath==""){
+			alert("请获取ftp帐号");
+			return false;
+		}
+		if(filename==""){
+			alert("请输入文件名称");
+			return false;
+		}
+		var isFetchApk = $("#apkInfo .col-md-12").find("p");
+		if(isFetchApk.length !== 5){
+			alert("请获取ftp文件");
+			return false;
+		}
+		$("#comfirmSub").attr("disabled", true).html("处理中...");
+		var _data = {'filename':filename,"ftppath":ftppath};
+		$.ajax({type:"POST",url:"/apps/ftpappsub",data:_data,success:function(data){
+			if(data.status==1){
+				var apkId = data.info.apk_id;
+            	window.location.href="/apps/info/id/"+apkId+".html";
+			}else{
+				alert(data.info);
+				$("#comfirmSub").attr("disabled", false).html("提交");
+				return false;
+			}
+		}});
+	});
+	
+	$("#get_ftpaccount").click(function(){
+		
+		var url = $(this).attr("reset") == 1 ? "/apps/get_ftpaccount/reset/1" : "/apps/get_ftpaccount";
+		
+		$.getJSON(url,function(data){
+			if(data.id > 0){
+				$("#account").html(data.User);
+				$("#pwd").html(data.Password);
+				$("#server").html(data.host);
+				$("#port").html(data.port);
+				$("#get_ftpaccount").hide();
+				$("#ftpaccount").show();
+			}else{
+				alert("申请FTP帐号出错了，请联系我们");
+				return false;
+			}
+		});
+	});
+});
+</script>
+<include file="Public:footer" />

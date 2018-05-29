@@ -1,0 +1,60 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div id="page" class="superfile">
+
+		<article class="ac">
+			<div class="slide-pic J_slidePic">
+				<div class="slideWrap">
+					<div class="pic">
+						<?php foreach($ads as $key=>$value) {?>
+							 <a href="<?php echo Common::tjurl($tjUrl, $value['id'], 'AD', $value['link'], 'AD2'.($key+1));?>"><img src="<?php echo $attachPath.$value['img'];?>" alt="<?php echo $value['name']?>" /></a>
+					   <?php } ?>
+					</div>
+				</div>
+				<div class="handle">
+					<?php foreach($ads as $key=>$value) {?>
+					<span class="<?php echo $key == 0? 'on':'';?>"></span>
+				    <?php } ?>
+				</div>
+			</div>
+			
+			<div class="item-box">
+				<h2 class="sf-title">最新游戏</h2>
+				<ul>
+					<?php foreach($newGames as $key=>$value) {?>
+					<li>
+						<a href="<?php echo Common::tjurl($tjUrl, $value['id'], 'GAME', $webroot.'/super/game/detail/?id='.$value['id'],'AD6'.(($key+1) < 10 ? ('0'.($key+1)):($key+1)));?>">
+							<div class="pic">
+								<img src="<?php echo $attachPath. $value['img'];?>" alt="<?php echo $value['name'];?>">
+							</div>
+							<div class="desc"><?php echo $value['name'];?></div>
+						</a>
+					</li>
+					<?php }?>
+					</ul>
+			</div>
+			
+			<div class="item-box">
+			<h2 class="sf-title">热门游戏</h2>
+				<ul>
+					<?php foreach($hotGames as $key=>$value) {?>
+					<?php foreach($value as $k=>$val) {?>
+					<li>
+						<a href="<?php echo Common::tjurl($tjUrl, $val['id'], 'GAME', $val['link'],'AD4'.($key).($k+1));?>">
+							<div class="pic">
+								<img src="<?php echo $attachPath. $val['img'];?>" alt="<?php echo $val['title'];?>">
+							</div>
+							<div class="desc"><?php echo $val['title'];?></div>
+						</a>
+					</li>
+					<?php }?>
+					<?php }?>
+				</ul>
+			</div>
+		</article>
+
+		<footer class="ft">
+		    <div class="back-top"><a class="btn" href="#top">返回顶部</a></div>
+		</footer>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</html>

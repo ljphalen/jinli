@@ -1,0 +1,159 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/jquery.datetimepicker.css" rel="stylesheet" type="text/css">
+<script type="text/javascript"
+src="<?php echo $staticPath ?>jssdk/plugins/datepicker/jquery.datetimepicker.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath ?>jssdk/farbtastic.js"></script>
+
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- 页面唯一id标识符  一般情况下id=文件名  eg:bz_admin_taotu02-->
+    <div id="bz_admin_taotu_list02">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">名称</label>
+                    <div class="tb_cont tb_cell">
+                        <input type="hidden" class="setid" value="<?php echo $setinfo['set_id'] ?>">
+                        <input type="text" class="rd_1" value="<?php echo $setinfo['set_name'] ?>">
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">标签</label>
+                    <div class="tb_cont tb_cell">
+                        <div class="select_box">
+                            <label class="select_val" val="<?php echo $setinfo['set_targ'] ?>"><?php echo $lineTarg[$setinfo['set_targ']]['w_type_name'] ?></label>
+                            <ul class="select_option">
+                                <?php foreach ($targs as $v) { ?>
+                                    <li val="<?php echo $v['w_type_id'] ?>"><?php echo $v["w_type_name"] ?></li>
+                                <?php } ?>
+
+                            </ul>
+                        </div><!-- select_box -->
+
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="drag_sort_wrap">
+                <div class="drag_sort">
+                    <label>待选壁纸</label>
+                    <ul class="drag_sort_list" id="dragSortTxt1">
+
+                    </ul>
+                    <div class="clear-fix"></div>
+                    <div><button class="btn_s3" id="packBzAdd">添加</button></div>
+                </div><!-- drag_sort end -->
+
+                <div class="drag_sort">
+                    <label>已选壁纸</label>
+
+                    <ul class="drag_sort_list" id="dragSortTxt2">
+                        <?php foreach ($setimage as $v) { ?>
+                            <li><?php echo $v["wallpaper_name"]; ?></li>
+                        <?php } ?>
+
+                    </ul>
+                </div><!-- drag_sort end -->
+
+                <div class="drag_sort">
+                    <label>缩略图</label>
+                    <ul class="drag_sort_img" id="dragSortImgPack">
+                        <?php foreach ($setimage as $v) { ?>
+                            <li class="img_list" mid="<?php echo $v['wallpaper_id'] ?>"><img src="<?php echo $v['url'] ?>"></li>
+                        <?php } ?>
+
+
+                    </ul>
+                </div><!-- drag_sort end -->
+
+                <div class="clear-fix"></div>
+                <div><button class="btn_s3" id="packBzDel">删除</button></div>
+            </div><!-- drag_sor_wrap end -->
+
+            <div class="com_tb_wrap">
+
+                <?php if ($groupid == 3) { ?>
+                    <div class="com_tb">
+                        <label class="tb_cell">上线时间</label>
+                        <div class="tb_cont tb_cell">
+                            <input type="text" class="datepicker linetime" readonly value=''>
+                        </div>
+                    </div><!-- com_tb end -->
+                <?php } else { ?>
+                    <div class="com_tb">
+                        <label class="tb_cell">打包时间</label>
+                        <div class="tb_cont tb_cell">
+                            <input type="text" class="rd_2" readonly value="<?php echo date('Y-m-d', $setinfo['set_create_time']); ?>">
+                        </div>
+                    </div><!-- com_tb end -->
+                <?php } ?>
+            </div><!-- com_tb_wrap end -->
+
+            <div class="bnts_wrap"><button class="btn_s2 pop_btn" openPopId="fixTipView">保存</button><button class="btn_s2" id="bzAdminTaoTuL2Cancel">取消</button></div>
+
+        </div><!-- content end -->
+    </div>
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">确定保存?</p>
+                    <div class="tip_btns">
+                        <button class="btn_s2 save_ok">确定</button>
+                        <button class="btn_s2 btnCancel">取消</button>
+                    </div>
+                    <
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+<script type="text/javascript">
+    $(function () {
+        $(".save_ok").click(function () {
+            $(".pop_wraper").removeClass("show");
+            var setid = $(".setid").val();
+            var name = $(".rd_1").val();
+            var targid = $(".select_val").attr("val");
+
+            var packageTime = $(".rd_2").val();
+            var lineTime = $(".linetime").val();
+            var imids = $("#dragSortImgPack >li").map(function () {
+                return $(this).attr("mid");
+            }).get().join("_");
+
+            var data = "setid=" + setid + "&name=" + name +
+                    "&targid=" + targid + "&imids=" + imids +
+                    "&packagetime=" + packageTime + "&lineTime=" + lineTime + "&token=" + token;
+
+            //alert(data);
+            var url = "/Admin/wallpaperadmin/update_edit";
+
+            $.post(url, data, function (r) {
+                if (r) {
+                    // window.location.href = "/Admin/wallpaperadmin/adminset";
+                    history.go(-1);
+                } else {
+                    alert("请重新提交")
+                }
+            });
+
+
+        })
+    })
+</script>
+</body>
+</html>

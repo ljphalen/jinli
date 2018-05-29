@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title><?=$info['title']?></title>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="stylesheet" href="<?php echo $staticResPath; ?>/read/css/style.min.css?v=<?=$version?>" />
+</head>
+<body class="ui-pg-app">
+<div class="ui-pg-toolbar">
+    <a id="js-btn-back" class="btn-back"
+       href="<?php echo $webroot; ?>/nav/news/index?type=back&column_id=<?=$info['column_id'];?>#tab/<?=$info['column_id'];?>"></a>
+    <span class="txt">返回</span>
+</div>
+<div class="ui-pg-detail">
+    <div class="title">
+        <h1><?=$info['title']?></h1>
+
+        <p><?=$info['from']?>  <?=$info['formatTime']?></p>
+    </div>
+    <div class=""></div>
+    <div class="content">
+        <?php
+        $out = '';
+        foreach ($info['content'] as $val) {
+            if ($val['type'] == 2) {
+                $img = trim($val['value']);
+                if (!stristr($img, 'http')) {
+                    $img = Common::getImgPath() . $img;
+                }
+
+                $out .= sprintf('<img src="%s" />', $img);
+            } else {
+                $value = str_ireplace(' ', '', trim($val['value']));
+                $out .= sprintf('<p>%s</p>', $value);
+            }
+        }
+        echo $out;
+        ?>
+
+        <div class="source"><a href="<?=$info['link']?>">查看原文 &gt;</a></div>
+    </div>
+
+    <?php if (!empty($info['lastList']) || !empty($reclink)): ?>
+        <div class="mod-recommand-box">
+            <h2>热文推荐</h2>
+            <ul>
+                <?php foreach ($reclink as $val): ?>
+                    <li><a href="<?=$val['url']?>"><?=$val['title']?></a></li>
+                <?php endforeach; ?>
+
+                <?php foreach ($info['lastList'] as $val): ?>
+                    <li><a href="<?=$val['link']?>"><?=$val['title']?></a></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+    <?php if (!empty($banner)): ?>
+        <div class="mod-ads-wrap">
+            <?php foreach ($banner as $val): ?>
+                <a href="<?=$val['url']?>" target="_balnk"><img border="0" src="<?=$val['img']?>" width="100%" height="100px"></a>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <!-- 畅言评论 -->
+    <?php
+    $p = html_entity_decode(Gionee_Service_Config::getValue('changyan_comment_val'));
+    if (!empty($p)):
+        ?>
+        <div class="mod-discuss">
+            <div id="SOHUCS" sid="nav_news_<?=$info['id']?>"></div>
+        </div>
+        <script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?<?=$p?>">
+        </script>
+        <script type="text/javascript" src="http://assets.changyan.sohu.com/upload/plugins/plugins.count.js">
+        </script>
+    <?php endif; ?>
+    <!-- 畅言评论 end-->
+</div>
+<script>
+    window.onload = function(){
+        var loginEnterEl = document.getElementById('cy-user-name');
+        var loginEnterList = document.getElementById('cy-platforms-list').getElementsByTagName('li');
+
+        loginEnterEl.onclick = function(){
+            for(var i = 0; i < loginEnterList.length; i++){
+                if(!loginEnterList[i].getAttribute('data-url')){
+                    var str = loginEnterList[i].getAttribute('onclick'), 
+                        url = str.substring(str.indexOf('=')+2,str.length-1);
+                    loginEnterList[i].setAttribute('data-url',url);
+                }
+            }
+        };
+
+        if(window.opener!=null){
+            var btnback = document.getElementById("js-btn-back");
+            btnback.onclick = function(e){
+                window.close();
+            }
+        }
+    }
+
+</script>
+</body>
+</html>

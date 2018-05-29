@@ -1,0 +1,55 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">淘客商品列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">商品分类</th>
+			<td class="td">
+			<select name="cid">
+				<option selected value="0">所有分类</option>
+<?php foreach($item_cats as $key=>$value) {?>
+				<option <?php if($cid == $value['cid']) echo 'selected';?> value="<?php echo $value['cid'];?>"><?php echo $value['name'];?></option>
+<?php }?>
+			</select>
+			</td>
+			<th class="th">关键字</th>
+			<td class="td"><input type="text" class="input wc" name="keyword" value="<?php echo $keyword;?>"></td>
+			<td class="td"><span class="btn"><span><button type="submit">搜 索</button></span></span></td>
+		</tr>
+	</table>
+</div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="120">商品淘宝ID</td>
+			<td width="250">商品名称</td>
+			<td>商品图片</td>
+			<td>卖家</td>
+			<td>淘宝价</td>
+			<td>预计返利</td>
+			<td>库存</td>
+		</tr>
+<?php foreach($goods as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['num_iid'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><img src="<?php echo $value['pic_url'];?>" /></td>
+			<td><?php echo $value['nick'];?></td>
+			<td><?php echo $value['price'];?></td>
+	        <td><?php echo $value['commission'];?></td>
+	        <td><?php echo $infos[$value['num_iid']]['num'];?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

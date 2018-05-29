@@ -1,0 +1,61 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+</script>
+<body>
+	<div  id="list-page">
+		<section class="wrap">
+			<div class="item-list J_gameItem">
+				<ul>
+					<?php
+					if($intersrc){
+						$t_id = $intersrc;
+					 } else {
+						$t_id = 'Mostdownload';
+						if ($flag == 1) $t_id = 'Newrelease';
+					}
+					 foreach($games as $key=>$value){
+                         $href = $webroot.'/kingstone/index/detail/?id='.$value['id'].'&flag='.$flag.'&pc=1&intersrc='.$t_id.'&t_bi='.$source;
+                         //评测url
+                         $evaluateStr = '';
+                         if ($value['pc_info']){
+                         	$evaluateStr = ',评测,' . $webroot.'/kingstone/evaluation/detail/?id='.$value['pc_info'].'&pc=3&intersrc='.$t_id.'&t_bi='.$source;
+                         }    
+                         if (($checkver >= 2)) {
+                         	$data_info = '游戏详情,'.$href.','.$value['id'] . $evaluateStr;
+                         } else {
+                         	$data_info = $value['name'].','.$href.','.$value['infpage'];
+                         }
+                     ?>
+					<li>
+						<a <?php if ($checkver >= 2) {?> data-type = '1' <?php }?> data-infpage="<?php echo $data_info;?>">
+							<span class="icon"><img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $value['img'];?>"></span>
+							<span class="desc">
+								<em><?php echo $value['name'];?></em>
+								<p>
+								<em>大小：<?php echo $value['size'];?>M</em>
+								<em class="tips"> 
+								<?php if ($checkver >= 2) {?> 
+									<?php if ($value['pc_info']) {?><span class="comment">评</span> <?php }?>
+									<?php if ($value['gift_info']) {?> <span class="gift">礼</span> <?php } ?>
+									<?php if ($value['device']) {?> <span class="grip">游戏手柄</span> <?php } ?>
+								<?php }?>
+							 	</em>
+								</p>
+								<b><?php echo $value['resume'];?></b>
+							</span>
+						</a>
+					</li>
+					<?php }?>
+				</ul>
+			</div>
+			
+		</section>
+		 <?php if($hasnext && $games) {?>
+			<div class="loading J_loadMore" style="display: none;" data-ajaxUrl="<?php echo $webroot.'/kingstone/rank/more/?flag='.$flag.'&intersrc='.$intersrc.'&t_bi='.$source.'&sp='.$sp;?>" data-hasnext="<?php echo $hasnext;?>" data-curpage="<?php echo $page;?>" data-curClass="<?php echo $tid;?>">
+				<span class="load"></span>
+			</div>
+		<?php }?>
+	</div>
+</body>
+</html>

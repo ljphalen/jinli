@@ -1,0 +1,114 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<div id="page">
+		<div id="iscrollWrap">
+			<div class="mainWrap">
+				<!-- 内容区域 START-->
+					<input name="goods_id" id="goods_id" type="hidden" value="<?php echo $goods['id'];?>"/>
+					<section class="porder">
+							<div class="content">
+								<section>
+									<a href="<?php echo $webroot,'/goods/detail/?id=',$goods['id'];?>">
+										<div class="mod-pic-list">
+											<div class="pic"><img src="<?php echo $attachPath,$goods['img'];?>" /></div>
+											<div class="txt">
+												<div><?php echo $goods['title'];?></div>
+												<div>
+													￥<span class="zt-red"><?php echo $goods['price'];?></span>
+													<span class="zt-orange fr"> 可用<?php echo $goods['silver_coin'];?>元银币抵现</span>
+												</div>
+											</div>
+										</div>
+									</a>
+								</section>
+								<div class="order-form">
+									<div class="field">
+										<div>
+											<span>购&nbsp;买&nbsp;&nbsp;数：</span>
+											<span>
+												<input type="number" min='1' max='999999' value="1" class="quantity inp-text" style= "ime-mode:Disabled"/>
+											</span>
+											<span class="fr subtotal"><?php echo $goods['price'];?>元</span>
+										</div>
+										<div>（限购<em class="zt-orange maxLimitNum"><?php echo $goods['limit_num'];?></em>件）</div>
+									</div>
+
+									<div class="field">
+										<div>
+										<?php 
+										if ($goods['silver_coin'] > $user['silver_coin']) {
+											$silver_coin = $user['silver_coin'];
+										} else {
+											$silver_coin = $goods['silver_coin'];
+										} 
+										
+										?>
+											<span>可用银币：</span>
+											<span>
+												<input type="number" value="<?php echo $silver_coin;?>" class="coinNum inp-text" min='1' max='999999' class="coinNum inp-text" /> 元
+											</span>
+											<span class="fr subcointotal">-<?php echo $silver_coin;?>元</span>
+										</div>
+										<div>
+											（账户可用余额为<em class="zt-orange maxCoinLimit"><?php echo $user['silver_coin'];?></em>元）
+										</div>
+									</div>
+									<div class="field"><span>实际支付</span><span class="fr total-price"><?php echo Common::money($goods['price'] - $silver_coin);?>元</span></div>
+									<div class="field"><span>支付方式</span><span class="fr"><?php if($goods['iscash'] == 1) {echo '货到付款';}else{echo '在线支付';};?></span></div>
+								</div>
+								
+								<?php if($goods['goods_type'] == 1 || $goods['goods_type'] == 2) {?>
+								<section>
+								<?php 
+								if($goods['goods_type'] != 1) {
+									if($address) {
+										$url = $webroot.'/user/address/edit?id='.$address['id'].'&refer='.urlencode($webroot.'/order/detail?id='.$goods['id']);
+									} else {
+										$url = $webroot.'/user/address/add?refer='.urlencode($webroot.'/order/detail?id='.$goods['id']);
+								}
+								?>
+									<ul class="mod-text-list">
+										<li>
+											<a href="<?php echo $url;?>" class="r-arrow">
+												<dl class="mod-dl-list">
+													<dd>收货人：<?php echo $address['realname'];?></dd>
+													<dd>手机：<?php echo $address['mobile'];?></dd>
+													<dd>收货地址：<?php echo $address['adds'],$address['detail_address']?></dd>
+												</dl>
+											</a>
+										</li>
+									</ul>
+								<?php }?>
+									<input type="hidden" value="1" class="J_cneeInfoFlag" />
+
+									<!-- 新增item -->
+									<div class="new-input">
+									<?php if($goods['goods_type'] == 1) {?>
+										<input type="text" maxlength="11" class="J_phonePay" placeholder="要充值的手机号码">
+										<input type="text" maxlength="11" class="J_phonePay_again" placeholder="确认手机号码">
+									<?php }else{?>
+										<input type="text" class="J_leaveMsg" placeholder="给店小二留言">
+									<?php }?>
+									</div>
+								</section>
+								<?php }?>
+								<div class="button">
+										<a href="tel:0755-82583525" class="btn orange">联系我们</a>
+										 <?php if($goods['start_time'] < Common::getTime()){
+										 		$color = 'orange';
+										 	} else {
+												$color = 'disabled';
+											}										 	
+										 ?>
+										<button type="button" class="btn <?php echo $color;?>" id="J_createOrder" data-ajaxUrl="<?php echo $webroot.'/order/create'?>">确认订单</button>
+								</div>
+						</div>
+					</section>
+				<!-- 内容区域 END-->
+				<!-- 底部区域 START -->
+				<!-- 底部区域 END -->
+			</div>
+		</div>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

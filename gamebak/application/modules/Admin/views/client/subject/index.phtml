@@ -1,0 +1,115 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $listUrl;?>">专题列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加专题</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">关键字</th>
+				<td class="td"><input type="text" class="input" name="title" value="<?php echo $params['title'];?>"></td>
+				<th class="th">状态</th>
+				<td class="td"><select name="status" class="wa">
+					<option value=""></option>
+					<option <?php if(strlen($params['status'])>0 && $params['status'] == 1) echo 'selected';?> value="1">开启</option>
+					<option <?php if(strlen($params['status'])>0 && $params['status'] == 0) echo 'selected';?> value="0">关闭</option>
+				</select></td>
+				<th class="th">生效时间</th>
+    			<td class="td">
+    			<div><input type="text" class="input" name="start_time" id="start_time" value="<?php echo $params['start_time'];?>"> 至 
+    			<input type="text" class="input" name="end_time" id="end_time" value="<?php echo $params['end_time'];?>"></div>
+    			</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">机组</th>
+				<td class="td">
+				    <select name="pgroup" class="wa">
+				    <option value=""></option>
+					<?php foreach($groups as $key=>$value) {?>
+    			    <option value="<?php echo $value['id'];?>" <?php if(strlen($params['pgroup'])>0 && $params['pgroup'] == $value['id']) echo 'selected';?>><?php echo $value['title'];?></option>
+    			    <?php }?>
+			        </select>
+			    </td>
+				<th class="th">类型</th>
+				<td class="td">
+    				<select name="sub_type" class="wa">
+				    <option value=""></option>
+					<?php foreach($subType as $key=>$value) {?>
+    			    <option value="<?php echo $key;?>" <?php if(strlen($params['sub_type'])>0 && $params['sub_type'] == $key) echo 'selected';?>><?php echo $value;?></option>
+    			    <?php }?>
+                    </select>
+                </td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button type="submit">搜 索</button></span></span>
+	</div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>"
+	method="post">
+	<input name="token" type="hidden" value="<?php echo $token;?>" /> <input
+		name="action" id="action" type="hidden" value="" />
+	<div class="h_a">
+		<span class="btn2"><span><button onclick="$('#action').val('sort');" ype="submit">排序</button></span></span>
+        <!--  
+		<span class="btn2"><span><button onclick="$('#action').val('open');" ype="submit">开启</button></span></span> 
+		<span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">关闭</button></span></span>
+		-->
+		<span>共<?php echo $total;?>条结果</span>
+	</div>
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="30"><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+				<td width="30">排序</td>
+				<td width="80">ID</td>
+				<td width="150">专题名称</td>
+				<td width="300">游戏</td>
+				<td width="80">机组</td>
+				<td width="80">类型</td>
+				<td width="80">模板</td>
+				<td width="80">状态</td>
+				<td width="120">生效时间</td>
+				<td width="80">操作</td>
+			</tr>
+<?php foreach($subjects as $key => $value) {?>
+		<tr class="ct">
+		        <td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+                <td><input type="text" class="input" style="width:30px" name="sort[<?php echo $value['id'];?>]" value="<?php echo $value['sort'];?>"></td>
+				<td><?php echo $value['id'];?></td>
+				<td><?php echo $value['title'];?></td>
+				<td><?php echo $value['game_name'];?></td>
+				<td><?php echo $groups[$value['pgroup']]['title'];?></td>
+				<td><?php echo $subType[$value['sub_type']];?></td>
+				<td><?php echo $viewTpl[$value['sub_type']][$value['view_tpl']];?></td>
+				<td><?php echo $value['status'] == 1 ? '开启' : ($value['status'] == 0 ? '关闭' : '');?></td>
+			    <td><?php echo date('Y-m-d H:i:s', $value['start_time']);?><br><?php echo date('Y-m-d H:i:s', $value['end_time']);?></td>
+				<td><a href="<?php echo $editUrl;?>?id=<?php echo $value['id'];?>&from=list"
+					class="mr10">编辑</a> <a href="javascript:"
+					onclick="deleteOne('<?php echo $deleteUrl;?>?id=<?php echo $value['id'];?>', '', event);">删除</a>
+				</td>
+				
+			</tr>
+<?php } ?>
+	</table>
+	</div>
+	<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script>
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Client_Subject/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

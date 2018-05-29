@@ -1,0 +1,107 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">背景图列表</a></li>
+    <li class="current"><a href="javascript:;">编辑背景图</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑背景图</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">类型</th>
+			<td class="td">
+				<select name="ad_ptype" onchange='showtd()'>
+        <?php foreach($ad_ptypes as $key=>$value) {?>				
+					<option value="<?php echo $key;?>" <?php if ($info['ad_ptype'] == $key) echo 'selected="selected"';?>><?php echo $value;?></option>
+        <?php }?>
+				</select>
+			</td>
+		</tr>
+		<?php 
+		    $ad_ptype = $info['ad_ptype'];
+		    list($dayImgUrl, $nightImgUrl) = Account_BgimgController::parseImgUrl($ad_ptype, $info['img']);
+		?>
+		<tr class="tr">
+			<th class="th" id="th_day"><?php 
+			if($info['ad_ptype'] == 1)  $str = '白天图片';
+			if($info['ad_ptype'] == 2)  $str = '图片';
+			echo $str;
+			?></th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="DayImg">
+						<img src="<?php echo $attachPath.$dayImgUrl;?>"/>
+						<input type="hidden" name="img_day" value="<?php echo $dayImgUrl;?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=DayImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		
+		<tr class="tr" id="tr_night" 
+		<?php if($info['ad_ptype'] == 2){?>
+		  style="display:none;"
+		<?php }?>
+		>
+			<th class="th">夜晚图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="NightImg">
+						<img src="<?php echo $attachPath.$nightImgUrl;?>"/>
+						<input type="hidden" name="img_night" value="<?php echo $nightImgUrl;?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=NightImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		
+		<tr class="tr">
+			<th class="th">开始结束时间</th>
+			<td class="td"><div><input class="input" type="text" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $info['start_time']);?>" /> 至 <input class="input" type="text" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s', $info['end_time']);?>" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status" min-width="100px">
+                	<option <?php if($info['status'] == 1) echo 'selected="selected"';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 0) echo 'selected="selected"';?>value="0">关闭</option>
+            </select></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+function showtd(){
+	var value=$("select[name=ad_ptype]").val();
+	if (value == 1) {
+		 $("#th_day").html('白天图片');
+		 $("#tr_night").show();
+	} else if(value == 2){
+		$("#th_day").html('图片');
+		$("#tr_night").hide();
+	}
+}
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Account_Bgimg/index');
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

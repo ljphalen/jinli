@@ -1,0 +1,80 @@
+<style type="text/css">
+button.closeBtn {
+	padding: 0;
+	cursor: pointer;
+	background: transparent;
+	border: 0;
+	-webkit-appearance: none;
+}
+.closeBtn {
+	float: right;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 1;
+	color: #000000;
+	text-shadow: 0 1px 0 #ffffff;
+	opacity: 0.2;
+	filter: alpha(opacity=20);
+}
+.fancybox-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 10000;
+	display: none;
+}
+.fancybox-display {
+	opacity: 0.7;
+	cursor: pointer;
+	display: block;
+	background-color: rgb(119, 119, 119);
+}
+#existAppAlert { width: 556px;padding: 10px 90px;display:none; }
+#existAppAlert .intent { margin-left:20px; }
+</style>
+<div id="jumbotron" style="display: none; z-index: 10001; position: absolute; width: 745px;">
+	<div class="yfarea">
+		<h4 class="yyt indexup" id="myModalLabel">
+			<button type="button" class="closeBtn" id="alert">×</button>
+			<span>应用上传中，请不要关闭或刷新页面</span>
+		</h4>
+		<div class="graph">
+			<div id="progress" style="width:2%"></div>
+		</div>
+		<div id="apk" class="filena"></div>
+		<div id="existAppAlert">
+			<p>您刚上传的应用已经在金立游戏大厅中存在了，如果您是企业开发者，需要认领该应用，请将相关信息发送到dev.game@gionee.com。</p>
+			<p>具体内容如下：</p>
+			<p class="intent">1. 您的帐号注册邮箱（如：dev@gionee.com）</p>
+			<p class="intent">2. 企业名称</p>
+			<p class="intent">3. 营业执照副本</p>
+			<p class="intent">4. 认领应用名称和包名列表（例如，应用名称：游戏大厅包名：com.youxidating.channel）</p>
+			<p class="intent">5. 企业联系人姓名、电话</p>
+			<p class="intent">6. 您刚才想要上传的应用程序安装文件</p>
+		</div>
+	</div>
+</div>
+<div class="fancybox-overlay" id="uploadMask"></div>
+<script type="text/javascript">
+jQuery(function(){
+	var _action = '__ACTION__';
+	$("#alert").click(function(){
+		window.location.reload();
+	});
+});
+</script>
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="{:cdn('PUBLIC')}/app/jqueryUpload/js/vendor/jquery.ui.widget.js?{:C('JS_VERSION')}"></script>
+<!-- The basic File Upload plugin -->
+<script src="{:cdn('PUBLIC')}/app/jqueryUpload/js/jquery.fileupload.js?{:C('JS_VERSION')}"></script>
+<!-- The File Upload processing plugin -->
+<script src="{:cdn('PUBLIC')}/app/jqueryUpload/js/jquery.fileupload-process.js?{:C('JS_VERSION')}"></script>
+<!-- The File Upload validation plugin -->
+<script src="{:cdn('PUBLIC')}/app/jqueryUpload/js/jquery.fileupload-validate.js?{:C('JS_VERSION')}"></script>
+<script src="{:cdn('PUBLIC')}/common/js/upload/main.js?{:C('JS_VERSION')}"></script>
+<script src="{:cdn('PUBLIC')}/common/js/upload/screen.js?{:C('JS_VERSION')}"></script>
+<!--[if (gte IE 8)&(lt IE 10)]>
+<script src="{:cdn('PUBLIC')}/common/js/jquery.xdr-transport.js?{:C('JS_VERSION')}"></script>
+<![endif]-->

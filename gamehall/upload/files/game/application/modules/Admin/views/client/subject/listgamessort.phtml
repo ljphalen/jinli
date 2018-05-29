@@ -1,0 +1,118 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $listUrl;?>">专题列表</a></li>
+        <li class="current"><a href="javascript:;">添加游戏</a></li>
+	</ul>
+</div>
+<form id="batchForm" action="<?php echo $listGamesSortPostUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="id" value="<?php echo $id;?>" type="hidden" />
+
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">状态(<span style="color: red">*</span>)</th>
+			<td class="td">
+			   <select name="status" class="input">
+                	<option <?php if($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+                </select>
+            </td>
+			<th class="th">视觉模板(<span style="color: red">*</span>)</th>
+			<td class="td">
+			   <select name="view_tpl" class="input">
+					<?php foreach($viewTpl as $key=>$value) {?>
+    			    <option value="<?php echo $key;?>" <?php if($info['view_tpl'] == $key) echo 'selected';?>><?php echo $value;?></option>
+    			    <?php }?>
+                </select>&nbsp;&nbsp;&nbsp;<button id='btn_view' type="button">预览</button>
+            </td>
+		</tr>
+    </table>
+</div>
+
+<div class="h_a">
+	<span>共<?php echo count($list);?>条结果</span>
+</div>
+<div id="table_list" class="table_list">
+	<table width="100%">
+	<thead>
+		<tr class="hd">
+			<td width="30">排序</td>
+			<td width="30">ID</td>
+			<td width="50">图标</td>
+			<td width="50">标题</td>
+			<td width="30">分类</td>
+			<td width="30">大小</td>
+		</tr>
+	 </thead>
+	 <tbody>
+		<?php foreach($list as $key => $value) {?>
+		<tr class="ct">
+			<td><input type="text" class="input" style="width:30px" name="sort[<?php echo $value['game_id'];?>]" value="<?php echo $value['sort'];?>"></td>
+			<td><?php echo $value['game_id'];?></td>
+			<td><img src="<?php echo $value['gameIcon']?>" style="width:70px;height:70px;"/></td>
+			<td><?php echo $value['gameName'];?></td>
+			<td><?php echo $value['gameCategory'];?></td>
+			<td><?php echo $value['gameSize'];?>M</td>
+		</tr>
+	 <?php } ?>
+    </tbody>
+	</table>
+</div>
+<div class="mb10 tac">
+    <span class="btn"><span><a href="<?php echo $gamesAddUrl.'?id='.$id;?>"><button type="button">返回</button></a></span></span>
+    <span class="btn"><span><button onfocus="blur();" type="submit">完成</button></span></span></div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $listUrl;?>');
+	});
+	
+	$( "#notConing" ).dialog({
+		autoOpen: false,
+        modal: true,
+		width: 440
+	});
+    $("#btn_view").bind("click",function(e) {
+    	var view_tpl = $("select[name='view_tpl']").val();
+    	view_tpl = parseInt(view_tpl) + 1;
+    	if(view_tpl<10) view_tpl = "0"+ view_tpl;
+        url = "<?php echo $staticPath;?>/game/pic/list-"+view_tpl+".jpg";
+    	$("#notConing img").attr('src', url);
+        $( "#notConing" ).dialog( "open" );
+
+        e.stopPropagation();
+		$('body').click(function(){
+			$( "#notConing" ).dialog('close');
+			$('body').unbind('click');
+		});
+    });
+
+	var fixHelperModified = function(e, tr) {
+	    var $originals = tr.children();
+	    var $helper = tr.clone();
+	    $helper.children().each(function(index) {
+	        $(this).width($originals.eq(index).width())
+	    });
+	    return $helper;
+	};
+	var updateIndex = function(e, ui) {
+		var length = $("input[class='input']").length;		
+		$("input[class='input']", ui.item.parent()).each(function (i) {
+			$(this).val(length - i);
+		});
+	};
+
+	$("#table_list tbody").sortable({
+	    helper: fixHelperModified,
+	    stop: updateIndex
+	});
+	$("#table_list tbody").disableSelection();
+})
+</script>
+
+<div id="notConing" ><div><img src=""/></div></div>
+
+<?php echo $this->render("layout/footer.phtml");?>

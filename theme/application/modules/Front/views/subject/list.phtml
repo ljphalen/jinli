@@ -1,0 +1,28 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<style type="text/css">
+    body{"padding-bottom:0;}
+    </style>
+    <div id="page" class="ui-refresh">
+        <div id="J_dataList" class="topic-box data-box" data-ajaxUrl="<?php echo $webroot . '/subject/listmore' ?>">
+            <ul style="margin:0 0 .4rem; overflow:hidden;" >
+                <?php foreach ($subjects as $subject) { ?>
+                    <li><a data-inftheme="<?php echo $webroot . '/subject?sid=' . $subject['id'] . '&orderby=id'; ?>|<?php echo $subject['title']; ?>">
+                            <img src="<?php echo $attachPath . $subject['img']; ?>" alt="">
+
+                        </a></li>
+                <?php } ?>
+            </ul>
+            <div class="ui-refresh-down none clearfix"></div>
+        </div>
+    </div>
+    <script id="J_itemView" type="text/html">
+        <% for (var i = 0; i < data.list.length; i++) { %>
+        <li>
+            <a data-infTheme="<%= data.list[i].url %>">
+                <img data-lazyload="true" src="<?php echo $staticResPath; ?>/pic/pic_nopreview.png" data-src="<%= data.list[i].img %>">
+
+            </a>
+        </li>
+        <% } %>
+    </script>
+    <?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,76 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $indexUrl;?>">渠道列表</a></li>
+    <li class="current"><a href="javascript:;">编辑渠道</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑渠道</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input wb" name="sort" value="<?php echo $info['sort'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">名称</th>
+			<td class="td"><input type="text" class="input wc" name="name" value="<?php echo $info['name'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">链接</th>
+			<td class="td"><textarea type="text" class="input wc" name="link"><?php echo $info['link'];?></textarea></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="AdImg">
+						<img src="<?php echo $attachPath.$info['img'];?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>">
+					</li>
+				</ul>			
+<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				<select class="wa" name="status">
+					<option <?php if($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+					<option <?php if($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+				</select> 
+			</td>
+		</tr>
+		<tr class="tr">
+				<th class="th">是否推荐</th>
+				<td class="td">
+				<input type="hidden" name="is_recommend" id="is_recommend" value="<?php echo $info['is_recommend'];?>"/>
+				<input type="checkbox" onclick="if(this.checked){$('#is_recommend').val(1);}else{$('#is_recommend').val(0);}"
+					<?php echo $info['is_recommend'] == 1 ? 'checked="checked"' : '';?> >(选中表示推荐)</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">开始结束时间</th>
+			<td class="td"><div><input class="input" type="text" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $info['start_time']);?>" /> 至 <input class="input" type="text" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s', $info['end_time']);?>" /></div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+    $('#end_time').datetimepicker();
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Channel/index?s=1');
+	});
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,202 @@
+<div class="page">
+	<div class="pageContent">
+	<form method="post" action="__URL__/save_authorize/navTabId/__MODULE__{:$check==1?'CHECK':''}/callbackType/closeCurrent" 
+		class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone)">
+		<div class="pageFormContent" layoutH="58">
+			<input type="hidden" name="id" value="{$vo.id}">
+            <if condition="$check eq '1'">
+                <div class="unit">
+                    <label>合同名称：</label>
+                    <p>{$vo.name|default="未填写"}</p>
+                </div>
+
+                <div class="unit">
+                    <label>合同类型：</label>
+                    <label>
+                        <switch name="vo.type">
+                            <case value="0">主合同</case>
+                            <case value="1">续签合同</case>
+                        </switch>
+                    </label>
+                </div>
+
+                <div class="unit">
+                    <label>应用名称：</label>
+                    <p>{$vo.app_name|default="未填写"}</p>
+                </div>
+
+                <div class="unit">
+                    <label>开发者：</label>
+                    <p>{$vo.company_name|default="未填写"}</p>
+                </div>
+
+                <div class="unit">
+                    <label>发票类型：</label>
+                    <p>{$receipt|default="未填写"}</p>
+                </div>
+
+                <div class="unit">
+                    <label>分成比例：</label>
+                    <p>{$vo.share|default="未填写"}</p>
+                </div>
+
+                <div class="unit">
+                    <label>签署日期：</label>
+                    <p>{$vo.ctime|date='Y/m/d',###}</p>
+                </div>
+
+                <div class="unit">
+                    <label>回传日期：</label>
+                    <p>{$vo.rtime|date='Y/m/d',###}</p>
+                </div>
+
+                <div class="unit">
+                    <label>合同有效期：</label>
+                    <p>{$vo.vtime|date='Y/m/d',###} - {$vo.etime|date='Y/m/d',###}</p>
+                </div>
+                <div class="unit">
+                    <label>合同文件：</label>
+                    <p>
+                        <a href="{:Helper ( 'Apk' )->get_url ( 'user' )}{$vo.filepath}" target="_blank">{$vo.filename}</a>
+                    </p>
+                </div>
+
+                <div class="unit">
+                    <label>审核结果：</label>
+                    <label><input type="radio" name="status" value="4" checked onclick="javascript:$(message_{$vo.id}).hide()"  /> 审核通过</label>
+                    <label><input type="radio" name="status" value="-2" onclick="javascript:$(message_{$vo.id}).show()" /> 不通过 </label>
+                </div>
+			<else/>
+				<div class="unit">
+					<label>游戏名称：</label>
+					<p>{$vo.app_name|default="未填写"}</p>
+				</div>
+				
+				<div class="unit">
+					<label>游戏包名：</label>
+					<p>{$vo.package|default="未填写"}</p>
+				</div>
+	
+	            <div class="unit">
+	                <label>发票类型：</label>
+	                <p>{$receipt|default="未填写"}</p>
+	            </div>
+	
+	            <div class="unit">
+	                <label>分成比例：</label>
+	                <p>{$vo.share|default="未填写"}</p>
+	            </div>
+	
+	            <div class="unit">
+	                <label>开户名称：</label>
+	                <p>{$vo.account_name|default="未填写"}</p>
+	            </div>
+	
+	            <div class="unit">
+	                <label>银行账号：</label>
+	                <p>{$vo.account_key|default="未填写"}</p>
+	            </div>
+	
+	            <div class="unit">
+	                <label>开户银行：</label>
+	                <p>{$vo.account_bank|default="未填写"}</p>
+	            </div>
+	
+	            <div class="unit">
+	                <label>公司名称：</label>
+	                <p>{$vo.company_name|default="未填写"}</p>
+	            </div>
+	
+	            <div class="unit">
+	                <label>联系地址：</label>
+	                <p>{$vo.province}{$vo.city}{$vo.address_detail}</p>
+	            </div>
+	
+	            <div class="unit">
+	                <label>联系人姓名：</label>
+	                <p>{$vo.contact|default="未填写"}</p>
+	            </div>
+	
+	            <div class="unit">
+	                <label>联系人邮箱：</label>
+	                <p>{$vo.contact_email|default="未填写"}</p>
+	            </div>
+	
+	            <div class="unit">
+	                <label>金立商务对接人：</label>
+	                <p>{$joiner.name|default="未填写"}</p>
+	            </div>
+	
+	            <div class="unit">
+	                <label>对接人联系邮箱：</label>
+	                <p>{$joiner.email|default="未填写"}</p>
+	            </div>
+
+                <div class="unit">
+                    <label>审核结果：</label>
+                    <label><input type="radio" name="status" value="2" checked onclick="javascript:$(message_{$vo.id}).hide()"  /> 审核通过</label>
+                    <label><input type="radio" name="status" value="-1" onclick="javascript:$(message_{$vo.id}).show()" /> 不通过 </label>
+                </div>
+            </if>
+
+			<div id="message_{$vo.id}" style="display:none;">
+				<div class="unit">
+					<label>未通过原因：</label>
+                    <if condition="$check eq '1'">
+                        <select class="combox" name="notpass_reason">
+                            <option selected value="">请选择未通过原因</option>
+                            <option value="上传文件不清晰">上传文件不清晰</option>
+                            <option value="分成比例填写错误">分成比例填写错误</option>
+                            <option value="合同未加盖公章">合同未加盖公章</option>
+                            <option value="合同加盖的公章不符合要求">合同加盖的公章不符合要求</option>
+                            <option value="合同有缺页">合同有缺页</option>
+                            <option value="合同主体与开户行不符">合同主体与开户行不符</option>
+                        </select>
+                        <else/>
+
+                        <select class="combox" name="notpass_reason">
+                            <option selected value="">请选择未通过原因</option>
+                            <option value="发票类型不符合要求">发票类型不符合要求</option>
+                            <option value="开户银行不符合要求">开户银行不符合要求</option>
+                            <option value="开户人不符合要求">开户人不符合要求</option>
+                            <option value="银行账号不符合要求">银行账号不符合要求</option>
+                            <option value="公司名称不正确">公司名称不正确</option>
+                            <option value="联系地址不正确">联系地址不正确</option>
+                            <option value="联系人名称不正确">联系人名称不正确</option>
+                        </select>
+                    </if>
+
+				</div>
+				<div class="unit">
+					<label>备注：</label>
+					<textarea name="note" style="width:80%;height: 100px;" title="未通过审核备注信息会展示给开发者，请简洁清楚描述未通过原因"></textarea>
+				</div>
+			</div>
+
+            <div class="unit">
+                <label>审核人：</label>
+                <label>{$Think.SESSION.loginUserName}</label>
+            </div>
+            <div class="unit">
+                <label>注意：</label>
+                <p style="color: red;">已通过审核无需填写备注信息。 未通过审核备注信息会展示给开发者，请简洁清楚描述未通过原因。</p>
+            </div>
+
+            <div class="unit">
+                <label>是否通知：</label>
+                <label><input type="checkbox" name="notice"/>邮件通知开发者</label>
+            </div>
+
+        </div>
+		<style>
+		.tax_thumb{position: absolute; right:3px; top:-80px;}
+		</style>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">确认</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">关闭</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+	</div>
+</div>

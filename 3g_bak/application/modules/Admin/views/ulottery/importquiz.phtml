@@ -1,0 +1,36 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li ><a href="<?php echo $quizUrl; ?>">列表</a></li>
+			<li><a href="<?php echo $editQuizUrl; ?>">添加内容</a></li>
+			<li class="current"><a href="<?php echo $importQuizUrl; ?>">数据导入</a></li>
+			<li><a href="<?php echo $quizConfigUrl; ?>">配置信息</a></li>
+			<li><a href="<?php echo $quizlogUrl; ?>">统计信息</a></li>
+		</ul>
+	</div>
+	<div class="h_a">数据导入</div>
+	<form method="post" action="<?php echo $importQuizUrl; ?>" id="addFrom" enctype="multipart/form-data">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">选择文件</th>
+					<td class="td"><input type="file" class="input" name="data" value=""></td>
+					<td class="td"><a href="<?php echo $exportQuizUrl; ?>">导出</a></td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+
+	<script type="text/javascript">
+		//广告表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Ulottery/quiz');
+			});
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

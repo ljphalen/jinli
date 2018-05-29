@@ -1,0 +1,33 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+	var token = '<?php echo $token;?>';
+</script>
+	<div id="page">
+		<section class="wrap first-grade">
+			<div class="gift-list J_giftItem">
+				<ul>
+					<?php 
+					 foreach($gifts as $key=>$value){
+                      if(!$intersrc) $intersrc = 'libao_olg'.$value['id'];?>
+					<li>
+						<a data-type=2 data-infpage="<?php echo $value['name'].','.$webroot.'/channel/index/detail/?id='.$value['game_id'].'&intersrc='.$intersrc.'&t_bi='.$source.','.$value['game_id'].','.$value['id'];?>">
+							<span class="icon"><img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $imgs[$value['id']][0]['img'];?>"></span>
+							<span class="desc">
+								<em><?php echo $value['name'];?></em>
+								<p><em><?php echo $numlog[$value['id']][0];?></em></p>
+							</span>
+						</a>
+					</li>
+					<?php }?>
+				</ul>
+			</div>
+		</section>
+		<?php if($hasnext) {?>
+			<div class="loading J_loadMore" style="display:none" data-ajaxUrl="<?php echo $webroot.'/channel/gift/more/?t_bi='.$source;?>" data-hasnext="<?php echo $hasnext;?>" data-curpage="<?php echo $page;?>" data-curClass="<?php echo $tid;?>">
+				<span class="load"></span>
+			</div>
+		<?php }?>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

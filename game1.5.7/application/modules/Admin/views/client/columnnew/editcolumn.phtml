@@ -1,0 +1,94 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl.'/?column_version=1.5.2';?>">1.5.2</a></li>
+		<li><a href="<?php echo $listUrl.'/?column_version=1.5.3';?>">1.5.3</a></li>
+		<li class="current"><a href="javascript:;">编辑栏目配置</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑栏目配置-<?php echo $column_version=='1.5.2'?'1.5.2':'1.5.3及以上'?></div>
+<div class="step mb10">
+	<ul class="cc">
+		<li style="width:25%;"  class="current" ><span class="fl"><em>设置栏目</em></span></li>
+		<li class="line" style="left:25%"></li>
+		<li style="width:25%"><span class="fl"><em>设置频道</em></span></li>
+		<li class="line" style="left:50%"></li>
+		<li style="width:25%"><span class="fl"><em>频道排序</em></span></li>
+		<li class="line" style="left:75%"></li>
+		<li  style="width:25%"><span class="fl"><em>设置时间</em></span></li>
+	
+	</ul>
+</div>
+<form method="post" action="<?php echo $editColumnPostUrl; ?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="level" value="1" type="hidden"/>
+<input name="column_version" value="<?php echo $column_version; ?>" type="hidden"/>
+<input name="log_id" value="<?php echo $log_id; ?>" type="hidden"/>
+<div class="table_list">
+	<table width="100%">
+	<tr class="hd" >
+		<td width="10%">位置</td>
+		<td width="10%">名称</td>
+		<td width="10%">状态</td>
+		<td width="35%" >选中图片</td>
+		<td width="35%">默认图片</td>
+	</tr>
+	<?php foreach ($info as $key=>$value) {?>
+	<input name="column_id<?php echo ($key+1);?>" value="<?php echo $value['id']; ?>" type="hidden"/>
+	<input name="relevance<?php echo ($key+1);?>" value="<?php echo $value['relevance']; ?>" type="hidden"/>
+	<tr class="ct" >
+	    <td><?php echo $value['position'];?></td>
+		<td><input type="text" class="input" name="name<?php echo ($key+1);?>" value="<?php echo $value['name']?>" size="10"></td>
+		<td>
+			<select name="status<?php echo ($key+1);?>" class="select">
+				<option  value="1" <?php echo ($value['status'] == 1)?'SELECTED':''; ?> >开启</option>
+				<option  value="0" <?php echo ($value['status'] == 0)?'SELECTED':''; ?> >关闭</option>
+			</select>
+		</td>
+		<td>
+			<ul class="uploadImg">
+				<li id="icon_choose<?php echo ($key+1) ;?>">
+					<img src="<?php echo ($value['icon_choose'])?$attachPath.$value['icon_choose']:$staticPath.'/img/content/nopic.jpg';?>"/>
+					<input type="hidden" name="icon_choose<?php echo ($key+1);?>" value="<?php echo $value['icon_choose'];?>">
+				</li>
+			</ul>			
+			<p style="clear:both;">
+	            <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=icon_choose'.($key+1);?>" style="height:60px;width:100%;" frameborder="0" scrolling="no"></iframe>
+			</p>
+		</td>
+		<td>
+			<ul class="uploadImg">
+				<li id="icon_default<?php echo ($key+1) ;?>">
+					<img src="<?php echo ($value['icon_default'])?$attachPath.$value['icon_default']:$staticPath.'/img/content/nopic.jpg';?>"/>
+					<input type="hidden" name="icon_default<?php echo ($key+1);?>" value="<?php echo $value['icon_default'];?>">
+				</li>
+			</ul>			
+			<p style="clear:both;">
+	            <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=icon_default'.($key+1);?>" style="height:60px;width:100%;" frameborder="0" scrolling="no"></iframe>
+			</p>
+	   </td>
+	</tr>
+	<?php }?>
+	</table>
+	<table width="100%">
+		<tr class="tr"><td class="td">默认打开</td>
+		<td>	
+		   <select name="default_open" class="select wa">
+	   		 <?php foreach ($info as $value) { ?>
+				<option <?php if ($value['default_open'] == 1) echo 'selected';?> value="<?php echo $value['position'];?>"><?php echo $value['position'];?></option>
+			 <?php }?>
+			</select>
+		</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">下一步</button></span></span></div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Columnnew/editChannelSet/?'+'log_id='+ret.data.log_id+'&column_version='+ret.data.column_version+'&default_open='+ret.data.default_open);
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,139 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li class="current"><a href="<?php echo $indexUrl;?>">商品列表</a></li>
+		<li><a href="<?php echo $searchUrl;?>">添加商品</a></li>
+		<li><a href="<?php echo $meilishuoStep1Url;?>">添加美丽说商品</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">商品名称</th>
+				<td class="td"><input class="input wb" type="text" name="title" value="<?php echo $param['title'];?>"></td>
+				<th class="th">商品来源</th>
+				<td class="td">
+					<select name="supplier">
+						<option value="0">所有</option>
+						<?php foreach ($configs as $key=>$val):?>
+						<option value="<?php echo $key;?>" <?php if ($key == $param['supplier']) echo 'selected="selected"';?>><?php echo $val['name'];?></option>
+						<?php endforeach;?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">时间</th>
+				<td class="td">
+					<input class="input" type="text" maxlength="30" id="start_time" name="start_time" value="<?php echo $param['start_time'];?>">
+					<input class="input" type="text" maxlength="30" id="end_time" name="end_time" value="<?php echo $param['end_time'];?>">
+				</td>
+				<th class="th" width="60">状态</th>
+				<td class="td">
+					<select name="status">
+						<option value="0" <?php if ($param['status'] == 0) echo 'selected="selected"';?>>所有</option>
+						<option value="1" <?php if ($param['status'] == 1) echo 'selected="selected"';?>>上架</option>
+						<option value="2" <?php if ($param['status'] == 2) echo 'selected="selected"';?>>下架</option>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">分类</th>
+				<td class="td">
+					<select name="goods_type">
+						<option value="0">所有</option>
+						<?php foreach ($goods_type as $key=>$val): if($val['status']):?>
+						<option value="<?php echo $key;?>" <?php if($param['goods_type'] == $key) echo 'selected="selected"';?>><?php echo $val['title'];?></option>
+						<?php endif; endforeach;?>
+					</select>
+				</td>
+				<th class="th" width="60"></th>
+				<td class="td"></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn">
+			<span>
+				<button type="submit">搜 索</button>
+			</span>
+		</span>
+	</div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('sort');" type="submit">重新排序</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">下架</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">上架</button></span></span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		<td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="50">排序</td>
+			<td width="120">名称</td>
+			<td width="100">图片</td>
+			<td width="80">分类</td>
+			<td width="60">来源</td>
+			<td width="40">市场价</td>
+			<td width="40">销售价</td>
+			<td width="40">折扣</td>
+			<td width="100">开始时间</td>
+			<td width="100">结束时间</td>
+			<td width="40">状态</td>
+			<td width="140">点击量</td>
+			<td width="60">操作</td>
+		</tr>
+		<?php if(!empty($list)): foreach ($list as $val):list($module_id, $channel_id) = explode("_", $val['module_channel'])?>
+		<tr class="ct">
+			<td><input class="checkbox" name="ids[]" value="<?php echo $val['id'];?>" type="checkbox"></td>
+			<td><input type="text" class="input" style="width:50px" name="sort[<?php echo $val['id'];?>]" value="<?php echo $val['sort'];?>"></td>
+			<td><a href="<?php echo $val['link'];?>" target="_blank"><?php echo $val['title'];?></a></td>
+			<td><img alt="" src="<?php 
+			
+        if ($val['supplier'] == 2 && strpos(html_entity_decode($val['img']), 'www.yigw.net') !== false) {
+		    $val['img'] = str_replace('www.yigw.net', 'img.ytaow.cn', html_entity_decode($val['img']));
+		}
+			echo $val['img'];
+			
+			?>" width="100"></td>
+			<td><?php echo $goods_type[$val['goods_type']]['title'];?></td>
+			<td><?php echo $configs[$val['supplier']]['name'];?></td>
+			<td><?php echo $val['market_price'];?></td>
+			<td><?php echo $val['sale_price'];?></td>
+			<td><?php echo round($val['sale_price']/$val['market_price'], 2) * 10;?></td>
+			<td><?php if(!empty($val['start_time'])) echo date('Y-m-d H:i:s', $val['start_time']);?></td>
+			<td><?php if(!empty($val['end_time'])) echo date('Y-m-d H:i:s', $val['end_time']);?></td>
+			<td><?php echo $val['status'] == 2 ? '下架' : '上架';?></td>
+			<td>
+                <a href="/admin/stat/thirdpart/?version_id=<?php echo Stat_Service_Log::V_H5;?>&module_id=<?php echo $module_id;?>&channel_id=<?php echo $channel_id;?>&item_id=<?php echo $val['id'];?>" target="_blank" class="mr10">H5点击量</a>
+                <a href="/admin/stat/thirdpart/?version_id=<?php echo Stat_Service_Log::V_APK;?>&module_id=<?php echo $module_id;?>&channel_id=<?php echo $channel_id;?>&item_id=<?php echo $val['id'];?>" target="_blank" class="mr10">APK点击量</a>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $val['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $val['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+		<?php endforeach; endif;?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?> </div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#start_time").datepicker({
+		dateFormat : 'yy-mm-dd'
+	});
+	
+	$("#end_time").datepicker({
+		dateFormat : 'yy-mm-dd'
+	});
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Channelgoods/index');
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

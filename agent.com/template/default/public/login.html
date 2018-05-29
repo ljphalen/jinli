@@ -1,0 +1,85 @@
+<{config_load file="site.conf"}>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title><{#siteName#}> 管理中心</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="/public/styles/general.css" rel="stylesheet" type="text/css" />
+<link href="/public/styles/main.css" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+body {
+	color: white;
+}
+</style>
+<link href="/public/styles/validate.css" rel="stylesheet"
+	type="text/css" />
+<script src="/public/js/jquery.js" type="text/javascript"
+	language="javascript"></script>
+<script src="/public/js/jquery.validate.js" type="text/javascript"
+	language="javascript"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#theForm").validate({
+		rules: {
+			username: "required",
+			password: "required"
+			//captcha: "required"
+		},
+		messages: {
+			username: "请输入管理员姓名",
+			password: "请输入管理员密码"
+			//captcha: "验证码"
+		}
+	});	
+	
+	$("#username").focus();
+});
+</script>
+<style>
+.logo_txt{
+font-family:Georgia,"宋体";
+font-size:28px;
+font-weight:bold;
+}
+</style>
+</head>
+<body style="background: #278296">
+<form method="post" action="/index.php/index/loginHandle" id='theForm'>
+<table cellspacing="0" cellpadding="0" style="margin-top: 100px"
+	align="center">
+	<tr>
+		<td></td>
+		<td style="padding-left: 50px">
+		<table>
+      <th colspan="2" align="center">
+      <font class="logo_txt"><{#siteName#}></font>
+      </th>
+      <tr><td> </td></tr>
+			<tr>
+				<td>管理员帐号：</td>
+				<td><input type="text" name="username" id="username" /></td>
+			</tr>
+			<tr>
+				<td>管理员密码：</td>
+				<td><input type="password" name="password" id="password" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td><input type="text" name="captcha" id="captcha" class="capital" maxlength="4" /> <span style="vertical-align: bottom;"><img src="/index.php/index/captcha/" border="0" align="absmiddle" style=" cursor:pointer;" title="点击刷新验证码" onclick="this.src='/index.php/index/captcha/?t='+new Date().getTime()" /></span></td>
+			</tr>
+
+			<tr>
+				<td>&nbsp;</td>
+				<td><input type="submit" value="进入管理中心" class="button" /></td>
+			</tr>
+            <tr>
+				<td>&nbsp;</td>
+				<td><a style="color:#FFFFFF" href="/index.php/findpwd/index">忘记密码？点击重置密码</a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+</form>
+</body>

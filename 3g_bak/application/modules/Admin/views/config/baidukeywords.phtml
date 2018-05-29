@@ -1,0 +1,53 @@
+<?php echo $this->render("layout/header2.phtml"); ?>
+<section class="main-content">
+	<header class="header navbar bg-default">
+		<ul class="nav navbar-nav">
+			<li class="active">
+				<a href="javascript:;">百度关键字</a>
+			</li>
+		</ul>
+		<div class="btn-group pull-right mg-r-sm">
+			<form id="form1" name="form1" method="post" action="/Admin/Config/baidukeywords">
+				<input type="hidden" name="token" value="<?php echo $token; ?>">
+				<input type="hidden" name="update" value="1">
+				<button type="submit" name="sub" class="btn btn-sm btn-primary navbar-btn">
+					重新拉取
+				</button>
+			</form>
+		</div>
+	</header>
+
+	<div class="content-wrap">
+		<div class="row">
+			<div class="col-lg-12">
+				<!-- table content start -->
+				<section class="panel">
+					<table class="table table-bordered table-striped no-margin">
+						<tr>
+							<td style="width: 100px">完整内容</td>
+							<td><?php echo count($items) . ':' . implode(',', $items); ?></td>
+						</tr>
+						<tr>
+							<td>关键字</td>
+							<td><?php echo count($keywords) . ':' . implode(',', $keywords); ?></td>
+						</tr>
+						<tr>
+							<td>热词</td>
+							<td><?php echo count($hotwords) . ':' . implode(',', $hotwords); ?></td>
+						</tr>
+						<tr>
+							<td>导航首页关键字</td>
+							<td><?php echo count($navindexwords) . ':' . implode(',', $navindexwords); ?></td>
+						</tr>
+						<tr>
+							<td>api关键字</td>
+							<td><?php echo count($apikeys) . ':' . implode(',', $apikeys); ?></td>
+						</tr>
+					</table>
+				</section>
+			</div>
+		</div>
+	</div>
+</section>
+
+<?php echo $this->render("layout/footer.phtml"); ?>

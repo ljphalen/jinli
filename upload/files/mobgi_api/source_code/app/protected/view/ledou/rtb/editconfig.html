@@ -1,0 +1,152 @@
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>
+<link media="screen" href="{{rootUrl}}/css/chosen.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+.addconfiglabel{width:150px;float:left;}
+.app_cat_1{float:left;margin:10px;font-weight: bold;font-size: 20px;}
+.app_cat_2{float:left;clear:both;font-weight: bold;font-size: 14px;}
+.app_cat_2_label{float:left;}
+.app_cat_3{float:left;clear:both;font-weight: normal;font-size: 14px;}
+</style> 
+<div class="colMain">
+    <div class="title">
+        <p class="fl">导量配置设置</p>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="app-detail" style="">
+                <form method="POST" action="/rtb/editconfigsave" style="">
+                    <ul class="form" style="">
+                        <li>
+                            <span class="label">导量配置名称：</span>
+                            <div class="fc">
+                                <input type="hidden" name="config_id" id="config_id" value="{{configInfo.id}}"/>
+                                <input type="text" name="config_name" id="config_name" required  class="iText" value="{{configInfo.config_name}}"/>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label">导量产品：</span>
+                            <div class="fc">
+                                <select name="product_id" class="required" required id="product_id" onchange="javascript:$('#product_name').val($('#product_id option:selected').text().replace('(T)', '').replace('(A)', '').replace('(I)', ''))">
+                                </select>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label">导量平台：</span>
+                            <div class="fc">
+                                <select name="platform" class="required" required id="platform">
+                                    <option value="1" <!-- if {{configInfo.platform}}==1 --> selected="selected" <!-- endif --> >Android</option>
+                                    <option value="2" <!-- if {{configInfo.platform}}==2 --> selected="selected" <!-- endif --> >IOS</option>
+                                </select>
+                                <select name="mober" class="required" required id="mober" >
+                                    <!-- loop rtb_mober -->
+                                        <option value="{{rtb_mober' value}}" <!-- if {{configInfo.mober}}=={{rtb_mober' value}} --> selected="selected" <!-- endif --> >{{rtb_mober' value}}</option>
+                                    <!-- endloop -->
+                                </select>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label">渠道号：</span>
+                            <div class="fc">
+                                <input type="text" id="channel" name="channel"  class="iText" readonly="readonly" />
+                            </div>
+                        </li>
+                        
+                        <li class="line"></li>
+                        
+                        <li>
+                            <span class="label"><input type="checkbox" name="app_cat_all" id="app_cat_all"/>应用类型：</span>
+                            <div class="fc">
+                                <span id="platform_mober_title" class="red">Android-AMAX</span>
+                                <div class="app_cat" id="app_cat_div">
+
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label"><input type="checkbox" name="mobile_type_all" id="mobile_type_all"  />手机品牌：</span>
+                            <div class="fc">
+                                <div class="mobile_type" id="mobile_type_div">
+                                    <!-- loop mobile_make -->
+                                        <label class="addconfiglabel"><input type="checkbox" name="mobile_type[]" value="{{mobile_make' key}}" <!-- if (!empty({{limitInfo.make}})&&in_array({{mobile_make' key}}, {{limitInfo.make}})) -->  checked="checked" <!-- endif --> />{{mobile_make' value}}</label>
+                                    <!-- endloop -->
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label"><input type="checkbox" name="carrieroperator_all" id="carrieroperator_all"  />运营商：</span>
+                            <div class="fc">
+                                <div class="carrieroperator" id="carrieroperator_div">
+
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label"><input type="checkbox" name="network_environment_all" id="network_environment_all"  />网络环境：</span>
+                            <div class="fc">
+                                <div class="network_environment" id="network_environment_div">
+
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label"><input type="checkbox" name="screen_orientation_all" id="screen_orientation_all"  />屏幕方向：</span>
+                            <div class="fc">
+                                <div class="screen_orientation" id="screen_orientation_div">
+
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label"><input type="checkbox" name="geographical_position_all" id="geographical_position_all"  />地理位置：</span>
+                            <div class="fc">
+                                <div class="geographical_position">
+                                    <!-- loop geographical_position -->
+                                        <label class="addconfiglabel"><input type="checkbox" name="geographical_position[]" value="{{geographical_position' value}}" <!-- if (!empty({{limitInfo.loc}})&&in_array({{geographical_position' value}}, {{limitInfo.loc}})) -->  checked="checked" <!-- endif --> />{{geographical_position' value}}</label>
+                                    <!-- endloop -->
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <div class="fc">
+                                <input type="button" class="submit" value="保存" onclick="checksubmit()">
+                                <input type="button" onclick="window.location.href = '/rtb/config'" class="cancel" value="取消">
+                            </div>
+                        </li>
+                        
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--载入公共JS-->
+
+<!-- include "addconfig_inc" -->
+
+
+<script>
+
+$(function(){
+    var product_id = "{{configInfo.product_id}}";
+    autoPlatform(product_id);
+    $("#platform").bind("change",autoPlatform);
+    $("#mober").bind("change", update_platform_mober);
+    $("#app_cat_all").click(app_cat_check_all);
+    $("#mobile_type_all").click(mobile_type_check_all);
+    $("#carrieroperator_all").click(carrieroperator_check_all);
+    $("#network_environment_all").click(network_environment_check_all);
+    $("#screen_orientation_all").click(screen_orientation_check_all);
+    $("#geographical_position_all").click(geographical_position_check_all);
+})
+    
+
+</script>

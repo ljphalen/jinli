@@ -1,0 +1,61 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="javascript:;">编辑活动资讯</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑活动资讯</div>
+<form method="post" action="<?php echo $otherPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="recommend_id" value="<?php echo $mainInfo['id'];?>" type="hidden" />
+<input name="day_id" value="<?php echo $mainInfo['day_id'];?>" type="hidden" />
+<input name="type" value="<?php echo $info[1]['list_type'];?>" type="hidden" />
+<div class="table_full">
+    <table width="100%">
+		<tr class="tr">
+			<th class="th">添加的类型</th>
+			<td class="td"><?if($info[1]['list_type'] == 'hd') {?>活动<?}else{?>资讯<?}?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">标题(<span style="color: red">*</span>)</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?=$mainInfo['title']?>"></td>
+		</tr>
+		<?php for($i=1;$i<=$loop_num;$i++) {?>
+		<tr class="tr">
+			<th class="th"><?if($info[1]['list_type'] == 'hd') {?>活动<?}else{?>资讯<?}?>ID</th>
+			<td class="td"><input type="text" class="input wc" name="list_id[<?=$i?>]" value="<?=$info[$i]['list_id']?>" id="list_id_<?=$i?>"><button type="button" name="getInfo" getInputId="<?=$i?>" style="margin-left:20px;">获取标题</button><br>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th"><?if($info[1]['list_type'] == 'hd') {?>活动<?}else{?>资讯<?}?>活动标题</th>
+			<td class="td"><input type="text" class="input wc" id="list_title_<?=$i?>" name="list_title[<?=$i?>]" value="<?=$info[$i]['list_title']?>"><br>
+			</td>
+		</tr>
+		<?php }?>
+	</table>
+</div>
+<div class="mb10 tac">
+    <span class="btn"><span><a href="javascript:window.history.go(-1);"><button type="button">返回</button></a></span></span>
+    <span class="btn"><span><button onfocus="blur();" type="submit">完成提交</button></span></span>
+</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $listEditUrl . "?day_id=";?>' + ret.data);
+	});
+	$("button[name='getInfo']").click(function() {
+		var NumId = $(this).attr('getInputId');
+		var idVal = $('#list_id_'+NumId).val();
+		$.getJSON(baseurl + '<?php echo $checkTitleUrl;?>', { infoId: idVal, type: "<?=$info[1]['list_type']?>" }, function (data, status) {
+			if(data.data.title !== null) {
+			    $('#list_title_'+NumId).val(data.data.title);
+			} else {
+			    alert(data.msg);
+			}
+	    });
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

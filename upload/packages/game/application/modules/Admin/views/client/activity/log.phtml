@@ -1,0 +1,116 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	<li class="current"><a href="<?php echo $lotterylogUrl;?>">抽奖记录</a></li>
+    <li><a href="<?php echo $editlotterylogUrl;?>">奖品管理</a></li>
+    <li><a href="<?php echo $listUrl;?>">活动列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $lotterylogUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr">
+	       <th class="th">中奖状态</th>
+			<td class="td">
+			 <select name="status" class="wa">
+			    <option  value="0">全部</option>
+				<option <?php if($s['status'] == 2) echo 'selected';?> value="2">已中奖</option>
+				<option <?php if($s['status'] == 1) echo 'selected';?> value="1">未中奖</option>
+			 </select>
+			</td>
+			<th class="th">奖项</th>
+			<td class="td">
+			 <select name="lottery_id" class="wa">
+			    <option  value="0">全部</option>
+			    <option <?php if($s['lottery_id'] == 1) echo 'selected';?> value="1">一等奖</option>
+				<option <?php if($s['lottery_id'] == 2) echo 'selected';?> value="2">二等奖</option>
+				<option <?php if($s['lottery_id'] == 3) echo 'selected';?> value="3">三等奖</option>
+			 </select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">抽奖开始结束时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo $s['start_time'];?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo $s['end_time'];?>" /></div>
+			</td>
+			<th class="th">账号</th>
+			<td class="td"><input type="text" class="input" name="uname" value="<?php echo $s['uname'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动名称</th>
+			<td class="td"><input type="text" class="input" name="name" value="<?php echo $s['name'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+ <div class="mb10">
+ <span class="btn"><span><button type="button" id="extportBtn">导出记录</button></span>
+</div>
+<div class="table_full" style="display: none;">
+<dl style="display:-webkit-box">
+	<dd style="padding-left: 0px">
+		<p><span class="name">活动名称:<?php echo $info['name'];?></span></p>
+		<p><span class="type">奖品数量（剩余/总）:<?php echo ($num - $have_lotterys)."/".$num;?></span></p>
+	</dd>
+</dl>
+</div>
+<div class="h_a">
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;共<?php echo $total;?>条结果</span>
+</div>
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td>ID</td>
+		    <td>账号</td>
+			<td width="250">用户IMEI</td>
+			<td width="130">抽奖时间</td>
+			<td>中奖状态</td>
+			<td>奖项</td>
+			<td width="250">活动名称</td>
+		</tr>
+<?php foreach($logs as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['uname'];?></td>
+			<td><?php echo $value['imei'];?></td>
+			<td><?php echo !$value['create_time'] ? " " : date('Y-m-d H:i:s', $value['create_time']);?></td>
+			<td><?php echo $value['status'] ? '已中奖' : '未中奖';?></td>
+			<td><?php echo $value['lottery_id'] ? $awards[$value['lottery_id']] : '无';?></td>
+			<td><?php echo $activities[$value['activity_id']]['name'];?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<div class="mr10 cc">
+	<form action="<?php echo $exportUrl;?>" method="post" id="exportForm">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<input name="log" type="hidden" value="log" />
+	<input name="lottery_id" type="hidden" value="<?php echo $s['lottery_id'];?>" />
+	<input type="hidden" name="start_time" value="<?php echo $s['start_time'];?>">
+	<input type="hidden" name="end_time" value="<?php echo $s['end_time'];?>" />
+	<input type="hidden" name="uname" value="<?php echo $s['uname'];?>">
+	<input type="hidden" name="status" value="<?php echo $s['status'];?>">
+	<input type="hidden" name="name" value="<?php echo $s['name'];?>">
+	</form>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Client_Activity/log?id=<?php echo $s['id'];?>&start_time=<?php echo $s['start_time'];?>&end_time=<?php echo $s['end_time'];?>');
+	});
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+     $("#extportBtn").click(function(){
+			$("#exportForm").submit();
+   });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

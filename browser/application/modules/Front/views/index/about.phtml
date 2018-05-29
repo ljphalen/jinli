@@ -1,0 +1,71 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div data-role="page" id="page" class="intro" data-theme="no">
+		<?php echo $this->render("layout/nav.phtml");?>
+		<div class="ct">
+			<div class="banner">
+				<!--begin slide -->
+				<div class="mainfocus isTouch" id="mainfocus">
+					<div class="ui-slide-scrollbox">
+						<ul class="ui-slide-scroll clearfix" >
+<?php foreach($ads as $key=>$value) {?>	
+					<li  class="ui-slide-item"><a
+					href="<?php echo $value['link'];?>"><img
+					src="<?php echo $attachPath . $value['img'];?>" alt="<?php echo $value['title']?>"></a></li>
+<?php }?>					
+												</ul>
+					</div>
+					<div class="ui-slide-tabs">
+<?php 
+$total = count($ads);
+for($i=1; $i<=$total; $i++) {?>	
+					<span class="ui-slide-tab <?php if($i==1) echo 'ui-slide-tabcur';?>"></span>
+<?php }?>
+					</div>
+					<span class="ui-slide-prev"></span>
+					<span class="ui-slide-next ui-slide-nextdis"></span>
+				</div>
+				<!--end slide-->
+			</div>
+			
+			<div class="list sub-link">
+				<ul>
+					<li>
+						<a href="/index/about_us">
+							<span class="ico"><img src="<?php echo $staticResPath;?>//pic/pic_intro1.png" alt="" /></span>
+							<em>关于我们</em>
+							<s><img src="<?php echo $staticResPath;?>//pic/jt.png" alt="" /></s>
+						</a>
+					</li>
+					<li>
+						<a href="/index/about_culture" data-ajax="false">
+							<span class="ico"><img src="<?php echo $staticResPath;?>//pic/pic_intro2.png" alt="" /></span>
+							<em>企业文化</em>
+							<s><img src="<?php echo $staticResPath;?>//pic/jt.png" alt="" /></s>
+						</a>
+					</li>
+					<li>
+						<a href="/index/about_honor">
+							<span class="ico"><img src="<?php echo $staticResPath;?>//pic/pic_intro3.png" alt="" /></span>
+							<em>企业荣誉</em>
+							<s><img src="<?php echo $staticResPath;?>//pic/jt.png" alt="" /></s>
+						</a>
+					</li>
+					<li>
+						<a href="/index/about_events">
+							<span class="ico"><img src="<?php echo $staticResPath;?>//pic/pic_intro4.png" alt="" /></span>
+							<em>金立大事</em>
+							<s><img src="<?php echo $staticResPath;?>//pic/jt.png" alt="" /></s>
+						</a>
+					</li>
+					<li>
+						<a href="/news/index">
+							<span class="ico"><img src="<?php echo $staticResPath;?>//pic/pic_intro5.png" alt="" /></span>
+							<em>新闻活动</em>
+							<s><img src="<?php echo $staticResPath;?>//pic/jt.png" alt="" /></s>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+<?php echo $this->render("layout/footer.phtml");?>

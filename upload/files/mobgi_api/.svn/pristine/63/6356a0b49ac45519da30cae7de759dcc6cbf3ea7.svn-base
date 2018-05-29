@@ -1,0 +1,55 @@
+{header} 
+<script language="JavaScript">
+<!--
+function process_data(theform) {
+	if (theform.old_password.value=='') {
+		alert("请填写你的密码！");
+		theform.old_password.focus();
+		return false;		
+	}
+	if (theform.new_password.value=='') {
+		alert("请填写新密码！");
+		theform.new_password.focus();
+		return false;
+	}
+	if (theform.new_password.value!=theform.confirm_new_password.value) {
+		alert("请两次输入的新密码不一，请重新输入！");
+		theform.new_password.value='';
+		theform.confirm_new_password.value='';		
+		theform.new_password.focus();
+		return false;
+	}
+}
+//-->
+</script>
+<table width="100%" border="0" cellpadding="3" cellspacing="1" class="tableOutborder">
+  <form name="form" method="post" action="password.php" onsubmit="return process_data(this)">
+    <tr class="tableHeader"> 
+      <td colspan="2"><strong><font color="#FFFFFF">修改登陆，密码请记住你的密码，密码是区分大小写的。登陆时，请注意所输入的字符的大小写！</font></strong></td>
+    </tr>
+    <tr class="bg_0"> 
+      <td>旧密码： </td>
+      <td> 
+        <input name="old_password" type="password" id="old_password2" size="30" maxlength="30"> 
+        <font color="#FF0000">**</font></td>
+    </tr>
+    <tr class="bg_0"> 
+      <td>新密码：</td>
+      <td> 
+        <input name="new_password" type="password" id="new_password" size="30" maxlength="30"> 
+        <font color="#FF0000">**</font></td>
+    </tr>
+    <tr class="bg_0"> 
+      <td>确认新密码：</td>
+      <td> 
+        <input name="confirm_new_password" type="password" id="confirm_new_password" size="30" maxlength="30"> 
+        <font color="#FF0000">**</font></td>
+    </tr>
+    <tr class="tableHeader"> 
+      <td colspan="2" align="center"> <input name="action" type="hidden" id="action" value="update"> 
+        <input name="Submit" type="submit" id="Submit" value="  提交  " accesskey="s"> 
+        <input name="重置" type="reset" value="  重置  "> </td>
+    </tr>
+  </form>
+</table>
+{footer} 

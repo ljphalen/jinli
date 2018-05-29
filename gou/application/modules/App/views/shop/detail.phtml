@@ -1,0 +1,63 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body>
+	<div class="module shop-detail">
+	<?php if ($hasheader) {?>
+		<header id="iHeader" class="hd">
+			<div class="top-wrap">
+				<div class="title">
+					<a href="<?php echo $_SERVER['HTTP_REFERER'];?>" class="back"></a>
+					<h1>店铺详情</h1>
+				</div>
+			</div>
+		</header>
+	<?php }?>
+		<div id="iScroll">
+			<div class="detail-info">
+			<div class="shop-info">
+				<div class="detail-filed">
+						<dl>
+							<dt class="icon">
+								<img src="<?php echo $staticResPath;?>/h5/pic/blank.gif" data-original="http://logo.taobao.com/shop-logo<?php echo $shop_info['pic_path'];?>" alt=""/>
+							</dt>
+							<dd class="desc">
+								<p><?php echo Util_String::substr($shop_info['title'], 0, 12, '', true);?></p>
+								<p class="level">
+									<img src="<?php echo $shop_convert['shop_type'] == 'C' ? $shop_convert['credit_img'] : $staticRoot.'/apps/gou/h5/pic/tmall_logo.png';?>" alt="" />
+								</p>
+								<p class="address">
+									<?php if($shop) {?><span>所在地：<?php echo $shop['city'];?></span><?php }?>
+									<span class="type">主营：<?php echo Util_String::substr($shop_info['cat_name'], 0, 5, '', true);?></span>
+								</p>
+							</dd>
+						</dl>
+				</div>
+				<div class="comment">
+					<ul>
+						<li class="up">
+							<p><span>描述相符:<?php echo $shop_info['shop_score']['item_score'];?></span></p>
+							<!-- <p><em></em>27.7%</p> -->
+						</li>
+						<li class="up">
+							<p><span>服务态度:<?php echo $shop_info['shop_score']['service_score'];?></span></p>
+							<!-- <p><em></em>27.7%</p> -->
+						</li>
+						<li class="down">
+							<p><span>发货速度:<?php echo $shop_info['shop_score']['delivery_score'];?></span></p>
+							<!-- <p><em></em>27.7%</p> -->
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="pic-info water-fall J_waterFall" data-ajaxUrl="<?php echo $webroot;?>/api/shop/detail?nick=<?php echo urlencode($shop_info['nick']);?>" data-hasnext="true">
+				<ul class="">
+					<li></li>
+					<li></li>
+					<li></li>
+				</ul>				
+			</div>
+		</div>
+		</div>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<style type="text/css">
+button.closeBtn {
+	padding: 0;
+	cursor: pointer;
+	background: transparent;
+	border: 0;
+	-webkit-appearance: none;
+}
+.closeBtn {
+	float: right;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 1;
+	color: #000000;
+	text-shadow: 0 1px 0 #ffffff;
+	opacity: 0.2;
+	filter: alpha(opacity=20);
+}
+.fancybox-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 10000;
+	display: none;
+}
+.fancybox-display {
+	opacity: 0.7;
+	cursor: pointer;
+	display: block;
+	background-color: rgb(119, 119, 119);
+}
+#existAppAlert { width: 556px;padding: 10px 90px;display:none; }
+#existAppAlert .intent { margin-left:20px; }
+</style>
+<div id="jumbotron" style="display: none; z-index: 10001; position: fixed; width: 745px;">
+	<div class="yfarea">
+		<h4 class="yyt indexup" id="myModalLabel">
+			<button type="button" class="closeBtn" id="alert" onclick="$('#jumbotron').hide();return true;">×</button>
+			<span>应用上传中，请不要关闭或刷新页面</span>
+		</h4>
+		<div class="graph">
+			<div id="progress"></div>
+		</div>
+		<div id="apk" class="filena"></div>
+		<div id="existAppAlert">
+			<p>您刚上传的应用已经在金立游戏大厅中存在了，如果您是企业开发者，需要认领该应用，请将相关信息发送到dev.game@gionee.com。</p>
+			<p>具体内容如下：</p>
+			<p class="intent">1. 您的帐号注册邮箱（如：dev@gionee.com）</p>
+			<p class="intent">2. 企业名称</p>
+			<p class="intent">3. 营业执照副本</p>
+			<p class="intent">4. 认领应用名称和包名列表（例如，应用名称：游戏大厅包名：com.youxidating.channel）</p>
+			<p class="intent">5. 企业联系人姓名、电话</p>
+			<p class="intent">6. 您刚才想要上传的应用程序安装文件</p>
+		</div>
+	</div>
+</div>
+<div class="fancybox-overlay" id="uploadMask"></div>
+<script src="{:cdn('PUBLIC')}/app/jqueryUpload/js/vendor/jquery.ui.widget.js?{:C('JS_VERSION')}"></script>
+<script src="{:cdn('PUBLIC')}/app/jqueryUpload/js/jquery.fileupload.js?{:C('JS_VERSION')}"></script>
+<script src="{:cdn('PUBLIC')}/app/jqueryUpload/js/jquery.fileupload-process.js?{:C('JS_VERSION')}"></script>
+<script src="{:cdn('PUBLIC')}/app/jqueryUpload/js/jquery.fileupload-validate.js?{:C('JS_VERSION')}"></script>
+<!--[if (gte IE 8)&(lt IE 10)]>
+<script src="{:cdn('PUBLIC')}/common/js/jquery.xdr-transport.js?{:C('JS_VERSION')}"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+    <script src="http://libs.useso.com/js/html5shiv/3.7/html5shiv.min.js"></script>
+    <script src="http://libs.useso.com/js/respond.js/1.3.0/respond.min.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/app/webuploader/css/webuploader.css?{:C('JS_VERSION')}" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/webuploader/js/webuploader.js?{:C('JS_VERSION')}"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/common/js/webuploader/apk.js?{:C('JS_VERSION')}"></script>
+
+<script type="text/javascript">
+jQuery(function(){
+	var _action = '__ACTION__';
+	$("#alert").click(function(){
+		window.location.reload();
+	});
+});
+</script>
+
+<script type="text/javascript" src="{:cdn('PUBLIC')}/common/js/upload/fileShard.js"></script>
+<script type="text/javascript">
+$(function(){
+	
+	
+	
+    $('#uploadapkfile').change(function(){
+    	var url = "/apps/apkUploadH5";
+        var type = $("#type").val() || 0;
+        var appId = $("#app_id").val() || 0;
+        var apkId = $("#apk_id").val() || 0;
+        url += "/type/"+type;
+        if(type=="1" || appId!="") 
+            url += "/appId/"+appId;
+        if(type=="2" || apkId!="") 
+            url += "/apkId/"+apkId;
+        
+        var $err = $('<span class="text-danger"/>');
+    	$("#uploadMask").addClass("fancybox-display");
+        $('#jumbotron').show();
+    	//alert(this.files[0].size);
+       var fileDom = this.files[0];
+        $("#apk").html('');
+        $('<span id="file_name"/>').text(fileDom.name).appendTo($('<p/>').appendTo($('<div/>').appendTo('#apk')));
+        var fileShard = new FileShard({
+            file: fileDom,
+            shardSize: 10 * 1024 * 1024,
+            uploadShardApi: '/file_upload/uploadShard',
+            getUploadTokenApi: '/file_upload/getUploadToken',
+            success: function(data) {
+            	//alert(data.upload_token);
+            	//$('#jumbotron').hide();
+            	//$("#uploadMask").removeClass("fancybox-display");
+            	$('#progress').css(
+                   'width',
+                   100 + '%'
+                );
+                $err.text('上传结果处理中，请等待...').appendTo("#apk div p");
+            	$.get(url + '/uploadToken/' + data.upload_token, function(result) {
+            		var data = JSON.parse(result);
+            		if (data.status == 1) {
+            			window.location.href="/apps/info/id/"+data.data.apk_id+".html?fileuploaddone=1";
+            		} else {
+            			$err.text(data.data).appendTo("#apk div p");
+            		}
+            	});
+            },
+            loading: function(data) {
+            	//alert(data.percent);
+            	$('#progress').css(
+                    'width',
+                    data.percent + '%'
+                );
+            },
+            error: function(data) {
+                $err.text(data.msg).appendTo("#apk div p");
+                //$('#jumbotron').hide();
+                //$("#uploadMask").removeClass("fancybox-display");
+            }
+        });
+        fileShard.send();
+    });
+    $("#apkupload_h5").click(function() {
+    	$("#uploadapkfile").click();
+    });
+})
+</script>
+
+

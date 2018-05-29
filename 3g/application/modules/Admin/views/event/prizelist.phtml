@@ -1,0 +1,94 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $prizeListUrl; ?>">奖品列表</a></li>
+			<li ><a href="<?php echo $prizeEditUrl; ?>">添加奖品</a></li>
+		</ul>
+	</div>
+	
+	<div class="table_full">
+		<form action="<?php echo $prizeListUrl; ?>" method="POST" id="addForm">
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<table width="100%" cellspacing="0" cellpadding="0">
+				<tr class="tr">
+						<th class="th">活动名：</th>
+						<td class="td">
+							<select name="type_id" id="type_id">
+								<option value="0">请选择</option>
+								<?php foreach ($activites as $k => $v) { ?>
+									<option <?php echo ($v['id'] == $typeid) ? 'selected="selected"' : ''; ?> value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+								<?php } ?>
+							</select>
+						</td>
+					</tr>
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+			<input type="hidden" name="export" id="export" value="0">
+			<script type="text/javascript">
+				//为已选取的活动名 js-type-id 进行跳转 @yicheng 2015-11-02
+				$(function(){
+					if(window.localStorage){
+						var keepval = window.localStorage.getItem("admin_event_prizelist_typeid");
+						if(keepval!==null){
+							var nowvalue = $("select#type_id").val();
+							if(nowvalue!==keepval){
+								$("select#type_id").val(keepval);
+								window.localStorage.setItem("admin_event_prizelist_typeid",$("select#type_id").val());
+								$("select#type_id").parents("form#addForm").submit();
+							}
+							$("select#type_id").val(keepval);
+						}
+						$("select#type_id").change(function(){
+							if(window.localStorage){
+								window.localStorage.setItem("admin_event_prizelist_typeid",$(this).val());
+							}
+						});
+					}
+				})
+			</script>
+		</form>
+	</div>
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+				<th class="th">活动名</th>
+				<th class="th">奖品名称</th>
+				<th class="th">奖品属性</th>
+				<th class="th">数量</th>
+                <th class="th">显示数量</th>
+				<th class="th">奖品等级</th>
+				<th class="th">奖品ID/金币数</th>
+				<th class="th">中奖概率</th>
+				<th class="th">开始时间</th>
+				<th class="th">结束时间</th>
+				<th class="th">排序</th>
+				<th class="th">状态</th>
+				<th class="th">操作</th>
+			</tr>
+			<?php foreach ($dataList as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['id'];?></td>
+					<td class="td"><?php echo $v['type_name'];?></td>
+					<td class="td" align="left"><?=$v['name'];?></td>
+					<td class='td'><?php echo $prizeTypes[$v['prize_type']];?></td>
+					<td class="td"><?php echo $v['number'] ?></td>
+                    <td class="td"><?php echo $v['show_number'] ?></td>
+					<td class="td"><?php echo $prizeLevels[$v['prize_level']]; ?></td>
+					<td class="td"><?php echo $v['prize_val'] ?></td>
+					<td class="td"><?php echo $v['ratio']; ?></td>
+					<td class="td"><?php  echo $v['start_time']?date("Y-m-d H:i:s",$v['start_time']):'----';?></td>
+					<td class="td"><?php  echo $v['end_time']?date("Y-m-d H:i:s",$v['end_time']):'----';?></td>
+					<td class="td"><?php echo $v['sort']; ?></td>
+					<td class="td" style='color:blue'><?php echo $v['status'] ? '开启' : '关闭'; ?></td>
+					<td class="td"><a href="<?php echo $prizeEditUrl; ?>/?id=<?php echo $v['id']; ?>">编辑</a>&nbsp;
+						<a href="javascript:void(0);" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $v['id']; ?>', '', event);">删除</a>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+<?php echo $this->render("layout/footer.phtml"); ?>

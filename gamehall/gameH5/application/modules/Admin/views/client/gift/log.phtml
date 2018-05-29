@@ -1,0 +1,110 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $gameListUrl;?>">游戏列表</a></li>
+        <li><a href="<?php echo $hotUrl;?>">热门礼包</a></li>
+		<li class="current"><a href="">兑奖码管理</a></li>
+	</ul>
+</div>
+<form action="<?php echo $giftlogUrl;?>/?id=<?php echo $s['id'];?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="id" type="hidden" value="<?php echo $s['id'];?>" />
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr">
+		   <th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			    <option  value="0">全部</option>
+				<option <?php if($s['status'] == 2) echo 'selected';?> value="2">已领取</option>
+				<option <?php if($s['status'] == 1) echo 'selected';?> value="1">未领取</option>
+			</select>
+			</td>
+			<th class="th">发放开始结束时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo $s['start_time'];?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo $s['end_time'];?>" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">账号</th>
+			<td class="td"><input class="input" type="text" maxlength="30" style="width:143px;" name="uname" value="<?php echo $s['uname'];?>" /> </td>
+			<th class="th">昵称</th>
+			<td class="td"><input class="input" type="text" maxlength="30" style="width:143px;" name="nickname" value="<?php echo $s['nickname'];?>" /> </td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_full">
+<dl style="display:-webkit-box">
+	<dt style="width:64px;height:64px; " >
+	<img style="height: 100%;width:auto;" src="<?php echo $game_info['img'];?>" alt="" >
+	</dt>
+	<dd style="padding-left: 64px">
+		<p><span class="name">礼包名称:<?php echo $info['name'];?></span></p>
+		<p><span class="id">游戏名称:<?php echo $game_info['name'];?></span></p>
+		<p><span class="type">兑奖码数量（剩余/总）:<?php echo $remain_gifts."/".($remain_gifts + $not_gifts);?></span></p>
+	</dd>
+	<dd style="padding-left: 64px">
+		<p><span class="name">礼包ID:<?php echo $info['id'];?></span></p>
+		<p><span class="id">游戏ID:<?php echo $game_info['id'];?></span></p>
+		<p><span class="type">生效时间:<?php echo date('Y-m-d H:i:s', $info['effect_start_time']);?> 
+		至 <?php echo date('Y-m-d H:i:s', $info['effect_end_time']);?></span></p>
+	</dd>
+</dl>
+</div>
+<div class="h_a">
+    <a href="<?php echo $listByGameUrl.'?game_id='.$game_info['id'];?>">
+    <input type="button" value="礼包管理"/>
+    </a>
+</div>
+<div class="h_a">
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;共<?php echo $total;?>条结果</span>
+    <span style=" position:absolute;right:30px;"><a href="<?php echo $addlogUrl.'?gift_id='.$info['id']."&game_id=".$game_info['id'];?>">添加兑奖码</a></span>
+</div>
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="65">ID</td>
+			<td width="65">发放顺序</td>
+			<td width="100">兑奖码</td>
+			<td width="200">账号</td>
+			<td width="200">IMEI</td>
+			<td width="130">发放时间</td>
+			<td width="65">状态</td>
+			<td width="65">操作</td>
+		</tr>
+<?php foreach($logs as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['send_order'];?></td>
+			<td><?php echo $value['activation_code'];?></td>
+			<td><?php echo $value['uname'];?></td>
+			<td><?php echo $value['imei'];?></td>
+			<td><?php echo !$value['create_time'] ? " " : date('Y-m-d H:i:s', $value['create_time']);?></td>
+			<td><?php echo $value['status'] ? '已领取' : '未领取';?></td>
+			<td>
+			 <?php if(!$value['status']){?>
+			  <a href="<?php echo $editLogUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			  <a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>&gift_id=<?php echo $info['id'];?>', '', event);">删除</a>
+			  <?php }?>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Client_Gift/log?id=<?php echo $s['id'];?>&start_time=<?php echo $s['start_time'];?>&end_time=<?php echo $s['end_time'];?>');
+	});
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

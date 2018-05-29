@@ -1,0 +1,68 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">数据列表</a></li>
+		<li class="current"><a href="<?php echo $editUrl; ?>">添加数据</a></li>
+	</ul>
+</div>
+
+<?php
+$id = !empty($info['id']) ? intval($info['id']) : 0;
+?>
+<div class="h_a"><?php echo $id ? '编辑数据' : '添加数据'; ?></div>
+<form method="post" action="<?php echo $editPostUrl; ?>" id="editForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="id" value="<?php echo $id; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">标题</th>
+				<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title']; ?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">内容</th>
+				<td class="td">
+					<textarea id="content" style="width: 600px; height: 800px" class="textarea" name="content"><?php echo $info['content']; ?></textarea>
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">发布时间</th>
+				<td class="td"><input type="text" class="input" id="create_time" name="create_time" value="<?php echo !empty($info['create_time']) ? date('Y-m-d H:i:s', $info['create_time']) : date('Y-m-d H:i:s'); ?>">
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		ajaxForm('editForm',function(ret){
+			ajaxRedirect(ret, baseurl + '<?php echo $editUrl.'?id='.$id;?>');
+		},function(){
+			editor.sync();
+		})
+
+		var editor;
+		KindEditor.ready(function(K) {
+			K.token = $('#token').val();
+			editor = K.create('textarea[name="content"]', {
+				resizeType : 1,
+				allowPreviewEmoticons : false,
+				allowImageUpload : false,
+				items : EDITOR_ITEMS
+			});
+		});
+
+
+		$('#create_time').datetimepicker();
+	})
+
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

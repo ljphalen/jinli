@@ -1,0 +1,35 @@
+<?php echo $this->render("layout/header.phtml");?>
+<section id="page">
+	<header id="header"><!-- HEADER --></header>
+	<!-- 主体内容 -->
+	<section id="content">
+		<section class="psearch">
+			<section class="mod-search">
+				<div class="long">
+					<form action="<?php echo $webroot.'/search/search';?>" method="get" name="form-search" id="J_form_search">
+						<input type="text" name="keyword" autocomplete="off" placeholder="请输入商品或品类名" class="inp" />
+						<input type="submit" name="search-btn" value="" />
+					</form>
+				</div>
+			</section>
+           <?php if(count($default_words)){?>
+			<nav class="mod-search-tags">
+			<?php
+			$i = 0; 
+			foreach($default_words as $key=>$value) {
+			if($i > 0 && $i < 10)
+			?>
+				<a href="<?php echo $webroot,'/search/search?keyword=',$value;?>"><?php echo $value;?></a>
+			<?php
+			$i++; 
+			}
+			?>
+			</nav>
+			<?php }?>
+		</section>
+	</section>
+	<!--  /主体内容 -->
+	<footer id="footer"><!-- FOOTER --></footer>
+</section>
+</body>
+</html>

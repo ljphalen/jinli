@@ -1,0 +1,53 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div id="detail-page">
+	<section class="wrap">
+		<div class="detail-field">
+			<dl>
+				<dt class="icon"><img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $info['img'];?>"></dt>
+				<dd class="desc">
+				   <p class="name"><?php echo $info['name'];?></p>
+					<p class="info">
+						<?php $tmp=$from == 'baidu' ? $info['category'] : $info['category_title']; if($tmp){?>
+							<span><?php echo $from == 'baidu' ? $info['category'] : $info['category_title'];?></span><em>|</em>
+						<?php }?>
+						<span><?php echo $info['language'];?></span><em>|</em><span><?php echo $info['size'];?>M</span></p>
+					<p class="origin"><?php echo $info['developer'];?></p>
+				</dd>
+			</dl>
+		</div>
+		<?php if(strnatcmp($apk_version,'1.4.6') >= 0 && !stristr($intersrc,'gltj') && $games){?>
+		<div class="suggest_field">
+			<h1>相关推荐</h1>
+			<ul class="list">
+				<?php $i=0; foreach($games as $key=>$value){
+					if($i < 4){
+			    $href = $webroot.'/channel/index/detail/?id='.$value['id'].'&intersrc=gltj'.$value['id'].'&t_bi='.$source;
+				?>
+				<li>
+				  <a data-infpage="<?php echo $value['name'].','.$href.','.$value['id'].','.$value['link'].','.$value['package'].','.$value['size'].','.'Android'.$value['min_sys_version_title'].','.$value['min_resolution_title'].'-'.$value['max_resolution_title'];?>">
+				   <img src="<?php echo $staticResPath;?>/pic/blank.gif" data-src="<?php echo $value['img'];?>" alt="">
+				  </a>
+				</li>
+				<?php } $i++;}?>
+			</ul>
+		</div>
+		<?php }?>
+		<div class="detail-scrollPic" id="J_screenshot">
+			<div class="pic-container">
+				<div class="pic-wrap">
+					<?php foreach($info['simgs'] as $key=>$value){?>
+					<span><img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $value;?>" data-bigpic="<?php echo $info['gimgs'][$key];?>"></span>
+					<?php }?>
+				</div>
+			</div>
+		</div>
+		<div class="detail-text ui-editor">
+			<div class="text-container">
+				<p><?php echo html_entity_decode($info['descrip']);?></p>
+			</div>
+		</div>
+	</section>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

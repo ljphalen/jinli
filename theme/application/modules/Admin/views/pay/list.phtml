@@ -1,0 +1,104 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.js"></script>
+<script type="text/javascript" src="<?php echo $staticPath ?>appjs/payment/paylist.js"></script>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <div id="pay_paylist_list">
+        <div class="content">
+        	<!--支付详情开始-->
+        	<div class="pay_detail">
+        		<?php echo $this->render("pay/filter.phtml"); ?>
+				<div class="com_tb_wrap none">
+					<div class="com_tb">
+						<label class="tb_cell" style="vertical-align:middle">排序</label>
+						<div class="tb_cont tb_cell">
+							<ul class="rank">
+								<li class="first-child hover">默认</li>
+								<li class="on arrow_up"><a>价格</a>
+									<ul class="none">
+										<li>价格从高到低</li>
+										<li>价格从低到到</li>
+									</ul>
+								</li>
+								<li class="on arrow_up"><a>下载量</a></li>
+								<li class="on arrow_up"><a>购买量</a></li>
+								<li class="on arrow_up last-child"><a>营业额</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- com_tb_wrap end -->
+				<div class="pay_veiw_list">
+					<table class="view_list_tb toggle_icon">
+						<thead>
+							<tr>
+								<th>主题</th>
+								<th >名称</th>
+								<th class="on <?php if($_GET['sort'] == 'price' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="price">价格</th>
+								<th class="on <?php if($_GET['sort'] == 'down' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="down">下载次数</th>
+								<th class="on <?php if($_GET['sort'] == 'purchase_times' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="purchase_times">购买次数</th>
+								<th class="on <?php if($_GET['sort'] == 'total' && $_GET['sort_type'] == 'desc') echo 'th_icon'; ?>" val="total">购买营业额</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php foreach($themes as $theme){?>
+							<?php if($theme['item_num']==1) { ?>
+							<tr>
+								<td><img src="<?php echo $imageurl.$theme['cover'] ?>"></td>
+								<td><?php echo $theme[ 'product_name']; ?></td>
+								<td><?php echo $theme[ 'price']; ?></td>
+								<td><?php echo $theme[ 'all_download_times'] ? $theme[ 'all_download_times'] : '-'; ?></td>
+								<td><?php echo $theme[ 'all_purchase_times']; ?></td>
+								<td><?php echo $theme[ 'all_total']; ?></td>
+								<td><a class="btn_txt" href="/Admin/pay/detail?themeId=<?php echo $theme['product_id'];?>">详情</a></td>
+							</tr>
+							<?php } else { ?>
+							<tr>
+								<td><img src="<?php echo $imageurl.$theme['cover'] ?>"></td>
+								<td class="more_td"><?php echo $theme[ 'product_name']; ?></td>
+								<td >
+									<div class="more multiterm on more">多项</div>
+									<?php foreach($theme['items'] as $items){?>
+									<div class="more_cont none"><?php echo $items['price']; ?></div>
+									<?php } ?>
+								</td>
+								<td >
+									<div class="more"><?php echo $theme[ 'all_download_times'] ? $theme[ 'all_download_times'] : '-'; ?></div>
+									<?php foreach($theme['items'] as $items){?>
+									<div class="more_cont none"><?php echo $items['download_times']; ?></div>
+									<?php } ?>
+								</td>
+								<td >
+									<div class="more"><?php echo $theme[ 'all_purchase_times']; ?></div>
+									<?php foreach($theme['items'] as $items){?>
+									<div class="more_cont none"><?php echo $items['purchase_times']; ?></div>
+									<?php } ?>
+								</td>
+								<td >
+									<div class="more"><?php echo $theme[ 'all_total']; ?></div>
+									<?php foreach($theme['items'] as $items){?>
+									<div class="more_cont none"><?php echo $items['total']; ?></div>
+									<?php } ?>
+								</td>
+								<td class="more_td"><a class="btn_txt" href="/Admin/pay/detail?themeId=<?php echo $theme['product_id'];?>">详情</a>
+								</td>
+							</tr>	
+							<?php } ?>
+						<?php } ?>
+						</tbody>
+					</table>
+					<div class="clear-fix"></div>
+					<?php echo $this->render("common/pageshow.phtml"); ?>
+				</div>
+			</div>
+			<!--支付详情结束-->
+		</div>
+		<!-- content end -->
+	</div>
+</section>
+
+</body>
+
+</html>

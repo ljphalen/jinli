@@ -1,0 +1,92 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">大家玩推荐列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加大家玩推荐</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	    <tr class="tr">
+	        <th class="th">游戏库分类</th>
+			<td class="td">
+				<select name="category_id">
+					<option selected="" value="0">所有分类</option>
+					<?php foreach($categorys as $key=>$value) {?>
+					<?php if(!$value['editable']){?>
+    			    <option value="<?php echo $value['id'];?>" <?php if ($search['category_id'] == $value['id']) echo 'selected="selected"';?>><?php echo $value['title'];?></option>
+    			    <?php }}?>
+			    </select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">关键字</th>
+			<td class="td"><input type="text" class="input" name="name" value="<?php echo empty($search['name'])?'':$search['name'];?>"></td>
+		</tr>	
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+    <span class="btn2"><span><button onclick="$('#action').val('delete');" type="submit">删除</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('sort');" type="submit">重新排序</button></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="60">排序</td>
+			<td>标题</td>
+			<td>分类</td>
+			<td>游戏ID</td>
+			<td>图标</td>
+			<td>大小</td>
+			<td>版本号</td>
+			<td width="120">开始时间</td>
+			<td width="120">结束时间</td>
+			<td width="60">广告状态</td>
+			<td width="100">操作</td>
+		</tr>
+<?php foreach($games as $key => $value) {?>
+        <?php if($value['status']){?>
+		<tr class="ct">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $ad_games[$value['id']]['id'],'|',$value['id'];?>" type="checkbox"></td>
+			<td><input type="text" class="input" style="width:30px" name="sort[<?php echo $value['id'];?>]" value="<?php echo $ad_games[$value['id']]['sort'];?>"></td>
+			<td><?php echo $value['name'];?></td>
+			<td><?php echo implode($category_title[$value['id']], ',');?></td>
+			<td><?php echo $value['id'];?></td>
+			<td><img src="<?php echo $value['img'];?>" style="width:70px;height:70px;"/></td>
+			<td><?php echo $oline_versions[$value['id']]['size'];?>M</td>
+        	<td><?php echo $oline_versions[$value['id']]['version'];?></td>
+		        <td><?php echo date('Y-m-d H:i:s', $ad_games[$value['id']]['start_time']);?></td>
+		        <td><?php echo $ad_games[$value['id']]['end_time'] ? date('Y-m-d H:i:s', $ad_games[$value['id']]['end_time']):'';?></td>
+			<td><?php echo $ad_games[$value['id']]['status'] == 1 ? '开启' : '关闭';?></td>
+			<td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $ad_games[$value['id']]['id'];?>" class="mr10">编辑</a>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $ad_games[$value['id']]['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php }} ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Web_Playgame/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

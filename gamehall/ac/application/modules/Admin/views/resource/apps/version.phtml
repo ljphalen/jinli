@@ -1,0 +1,65 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">应用列表</a></li>
+		<li class="current"><a>版本管理</a></li>
+	</ul>
+</div>
+<div class="h_a">
+    <a href="<?php echo $versionUrl.'?id='.$data['id'];?>">
+    <input type="button" value="应用版本列表"/>
+    </a>
+    <div style=" position:absolute;right:20px;top:68px"><a href="<?php echo $addVersionUrl.'?id='.$data['id'];?>">
+    <input type="button" value=" 添加应用版本" />
+    </a></div>
+</div>
+<div class="table_full">
+<dl style="display:-webkit-box">
+	<dt style="width:64px;height:64px; " >
+	<img style="height: 100%;width:auto;" src="<?php echo $attachPath.$data['icon'];?>" alt="" >
+	</dt>
+	<dd style="padding-left: 64px">
+		<p><span class="name">应用名称:<?php echo $data['name'];?></span></p>
+		<br/>
+		<p><span class="name">应用归属:<?php echo $belong[$data['belong']];?></span></p>
+		<br/>
+		<p><span class="id">应用ID:<?php echo $data['id'];?></span></p>
+	</dd>
+</dl>
+</div>
+<div class="h_a">
+	<span style="color: red">重要提示：执行替换操作后需要点击【同步验证】操作，让apk包在CDN中更新为最新替换的包。</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="40">版本ID</td>
+			<td width="100">版本号</td>
+			<td>包名</td>
+			<td>VersionCode</td>
+			<td>大小</td>
+			<td>下载地址</td>
+			<td>操作时间</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($versions as $key => $value) {?>
+		<tr class="ct">
+		    <td><?php echo $value['id'];?></td>
+			<td><?php echo $value['version'];?></td>
+			<td><?php echo $value['package'];?></td>
+			<td><?php echo $value['version_code']; ?></td>
+			<td><?php echo $value['size']; ?>M</td>
+			<td><?php echo $downloadPath . $value['link']; ?></td>
+			<td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+			<td><?php echo $value['status'] ? '已上线' : '未上线';?></td>
+			<td>
+			<a href="<?php echo $editVersionUrl;?>/?id=<?php echo $value['id'];?>&app_id=<?php echo $data['id'];?>" class="mr10">编辑</a>
+			<a href="<?php echo $replaceVersionUrl;?>/?id=<?php echo $value['id'];?>&app_id=<?php echo $data['id'];?>" class="mr10">替换</a>
+			<a href="<?php echo $downloadPath . $value['link']. '?v=' . time(); ?>" class="mr10" title="有替换APK动作，必须执行该操作。">同步验证</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,232 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+
+<?php if($goodsInfo['event_flag']){ ?>
+<title>领奖中心</title>
+<?php }else{?>
+<title>兑换中心</title>
+<?php }?>
+<link rel="stylesheet" type="text/css" href="<?php echo $staticResPath?>/call/css/style.min.css?ver=<?php echo $version;?>" />
+<style type="text/css">
+    .detail-countdown{
+        font-size:12px; background: #fff; padding: 10px 20px 0;
+    }
+</style>
+<script type="text/javascript">
+    var remainTime = <?php echo $remainedSconds; ?>;
+    
+    function countdown(time){
+        var args = arguments,
+       //h = parseInt(time/3600),
+        //m = parseInt((time%3600)/60),
+       m=parseInt(time/60);
+        s = parseInt(time%60);
+
+       // h = h < 10 ? '0' + h : h;
+        m = m < 10 ? '0' + m : m;
+        s = s < 10 ? '0' + s : s;
+
+        if(time > 0){
+            setTimeout(function(){
+                args.callee(time-1);
+            },1000);
+        }
+
+        if(time === 0){
+            document.getElementById('J_detail_popup').style.display = '';
+            document.getElementById('countdown').style.display = 'none';
+        }
+
+        document.getElementById('countdown').innerHTML = '奖品将于<span style="color:red;">' + ( m + "分" + s + '秒' ) + '</span>'+'之后自动失效，请在此之前领取，谢谢！';
+    }
+
+    window.onload = function(){
+        if(remainTime > -1){
+            countdown(remainTime);
+        }
+    };
+</script>
+</head>
+
+<body id="award-detail-page" class="ui-app">
+
+<div class="ui-top-bar">
+	<a class="ui-pos icon-back" href="<?php echo $webroot;?>/user/goods/list"></a>
+	<?php if($goodsInfo['event_flag']) {?>
+	<span class="ui-top-txt">领奖中心</span>
+	<?php }else{?>
+	<span class="ui-top-txt">兑换中心</span>
+	<?php }?>
+	<!-- <a class="ui-pos icon-menu" href="#"></a> -->
+</div>
+
+<div class="ui-page ui-award-addr js-active">
+	<div class="ui-page-content">
+        <!-- 倒计时 -->
+        <div id="countdown" class="detail-countdown"></div>
+        <!-- /倒计时 -->
+        <?php if(empty($goodsInfo['event_flag'] )){?>
+		<div class="ui-box">
+			<div class="ui-award-info">
+				<a class="s s2" href="<?php echo $webroot;?>/user/center/score">
+				
+					<span class="span-jifen">当前金币 <b><?php echo $userScores['remained_score'];?></b><em class="icon-gold"></em></span>
+				</a>
+			</div>
+		</div>
+	
+		<div class="ui-box">
+			<div class="ui-caption">兑换</div>
+		</div>
+	<?php }?>
+		<!-- 消息列表 START-->
+		
+		<?php if($goodsInfo['goods_type'] == 1){?>
+		<div class="ui-box">
+			<div class="ui-box-award">
+				<div class="ui-award-detail">
+					<div class="pic"><img src="<?php echo $attachPath.$goodsInfo['image'];?>" width="104" height="62" /></div>
+					<div class="txt"><?php echo $goodsInfo['name'];?></div>
+                    <div id="js-error-tips" class="ui-error-tips ui-error-tip1"></div>
+				</div>
+				<?php if(in_array($exType,array(1,3))){?>
+				<div class="ui-award-filed">
+					<div class=""><label>手机号</label>
+					<input type="text" id="award-tel"  data-id="<?php echo $goodsInfo['id'];?>" data-url="<?php echo $webroot;?>/api/recharge/info" placeholder="请输入有效的手机号码" maxLength="11"  value="<?php echo $userInfo['username'];?>"/>
+					</div>
+					<div id="js-error-tips" class="ui-error-tips ui-error-tip2"></div>
+				</div> 
+			<?php }elseif($exType == 4){?>
+				<div class="ui-award-filed">
+					<div class=""><label>QQ号</label>
+					<input type="text" id="award-qq"  data-id="<?php echo $goodsInfo['id'];?>" data-url="<?php echo $webroot;?>/api/recharge/qqCoinPrice" placeholder="请输入您的QQ号" maxLength="13"  value=""/>
+					</div>
+					<div id="js-error-tips" class="ui-error-tips ui-error-tip3"></div>
+				</div> 
+			<?php }?>
+				<div class="ui-panel ui-border-b">
+				<?php 	
+						$geetest = new Vendor_Geetest();
+						$geetest->set_captchaid($captchaid);
+						if($geetest->register()){
+							echo  $geetest->get_widget('float');
+						}
+				?>
+                    <!-- <script async type="text/javascript" src="http://api.geetest.com/get.php?gt=99f0c43f67f47794a9d538f941856a5b&width=300"></script> -->
+				</div>  
+			</div>
+		</div>
+		<?php }else{?>
+		<form action="<?php  echo $webroot;?>/user/goods/submit?goods_id=<?php echo $goodsInfo['id'];?>&prize_id=<?php echo $prize_id;?>" method="POST">
+			<input type="hidden" value="<?php echo $token;?>" name="token">
+		        <div class="ui-box">
+            <div class="ui-box-award">
+                <div class="ui-award-detail ui-award-success">
+                    <div class="pic" style="text-align:center;"><img src="<?php echo $attachPath.$goodsInfo['image'];?>" style="height:auto;max-height:62px;width:auto;max-width:200px;" /></div>
+                    <div class="txt"><?php echo $goodsInfo['name'];?></div>
+                </div>
+            </div>
+
+            <div class="ui-form-box">
+                <div class="ui-form-filed">
+                    <div class="ui-form-inbox">
+                        <label>收件人</label>
+                        <input id="addr_name" class="inptxt" type="text" name="receiver_name" maxlength="20" placeholder="请输入真实姓名" value="">
+                    </div>
+                </div>
+                <div class="ui-form-filed">
+                    <div class="ui-form-inbox">
+                        <label>省份</label>
+                        <select name="province_id"  id="province_id" data-url="/user/center/ajaxGetAreaDataList">
+                            <option value="0">请选择</option>
+                            <?php foreach ($provinceList as $key=>$val){?>
+                          	  <option value="<?php echo $val['id'];?>"><?php echo $val['name'];?></option>
+            				<?php }?>
+                        </select>
+                    </div>
+                </div>
+                <div class="ui-form-filed">
+                    <div class="ui-form-inbox">
+                        <label>城市</label>
+                        <select name="city_id"  id="city_id">
+                            <option value="0">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="ui-form-filed">
+                    <div class="ui-form-inbox">
+                        <label>地址</label>
+                        <input id="addr_addr" class="inptxt" maxLength="60" type="text" name="address" placeholder="请输入详细地址" />
+                    </div>
+                </div>
+                <div class="ui-form-filed">
+                    <div class="ui-form-inbox">
+                        <label>联系电话</label>
+                        <input id="addr_tel" class="inptxt" maxLength="11" type="tel" name="mobile" placeholder="请输入联系电话" />
+                    </div>
+                </div>
+            </div>
+            
+            <div id="award-addr-tips" class="tips hide">请填写完整有效信息，才可提交</div>
+
+            <div class="ui-panel">
+                <a id="award-addr-btn" class="ui-button ui-block ui-normal"
+                	href="javascript:;" data-url="<?php  echo $webroot;?>/user/goods/submit?goods_id=<?php echo $goodsInfo['id'];?>&prize_id=<?php echo $prize_id;?>">立即领取</a>
+            </div>
+        </div>
+		</form>
+		<?php }?>
+		<!-- 消息列表 END-->
+	</div>
+</div>
+
+<div id="triggerDialog" class="none" data-toggle="dialog" data-target="#myActionsheet" data-type="actionsheet" data-effect="from-bottom" data-cache="false"></div>
+<div id="myActionsheet" role="dialog" class="ui-dialog" aria-labelledby="myActionsheetLable" aria-hidden="true">
+    <div class="js-dialog-content ui-actionsheet">
+        <ul>
+            <li id="ui-actionsheet-text">您确定为该手机号充值吗？</li>
+            <li role="button" id="js-actionsheet-ok">确定</li>
+        </ul>
+        <a role="button" data-dismiss="dialog" class="ui-actionsheet-cancel">取消</a>
+    </div>
+</div>
+
+<div id="J_detail_popup" class="pop-mask-normal"  style="display:none;">
+	<div class="popup-wrap"  style="width:280;height:240px">
+		<div class="popup-txt">
+			<img src="<?php  echo $attachPath.$goodsInfo['image']; ?>" width="120px" height="90px">
+		</div>
+		<div  class="popup-txt">
+                <p>已超过领取时间（<?php echo  $expiredTime; ?>分钟），奖品自动失效。</p>
+            </div>
+		<div class="btn-wrap">
+			<a id="J_btn_back" class="btn btn-green" href="/event/seckill/index">好吧</a>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+    var __config__ = {
+        "token": "<?php echo $token;?>",
+        "type": "<?php echo $exType;?>",
+        "awardUrl": "<?php echo $webroot;?>/user/goods/exchange?goods_id=<?=$goodsInfo['id']?>&prize_id=<?php echo $prize_id;?>"
+    };
+</script>
+<script type="text/javascript">
+    var token = "<?php echo $token;?>", version = "<?php echo $version;?>";
+</script>
+<script id="main" data-baseurl="<?php echo $staticResPath;?>/call/js" data-version="<?php echo $version;?>" src="<?php echo $staticResPath;?>/call/js/lib/require.js?v=<?php echo $version;?>"></script>
+<script>
+    require(['<?php echo $staticResPath;?>/call/js/common.js?v=<?php echo $version;?>'],function(){
+        require(['page/award_detail']);
+    });
+</script>
+</body>
+</html>

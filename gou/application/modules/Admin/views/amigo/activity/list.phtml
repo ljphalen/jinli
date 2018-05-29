@@ -1,0 +1,98 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $indexUrl;?>">热门活动</a></li>
+        <li class="current"><a href="<?php echo $listUrl;?>">长期活动</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加活动</a></li>
+	</ul>
+</div>
+
+<form action="<?php echo $listUrl;?>" method="get" id="searchForm" >
+	<input name="token" type="hidden" value="<?php echo $token;?>"/>
+	<div class="table_full">
+		<table width="100%">
+            <tr>
+                <th class="th">活动名称</th>
+                <td class="td">
+                    <input class="input wc" type="text" id="title" name="title"
+                           value="<?php echo $params['title']; ?>"/>
+                </td>
+                <th class="th">标签</th>
+                <td class="td">
+                    <select name="tag_id">
+                        <option value="">不限</option>
+                        <?php foreach ($tags as $tag) { ?>
+                            <option  value="<?php echo $tag['id']; ?>" <?php if ($params['tag_id'] == $tag['id']) echo 'selected="selected"'; ?> ><?php echo $tag['name']; ?></option>
+                        <?php } ?>
+                    </select>
+                </td>
+            </tr>
+
+        </table>
+        <div class="mb10 tac">
+		<span class="btn">
+			<span>
+				<button type="submit">搜 索</button>
+			</span>
+		</span>
+        </div>
+	</div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('sort');" type="submit">重新排序</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">关闭</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">开启</button></span></span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		<td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="30">排序</td>
+			<td width="40">ID</td>
+			<td>名称</td>
+			<td>图片</td>
+			<td>标签</td>
+            <td>点击</td>
+            <td>状态</td>
+			<td>操作</td>
+		</tr>
+		<?php if(!empty($list)): foreach ($list as $val):?>
+		<tr class="ct">
+			<td><input class="checkbox" name="ids[]" value="<?php echo $val['id'];?>" type="checkbox"></td>
+			<td><input type="text" class="input" style="width:30px" name="sort[<?php echo $val['id'];?>]" value="<?php echo $val['sort'];?>"></td>
+			<td width="40"><?php echo $val['id'];?></td>
+			<td><?php echo $val['title'];?></td>
+			<td><img width="100" src="<?php if(strpos($val['img'], 'http://') === false) {echo $attachPath . $val['img'];}else{echo $val['img'],end(explode(".",  $val['img']));};?>"/></td>
+			<td><?php echo $tags[$val['tag_id']]['name'];?></td>
+            <td><a href="/admin/stat/click?type_id=33&item_id=<?php echo $val['id'];?>" target="_blank"><?php echo $val['hits'];?></a></td>
+            <td><?php echo $val['status'] == 1 ? '开启' : '关闭';?></td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $val['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $val['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+		<?php endforeach; endif;?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+
+<script type="text/javascript">
+//导购表单数据提交
+$(document).ready(function(){
+     submitForm = function() {
+  		$("#searchForm").submit();
+  	};
+
+  	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Amigo_Activity/list');
+	});
+})
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

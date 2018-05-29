@@ -1,0 +1,101 @@
+###pre install
+yum install libmcrypt libmcrypt-devel mcrypt mhash mhash-devel libtool-ltdl libtool-ltdl-devel libxml2-devel curl-devel 
+yum install libjpeg.x86_64 libpng.x86_64 freetype.x86_64 libjpeg-devel.x86_64 libpng-devel.x86_64 freetype-devel.x86_64 -y
+#monitor
+scp /root/so/software/soft.tar.gz root@10.162.88.159:/root/so/software/
+#初始化服务器上
+###install php
+cd /root/so/software/
+tar zxvf soft.tar.gz
+cd /root/so/software/soft/
+tar -zvxf /root/so/software/soft/php-5.4.13.tar.gz
+cd php-5.4.13
+./configure --prefix=/usr/local/php.5.4.13 --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-zlib --with-gd --with-freetype-dir=/usr/local/freetype --with-jpeg-dir=/usr/local/jpeg --with-png-dir=/usr/local/libpng --enable-iconv --enable-fpm  --enable-cgi --enable-static --enable-maintainer-zts --enable-zend-multibyte --enable-inline-optimization --enable-sockets --enable-wddx --enable-zip --enable-calendar --enable-bcmath --enable-ftp --enable-soap --enable-mbstring --without-sqlite --disable-ipv6 --disable-debug --with-curl=/usr/local/curl --with-mcrypt=/usr/local/libmcrypt --with-openssl
+make && make install
+
+#copy configure fles to install dir
+cp /root/so/software/soft/php.ini /usr/local/php.5.4.13/lib/
+cp /root/so/software/soft/php-fpm.conf /usr/local/php.5.4.13/etc/
+
+###cp star script to init dir
+cp /root/so/software/soft/php-5.4.13/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
+chmod +x /etc/init.d/php-fpm
+
+###install php extension
+cd /root/so/software/soft/
+tar -zvxf /root/so/software/soft/eaccelerator-eaccelerator-42067ac.tar.gz
+cd /root/so/software/soft/eaccelerator-eaccelerator-42067ac/
+/usr/local/php.5.4.13/bin/phpize
+./configure --with-php-config=/usr/local/php.5.4.13/bin/php-config
+make && make install
+
+cd /root/so/software/soft/
+tar -zvxf /root/so/software/soft/php-yaf.tar.gz
+cd /root/so/software/soft/php-yaf/
+/usr/local/php.5.4.13/bin/phpize
+./configure --with-php-config=/usr/local/php.5.4.13/bin/php-config
+make && make install
+
+cd /root/so/software/soft/
+tar -zvxf /root/so/software/soft/nicolasff-phpredis-a568029.tar.gz
+cd /root/so/software/soft/nicolasff-phpredis-a568029/
+/usr/local/php.5.4.13/bin/phpize
+./configure --with-php-config=/usr/local/php.5.4.13/bin/php-config
+make && make install
+
+###install opcache
+cd /root/so/software/soft/
+#wget http://pecl.php.net/get/zendopcache-7.0.3.tgz
+tar zxvf zendopcache-7.0.3.tgz
+cd zendopcache-7.0.3
+/usr/local/php.5.4.13/bin/phpize
+ ./configure --with-php-config=/usr/local/php.5.4.13/bin/php-config
+make && make install
+
+### set php autoStart
+echo "/usr/local/php.5.4.13/sbin/php-fpm" >> /etc/rc.local
+
+echo "PHP Installed Successful !" 
+#启动
+/usr/local/php.5.4.13/sbin/php-fpm
+
+#######install nginx###
+
+cd /root/so/software/soft
+tar zxvf pcre-7.9.tar.gz
+tar zxvf nginx-1.0.5.tar.gz
+tar zxvf nginx_concat_module.tar.gz
+
+cd pcre-7.9
+./configure
+make && make install
+######
+cd /root/so/software/soft/nginx-1.0.5
+
+./configure --user=nobody --group=nobody --prefix=/usr/local/nginx.1.0.5  --with-http_stub_status_module  --with-http_ssl_module  --add-module=../nginx_concat_module
+make && make install
+
+#monitor
+scp root@prod-gou-s-01:/usr/local/nginx.1.0.5/conf/nginx.conf ./
+scp root@prod-gou-s-01:/usr/local/nginx.1.0.5/conf/fcgi.conf ./
+scp nginx.conf root@prod-gou-s-03:/usr/local/nginx.1.0.5/conf/nginx.conf
+scp fcgi.conf root@prod-gou-s-03:/usr/local/nginx.1.0.5/conf/fcgi.conf
+
+#3g03
+mkdir -p /data/www/gou/
+mkdir -p /data/logs/nginx/
+
+###启动
+/usr/local/nginx.1.0.5/sbin/nginx
+### set nginx autoStart
+echo "/usr/local/nginx.1.0.15/sbin/nginx" >> /etc/rc.local
+#测试
+###添加index.php文件
+vi /data/www/gou/public/front/index.php
+<?php
+phpinfo();
+?>
+
+##重启nginx
+/usr/local/nginx.1.0.5/sbin/nginx -t
+/usr/local/nginx.1.0.5/sbin/nginx -s reload

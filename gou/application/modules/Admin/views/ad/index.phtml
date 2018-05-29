@@ -1,0 +1,121 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>?channel_id=<?php echo $search['channel_id'];?>">广告列表</a></li>
+		<li><a href="<?php echo $addUrl;?>?channel_id=<?php echo $search['channel_id'];?>&ad_type=<?php echo $ad_type;?>">添加广告</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>?channel_id=<?php echo $search['channel_id'];?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">分类</th>
+			<td class="td">
+			<select name="ad_type" >
+                <option value="">全部</option>
+            <?php foreach($ad_types as $key=>$value) {?>
+				<option <?php echo ($search['ad_type'] == $key) ? 'selected="selected"' :'';?> value="<?php echo $key;?>"><?php echo $value;?></option>
+            <?php }?>
+			</select>
+            </td>
+            <th class="th">开始日期</th>
+            <td class="td">
+                <input class="input" type="text" maxlength="30" id="start_time" name="start_time" value="<?php echo $search['start_time'];?>">
+            </td>
+             <th class="th">标题</th>
+            <td class="td">
+                <input class="input" type="text" name="title" value="<?php echo $search['title'];?>">
+            </td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('sort');" type="submit">重新排序</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">关闭</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">开启</button></span></span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="50">排序</td>
+			<td>标题</td>
+			<td width="100">分类</td>
+			<td width="100">图片</td>
+			<td width="120">开始时间</td>
+			<td width="120">结束时间</td>
+			<td width="50">状态</td>
+			<td width="50">渠道号</td>
+			<td width="40">点击量</td>
+			<td width="80">操作</td>
+			<td width="60"></td>
+		</tr>
+<?php foreach($ads as $key => $value) {
+list($module_id, $channel_id) = explode("_", $value['module_channel']);
+?>
+		<tr class="ct">
+		  <td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><input type="text" class="input" style="width:50px" name="sort[<?php echo $value['id'];?>]" value="<?php echo $value['sort'];?>"></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $ad_types[$value['ad_type']];?></td>
+			<td><img src="<?php echo $attachPath.$value['img'];?>" width="100" /></td>
+		        <td><?php echo date('Y-m-d H:i:s', $value['start_time']);?></td>
+		        <td><?php echo date('Y-m-d H:i:s', $value['end_time']);?></td>
+			<td><?php echo $value['status'] == 1 ? '开启' : '关闭';?></td>
+			<td><?php echo $value['channel_code'];?></td>
+			<td>
+            <a href="/admin/stat/thirdpart?version_id=<?php echo $search['channel_id'];?>&module_id=<?php echo $module_id;?>&channel_id=<?php echo $channel_id;?>&item_id=<?php echo $value['id'];?>" target="_blank"><?php echo $value['hits'];?></a>
+			</td>
+            <td>
+			<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+			<td>
+			<select class="copy_select">
+				<option value=''>copy到</option>
+				<option value="Admin_H5-Admin_Ad_H5|1|<?php echo $value['id'];?>">H5版</option>
+				<option value="Admin_Apk-Admin_Ad_apk|2|<?php echo $value['id'];?>">预装版</option>
+				<option value="Admin_Channel-Admin_Ad_channel|3|<?php echo $value['id'];?>">渠道版</option>
+				<option value="Admin_Market-Admin_Ad_market|4|<?php echo $value['id'];?>">穷购物</option>
+				<option value="Admin_App-Admin_Ad_app|5|<?php echo $value['id'];?>">APP版</option>
+				<option value="Admin_IOS-Admin_Ad_ios|6|<?php echo $value['id'];?>">IOS版</option>
+			</select>			
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#start_time").datepicker({
+            dateFormat : 'yy-mm-dd'
+        });
+    });
+$(document).ready(function(){
+	$('.copy_select').change(function(){
+		var url = '<?php echo $copyUrl;?>';
+		var option = $(this).children('option:selected').val();
+		if(option) {
+			var val= option.split('|');
+			parent.openWin(val[0], url+'/?id='+val[2]+'&channel_id='+val[1]);
+		}
+    });
+
+	ajaxForm('batchForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Ad/index?s=1&channel_id=<?php echo $search['channel_id'];?>');
+	});
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

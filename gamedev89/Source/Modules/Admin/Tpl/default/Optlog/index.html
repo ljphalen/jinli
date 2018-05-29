@@ -1,0 +1,70 @@
+<form id="pagerForm" action="__ACTION__" method="post">
+	<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+	<input type="hidden" name="numPerPage" value="{$_REQUEST.numPerPage}" />
+	<input type="hidden" name="orderField" value="{$_REQUEST.orderField}" />
+	<input type="hidden" name="orderDirection" value="{$_REQUEST.orderDirection}" />
+	<volist name="_search" key="name" id="field">
+		<input type="hidden" name="_search[{$key}]" value="{$field|safe}"/>
+	</volist>
+</form>
+
+<div class="page">
+	<div class="pageContent">
+	
+		<!-- 列表开始 -->
+		<table class="list" width="100%" layoutH="138">
+			<thead>
+			<tr>
+				<th>包名</th>
+				<th>开发者</th>
+				<th>应用名称</th>
+				<th>应用版本</th>
+				<th>应用状态</th>
+				<th>日期</th>
+				<th>操作人员</th>
+			</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="list">
+				<php>
+					$accounts = D("Dev://Accounts")->getAccountById($vo['account_id']);
+					$admin_info = D("Admin")->field('account')->find($vo['admin_id']);
+					$apkModel = D("Apks");
+				</php>
+			
+				<tr target="sid_user" rel="{$vo['id']}">
+					<td>{$vo['package']}</td>
+					<td>{$admin_info['account']}</td>
+					<td>{$vo['app_name']}</td>
+					<td>{$vo['version_name']}</td>
+					<td>{:$apkModel->getApkStatusByStatus($vo['status']);}</td>
+					<td>{$vo['created_at']|date="Y-m-d H:i:s",###}</td>
+					<td>{$admin_info['account']}</td>
+				</tr>
+				
+			</volist>
+			</tbody>
+		</table>
+		<!-- 列表结束 -->
+		
+		<!-- 分页开始 -->
+		<div class="panelBar">
+			<div class="pages">
+				<span>显示</span>
+				<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+					<option value="10" <eq name="numPerPage" value="10">selected</eq>>10</option>
+					<option value="20" <eq name="numPerPage" value="20">selected</eq>>20</option>
+					<option value="50" <eq name="numPerPage" value="50">selected</eq>>50</option>
+					<option value="100" <eq name="numPerPage" value="100">selected</eq>>100</option>
+					<option value="200" <eq name="numPerPage" value="200">selected</eq>>200</option>
+				</select>
+				<span>共{$totalCount}条</span>
+			</div>
+			<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="10" currentPage="{$currentPage}"></div>
+		</div>
+		<!-- 分页结束 -->
+		
+	</div>
+	
+</div>
+

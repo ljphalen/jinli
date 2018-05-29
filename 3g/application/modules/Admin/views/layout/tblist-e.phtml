@@ -1,0 +1,32 @@
+onLoadSuccess:function(){
+$(this).datagrid('clearSelections');//取消所有的已选择项
+$(this).datagrid('unselectAll');//取消全选按钮为全选状态
+},
+onRowContextMenu : function(e, rowIndex, rowData) {
+e.preventDefault();
+$(this).datagrid('unselectAll');
+$(this).datagrid('selectRow', rowIndex);
+$('#datagrid_menu').menu('show', {
+left : e.pageX,
+top : e.pageY
+});
+},
+onDblClickRow:function(rowIndex, rowData){
+edit(rowIndex, rowData);
+},
+
+});
+
+});
+
+
+function add(){
+addData("添加","#edit_form",datagrid,"<?php echo $actionUrl; ?>add",edit_W,edit_H);
+}
+function edit(rowIndex,rowData){
+editData(rowIndex,rowData,"编辑",'#edit_form',datagrid,"<?php echo $actionUrl; ?>edit",edit_W,edit_H,'uid');
+}
+function del(){
+delData(datagrid,"<?php echo $actionUrl; ?>delete",'uid');
+}
+</script>

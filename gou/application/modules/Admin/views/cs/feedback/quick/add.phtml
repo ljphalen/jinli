@@ -1,0 +1,50 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li><a href="<?php echo $indexUrl;?>">回复列表</a></li>
+        <li class="current"><a href="javascript:;">添加回复</a></li>
+    </ul>
+</div>
+<div class="h_a">添加回复</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+    <input name="token" value="<?php echo $token;?>" type="hidden" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+            <tr class="tr">
+                <th class="th">排序</th>
+                <td class="td"><input type="text" class="input wa" name="sort" value="0"></td>
+            </tr>
+            <tr>
+                <th class="th">状态</th>
+                <td class="td">
+                    <select name="status">
+                        <option value='1'>有效</option>
+                        <option value='0'>无效</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">问题</th>
+                <td class="td"><input type="text" class="input wc" name="name" value=""></td>
+            </tr>
+
+            <tr class="tr">
+                <th class="th">答案</th>
+                <td class="td">
+                    <textarea name="answer" cols="120" rows="16"></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+    //广告表单数据提交
+    $(document).ready(function(){
+        ajaxForm('addForm',function(ret){
+            ajaxRedirect(ret, '<?php echo Util_Http::getServer("HTTP_REFERER"); ?>');
+        });
+    })
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

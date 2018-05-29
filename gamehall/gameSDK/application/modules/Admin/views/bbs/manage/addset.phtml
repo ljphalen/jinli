@@ -1,0 +1,85 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $listUrl;?>">论坛管理</a></li>
+	    <li class="current"><a href="javascript:;">添加论坛</a></li>
+	</ul>
+</div>
+<div class="step mb10">
+		<ul class="cc">
+			<li >选择内容</li>
+			<li class="line"></li>
+			<li class="current">设置论坛</li>
+		</ul>
+</div>
+<div class="h_a">
+<p style="float:left"><img src="<?php echo $game_info['img']  ?>" style="width:7.2em;height:7.2em" ></p>
+<p style="float:left;">
+<p style="line-height:38px;" >ID:<?php echo $game_info['id']  ?></p>
+<p style="line-height:38px;">名称：<?php echo $game_info['name']  ?></p>
+</p>
+</div>
+<form method="post" action="<?php echo $addSetPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="game_id" value="<?php echo $game_id;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">地址</th>
+			<td class="td"><input type="text"  class="input wc" name="url"  maxlength="100"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td"><select name="status">
+                	<option value="1">开启</option>
+                	<option value="0">关闭</option>
+            </select></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">生效时间</th>
+			<td class="td"><div>
+			 <label><input type="radio" checked value="1" name="effect">立即生效 </label> <br />
+			 <input type="radio" value="0"  name="effect"><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="" /> </div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">失效时间</th>
+			<td class="td"><div>
+			 <label><input type="radio"  checked value="1" name="invalid">永不失效</label> <br />
+			 <input type="radio" value="0"  name="invalid"><input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="" /></div>
+			</td>
+		</tr>
+
+
+	
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">完成</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+     //提交表单
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Bbs_Manage/index');
+	});
+	 $("[name = effect]:radio").click(function () {
+         if ($(this).val() == 1) {
+        	 $('#start_time').attr('disabled',true);
+         }else{
+        	 $('#start_time').attr('disabled',false);
+         }
+     });
+	 $("[name = invalid]:radio").click(function () {
+         if ($(this).val() == 1) {
+        	 $('#end_time').attr('disabled',true);
+         }else{
+        	 $('#end_time').attr('disabled',false);
+         }
+     });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

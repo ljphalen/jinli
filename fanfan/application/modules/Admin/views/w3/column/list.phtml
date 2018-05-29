@@ -1,0 +1,125 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $listUrl; ?>">机型栏目列表</a></li>
+		<li><a href="<?php echo $editUrl."?spec_id={$curId}"; ?>">添加栏目</a></li>
+	</ul>
+</div>
+
+<form action="<?php echo $baseUrl; ?>" method="get">
+	<input name="token" type="hidden" value="<?php echo $token; ?>">
+	<input name="status" type="hidden" value="<?php echo $status; ?>">
+
+	<div class="table_full">
+		<table width="100%">
+			<tbody>
+			<tr class="tr">
+				<th class="th" style="width: 40px;">系列</th>
+				<td>
+					<select id="specType" name="specType" onchange="setSpec(this.value,'-')">
+						<option value="默认">默认</option>
+						<?php
+						foreach ($specTypes as $val) {
+							$selected = ($val['type'] == $curType) ? ' selected ' :'';
+							echo "<option value=\"{$val['type']}\" {$selected}>{$val['type']}</option>";
+						}
+						?>
+					</select>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th" style="width: 40px;">机型</th>
+				<td>
+					<select id="specId" name="specId" onchange="to_url(this.value)">
+						<option value="">请选择机型</option>
+					</select>（请先选择系列再选择机型）
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</form>
+
+<form method="post" action="<?php echo $sortPostUrl; ?>" id="filesortForm">
+	<input name="token" type="hidden" value="<?php echo $token; ?>"/>
+
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="40">选择</td>
+				<td width="50">排序</td>
+				<td width="40">ID</td>
+				<td width="100">栏目名称</td>
+				<td width="50">图标</td>
+				<td width="100">内容源</td>
+				<td width="100">分类</td>
+				<td width="50">状态</td>
+				<td width="30">是否推荐</td>
+				<td width="120">操作</td>
+			</tr>
+			<?php foreach ($columns as $key => $value) { ?>
+				<tr class="ct">
+					<td><input type="checkbox" name="ids[<?php echo $value['id']; ?>]"
+					           value="<?php echo $value['id']; ?>"></td>
+					<td><input type="text" name="sort[<?php echo $value['id']; ?>]" class="input"
+					           value="<?php echo $value['sort']; ?>" style="width:60px;"></td>
+					<td><?php echo $value['id']; ?></td>
+					<td><?php echo $value['title']; ?></td>
+					<td>
+						<?php if ($value['icon']) { ?>
+							<img src="<?php echo $attachPath . $value['icon']; ?>" width="40"/>
+						<?php } ?>
+					</td>
+					<td><?php echo $cpUrls[$value['url_id']]['title']; ?></td>
+					<td><?php echo isset($types[$value['type']]) ? $types[$value['type']] : $value['type']; ?></td>
+					<td><?php echo $value['status'] == 1 ? '开启' : '关闭'; ?></td>
+					<td><?php echo $value['is_recommend'] == 1 ? '是' : '否'; ?></td>
+					<td>
+						<a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+						<?php if ($value['id'] > 8):?>
+						<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+					<?php endif; ?>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mb10 tac"><span class="btn"><span><button type="submit">修改排序</button></span></span></div>
+</form>
+<script type="text/javascript">
+	$(document).ready(function () {
+		ajaxForm('filesortForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/W3_Column/list?spec_id=<?php echo $specId;?>');
+		});
+
+		if ($('#specType').val() != 0 && $('#specType').val() != '') {
+			setSpec($('#specType').val(), <?php echo $curId;?>);
+		}
+	})
+
+	var specType = <?php echo json_encode($specList); ?>;
+
+	function to_url(id) {
+		window.location.href= "<?php echo $baseUrl ?>?spec_id="+id;
+		return false;
+	}
+
+	function setSpec (key, sel) {
+		var options = '<option value="">请选择机型</option>';
+		$.each(specType, function (index, data) {
+			var s = '';
+			if (data.type == key) {
+				if (data.id == sel) {
+					s = ' selected ';
+				}
+				options += '<option value="' + data.id + '" ' + s + '>' + data.name + '</option>';
+				$('#specId').show();
+			}
+		});
+
+		$("select[name='specId']").html(options);
+	}
+
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

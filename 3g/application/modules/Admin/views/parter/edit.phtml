@@ -1,0 +1,42 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $listUrl; ?>">数据列表</a></li>
+			<li class="current"><a href="javascript:;"><?php echo $v['id'] ? '编辑' : '添加'; ?>信息</a></li>
+		</ul>
+	</div>
+	<div class="h_a"><?php echo $v['id'] ? '编辑' : '添加'; ?>信息</div>
+	<form method="post" action="<?php echo $addPostUrl; ?>" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+		<input name="id" value="<?=$v['id'];?>" type="hidden">
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">合作商名</th>
+					<td class="td"><input type="text" name="name" id="name" value="<?=$v['name'];?>"></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">帐号:</th>
+					<td class="td"><input type="text" name="account" value="<?php echo $v['account']; ?>"/></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">密码:</th>
+					<td class="td"><input type="text" name="pass" value="<?php echo $v['pass']; ?>"/></td>
+				</tr>
+
+			</table>
+			<span style="padding-left:260px;margin-top:20px;"><input type="submit" class="btn" value="提交"></span>
+		</div>
+
+	</form>
+
+	<script type="text/javascript">
+		//表单数据提交
+		$(document).ready(function () {
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Parter/list');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

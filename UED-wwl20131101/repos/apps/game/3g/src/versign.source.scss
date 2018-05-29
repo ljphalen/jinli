@@ -1,0 +1,257 @@
+/***********************************************
+ * reset
+ ***********************************************/
+@charset "utf-8";
+html{font-size:20px; -webkit-text-size-adjust:none;background: #ebebeb;}
+@media all and (min-width:359px) and (-webkit-min-device-pixel-ratio:1.5){html{font-size:22.5px;}}
+body{font:1rem/1 "\5FAE\8F6F\96C5\9ED1","\5b8b\4f53",SimSun,Tahoma,Helvetica,Arial,sans-serif;}
+
+html,body,div,span,h1,h2,h3,h4,h5,h6,p,dl,dt,dd,ol,ul,li,
+a,em,img,small,form,label,footer,header,nav
+{margin:0; padding:0; -webkit-tap-highlight-color:rgba(0,0,0,0);}
+
+fieldset,img{border:none;}
+img{width:100%; max-width:16rem; height:auto;}
+a{text-decoration:none;}
+a, a:active{color:#333;}
+
+ul,ol,dl,li,dt,dd{list-style:none;}
+h1,h2,h3,h4,h5,h6{font-size:1rem; font-weight:normal;}
+
+a:focus, input, textarea{outline:none; border:0;}
+input,button,textarea,select{font-family:inherit; font-size:inherit; font-weight:inherit; outline:none;}
+img,input,button,select{vertical-align:middle;}
+textarea{resize:none;}
+
+b{font-weight:normal;}
+i,em{font-style:normal;}
+
+
+.hidden{display:none!important;}
+.invisible{visibility:hidden!important;}
+
+
+.clearfix:after{content:"\0020"; display:block; height:0; clear:both;}
+.clear{clear:both;}
+
+@import "compass/css3";
+$radius-m:2px;
+//gradient
+@mixin lg($dir, $col1, $col2){
+	background-color:$col2; 
+	@include background-image(linear-gradient($dir, $col1, $col2));
+}
+@mixin btn($h,$fontsize,$color,/* ,$shadowColor,$from, */$to){
+	text-decoration: none;
+  text-align: center;
+  display: inline-block;
+  width:100%;
+  height: $h;
+  line-height: $h;
+  font-size: $fontsize;
+  color:$color;
+  @include border-radius($radius-m);
+  background-color:$to;
+  /* @include box-shadow(0 2px 2px $shadowColor);
+  
+  @include background-image(linear-gradient(top, $from, $to)); */
+  &:hover,&:active{
+		
+  }
+}
+
+//header of login and register
+.hd{
+	@include lg(top,#353535,#323232);
+	height: 2.7rem;
+	color:#fff;
+	font-size: .9rem;
+	line-height: 2.7rem;
+	padding-left:1rem;
+	letter-spacing: 2px; 
+}
+//main content of login and register
+.content,.content1,.content2{
+	padding:0 1rem;
+	// amigo icon in login page
+	.icon-amigo{
+		display: inline-block;
+		background: inline-image("../img/icon-amigo.png") no-repeat;
+		width:126px;
+		height: 30px;
+		background-size:100%;
+		margin:12px auto;
+	}
+	//submit btn
+	//$w,$h,$fontsize,$color
+	.btn{
+		@include btn(2.3rem,.8rem,#fff,#ff8a00);
+	}
+	div.input{
+		border:2px solid #a5a5a5;
+		background: #fff;
+		font-size: .65rem;
+		margin-bottom: 12px;
+		height: 2rem;
+		line-height: 2rem;
+		// @include border-radius($radius-m);
+		@include box-shadow(rgba(0,0,0,.2) 0px 2px 5px inset);
+		input{
+			border:none;
+			width:10rem;
+		}
+		span{
+			color:#000;
+			vertical-align: middle;
+			display: inline-block;
+			text-align: center;
+			width:3.1rem;
+		}
+	}
+	.code{
+		// display: none;
+		margin-bottom: 4px;
+		input{
+			border:2px solid #a5a5a5;
+			background: #fff;
+			font-size: .65rem;
+			padding:12px;
+			width:4.8rem;
+			// @include border-radius($radius-m);
+			@include box-shadow(rgba(0,0,0,.2) 0px 2px 5px inset);
+		}
+		.J_loading{
+			display: inline-block;
+			width:72px;
+			text-align: center;
+		}
+		img{
+			width:72px;
+			height: 30px;
+			font-size: .6rem;
+		}
+		.icon-loading{
+			width: 28px;
+			height: 28px;
+			vertical-align: middle;
+		}
+
+		.refresh-tips{
+			color:#1e98d0;
+			font-size: .5rem;
+		}
+	}
+	.getCode{
+		color: #000;
+		font-size: .65rem;
+		height: 2.1rem;
+		line-height: 2.1rem;
+		display: inline-block;
+		background: #cecece;
+		padding:0 .5rem;
+		border:none;
+	}
+	.codeContainer{
+		overflow: hidden;
+		position: relative;
+		.verifyCode{
+			display: inline-block;
+			input{
+				width:6rem!important;
+			}
+		}
+		.getCode{
+			position: absolute;
+			right: 0;
+		}
+	}
+	
+
+	.error-tips{
+		color:#d01313;
+		font-size: .65rem;
+		margin-bottom: 6px;
+		display: block;
+	}
+	//find password and register
+	.nav{
+		margin-top: 28px;
+		position: relative;
+		z-index: -1;
+		a{
+			text-decoration: underline;
+			color:#ff8a00;
+			font-size:.7rem;
+			position: absolute;
+		}
+		a.findPwd{
+			right:0;
+		}
+	}
+}
+
+//input password when register
+.content1,.content2{
+	margin-top: 18px;
+}
+
+
+.disabled{
+	color:#000!important;
+	background-color:#f5f5f5!important;
+}
+
+
+.mask{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.5);
+	z-index: 99;
+	.submit-mask{
+		padding:12px 0 20px;
+		text-align: center;
+		background:#ebebeb; 
+		position: absolute;
+		width: 100%;
+		bottom: 0;
+		font-size: .5rem;
+		.icon-loading{
+			width: 38px;
+			height: 38px;
+		}
+		div{
+			margin-top: 10px;
+		}
+	}
+}
+.icon-loading{
+	background: inline-image("../img/loading.gif");
+	background-size:100% 100%;
+	display: inline-block;
+}
+
+.tip-box{
+	position:absolute; 
+	height:1.8rem; 
+	line-height:1.8rem; 
+	bottom:1rem;
+	z-index: 9999;
+	.boxBg{
+		background:#000; 
+		@include opacity(.7); 
+		height:100%; 
+		margin-top:-1.8rem;
+		@include border-radius(4px);
+	}
+	p{
+		color:#fff; 
+		position:relative; 
+		z-index:10;
+		font-size: .6rem; 
+		text-align:center;
+		padding:0 10px;
+	}
+}

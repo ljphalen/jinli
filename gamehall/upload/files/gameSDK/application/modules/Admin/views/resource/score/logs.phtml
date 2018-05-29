@@ -1,0 +1,129 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li ><a href="<?php echo $listUrl;?>">评分管理</a></li>
+    <li class="current"><a href="javascript:;">用户评分</a></li>
+	</ul>
+</div>
+<div>
+	<table style="margin-bottom:10px">
+		<tr>
+			<td style="padding:6px;" >
+				<img src="<?php echo $gscore['icon'];?>" style="width: 80px; heigh:80px;"/>
+			</td>
+			<td>
+				<table >
+						<tr >
+							<td>游戏ID：<?php echo $gscore['id'];?></td>
+						</tr>
+						<tr >
+							<td>游戏名称：<?php echo $gscore['name'];?></td>
+						</tr>
+						<tr >
+							<td>状态：<?php echo $gscore['status'] ? '已上线' : '已下线';?></td>
+						</tr>
+						
+					</table>	
+			</td>
+			<td style="padding-left:20px;" >评分：<div class="rank-<?php echo (intval($gscore['score']) > 10) ? 10 : $gscore['score'];?>"><span></span><span></span><span></span><span></span><span></span></div>
+				<span class="rankValue"><?php echo (intval($gscore['score']) > 10) ? 10 : $gscore['score'];?></span></td>
+		</tr>
+	</table>
+</div>
+	
+<form action="<?php echo $logsUrl;?>/?id=<?php echo $gscore['id'];?>" method="post" id="searchForm">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">账号</th>
+			<td class="td">
+				<input type="text" class="input" name="user" value="<?php echo $search['user'];?>">
+			</td>
+			<th class="th">用户昵称</th>
+			<td class="td">
+				<input type="text" class="input" name="nickname" value="<?php echo $search['nickname'];?>">
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">分数</th>
+			<td class="td">
+				<input type="text" class="input"  name="lscore" value="<?php echo $search['lscore'];?>">
+				至
+				<input type="text" class="input"  name="rscore" value="<?php echo $search['rscore'];?>">
+			</td>
+			<th class="th">时间</th>
+			<td class="td">
+			<div>
+			<input class="input" type="text" maxlength="30" id="start_time" name="start_time" value="<?php echo $search['start_time'];?>" /> 
+			至 
+			<input class="input" type="text" maxlength="30" id="end_time" name="end_time" value="<?php echo $search['end_time'];?>" />
+			</div>	
+			</td>
+		 </tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a"> <span class="btn"> <span><a class="exbtn" href="<?php echo $exlogs;?>">导出excel</a></span></span> <span>共<?php echo $total;?>条结果</span></div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">序号</td>
+			<td width="400">分数</td>
+			<td width="300">打分时间</td>
+			<td >用户信息</td>
+		</tr>
+<?php foreach($data as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td>
+				<div class="rank-<?php echo (intval($value['score']) > 10) ? 10 : $value['score'];?>">
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+				<span class="rankValue"><?php echo (intval($value['score']) > 10) ? 10 : $value['score'];?></span>
+			</td>
+			<?php $uname = $value['user'] ? $value['user'] : $value['imei'];?>
+        	<td><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+            <?php $stype = ($value['stype'] == 1) ? '艾米游戏' : (($value['stype'] == '2') ? '游戏大厅' : '其他');?>
+        	<td><?php echo "{$value['nickname']}/{$uname}/{$value['model']}/{$stype}/{$value['version']}/{$value['android']}";?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc"> <?php echo $pager;?></div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<style>
+.exbtn {
+	color: #ffffff;height: 21px;margin: 0 -9px;padding: 0 10px;line-height: 21px;padding-bottom: 2px;
+}
+</style>
+<script>
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+    $('#end_time').datetimepicker();
+ 	$("#searchForm").submit(function(e){
+ 		var lscore = parseInt($("input[name='lscore']").val());
+ 		var rscore = parseInt($("input[name='rscore']").val());
+		if(lscore < 0 ||lscore > 10){
+			showError('', '请填写1-10的数字。');
+			return false;
+		}
+		if(rscore < 0 || rscore > 10){
+			showError('', '请填写1-10的数字。');
+			return false;
+		}
+		if (lscore.length!=0 && rscore.length!=0) {
+			if(rscore < lscore) {
+				showError('', '分数范围填写错误。');
+				return false;
+			}
+		}
+ 	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

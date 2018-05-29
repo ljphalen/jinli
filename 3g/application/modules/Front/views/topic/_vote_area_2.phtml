@@ -1,0 +1,42 @@
+<?php
+$voted1 = $hasVote?'none':'';
+$voted2 = $hasVote?'':'none';
+?>
+<div class="topic-vote <?=$voted1?>">
+	<div class="vtitle"><?=$info['feedback_title']?></div>
+	<div class="feed-row">
+		<ul class="ui-list-radio">
+			<?php foreach($option as $k=>$v){?>
+				<li>
+					<label class="ui-radio"><input type="radio" name="option_num" value="<?php echo $k;?>" /><?php echo $v;?></label>
+				</li>
+			<?php } ?>
+		</ul>
+	</div>
+
+	<div class="feed-row mr10 buttons">
+		<span id="js-feed-submit" class="btn-vote" data-url="<?php echo $webroot.$feedbackUrl;?>">确认提交</span>
+	</div>
+</div>
+
+<div class="topic-vote vote-result <?=$voted2?>">
+	<div class="vtitle"><?=$info['feedback_title']?></div>
+	<div class="feed-row">
+		<ul class="ui-list-radio">
+			<?php
+			foreach($option as $k=>$v){
+				$vcolor = ($k)%11; if($vcolor == 0) $vcolor = 1;
+				$cked = $k==$info['option_num'] ? 'checked="checked"':'';
+				$num = empty($optionResult[$k]['val']) ? 0 : $optionResult[$k]['val'];
+			?>
+				<li>
+					<label class="ui-radio"><input disabled="disabled" type="radio" <?=$cked?> name="option_num1" value="<?php echo $k;?>" /><?php echo $v;?></label>
+					<p>
+						<span class="vote-bg<?php echo $vcolor;?>" style="width:<?=$optionResult[$k]['percent']?>;"></span>
+						<span><?=$num?>人</span>
+					</p>
+				</li>
+			<?php } ?>
+		</ul>
+	</div>
+</div>

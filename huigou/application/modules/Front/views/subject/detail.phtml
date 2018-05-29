@@ -1,0 +1,51 @@
+<?php echo $this->render("layout/header.phtml");?>
+<section id="page">
+	<!-- 主体内容 -->
+	<section id="content">
+		<section class="goods">
+			<section class="recommend">
+				<div class="top-info">
+					<div class="pic"><img src="<?php echo $attachPath,$info['img'];?>" alt="" /></div>
+					<div class="txt mod-ws-box">
+						<p><h3>小编寄语：</h3></p>
+						<p><?php echo html_entity_decode($info['descrip']);?></p>
+					</div>
+				</div>
+				<section class="main">
+					<header><h1>推荐商品</h1></header>
+					<section class="mod-show-list" id="J_publWrap" data-ajaxUrl="<?php echo $webroot,'/subject/publWrap/id='.$id;?>">
+							<ul class="mod-item-list">
+								<?php 
+								
+								foreach($goods as $key=>$value) {
+								if(strpos($value['img'], 'http://') === false) {
+									$img = $attachPath.$value['img'];
+								}else{
+									$img = $value['img'].'_200x200.'.end(explode(".",  $value['img']));
+									};
+								?>
+								<li>
+									<a href="<?php echo $webroot,'/goods/detail/?id=',$value['id'];?>">
+										<div class="pic"><img src="<?php echo $img;?>" alt="" /></div>
+										<div class="txt"><?php echo $value['want']+$value['default_want'];?>人想要     ￥<?php echo $value['price'];?></div>
+									</a>
+								</li>
+								<?php }?>
+							</ul>
+					</section>
+				</section>
+			</section>
+		</section>
+	</section>
+	<!--  /主体内容 -->
+</section>
+<script type="template" id="J_itemView">
+	<li>
+		<a href="{list.href}">
+			<div class="pic"><img src="{list.img}" alt="" /></div>
+			<div class="txt">{list.want}人想要     ￥{list.price}</div>
+		</a>
+	</li>
+</script>
+</body>
+</html>

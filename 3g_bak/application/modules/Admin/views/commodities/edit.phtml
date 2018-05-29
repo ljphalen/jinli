@@ -1,0 +1,276 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<style>
+		.iform {
+			width: 200px;
+		}
+	</style>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $indexUrl; ?>">商品列表</a></li>
+			<li class="current"><a href=" <?php echo $editUrl; ?>"><?php echo empty($data) ? '添加' : '编辑'; ?>商品</a></li>
+			<li><a href="<?php echo $importUrl; ?>">批量导入虚拟商品</a></li>
+		</ul>
+	</div>
+	<div class="h_a">添加商品</div>
+	<form method="post" action="<?php echo $editPostUrl; ?>" id="addForm">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">所属分类：</th>
+					<td class="td"><select name="cat_id" id="cat_id">
+							<option value="0">请选择分类</option>
+							<?php foreach ($category as $k => $v) { ?>
+								<option value="<?php echo $v['id']; ?>" <?php if ($data['cat_id'] == $v['id']) echo 'selected'; ?>><?php echo $v['name'] ?></option>
+							<?php } ?>
+						</select></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">商品形态：</th>
+					<td class="td"><select name="goods_type" id="goods_type">
+							<option value="0">请选择</option>
+							<?php foreach ($goodsType as $k => $v) { ?>
+								<option value="<?php echo $k; ?>" <?php if ($data['goods_type'] == $k) echo 'selected'; ?>><?php echo $v ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<tr class="tr" id="tr_event_flag" style="display: <?php echo $data['goods_type'] == 2 ? '' : 'none'; ?>">
+					<th class="th">是否为活动物品</th>
+					<td class="td">
+						<select name="event_flag">
+							<option value="0"  <?php if ($data['event_flag'] == 0) echo 'selected'; ?>>否</option>
+							<option value="1"   <?php if ($data['event_flag'] == 1) echo 'selected'; ?>>是</option>
+						</select>
+					</td>
+				</tr>
+
+				<tr class="tr" id="tb_virtual_body" style="display: <?php echo $data['goods_type'] == 2 ? 'none' : ''; ?>">
+					<th class="th">类型</th>
+					<td class="td">
+						<select name="virtual_type_id" id="virtual_type_id">
+							<option value="0">请选择</option>
+							<?php foreach ($virtualTypes as $k => $v) { ?>
+								<option value="<?php echo $k; ?>"  <?php if (isset($data['virtual_type_id']) && $data['virtual_type_id'] == $k) echo 'selected'; ?>><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr" id="tb_virtual_sub_body" style="display: <?php echo $data['goods_type'] == 2 ? 'none' : ''; ?>">
+					<th class="th">子类型</th>
+					<td class="td">
+						<select name="virtual_sub_type" id="virtual_sub_type_id">
+							<option value="0">请选择</option>
+							<?php foreach ($subVirtualTypes as $m => $v) { ?>
+								<option value="<?php echo $v['id']; ?>" <?php if ($v['type_id'] == $cardMsg['type_id']) echo 'selected'; ?> ><?php echo $v['type_name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr" id="virtualGoods" style="display: <?php echo $data['goods_type'] == 2 ? 'none' : ''; ?>">
+					<th class="th">面值信息</th>
+					<td class="td"><select name="card_info_id" id="card_id">
+							<?php foreach ($cardList as $s => $t) { ?>
+								<option value="<?php echo $t['id']; ?>"  <?php if ($data['card_info_id'] == $t['id']) echo 'selected'; ?>><?php echo $t['card_name']; ?></option>
+							<?php } ?>
+						</select></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">商品名称</th>
+					<td class="td"><input type="text" class="input" name="name" value="<?php echo $data['name']; ?>">
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">副标题</th>
+					<td class="td"><input type="text" class="input" name="title" value="<?php echo $data['title']; ?>">
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">单价</th>
+					<td class="td"><input type="text" class="input" name="price" value="<?php echo $data['price']; ?>">
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">所需积分数</th>
+					<td class="td">
+						<input type="text" name="scores" id="scores" class="input" value="<?php echo $data['scores']; ?>">
+					</td>
+				</tr>
+
+				<tr class="tr">
+				<th class="th">商品总库存</th>
+				<td class="td">
+					<input type="text" name="number" id="number" class="input" value="<?php  echo $data['number']; ?>"></td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">前台显示商品数量</th>
+				<td class="td">
+					<input type="text" name="show_number" id="number" class="input" value="<?php  echo $data['show_number']; ?>"></td>
+			</tr>
+			
+			<tr class="tr">
+				<th class="th">显示/实际兑换比</th>
+				<td class="td">
+					<input type="text" name="num_ratio" id="num_ratio" class="input" value="<?php  echo max(1,$data['num_ratio']); ?>"></td>
+			</tr>
+
+				<tr class="tr">
+					<th class="th">是否为会员等级商品</th>
+					<td class="td"><select name="is_special" id="is_special">
+							<option value="1" <?php if ($data['is_special'] == 1) echo 'selected'; ?>>是</option>
+							<option value="0"  <?php if ($data['is_special'] == 0) echo 'selected'; ?>>否</option>
+						</select>
+					</td>
+				</tr>
+
+				<!-- <tr class="tr">
+					<th class="th">链接</th>
+					<td class="td"><input type="text" name="link" id="link" class="input"></td>
+				</tr> -->
+
+				<tr class="tr">
+					<th class="th">开始时间</th>
+					<td class="td">
+						<input name="start_time" id="start_time" class="input" type="text" value="<?php echo $data['start_time'] ? date('Y-m-d', $data['start_time']) : ''; ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">结束时间</th>
+					<td class="td">
+						<input name="end_time" id="end_time" class="input" type="text" value="<?php echo $data['end_time'] ? date('Y-m-d', $data['end_time']) : ''; ?>">
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">排序</th>
+					<td class="td">
+						<input type="text" name="sort" id="sort" class="input" value="<?php echo $data['sort']; ?>">
+					</td>
+				<tr>
+
+					<tbody id="image">
+				<tr class="tr">
+					<th class="th">图片广告</th>
+					<td class="td">
+						<ul class="uploadImg">
+
+							<?php if (empty($data)) { ?>
+								<li id="comImage">
+									<img src="<?php echo $attachPath; ?>/img/content/nopic.jpg"/>
+									<input type="hidden" name="image">
+								</li>
+							<?php } else { ?>
+								<li id="comImage">
+									<img src="<?php echo $attachPath . $data['image']; ?>"/>
+									<input type="hidden" name="image" value="<?php echo $data['image']; ?>">
+								</li>
+							<?php } ?>
+						</ul>
+						<p style="clear:both;">
+							<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=comImage'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tbody>
+
+				<tr class="tr">
+					<th class="th">描述</th>
+					<td class="td">
+						<textarea name="description" style="width:300px;height:230px"><?php echo $data['description']; ?></textarea>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">状态</th>
+					<td class="td"><select name="status" class="select">
+							<option value="1"  <?php if ($data['status'] == 1) echo 'selected'; ?>>开启</option>
+							<option value="0"  <?php if ($data['status'] == 0) echo 'selected'; ?>>关闭</option>
+						</select></td>
+				</tr>
+			</table>
+			<input type="hidden" value="<?php echo $data['id']; ?>" name="id">
+		</div>
+		<div class="mb10 tac">
+			<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js?v=<?php echo $version; ?>"></script>
+	<script type="text/javascript">
+		//用户表单数据提交
+		$(document).ready(function () {
+			$('#start_time').datetimepicker();
+			$('#end_time').datetimepicker();
+
+			ajaxForm('addForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/commodities/index');
+			});
+		})
+
+		$("#goods_type").bind('change', function () {
+			var goodsType = $("#goods_type  option:selected").val();
+			if(goodsType==0){
+				$("#tr_event_flag").hide();
+			}else{
+				$("#tr_event_flag").show();
+			}
+			if (goodsType == 1) {
+				$("#tb_virtual_body").show();
+			} else {
+				$("#tb_virtual_body").hide();
+				$("#tb_virtual_sub_body").hide();
+				$("#virtualGoods").hide();
+			}
+		})
+
+
+		$("#virtual_type_id").bind('change', function () {
+			var virtualType = $("#virtual_type_id  option:selected").val();
+			if (virtualType > 0) {//
+				$.ajax({
+					'type': 'post',
+					'dataType': 'json',
+					'url': '/Admin/commodities/AjaxGetCardMsg',
+					'data': {'token': '<?php echo $token;?>', 'group_type': virtualType},
+					'success': function (e) {
+						var html = "<option value='0'>请选择</option>";
+						$.each(e.data, function (i, m) {
+							html += "<option value='" + m.type_id + "'>" + m.type_name + "</option>";
+						});
+						$("#virtual_sub_type_id").html(html);
+						$("#tb_virtual_sub_body").show();
+					}
+				});
+			} else {
+				$("#tb_virtual_body").hide();
+				$("#virtualGoods").hide();
+			}
+		});
+
+		$("#virtual_sub_type_id").bind('change', function () {
+			var type_id = $("#virtual_sub_type_id  option:selected").val();
+			if (type_id > 0) {
+				$.ajax({
+					'type': 'post',
+					'dataType': 'json',
+					'url': '/Admin/commodities/AjaxGetCardMsg',
+					'data': {'token': '<?php echo $token?>', 'type_id': type_id},
+					'success': function (e) {
+						var html = "<option value='0'>请选择</option>";
+						$.each(e.data, function (i, m) {
+							html += "<option value='" + m.id + "'>" + m.card_name + "</option>";
+						});
+						$("#card_id").html(html);
+						$("#virtualGoods").show();
+					}
+				});
+			} else {
+				$("#virtualGoods").hide();
+			}
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

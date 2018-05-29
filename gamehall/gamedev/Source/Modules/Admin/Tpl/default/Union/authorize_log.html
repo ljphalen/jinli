@@ -1,0 +1,47 @@
+<div class="page">
+	<div class="pageHeader">
+		<div class="searchBar">
+			<ul class="" style="">
+				<li>包名：{$vo.package}</li>
+				<li>渠道：{$vo.channel}</li>
+				<li>帐号：{$vo.author}</li>
+				<li>类型：{:$vo["type"]==1 ? '网游' : '单机'}</li>
+				<li>AppID：{$vo.appid|default='-'}</li>
+				<li>Api-Key：{$vo.api_key|default='-'}</li>
+				<li>Secret key：{$vo.secret_key|default='-'}</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="pageContent">
+		<table class="list" width="100%" layoutH="5">
+			<thead>
+			<tr>
+				<th width="60" orderField="id">编号</th>
+				<th width="120">申请时间</th>
+				<th width="120">处理时间</th>
+				<th width="70">处理结果</th>
+				<th>备注</th>
+				<th width="120">审核文档</th>
+				<th width="80">管理员</th>
+			</tr>
+			</thead>
+			<tbody>
+			
+			<php>$s = D("Union")->_status;</php>
+			<volist id="vo" name="list">
+				<tr target="sid_node" rel="{$vo['id']}">
+					<td>{$vo['id']}</td>
+					<td>{$vo['apply_at']|date="Y-m-d H:i:s",###}</td>
+					<td>{$vo['created_at']|date="Y-m-d H:i:s",###}</td>
+					<td>{:$s[$vo['status']]}</td>
+					<td>{$vo['note']}</td>
+					<td><notempty name="vo.doc_file"><a href="{:Helper("Apk")->get_url('test')}{$vo['doc_file']}" target="_blank">下载</a><else/>未上传</notempty></td>
+					<td>{:D("Admin")->getNickname($vo['admin_id']);}</td>
+				</tr>
+			</volist>
+			</tbody>
+		</table>
+
+	</div>
+</div>

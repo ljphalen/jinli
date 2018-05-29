@@ -1,0 +1,109 @@
+{{pagerCss}}
+<link media="screen" href="{{rootUrl}}/css/table.css" rel="stylesheet" type="text/css">
+<link media="screen" href="{{rootUrl}}/css/gri.controls.css" rel="stylesheet" type="text/css">
+<div class="colMain">
+    <div class="title"><p class="fl">配置项列表</p></div>
+    <div class="main">
+        <div class="toolbar">
+            <div class="search fl">
+                <form action="/implantable/configlist" method="GET">
+                <span>{{search}}</span>
+                <span>
+                    <input typt="text" class="iText" name='appname' value='{{appname}}' />
+                    <input type="submit" class="submit" value="" onclick="confirmSubmit();"/>
+                    <span class="sign">可输入应用名称查询</span>
+                </span>
+                </form>
+            </div>
+            <a href="/implantable/configAdd" class="fr add">新增</a> &nbsp;
+        </div>
+        <div class="content">
+            <div class="grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>配置项ID</th>
+                            <th>配置项名称</th>
+                            <th>条件配置</th>
+                            <th>推广计划</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- loop result -->
+                        <tr>
+                            <td><span class="blue">{{result' value.config_id}}</span></td>
+                            <td>{{result' value.config_name}}</td>
+                            <td>
+                                <a href="/implantable/editconfig?configid={{result' value.id}}">{{result' value.appname}}</a>
+                            </td>
+                            <td>
+                                <!-- loop result' value.plan -->
+                                <a href="/implantable/planveiw?config_id=<?php echo $v1['config_id']; ?>"><?php  echo date("Y-m-d H:i:s",$v2['planpd']["starttime"]);  ?>-<?php  echo date("Y-m-d H:i:s",$v2['planpd']["end_time"]);  ?>  <?php  echo $v2['planpd']["prduct_name"];  ?></a><br>
+                                <!-- endloop -->
+                            </td>
+                            <td>
+                                <a href="/implantable/planedit_view?config_id={{result' value.id}}" title="新建">新建</a>
+                                |
+                                <a href="../implantable/configDel?id={{result' value.id}}" class="del" title="删除"></a>
+                            </td>
+                        </tr> 
+                        <!-- endloop -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">{{pager.pages}}</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{{rootUrl}}/js/gri.dateRange.js"></script>
+<script type="text/javascript">
+$(function(){
+
+$(".setAppstateOn").click(function(){
+        if($(this).hasClass('cur')){
+            return;
+        }
+        if(!confirm("您确认要打开这个应用吗？")){
+            return;
+        }
+        $(this).parent().find('input').val(1);
+        $(this).addClass("cur");
+        $(this).parent().find(".aoff").removeClass('cur');
+        set_appstate($(this).attr("id"), 1);
+    });
+
+$(".setAppstateOFF").click(function(){
+        if($(this).hasClass('cur')){
+            return;
+        }
+        if(!confirm("您确认要关闭这个应用吗？")){
+            return;
+        }
+        $(this).parent().find('input').val(0);
+        $(this).addClass("cur");
+        $(this).parent().find(".aon").removeClass('cur');
+        set_appstate($(this).attr("id"), 0);
+    });
+
+
+});
+
+function set_appstate(appid, state)
+{
+    ajaxGET("/implantable/setAppState", "appid=" + appid + "&state=" + state, function(data) {
+        if (data.code == 0) {
+
+        } else {
+            alert(data.msg)
+        }
+    })
+}
+
+function confirmSubmit()
+{
+    return true;
+}
+
+
+</script>

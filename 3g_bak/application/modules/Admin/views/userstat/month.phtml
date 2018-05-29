@@ -1,0 +1,108 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<form method="post" action="<?php echo $baseUrl; ?>" id="addFrom">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">时间范围</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $sdate; ?>"> 至
+						<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $edate; ?>">
+
+					</td>
+				</tr>
+
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+		<input type="hidden" id="hidden_export" name="export" value="0"/>
+	</form>
+
+	<div class="h_a">
+		&nbsp; <span id="total" style="color: red;font-size:14px"></span>
+		<span style="float:right;"><input type="button" value="导出" id="downLoad"></span>
+	</div>
+
+	<div class="table_list">
+		<table width="100%">
+			<tr class="ct">
+				<td class="td2" style="width:62px;">查询日期</td>
+				<td class="td2">新增用户</td>
+				<td class="td2">累计用户</td>
+				<td class="td2" style="width:25px;">PV</td>
+				<td class="td2" style="width:25px;">UV</td>
+				<td class="td2">签到用户</td>
+				<td class="td2">签到用户占比</td>
+				<td class="td2">领取金币用户数</td>
+				<td class="td2">领取金币用户占比</td>
+				<td class="td2">领取金币总额</td>
+				<td class="td2">完成任务用户数</td>
+				<td class="td2">完成任务用户占比</td>
+				<td class="td2">完成任务次数</td>
+				<td class="td2">兑换成功用户数</td>
+				<td class="td2">兑换成功次数</td>
+				<td class="td2">兑换次数</td>
+				<td class="td2">兑换成功占比</td>
+				<td class="td2">金币兑换金额数</td>
+				<td class="td2">截止当月流通金币数</td>
+				<td class="td2">抽奖用户数</td>
+				<td class="td2">抽奖用户数占比</td>
+				<td class="td2">抽奖次数</td>
+				<td class="td2">夺宝用户数</td>
+				<td class="td2">夺宝用户占比</td>
+				<td class="td2">夺宝次数</td>
+
+
+			</tr>
+			<?php
+			foreach ($data as $k => $v) { ?>
+				<tr class="ct">
+					<td><?php echo $k; ?></td>
+					<td class="td2"><?php echo $v['goods']['user_day_incre'] ? $v['goods']['user_day_incre'] : 0; ?></td>
+					<td class="td2"><?php echo $v['goods']['user_total_number'] ? $v['goods']['user_total_number'] : 0; ?></td>
+					<td class="td2"><?php echo $v['pv'] ? $v['pv'] : 0; ?></td>
+					<td class="td2"><?php echo $v['uv'] ? $v['uv'] : 0; ?></td>
+					<td class="td2"><?php echo $v['goods']['user_signin_num']; ?></td>
+					<td class="td2"><?php echo bcdiv($v['goods']['user_signin_num'], $v['uv'], 4) * 100 ?>%</td>
+					<td class="td2"><?php echo $v['goods']['user_earn_num'] ?></td>
+					<td class="td2"><?php echo bcdiv($v['goods']['user_earn_num'], $v['uv'], 4) * 100 ?>%</td>
+					<td class="td2"><?php echo $v['goods']['user_earn_amount']; ?></td>
+					<td class="td2"><?php echo $v['goods']['user_tasks_num']; ?></td>
+					<td class="td2"><?php echo bcdiv($v['goods']['user_tasks_num'], $v['uv'], 4) * 100; ?>%</td>
+					<td class="td2"><?php echo $v['goods']['user_tasks_amount']; ?></td>
+					<td class="td2"><?php echo $v['goods']['user_exchange_num']; ?></td>
+					<td class="td2"><?php echo $v['goods']['user_exchange_scuessed_times']; ?></td>
+					<td class="td2"><?php echo $v['goods']['user_exchange_total']; ?></td>
+					<td class="td2"><?php echo bcdiv($v['goods']['user_exchange_scuessed_times'], $v['goods']['user_exchange_total'], 4) * 100 ?>%</td>
+					<td class="td2"><?php echo $v['goods']['user_exchange_costs']; ?></td>
+					<td class="td2"><?php echo $v['goods']['user_currency_scores']; ?></td>
+					<td class="td2"><?php echo $v['uv_draw']; ?></td>
+					<td class="td2"><?php echo bcdiv($v['uv_draw'], $v['uv'], 4) * 100 ?>%</td>
+					<td class="td2"><?php echo $v['pv_draw']; ?></td>
+					<td class="td2"><?php echo $v['snatch_users'] ? $v['snatch_users'] : 0; ?></td>
+					<td class="td2"><?php echo bcdiv($v['snatch_users'], $v['user_total_number'], 4) * 100; ?>%</td>
+					<td class="td2"><?php echo $v['snatch_times'] ? $v['snatch_times'] : 0; ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#sdate").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#edate").datepicker({dateFormat: 'yy-mm-dd'});
+			$("#total").text('<?php echo $sum;?>');
+			$("#downLoad").bind('click', function () {
+				$("#hidden_export").val(1);
+				$("#addFrom").submit();
+				$("#hidden_export").val(0);
+			});
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

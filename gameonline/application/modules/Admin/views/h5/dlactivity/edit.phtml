@@ -1,0 +1,121 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">下载活动列表</a></li>
+    <li class="current"><a href="javascript:;">添加下载活动</a></li>
+	</ul>
+</div>
+
+<form method="post" action="<?php echo $editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full" id="detail_one">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">活动名称</th>
+			<td class="td"><input type="text" class="input wc" name="name" value="<?php echo $info['name'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动上线图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="openImg">
+						<img src="<?php echo $attachPath . $info['open_img']?>"/>
+						<input type="hidden" name="openImg" value="<?php echo $info['open_img'];?>">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=openImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动未上线图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="closeImg">
+						<img src="<?php echo $attachPath . $info['close_img']?>"/>
+						<input type="hidden" name="closeImg" value="<?php echo $info['close_img'];?>">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=closeImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动开始结束时间</th>
+			<td class="td"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $info['start_time']);?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s', $info['end_time']);?>" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">参与游戏ID</th>
+			<td class="td">
+				<div>
+			 		<input type="text" class="input wc" style="height:20px;" name="games"  value="<?php echo html_entity_decode($info['games']);?>"/>&nbsp;&nbsp;
+			 		<span style="color: red">(此处填写参与活动的在线游戏ID，多个游戏ID之间使用英文 ‘,’ 逗号分割。)</span>
+			 	</div>
+			</td>
+		</tr>
+		 <tr>
+    		<th class="th">奖项配置</th>
+    		<?php $prize = unserialize($info['prize']);?>
+			<td>
+				<span>&nbsp;&nbsp;&nbsp;&nbsp;一等奖：&nbsp;&nbsp;&nbsp;&nbsp;概率：<input type="text" class="input w" name="prize[1][p]" value="<?php echo $prize['1']['p'];?>"/>&nbsp;&nbsp;
+					  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			 		  数量: <input type="text" class="input w" name="prize[1][n]" value="<?php echo $prize['1']['n'];?>"/>
+				</span><br/>
+				<span>&nbsp;&nbsp;&nbsp;&nbsp;二等奖：&nbsp;&nbsp;&nbsp;&nbsp;概率：<input type="text" class="input w" name="prize[2][p]" value="<?php echo $prize['2']['p'];?>"/>&nbsp;&nbsp;
+					  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			 		  数量: <input type="text" class="input w" name="prize[2][n]" value="<?php echo $prize['2']['n'];?>"/>
+				</span><br/>
+				<span>&nbsp;&nbsp;&nbsp;&nbsp;三等奖：&nbsp;&nbsp;&nbsp;&nbsp;概率：<input type="text" class="input w" name="prize[3][p]" value="<?php echo $prize['3']['p'];?>"/>&nbsp;&nbsp;
+					  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			 		  数量: <input type="text" class="input w" name="prize[3][n]" value="<?php echo $prize['3']['n'];?>"/>
+				</span><br/>
+				<span style="color: red">&nbsp;&nbsp;&nbsp;&nbsp;概率支持百万级的概率，只能填写[0-<?php echo $maxRate; ?>]中间的数字,三个奖项概率加起来不能超过<?php echo $maxRate; ?>，数量只能填写数字。</span>
+			</td>
+ 		</tr>
+		<tr class="tr">
+			<th class="th">活动说明</th>
+			<td class="td"><textarea style="width: 800px; height: 300px" class="textarea" name="descrip" ><?php echo $info['descrip'];?></textarea>
+		    </td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				<select name="status">
+					<option <?php if($info['status'] == 1) echo 'selected="selected"';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 0) echo 'selected="selected"';?>value="0">关闭</option>
+            	</select>
+            </td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">完成</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var editor;
+	KindEditor.ready(function(K){
+		K.token = '<?php echo $token;?>';
+	    editor = K.create('textarea[name="descrip"]', {
+	        resizeType : 1,
+	        allowPreviewEmoticons : false,
+	        allowImageUpload : true,
+	        uploadJson : '<?php echo $uploadImgUrl;?>',
+	        items : EDITOR_ITEMS
+	    });
+	});
+	$('#start_time').datetimepicker();
+	$('#end_time').datetimepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/H5_Dlactivity/index');
+	},function(){
+		editor.sync();
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

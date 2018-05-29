@@ -1,0 +1,38 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">分类列表</a></li>
+    <li class="current"><a href="javascript:;">编辑分类</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑分类</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">名称</th>
+			<td class="td"><input type="text" class="input" name="name" value="<?php echo $info['name'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">描述</th>
+			<td class="td"><textarea class="input" name="descript" class="textarea wc" style="height:60px;width:600px"><?php echo $info['descript'];?></textarea></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort'];?>">（填写一个数字，数字越大越靠前）</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Filetype/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

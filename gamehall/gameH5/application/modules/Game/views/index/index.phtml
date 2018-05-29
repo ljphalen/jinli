@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <?php
+        $this->title = '首页';
+        $this->hasSearch = 'true';
+        ?>
+        <meta charset="UTF-8">
+        <title>金立游戏大厅</title>
+<?php echo $this->render("layout/cssInc.phtml"); ?>
+    </head>
+    <body>
+        <div id="roll" class="roll">
+
+        </div>
+
+        <div class="index-search">
+            <a href="/Search/index">
+                <input type="text" placeholder="输入搜索关健字" />
+                <div class="absolute-vCenter">
+                    <span class="icon-search"></span>
+                </div>
+            </a>
+        </div>
+
+        <div id="menu">	
+
+        </div>
+        <div id="container">
+        </div>
+        <div id="advertisingData">
+
+        </div>
+<?php if($indexAd) {?>  
+        <div class="prompt-layer" id="prompt">
+		<span class="del" name="del">+</span>
+			<div class="prompt-layer-bg">
+			</div>
+			<span class="del" name="del">+</span>
+			<?php if($indexAd['button_title']) {?>
+                                                        <a href="<?=$indexAd['button_url']?>">
+                                                        <input type="button"  value="<?=$indexAd['button_title']?>" />
+                                                        </a>
+                                                        <?php }?>
+			<p><?=$indexAd['title']?></p>
+	</div>
+<?php }?>
+        <?php echo $this->render("layout/footer.phtml"); ?>
+<?php echo $this->render("layout/scriptInc.phtml"); ?>
+        <script type="text/javascript">
+            var pageData = {}
+            , rollData = {}
+            ;
+            pageData.list = <?= $dataInfoList ?>;
+            pageData.picturePath = '<?php echo $appImg ?>';
+            rollData.data = <?= $dataBannerList ?>;
+            var menuData = {
+                list: [
+                    {
+                        name: '分类'
+                        , type: 'category'
+                        , href: '/category/index'
+
+                    },
+                    {
+                        name: '排行'
+                        , href: '/rank/index'
+                        , type: 'rank'
+                    },
+                    {
+                        name: '新游'
+                        , href: '/channel/newGame'
+                        , type: 'newGame'
+                    },
+                    {
+                        name: '活动'
+                        , href: '/activity/index'
+                        , type: 'activity'
+                    },
+                    {
+                        name: '破解'
+                        , href: '/channel/crackGame'
+                        , type: 'crack'
+                    },
+                    {
+                        name: '网游'
+                        , href: '/channel/webGame'
+                        , type: 'webGame'
+                    },
+                    {
+                        name: '单机'
+                        , href: '/channel/singleGame'
+                        , type: 'singleGame'
+                    },
+                    {
+                        name: '论坛'
+                        , href: 'http://bbs.amigo.cn/forum-150-1.html'
+                        , type: 'forum'
+                    }
+                ]
+            }
+        </script>
+        <script src="<?php echo "$appJs/sys/touchSwipe.js$timestamp"; ?>"></script>
+        <script src="<?php echo "$appJs/view/menu.js$timestamp"; ?>"></script>
+        <script src="<?php echo "$appJs/view/roll.js$timestamp"; ?>"></script>
+        <script src="<?php echo "$appJs/index.js$timestamp"; ?>"></script>
+<?php echo $this->render("layout/lastscriptInc.phtml"); ?>
+    </body>
+</html>

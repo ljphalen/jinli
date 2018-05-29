@@ -1,0 +1,123 @@
+<?php echo $this->render("layout/header4.phtml"); ?>
+<form method="post" action="<?php echo $editPostUrl; ?>" id="editForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<table class="veditTable">
+		<tr>
+			<th>缓存开关</th>
+			<td>
+				<label class="mr20"><input <?php if ($configs['gionee_cache']) echo 'checked'; ?> name="gionee_cache" value="1" type="radio">开启</label>
+				<label class="mr20"><input <?php if (!$configs['gionee_cache']) echo 'checked'; ?> name="gionee_cache" value="0" type="radio">关闭</label>
+			</td>
+		</tr>
+		<tr>
+			<th>资源缓存版本</th>
+			<td>
+				<input name="styles_version" type="text" class="form-control" value="<?php echo $configs['styles_version']; ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>双11活动开关</th>
+			<td>
+				<input name="activity_1111" type="text" class="form-control" value="<?php echo $configs['activity_1111']; ?>">
+			</td>
+		</tr>
+
+		<tr>
+			<th>搜狐合作页面跳转页URL</th>
+			<td>
+				<input type="text" class="form-control" name="sohu_redirect_url" value="<?php echo $configs['sohu_redirect_url']; ?>">
+			</td>
+		</tr>
+
+		<tr>
+			<th>专题页是否显示顶部功能栏</th>
+			<td>
+				<label><input type="radio" <?php if ($configs['topic_top_func_status'] == 1) echo 'checked'; ?> name="topic_top_func_status" value="1"> 开启
+					<label><input type="radio" <?php if ($configs['topic_top_func_status'] == 0) echo 'checked'; ?> name="topic_top_func_status" value="0"> 关闭
+			</td>
+		</tr>
+		<tr>
+			<th>导航底部配置</th>
+			<td>
+				<textarea name="nav_bottom" style="width: 450px; height: 100px;"><?php echo $configs['nav_bottom']; ?></textarea>
+			</td>
+		</tr>
+		<tr>
+			<th>本地化卡片静态文件化</th>
+			<td>
+				<label><input type="radio" <?php if ($configs['localnav_to_html'] == 1) echo 'checked'; ?> name="localnav_to_html" value="1"> 开启</label>
+				<label><input type="radio" <?php if ($configs['localnav_to_html'] == 0) echo 'checked'; ?> name="localnav_to_html" value="0"> 关闭</label>
+			</td>
+		</tr>
+		<tr>
+			<th>本地化卡片离线缓存开关</ths>
+			<td>
+				<label><input type="radio" <?php if ($configs['localnav_to_appcache'] == 1) echo 'checked'; ?> name="localnav_to_appcache" value="1"> 开启</label>
+				<label><input type="radio" <?php if ($configs['localnav_to_appcache'] == 0) echo 'checked'; ?> name="localnav_to_appcache" value="0"> 关闭</label>
+			</td>
+		</tr>
+		<tr>
+			<th>百度分析统计验证域名代码</th>
+			<td>
+				<input name="baidu_stat_no" type="text" class="form-control" value="<?php echo $configs['baidu_stat_no']; ?>">
+			</td>
+		</tr>
+
+        <tr>
+            <th>精准投放测试IMEI</th>
+            <td>
+                <textarea name="filter_label_imeis" style="width: 450px; height: 100px;"><?php echo implode("\n",json_decode($configs['filter_label_imeis'],true)); ?></textarea>
+            </td>
+        </tr>
+
+        <tr>
+            <th>卡片管理文字</th>
+            <td>
+                <input name="card_list_manage_title" type="text" class="form-control" value="<?php echo $configs['card_list_manage_title']; ?>">
+            </td>
+        </tr>
+	</table>
+	<div id="datagrid_toolbar" style="padding:10px 5px; text-align: center;">
+		<a id="btn-save" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">立即保存</a>
+	</div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		$('#btn-save').on('click', function(){
+			$('#editForm').form({
+				url: $('#editForm').attr('action'),
+				success: function(data){
+					var data = JSON.parse(data);
+					if(data.success){
+						$.messager.alert('提示信息',textDecode(data.msg));
+
+					} else {
+						$.messager.alert('错误信息',textDecode(data.msg));
+					}
+				}
+			});
+			$('#editForm').submit();
+		});
+
+		var editor;
+		KindEditor.ready(function (K) {
+			K.token = $('#token').val();
+			editor = K.create('textarea[name="nav_bottom"]', {
+				resizeType: 1,
+				allowPreviewEmoticons: false,
+				allowImageUpload: true,
+				items: ['fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+					'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+					'insertunorderedlist', 'link']
+			});
+		});
+		ajaxForm('editForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Config/index');
+		}, function () {
+			editor.sync();
+		});
+	})
+</script>
+<?php echo $this->render("layout/footer4.phtml"); ?>

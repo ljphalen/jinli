@@ -1,0 +1,114 @@
+<?php echo $this->render("layout/header.phtml");?>
+<?php
+$cfg = Activity_Service_SummerHoliday::getEffectionActivity();
+$id = $cfg['id'];
+$queryParams[Activity_Service_UserData::UUID] = $uuid;
+$queryParams[Activity_Service_UserData::ACTIVITY_ID] = $id;
+$userInfo = Activity_Service_UserData::getBy($queryParams); 
+?>
+<div class="h_a">
+	<span>活动ID：<?php echo $id;?>, 用户ID：<?php echo $uuid;?></span>
+</div>
+<div class="h_b">
+	<span>每日任务</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr>
+			<th> 日期 </th>
+			<td> 活动一 </td>
+			<td> 活动二 </td>
+		</tr>
+		<?php
+		$activity = json_decode($cfg[Activity_Service_Cfg::ACTIVITY], true);
+		$userData = json_decode($userInfo[Activity_Service_UserData::DATA], true);
+		Festival_SummerController::toolLog("getuserdata", array($userInfo));
+		foreach ( $activity['day_task'] as $key => $dayConfig ) {
+		?>
+		<tr>
+			<th>
+				<?php echo date('Y-m-d', $key); ?>
+			</th>
+			<?php 
+			for ($i = 1; $i < 3; $i++) {
+				$result = $userData['day_task'][$key][$i]; 
+			?>
+			<td>
+				<form method="post" action="<?php echo $changeUserData1Url;?>" id="addFrom">
+					<input name="token" value="<?php echo $token;?>" type="hidden" />
+					<input name="uuid" value="<?php echo $uuid;?>" type="hidden" />
+					<input name="day" value="<?php echo $key;?>" type="hidden" />
+					<input name="tid" value="<?php echo $i;?>" type="hidden" />
+					<input name="value" value="<?php echo $result;?>" type="hidden" />
+					<button onfocus="blur();" type="submit">
+						<?php 
+						if ($result) {
+							echo "完成";
+						} else {
+							echo "未完成";
+						} 
+						?>
+					</button>
+				</form>
+			</td>
+			<?php } ?>
+		</tr>
+		<?php
+		} 
+		?>
+	</table>
+</div>
+<div class="h_b">
+	<span>抽奖</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr>
+			<td> 抽奖一 </td>
+			<td> 抽奖二 </td>
+			<td> 抽奖三 </td>
+		</tr>
+		<tr>
+			<?php
+			for($i = 1; $i < 4; $i++) {
+				$result = $userData['reward'][$i];
+			?>
+			<td>
+				<form method="post" action="<?php echo $changeUserData2Url;?>" id="addFrom">
+					<input name="token" value="<?php echo $token;?>" type="hidden" />
+					<input name="uuid" value="<?php echo $uuid;?>" type="hidden" />
+					<input name="tid" value="<?php echo $i;?>" type="hidden" />
+					<button onfocus="blur();" type="submit">
+						<?php
+							if ($result == 2) {
+								echo "已抽奖";
+							} else if ($result == 1) {
+								echo "可抽奖";
+							} else {
+								echo "未抽奖";
+							} 
+						?>	
+					</button>
+				</form>
+			</td>
+			<?php 
+			} 
+			?>
+		</tr>
+	</table>
+</div>
+<div class="h_b">
+	<span>删除用户数据</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<form method="post" action="<?php echo $changeUserData3Url;?>" id="addFrom">
+			<input name="token" value="<?php echo $token;?>" type="hidden" />
+			<input name="uuid" value="<?php echo $uuid;?>" type="hidden" />
+			<button onfocus="blur();" type="submit">删除</button>
+		</form>
+	</table>
+</div>
+<div class="mr10 cc">
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

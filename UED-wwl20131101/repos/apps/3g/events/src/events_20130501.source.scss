@@ -1,0 +1,165 @@
+@charset "UTF-8";
+@import "compass/css3";
+@import "E:/www/mue/component/_sass/vars.scss";
+@import "E:/www/mue/component/_sass/func.scss";
+@import "E:/www/mue/component/_sass/reset.scss";
+
+@include GIONEE_WEBSITE_REST("REST_ENV_PX");
+
+body{background:#8b1919; line-height:25*$px; color:#ffa160;}
+
+.ishide{display:none;}
+
+a:link,a:visited{color:#ffa160;}
+
+.ui-toolbar {width:100%; z-index: 999}
+
+.ui-toolbar-wrap {position: relative;}
+
+.ui-toolbar-title {height: 100%;}
+
+.ui-toolbar-backbtn {display: block; position: relative; float: left; cursor: pointer; -webkit-box-sizing:border-box; box-sizing:border-box; -webkit-user-select: none; user-select: none;}
+
+.ui-toolbar-left, .ui-toolbar-right {position: absolute; top:0; height: 100%;}
+.ui-toolbar-left {left: 0;}
+.ui-toolbar-right {top:0; right:0;}
+.ui-toolbar-left > * {display: inline-block; float: left; margin-right:5px; text-align: center;}
+.ui-toolbar-right > * {display: inline-block; float: right; margin-right:10px; text-align: center;}
+
+.ui-toolbar-wrap{height:40*$px; background:#7c0e0f; margin-bottom:20*$px; @include box-shadow(0 2px 5px rgba(0,0,0,.3));}
+.ui-toolbar-backbtn{background:#8b1919; border:1px solid #741112; border-width:1px 1px 1px 0; margin:5*$px 0 0 20*$px; padding:0 8*$px 0 6*$px; height:30*$px; line-height:29*$px;}
+.ui-toolbar-backbtn::before, .ui-toolbar-backbtn::after{content:""; position:absolute; left:-8*$px; top:-1*$px;  width:0; height:0; display:block; border:solid; border-width:15*$px 8*$px 15*$px 0;}
+.ui-toolbar-backbtn::before{border-color:transparent #741112 transparent transparent;}
+.ui-toolbar-backbtn::after{border-color:transparent #8b1919 transparent transparent; left:-7*$px;}
+.ui-toolbar-title{
+	line-height:40*$px; text-align:center; font-weight:bold;
+	span{display:none;}
+}
+
+//抽奖模块
+.lottery-wrap{
+	@extend .no-flick;
+	height:350*$px; min-width:320*$px; max-width:360*$px; margin:0 auto; position:relative;
+	background:url("../img/events-main-bg.jpg") no-repeat left top;
+	@include background-size(cover);
+	@media all and (max-width:320px) and (-webkit-min-device-pixel-ratio:1.5){@include background-size(320*$px auto); height:310*$px;}
+	@media all and (min-width:359px) and (-webkit-min-device-pixel-ratio:1.5){@include background-size(360*$px auto); height:350*$px;}
+	.lottery-bg{
+		position:absolute; left:36%; top:41%; width:92*$px; height:104*$px; overflow:hidden; text-indent:-999em; z-index:1000;
+		@media all and (max-width:320px) and (-webkit-min-device-pixel-ratio:1.5){left:35%; top:40%;}
+		background:url("../img/events-main-bg3.png") no-repeat 0 0;
+		background-size:100% auto;
+
+		&:active{
+			background:url("../img/events-main-bg3-active.png") no-repeat 0 0;
+			background-size:100% auto;
+		}
+	}
+
+	.lottery-pointer{
+		position:absolute; left:36%; top:41%; width:92*$px; height:104*$px; overflow:hidden; text-indent:-999em; z-index:999;
+		@media all and (max-width:320px) and (-webkit-min-device-pixel-ratio:1.5){left:35%; top:40%;}
+		background:inline-image("../img/events-main-bg4.png") no-repeat 0 0;
+		background-size:100% auto;
+	}
+}
+
+//中奖提示
+.show-winning-tips{
+	display:block;
+	-webkit-animation-name: show-winning;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-iteration-count: 1;
+    //-webkit-animation-direction: alternate;
+	-webkit-animation-timing-function: ease-in-out;
+}
+
+
+@-webkit-keyframes show-winning {
+	0% {
+		-webkit-transform: scale(.1,.1);
+		opacity:.2;
+    }
+    100% {
+    	-webkit-transform: scale(1,1);
+    	opacity:1;
+    }
+}
+
+.winning-tips-wrap{
+	display:-webkit-box; -webkit-box-align:center; -webkit-box-pack:center; height:148*$px; min-width:236*$px; max-width:260*$px; margin:0 auto; position:relative; padding:20*$px; text-align:center; color:#fffd48; font-size:16*$px;
+	background:url("../img/events-main-tips-bg1.jpg") no-repeat center 10*$px, url("../img/events-main-tips-bg0.png") no-repeat left top;
+	@include background-size(276px 156px,100% auto);
+	.btn{color:#ffe081;}
+	.winning,.unwinning,.timeout{
+		.txt{font-size:22*$px; line-height:30*$px;}
+		.btn{width:80%; margin-top:10*$px; font-size:20*$px; padding:5*$px 0;}
+	}
+}
+
+.events-info{margin:0 10*$px; ol{padding:10*$px 5*$px;}}
+
+.btn{
+	display:inline-block;
+	width:90*$px; height:28*$px; text-align:center; line-height:28*$px; border:1px solid #e94418;
+	@include lg(top,#fc744e,#e63a0c);
+	@include border-radius(3*$px);
+	@include box-shadow(0 2px 5px rgba(0,0,0,.4));
+	&:active,&:hover{
+		@include lg(top,#e63a0c,#fc744e);
+	}
+}
+
+//活动展示
+.events-show{
+	margin:0 10*$px; padding-bottom:20*$px;
+	.events-show-title{
+		display:-webkit-box; background:#e84114; padding:5*$px;
+		h2, a{font-size:18*$px; font-weight:normal; color:#fcf046;}
+		h2{-webkit-box-flex:1;}
+	}
+	.events-show-pic{
+		display:-webkit-box; overflow:hidden; padding-top:10*$px;
+		a{display:block; -webkit-box-flex:1; text-align:center;}
+		a:first-child{text-align:left;}
+		a:last-child{text-align:right;}
+		img{width:90*$px; height:90*$px;}
+		span{display:block; color:#ffa160;}
+	}
+}
+
+//奖励中心
+.award-center-list{
+	li{float:left; display:inline-block; width:50%;}
+	.pic{text-align:center; img{width:90*$px; height:90*$px;}}
+	.txt{
+		margin-bottom:20*$px; font-size:12*$px;
+		span{display:block; text-align:center; line-height:normal; margin-top:8*$px;}
+		a{color:#ffe081;}
+		
+	}
+}
+
+.events-detail-title{
+	//background:url("../img/events-award-detail-title.png") no-repeat 23*$px 8*$px,url("../img/events-award-title-bg.png") no-repeat left top; width:244*$px; height:88*$px;
+	//background-size:69*$px 19*$px,244*$px 88*$px;
+	background:url("../img/events-award-detail-title.png") no-repeat center center;
+	background-size:69*$px 19*$px;
+}
+
+.award-center-title{
+	//background:url("../img/events-award-center-title.png") no-repeat 23*$px 8*$px,url("../img/events-award-title-bg.png") no-repeat left top; width:244*$px; height:88*$px;
+	//background-size:69*$px 19*$px,244*$px 88*$px;
+	background:url("../img/events-award-center-title.png") no-repeat center center;
+	background-size:69*$px 19*$px;
+}
+
+.events-detail-content{padding:15*$px; overflow:hidden;}
+.events-detail-item{
+	display:-webkit-box;
+	.pic img{width:100*$px; height:100*$px;}
+	.txt {
+		span{display:block; line-height:23*$px; padding-left:15*$px;}
+		a{color:#ffe081;}
+	}
+}

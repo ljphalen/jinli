@@ -1,0 +1,78 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">店铺列表</a></li>
+    <li class="current"><a href="javascript:;">编辑店铺</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑店铺</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<input name="channel_id" value="<?php echo $info['channel_id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">shop_id</th>
+			<td class="td"><input type="text" class="input wc" name="shop_id" value="<?php echo $info['shop_id'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">店铺名称</th>
+			<td class="td"><input type="text" class="input wc" name="shop_title" value="<?php echo $info['shop_title'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">店铺链接</th>
+			<td class="td"><textarea class="input wc" name="shop_url"><?php echo $info['shop_url'];?></textarea></td>
+		</tr>
+        <tr class="tr">
+            <th class="th">推广商品</th>
+            <td class="td"><input type="text" class="input wc" name="goods_ids" placeholder="推广商品id，多个逗号隔开" value="<?php echo $info['goods_ids']; ?>"/></td>
+        </tr>
+        <tr class="tr">
+            <th class="th">状态</th>
+            <td class="td">
+                <select name="status">
+                    <option <?php if($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+                    <option <?php if($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="tr">
+            <th class="th">店铺类型</th>
+            <td class="td">
+				<select name="shop_type">
+					<?php foreach ($shop_type as $k=>$v):?>
+						<option value="<?php echo $k; ?>" <?php if($k==$info['shop_type'])echo 'selected="selected"'; ?>><?php echo $v; ?></option>
+					<?php endforeach; ?>
+				</select>
+            </td>
+        </tr>
+		<tr class="tr">
+			<th class="th">LOGO</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="ShopImg">
+						<img src="<?php if(strpos($info['logo'], 'http://') === false) {echo $attachPath,$info['logo'];}else{echo $info['logo'];};?>"/>
+						<input type="hidden" name="logo" value="<?php echo $info['logo'];?>">
+					</li>
+				</ul>
+                <p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=ShopImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p>
+            </td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+    var uri = '<?php echo Util_Http::getServer("HTTP_REFERER"); ?>';
+	ajaxForm('addForm',function(ret){
+        ajaxRedirect(ret, '<?php echo Util_Http::getServer('HTTP_REFERER'); ?>');
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

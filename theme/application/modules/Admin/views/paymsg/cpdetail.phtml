@@ -1,0 +1,139 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript"
+src="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.js"></script>
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <div id="pay_paymsg_cpdetail">
+        <div class="content">
+        	<div class="upload_zt_detail">
+        		<div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell">名称</label>
+                        <div class="tb_cont tb_cell">
+                           <p class="zt_name"><?php echo $theme['title']; ?></p>
+                        </div>
+                    </div><!-- com_tb end -->
+                </div>
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell">作者</label>
+                        <div class="tb_cont tb_cell">
+                            <p class="zt_author"><?php echo $theme['author']; ?></p>
+                        </div>
+                    </div><!-- com_tb end -->
+                </div>
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell">预览图</label>
+                            <div class="cell_img_detial" id="cell_img_detial">
+                                <?php foreach($imgs as $img){ ?>
+                                <a><img src='<?php echo $imageurl.$img['img']; ?>' style="height:auto;"></a>
+                                <?php } ?>
+                            </div>
+                    </div>
+                </div>
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell">一级标签</label>
+                         <div class="tb_cont tb_cell">
+                            <ul class="tag_list tag_one">
+                                <li><?php echo $theme['type_name']; ?></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell align_top">二级标签</label>
+                        <div class="tb_cont tb_cell">
+                            <ul class="tag_add_wrap">
+                                <?php foreach($theme['sec_type_name'] as $sec_type){ ?>
+                                <li class="btn_tag"><span><?php echo $sec_type; ?></span><i class="tag_del"></i></li>
+                                <?php } ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell align_middle">主题介绍</label>
+                        <div class="tb_cont tb_cell txt_editor_wrap"><textarea class="txt_editor" placeholder="填写主题介绍" readonly="readonly"><?php echo $theme['descript']; ?></textarea></div>
+                    </div>
+                </div>
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell">价格变动</label>
+                        <div class="tb_cont tb_cell">
+                            <p><span class="now_price">目前价格为<?php echo $price['current_price']; ?>A币</span><span class="recent_price">修改后的价格为<?php echo $price['apply_price']; ?>A币</span></p>
+                        </div>
+                    </div><!-- com_tb end -->
+                </div><!-- com_tb_wrap end -->
+                <div class="com_tb_wrap">
+                    <div class="com_tb">
+                        <label class="tb_cell top">状态</label>
+                        <div class="tb_cont fl">
+                            <div class="select_box" id="select_status">
+                                <?php if($price['status']>0){?>
+                                <label class="select_val" val="<?php echo $price['status']; ?>"><?php echo $status[$price['status']]; ?></label>
+                                <?php } else {?>
+                                <label class="select_val">请选择</label>
+                                <?php } ?>
+                                <ul class="select_option">
+                                    <?php foreach($status as $key=> $val){?>
+                                    <li val="<?php echo $key; ?>"><?php echo $val; ?></li>
+                                    <?php } ?>
+                                </ul>
+                            </div><!-- select_box -->
+                        </div>
+                        <div class="tb_cont fl"><textarea class="txt_editor" placeholder="请填写修改的理由及原因" id="change_reason"><?php echo $price['apply_reason']; ?></textarea>
+                        </div>
+                    </div><!-- com_tb end -->
+                </div><!-- com_tb_wrap end -->
+            <div class="bnts_wrap">
+                <button class="btn_s2 pop_btn" openPopId="fixTipView">完成</button>
+            </div>
+        </div><!-- content end -->
+    </div>
+</section>
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">价格已修改,是否保存</p>
+                    <div class="tip_btns"><button class="btn_s2 save_ok " id="submitBtn">确定</button>
+                        <button class="btn_s2 btnCancel " >取消</button></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+<script type="text/javascript">
+	$(function(){
+        $("#submitBtn").click(function(){
+            var status = $("#select_status").find(".select_val").attr('val');
+            var reason = $("#change_reason").val();
+            var price_id = "<?php echo $_GET['id'];?>";
+
+            var url = '/Admin/paymsg/changestatus';
+            var data = {
+                status: status,
+                reason: reason,
+                id: price_id,
+                token: token,
+            };
+            $.post(url, data, function(d){
+                if(d){
+                    window.location.href = "/Admin/paymsg/cpdetail?id=<?php echo $_GET['id'];?>";
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

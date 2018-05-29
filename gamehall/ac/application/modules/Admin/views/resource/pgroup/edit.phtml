@@ -1,0 +1,60 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">机组列表</a></li>
+    <li class="current"><a href="javascript:;">管理机组</a></li>
+	</ul>
+</div>
+<form id="editForm" action="<?php echo $editPostUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="id"  type="hidden" value="<?php echo $info['id'];?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">机组名称</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="select wa">
+				<option <?php if ($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+				<option <?php if ($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="h_a">
+	<span>选择机型</span> 	
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td>机型</td>
+			<td>运营商</td>
+		</tr>
+		<?php $p_id= explode(',' ,$info['p_id']); ?>
+        <?php foreach($modes as $key => $value) {	?>
+		 <tr class="ct">
+		    <td>
+		     <input class="checkbox"  <?php echo in_array($value['id'], $p_id) ? 'checked' : ''; ?> name="ids[]" value="<?php echo $value['id'];?>" type="checkbox">
+		     <input name="lables[<?php echo $value['id'];?>]" type="hidden" value="<?php echo $value['title'];?>" />
+		    </td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $operators[$value['operators']]['title'];?></td>
+		</tr>
+    <?php } ?>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">完成</button></span></span></div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Resource_Pgroup/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,39 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">机组列表</a></li>
+		<li class="current"><a href="<?php echo $filerAddUrl.'?id='.$s['id'];?>">批量添加包名</a></li>
+	</ul>
+</div>
+<div class="h_a"><span style="font-weight:700;"><?php echo $info['title'];?></span></div>
+
+<div class="h_a">批量添加过滤游戏</div>
+<span class="btn2"><span><a href="<?php echo $filerAddUrl.'?id='.$id;?>" class="mr10" style="color:white;margin-right:0px;">返回 </a></span></span>
+<form method="post" action="<?php echo $importPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $id;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+			    <th class="th"> </th>
+				<td class="td">
+					 <textarea name=packages class="textarea wc" style="height:700px; width:600px"></textarea>
+					 <br/>
+					 <br/>
+					 <span style="color:red">请填写游戏包名,并分行区分</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Resource_Pgroup/filerAdd?id=<?php echo $id;?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

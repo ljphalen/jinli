@@ -1,0 +1,177 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $prizeListUrl; ?>">奖品列表</a></li>
+			<li class="current"><a href="<?php echo $editUrl; ?>">添加奖品</a></li>
+		</ul>
+	</div>
+	<div class="table_list">
+		<form method="post" action="<?php echo $prizePostUrl; ?>" id="addForm">
+			<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+			<div class="table_full">
+				<table style="width: 100%">
+				<tr class="tr">
+						<th class="th">活动名：</th>
+						<td class="td">
+							<select name="activity_type" id="activity_type">
+								<option value="0">请选择</option>
+								<?php foreach ($typeList as $k => $v) { ?>
+									<option <?php echo ($v['id'] == $data['activity_type']) ? 'selected="selected"' : ''; ?> value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+								<?php } ?>
+							</select>
+						</td>
+					</tr>
+				
+					<tr class="tr">
+						<th class="th">奖品名称</th>
+						<td class="td"><input name="name" id="name" class="input" value="<?php echo $data['name']; ?>">
+						</td>
+					</tr>
+                    <tr class="tr">
+                        <th class="th">显示数量</th>
+                        <td class="td">
+                            <input name="show_number" id="show_number" class="input" value="<?php echo $data['show_number']; ?>"></td>
+                    </tr>
+					
+					<tr class="tr">
+						<th class="th">数量(实际)</th>
+						<td class="td">
+							<input name="number" id="number" class="input" value="<?php echo $data['number']; ?>"></td>
+					</tr>
+					
+					<tr class="tr">
+						<th class="th">奖品等级</th>
+						<td class="td">
+							<select name="prize_level">
+								<option>请选择</option>
+								<?php foreach ($prizeLevels as $k => $v) { ?>
+									<option value="<?php echo $k; ?>" <?php if ($k == $data['prize_level']) echo 'selected'; ?>><?php echo $v; ?></option>
+								<?php } ?>
+							</select>
+						</td>
+					</tr>
+					
+					<tr class="tr">
+						<th class="th">奖品类型</th>
+						<td class="td">
+							<select name="prize_type"  id="prize_type">
+								<option value="0">请选择</option>
+								<?php foreach ($prizeTypes as $k => $v) { ?>
+									<option value="<?php echo $k; ?>" <?php if ($data['prize_type'] == $k) echo 'selected'; ?>><?php echo $v; ?></option>
+								<?php } ?>
+							</select>
+						</td>
+					</tr>
+
+						<tr class="tr" id="tr_prize_info" >
+						<th class="th"> 金币数/实物奖品名</th>
+						<td class="td"  id="td_prize_info">
+							<?php if($data['prize_type'] == '1'){?>
+							<select name="prize_val"  id="entity_goods_id">
+							<option value="0">请选择</option>
+							<?php foreach($goodsList   as $k=>$v){?>
+								<option value="<?php echo $v['id'];?>" <?php if($v['id'] == $data['prize_val']) echo 'selected';?>><?php echo $v['name'];?></option>
+							<?php }?>
+							</select>
+							<?php }else{?>
+							<input name="prize_val"  id="prize_scores" class="input" value="<?php echo $data['prize_val']; ?>">
+							<?php }?>
+						</td>
+					</tr>
+	
+					<tr class="tr">
+						<th class="th">中奖概率</th>
+						<td class="td">
+							<input name="ratio" id="ratio" class="input" value="<?php echo $data['ratio']; ?>"></td>
+					</tr>
+
+					<tr class="tr">
+						<th class="th">开始时间(默认不填)</th>
+						<td class="td"><input type="text" class="input" id="start_time" name="start_time" width="80px;" value="<?php echo $data['start_time']?date("Y-m-d H:i:s",$data['start_time']):''; ?>"></td>
+					</tr>
+		
+				<tr class="tr">
+					<th class="th">结束时间(默认不填)</th>
+					<td class="td"><input type="text" class="input" id="end_time" name="end_time" width="80px;" value="<?php echo $data['start_time']?date("Y-m-d H:i:s",$data['end_time']):''; ?>"></td>
+				</tr>
+					
+					<tr class="tr">
+						<th class="th">排序</th>
+						<td class="td">
+							<input name="sort" id=""   class="input" value="<?php echo $data['sort']; ?>">
+						</td>
+					</tr>
+
+					<tr class="tr">
+						<th class="th">图片</th>
+						<td class="td">
+							<ul class="uploadImg">
+								<li id="nationalImage">
+									<?php if ($data['image']) { ?>
+										<img src="<?php echo $attachPath . $data['image']; ?>"/>
+									<?php } else { ?>
+										<img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+									<?php } ?>
+									<input type="hidden" name="image" value="<?php echo $data['image']; ?>">
+								</li>
+							</ul>
+							<p style="clear:both;">
+								<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=nationalImage'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+							</p>
+						</td>
+					</tr>
+					
+					<tr class="tr">
+						<th class="th">状态</th>
+						<td class="td">
+							<select name="status">
+								<option value="1"   <?php if ($data['status'] == '1') echo 'selected'; ?>>开启</option>
+								<option value="0"   <?php if ($data['status'] == '0') echo 'selected'; ?>>关闭</option>
+							</select>
+						</td>
+					</tr>
+
+				</table>
+				<div class="mb10 tac">
+					<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+				</div>
+				<input type="hidden" value="<?php echo $data['id']; ?>" name="id">
+			</div>
+		</form>
+	</div>
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+	<script type="text/javascript">
+		//用户表单数据提交
+		$(document).ready(function () {
+			$('#start_time').datetimepicker();
+			$('#end_time').datetimepicker();
+			
+			ajaxForm('addForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Event/prizeList');
+			});
+		});
+
+		$("#prize_type").bind('change',function(){
+			var typeValue = $("#prize_type option:selected").val();
+			if(typeValue == 1){
+				$.ajax({
+					'url':'/Admin/Event/ajaxGetEventGoodsList',
+					'type':'post',
+					'dataType':'json',
+					'data':{'token':'<?php echo $token;?>'},
+					'success':function(e){
+						var html = '<select name="prize_val" id="prize_val"><option value="0">请选择</option>';
+							$.each(e.data,function(i,m){
+								html+='<option value="'+m.id+'">'+m.name+"</option>";
+							});
+							html+="</select>";
+							$("#td_prize_info").html(html);
+						},
+					});
+			}else{
+				var text  = '<input class="input"  value="" type="input" name="prize_val" >';
+				$("#td_prize_info").html(text);
+			}
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

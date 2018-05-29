@@ -1,0 +1,195 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+
+<style type="text/css">
+    .pre_publish{
+        background-color: #E5E5E5;
+    }
+</style>
+<!-- 导航栏Ajax加载 指向navagator.html  menuOn表示分别需要高亮的菜单栏id 用下划线_隔开 eg:bz_taotu_taotuPack-->
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- wp01-壁纸详情-->
+    <div id="bz_admin_wp01">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">一级标签</label>
+                    <div class="tb_cont tb_cell">
+                        <ul class="tag_list tag_one"><!-- tag_one 一级标签 只能选中一个 -->
+                            <a href="/Admin/wallpaperadmin/hot">
+                                <li value="0" class="<?php if (!$tid) echo 'on'; ?>">全部</li>
+                            </a>
+                            <?php foreach ($targ as $v) { ?>
+                                <a href="/Admin/wallpaperadmin/hot?tid=<?php echo $v['w_type_id'] ?>">
+                                    <li value="<?php echo $v['w_type_id']; ?>" class="<?php if ($v['w_type_id'] == $tid) echo 'on'; ?>"><?php echo $v["w_type_name"] ?></li>
+                                </a>
+                            <?php } ?>
+                        </ul>
+
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">二级标签</label>
+                    <div class="tb_cont tb_cell">
+                        <ul class="tag_list tag_two">
+                            <?php foreach ($sedtype as $v) { ?>
+                                <li val="<?php echo $v['w_subtype_id'] ?>"
+                                    class="<?php
+                                    if (in_array($v['w_subtype_id'], $selectsedIds)) {
+                                        echo 'on';
+                                    }
+                                    ?>"
+                                    >
+                                        <?php echo $v['w_subtype_name']; ?>
+                                </li>
+                            <?php } ?>
+
+                        </ul>
+
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">搜索:</label>
+                    <div class="tb_cont tb_cell">
+                        <input type="text" style="width:350px;" class="rd_1 search_name" value="<?php echo $search ?>">
+                        <button class="btn_s2 search_btn">搜索壁纸</button>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <!-- 列表模式 -->
+            <section class="view view_list show" id="viewList">
+                <!-- 批量管理内容 默认隐藏 -->
+                <div class="view_admin view_list_admin">
+                    <!-- checkClass表示 点击后 哪些class要被选中 -->
+                    <button class="btn_check btn_check_all" checkClass="btn_check_list"></button><label>全选</label><span class="btn btn_s1 pack_approve">批量通过</span><span class="btn btn_s1 pack_del">批量删除</span>
+                </div>
+                <table class="view_list_tb">
+                    <thead>
+                        <tr><th>壁纸</th>
+                            <th>排序</th>
+                            <th>名称</th>
+                            <th>大小</th>
+                            <th>作者</th>
+                            <th>一级标签</th>
+                            <th>二级标签</th>
+                            <th>上传时间</th>
+                            <th>上架时间</th>
+                            <th>分辨率</th>
+                            <th>下载量</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <?php foreach ($wallpaper as $v) { ?>
+                            <tr class="<?php if (strtotime($v['wallpaper_online_time']) > time()) echo 'pre_publish'; ?>">
+                                <td><button class="btn_check btn_check_list"></button>
+                                    <img src="<?php echo $v['url'] ?>" val="<?php echo $v['wallpaper_path'] ?>" class="tb_cell_img pop_btn prev_btn" openPopId="fixPicView">
+                                </td>
+                                <td val="<?php echo $v['wallpaper_id'] ?>"><input class="numSort" size="12" type="text" value="<?php echo $v['hot_sort'] ?>"></td>
+
+                                <td><?php echo $v['wallpaper_name'] ?></td>
+                                <td><?php echo sprintf("%.1f", $v['wallpaper_size'] / 1000) . "KB" ?></td>
+                                <td><?php echo $v['user_name'] ?></td>
+                                <td><?php echo $linetarg[$v['wallpaper_type']]['w_type_name'] ?></td>
+                                <td>
+
+                                    <?php
+                                    foreach ($sedidxwallpaper[$v['wallpaper_id']] as $tar) {
+                                        echo $sedtype[$tar]['w_subtype_name'] . "<br/>";
+                                    }
+                                    ?>
+                                </td>
+                                <td><?php if ($v['wallpaper_updatetime']) echo date("Y/m/d", $v['wallpaper_updatetime']); ?></td>
+
+                                <td><?php if ($v['wallpaper_online_time']) echo date('Y/m/d', strtotime($v['wallpaper_online_time'])); ?></td>
+
+                                <td><?php echo $v['wallpaper_width'] . "X" . $v["wallpaper_height"] ?></td>
+                                <td><?php echo $v['wallpaper_down_count'] ?></td>
+                            </tr>
+
+
+                        <?php } ?>
+
+
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 分页模块 -->
+            <?php echo $this->render("common/pageshow.phtml"); ?>
+
+        </div><!-- content end -->
+
+    </div>
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">是否删除壁纸<span></span></p>
+                    <div class="tip_btns"><button class="btn_s2 del_ok">确定</button>
+                        <button class="btn_s2 btnCancel">取消</button></div>
+                    <div class="pop_close"></div>
+                </div>
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+<script type="text/javascript">
+    $(function () {
+        $(".search_btn").on("click", function () {
+            var name = $(".search_name").val();
+            window.location.href = "/Admin/wallpaperadmin/hot?search=" + name;
+        });
+
+        $(".tag_two >li").click(function () {
+            var ids = $(".tag_two>li").filter(".on").map(function () {
+                return $(this).attr("val");
+            }).get().join("_");
+
+            var id = $(".tag_one>a").find("li.on").attr("value");
+            var data = "ids=" + ids + "&tid=" + id + "&token=" + token;
+            var url = "/Admin/wallpaperadmin/hot?" + data;
+            window.location.href = url;
+        });
+
+        $(".select_stu >li").click(function () {
+            var status = $(this).attr("val");
+            var data = "status=" + status;
+
+            window.location.href = "/Admin/wallpaperadmin/hot?" + data;
+        });
+
+        $(".numSort").change(function () {
+            var sort = $(this).val();
+            var id = $(this).parent().attr("val");
+
+            if (isNaN(sort)) {
+                alert("请输入有效的数字");
+                return 0;
+            } else {
+                var uri = "sort=" + sort + "&id=" + id + "&token=" + token;
+                var url = "/Admin/wallpaperadmin/updateHot";
+                $.post(url, uri, function (data) {
+                    if (data == 1) {
+                        //window.location.href = "/Admin/wallpaperadmin/hot";
+                    }
+                })
+            }
+        });
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<?php echo $this->render("layout/header.phtml");?>
+<style>
+	.ct_01 td{
+		padding: 7px 10px 9px;
+		color: #666;
+	}
+	.text{
+		border:1px solid gray ;
+		background: #fff;
+		min-height:40px; 
+		margin-bottom: 4px;
+	}
+	.icon_user{
+		background-position: -144px -96px;
+		width: 16px;height: 16px;
+	}
+	
+</style>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $listUrl;?>">免流量活动</a></li>
+		<li  class="current"><a href="<?php echo $ulistUrl;?>">用户统计</a></li>
+        <li><a href="<?php echo $flistUrl;?>">流量统计</a></li>
+        <li><a href="<?php echo $blistUrl;?>">黑名单</a></li>
+	</ul>
+</div>
+<form action="<?php echo $ulistUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+	    <tr>
+	        <th class="th">IMSI</th>
+			<td class="td"><input type="text" class="input" name="imsi" value="<?php echo $s['imsi'];?>"></td>
+			<th class="th">账号</th>
+			<td class="td"><input type="text" class="input" name="uname" value="<?php echo $s['uname'];?>"></td>
+			<th class="th">IMEI</th>
+			<td class="td"><input type="text" class="input" name="imei" value="<?php echo $s['imei'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">流量排序</th>
+			<td class="td">
+			<select name="sort" class="select wa">
+				  <?php foreach($stype as $key=>$value) {?>
+    			  <option value="<?php echo $key;?>" <?php if($s['sort'] == $key) echo 'selected="selected"';?>><?php echo $value;?></option>
+    			<?php }?>
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+    <span class="btn2"><span><button type="button" id="extportBtn">导出数据</button></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="btn2"><span><button><a href="<?php echo $ualistUrl;?>" class="mr10" style="color:white;">全部用户</a></button></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;共<?php echo $total;?>条结果</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="100">编号</td>
+			<td width="300">IMSI</td>
+			<td width="300">IMEI</td>
+			<td width="100">累计消耗</td>
+			<td align="center">操作</td>
+		</tr>
+<?php foreach($result as $key => $value) {?>
+		<tr class="ct_01">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo  $value['imsi'];?></td>
+			<td><?php echo  $value['imei'];?></td>
+			<td><?php echo $value['total_consume'];?>M</td>
+			<td align="center">
+			<a href="<?php echo $uzdetailUrl;?>/?imsi=<?php echo $value['imsi'];?>">账号明细</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="<?php echo $udetailUrl;?>/?id=<?php echo $value['id'];?>&imsi=<?php echo $value['imsi'];?>" class="mr10">用户明细</a>
+			</td>
+		</tr>
+		<tr class="ct">
+			<td colspan="6">
+			<span class="ui-icon ui-icon-person" style="display:inline-block;margin-bottom:-4px"></span>
+				<?php 
+				   $imei = "IMEI:".$value['imei'];
+				?>
+				<?php echo $value['nickname'];?>/<?php echo $value['uname'];?>/<?php echo $imei;?>/<?php echo $value['model'];?>/<?php echo $value['client_pkg'] == "gn.com.android.gamehall" ? "游戏大厅" : "艾米游戏";?>/<?php echo $value['version'];?>/<?php echo $value['sys_version'];?>
+				</td>
+			</tr>
+		</tr>
+		<tr></tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<div class="mr10 cc">
+	<form action="<?php echo $uexportUrl;?>" method="post" id="exportForm">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<input type="hidden" name="imsi" value="<?php echo $s['imsi'];?>">
+	<input type="hidden" name="uname" value="<?php echo $s['uname'];?>">
+	<input type="hidden" name="imei" value="<?php echo $s['imei'];?>">
+	<input type="hidden" name="sort" value="<?php echo $s['sort'];?>">
+	</form>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Freedl_Hd/uindex');
+	});
+	$("#extportBtn").click(function(){
+		$("#exportForm").submit();
+    });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

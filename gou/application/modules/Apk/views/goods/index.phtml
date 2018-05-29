@@ -1,0 +1,61 @@
+<?php echo $this->render("layout/header2.phtml");?>
+	<div id="page">
+		<div id="iscrollWrap">
+			<div class="mainWrap">
+				<?php if ($hasheader) {?>
+				<header class="hdWrap">
+					<div class="hd-l"><a href="<?php echo $webroot;?>" class="l-arrow">back</a></div>
+					<div class="hd-r"><h1>积分换购专区</h1></div>	
+				</header>
+				<?php }?>
+				<!-- 内容区域 START-->
+					<section class="pscore">
+							<div class="content">
+								<?php foreach($goods as $key=>$value) {
+									$date_time = $key - time();
+									$days = intval($date_time/86400);
+									$remain = $date_time%86400;
+									$hours = intval($remain/3600);
+									$remain = $remain%3600;
+									$mins = intval($remain/60);
+									$secs = $remain%60;
+								?>
+								<div class="date-time J_countDown" data-endTime="<?php echo $key;?>" data-currentTime="<?php echo time();?>">剩余时间：<span class="days"><?php echo $days;?></span>天<span class="hours"><?php echo $hours;?></span>小时<span class="minutes"><?php echo $mins;?></span>分钟<span class="seconds"><?php echo $secs;?></span>秒</div>
+								<?php foreach($value as $k=>$v) {?>
+								<section>
+									<a href="<?php echo $webroot,'/goods/detail/?id='.$v['id'];?>">
+										<div class="mod-pic-list">
+											<div class="pic">
+											<img src="<?php echo $attachPath, $v['img'];?>" />
+											<?php if ($v['stock_num'] == 0) {?>
+											<div class="over">卖光了</div>
+											<?php }?>
+											</div>
+											<div class="txt">
+												<div><?php echo $v['title'];?></div>
+												<div>
+													￥<span class="zt-red"><?php echo $v['price'];?></span>
+													<span class="zt-orange fr"> 可用<?php echo $v['silver_coin']?>元银币抵现</span>
+												</div>
+												<div><span class="zt-gray">已有<?php echo $v['purchase_num'];?>人购买</span></div>
+											</div>
+										</div>
+									</a>
+								</section>
+								<?php }?>
+								<?php }?>
+								<!-- 积分换购规则 -->
+								<div class="link-rule"><a href="<?php echo $webroot,'/activity/coin'?>">积分换购活动</a></div>
+							</div>
+					</section>
+				<!-- 内容区域 END-->
+				<!-- 底部区域 START -->
+				<?php echo $this->render("layout/footer.phtml");?>
+				<!-- 底部区域 END -->
+			</div>
+
+		</div>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

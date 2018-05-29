@@ -1,0 +1,158 @@
+<?php echo $this->render("layout/header.phtml");?>
+<style>
+.ct2 td{padding: 7px 10px 9px;}
+</style>
+<div class="nav">
+	<ul class="cc">
+        <li><a href="<?php echo $pointShopIndexUrl;?>">积分商城</a></li>
+        <li><a href="<?php echo $pointCJIndexUrl;?>">积分抽奖</a></li>
+        <li><a href="<?php echo $presendIndexUrl;?>">人工发放</a></li>
+        <li class="current"><a href="javascript:;">中奖记录</a></li>
+	</ul>
+</div>
+<form action="<?php echo $logUrl;?>/?id=<?php echo $search['id'] ?>" method="post" >
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">	
+	   <tr class="tr">
+			<th class="th">抽奖状态</th>
+			<td class="td">
+			<select name="prize_status" class="select wa">
+			    <option  value="0">全部</option>
+				<option <?php if ($search['prize_status'] == 2) echo 'selected';?> value="2">已中</option>
+				<option <?php if ($search['prize_status'] == 1) echo 'selected';?> value="1">未中</option>
+			 </select>
+			</td>
+			<th class="th">奖项</th>
+			<td class="td">
+			 <select name="type" class="select wa">
+			    <option  value="0">全部</option>
+				<option <?php echo ($search['type'] == '2') ? 'selected':'';?> value="2">实体</option>
+  				<option <?php echo ($search['type'] == '3') ? 'selected':'';?> value="3">A券</option>
+  				<option <?php echo ($search['type'] == '4') ? 'selected':'';?> value="4">积分</option>
+  				<option <?php echo ($search['type'] == '1') ? 'selected':'';?> value="1">不中</option>
+			 </select>
+		   </td>
+		   <th class="th">发放</th>
+			<td class="td">
+			 <select name="send_status" class="select wa">
+			    <option  value="0">全部</option>
+				<option <?php if ($search['send_status'] == 2) echo 'selected';?> value="2">已发放</option>
+				<option <?php if ($search['send_status'] == 1) echo 'selected';?> value="1">未发放</option>
+			 </select>
+		   </td>
+		</tr>
+		<tr class="tr">
+		    <th class="th">抽奖时间</th>
+			<td class="td" colspan="2"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="prize_start_time" name="prize_start_time" value="<?php echo $search['prize_start_time'] ;?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="prize_end_time" name="prize_end_time" value="<?php echo $search['prize_end_time'] ;?>" /></div>
+			</td>
+			<th class="th">发放时间</th>
+			<td class="td" colspan="2"><div><input class="input" type="text" maxlength="30" style="width:143px;" id="send_start_time" name="send_start_time" value="<?php echo $search['send_start_time'] ;?>" /> 至 <input class="input" type="text" maxlength="30" style="width:143px;" id="send_end_time" name="send_end_time" value="<?php echo $search['send_end_time'] ;?>" /></div>
+			</td>
+		</tr>
+		<tr class="tr">
+		<th class="th">账号</th>
+		<td class="td"><input type="text" class="input" name="uname" value="<?php echo $search['uname'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="exportForm" action="<?php echo $exportUrl;?>?id=<?php echo $search['id']?>" method="post">
+	<input type="hidden" name="prize_status" value="<?php echo $search['prize_status'];?>">
+	<input type="hidden" name="type" value="<?php echo $search['type'];?>">
+	<input type="hidden" name="send_status" value="<?php echo $search['send_status']; ?>">
+	<input type="hidden" name="prize_start_time" value="<?php echo $search['prize_start_time'];?>">
+	<input type="hidden" name="prize_end_time" value="<?php echo $search['prize_end_time'];?>">
+	<input type="hidden" name="send_start_time" value="<?php echo $search['send_start_time'];?>">
+	<input type="hidden" name="send_end_time" value="<?php echo $search['send_end_time'];?>">
+	<input type="hidden" name="uname" value="<?php echo $search['uname'];?>">
+	<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="h_a">
+	<span class="btn2"><span><button type="button" id="exportBtn">导出数据</button></span></span>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="50">ID</td>
+			<td width="100">账号</td>
+			<td width="80">中奖状态</td>
+			<td width="100">奖项</td>
+			<td width="80">发放状态</td>
+			<td width="120">发放时间</td>
+			<td width="120">抽奖时间</td>
+			<td width="120">操作</td>
+		</tr>
+		<?php foreach ($data as $item):?>
+		  <tr class="<?php echo (($item['prize_status'] && ($config[$item['prize_cid']]['type']=='1'))) ? "ct2" : "ct";?>" >
+			<td><?php echo $item['id']?></td>
+			<td><?php echo $item['uname']?></td>
+			<td><?php echo ($item['prize_status']) ? '已中奖' : '未中';?></td>
+			<td><?php echo ($config[$item['prize_cid']]['title']) ? $config[$item['prize_cid']]['title'] : '-';?></td>
+			<td><?php echo ($item['prize_status']) ? (($item['send_status']) ? '已发' : '未发') : '-';?></td>
+			<td><?php echo ($item["send_time"]) ? date('Y-m-d  H:i:s', $item["send_time"]): '-';?> </td>
+			<td><?php echo date('Y-m-d  H:i:s', $item["create_time"]);?> </td>
+			<td>
+			<?php if ((!$item['send_status'])&&($config[$item['prize_cid']]['type'] == '1')) {?>
+					<a href="javascript:" onclick="sendOne('<?php echo $sendUrl;?>/?id=<?php echo $item['id'];?>', '', event);" class="mr10">发放</a>
+			<?php }?>
+			</td>
+		  </tr>	
+		  <?php if($item['prize_status'] && ($config[$item['prize_cid']]['type']=='1')):?>
+		  <tr class="ct">
+		  	<td></td>
+		  	<td colspan="6" style="background-color:white"> 收货人：<?php echo $item['receiver'];?>  联系电话：<?php echo $item['mobile'];?>  联系地址：<?php echo $item['address'];?> </td>
+		 	 <td></td>
+		  </tr>
+		  <?php endif;?>
+		<?php endforeach;?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//删除单个信息
+function sendOne(url, msg, e) {
+	if (msg == '')
+		msg = '确认发放该用户奖品？';
+	showConfirm(msg, function() {
+				$.ajax({
+							url : url,
+							type : 'POST',
+							dataType : 'json',
+							data : {
+								token:token
+							},
+							success : function(ret) {
+								if (ret.success) {
+									showMsg('', ret.msg);
+									setTimeout(function() {
+												location.reload();
+											}, 500);
+								} else {
+									showError('', ret.msg);
+								}
+							}
+						});
+			}, e);
+
+}
+
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#prize_start_time').datetimepicker();
+     $('#prize_end_time').datetimepicker();
+     $('#send_start_time').datetimepicker();
+     $('#send_end_time').datetimepicker();
+     
+     $("#exportBtn").click(function(){
+  		$("#exportForm").submit();
+      });
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

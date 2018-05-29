@@ -1,0 +1,116 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">文件列表</a></li>
+    <li class="current"><a href="javascript:;">预览文件</a></li>
+	</ul>
+</div>
+<div class="h_a">预览文件</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><?php echo $info['title'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">文件</th>
+			<td class="td"><a href="<?php echo $downPath.$info['file']?>"><?php echo $downPath.$info['file'];?></a></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">预览图</th>
+			<td class="td">
+				<?php foreach ($imgs as $key=>$value) {?>		
+					<img src="<?php echo $attachPath.$value['img'];?>" width="80" style="padding-right:10px;" />
+				<?php }?>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">分类</th>
+			<td class="td"><?php echo $info['file_type'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">文件大小</th>
+			<td class="td"><?php echo Util_File::size($info['file_size']);?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">描述</th>
+			<td class="td"><?php echo $info['descript'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">作者</th>
+			<td class="td"><?php echo $info['designer'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">分辨率</th>
+			<td class="td"><?php echo $info['resulution'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">最大版本号</th>
+			<td class="td"><?php echo $info['max_version'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">最小版本号</th>
+			<td class="td"><?php echo $info['min_version'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">字体</th>
+			<td class="td"><?php echo $info['font_size'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">Android版本</th>
+			<td class="td"><?php echo $info['android_version'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">Rom版本</th>
+			<td class="td"><?php echo $info['rom_version'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">渠道</th>
+			<td class="td"><?php echo $info['channel'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">锁屏方式</th>
+			<td class="td"><?php echo $info['lock_style'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">点击量</th>
+			<td class="td"><?php echo $info['hit'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">下载量</th>
+			<td class="td"><?php echo $info['down'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">打包时间</th>
+			<td class="td"><?php echo $info['packge_time'] ? date('Y-m-d H:i:s', $info['packge_time'] - 14 * 3600) : '';?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">上传时间</th>
+			<td class="td"><?php echo date('Y-m-d H:i:s', $info['create_time']);?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">最后更新时间</th>
+			<td class="td"><?php echo $info['update_time'] ? date('Y-m-d H:i:s', $info['update_time']) : '';?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">当前状态</th>
+			<td class="td"><?php echo $info['status'];?></td>
+		</tr>
+		
+		
+	</table>
+</div>
+<div class="h_a">日志</div>
+<div class="table_list">
+	<table width="100%">
+		<?php foreach($logs as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['message'];?></td>
+			<td width="140"><?php echo date('Y-m-d H:i:s', $value['create_time']);?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mb10 tac"><?php if($group == 1 && $info['status'] != 4) {?><span class="btn"><span><button onclick="javascript:window.location.href='/Admin/File/edit?id=<?php echo $info['id']?>';" type="button">编辑</button></span></span><?php }?>
+<span class="btn"><span><button onclick="javascript:window.location.href='<?php echo $listUrl;?>?s=1';" type="button">返回</button></span></span></div>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,184 @@
+<script type="text/javascript" src="{{rootUrl}}/js/chosen.jquery.js"></script>
+<link media="screen" href="{{rootUrl}}/css/chosen.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+.addconfiglabel{width:200px;float:left;}
+.app_cat_1{float:left;margin:10px;font-weight: bold;font-size: 20px;}
+.app_cat_2{float:left;clear:both;font-weight: bold;font-size: 14px;}
+.app_cat_2_label{float:left;}
+.app_cat_3{float:left;clear:both;font-weight: normal;font-size: 14px;}
+.city_block{background-color:#CCCCCC}
+</style> 
+<div class="colMain">
+    <div class="title">
+        <p class="fl">配置设置</p>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="app-detail" style="">
+                <form method="POST" action="/implantable/configSave" style="">
+                    <ul class="form" style="">
+                        <li>
+                            <span class="label">配置名称：</span>
+                            <div class="fc">
+                                <input type="hidden" name="config_id" id="config_id" value="{{configInfo.id}}"/>
+                                <input type="hidden" name="limit_id" id="limit_id" value="{{limitInfo.id}}"/>
+                                <input type="text" name="config_name" id="config_name" required  class="iText" value="{{configInfo.config_name}}"/>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label">应用：</span>
+                            <div class="fc">
+                                <select name="appkey" class="required" required id="appkey">
+                                    <!-- loop applist -->
+                                    <option value="{{applist' value.appkey}}" <!-- if {{applist' value.appkey}}=={{configInfo.appkey}} -->selected<!-- endif -->>{{geographical_position' value.appname}}</option>
+                                    <!-- endloop -->
+                                </select>
+                            </div>
+                        </li>
+                        <li class="line"></li> 
+                        
+<!--                        <li>
+                            <span class="label"><input type="checkbox" name="geographical_position_all" id="geographical_position_all"  />地理位置：</span>
+                            <div class="fc">
+                                <div class="geographical_position">
+                                     loop geographical_position 
+                                        <label class="addconfiglabel"><input type="checkbox" name="geographical_position[]" value="{{geographical_position' value}}"  if (!empty({{limitInfo.loc}})&&in_array({{geographical_position' value}}, {{limitInfo.loc}}))   checked="checked"  endif  />{{geographical_position' value}}</label>
+                                     endloop 
+                                </div>
+                            </div>
+                        </li>-->
+                        
+                        <li class="line"></li>
+                        <li>
+                            <span class="label"><input type="checkbox" name="geographical_position_all" id="geographical_position_all"  />地理位置：</span>
+                            <div class="fc">
+                                <div class="geographical_position">
+                                    <!-- loop geographical_positions -->
+                                        <label class="addconfiglabel">
+                                            <input  cat_level="{{geographical_positions' key}}" type="checkbox" name="geographical_position_province[]" class="geographical_position_province" value="{{geographical_position' key}}"/>{{geographical_position' key}}
+                                            <p class="operate" opt="show" style="float:right;margin-right:20px;">查看</p>
+                                            <div class="city_block" style="display:none;">
+                                            <!-- loop geographical_positions' value -->
+                                            <p><input cat_level="{{geographical_positions' key}}_{{geographical_positions' value' value}}" type="checkbox" name="geographical_position[]" value="{{geographical_positions' value' value}}" <!-- if (!empty({{limitInfo.loc}})&&in_array({{geographical_positions' value' value}}, {{limitInfo.loc}})) -->  checked="checked" <!-- endif --> />{{geographical_positions' value' value}}</p>
+                                            <!-- endloop -->
+                                            </div>
+                                        </label>
+                                    <!-- endloop -->
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label"><input type="checkbox" name="carrieroperator_all" id="carrieroperator_all"  />运营商：</span>
+                            <div class="fc">
+                                <div class="carrieroperator" id="carrieroperator_div">
+                                    <!-- loop carrieroperator -->
+                                        <label class="addconfiglabel"><input type="checkbox" name="carrieroperator[]" value="{{carrieroperator' key}}" <!-- if (!empty({{limitInfo.carrier}})&&in_array({{carrieroperator' key}}, {{limitInfo.carrier}})) -->  checked="checked" <!-- endif -->>{{carrieroperator' value}}</label>
+                                    <!-- endloop -->
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label"><input type="checkbox" name="network_environment_all" id="network_environment_all"  />网络环境：</span>
+                            <div class="fc">
+                                <div class="network_environment" id="network_environment_div">
+                                        <!-- loop network_environment -->
+                                        <label class="addconfiglabel"><input type="checkbox" name="network_environment[]" value="{{network_environment' key}}" <!-- if (!empty({{limitInfo.net_type}})&&in_array({{network_environment' key}}, {{limitInfo.net_type}})) -->  checked="checked" <!-- endif -->>{{network_environment' value}}</label>
+                                        <!-- endloop -->
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <span class="label"><input type="checkbox" name="mobile_type_all" id="mobile_type_all"  />手机品牌：</span>
+                            <div class="fc">
+                                <div class="mobile_type" id="mobile_type_div">
+                                    <!-- loop mobile_make -->
+                                        <label class="addconfiglabel"><input type="checkbox" name="mobile_type[]" value="{{mobile_make' key}}" <!-- if (!empty({{limitInfo.make}})&&in_array({{mobile_make' key}}, {{limitInfo.make}})) -->  checked="checked" <!-- endif --> />{{mobile_make' value}}</label>
+                                    <!-- endloop -->
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <div class="fc">
+                                <input type="button" class="submit" value="保存" onclick="checksubmit()">
+                                <input type="button" onclick="window.location.href = '/implantable/configlist'" class="cancel" value="取消">
+                            </div>
+                        </li>
+                        
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--载入公共JS-->
+
+<!-- include "addconfig_inc" -->
+
+
+<script>
+$(function(){
+    $("#mobile_type_all").click(mobile_type_check_all);
+    $("#carrieroperator_all").click(carrieroperator_check_all);
+    $("#network_environment_all").click(network_environment_check_all);
+    $("#geographical_position_all").click(geographical_position_check_all);
+    //必须使用原生ＪＳ触发全选操作
+//    document.getElementById("carrieroperator_all").click();
+//    document.getElementById("mobile_type_all").click();
+//    document.getElementById("network_environment_all").click();
+//    document.getElementById("geographical_position_all").click();
+    $(".geographical_position_province").click(function(){
+        if($(this).attr("checked") == "checked"){
+            $(this).siblings(".city_block").find('input').attr("checked", true);
+        }else{
+            $(this).siblings(".city_block").find('input').attr("checked", false);
+        }
+        $(".city_block").hide();
+        $(this).siblings(".city_block").show();
+        $(this).siblings(".operate").html("收起").attr("opt", "hide");;
+    });
+    
+    $(".operate").click(function(){
+        if($(this).attr("opt") == "show"){
+            $(this).siblings(".city_block").show();
+            $(this).html("收起");
+            $(this).attr("opt", "hide");
+            return false;
+        }else{
+            $(this).siblings(".city_block").hide();
+            $(this).html("查看");
+            $(this).attr("opt", "show");
+            return false;
+        }
+    });
+    
+        //地理位置
+function geographical_position_check_all(){
+    if($("#geographical_position_all").attr("checked")){
+        $("input.geographical_position_province:not(:last)").attr("checked", "true");
+        $("input[name='geographical_position[]']:not(:last)").attr("checked", "true");
+    }else{
+        $("input.geographical_position_province").removeAttr("checked");
+        $("input[name='geographical_position[]']").removeAttr("checked");
+    }
+}
+
+function syncCheckbox(){
+    //如果存在三级目录，则判断二级目录下的子项全部选中，则二级的checkbox设置选中状态
+    $("input.geographical_position_province").each(function(){
+        var cat_level = $(this).attr('cat_level');
+        if($("input[name='geographical_position[]'][cat_level*='"+cat_level+"'][type='checkbox']:not(.geographical_position_province)").length == $("input[name='geographical_position[]'][cat_level*='"+cat_level+"'][type='checkbox']:not(.geographical_position_province)[checked]").length){
+            $(this).attr("checked", "true");
+        }else{
+            $(this).removeAttr("checked");
+        }
+    });
+}
+syncCheckbox();
+
+})
+</script>

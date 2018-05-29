@@ -1,0 +1,62 @@
+<?php echo $this->render("../../Front/views/layout/header.phtml");?>
+<section id="page">
+	<!-- 主体内容 -->
+	<section id="content">
+		<section class="order">
+			<section class="love">
+			    <?php if($user && $total){ ?>
+				<ul class="mod-text-list lazyload" data-ajaxUrl="<?php echo $webroot,'/user/want/more/'?>">
+				   <?php foreach($wants as $key=>$value){?>
+					<li>
+						<a href="<?php echo $taokes[$goods[$value['goods_id']]['num_iid']]['click_url'];?>" class="r-arrow">
+							<ul class="mod-tw-list">
+								<li><img src="<?php
+							$img = $goods[$value['goods_id']]['img'];
+							if(strpos($img, 'http://') === false) {
+									echo $attachPath . $img;
+							}else{
+									echo $img,'_200x200.',end(explode(".", $img));
+							};
+							?>" alt="" /></li>
+								<li>
+									<h3><?php echo $goods[$value['goods_id']]['title'];?></h3>
+									<p>单价：<em class="zt-orange"><?php echo $goods[$value['goods_id']]['price'];?></em>元</p>
+									<p><?php echo $goods[$value['goods_id']]['want'] + $goods[$value['goods_id']]['default_want'];?>人想要</p>
+								</li>
+							</ul>
+						</a>
+					</li>
+					<?php } ?>
+				</ul>
+				<?php } else { ?>
+				<div class="no-data-tips">
+					<p><img src="<?php echo $staticResPath;?>/pic/icon-want-gray.png" alt="" /></p>
+					<p>亲，你还没有收藏想要的商品哦！</p>
+					<p class="button"><a href="<?php echo $webroot;?>" class="btn orange">去逛逛</a></p>
+				</div>
+				<?php } ?>
+			</section>
+		</section>
+	</section>
+	<!--  /主体内容 -->
+</section>
+<script type="template" id="J_itemView">
+		 {each data.list}
+				<li>
+					<a href="{$value.href}" class="r-arrow">
+					<ul class="mod-tw-list">
+						<li>
+                            <img src="{$value.img}" alt="" />
+                        </li>
+						<li> 
+                           <h3>{$value.title}</h3>
+                            <p>单价：<em>{$value.price}</em>元</p>
+                            <p>{$value.want}人想要</p>
+                        </li>
+					</ul>
+					</a>
+				</li>
+		{/each}
+</script>
+</body>
+</html>

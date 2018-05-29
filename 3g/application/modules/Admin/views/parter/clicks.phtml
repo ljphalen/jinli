@@ -1,0 +1,156 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="table_full">
+	<form action="<?php echo $baseUrl; ?>" method="POST" id="form">
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+		<table width="100%" cellspacing="0" cellpadding="0">
+			<tr class="tr">
+				<th class="th">日期:</th>
+				<td class="td">
+					<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $params['sdate']; ?>"> 至
+					<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $params['edate']; ?>">
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">所属页面:</th>
+				<td class="td">
+					<select name="pageType" id="pageType">
+						<?php foreach ($pageTypes as $k => $v) { ?>
+							<option <?php echo ($k == $params['pageType']) ? 'selected="selected"' : ''; ?> value="<?php echo $k; ?>"><?php echo $v; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">所属CP:</th>
+				<td class="td">
+					<select name="pid" id="pid">
+						<option value="0">请选择</option>
+						<?php foreach ($parters as $k => $v) { ?>
+							<option <?php echo ($v['id'] == $params['pid']) ? 'selected="selected"' : ''; ?> value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">业务名称:</th>
+				<td class="td">
+					<select name="bid" id="bid">
+						<option value="0">请选择</option>
+						<?php foreach ($businessList as $k => $v) { ?>
+							<option value="<?php echo $v['id']; ?>" <?php if ($v['id'] == $params['bid']) echo 'selected'; ?>><?php echo $v['name'] ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">关键字:</th>
+				<td class="td">
+					<input class="input" type="text" id="keywords" maxlength="100" name="keywords" value="<?php echo $params['keywords']; ?>"><span color="blue">备注：可查询业务名称</span>
+				</td>
+			</tr>
+		</table>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+		<input type="hidden" id="hidden_export" name="export" value="0"/>
+	</form>
+</div>
+<style type="text/css">
+	table {
+		empty-cells: show;
+		border-collapse: collapse;
+	}
+
+	table th {
+		white-space: nowrap;
+	}
+
+</style>
+
+<div class="h_a"><span>总点击量: </span>&nbsp;&nbsp;<span id="amount" style="color: red"></span>
+	<span style="padding-left:900px"><input type="button" value="导出数据" id="checkout"></span>
+</div>
+<div class="table_list">
+	<table cellspacing="0" cellpadding="0" width="100%">
+		<tbody>
+		<tr class="ct">
+			<th class="th" style="width: 100px">业务名称</th>
+			<th class="th" style="width: 60px">所属CP</th>
+			<th class="th" style="width: 60px">所属页面</th>
+			<?php foreach ($date as $d): ?>
+					<th class="td2" style="width: 100px;"><?php echo $d; ?></td>
+				<?php endforeach; ?>
+			<th class="td2" style="width: 70px;">总和
+			</td>
+		</tr>
+		<?php
+		$sum = 0;
+		foreach ($data as $k => $v) {
+			?>
+			<tr class="ct">
+				<td style="color:blue"><?php echo $v['name']; ?></td>
+				<td class="td" style="color:blue"><?php echo $v['parter_name']; ?></td>
+				<td class="td" style="color:blue">导航</td>
+				<?php
+				$total = 0;
+				foreach ($date as $d):
+					?>
+					<td class="td2"><?php echo $v['clicks'][$d] ? $v['clicks'][$d] : 0; ?></td>
+					<?php
+					$total += $v['clicks'][$d];
+					$sum += $v['clicks'][$d];
+				endforeach;
+				?>
+				<td class="td2"><?php echo $total; ?></td>
+			</tr>
+		<?php } ?>
+		</tbody>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		$("#sdate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+		$("#edate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>
+<script>
+	$("#amount").text('<?php echo $sum?>');
+
+	$("#checkout").bind('click', function () {
+		$("#hidden_export").val(1);
+		$("#form").submit();
+		$("#hidden_export").val(0);
+
+	});
+
+	$("#pid").bind('change', function () {
+		var pid = $("#pid option:selected").val();
+		$.ajax({
+			'url': '/Admin/Parter/ajaxGetBussinessList',
+			'type': 'post',
+			'dataType': 'json',
+			'data': {'token': '<?php echo $token;?>', 'pid': pid},
+			'success': function (e) {
+				var html = '<option value="0">请选择</option>';
+				$.each(e.data, function (i, m) {
+					html += '<option value="' + m.id + '">' + m.name + '</option>';
+				});
+				$("#bid").html(html);
+			}
+		})
+	})
+</script>

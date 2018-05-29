@@ -1,0 +1,62 @@
+<?php
+$pageData = array(
+	'last_url'        => '/front/activity/clist',
+	'call_url'        => '/front/activity/cindex',
+	'contact_url'     => '/front/activity/contact',
+	'tips_url'        => '/front/activity/tips',
+	'me_url'          => '/front/activity/me',
+	'center_url'      => '/user/index/index',
+	'call_css_url'    => sprintf('%s/call/css/call.min.css?v=%s', $staticResPath, $version),
+	'call_js_url'     => sprintf('%s/call/js/call.min.js?v=%s', $staticResPath, $version),
+	'localsdk_js_url' => sprintf('%s/call/js/localsdk.min.js?v=%s', $staticResPath, $version),
+	'require_js_url'  => sprintf('%s/call/js/vendor/requirejs/require.js?v=%s', $staticResPath, $version)
+);
+?>
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<title>畅聊免费打电话</title>
+	<link rel="stylesheet" type="text/css" href="<?=$pageData['call_css_url']?>" />
+	<script src="<?=$pageData['localsdk_js_url']?>"></script>
+	<script type="text/javascript">
+		window.onload = function(){
+			localSDK.getperm();
+		}
+	</script>
+</head>
+
+<body class="ui-app">
+<div class="ui-top-bar ui-border-b">
+	<!-- <a class="ui-pos link-back" href="<?=$pageData['center_url']?>"></a> -->
+	<span class="ui-top-txt">联系人</span>
+</div>
+
+<div class="ui-page page1 js-active">
+	<div class="ui-page-content">
+		<ul id="js-contcat-list" class="contcat-list js-active">
+			<!--<li class="call-kefu ui-border-b">
+				<a class="call-tel" href="<?/*=$pageData['center_url']*/?>">有信客服1</a>
+			</li>-->
+		</ul>
+	</div>
+</div>
+
+<div class="ui-bottom-bar call-bottom-bar ui-border-t">
+	<a href="<?=$pageData['last_url']?>" class="s1"><i></i>最近通话</a>
+	<a href="<?=$pageData['call_url']?>" class="s2"><i></i>拔号</a>
+	<script type="text/javascript">
+		if(localSDK.support().code == 1){
+			document.write('<a href="<?=$pageData['contact_url']?>" class="s5 active"><i></i>联系人</a>');
+		}
+	</script>
+	<a class="s4" href="<?=$pageData['me_url']?>"><i></i>我</a>
+</div>
+</body>
+</html>
+
+

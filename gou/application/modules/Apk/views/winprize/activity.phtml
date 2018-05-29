@@ -1,0 +1,60 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body>
+	<div class="module" style="background:#fff;">
+		<section class="layout-center">
+			<div class="activity-record-status">
+				<?php if($no_tip||$no_send):?>
+				<a onclick="GOU.addBaiduStatic('ACTIVITY_RECORD_RECEIVE')" href="<?php echo $webroot.$awardUrl;?>">您有未领取奖品，立即领取>></a>
+			<?php else:?>
+				<a onclick="GOU.addBaiduStatic('ACTIVITY_RECORD_HIT')" href="<?php echo $webroot.$awardUrl;?>">我的获奖记录></a>
+			<?php endif;?>
+			</div>
+		</section>
+		<section class="layout-center J_proDetail" data-ajaxurl="<?php echo $webroot;?>/api/apk_winprize/activity">
+			<ul class="activity-record-list wrap"></ul>
+		</section>
+	</div>
+    <?php if( $no_send): ?>
+	<div class="game-winning" style="display:none;"></div>
+    <?php endif; ?>
+
+	<script id="J_dtemplate" type="text/icat-template">
+		<%if (!data.list.length&&data.curpage==1) {%>
+		<div class="connect-error">
+			<a href="javascript:window.share.gotoHuodongProductList();" class="wrap">
+				<div class="pic"></div>
+				<div class="desc">无记录，轻触去活动列表</div>
+			</a>
+		</div>
+		<%}%>
+		<%for(var i=0, len=data.list.length; i<len; i++) {%>
+		<li class="flex">
+			<div class="side">
+				<div class="date"><%=data.list[i].date%></div>
+				<div class="pic">
+					<img src="<%=blankPic%>" data-src="<%=data.list[i].image%>">
+				</div>
+				<a onclick="GOU.addBaiduStatic(\'ACTIVITY_RANK\', <%=data.list[i].no%>)" href="<?php echo $webroot;?>/winprize/rank?id=<%=data.list[i].id%>" class="txt">
+					<i class="icon-cup-gray"></i>排行榜
+				</a>
+			</div>
+			<div class="main">
+				<dl>
+					<dt>
+						<span class="circle"></span><%=data.list[i].title%>
+					</dt>
+					<%for(var j=0, max=data.list[i].activity.length; j<max; j++){%>
+						<dd>
+							<span class="circle"></span>
+							<span class="time"><%=data.list[i].activity[j].create_time%></span>
+							活动用时<%=data.list[i].activity[j].fin_time%>秒
+						</dd>
+					<%}%>
+				</dl>
+			</div>
+		</li>
+		<%}%>
+	</script>
+
+	<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/newfooter.phtml");?>

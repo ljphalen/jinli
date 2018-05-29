@@ -1,0 +1,432 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li class="current"><a href="<?php echo $indexUrl;?>">点击统计</a></li>
+    </ul>
+</div>
+<form>
+    <input name="token" type="hidden" value="<?php echo $token;?>" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">统计类型</th>
+                <td class="td">
+                    <select name="stat_type" id="stat_type">
+                        <option value="0">请选择</option>
+                        <option value="1">按用户数</option>
+                        <option value="2">按用户数占比</option>
+                        <option value="3">按点击数</option>
+                        <option value="4">按点击数占比</option>
+                    </select>
+                </td>
+                <th class="th">版本号</th>
+                <td class="td">
+                    <input name="version" id="version" type="text" class="input" value="2.5.6" /> 例如: 2.5.6
+                </td>
+            </tr>
+            <tr>
+                <th class="th">时间 <i style="color: #E53333;">(UV当天去重，多天不去重)</i></th>
+                <td class="td">
+                    <div>
+                        <input class="input" type="text" id="start_time" name="start_time" value="<?php echo date('Y-m-d', Common::getTime());?>" /> 至
+                        <input class="input" type="text" id="end_time" name="end_time" value="<?php echo date('Y-m-d', Common::getTime());?>" />
+                    </div>
+                </td>
+                <td class="th" colspan="2">
+                    <span class="btn"><span><button type="button" id="J_static">统计</button></span></span>
+                    <span class="btn"><span><button type="button" id="extportBtn">导出报表</button></span></span> |
+                    <span class="btn"><span><button type="button" id="downloadBtn">定期报表</button></span></span>
+                    <input class="input" style="width: 80px; text-align: center;" type="text" id="download_time" name="download_time" /> (每周四, 前7天)
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+<style>
+    ul li {list-style: none;}
+    .fl {float: left; }
+    .fr {float: right; }
+    .clear {display: block; clear: both; overflow: hidden; line-height: 0; height: 0; }
+    .static-page {position: relative; height: 100%; width: 940px; margin: 0 auto;}
+
+    .canvas-wrap {position: relative;}
+    .canvas-wrap canvas {position: absolute;}
+
+    .static-page .static-page-wrap {position: absolute; top: 0; left: 0; }
+    #svg-root {width: 100%; height: 100%; }
+    .static-page-wrap .start-node {left: 270px; position: absolute; width: 180px; height: 100px; line-height: 100px; color: #fff; text-align: center; background: #9fccff; font-weight: bold; -webkit-box-shadow: 1px 3px 5px #d0e3ef; -moz-box-shadow: 1px 3px 5px #d0e3ef; -ms-box-shadow: 1px 3px 5px #d0e3ef; box-shadow: 1px 3px 5px #d0e3ef; }
+    .static-page-wrap .side-node, .static-page-wrap .child-node {padding: 4px 10px; min-width: 200px; color: #216cc7; background: rgb(189, 216, 243); }
+    .static-page-wrap .side-node-div {position: absolute;}
+    .static-page-wrap .child-node {position: absolute;}
+    .static-page-wrap .sub-node {padding: 2px 10px; font-size: 14px; width: 150px; color: #216cc7; background: rgb(189, 216, 243); border-bottom: 1px solid #fff; line-height: 1.2;}
+    .static-page-wrap .sub-node:last-child{border-bottom: none; }
+    .static-page-wrap .side-node .name, .static-page-wrap .start-node .name, .static-page-wrap .child-node .name, .static-page-wrap .sub-node .name {font-size: 14px; }
+    .static-page-wrap .side-node .count, .static-page-wrap .start-node .count, .static-page-wrap .child-node .count, .static-page-wrap .sub-node .count {color: #fff; font-weight: bold; font-size: 16px; }
+    .static-page-wrap .sub-node .name {font-size: 12px; }
+    .static-page-wrap .sub-node .count {color: #fff; font-weight: bold; font-size: 14px; }
+    .static-page-wrap .child-node-ul {margin-left: 500px; }
+    .static-page-wrap .side-node, .static-page-wrap .child-node-li {margin-top: 5px; }
+    .static-page-wrap .side-node:first-child, .static-page-wrap .child-node-li:first-child {margin-top: 0; }
+    .static-page-wrap .sub-node-ul {margin-left: 260px; }
+</style>
+<div class="cc" id="statistic_chart" style="border: 1px solid #ddd; background: #fff; padding: 10px; min-height: 500px;">
+    <div style="text-align:right;"><span class="btn"><span><button type="button" id="J_copyImage">打开复制图片</button></span></span></div>
+    <div class="static-page" id="J_staticPage">
+        <div id="J_svgWrap" class="svg-wrap">
+            <svg id="svg-root"></svg>
+        </div>
+        <div id="J_templateWrap"></div>
+    </div>
+</div>
+
+<div class="mr10 cc">
+    <form action="<?php echo $extportUrl;?>" method="post" id="exportForm">
+        <input name="token" type="hidden" value="<?php echo $token;?>" />
+        <input type="hidden" name="stat_type" id="stat_type_d">
+        <input type="hidden" name="version" id="version_d">
+        <input type="hidden" name="start_time" id="start_time_d">
+        <input type="hidden" name="end_time" id="end_time_d">
+    </form>
+    <form action="<?php echo $downloadUrl;?>" method="post" id="downloadForm">
+        <input name="token" type="hidden" value="<?php echo $token;?>" />
+        <input name="download_time" type="hidden" id="download_time_d" />
+    </form>
+</div>
+
+<div id="J_dialog" title="复制图像">
+    <div id="J_canvasWrap" class="canvas-wrap"></div>
+</div>
+
+<script type="text/template" id="J_template">
+    <%if(data.name){%>
+    <div id="J_pageWrap" class="static-page-wrap">
+        <div class="side-node-div fl">
+            <%for(var k=0, leng=data.side.length; k<leng; k++) {%>
+            <div class="side-node">
+                <div class="count"><%=data.side[k].count%></div>
+                <div class="name"><%=data.side[k].name%></div>
+            </div>
+            <%}%>
+        </div>
+        <div class="start-node fl"><%=data.name%></div>
+        <ul class="child-node-ul">
+            <%for(var i=0, len=data.child.length; i<len; i++) {%>
+            <li class="child-node-li">
+                <div class="child-node fl">
+                    <div class="count"><%=data.child[i].count%></div>
+                    <div class="name"><%=data.child[i].name%></div>
+                </div>
+                <ul class="sub-node-ul">
+                    <%for(var j=0, max=data.child[i].child.length; j<max; j++) {%>
+                    <li class="sub-node">
+                        <span class="name"><%=data.child[i].child[j].name%>：</span>
+                        <span class="count"><%=data.child[i].child[j].count%></span>
+                    </li>
+                    <%}%>
+                </ul>
+            </li>
+            <%}%>
+        </ul>
+    </div>
+    <%}%>
+</script>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script src="<?php echo $staticPath;?>/js/common/underscore.js"></script>
+<script src="<?php echo $staticPath;?>/js/common/backbone-1.1.2.js"></script>
+<script src="<?php echo $staticPath;?>/js/common/html2canvas.js"></script>
+<script src="<?php echo $staticPath;?>/js/common/rgbcolor.js"></script>
+<script src="<?php echo $staticPath;?>/js/common/StackBlur.js"></script>
+<script src="<?php echo $staticPath;?>/js/common/canvg.js"></script>
+<script type="text/javascript">
+    $(function() {
+        var statType = $('#stat_type');
+        var version = $('#version');
+        var startTime = $( "#start_time" );
+        var endTime = $( "#end_time" );
+        var downloadTime = $( "#download_time" );
+        var svgRoot = $('#svg-root');
+        var pageWrap;
+
+        var startNode;
+        var childNode;
+        var subNode;
+        var pageView;
+        var sideNodeDiv;
+        var sideNode;
+
+        var PageModel = Backbone.Model.extend({
+            defaults: {
+                data: ''
+            }
+        });
+
+        var pageModel = new PageModel();
+
+        var PageView = Backbone.View.extend({
+            model: pageModel,
+            el: $('#J_templateWrap'),
+            template: _.template($('#J_template').html()),
+            render: function() {
+                this.$el.html(this.template(this.model.attributes));
+                return this;
+            }
+        });
+
+        var renderView = function(result) {
+            var data = {};
+            if (!$.isPlainObject(result)) {
+                result = $.parseJSON(result);
+            }
+            if (result.success) {
+                data = result.data;
+            } else {
+                alert(result.msg)
+            }
+
+            pageModel.set({data: data});
+            pageView = new PageView().render();
+
+            if ($.isEmptyObject(data)) {
+                return;
+            }
+
+            startNode = $('.start-node');
+            childNode = $('.child-node');
+            subNode = $('.sub-node');
+            pageWrap = $('#J_pageWrap');
+            sideNode = $('.side-node');
+            sideNodeDiv = $('.side-node-div');
+
+            positionElement();
+            renderSVG()
+        }
+
+        function init() {
+            
+            startTime.datepicker({
+                dateFormat : 'yy-mm-dd'
+            });
+
+            endTime.datepicker({
+                dateFormat : 'yy-mm-dd'
+            });
+
+            downloadTime.datepicker({
+                dateFormat : 'yy-mm-dd'
+            });
+
+
+
+            $("#extportBtn").click(function(){
+                $('#stat_type_d').val(statType.val());
+                $('#version_d').val(version.val());
+                $('#start_time_d').val(startTime.val());
+                $('#end_time_d').val(endTime.val());
+                $("#exportForm").submit();
+            });
+
+            $('#J_copyImage').click(function() {
+                generatePicture();
+            })
+
+            $('#J_static').click(function() {
+
+                if(statType.val() == '0') {
+                    alert('请选择统计类型');
+                    return false;
+                }
+
+                if(version.val() == '') {
+                    alert('请输入版本号');
+                    return false;
+                }
+
+                svgRoot.empty();
+
+                getStaticData(renderView);
+            })
+
+            // getStaticData(renderView);
+        }
+
+        init();
+
+        function generatePicture() {
+
+            if ($('#svg-root').children().length <= 0) {
+                alert('请先生成统计')
+                return;
+            }
+
+            var canvasWrap = $('#J_canvasWrap');
+            var svgWrap = $('#J_svgWrap');
+            var svgHtml;
+            var elemCanvas;
+            var svgCanvas;
+
+            canvasWrap.empty();
+            svgCanvas = $('<canvas id="J_svgCanvas"></canvas>');
+            svgCanvas.width(svgWrap.width());
+            svgCanvas.height(svgWrap.height());
+            canvasWrap.append(svgCanvas);
+
+            html2canvas(pageWrap[0], {
+              onrendered: function(canvas) {
+                canvas.id = 'J_elemCanvas';
+                canvasWrap.append(canvas);
+              }
+            });
+        
+            svgHtml = svgWrap[0].innerHTML;
+            canvg('J_svgCanvas', svgHtml.trim());
+
+            setTimeout(function() {
+                elemCanvas = $("#J_elemCanvas");
+                svgCanvas = $('#J_svgCanvas');
+                var w = svgCanvas.width();
+                var h = svgCanvas.height();
+                var elemContext = elemCanvas[0].getContext('2d');
+                
+                var svgImageData = svgCanvas[0].toDataURL('image/png');
+                var img = new Image();
+                img.src = svgImageData;
+                img.onload = function() {
+                    elemContext.drawImage(img, 0, 0, w, h);
+                    svgCanvas.remove();
+                }
+            }, 4000)
+
+            $('#J_dialog').dialog({
+                modal: true,
+                width: 1000,
+                height: 600
+            });
+        }
+
+
+        function positionElement() {
+            var wrapHeight = pageWrap.height();
+            svgRoot.height(wrapHeight);
+            
+            sideNodeDiv.css({
+                top: wrapHeight/2 - sideNodeDiv.height()/2
+            })
+
+            startNode.css({
+                top: wrapHeight/2 - startNode.height()/2
+            })
+
+            $('.sub-node-ul').each(function(idx, el) {
+                el = $(el);
+                var top = el.position().top;
+                var prev = el.prev();
+                prev.css({
+                    'top': top + el.height()/2 - prev.outerHeight()/2
+                })
+            })
+        }
+
+        function getStaticData(callback) {
+            var data = {
+                'token': $('input[name="token"]').val(),
+                'stat_type': statType.val(),
+                'version': version.val(),
+                'start_time': startTime.val(),
+                'end_time': endTime.val()
+            }
+            $.ajax({
+                url: baseurl + '<?php echo $statisticUrl;?>',
+                type: 'POST',
+                data: data,
+                success: function(result) {
+                    if (callback) {
+                        callback(result);
+                    }
+                }
+            })
+        }
+
+        function renderSVG() {
+            var startLeftPoint = getLeftPoint(startNode);
+            var startRightPoint = getRightPoint(startNode);
+            var childNodes = $('.child-node-li');
+
+            sideNodeDiv.position().left
+            sideNode.each(function(sideIndex) {
+                var node = sideNode.eq(sideIndex);
+                var sideRightPoint = {
+                    x: node.position().left + sideNodeDiv.position().left + node.outerWidth(),
+                    y: node.position().top + sideNodeDiv.position().top + node.outerHeight()/2
+                }
+                var sidePoints = getCurvePoints(sideRightPoint, startLeftPoint);
+                paintCurve(sidePoints[0], sidePoints[1], sidePoints[2], sidePoints[3]);
+            });
+
+            childNodes.each(function(childIndex) {
+                var node = childNodes.eq(childIndex).find('.child-node');
+                var childLeftPoint = getLeftPoint(node);
+                var childRightPoint = getRightPoint(node);
+                var childPoints = getCurvePoints(startRightPoint, childLeftPoint);
+                paintCurve(childPoints[0], childPoints[1], childPoints[2], childPoints[3]);
+
+                var subNodes = node.next('.sub-node-ul').find('.sub-node');
+                subNodes.each(function(subIndex) {
+                    var subLeftPoint = getLeftPoint(subNodes[subIndex]);
+                    var subPoints = getCurvePoints(childRightPoint, subLeftPoint);
+                    paintCurve(subPoints[0], subPoints[1], subPoints[2], subPoints[3]);
+                })
+            })
+        }
+
+        function getLeftPoint(el) {
+            el = $(el);
+            return {
+                x: el.position().left,
+                y: el.position().top + el.outerHeight()/2
+            }
+        }
+
+        function getRightPoint(el) {
+            el = $(el);
+            return {
+                x: el.position().left + el.outerWidth(),
+                y: el.position().top + el.outerHeight()/2
+            }
+        }
+
+        function showPoint(p) {
+            if (p.x == null) return;
+            var html = '<circle cx="' + p.x + '" cy="' + p.y + '" fill="red" r="5"/>';
+            svgRoot.html(svgRoot.html() + html);
+        }
+
+        function format(p1, p2, p3, p4) {
+            var arr = [];
+            arr.push('M' + p1.x + ',' + p1.y);
+            arr.push('C' + p2.x + ',' + p2.y);
+            arr.push(p3.x +',' + p3.y);
+            arr.push(p4.x + ',' + p4.y );
+            return arr.join(' ');
+        }
+
+        function paintCurve(p1, p2, p3, p4) {
+            var html = '<path fill="none" stroke="#4d9cf5" d="' + format(p1, p2, p3, p4) + '" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path>'
+            svgRoot.html(svgRoot.html() + html);
+        }
+
+        function getCurvePoints(startPoint, endPoint) {
+            if (startPoint.x == null || startPoint.y == null || endPoint.x == null || endPoint.y == null) return;
+            var absX = Math.abs(startPoint.x - endPoint.x);
+            var p1 = {x: startPoint.x + (1/2 * absX), y: startPoint.y};
+            var p2 = {x: endPoint.x - (1/2 * absX), y: endPoint.y};
+            return [startPoint, p1, p2, endPoint];
+        }
+
+        $("#downloadBtn").click(function(){
+            $('#download_time_d').val(downloadTime.val());
+            $("#downloadForm").submit();
+        });
+    });
+</script>
+
+<?php echo $this->render("layout/footer.phtml");?>

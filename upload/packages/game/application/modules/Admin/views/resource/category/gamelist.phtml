@@ -1,0 +1,92 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $indexUrl;?>">分类列表</a></li>
+		<li class="current"><a href="javascript:;">游戏排序</a></li>
+	</ul>
+</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th"><?php echo $info['title'];?></th>
+		</tr>	
+	</table>
+</div>
+<form action="<?php echo $gameListUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="id" type="hidden" value="<?php echo $info['id'];?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td">
+			<select name="sort" class="wa">
+			    <option value="0">全部</option>
+				<option <?php if($search['sort'] == 1) echo 'selected';?> value="1">最新</option>
+				<option <?php if($search['sort'] == 2) echo 'selected';?> value="2">最热</option>
+				<?php foreach ($subCategory as $item):?>
+				<option <?php if($search['sort'] == $item['id']) echo 'selected';?> value="<?php echo $item['id']?>"><?php echo $item['title']?></option>
+				<?php endforeach;?>
+				</optgroup>
+			</select>
+			</td>
+		</tr>
+		<tr class="tr"">
+			<th class="th">关键字</th>
+			<td class="td"><input type="text" class="input" name="name" value="<?php echo $search['name'];?>"></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateGameUrl;?>" method="post">
+<input name="token" type="hidden" value = "<?php echo $token;?>" />
+<input name="id" type="hidden" value = "<?php echo $info['id'];?>" />
+<div class="h_a">
+	<span class="btn2"><span><button type="submit">重新排序</button></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="30">排序</td>
+			<td width="50">ID</td>
+			<td>标题</td>
+			<td>游戏ID</td>
+			<td>图标</td>
+			<td>大小</td>
+			<td>版本号</td>
+			<td>上线时间</td>
+			<td>下载量</td>
+			<td>状态</td>
+		</tr>
+		<?php foreach($games as $key => $value) {?>
+		 <tr class="ct">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><input type="text" class="input" style="width:30px" name="sort[<?php echo $value['id'];?>]" value="<?php echo $value['sort'];?>"></td>
+			<td><?php echo $value['id'];?></td>
+			<td><a target="blank" href="<?php echo $frontroot . '/client/index/detail/?id=',$value['game_id'];?>"><?php echo $value['name'];?></a></td>
+			<td><?php echo $value['game_id'];?></td>
+			<td><img src="<?php echo $value['img'];?>" style="width:7.2em;height:7.2em"/></td>
+        	<td><?php echo $value['size'];?>M</td>
+        	<td><?php echo $value['version'];?></td>
+        	<td><?php echo date('Y-m-d H:i:s', $value['online_time']);?></td>
+        	<td><?php echo $value['downloads'];?></td>
+        	<td><?php echo $value['status'] ? '已上线' : '未上线';?></td>
+		 </tr>
+	   <?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script>
+$(document).ready(function(){
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Resource_Category/gameList?id=<?php echo $info['id'];?>&sort=<?php echo $search['sort'];?>&name=<?php echo $search['name'];?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

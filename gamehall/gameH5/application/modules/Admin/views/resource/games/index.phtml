@@ -1,0 +1,220 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl.'?type='.$type;?>">全部游戏</a></li>
+    <?php if ($type == 2) {?>
+    <li style="display: none;"><a href="<?php echo $step1Url.'?type='.$type;?>">添加游戏</a></li>
+    <?php }?>
+	</ul>
+</div>
+<script>
+function getSubCategory(parentId, subId){
+	var str = '';
+	$("#subCategory").html(str);
+	str = '<label class="mr20">	<input type="radio" checked name="subcategory" value="0"/>全部</label>';
+	if (parentId == 0) {
+		 $("#subCategory").html(str);
+		 return false;
+	} else {
+		$.ajax({
+			url : baseurl + '/Admin/Resource_Games/getSubCategory?id=' + parentId,
+			type : 'GET',
+			dataType : 'json',
+			success : function(ret) {
+				if (ret.success) {
+					 $.each(ret.data, function (n, value) {  
+			              var label = '';  
+			              label += '<label class="mr20"> <input type="radio"';
+			              if(value.id == subId) label += ' checked ';
+			              label += 'name="subcategory" value="' + value.id + '"/>' + value.title + '</label>';
+			              str += label;  
+			          });
+					 $("#subCategory").html(str);
+				} else {
+					showError('', ret.msg);
+				}
+			}
+		});
+	}
+}
+
+function submitBtn(type){
+	$("input[name='action']").val(type);
+	$("#searchForm").submit();
+	return false;
+}
+
+$(document).ready(function(){
+	$("#parentCategory input[name='category']").change(function(){
+		getSubCategory($(this).val(), 0);
+	});
+});
+</script>
+<form action="<?php echo $listUrl.'?type='.$type;?>" method="post" id="searchForm">
+<input name="token" type="hidden" value="<?php echo $token;?>"/>
+<input name="type" type="hidden" value="<?php echo !$params['type'] ? $type : $params['type'];?>"/>
+<input name="action" type="hidden" value="<?php echo $params['action'];?>"/>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">模糊搜索</th>
+			<td class="td" colspan="3">
+			<table width="100%">
+	   			<tr class="tr">
+					<th class="th">主分类</th>
+					<td class="td" colspan="3" id="parentCategory">
+						<label class="mr20">
+							<input type="radio" <?php if ($params['category'] == 0) echo 'checked';?> name="category" value="0"/>
+							全部
+						</label>
+			 			<?php foreach($categorys as $key=>$value):?>
+			 			<label class="mr20">
+			 				<input type="radio" <?php if ($params['category'] == $value['id']) echo 'checked';?> name="category" value="<?php echo $value['id'];?>">
+			 					&nbsp;&nbsp;<?php echo $value['title'];?>
+			 			</label>
+			 			<?php endforeach;?>
+		    		</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">子分类</th>
+					<td class="td" colspan="3" id="subCategory">
+					<label class="mr20">
+						<input type="radio" <?php if ($params['subcategory']==0) echo 'checked';?> name="subcategory" value="0"/>
+						全部
+					</label>
+					<?php foreach($subCategory as $key=>$value):?>
+			 		    <label class="mr20">
+			 		     <input type="radio" <?php if ($params['subcategory'] == $value['id']) echo 'checked';?> name="subcategory" value="<?php echo $value['id'];?>">
+			 			 &nbsp;&nbsp;<?php echo $value['title'];?>
+			 			</label>
+			 		  <?php endforeach;?>
+		    		</td>
+				</tr>
+				<tr class="tr">
+		   			 <th class="th">状态</th>
+					 <td class="td">
+						<select name="status" class="select wa">
+			    			<option value="0">全部</option>
+							<option <?php if($params['status'] == 2) echo 'selected';?> value="2">已上线</option>
+							<option <?php if($params['status'] == 1) echo 'selected';?> value="1">已下线</option>
+						</select>
+					</td>
+					<th class="th">开发者账号</th>
+						<td class="td">
+						<input type="text" class="input " name="company" value="<?php echo $params['company'];?>">
+		    		</td>
+		   		</tr>
+		   		<tr class="tr">
+		   			<th class="th">合作方式</th>
+					<td class="td">
+						<select name="cooperate" class="select wa">
+			   				<option value="0">全部</option>
+							<option <?php if($params['cooperate'] == 2) echo 'selected';?> value="2">普通</option>
+							<option <?php if($params['cooperate'] == 1) echo 'selected';?> value="1">联运</option>
+						</select>
+		   			</td>
+		   			<th><span class="btn"><span><button onclick="submitBtn(1)">搜 索</button></span></span></th>
+		   			<td></td>
+		   		</tr>	
+		    </table>
+		    </td>
+		  </tr>
+	 </table>
+	 <table width="100%">
+		<tr class="tr">
+			<th class="th">精确搜索</th>
+			<td class="td" colspan="3">
+			<table width="100%">
+	    		<tr class="tr">
+		    		<th class="th">关键字</th>
+					<td class="td">
+						<input type="text" class="input " name="name" value="<?php echo $params['name'];?>">
+		    			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		   				<span class="btn"><span><button onclick="submitBtn(2)">搜 索</button></span></span>
+		   			</td>
+		    	</tr>
+		    	<tr class="tr">	
+		    		<th class="th">游戏ID</th>
+					<td class="td">
+						<input type="text" class="input" name="id" value="<?php echo $params['id'];?>">
+		    			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		   				<span class="btn"><span><button onclick="submitBtn(3)">搜 索</button></span></span>
+		   			</td>
+		    	</tr>
+		    	<tr class="tr">	
+		    		<th class="th">APPID</th>
+					<td class="td">
+						<input type="text" class="input" name="appid" value="<?php echo $params['appid'];?>">
+		    		    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		   				<span class="btn"><span><button onclick="submitBtn(4)">搜 索</button></span></span>
+		   			</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	</table>
+</div>
+</form>
+<div class="h_a">
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="80">游戏ID</td>
+			<td width="80">APPID</td>
+			<td>标题</td>
+			<td>图标</td>
+			<?php if ($type >= 1) {?>
+			<td width="80">开发者账号</td>
+			<?php }?>
+			<?php if ($type == 2) {?>
+			<td>评级</td>
+			<?php }?>
+			<td>包名</td>
+			<td>上线时间</td>
+			<td>状态</td>
+			<td>版本数量</td>
+			<td>线上/最新</td>
+			<?php if ($type >= 1) {?>
+			<td>版本管理</td>
+			<?php }?>
+			<?php if ($type == 2) {?>
+			<td>管理</td>
+			<?php }?>
+		</tr>
+<?php foreach($games as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['appid'];?></td>
+			<td><a target="blank" href="<?php echo $frontroot . '/client/index/detail/?id=',$value['id'].'&preview=true';?>"><?php echo $value['name']; ?></a></td>
+			<td><img src="<?php echo $value['img'];?>" style="width:7.2em;height:7.2em"/></td>
+			<?php if ($type >= 1) {?>
+			<td><?php echo $value['company'];?></td>
+			<?php } ?>
+			<?php if ($type == 2) {?>
+			<td><?php echo $game_level[$value['id']] ? $game_level[$value['id']]: '无';?></td>
+			<?php } ?>
+			<td><?php echo $value['package'];?></td>
+			<td><?php echo  date('Y-m-d H:i:s', $value['online_time']);?></td>
+			<td><?php echo $value['status'] ? '已上线' : '已下线';?></td>
+			<td><?php echo $versions[$value['id']]['num'];?></td>
+			<td><?php echo $online_versions[$value['id']]['version'].'/'.$new_versions[$value['id']]['version'];?></td>
+			<?php if ($type >= 1) {?>
+			<td><a href="<?php echo $step2editUrl;?>/?id=<?php echo $value['id'];?>&type=<?php echo $type;?>" class="mr10">版本管理</a></td>
+			<?php }?>
+			<?php if ($type == 2) {?>
+			<td>
+			<a href="<?php echo $step5Url;?>/?id=<?php echo $value['id'];?>&type=<?php echo $type;?>" class="mr10">管理</a>
+			<a style="display: none;" href="<?php echo $step1editUrl;?>/?id=<?php echo $value['id'];?>&type=<?php echo $type;?>" class="mr10">编辑</a>
+			<a  style="display: none;" href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+			<?php }?>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

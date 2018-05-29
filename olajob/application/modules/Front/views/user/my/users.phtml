@@ -1,0 +1,41 @@
+<?php echo $this->render("layout/header.phtml");?>
+<body module-id="myUsers">
+<div class="module">
+    <section class="layout-center">
+        <ul class="list-wrap" id="J_listWrap" data-ajax="<?php echo $webroot;?>/api/user/users?job_id=<?php echo $job_id;?>"></ul>
+    </section>
+</div>
+
+<script type="text/template" id="J_template">
+<%if(list.length){%>
+    <%for(var i=0, len=list.length; i<len; i++){%>
+    <li>
+        <div class="side">
+            <div class="pic">
+                <img src="<%=list[i].headimgurl%>"/>
+            </div>
+        </div>
+        <a href="<%=list[i].link%>" class="main">
+            <div class="title"><%=list[i].realname%></div>
+            <ul class="detail <%=list[i].description?'custom':''%>">
+                <li class="age"><i class="icon-age"></i><%=list[i].age%>岁</li>
+                <li class="flex"><i class="icon-edu"></i><%=list[i].education%></li>
+            </ul>
+            <%if(list[i].description){%>
+                <div class="add-to">附加信息：<%=list[i].description%></div>
+            <%}%>
+            <%if(list[i].status == '1'){%>
+            <div class="status rejected"></div>
+            <%} else if (list[i].status == '2') {%>
+            <div class="status pending"></div>
+            <%} else if (list[i].status == '3'){%>
+            <div class="status passed"></div>
+            <%}%>
+        </a>
+    </li>
+    <%}%>
+<%} else {%>
+    <div class="no-result">暂无数据</div>
+<%}%>
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

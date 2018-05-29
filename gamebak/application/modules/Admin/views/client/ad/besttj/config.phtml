@@ -1,0 +1,40 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">闪屏推荐列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加闪屏推荐</a></li>
+		<li class="current"><a href="<?php echo $configUrl;?>">配置</a></li>
+	</ul>
+</div>
+<form method="post" action="<?php echo $configPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">检查间隔时间</th>
+				<td class="td">
+				   <select name="game_client_bestime">
+					<option value="1" <?php if ($game_client_bestime == 1) echo 'selected="selected"';?>>1天</option>
+					<option value="2" <?php if ($game_client_bestime == 2) echo 'selected="selected"';?>>2天</option>
+					<option value="3" <?php if ($game_client_bestime == 3) echo 'selected="selected"';?>>3天</option>
+					<option value="4" <?php if ($game_client_bestime == 4) echo 'selected="selected"';?>>4天</option>
+					<option value="5" <?php if ($game_client_bestime == 5) echo 'selected="selected"';?>>5天</option>
+					<option value="6" <?php if ($game_client_bestime == 6) echo 'selected="selected"';?>>6天</option>
+					<option value="7" <?php if ($game_client_bestime == 7) echo 'selected="selected"';?>>7天</option>
+				</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Ad_Besttj/config');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,152 @@
+首页推荐涉及四个模块:
+	1.banner图片
+	2.文字公告
+	3.每日一荐
+	4.推荐列表
+功能拆分:
+	1) 推荐日程
+		1. 表结构:
+			1.1 推荐日程
+			CREATE TABLE IF NOT EXISTS `game_recommend_list` (
+			  `day_id` int(10) unsigned NOT NULL COMMENT 'ID',
+			  `create_time` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
+			  PRIMARY KEY (`day_id`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='推荐日程';
+		2. 说明:
+			2.1 该功能以天为单位,day_id存储零点的时间戳,其他附表以该字段关联.
+			2.2 客户端每天读取对应数据,后台定时任务在每天23:30分检查第二天的数据有没有添加,如果没有测复制当天的数据到第二天.		
+	2) banner图片
+		1. 表结构:
+			1.1 banner图片
+			CREATE TABLE IF NOT EXISTS `game_recommend_banner` (
+			  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+			  `sort` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
+			  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '标题',
+			  `link_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '链接类型',
+			  `link` varchar(255) DEFAULT '' COMMENT '链接参数',
+			  `img1` varchar(255) NOT NULL DEFAULT '' COMMENT '1.5.5版本尺寸',
+			  `img2` varchar(255) NOT NULL DEFAULT '' COMMENT '1.5.6版本尺寸',
+			  `img3` varchar(255) NOT NULL DEFAULT '' COMMENT '1.5.7版本尺寸',
+			  `day_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '生效日期',
+			  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:无效,1:生效',
+			  `create_time` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
+			  PRIMARY KEY (`id`),
+			  KEY `idx_day_id` (`day_id`),
+			  KEY `idx_status` (`status`),
+			  KEY `idx_sort` (`sort`),
+			  KEY `idx_link` (`link_type`,`link`)
+			) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='推荐banner图' AUTO_INCREMENT=1 ;
+		2. 说明:
+			2.1 每个banner图的具体链接对象用link_type保存:1:游戏ID,2:分类,3:专题,4:外部链接,5:活动.
+			2.2 banner图片的大小有三个版本,分别用三个字段记录:img1,img2,img3.
+			2.3 day_id为了与主表(game_recommend_list)关联.
+			2.4 link_type为专题的时候,要判断自定义专题只能显示在1.5.8之后的版本中,否则隐藏.
+	3) 文字公告
+		1. 表结构:
+			1.1 文字公告
+			CREATE TABLE IF NOT EXISTS `game_recommend_text` (
+			  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+			  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '标题',
+			  `link_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '链接类型',
+			  `link` varchar(255) DEFAULT '' COMMENT '链接参数',
+			  `day_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '生效日期',
+			  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:无效,1:生效',
+			  `create_time` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
+			  PRIMARY KEY (`id`),
+			  KEY `idx_day_id` (`day_id`),
+			  KEY `idx_status` (`status`),
+			  KEY `idx_link` (`link_type`,`link`)
+			) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='推荐Text公告' AUTO_INCREMENT=1 ;
+		2. 说明:
+			2.1 每个banner图的具体链接对象用link_type保存:1:游戏ID,2:分类,3:专题,4:外部链接,5:活动.
+			2.2 day_id为了与主表(game_recommend_list)关联.
+			2.3 link_type为专题的时候,要判断自定义专题只能显示在1.5.8之后的版本中,否则隐藏.
+	4) 每日一荐
+		1. 表结构:
+			1.1 每日一荐
+			CREATE TABLE IF NOT EXISTS `game_recommend_day` (
+			  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+			  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '标题',
+			  `game_id` int(10) NOT NULL DEFAULT '0' COMMENT '游戏ID',
+			  `game_status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '游戏状态',
+			  `content` varchar(255) DEFAULT NULL COMMENT '描述',
+			  `day_id` int(10) NOT NULL DEFAULT '0' COMMENT '生效日期',
+			  `start_time` int(10) NOT NULL DEFAULT '0' COMMENT '开始时间',
+			  `end_time` int(10) NOT NULL DEFAULT '0' COMMENT '结束时间',
+			  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:关闭,1:开启',
+			  `sort` tinyint(1) NOT NULL DEFAULT '0' COMMENT '排序',
+			  `create_time` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
+			  PRIMARY KEY (`id`),
+			  KEY `status` (`status`),
+			  KEY `start_time` (`start_time`),
+			  KEY `end_time` (`end_time`),
+			  KEY `title` (`title`)
+			) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='每日一荐' AUTO_INCREMENT=1 ;
+		2. 说明:
+			2.1 day_id为了与主表(game_recommend_list)关联.
+			2.2 sort是1.5.7版本中的,该版本不需要在字段,将在1.5.9版本中删除.
+			2.3 game_status是1.5.7版本中的,该版本不需要在字段,将在1.5.9版本中删除.
+			2.4 start_time,end_time是1.5.7版本中的,该版本不需要在字段,将在1.5.9版本中删除.
+	5) 推荐列表
+		1. 表结构:
+			1.1 推荐列表主表
+				CREATE TABLE IF NOT EXISTS `game_recommend` (
+				  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+				  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '标题',
+				  `content` varchar(255) DEFAULT NULL COMMENT '描述',
+				  `start_time` int(10) NOT NULL DEFAULT '0' COMMENT '开始时间',
+				  `end_time` int(10) NOT NULL DEFAULT '0' COMMENT '结束时间',
+				  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:关闭,1:开启',
+				  `sort` tinyint(1) NOT NULL DEFAULT '0' COMMENT '排序',
+				  `pgroup` int(10) NOT NULL DEFAULT '0' COMMENT '机组',
+				  `rec_type` tinyint(1) DEFAULT '0' COMMENT '0:合集,1:图片',
+				  `day_id` int(10) NOT NULL DEFAULT '0' COMMENT '生效日期',
+				  `create_time` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
+				  PRIMARY KEY (`id`),
+				  KEY `status` (`status`),
+				  KEY `start_time` (`start_time`),
+				  KEY `end_time` (`end_time`),
+				  KEY `title` (`title`)
+				) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='游戏推荐' AUTO_INCREMENT=364 ;
+			1.2 推荐列表游戏
+				CREATE TABLE IF NOT EXISTS `game_recommend_games` (
+				  `recommend_id` varchar(255) NOT NULL DEFAULT '' COMMENT '主表ID',
+				  `game_id` int(10) NOT NULL DEFAULT '0' COMMENT '游戏ID',
+				  `sort` int(10) NOT NULL DEFAULT '0' COMMENT '排序',
+				  `game_status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '游戏状态',
+				  PRIMARY KEY (`recommend_id`,`game_id`),
+				  KEY `idx_recoment_id_status` (`game_status`,`recommend_id`)
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='游戏推荐';
+			1.3 推荐列表图片
+				CREATE TABLE IF NOT EXISTS `game_recommend_imgs` (
+				  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '图片ID',
+				  `recommend_id` int(10) unsigned NOT NULL COMMENT '推荐id',
+				  `link_type` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '链接类型',
+				  `link` varchar(255) DEFAULT '' COMMENT '链接参数',
+				  `img` varchar(255) NOT NULL DEFAULT '' COMMENT '图片',
+				  PRIMARY KEY (`id`),
+				  KEY `idx_recommend_id` (`recommend_id`),
+				  KEY `idx_link` (`link_type`,`link`)
+				) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='推荐图片' AUTO_INCREMENT=18 ;
+		2. 说明:
+			2.1 day_id(game_recommend)为了与主表(game_recommend_list)关联.
+			2.2 pgroup(game_recommend)是在1.5.7版本中加入的功能,推荐列表可以定向显示到不同的机组.
+			2.3 rec_type(game_recommend)是1.5.8版本中加入的功能该字段决定是附表是游戏还是图片.
+			2.4 start_time,end_time是1.5.7版本中的,该版本不需要在字段,将在1.5.9版本中删除.
+			2.5 推荐列表的游戏存储在game_recommend_games表,推荐图片存储在game_recommend_imgs表,都是用recommend_id字段关联.
+			2.6 每个推荐图的具体链接对象用link_type保存:1:游戏ID,2:分类,3:专题,4:外部链接,5:活动.
+	5) 编辑记录
+		1. 表结构:
+			1.1 推荐列表主表
+				CREATE TABLE IF NOT EXISTS `game_recommend_edit_log` (
+				  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+				  `day_id` int(10) NOT NULL COMMENT '天ID',
+				  `uid` int(10) NOT NULL DEFAULT '0' COMMENT '编辑人',
+				  `create_time` int(10) NOT NULL DEFAULT '0' COMMENT '编辑时间',
+				  PRIMARY KEY (`id`),
+				  KEY `idx_day_id` (`day_id`)
+				) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='首页编辑记录' AUTO_INCREMENT=1 ;
+		2. 说明:
+			2.1 该表记录推荐列表编辑记录.
+			2.2 后台保存一次,该表保存条记录.
+

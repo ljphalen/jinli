@@ -1,0 +1,252 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<style>
+	.iform {
+		width: 200px;
+	}
+</style>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $indexUrl; ?>">权限商品列表</a></li>
+		<li class="current"><a href="<?php echo $addUrl; ?>">添加权限商品</a></li>
+	</ul>
+</div>
+<div class="h_a">添加信息</div>
+<form method="post" action="<?php echo $addPostUrl; ?>" id="addForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">商品分组</th>
+				<td class="td"><select name="group_id" id="group_id">
+						<option value='0'>请选择类别</option>
+						<?php foreach ($groupType as $k => $v) { ?>
+							<option value="<?php echo $k; ?>"><?php echo $v['val'] ?></option>
+						<?php } ?>
+					</select>
+				</td>
+
+				<tbody style="display:none" id="catLabel">
+			<tr class="tr">
+				<th class="th">商品分类</th>
+				<td class="td"><select name="cat_id" id="cat_id"></select>
+				</td>
+			</tbody>
+
+			<tbody style="display:none" id="goods_info">
+			<tr class="tr">
+				<th class="th">商品名称</th>
+				<td class="td"><select name="goods_id" id="goods_id"> </select>
+				</td>
+			</tr>
+			</tbody>
+
+			<tbody style="display: none" id="price">
+			<tr class="tr">
+				<th class="th">产生／消费积分数</th>
+				<td class="td"><span id="initScore" style="color: red"></span>
+					<input type="hidden" name="defaultScore" id="defaultScore">
+				</td>
+			</tr>
+			</tbody>
+
+			<tr class="tr">
+				<th class="th">用户等级组别</th>
+				<td class="td"><select name="level_group" id="level_group">
+						<option value="0">请选择</option>
+						<?php foreach ($levelGroupName as $k => $v) { ?>
+							<option value="<?php echo $k; ?>"><?php echo $v; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+
+			<tbody style="display:none" id="user_level_info">
+			<tr class="tr">
+				<th class="th">用户等级</th>
+				<td class="td"><select name='user_level' id="user_level"></select></td>
+			</tr>
+			</tbody>
+
+			<tbody id="goods_rule" style="">
+			<tr class="tr">
+				<th class="th">单次获取/消费积分数</th>
+				<td class="td">
+					<input type="text" name="scores" id="scores" class="input" value="0"><span style="color: blue">(原则上：用户行为产生积分时，等级越高，获到越多且不低于普通用户，行为消费积分时，则是相反)</span>
+				</td>
+			</tr>
+			</tbody>
+
+			<tbody id="cate_rule">
+			<tr class="tr">
+				<th class="th">连续天数</th>
+				<td class="td">
+					<input type="text" name="days" id="days" class="input" value="0"><span style="color: blue">(如连续打卡7天送20积分，没有可不填)</span>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">奖励积分数</th>
+				<td class="td"><input type="text" name="rewards" id="rewards" class="input" value="0"></td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">单天连续次数</th>
+				<td class="td">
+					<input type="text" name="times" id="times" class="input" value="0"><span style="color: blue">(如当天看图10个送10积分，没有可不填)</span>
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">获得积分数</th>
+				<td class="td"><input type="text" name="rewards2" id="rewords2" class="input" value="0"></td>
+			</tr>
+			</tbody>
+
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td"><select name="status" class="select">
+						<option value="1">开启</option>
+						<option value="0">关闭</option>
+					</select></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script
+	src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+	//用户表单数据提交
+	$(document).ready(function () {
+		$('#start_time').datetimepicker();
+		$('#end_time').datetimepicker();
+
+		ajaxForm('addForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/uprivilege/level');
+		});
+	})
+
+
+	//分组信息
+	$("#group_id").bind("change", function () {
+		var groupId = $("#group_id option:selected").val();
+		if (groupId == '2' || groupId == '3') {
+			$.ajax({
+				'type': 'post',
+				'dataType': 'json',
+				'url': '/Admin/Category/ajaxGetCategoryInfo',
+				'data': {'groupId': groupId, 'token': '<?php echo $token;?>'},
+				'success': function (e) {
+					if (e.key == '-1') {
+						alert(e.msg);
+						return false;
+					}
+					var options = "<option value='0'>请选择分类</optioin>";
+					$.each(e.msg, function (i, m) {
+						options += '<option value="' + m.id + '">' + m.name + "</option>";
+					});
+					$("#cat_id").html(options);
+					$("#catLabel").show();
+					if (groupId == '3') {
+						$("#cate_rule").hide();
+					} else {
+						$("#cate_rule").show();
+					}
+				}
+			});
+		} else {
+			$("#catLabel").hide();
+			$("#cate_rule").show();
+		}
+	});
+
+	//分类信息
+	$("#cat_id").bind('change', function () {
+		var groupId = $("#group_id option:selected").val();
+		var typeId = $("#cat_id option:selected").val();
+		var url;
+		switch (groupId) {
+			case '2': //所有生产类商品
+				url = '/Admin/Produces/ajaxGetGoodsInfo';
+				break;
+			case '3'://所有消费类商品
+				url = '/Admin/Commodities/ajaxGetData';
+				break;
+			default:
+				break;
+		}
+		var temp = ['2', '3'];
+		var flag = temp.indexOf(groupId) > -1 ?　true
+		:
+		false;
+		if (flag) {
+			$.ajax({
+				'type': 'post',
+				'dataType': 'json',
+				'data': {'type': typeId, 'token': '<?php echo $token;?>'},
+				'url': url,
+				'success': function (e) {
+					if (e.key == '-1') {
+						alert(e.msg);
+						return false;
+					}
+					var html = "<option value='0'>请选择商品</option>";
+					$.each(e.msg, function (i, n) {
+						html += "<option value='" + n.id + "' score='" + n.scores + "'>" + n.name + "</option>";
+					});
+					$("#goods_id").html(html);
+					$("#goods_info").show();
+				}
+			});
+		} else {
+			$("#goods_info").hide();
+			$("#price").hide();
+		}
+	});
+
+	$("#goods_id").bind('change', function () {
+		if ($("#goods_id").val() > 0) {
+			var score = $("#goods_id option:selected").attr('score');
+			$("#initScore").text(score);
+			$("#defaultScore").val(score);
+			$("#price").show();
+			//$("#cate_rule").hide();
+			$("#goods_rule").show();
+		} else {
+			$("#price").hide();
+			$("#cate_rule").show();
+			$("#goods_rule").hide();
+		}
+	});
+
+
+	//用户等级信息
+	$("#level_group").bind("change", function () {
+		var level_group = $("#level_group option:selected").val();
+		if (level_group != '0') {
+			$.ajax({
+				'type': 'post',
+				'dataType': 'json',
+				'url': '/Admin/Uprivilege/ajaxGetUserLevelGroup',
+				'data': {'group_id': level_group, 'token': '<?php echo $token;?>'},
+				'success': function (e) {
+					if (e.key == '-1') {
+						alert(e.msg);
+						return false;
+					}
+					var option = "<option value='0'>请选择用户等级</option>";
+					$.each(e.msg, function (i, n) {
+						option += "<option value='" + n.level + "'>" + n.name + "(level " + n.level + ")</option>";
+					});
+					$("#user_level").html(option);
+					$("#user_level_info").show();
+				}
+			});
+		} else {
+			$("#user_level_info").hide();
+		}
+	});
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

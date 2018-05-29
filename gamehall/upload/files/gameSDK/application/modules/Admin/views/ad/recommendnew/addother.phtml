@@ -1,0 +1,67 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="javascript:;">添加活动资讯</a></li>
+	</ul>
+</div>
+<div class="h_a">添加活动资讯</div>
+<form method="post" action="<?php echo $otherPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="day_id" value="<?php echo $day_id;?>" type="hidden" />
+<input name="type" value="<?php echo $type;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">添加的类型</th>
+			<td class="td"><?php if($type == 'hd') {?>活动<?php }else{?>资讯<?php }?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">标题(<span style="color: red">*</span>)</th>
+			<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+		</tr>
+		<?php for($i=1;$i<=$loop_num;$i++) {?>
+		<tr class="tr">
+			<th class="th"><?php if($type == 'hd') {?>活动<?php }else{?>资讯<?php }?>ID</th>
+			<td class="td"><input type="text" class="input wc" name="list_id[<?php echo$i?>]" value="" id="list_id_<?php echo$i?>"><button type="button" name="getInfo" getInputId="<?php echo$i?>" style="margin-left:20px;">获取标题</button><br>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th"><?php if($type == 'hd') {?>活动<?php }else{?>资讯<?php }?>标题</th>
+			<td class="td"><input type="text" class="input wc" value="" id="list_title_<?php echo $i?>" disabled="" name="list_title[<?php echo$i?>]" value=""><br>
+			</td>
+		</tr>
+		<?php }?>
+                <?php if($_GET['type'] == 'hd') {?>
+                <tr class="tr">
+			<th class="th">活动简介</th>
+                        <td class="td"><textarea type="text" class="input wc" name="list_resume" id="list_resume"><?=$info[1]['list_resume']?></textarea><br>
+			</td>
+		</tr>
+                <?php }?>
+	</table>
+</div>
+<div class="mb10 tac">
+    <span class="btn"><span><a href="<?php echo $listEditUrl.'?day_id='.date('Y-m-d', $day_id);?>"><button type="button">返回</button></a></span></span>
+    <span class="btn"><span><button onfocus="blur();" type="submit">完成提交</button></span></span>
+</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $listEditUrl . "?day_id=";?>' + ret.data);
+	});
+	$("button[name='getInfo']").click(function() {
+		var NumId = $(this).attr('getInputId');
+		var idVal = $('#list_id_'+NumId).val();
+		$.getJSON(baseurl + '<?php echo $checkTitleUrl;?>', { infoId: idVal, type: "<?=$type?>" }, function (data, status) {
+			if(data.data.title !== null) {
+			    $('#list_title_'+NumId).val(data.data.title);
+			} else {
+			    alert(data.msg);
+			}
+	    });
+	});
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

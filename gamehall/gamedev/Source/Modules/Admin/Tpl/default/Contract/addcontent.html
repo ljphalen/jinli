@@ -1,0 +1,176 @@
+<style>
+    .ratioInput {
+        width: 50px;
+        margin-right: 5px;
+    }
+</style>
+<div class="page">
+    <div class="pageContent" style="width: 586px;">
+        <div class="pageFormContent" layouth="58" style="height: 353px; overflow: auto;">
+            <div class="unit">
+                <label>内容类型：</label>
+                <select id="contract_type">
+                    <option value="1">分成比例</option>
+                    <option value="2">发票类型</option>
+                    <option value="3">金立对接人</option>
+                </select>
+            </div>
+            <!--分成比例-->
+            <form id="form_1" method="post" action="{:U('addContent')}"
+                  enctype="multipart/form-data" class="required-validate"
+                  onsubmit="return validateCallback(this, dialogAjaxDone);" novalidate="novalidate">
+                <input type="hidden" name="contract_type" value="1"/>
+                <div class="unit">
+                    <label>分成类型：</label>
+                    <select name="name" id="ratio_type">
+                        <option value="1">固定分成比例</option>
+                        <option value="2">阶梯分成比例</option>
+                    </select>
+
+                </div>
+                <div class="unit">
+                    <label>比例：</label>
+
+                    <div id="ratio_condition" style="display: none;">
+                        <span style="float: left;">月流水高于</span>
+                        <input type="text" name="condition" class="ratioInput" />
+                        <span style="float: left;">万时，甲:乙=</span>
+                    </div>
+
+
+                    <input name="ratio1" class="require ratioInput focus valid" type="text" value="" size="50">
+                    <input name="ratio2" class="require ratioInput focus valid" type="text" value="" size="50">
+                </div>
+
+                <div class="unit">
+                    <label>状态：</label>
+                    <select name="status">
+                        <option value="1">有效</option>
+                        <option value="0">无效</option>
+                    </select>
+                </div>
+
+                <div class="formBar">
+                    <ul>
+                        <li>
+                            <div class="buttonActive">
+                                <div class="buttonContent">
+                                    <button type="submit">提交</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="button">
+                                <div class="buttonContent">
+                                    <button type="button" class="close">取消</button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+
+
+            <!--发票类型-->
+            <form id="form_2" style="display: none" method="post" action="{:U('addContent')}"
+                  enctype="multipart/form-data" class="required-validate"
+                  onsubmit="return validateCallback(this, dialogAjaxDone);" novalidate="novalidate">
+                <input type="hidden" name="contract_type" value="2"/>
+
+                <div class="unit">
+                    <label>发票类型：</label>
+                    <input name="name" class="require textInput valid" type="text" size="50">
+                </div>
+                <div class="unit">
+                    <label>状态：</label>
+                    <select name="status">
+                        <option value="1">有效</option>
+                        <option value="0">无效</option>
+                    </select>
+                </div>
+                <div class="formBar">
+                    <ul>
+                        <li>
+                            <div class="buttonActive">
+                                <div class="buttonContent">
+                                    <button type="submit">提交</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="button">
+                                <div class="buttonContent">
+                                    <button type="button" class="close">取消</button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+
+
+            <!--金立对接人-->
+            <form id="form_3" style="display: none" method="post" action="{:U('addContent')}"
+                  enctype="multipart/form-data" class="required-validate"
+                  onsubmit="return validateCallback(this, dialogAjaxDone);" novalidate="novalidate">
+                <input type="hidden" name="contract_type" value="3"/>
+
+                <div class="unit">
+                    <label>联系人名称：</label>
+                    <input name="name" class="require textInput valid" type="text" size="50">
+                </div>
+                <div class="unit">
+                    <label>联系电话：</label>
+                    <input name="phone" class="require textInput" type="text"  size="50">
+                </div>
+                <div class="unit">
+                    <label>联系邮箱：</label>
+                    <input type="text" class="form-control" id="company_passport" size="50" tabindex="1"
+                           name="email">
+                </div>
+                <div class="unit">
+                    <label>状态：</label>
+                    <select name="status">
+                        <option value="1">有效</option>
+                        <option value="0">无效</option>
+                    </select>
+                </div>
+                <div class="formBar">
+                    <ul>
+                        <li>
+                            <div class="buttonActive">
+                                <div class="buttonContent">
+                                    <button type="submit">提交</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="button">
+                                <div class="buttonContent">
+                                    <button type="button" class="close">取消</button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#contract_type").live("change",function () {
+        var mtype = $(this).val();
+        $("#form_1").hide();
+        $("#form_2").hide();
+        $("#form_3").hide();
+        $("#form_" + mtype).show();
+    });
+
+    $("#ratio_type").live("change",function(){
+        var type = $(this).val();
+        if(type == 1)  $("#ratio_condition").hide();
+        else $("#ratio_condition").show();
+    });
+
+</script>

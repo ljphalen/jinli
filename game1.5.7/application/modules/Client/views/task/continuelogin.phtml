@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+	<html lang="en">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="format-detection" content="email=no" />
+	<link rel="stylesheet" href="<?php echo $staticroot; ?>/apps/game/apkv1/assets/css/activity.css?v=<?php echo $version;?>" />
+	<script >
+	var token='<?php echo $token;?>';
+	var uuid='<?php  echo  $uuid;?>';
+	var isLogin='<?php  echo  $online?'true':'false';?>';
+	</script>
+	<meta charset="UTF-8">
+		<title>连续登录</title>
+	</head>
+	<body>
+		<div class="login-progress border-1px">
+		    <?php if($imgUrl){?>
+			<div class="login-banner">
+				<img src="<?php echo $imgUrl.'?'.$version; ?>" alt="节日活动">
+			</div>
+			<?php }?>
+			<div class="progress-container">
+				<h1>连续登录进度 <em><?php echo $continueLoginDay; ?></em>/7</h1>
+				<ul class="point-lists">
+					<!-- 已完成登录添加class done -->
+					<?php foreach ($result as $val){?>
+					<li class="<?php echo $val['isDone']?'done':'';?>">
+						<div class="list">
+							<span class="points "><?php echo $val['value']?></span>
+							<span class="date"><?php echo $val['name']?></span>
+							
+							<?php if($val['festival']){ ?>
+							<span class="circle"><?php echo ($val['type'] == 1?'+':'x').$val['number'];?></span>
+							<?php }?>
+						</div>
+					</li>
+					<?php }?>
+					
+				</ul>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+		<div class="login-points border-1px" data-action="">
+			<span>本次连续获得 <?php if($currentPoint > 0){ ?><em id="num"><?php echo $currentPoint;?></em>积分<?php }?><?php if($currentTicket > 0){ ?><em id="num"><?php echo $currentTicket;?></em>A券<?php }?></span>
+			<span>累计共获得 <?php if($totalPoint > 0 || $totalTicket <= 0 ){ ?><em id="toatal"><?php echo $totalPoint;?></em>积分<?php }?><?php if($totalTicket > 0){ ?><em id="toatal"><?php echo $totalTicket;?></em>A券<?php }?></span>
+		</div>
+		<div class="login-rules border-1px">
+			<h1>活动规则说明</h1>
+			<div class="login-rule-container ui-editor">
+				<?php echo html_entity_decode($desc, ENT_QUOTES); ?>
+			</div>
+		</div>
+	</body>
+	</html>

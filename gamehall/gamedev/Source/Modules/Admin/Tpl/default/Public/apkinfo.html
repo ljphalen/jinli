@@ -1,0 +1,224 @@
+<div class="unit">
+	<label>包名称： </label>
+	<span>{$vo.package}</span>
+</div>
+<div class="unit">
+	<label>应用名称： </label>
+	<span>{$vo.app_name}</span>
+</div>
+<div class="unit">
+	<label>版本： </label>
+	<span>{$vo.version_name}</span>
+</div>
+<div class="unit">
+	<label>系统支持： </label>
+	<?php
+	$apkConfig = C("apk");
+	$minSDK = $vo['min_sdk_version'];
+	?>
+	<span>Android {$apkConfig['SDK_VER'][$minSDK]}</span>
+</div>
+<div class="unit">
+	<label>文件大小： </label>
+	<span>{$vo['file_size']/1048576 | round=2}M</span>
+</div>
+<div class="unit">
+	<label>上传日期： </label>
+	<span>{$vo['created_at']|date="Y-m-d H:i:s",###}</span>
+</div>
+<div class="unit">
+	<label>开发者： </label>
+	<span>{$vo['developer']}</span>
+</div>
+<div class="unit">
+	<label>客服电话： </label>
+	<span>{$vo['service_phone']}</span>
+</div>
+<div class="unit">
+	<label>代理商： </label>
+	<span>{$vo['agent']}</span>
+</div>
+<div class="unit">
+	<label>应用分辨率： </label>
+	<php>
+	$resoinfo = D ( "Reso" )->select ();
+	$reso = explode("-", $vo['reso']);
+    foreach( $resoinfo as $key =>$value ){
+	    if( in_array($value['reso_id'],$reso)){
+	    	echo $value['reso_name']."&nbsp;&nbsp;";
+	    }
+	}
+	</php>
+</div>
+<div class="unit">
+	<label>合作方式：</label>
+	<php>if($vo['is_join']==2) echo '普通';</php>
+	<php>if($vo['is_join']==1) echo '联运';</php>
+</div>
+<php>
+$labelJson = json_decode($vo['label']);
+$labelArr = objectToArray($labelJson);
+</php>
+<volist id="lvo" name="labelInfo">
+<div class="unit">
+	<label>{$lvo['name']}：</label>
+ 	<php>
+ 	$check = $labelArr[$key];
+    foreach( $lvo['child'] as $value ){
+	    if( in_array($value['id'],$check)){
+	    	echo $value['name'].'&nbsp;&nbsp;';
+	    }
+	}
+	</php>
+</div>
+</volist>
+
+<!--div class="unit">
+	<label>分类： </label>
+	<php>
+	echo $vo['category_one']=="100"?"网游":($vo['category_one']=="200"?"应用":"");
+	</php>
+</div-->
+<if condition="$vo['category_one'] eq '100'">
+<div class="unit">
+	<label>子分类： </label>
+	<php>
+		$cate = D("Category")->category_tree();
+	</php>
+	{$cate[$vo['category_p']]["name"]}&nbsp;
+	{$cate[$vo['category_p']]["item"][$vo['category_p_son']]}&nbsp;
+	{$cate[$vo['category_s']]["name"]}&nbsp;
+	{$cate[$vo['category_s']]["item"][$vo['category_s_son']]}
+	</php>
+</div>
+<div class="unit">
+	<label>资费信息： </label>
+	<php>
+	$feetype = D("Feetype")->select();
+	foreach($feetype as $fee){
+		if($vo['fee_type']==$fee['id']) echo $fee['type_name'];
+	}
+	</php>
+</div>
+<div class="unit">
+	<label>计费通道： </label>
+	<php>
+	$fee_mode_value = explode ( '-', $vo ['fee_mode'] );
+	foreach($feeMode as $key=>$value){
+		if( in_array($key, $fee_mode_value)){
+	    	echo $value."&nbsp;&nbsp;";
+	    }
+	}
+	</php>
+</div>
+<else />
+<div class="unit">
+	<label>合作模式： </label>
+	<php>
+	$coop_mode = array(0=>"免费",1=>"CPA",2=>"CPS");
+	foreach($mode as $key=>$coop_mode){
+		if($vo['cooperation_mode']==$key) echo $coop_mode;
+	}
+	</php>
+</div>
+</if>
+<div class="unit">
+	<label>语言： </label>
+	<php>if($vo['language']==1) echo '中文';</php>
+	<php>if($vo['language']==2) echo '英文';</php>
+	<php>if($vo['language']==3) echo '其它';</php>
+</div>
+<div class="unit">
+	<label>简述：</label>
+	<div style="margin-left:130px;width:90%">{$vo['brief']|nl2br}</div>
+</div>
+<div class="unit">
+	<label>应用介绍： </label>
+	<div style="margin-left:130px;width:90%">{$vo['description']|nl2br}</div>
+</div>
+<div class="unit">
+	<label>更新日志： </label>
+	<div style="margin-left:130px;width:90%">{$vo['changelog']|nl2br}</div>
+</div>
+<div class="unit">
+	<label>热词： </label>
+	{$vo['keyword']}
+</div>
+<php>
+	$iconUrl = Helper("Apk")->get_url("icon");
+	$screenUrl = Helper("Apk")->get_url("screen");
+	$apkUrl = Helper("Apk")->get_url("apk");
+	// 截图信息
+	$Picture = D ( "Dev://Picture" );
+	$screenshotinfo = $Picture->getApkScreen($vo['app_id'], $vo['id'], array('type'=>1));
+	// ICON信息
+	$iconinfo = $Picture->getApkIcon($vo['app_id'], $vo['id'], array('type'=>array("gt", 1)));
+</php>
+<div class="unit">
+	<label>应用ICON： </label>
+	  <php>
+       if(empty($iconinfo)){
+      </php>
+	   <a href="javascript:void(0)"><img src="{:cdn('PUBLIC')}/common/images/icon_72.jpg" width="72" height="72"></a>
+      <php>
+      	}else{
+      </php>
+       <a href="javascript:void(0)"><img src="{$iconUrl}{$iconinfo['file_path']}" width="72" height="72"></a>
+      <php>
+      	}
+      </php>
+</div>
+<div class="unit">
+	<label>应用截图： </label>
+	  <php>
+       if(empty($screenshotinfo)){
+      </php>
+	   <a href="javascript:void(0)"><img src="{:cdn('PUBLIC')}/common/images/shot_480.jpg" width="120" height="200"></a>
+      <php>
+      	}else{
+      </php>
+      <table>
+		<tr>
+	       	<volist name="screenshotinfo" id="data">
+			<td><a href="javascript:void(0)">
+			<img src="{$screenUrl}{$data.file_path}" width="120" height="200">
+			</a></td>
+			</volist>
+		</tr>
+	</table>
+      <php>
+      	}
+      </php>
+</div>
+
+<?php
+	$copyrightUpload = D('AppCert')->where(array('apk_id'=>$vo["id"]))->getField('file_path');
+	if($copyrightUpload) $copyrightUpload = Helper ( "Apk" )->get_url ( "user" ). $copyrightUpload;
+	else $copyrightUpload = cdn('PUBLIC').'/common/images/icon_add.jpg';
+?>
+
+<div class="unit">
+	<label>著作权证： </label>
+	<table>
+		<tr>
+			<td>
+				<a href="javascript:void(0)"><img src="{$copyrightUpload}" style="max-height:300px" width="300" onclick="window.open(this.src);" ></a>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<div class="unit">
+	<label>期望上线时间： </label>
+	<php>if($vo['onlinetime_type']==1) {echo '立即上线';} else {echo $vo['online_time'];}</php>
+</div>
+
+<div class="unit">
+	<label>版本更新类型： </label>
+	<php>if($vo['upgrade_type']==1) {echo '普通更新';} else {echo '强制更新';}</php>
+</div>
+
+<div class="unit">
+	<label>备注： </label>
+	{$vo['resumen']}
+</div>

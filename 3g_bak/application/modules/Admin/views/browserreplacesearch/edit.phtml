@@ -1,0 +1,34 @@
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="edit_form" enctype="multipart/form-data">
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr>
+			<th>名称</th>
+			<td>
+				<input type="text" class="easyui-textbox" name="title" required="true" value="<?php echo $info['title']; ?>">
+			</td>
+		</tr>
+
+		<tr>
+			<th>原连接</th>
+			<td>
+				<input type="text" style="width:250px;" class="easyui-textbox" name="url" required="true" value="<?=$info['url']?>">
+			</td>
+		</tr>
+
+        <tr>
+            <th>替换连接</th>
+            <td>
+                <input type="text" style="width:250px;" class="easyui-textbox" name="replace_url" required="true" value="<?=$info['replace_url']?>">
+            </td>
+        </tr>
+
+        <tr class="tr">
+            <th class="th">状态</th>
+            <td class="td">
+                上线<input type="radio" name="status" value="1" <?php echo $info['status'] == 1 ? 'checked="checked"' : ''; ?> />
+                下线<input type="radio" name="status" value="0" <?php echo $info['status'] == 0 ? 'checked="checked"' : ''; ?> />
+            </td>
+        </tr>
+	</table>
+</form>

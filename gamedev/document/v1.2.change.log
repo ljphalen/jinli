@@ -1,0 +1,680 @@
+diff --git a/Public/default/common/js/webuploader/apk.js b/Public/default/common/js/webuploader/apk.js
+index 58542fd..04f8c86 100644
+--- a/Public/default/common/js/webuploader/apk.js
++++ b/Public/default/common/js/webuploader/apk.js
+@@ -8,9 +8,9 @@ jQuery(function() {
+ 		uploader;
+ 	
+ 	var url = "/apps/apkUpload";
+-	var type = $("#type").val();
+-	var appId = $("#app_id").val();
+-	var apkId = $("#apk_id").val();
++	var type = $("#type").val() || 0;
++	var appId = $("#app_id").val() || 0;
++	var apkId = $("#apk_id").val() || 0;
+ 	
+ 	url += "/type/"+type;
+ 	if(type=="1" || appId!="") 
+@@ -109,7 +109,7 @@ jQuery(function() {
+     	if(typeof file =='object' && typeof ret =='object' && typeof ret.files =='object')
+     	{
+     		var data = ret.files[0];
+-        	if (data.error && data.errorCode) {
++        	if (data.error) {
+                 var error = data.error.error ? data.error.error : data.error;
+                 $err.text(error).appendTo("#apk div p");
+                 $("#closeTime, #closeBtn").show();
+diff --git a/Source/Lib/Model/TestinModel.class.php b/Source/Lib/Model/TestinModel.class.php
+new file mode 100644
+index 0000000..3dcd9be
+--- /dev/null
++++ b/Source/Lib/Model/TestinModel.class.php
+@@ -0,0 +1,56 @@
++<?php
++/**
++ * 云测模型
++ * @author shuhai
++ *
++ */
++class TestinModel extends Model
++{
++	protected $trueTableName = "testin";
++	public $_status = array("3"=>"等待测试", "4"=>"正在测试", "5"=>"部分完成", "6"=>"测试完成");
++	public $_run_status = array("1"=>"测试通过", "2"=>"待优化","3"=>"未执行","5"=>"安装失败", "6"=>"运行中失败");
++	public $_chk_status = array("0"=>"待审核", "1"=>"检测通过", "-1"=>"检测不通过");
++
++	function getResult($map)
++	{
++		if(!is_array($map))
++		{
++			if(strlen($map) == 32)
++				$map = array("apk_md5"=>$map);
++			elseif(is_numeric($map))
++				$map = array("apk_id"=>$map);
++		}
++		$find = $this->where($map)->find();
++		if(empty($find))
++			return array();
++
++		$find["report"] = !empty($find["report"]) ? json_decode($find["report"], true) : array();
++		$find["detail_report"] = !empty($find["detail_report"]) ? json_decode($find["detail_report"], true) : array();
++		return $find;
++	}
++	
++	function getStatusByMd5($md5)
++	{
++		$find = $this->where(array("apk_md5"=>$md5))->field('chk_status,status,fail')->find();
++		list($chk_status, $status, $fail) = array_values($find);
++		
++		if(empty($status) || !isset($this->_status[$status]))
++			return '';
++
++		if(-1 == $chk_status)
++			return '任务异常';
++		
++		//已经有测试结果
++		if($status == 6)
++			return $fail > 0 ? '<font color="red">未通过('.$fail.')</font>' : '通过';
++		return $this->_status[$status];
++	}
++	
++	function getStatusByApkId($apkId)
++	{
++		$md5 = $this->where(array("apk_id"=>$apkId))->getField('apk_md5');
++		if(empty($md5)) return '';
++		
++		return $this->getStatusByMd5($md5);
++	}
++}
+\ No newline at end of file
+diff --git a/Source/Modules/Admin/Tpl/default/Index/index.html b/Source/Modules/Admin/Tpl/default/Index/index.html
+index 9e9ff32..70dd1da 100644
+--- a/Source/Modules/Admin/Tpl/default/Index/index.html
++++ b/Source/Modules/Admin/Tpl/default/Index/index.html
+@@ -45,7 +45,7 @@ function navTabAjaxMenu(json){
+ 	navTabAjaxDone(json);
+ }
+ $(function(){
+-	DWZ.init("__APP__/Data/Config/dwz.frag.xml", {
++	DWZ.init("<?php echo cdn('PUBLIC');?>/app/dwz/dwz.frag.xml", {
+ 		loginTitle:"操作超时，重新登录",
+ 		loginUrl:"__APP__/Public/logindialog",
+ 		statusCode:{ok:1, error:0, timeout:301},
+diff --git a/Source/Modules/Admin/Tpl/default/Veryfy/index.html b/Source/Modules/Admin/Tpl/default/Veryfy/index.html
+index e55aa01..02c66ae 100644
+--- a/Source/Modules/Admin/Tpl/default/Veryfy/index.html
++++ b/Source/Modules/Admin/Tpl/default/Veryfy/index.html
+@@ -101,6 +101,7 @@
+ 				<th>版本名称</th>
+ 				<th>版本类型</th>
+ 				<th>测试状态</th>
++				<th>云测状态</th>
+ 				<th>操作</th>
+ 				<th>测试记录</th>
+ 			</tr>
+@@ -138,6 +139,11 @@
+ 					<td>{:D("Dev://Apks")->getReleaseStatus($vo['app_id'], $vo['id'])}</td>
+ 					<td><php>echo $apkStatus[$vo['status']];</php></td>
+ 					<td>
++						<a href="__URL__/testin/md5/{$vo['apk_md5']}" target="dialog" max="true" width="820" height="450">
++							{:D("Testin")->getStatusByMd5($vo['apk_md5'])}
++						</a>
++					</td>
++					<td>
+ 					  <php>
+ 			       	  if($vo['status']==1){
+ 				      </php>
+diff --git a/Source/Modules/Admin/Tpl/default/Veryfy/testin.html b/Source/Modules/Admin/Tpl/default/Veryfy/testin.html
+new file mode 100644
+index 0000000..14de7e1
+--- /dev/null
++++ b/Source/Modules/Admin/Tpl/default/Veryfy/testin.html
+@@ -0,0 +1,78 @@
++<div class="page">
++
++	<php>
++		$results = D("Testin")->getResult(array("apk_md5"=>$_GET['md5']));
++	</php>
++	
++	<notempty name="results.pdf">
++		<!--查询开始-->
++		<div class="pageHeader">
++			<form onsubmit="return navTabSearch(this);" action="__URL__" method="post" name="myform" id = 'myform_veryfy'>
++			<div class="searchBar">
++				<ul class="searchContent">
++	                <div class="buttonActive">
++	                	<div class="buttonContent"><button type="button" onclick="window.open('{$results.pdf}')">下载PDF报告</button></div>
++					</div>
++					
++	                <div class="buttonActive">
++	                	<div class="buttonContent"><button type="button" onclick="window.open('{$results.report.excel}')">下载Excel报告</button></div>
++					</div>
++					
++				</ul>
++			</div>
++			</form>
++		</div>
++		<!--查询结束-->
++	</notempty>
++
++	<div class="pageContent">
++		<!-- 列表开始 -->
++		<table class="list listW" width="100%">
++			<thead>
++			<tr>
++				<th>提交日期</th>
++				<th>测试日期</th>
++				<th>设备名称</th>
++				
++				<th>安装测试</th>
++				<th>卸载测试</th>
++				<th>启动测试</th>
++				<th>启动时间</th>
++				
++				<th>最大内存消耗</th>
++				<th>最小内存消耗</th>
++				<th>平均内存消耗</th>
++				
++				<th>最大CPU消耗</th>
++				<th>最小CPU消耗</th>
++				<th>平均CPU消耗</th>
++				
++				<th>日志下载</th>
++
++			</tr>
++			</thead>
++			<tbody>
++			<volist id="vo" name="results.detail_report">
++				<tr target="sid_user">
++					<td>{$results.create_at|date="Y-m-d H:i:s",###}</td>
++					<td>{$vo.reportTime|date="Y-m-d H:i:s",###}</td>
++					<td>{$vo.reportDevice}</td>
++					<td>{$vo.installCode}</td>
++					<td>{$vo.uninstallCode}</td>
++					<td>{$vo.runCode}</td>
++					<td>{$vo.launch}</td>
++					<td>{$vo.maxMem}</td>
++					<td>{$vo.minMem}</td>
++					<td>{$vo.avgMem}</td>
++					<td>{$vo.maxCpu}</td>
++					<td>{$vo.minCpu}</td>
++					<td>{$vo.avgCpu}</td>
++					<td><empty name="vo.logUrl">暂无日志<else/><a href="{$vo.logUrl}" target="_blank">点击下载</a></empty></td>
++				</tr>
++			</volist>
++			</tbody>
++		</table>
++		<!-- 列表结束 -->
++	</div>
++
++</div>
+\ No newline at end of file
+diff --git a/Source/Modules/Cli/Action/TestinAction.class.php b/Source/Modules/Cli/Action/TestinAction.class.php
+new file mode 100644
+index 0000000..17267da
+--- /dev/null
++++ b/Source/Modules/Cli/Action/TestinAction.class.php
+@@ -0,0 +1,420 @@
++<?php
++/**
++ * 云测逻辑
++ * 
++ * 通过计划任务对审核通过的账号下的应用，添加云测请求，并对已经发起的请求进行状态检查
++ * 
++ * 部署
++ * * /10 * * * * cd /wwwroot/xxxx/ && /usr/bin/php ./cli.php Testin send
++ * * /10 * * * * cd /wwwroot/xxxx/ && /usr/bin/php ./cli.php Testin check
++ * 
++ * @author shuhai
++ */
++class TestinAction extends CliBaseAction
++{
++	protected $config = array();
++	
++	public $lastFetchTime = 0;
++	public $serverUrl = "";
++	public $lastLoginTime = 0;
++	public $serverSid = "";
++	public $device    = array();
++	public $totalApp  = 100;
++	
++	function _initialize()
++	{
++		parent::_initialize();
++
++		$this->config = C('TESTIN');
++		if(!is_array($this->config))
++			exit('配置文件 Data/Config/testin.php 不存在或者没有导入');
++		
++		$this->config = (object)$this->config;
++		
++		//获取服务器、登陆并获取所有设备
++		$this->fetch_server_list();
++		$this->login();
++		$this->deviceList();
++	}
++	
++	function index()
++	{
++		//发布测试、检查结果
++		$this->send();
++		$this->check();
++	}
++	
++	/**
++	 * 对已经上传的包，上传到云测
++	 */
++	function send()
++	{
++		//已提交的普通应用、已签名的联运应用
++		$apks = D("Apks")->where('(status = 1 and is_join = 2) OR (status = 1 and is_join = 1 and sign = 1)')->getField('id as apk_id, app_id, file_path, app_name, apk_md5', true);
++
++		foreach ($apks as $apk)
++		{
++			//添加到云测
++			if(!$find = D("Testin")->where(array("apk_md5"=>$apk["apk_md5"]))->find())
++			{
++				$apk_file = Helper("Apk")->get_url('apk').$apk["file_path"];
++				$apk["adapt_id"] = $this->add_app($apk["apk_id"].":::".$apk["app_name"], $apk_file);
++				$apk["create_at"] = time();
++				D("Testin")->add($apk);
++				printf("app add:%s, apk:%s, adaptId:%s\n", $apk["app_name"], $apk_file, $apk["adapt_id"]);
++			}
++		}
++	}
++
++	/**
++	 * 从云测提取测试结果
++	 */
++	function check()
++	{
++		$result = $this->get_result();
++		foreach ($result as $app)
++		{
++			//获取excel报告
++			if(6 == $app["execStatus"])
++				$app['excel'] = sprintf('http://realauto.testin.cn/nativeapp.action?op=Report.exportExcel&adpId=%s&authtoken=%s', $app['id'], $this->serverSid);
++
++			$where = array("adapt_id"=>$app["adaptId"]);
++			$data  = array("status"=>$app["execStatus"], "report"=>json_encode($app));
++			
++			//计算通过率
++			$data['fail'] = $app["installFailTotal"] + $app["runCrashTotal"];
++			$data['pdf'] = !empty($app["reportUrl"]) ? $app["reportUrl"] : '';
++			$data['chk_status'] = intval($app["checkApp"]);
++			
++			//获取详细报告
++			if(6 == $app["execStatus"])
++			{
++				$detail_result = $this->get_detail_result($app["adaptId"]);
++				foreach ($detail_result as $testResult)
++				{
++					$data['detail_report'][] = array(
++							"reportTime"		=>floor($testResult["reportTime"]/1000),
++							"reportDevice"		=>sprintf("%s %s", $testResult["reportDevice"]["brandName"], $testResult["reportDevice"]["modelName"]),
++							
++							"installCode"		=>$testResult["resultCode"] != 5 ? '通过' : '未通过',
++							"uninstallCode"		=>'通过',
++							"runCode"			=>$testResult["resultCode"] != 6 ? '通过' : '未通过',
++
++							"launch"			=>floor($testResult["logSummary"]["launch"])."ms",
++							"maxMem"			=>floor($testResult["logSummary"]["maxMem"]/1024)."M",
++							"avgMem"			=>floor($testResult["logSummary"]["avgMem"]/1024)."M",
++							"minMem"			=>floor($testResult["logSummary"]["minMem"]/1024)."M",
++							
++							"maxCpu"			=>trim($testResult["logSummary"]["maxCpu"]),
++							"minCpu"			=>trim($testResult["logSummary"]["minCpu"]),
++							"avgCpu"			=>trim($testResult["logSummary"]["avgCpu"]),
++							"logUrl"			=>$testResult["logUrl"],
++					);
++				}
++				$data['detail_report'] = json_encode($data['detail_report']);
++			}
++
++			D("Testin")->where($where)->save($data);
++			printf("app saveed, adaptId:%s, chk_status:%d, status:%s, fail:%d\n", $app["adaptId"], $app["chk_status"], $app["execStatus"], $data['fail']);
++		}
++	}
++	
++	/**
++	 * 请求参数签名
++	 **/
++	protected function hash_sig($array)
++	{
++		unset($array['sig']);
++		ksort($array);
++		$md5 = md5(json_encode($array).$this->config->SECKEY);
++		$array['sig'] = $md5;
++	
++		ksort($array);
++		return $array;
++	}
++	
++	/**
++	 * 获取服务器列表
++	 **/
++	protected function fetch_server_list()
++	{
++		$file = DATA_HOME.'/testin_server.list';
++		if(is_file($file))
++		{
++			list($this->lastFetchTime, $this->serverUrl) = file($file);
++
++			if($this->lastFetchTime + 600 > time())
++				return true;
++		}
++	
++		$data = array(
++				"op"		=>"Dispatch.list",
++				"apikey"	=>$this->config->APIKEY,
++				"timestamp"	=>time()*1000,
++				"sig"		=>"",
++		);
++		$data = $this->hash_sig($data);
++		$json = json_encode($data);
++	
++		$shell = sprintf("curl -s -X POST -d '%s' 'http://sd.testin.cn/mcfg/mcfg.action'", $json);
++		$exec = `{$shell}`;
++	
++		$exec = json_decode($exec, true);
++		if(empty($exec) || false == $exec || !isset($exec['code']))
++			exit("fetch_server_list http error");
++	
++		if($exec['code'] > 0 || empty($exec['data']['dispatches'][0]['externalIp']))
++			exit("fetch_server_list error ".$this->getError($exec['code']));
++	
++		$this->serverUrl = sprintf("http://%s:%s", $exec['data']['dispatches'][0]['externalIp'], $exec['data']['dispatches'][0]['externalPort']);
++		$this->lastFetchTime = time();
++	
++		file_put_contents($file, sprintf("%s\n%s", $this->lastFetchTime, $this->serverUrl));
++		return true;
++	}
++	
++	/**
++	 * 登陆获取用户id
++	 **/
++	protected function login()
++	{
++		$file = DATA_HOME.'/testin_login.list';
++		if(is_file($file))
++		{
++			list($this->lastLoginTime, $this->serverSid) = file($file);
++
++			if($this->lastLoginTime + 36000 > time())
++				return true;
++		}
++	
++		$request = '/sso/user.action';
++		$data = array(
++				"op"		=>"Login.login",
++				"apikey"	=>$this->config->APIKEY,
++				"timestamp"	=>time()*1000,
++				"sig"		=>"",
++				"email"		=>$this->config->EMAIL,
++				"pwd"		=>$this->config->PASSWD,
++				"sidTimeout"=>10080,	//sid超时时间，单位分钟，默认60分钟，最大值为 10080（7天）
++		);
++	
++		$data = $this->curl($request, $data);
++		if($data["code"] > 0)
++			exit("login error:".$this->getError($data["code"]));
++	
++		$this->serverSid = $data['data']['sid'];
++		$this->lastLoginTime = time();
++	
++		file_put_contents($file, sprintf("%s\n%s", $this->lastLoginTime, $this->serverSid));
++		return true;
++	}
++	
++	/**
++	 * 获取设备列表
++	 **/
++	protected function deviceList()
++	{
++		$request = '/deviceunit/cfg.action';
++		$data = array(
++				"op"		=>"Model.getSpecimens",
++				"apikey"	=>$this->config->APIKEY,
++				"timestamp"	=>time()*1000,
++				"sig"		=>"",
++				"sid"		=>$this->serverSid,
++	
++				"cloud"		=>$this->config->CLOUD,
++				"syspfName" =>"android",
++				"sidTimeout"=>10080,	//sid超时时间，单位分钟，默认60分钟，最大值为 10080（7天）
++		);
++	
++		$data = $this->curl($request, $data);
++		if($data["code"] > 0)
++			exit("deviceList error:".$this->getError($data["code"]));
++	
++		$this->device[] = array();
++		foreach ($data['data']['list'] as $d)
++			$this->device[] = array("modelId"=>$d['modelId'], "releaseVer"=>$d['releaseVer']);
++	
++		return true;
++	}
++	
++	/**
++	 * 提交一个应用进入云测
++	 **/
++	protected function add_app($apkName, $apkUrl)
++	{
++		$request = '/realtest/nativeapp.action';
++		$data = array(
++				"op"		=>"App.add",
++				"apikey"	=>$this->config->APIKEY,
++				"timestamp"	=>time()*1000,
++				"sig"		=>"",
++				"sid"		=>$this->serverSid,
++	
++				"appName"	=>$apkName,
++				"packageUrl"=>$apkUrl,//应用包下载地址
++				"syspfId"	=>1, //系统id 1-android、2-ios
++				"testType"	=>0, //测试类型 0-兼容测试 1-功能测试
++				"secrecy"	=>1, //是否需要在首页显示；0-显示、1-不显示
++	
++				"models"	=>$this->device, //测试机型列表
++				"callbackUrl"=>"",
++	
++				"cloud"		=>$this->config->CLOUD,
++				"prodId"	=>$this->config->PRODUCT,
++				"syspfName" =>"android",
++				"sidTimeout"=>10080,	//sid超时时间，单位分钟，默认60分钟，最大值为 10080（7天）
++		);
++	
++		$data = $this->curl($request, $data);
++		if($data["code"] > 0)
++			exit("app add error:".$this->getError($data["code"]));
++	
++		printf("app added, adaptId:%s\n", $data['data']['result']);
++		return $data['data']['result'];
++	}
++	
++	/**
++	 * 获取所有应用测试状态
++	 **/
++	protected function get_result()
++	{
++		$result = array();
++
++		$pageSize = 100;
++		$p = range(0, ceil($this->totalApp / $pageSize));
++		foreach ($p as $k=>$pid)
++		{
++			$request = '/realtest/nativeapp.action';
++			$data = array(
++					"op"		=>"App.list",
++					"apikey"	=>$this->config->APIKEY,
++					"timestamp"	=>time()*1000,
++					"sig"		=>"",
++					"sid"		=>$this->serverSid,
++						
++					"offset"	=>$k * 100,	//从第几条数据开始（默认为0）
++					"max"		=>100,	//最大查询条数（默认为15，不超过100）
++			);
++	
++			$data = $this->curl($request, $data);
++	
++			if($data["code"] > 0)
++				exit("deviceList error:".$this->getError($data["code"]));
++				
++			foreach ($data['data']['list'] as $app)
++			{
++				$result[] = $app;
++				//printf("adaptId:%s, packageName:%s, appVersion:%s, execStatus:%s, reportUrl:%s\n",
++				//		$app['adaptId'], @$app['packageName'], @$app['appVersion'], $app['execStatus'], $app['exportStatus'] > 1 ? $app['reportUrl'] : $app['exportStatus']);
++			}
++
++			if(count($data['data']['list']) < $pageSize)
++				break;
++		}
++
++		return $result;
++	}
++	
++	/**
++	 * 获取所有应用测试详细报告
++	 **/
++	protected function get_detail_result($adaptId)
++	{
++		$request = '/realtest/nativeapp.action';
++		$data = array(
++				"op"		=>"Report.details",
++				"apikey"	=>$this->config->APIKEY,
++				"timestamp"	=>time()*1000,
++				"sig"		=>"",
++				"sid"		=>$this->serverSid,
++		
++				"adaptId"	=>$adaptId,
++				"filter"	=>1,
++		);
++
++		$data = $this->curl($request, $data);
++		return $data["code"] == 0 ? $data["data"]["list"] : array();
++	}
++	
++	protected function curl($request, $data)
++	{
++		$data = $this->hash_sig($data);
++	
++		$shell = sprintf("curl -s -X POST -d '%s' '%s'", json_encode($data), $this->serverUrl.$request);
++		$exec = `{$shell}`;
++	
++		$json = @json_decode($exec, true);
++		if(empty($exec) || false === $json || !isset($json['code']))
++			exit("curl shell error:\n".$shell);
++	
++		return $json;
++	}
++	
++	protected function getError($code)
++	{
++		$error = array(
++				0=>"成功",
++				10000=>"未知错误",
++				10001=>"属于IP黑名单",
++				10002=>"API接口无效",
++				1000201=>"App访问api频率过快",
++				1000202=>"App访问api配额超限",
++				1000203=>"用户访问api频率过快",
++				1000204=>"用户访问api配额超限",
++				1000205=>"api配置异常",
++				10003=>"配额不足",
++				10004=>"该IP地址未经授权",
++				10005=>"参数无效",
++				1000501=>"参数无效(op)",
++				1000502=>"无效的参数(apikey)",
++				1000503=>"无效的参数(sid)",
++				1000504=>"无效的参数(timestamp)",
++				1000505=>"无效的参数(sig)",
++				1000506=>"无效的请求URL",
++				1000507=>"无效的参数(uid)",
++				1000508=>"无效的参数(nodeid)",
++				1000509=>"无效的请求(actionUrl)",
++				1000510=>"参数无效(cloud)",
++				10006=>"无效的应用",
++				1000601=>"平台配置app的类型有误，请联系平台管理员",
++				1000602=>"该应用被关闭",
++				1000603=>"app没有配置uid",
++				1000604=>"无效的第三方sid",
++				1000605=>"第三方转换注册异常",
++				1000606=>"App访问权限配置异常",
++				10007=>"信息不匹配",
++				10008=>"角色无效",
++				10009=>"该角色没有授权",
++				10010=>"没有有效数据",
++				10011=>"时间戳已过期",
++				10012=>"请求的对象为空",
++				10013=>"请求的报文超过限制",
++				10014=>"该用户未登录",
++				10015=>"无效的报文",
++				10016=>"执行失败",
++				10017=>"用户没有权限，请联系系统管理员",
++				10018=>"无效的配置，请联系系统管理员",
++				99999=>"服务正在初始化",
++				10401=>"无效的账号",
++				10402=>"用户被禁止",
++				10403=>"无效的密码",
++				10404=>"登陆失败",
++				10405=>"第三方用户的数据异常",
++				1090001=>"新增 Native App 测试数据失败",
++				1091001=>"无匹配第三方信息",
++				1091002=>"无匹配第三方配置信息",
++				1091003=>"创建测试机型数量超出配额限制",
++				1091004=>"测试机型来源检测不通过",
++				1091005=>"测试机型检测不通过",
++				1091006=>"测试所用的设备云信息查询为空",
++				1091007=>"没有查询到用户信息",
++				1091008=>"测试类型或者测试产品错误",
++		);
++	
++		if(isset($error[$code]))
++			return $error[$code];
++		else
++			return 'unknow error';
++	}
++}
+\ No newline at end of file
+diff --git a/Source/Modules/Dev/Action/AppsAction.class.php b/Source/Modules/Dev/Action/AppsAction.class.php
+index 4737a39..61c77ff 100644
+--- a/Source/Modules/Dev/Action/AppsAction.class.php
++++ b/Source/Modules/Dev/Action/AppsAction.class.php
+@@ -185,7 +185,9 @@ class AppsAction extends BaseAction {
+ 			$upload->saveRule = time () . rand ( 0, 1000 );
+ 			if (! $upload->upload ()) {
+ 				// 捕获上传异常
+-				$return [0] ['error'] = $upload->getErrorMsg ();
++				$return [0] ['error'] = $error = $upload->getErrorMsg ();
++				Log::write ( 'UPLOAD_FAIL:'.$error, Log::EMERG );
++				Log::write ( var_export($_FILES, true), Log::EMERG );
+ 			} else {
+ 				// 取得成功上传的文件信息
+ 				$return = $upload->getUploadFileInfo ();
+@@ -220,11 +222,13 @@ class AppsAction extends BaseAction {
+ 				if (APP_DEBUG)
+ 					Log::write ( print_r ( $apkInfo, true ), "apk_info" );
+ 				if (is_int ( $apkInfo )) { // 读取包信息失败
+-					$return [0] ['error'] = $apkClient->getErr ( $apkInfo );
++					$return [0] ['error'] = $error = $apkClient->getErr ( $apkInfo );
+ 					$return [0] ['errorCode'] = $apkInfo;
+ 					echo json_encode ( array (
+ 							"files" => $return 
+ 					) );
++					Log::write ( 'UPLOAD_READ_FAIL:'.$error, Log::EMERG );
++					Log::write ( var_export($return, true), Log::EMERG );
+ 					die ();
+ 				}
+ 				if (is_array ( $apkInfo )) {
+diff --git a/Source/version.php b/Source/version.php
+index 79e2103..438a236 100644
+--- a/Source/version.php
++++ b/Source/version.php
+@@ -1,5 +1,5 @@
+ <?php
+ if(!defined('SYS_VERSION')) {
+ 	define('SYS_VERSION', '1.1.0314.1391');
+-	define('SYS_RELEASE', '2014-07-14 17:22');
++	define('SYS_RELEASE', '2014-09-18 16:00');
+ }
+\ No newline at end of file

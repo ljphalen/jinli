@@ -1,0 +1,21 @@
+<?php echo $this->render("layout/header.phtml");?>
+	<div data-role="page" id="page" class="news" data-theme="no">
+		<?php echo $this->render("layout/nav.phtml");?>	
+		<h1 class="inner-title"><strong>公司新闻</strong></h1>
+		<div class="ct">
+			<div class="list news-title">
+				<ul>
+					<?php foreach($news as $key=>$value) {?>
+					<li>
+						<a href="/news/detail/?id=<?php echo $value['id'];?>">
+							<i class="ico"><img src="<?php echo $attachPath.$value['img'];?>" /></i>
+							<em><?php echo $value['title'];?><br /><span><?php echo date('Y年m月d日', $value['ontime']);?></span></em>
+							<s><img src="<?php echo $staticResPath;?>//pic/jt.png" alt="" /></s>
+						</a>
+					</li>
+					<?}?>
+				</ul>
+			</div>
+		</div>
+	</div>
+<?php echo $this->render("layout/header.phtml");?>

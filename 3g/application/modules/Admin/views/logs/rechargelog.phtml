@@ -1,0 +1,73 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $apiLogUrl; ?>">充值API日志</a></li>
+		</ul>
+	</div>
+
+	<form method="post" action="<?php echo $apiLogUrl; ?>" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">内部订单号</th>
+					<td class="td">
+						<input class="input" name="order_sn" value="<?php echo $searchParams['order_sn']; ?>"></td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+		<input type="hidden" id="export" name="export" value="0"/>
+
+		<div class="h_a">
+			&nbsp; <span id="total" style="color: red;font-size:14px"></span>
+			<span style="float:left;"><input type="button" value="导出" id="downLoad"></span>
+		</div>
+	</form>
+
+	<div class="table_list">
+		<table width="100%">
+			<tr class="hd">
+				<td width="5%">序号</td>
+				<td width="17%">内部订单号</td>
+				<td width="12%">外部订单号</td>
+				<td width="10%">API类型</td>
+				<td width="7%">状态</td>
+				<td width="12%">时间</td>
+				<td width="12%">错误描述</td>
+				<td width="24%">内容</td>
+			</tr>
+			<?php foreach ($data as $key => $value) {
+				?>
+				<tr class="ct">
+					<td><?php echo $value['id']; ?></td>
+					<td><?php echo $value['order_sn']; ?></td>
+					<td><?php echo $value['order_id']; ?></td>
+					<td><?php echo $value['api_type']; ?></td>
+					<td><?php echo $value['recharge_status'] ?></td>
+					<td><?php echo $value['add_time']; ?></td>
+					<td><?php echo $value['msg']; ?></td>
+					<td><?php echo $value['content']; ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+	<div class="mr10 cc">
+		<?php echo $pager; ?></div>
+
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#start_time').datetimepicker();
+			$('#end_time').datetimepicker();
+		});
+
+		$("#downLoad").bind('click', function () {
+			$("#export").val(1);
+			$('#addFrom').submit();
+			$("#export").val(0);
+		});
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

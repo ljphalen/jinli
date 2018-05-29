@@ -1,0 +1,48 @@
+{{pagerCss}}
+<div class="colMain">
+    <div class="title"><p class="fl">开发人员列表</p></div>
+    <div class="main">
+        <div class="toolbar">
+            <div class="search fl">
+                <form action="/developer/index" method="GET">
+                <span>
+                    <input type="hidden" name='ischeck' value='0' />
+                    <input typt="text" class="iText" name='user_name' value='{{params.user_name}}' /><input type="submit" class="submit" value="" />
+                    <span class="sign">可以按开发者邮箱,用户名,手机号查询</span>
+                </span>
+                </form>
+            </div>
+        </div>
+        <div class="content">
+            <div class="grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>待审核账号</th>
+                            <th>帐号状态</th>
+                            <th>提交审核时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- loop result -->
+                        <tr>
+                            <td><span class="blue"><a href="/developer/showCheckDevloper?dev_id={{result' value.dev_id}}">{{result' value.email}}</a></span></td>
+                            <td>
+                                <!-- if ({{result' value.dev_stat}} == 0) -->
+                                    已发送验证邮件
+                                <!-- elseif ({{result' value.dev_stat}} == 1) -->
+                                    已验证邮箱
+                                <!-- else -->
+                                    待审核
+                                <!-- endif -->
+                            </td>
+                            <td><?php echo format_time($v1['createdate']); ?></td>
+                        </tr> 
+                        <!-- endloop -->
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin: 20px auto; text-align: center;width:290px;">{{pager.pages}}</div>
+        </div>
+    </div>
+</div>

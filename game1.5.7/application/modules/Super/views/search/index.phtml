@@ -1,0 +1,50 @@
+<?php echo $this->render("layout/header.phtml");?>
+<script>
+var token = '<?php echo $token;?>';
+</script>
+<div id="page" class="superfile">
+		<article class="ac">
+			<div class="search-bar">
+				<form action="<?php echo $webroot.'/super/search/search';?>" method="get">
+				<input type="text" required="require" autocomplete="off" name="keyword" placeholder="请输入关键字" value="<?php echo $keyword;?>">
+				<button class="btn" onclick="event.preventDefault();var p=this.parentNode,input=p.querySelector('input');if(input.value!=''){p.submit();}else{input.focus();}">搜索</button>
+				<input name="t_bi" type="hidden" value="<?php echo $source?>"/>
+				<input name="intersrc" type="hidden" value="SEARCH"/>
+				</form>
+			</div>
+			<?php if($keyword && count($games)){?>
+			<div class="tips-num"><?php echo $total;?> 条关于 <?php echo $keyword;?> 的搜索结果</div>
+			<?php } else if($keyword && !count($games)){?>
+			<div class="sear-nothing">
+				<img src="<?php echo $staticResPath;?>/pic/pic_error.jpg" alt="">
+				<p>找到0条符合的结果</p>
+			</div>
+			<?php } ?>
+			<div class="item-list J_gameItem">
+				<ul>
+				    <?php if(count($games)){?>
+					<?php foreach($games as $key=>$value) {?>
+					<li>
+						<a class="detail" href="<?php echo $webroot.'/super/game/detail/?id='.$value['id'].'&intersrc=SEARCH&t_bi='.$source;?>">
+							<div class="pic"><img src="<?php echo $attachPath. $value['img'];?>" alt="<?php echo $value['name'];?>"></div>
+							<div class="desc">
+								<h3><?php echo $value['name'];?></h3>
+								<p><?php echo $value['resume'];?></p>
+							</div>
+						</a>
+						<div class="download"><a class="btn" href="<?php echo Common::tjurl($tjUrl, $value['id'], 'GAME', $value['link']);?>">安装</a></div>
+					</li>
+					<?php }?>
+					<?php }?>
+				</ul>
+			</div>
+			<?php if($hasnext){ ?>
+			<div class="load-more J_loadMore" data-ajaxUrl="<?php echo $webroot.'/super/search/more/?keyword='.$keyword.'&intersrc=SEARCH&t_bi='.$source;?>" data-hasnext="<?php echo $hasnext;?>" data-curpage="<?php echo $page;?>">
+				<span>加载更多</span>
+			</div>
+			<?php } ?>
+		</article>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

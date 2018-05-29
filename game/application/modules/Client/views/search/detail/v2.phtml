@@ -1,0 +1,64 @@
+<?php echo $this->render("layout/header.phtml");?>
+
+<body>
+    <div id="info-page">
+		<section>
+			<div class="info-scrollPic" id="J_screenshot_off">
+				<div class="pic-container">
+					<div class="pic-wrap">
+						<?php foreach($info['simgs'] as $key=>$value){?>
+						<span><img src="<?php echo $staticResPath; ?>/pic/blank.gif" alt="" data-src="<?php echo $value;?>" data-bigpic="<?php echo $info['gimgs'][$key];?>"></span>
+						<?php }?>
+					</div>
+				</div>
+				<div class="game-info">
+					版本：<em><?php echo $from == 'baidu' ? $info['apply_version'] : $info['version'];?></em>
+					语言：<em><?php echo $info['language'];?></em>
+				</div>
+			</div>
+			<div class="text-info">
+				<?php if($hd) {?>
+				<div class="event-info">
+					<a data-id="<?php echo $hd[0]['id'];?>" data-infpage="<?php echo $hd[0]['title'] . ',' . $hd[0]['url'];?>" data-gameid="<?php echo $hd[0]['game_id'];?>" data-viewtype="ActivityDetailView" data-type="0">
+						<span class="title">活动</span>
+						<div class="title-content"><?php echo $hd[0]['title'];?></div>
+					</a>
+				</div>
+				<?php }?>
+				<?php if($info['tgcontent']) {?>
+				<div class="gossip-info ui-editor">
+					<span class="title">小编八卦</span>
+					<div class="title-content"><?php echo html_entity_decode($info['tgcontent']);?></div>
+				</div>
+				<?php }?>
+				<div class="brif-info">
+					<span class="title">简介</span>
+					<div class="J_content content ui-editor"><?php echo html_entity_decode($info['descrip']);?></div>
+					<div class="J_expand showinfo">
+						<p><i class="icon-arrow-down"></i></p>
+						<p class="hidden"><i class="icon-arrow-up"></i></p>
+					</div>
+				</div>
+			</div>
+			<?php if(!stristr($intersrc,'gltj') && $games){?>
+			<div class="suggest_field">
+				<h1>您可能还喜欢</h1>
+				<ul class="list">
+					<?php $i=0; foreach($games as $key=>$value){
+					if($i < 4){
+					?>
+					<li>
+					  <a data-id="<?php echo $gameid;?>" data-viewtype="GameDetailView" data-gameid="<?php echo $value['id'];?>" class="icon" data-type=1 data-infpage="<?php echo $value['id'];?>">
+					   <img src="<?php echo $staticResPath;?>/pic/blank.gif" data-src="<?php echo $value['img'];?>" alt="">
+					  </a>
+					  <span><?php echo $value['name'];?></span>
+					</li>
+					<?php } $i++;}?>				
+				</ul>
+			</div>
+			<?php }?>
+		</section>
+	</div>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+</html>

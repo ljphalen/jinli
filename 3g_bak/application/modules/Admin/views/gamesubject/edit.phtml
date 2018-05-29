@@ -1,0 +1,56 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">专题列表</a></li>
+		<li class="current"><a href="javascript:;">编辑专题</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑专题</div>
+<form method="post" action="<?php echo $editPostUrl; ?>" id="editFrom">
+	<input name="token" id="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">标题</th>
+				<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title']; ?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">专题内容</th>
+				<td class="td">
+					<textarea name="content" style="width: 800px; height: 400px;"><?php echo $info['content']; ?></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+	//专题表单数据提交
+	$(document).ready(function () {
+		var editor;
+		KindEditor.ready(function (K) {
+			K.token = $('#token').val();
+			editor = K.create('textarea[name="content"]', {
+				resizeType: 1,
+				allowPreviewEmoticons: false,
+				allowImageUpload: true,
+				uploadJson: '<?php echo $uploadImgUrl;?>',
+				items: EDITOR_ITEMS
+			});
+		});
+
+		ajaxForm('editFrom', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Gamesubject/index');
+		}, function () {
+			editor.sync();
+		});
+	})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml"); ?>

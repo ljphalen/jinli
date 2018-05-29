@@ -1,0 +1,59 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">用户收藏列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post" id="searchForm" >
+<input name="token" type="hidden" value="<?php echo $token;?>"/>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<td class="td">开始结束时间</td>
+			<td class="td"><div><input class="input" type="text" style="width:143px;" id="start_time" name="start_time" value="<?php echo $params['start_time'];?>" /> 至 <input class="input" type="text" style="width:143px;" id="end_time" name="end_time" value="<?php echo $params['end_time'];?>" /></div>
+			</td>
+			<td class="td">产品id</td>
+			<td class="td"><input class="input" type="text" name="keyword" value="<?php echo $params['keyword'];?>">
+			</td>
+			<td class="td">产品名称</td>
+			<td class="td"><input class="input wb" type="text" name="keyword" value="<?php echo $params['keyword'];?>">
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="10%">产品id</td>
+			<td width="50%">产品名称</td>
+			<td>收藏量</td>
+		</tr>
+<?php foreach($logs as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['goods_id'];?></td>
+			<td><?php echo $value['goods_title'];?></td>
+			<td><?php echo $value['num'];?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//导购表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+     submitForm = function() {
+  		$("#searchForm").submit();
+  	};
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,43 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li class="current"><a href="<?php echo $listUrl;?>">积分商城</a></li>
+        <li><a href="<?php echo $pointPrizeIndexUrl;?>">积分抽奖</a></li>
+        <li><a href="<?php echo $presendIndexUrl;?>">人工发放</a></li>
+        <li><a href="<?php echo $pointDescIndexUrl;?>">积分说明管理</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑发货人地址</div>
+<div class="h_a"><a href="<?php echo $exchangeDetailUrl.'?mall_id='.$mall_id.'&page='.$page.'&category_id='.$categoryId;?>">返回兑换记录</a></div>
+<form method="post" action="<?php echo $editAddressPostUrl;?>" id="editFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<input name="category_id" value="<?php echo $categoryId;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">收货人</th>
+			<td class="td"><input type="text" class="input" name="receiver" value="<?php echo $info['receiver'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">联系人电话</th>
+			<td class="td"><input type="text" class="input" name="receiverphone" value="<?php echo $info['receiverphone'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">联系人地址</th>
+			<td class="td"><input type="text" class="input wc" name="address" value="<?php echo $info['address'];?>"></td>
+		     
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Mall_Goods/exchangeDetail?mall_id=<?php echo $mall_id;?>&category_id=<?php echo $categoryId;?>');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

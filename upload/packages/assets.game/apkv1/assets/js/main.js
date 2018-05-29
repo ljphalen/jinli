@@ -1,0 +1,8 @@
+(function(a){a.app("GameApk",function(){function b(){var f=window.location.search,c="";if(!f){return{version:"v1",sp:c,branch:"v1"};}else{f=f.substring(1);
+var d=f.split("&");for(var e=0;e<d.length;e++){if(!d[e]){continue;}if(d[e].split("=")[0]=="sp"){c=d[e].split("=")[1];break;}}}if(!c){return{version:"v1",sp:c,branch:"v1"};
+}else{if(c.split("_").length<2||c.split("_")[1]==""){return{version:"v1",sp:c,branch:"v1"};}else{var g=c.split("_")[1].split(".");if(g[0]>1||(g[0]==1&&g[1]>5)||(g[0]==1&&g[1]==5&&g[2]>=1)){if(g[0]==1&&g[1]==5&&g[2]==1){return{version:"v3",sp:c,branch:"v3"};
+}else{if(g[2]>=5||(g[0]>1||(g[0]==1&&g[1]>5))){return{version:"v3",sp:c,branch:"v3_2"};}return{version:"v3",sp:c,branch:"v3_1"};}}if(g[0]>1||(g[0]==1&&g[1]>4)||(g[0]==1&&g[1]==4&&g[2]>7)){return{version:"v2",sp:c,branch:"v2"};
+}return{version:"v1",sp:c,branch:"v1"};}}}return{spParam:b().sp,ApiVersion:b().version,branch:b().branch,blankPic:a.PathConfig.picPath+"blank.gif",loadingPic:a.PathConfig.picPath+"loading_img.gif",init:function(){var c=window.gamehall?["jQuery","./game.js"]:["jQuery","./plugin/cordova-2.0.0.js","./game.js"];
+if(document.querySelector("body[data-pagerole=body]")){a.require({modName:"appmvc",isCombo:!(a.DemoMode||a.DebugMode),callback:function(){var d=new GameApk.controller("mc");
+a.include(c,function(e){d.bindEvents();Gapk.init();},true,!(a.DebugMode||a.DemoMode));}});}else{a.include(c,function(){Gapk.init();},true,!(a.DemoMode||a.DebugMode));
+}}};});GameApk.init();})(ICAT);

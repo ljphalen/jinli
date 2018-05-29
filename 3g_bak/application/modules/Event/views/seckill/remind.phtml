@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>金立浏览器双十一特别活动</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/events/css/db_eleven_prev.min.css?ver=<?php echo $version;?>"/>
+    <script src="<?php echo $staticResPath;?>/events/js/zepto.min.js?ver=<?php echo $version;?>"></script>
+    <script type="text/javascript">
+        var token = "";
+        var initConfig = {
+        };
+    </script>
+</head>
+<body class="ui-app">
+    <div class="main">
+        <div class="main-hd">
+            <div class="banner">
+                <img src="<?php echo $staticResPath;?>/events/pic/dbelv_banner_hd.jpg" width="100%" height="auto" />
+                <div class="banner-text"><span>预约时间：11月9日-11月10日</span></div>
+            </div>
+        </div>
+        <div class="main-bd hd-space">
+        	<div class="text-title">请确认手机号码</div>
+        	<div class="text-sub-title">11月11日秒杀活动开始前15分钟,提醒短信会发送到此号码</div>
+        	<form id="js-main-form" action="<?php echo $webroot.$remindUrl ?>" class="main-form" methon="post">
+        		<div class="input-group">
+        			<label class="input-label" for="phonenumber">手机号码</label>
+        			<div class="input-box">
+        				<input id="phonenumber" type="text" maxlength="11" name="mobile" value="<?php echo $data["username"]; ?>"/>
+        				<i id="js-ipt-clear" class="input-clear"></i>
+        			</div>
+        		</div>
+        		
+        		<div class="btn-row">
+	        		<a class="button" href="<?php echo $webroot;?>/event/seckill/preheat">取消</a>
+	        		<input id="js-btn-submit" type="submit" value="预约" class="button" />
+	        	</div>
+	        	
+        	</form>
+        </div>
+    </div>
+
+    <div class="pop-toast-wrap" style="display:none;"></div>
+    
+    <script>
+
+        $(function(){
+            var sending = false;
+            toggleInputClose();
+            function toggleInputClose(){
+                if($('#phonenumber').val().length > 0){
+                    $("#js-ipt-clear").show();
+                } else {
+                    $("#js-ipt-clear").hide();
+                }
+            }
+            var iptphonenumber = $('#phonenumber');
+            var reg = /^\d{11}$/;
+            var submitbtn = $("#js-btn-submit");
+            function toggleSubmitClickAble(){
+                var val = iptphonenumber.val()
+                if(reg.test(val)){
+                    submitbtn.removeClass("disable");
+                }else{
+                    submitbtn.addClass("disable");
+                }
+            }toggleSubmitClickAble();
+
+            function toggleToast(obj){
+                $('.pop-toast-wrap').html(obj.txt).addClass('pop-toast-fadein').show();
+                setTimeout(function(){
+                    $('.pop-toast-wrap').removeClass('pop-toast-fadein').hide();
+                },6000);
+            }
+
+            $("#phonenumber").on('keyup',function(){
+                toggleInputClose();
+                toggleSubmitClickAble();
+            });
+
+            $("#js-ipt-clear").click(function(){
+                $('#phonenumber').val("").focus();
+                $("#js-ipt-clear").hide();
+            });
+
+            $("#js-main-form").submit(function(evt){
+                var val = $.trim($("#phonenumber").val());
+                var url = $(this).attr('action');
+                var tel = $('#phonenumber').val();
+                var reg = /^\d{11}$/;
+                var formEl = $(this);
+                evt.preventDefault();
+                if(!reg.test(val)){
+                    toggleToast({'txt':'请输入正常的手机号！'});
+                    return;
+                }
+                if(!$(this).hasClass('done')){
+                    $(this).addClass('done');
+                    submitRemindTel(formEl,url, {'mobile': tel});
+                }                
+            });
+
+            function submitRemindTel(formEl, url, param){
+                param = $.extend({"token": "<?php echo $token;?>"},param);
+                $.ajax({
+                    url: url,
+                    type: 'get',
+                    data: param,
+                    dataType: 'jsonp',
+                    success: function(data){
+                        if(data.success){
+                            if(data.data.redirect){
+                                window.location.href = data.data.redirect;
+                            }
+                        } else {
+                            formEl.removeClass('done');
+                            toggleToast({'txt': data.data.err_msg});
+                        }
+                    },
+                    error: function(){
+                        formEl.removeClass('done');
+                        toggleToast({'txt': '提醒设置失败，请稍后再试！'});
+                    }
+                });
+            }
+        });
+
+    	// $("#js-ipt-clear").click(function(){
+    	// 	$(this).prev("input").val("");
+    	// });
+
+    	// $("#js-main-form").submit(function(){
+    	// 	var valstr = $.trim($("input#phonenumber").val());
+    	// 	if(/^(13[0-9]|15[0|3|6|7|8|9]|18[8|9])\d{8}$/.test(valstr)){
+    	// 		return true;
+    	// 	}
+    	// 	alert("请检查手机号码的格式是否正确");
+    	// 	return false;
+    	// });
+    </script>
+    
+</body>
+</html>

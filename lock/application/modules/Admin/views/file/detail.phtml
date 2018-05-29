@@ -1,0 +1,59 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">文件列表</a></li>
+    <li class="current"><a href="javascript:;">预览文件</a></li>
+	</ul>
+</div>
+<div class="h_a">预览文件</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><?php echo $info['title'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">文件</th>
+			<td class="td"><a href="<?php echo $downPath.$info['file']?>"><?php echo $downPath.$info['file'];?></a></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">缩略图</th>
+			<td class="td"><img src="<?php echo $attachPath.$info['icon'];?>" /></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">预览图</th>
+			<td class="td"><img src="<?php echo $attachPath.$info['img_gif'];?>" />&nbsp;<img src="<?php echo $attachPath.$info['img_png'];?>" /></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">分类</th>
+			<td class="td"><?php echo $info['file_type'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">文件大小</th>
+			<td class="td"><?php echo $info['file_size'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">简要描述</th>
+			<td class="td"><?php echo $info['summary'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">详细描述</th>
+			<td class="td"><?php echo $info['descript'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">作者</th>
+			<td class="td"><?php echo $info['designer'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">价格</th>
+			<td class="td"><?php echo $info['price'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">分辨率</th>
+			<td class="td"><?php echo $info['file_size'];?></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><?php if($group == 1 && $info['status'] != 4) {?><span class="btn"><span><button onclick="javascript:window.location.href='/Admin/File/edit?id=<?php echo $info['id']?>';" type="button">编辑</button></span></span><?php }?>
+<span class="btn"><span><button onclick="javascript:history.back(-1);" type="button">返回</button></span></span></div>
+<?php echo $this->render("layout/footer.phtml");?>

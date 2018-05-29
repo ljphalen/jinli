@@ -1,0 +1,190 @@
+<!doctype html>
+<html>
+<meta charset="utf-8">
+<title>管理系统</title>
+<script src="<?php echo $staticPath;?>/apps/admin/js/common/jquery.js?v=$version"></script>
+<script src="<?php echo $staticPath;?>/apps/admin/js/common/jquery-ui.min.js?v=$version"></script>
+<script src="<?php echo $staticPath;?>/apps/admin/js/common/jquery.form.js?v=$version"></script>
+<script src="<?php echo $staticPath;?>/apps/admin/js/common/common.js?v=$version"></script>
+<script>
+var token = "$token";
+var baseurl = "$adminroot";
+</script>
+<link href="<?php echo $staticPath;?>/apps/admin/css/style.css" rel="stylesheet" />
+<link rel="stylesheet" href="<?php echo $staticPath;?>/apps/admin/css/jquery-ui.css?v=$version" />
+<style>
+.ui-datepicker-calendar { display: none; }  
+#a-head {width:100%;height: 85px;background: #CCC;line-height: 85px;padding-left: 40px;font-size: 24px;font-style: italic;font-weight: 700;letter-spacing: 2px;
+}
+#a-head a {font-size:12px;font-weight:100;letter-spacing:0;margin-left:15px;color:#FF0000;font-style:normal;}
+</style>
+</head>
+<body>
+<div id="a-head">月CP对账 <a href="/Cpmonthcheck/logout" title="退出">退出</a></div>
+<div class="wrap">
+<form method="post" action="<?php echo $baseUrl;?>" id="addFrom">
+<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">选择月份</th>
+			<td class="td">
+				<input class="input" type="text" maxlength="30" id="sdate" name="month" value="<?php echo $searchParam['month']; ?>">	
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">业务名称</th>
+			<td class="td">
+				<select id="page_type" name="business"  >
+					<option value="">请选择</option>
+					<?php foreach($searchData['business'] as $key => $value) {?>
+	                <option value="<?php echo $value['id'];?>" <?php if($searchParam['business'] == $value['id']) echo 'selected';?>><?php echo $value['title'];?></option>
+					<?php }?>
+	            </select>
+            </td>
+		</tr>		
+		<tr class="tr">
+			<th class="th">关键字（业务名称）</th>
+			<td class="td">
+				<input type="text" class="input_w" name="keywords" value="<?php echo $searchParam['keywords'];?>" />
+			</td>
+		</tr>		
+		<tr class="tr" id="column">
+			<th class="th">筛选</th>
+			<td class="td">
+			<span>
+				状态：
+				<select name="status">
+					<?php foreach($searchData['status'] as $k=>$v) {?>
+					<option value="<?php echo $k;?>" <?php if($searchParam['status']==$k) echo 'selected';?>><?php echo $v;?></option>
+					<?php } ?>
+				</select>
+			</span>			
+			</td>
+		</tr>
+		
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+<input type="hidden" id="hidden_export" name="export" value="0" />
+</form>
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="ct">
+			<td class="td2">序号</td>
+			<td class="td2">月份</td>
+			<td class="td2">业务名称</td>
+			<td class="td2">公司名称</td>
+			<td class="td2">PV</td>
+			<td class="td2">结算方式</td>
+			<td class="td2">结算金额</td>
+			<td class="td2">cp备注</td>
+			<td class="td2">CP确认</td>
+		</tr>
+		
+		<?php  foreach ($dataList as $k=>$v){?>
+			<tr class="ct">
+				<td class="td2"><?php echo $v['id'];?></td>
+				<td class="td2"><?php echo $v['month'];?></td>
+				<td class="td2"><?php echo $v['title'];?></td>
+				<td class="td2"><?php echo $v['company']?></td>
+				<td class="td2"><?php echo $v['pv'];?></td>
+				<td class="td2"><?php echo $searchData['checkType'][$v['checkType']];?></td>
+				<td class="td2"><?php echo $v['bcheckMoney']?></td>
+				<td class="td2" id="inputremarkhold-<?php echo $v['id'];?>">
+					<?php echo $v['remark']?>
+				</td>	
+				<td class="td2" id="td-confirm-hold-<?php echo $v['id'];?>">
+					<?php 
+						if($v['status'] == 2) {
+							echo '已结算';
+						}else {
+							echo '<button title="点击备注" class="btn-remark" xid="'.$v['id'].'">备注</button>';							
+							echo '<button title="点击确认" class="btn-confirm" xid="'.$v['id'].'">确认</button>';
+						}
+					?>
+					<span style="display:none;" id="confirm-money-span-<?php echo $v['id'];?>">
+						<?php echo $v['acheckMoney'] ? $v['acheckMoney'] : $v['bcheckMoney'];?>
+					</span>
+				</td>		
+			</tr>			
+		<?php }?>
+	</table>
+</div>
+<div class="mr10 cc">
+	<?php echo $pager;?>
+</div>
+<div id="ui-dialog-confirm" style="display:none;">
+<p>本次结算金额:<span id="confirm-money-hold"></span></p>
+</div>
+<div id="ui-dialog-remark" style="display:none;">
+备注：<textarea rows="3" cols="20" id="remark-hold"></textarea>
+</div>
+<script type="text/javascript">
+$(document).ready(function () {    
+	$("#sdate").datepicker({
+		changeMonth: true, 
+	    changeYear: true, 
+	    showButtonPanel: true, 
+	    dateFormat: 'yy年mm月', 
+	    onClose: function(dateText, inst) { 
+	        var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val(); 
+	        var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val(); 
+	        $(this).datepicker('setDate', new Date(year, month, 1)); 
+	    } 
+	});	
+	$(".btn-remark").click(function(){		
+		var id     = $(this).attr("xid");	
+		$("#ui-dialog-remark").dialog({
+			title : '请输入备注',
+			modal : true,
+			buttons: {
+				"Ok": function() {	
+					var remark = $("#remark-hold").val();				
+					$.getJSON("/Cpmonthcheck/remark",{"id":id,"remark":remark},function(json){
+						if(json.success == true) {
+							$("#inputremarkhold-"+id).html(remark);						
+						}else {
+							alert('备注失败，稍后再试');
+						}
+						$("#ui-dialog-remark").dialog('close');
+					});					 	
+				},
+				"Cancel": function() {
+					$(this).dialog('close');
+				}
+			}
+		});
+	});
+	$(".btn-confirm").click(function(){		
+		var id     = $(this).attr("xid");	
+		$("#confirm-money-hold").html($("#confirm-money-span-"+id).html());
+		$("#ui-dialog-confirm").dialog({
+			title : '请确认结算金额',
+			modal : true,
+			buttons: {
+				"Ok": function() {								
+					$.getJSON("/Cpmonthcheck/confirm",{"id":id},function(json){
+						if(json.success == true) {
+							$("#td-confirm-hold-"+id).html('已结算');	
+						}else {
+							alert('确认失败，稍后再试');
+						}
+						$("#ui-dialog-confirm").dialog('close');
+					});					 	
+				},
+				"Cancel": function() {
+					$(this).dialog('close');
+				}
+			}
+		});
+	});
+});
+</script>
+</div>
+<div id="error_msg_box" style="margin: 20px; line-height: 32px; font-size: 14px; display: none"><img align="absmiddle" style="position: relative; margin: -4px 5px 0 0" src="$staticPath/img/common/error_bg.gif" /> <span id="err_content"><span></div>
+<div id="msg_box_box" style="margin: 20px; line-height: 32px; font-size: 14px; display: none"><img align="absmiddle" style="position: relative; margin: -4px 5px 0 0" src="$staticPath/img/common/success_bg.gif" /> <span id="msg_content"><span></div>
+<div id="ajax_loader" style="margin: 20px; line-height: 32px; font-size: 14px; display: none"><img align="absmiddle" style="position: relative; margin: -4px 5px 0 0" src="$staticPath/img/common/ajax-loader.gif" /> <span id="msg_content">正在处理，请稍后...<span></div>
+</body>
+</html>

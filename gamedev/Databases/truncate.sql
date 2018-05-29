@@ -1,0 +1,21 @@
+DELETE from accounts where id > 20;
+DELETE from account_infos where account_id > 20;
+TRUNCATE account_contact;
+TRUNCATE account_tax;
+TRUNCATE account_message;
+TRUNCATE apk_safe;
+TRUNCATE apks;
+TRUNCATE app_cert;
+TRUNCATE app_picture;
+TRUNCATE apps;
+TRUNCATE bspackage;
+TRUNCATE message;
+TRUNCATE smslog;
+TRUNCATE smtp_logs;
+TRUNCATE union_apps;
+TRUNCATE union_authorize;
+TRUNCATE think_optlog;
+TRUNCATE think_claim_log;
+TRUNCATE think_history;
+TRUNCATE think_authlog;
+TRUNCATE think_blocklog

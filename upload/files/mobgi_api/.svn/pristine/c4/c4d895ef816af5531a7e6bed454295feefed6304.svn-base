@@ -1,0 +1,124 @@
+<script src="{{rootUrl}}/js/core.js" type="text/javascript"></script>
+<script src="{{rootUrl}}/js/app-type.js" type="text/javascript"></script>
+<div class="colMain">
+    <div class="title"><p class="fl">安装提醒添加</p></div>
+    <div class="main">
+        <div class="app-detail">
+            <form action="/installRemind/save" method="POST" >
+                <input type="hidden" name="id" value='{{data.edit}}' />
+                <ul class="form">
+                    <li>
+                        <span class="label">产品名称：</span>
+                        <div class="fc">
+                            
+                            <input type="text" value="{{data.game_name}}" name="game_name" <!-- if {{data.edit}} == 2 --> readonly <!-- endif --> class="iText required" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">文件泛MD值：</span>
+                        <div class="fc">
+                            <input type="text" value="{{data.notice_key}}" style="width:300px;" name="notice_key"  class="iText required" />
+                            <input type="button" value="获取泛MD值" class='submit getmd' />
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">信息标题：</span>
+                        <div class="fc">
+                            <input type="text" value="{{data.notice_title}}" name="notice_title" class="iText" />
+                            <span class="red">*</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="label">信息内容：</span>
+                        <div class="fc">
+                            <textarea name="notice_msg" style="height:100px; width: 600px;">{{data.notice_msg}}</textarea>
+                        </div>
+                    </li>
+                    <!-- loop remind_time -->
+                    <li class="remind_time">
+                        <span class="label">提醒时间：</span>
+                        <div class="fc">
+                            <input type="text" value="{{remind_time' value.date}}" name="date[]" class="iText required datepicker" />
+                            开始时间<input type="text" value="{{remind_time' value.shour}}" name="shour[]" class="iText required" style="width:40px;" />：
+                            <input type="text" value="{{remind_time' value.ssecond}}" name="ssecond[]" class="iText required" style="width:40px;" /> 至
+                            <input type="text" value="{{remind_time' value.ehour}}" name="ehour[]" class="iText required" style="width:40px;" />：
+                            <input type="text" value="{{remind_time' value.esecond}}" name="esecond[]" class="iText required" style="width:40px;" />
+                            <input type="button" class="submit deltime" value="删除" />
+                        </div>
+                    </li>
+                    <!-- endloop -->
+                    <li class="opt">
+                        <div class="fc">
+                            <input type="submit" value="确定" class="submit" />
+                            <input type="button" value="添加时间" class="submit addtime" />
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="mdvalue-dialog" style="display:none;">
+</div>
+<script>
+$(function(){
+    $(".deltime").live("click", function(){
+        $(this).parent().parent(".remind_time").remove();
+    });
+    $('.datepicker').datepicker({
+        changeMonth:true,
+        changeYear:true,
+        dateFormat : "yy-mm-dd",
+        minDate: "2013-01-01"
+    });
+    $(".addtime").click(function(){
+        var html = '<li class="remind_time"><span class="label">提醒时间：</span>';
+        html += '<div class="fc">';
+        html += '<input type="text" value="" name="date[]" class="iText required datepicker" /> ';
+        html += '开始时间<input type="text" value="" name="shour[]" class="iText required" style="width:40px;" /> ：';
+        html += '<input type="text" value="" name="second[]" class="iText required" style="width:40px;" /> 至 ';
+        html += '<input type="text" value="" name="ehour[]" class="iText required" style="width:40px;" /> ：';
+        html += '<input type="text" value="" name="eecond[]" class="iText required" style="width:40px;" /> ';
+        html += '<input type="button" value="删除" class="submit deltime" /></div></li>';
+        $(".opt").before(html);
+        
+        $('.datepicker').datepicker({
+            changeMonth:true,
+            changeYear:true,
+            dateFormat : "yy-mm-dd",
+            minDate: "2013-01-01"
+        });
+    });
+    $(".getmd").click(function(){
+        var game_name = $("input[name=game_name]").val();
+        $.ajax({
+            type : "POST",
+            url : "/installRemind/getmd",
+            data : {game_name : game_name},
+            success : function(retData){
+                var dataObj = JSON.parse(retData);
+                if (dataObj.retCode == 1){
+                    var html = "";
+                    $.each(dataObj.msg, function(key, val){
+                        html += "<div class='items-value' style='line-height:30px;border-bottom:1px #CCC solid;pointer:cursor;' _val="+val+" _name="+key+">"+key+" : "+val+"</div>";
+                    });
+                    $( "#mdvalue-dialog" ).html(html).dialog({
+                        width: 400,
+                    });
+                    $(".items-value").live("click", function(){
+                        var md = $(this).attr("_val");
+                        var gm = $(this).attr("_name");
+                        $("input[name=notice_key]").val(md);
+                        $("input[name=game_name]").val(gm);
+                        $( "#mdvalue-dialog" ).dialog( "close" );;
+                    });
+                }else{
+                    alert(dataObj.msg);
+                }
+            }
+            
+        });
+    });
+})
+</script>

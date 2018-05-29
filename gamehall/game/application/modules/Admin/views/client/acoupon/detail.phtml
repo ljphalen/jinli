@@ -1,0 +1,143 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">发放活动</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加活动</a></li>
+		<li><a href="<?php echo $ticketDetailUrl;?>">代金券明细列表</a></li>
+		<li><a href="<?php echo $moneyDetailUrl;?>">A币交易明细</a></li>
+		<li class="current"><a href="<?php echo $detailUrl;?>">A券说明</a></li>
+        <li><a href="<?php echo $gameVoucherDetailUrl;?>">游戏券说明</a></li>
+		<li><a href="<?php echo $sendTicketUrl;?>">手动赠送</a></li>
+		
+	</ul>
+</div>
+<div class="h_a"><a href="<?php echo $listUrl;?>">发放活动</a></div>
+<form action="<?php echo $detailPostUrl;?>" method="post" id="addFrom">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+	<div class="h_a">A券说明</div>
+	<div class="table_full">
+		<table width="100%">
+		    
+			<tr class="tr">
+				<th class="th">A券说明</th>
+				<td class="td">
+					 <textarea name="game_acoupon_desc" class="textarea" style="height:500px; width:800px"><?php echo $configs['game_acoupon_desc'];?></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+    <div class="table_list">
+        <table width="100%">
+            <tr class="hd"  style="font-weight: bold;">
+                <td width="33%">A券业务描述</td>
+                <td width="33%">TaskId编号</td>
+                <td width="33%">备注</td>
+            </tr>
+            <tr class="ct">
+                <td>福利任务-登录赠送</td>
+                <td>1-1</td>
+                <td>固定值</td>
+            </tr>
+            <tr class="ct">
+                <td>福利任务-下载单机赠送</td>
+                <td>1-2</td>
+                <td>固定值</td>
+            </tr>
+            <tr class="ct">
+                <td>福利任务-下载棋牌赠送</td>
+                <td>1-3</td>
+                <td>固定值</td>
+            </tr>
+            <tr class="ct">
+                <td>福利任务-联运登陆</td>
+                <td>1-4</td>
+                <td>固定值</td>
+            </tr>
+            <tr class="ct">
+                <td>福利任务-消费赠送</td>
+                <td>1-5</td>
+                <td>固定值</td>
+            </tr>
+            <tr class="ct">
+                <td>福利任务-下载网游赠送</td>
+                <td>1-6</td>
+                <td>固定值</td>
+            </tr>
+            <tr class="ct">
+                <td>每日任务-连续登陆</td>
+                <td>2-1</td>
+                <td>固定值</td>
+            </tr>
+            <tr class="ct">
+                <td>每日任务-下载赠送</td>
+                <td>2-2</td>
+                <td>固定值</td>
+            </tr>
+            <tr class="ct">
+                <td>每日任务-评论送A券</td>
+                <td>2-3</td>
+                <td>固定值</td>
+            </tr>
+            <tr class="ct">
+                <td>每日任务-分享游戏</td>
+                <td>2-41</td>
+                <td>固定值</td>
+            </tr>
+            <tr class="ct">
+                <td>A券管理-[充值|消费|登陆客户端]返利</td>
+                <td>3-XXX</td>
+                <td>XXX请使用具体的活动ID代替</td>
+            </tr>
+            <tr class="ct">
+                <td>手动后台赠送</td>
+                <td>4-0</td>
+                <td>固定值</td>
+            </tr>
+            <tr class="ct">
+                <td>积分抽奖</td>
+                <td>5-XXX</td>
+                <td>XXX请使用具体的活动ID代替</td>
+            </tr>
+            <tr class="ct">
+                <td>商城兑换</td>
+                <td>6-XXX</td>
+                <td>XXX请使用具体的商品ID代替</td>
+            </tr>
+            <tr class="ct">
+                <td>用户赠送-生日赠送</td>
+                <td>7-1</td>
+                <td>固定值</td>
+            </tr>
+            <tr class="ct">
+                <td>节日活动</td>
+                <td>8-活动ID</td>
+                <td>固定值</td>
+            </tr>
+        </table>
+    </div>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//游戏表单数据提交
+var editor;
+KindEditor.ready(function(K) {
+	K.token = '<?php echo $token;?>';
+    editor = K.create('textarea[name="game_acoupon_desc"]', {
+        resizeType : 1,
+        allowPreviewEmoticons : false,
+        allowImageUpload : true,
+        uploadJson : '<?php echo $uploadImgUrl;?>',
+        items : EDITOR_ITEMS
+    });
+});
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Acoupon/detail');
+	});
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

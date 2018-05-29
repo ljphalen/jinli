@@ -1,0 +1,38 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $tourl; ?>">列表</a></li>
+	</ul>
+</div>
+<div class="h_a">列表</div>
+<form method="post" action="<?php echo $baseUrl; ?>" id="editForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+
+			<?php foreach ($list as $key => $val): ?>
+				<tr class="tr">
+					<th class="th"><?php echo $key; ?>
+						<br>备注:<input type="text" class="input" name="desc[<?php echo $key; ?>]" value="<?php echo $desc[$key]; ?>">
+					</th>
+					<td class="td">
+						<input type="text" class="input wc" name="data[<?php echo $key; ?>]" value="<?php echo $list[$key]; ?>">
+					</td>
+				</tr>
+			<?php endforeach; ?>
+
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	$(document).ready(function () {
+		ajaxForm('editForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Recwebsite/tourl');
+		});
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

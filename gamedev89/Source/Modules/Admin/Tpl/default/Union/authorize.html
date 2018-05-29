@@ -1,0 +1,76 @@
+<div class="page">
+	<div class="pageContent">
+	<form method="post" action="__URL__/save_authorize/navTabId/__MODULE__/callbackType/closeCurrent" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone)">
+		<div class="pageFormContent" layoutH="58">
+			<input type="hidden" name="id" value="{$vo.id}">
+			<div class="unit">
+				<label>公司注册名：</label>
+				<label>{$company.company|default="未填写"}</label>
+			</div>
+			
+			<div class="unit">
+				<label>税务登记号：</label>
+				<label>{$company.tax_number|default="未填写"}</label>
+			</div>
+			
+			<div class="unit">
+				<label>扫描件：</label>
+				<label><empty name="company.tax_passport">未上传<else/>已上传<div class="tax_thumb"><a href="{:Helper('Apk')->get_url('user')}{$company.tax_passport}" target="_thumb"><img src="{:Helper('Apk')->get_url('user')}{$company.tax_passport}" width="300" height="180" /></a></div></empty></label>
+			</div>
+
+			<eq name="vo.channel" value="游戏大厅">
+				<div class="unit">
+					<label>渠道：</label>
+					<label>{$vo.channel}</label>
+				</div>
+				
+				<div class="unit">
+					<label>应用名称：</label>
+					<label>{$vo.name}</label>
+				</div>
+			</eq>
+			
+			<div class="unit">
+				<label>审核日期：</label>
+				<label>{:date("Y-m-d")}</label>
+			</div>
+			
+			<div class="unit">
+				<label>审核人：</label>
+				<label>{$Think.SESSION.loginUserName}</label>
+			</div>
+			
+			<div class="unit">
+				<label>审核结果：</label>
+				<label><input type="radio" name="status" value="1" checked onclick="javascript:$(message_{$vo.id}).hide()"  /> 审核通过</label>
+				<label><input type="radio" name="status" value="-1" onclick="javascript:$(message_{$vo.id}).show()" /> 不通过 </label>
+			</div>
+			
+			<div id="message_{$vo.id}" style="display:none;">
+				<div class="unit">
+					<label>备注：</label>
+					<select class="combox" name="note">
+					<option value="税务登记证与扫描件不符">税务登记证与扫描件不符</option>
+					<option value="税务登记证扫描件无法辨认">税务登记证扫描件无法辨认</option>
+					<option value="">其他原因</option>
+					</select>
+				</div>
+				<div class="unit">
+					<label>其它原因：</label>
+					<div>未通过审核备注信息会展示给开发者，请简洁清楚描述未通过原因</div>
+					<textarea name="other" style="width:80%;" title="未通过审核备注信息会展示给开发者，请简洁清楚描述未通过原因"></textarea>
+				</div>
+			</div>
+		</div>
+		<style>
+		.tax_thumb{position: absolute; right:3px; top:-80px;}
+		</style>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">确认</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">关闭</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+	</div>
+</div>

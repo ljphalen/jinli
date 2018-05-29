@@ -1,0 +1,50 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div id="page">
+	<?php echo $this->render("layout/nav.phtml");?>		
+	<article class="ac home">
+		<div class="index-banner">
+			<ul>
+<?php 
+$i = 1;
+foreach($ads as $key=>$value) {
+?>
+				<li><a <?php if(strpos($value['link'], 'theme') == false) {?>href="<?php echo Common::BI(strpos(html_entity_decode($value['link']), '?') == false ? $value['link'].'?chl_id=1&index_id='.$i : $value['link'].'&chl_id=1&index_id='.$i, $t_bi);?>">
+				<?php }else{?>data-jsonArgus="{action:'gn.com.android.theme.List', title:'<?php echo $value['title'];?>', source:'browser', url:'<?php echo $value['link'];?>', weburl:'http://3g.gionee.com/subject/?id=32'}" ><?php }?>
+				<img src="<?php echo $attachPath . $value['img'];?>" alt="<?php echo $value['title']?>" /></a>
+				</li>
+<?php 
+$i++;
+}
+?>
+			</ul>
+		</div>
+		<div class="index-series">
+			<ul>
+<?php foreach ($series as $key=>$value){?>
+				<li><a href="<?php echo $webroot."/product/list?sid=".$value['id']."&t_bi=",$t_bi;?>">
+						<div class="pic"><img src="<?php echo $attachPath.$value['img'];?>" alt=""></div>
+						<div class="txt">
+							<h2 style="color:<?php echo $value['color'];?>;"><?php echo $value['name'];?></h2>
+							<p><?php echo Util_String::substr($value['description'], 0, 10);?></p>
+						</div>
+					</a></li>
+<?php }?>
+			</ul>
+		</div>
+	</article>
+</div>
+<footer id="footer">
+		<div class="copyright">
+			<span><a href="<?php echo $webroot;?>/feedback">提建议>></a></span>			
+			<br>
+			<span>粤文市审[2012]196号</span>
+			<br>
+			<span>增值电信许可证：<a href="<?php echo $staticResPath.'/pic/1.jpg';?>" target="_blank">粤B2-20120350</a></span>
+			<br>
+			<span>网络文化经营许可证：<a href="<?php echo $staticResPath.'/pic/2.jpg';?>" target="_blank">粤网文[2013]029-029号</a></span>
+			<br>
+			<span style="font-family:Arial;">Copyright © 2012 - 2013 <a target="_blank" href="http://www.miitbeian.gov.cn/">粤ICP备05087105号</a><!--粤文市审[2012]196号--></span>
+		</div>
+</footer>
+<?php echo $this->render("layout/tj.phtml");?>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,223 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<link href="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript"
+src="<?php echo $staticPath ?>jssdk/plugins/datepicker/laydate.js"></script>
+
+
+<!-- 导航栏Ajax加载 指向navagator.html  menuOn表示分别需要高亮的菜单栏id 用下划线_隔开-->
+
+
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- 页面唯一id标识符 -->
+    <div id="bz_operation_seminar_add02">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">专题标题</label>
+                    <div class="tb_cont tb_cell"><input type="text" class="rd_1 sname"></div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">屏序</label>
+                    <div class="tb_cont tb_cell">
+                        <ul class="radio_wrap" id="screenid">
+                            <li class="radio on" value="3">屏序3</li>
+                            <li class="radio " value="6">屏序6</li>
+                            <li class="radio " value="7">屏序7</li>
+                        </ul>
+
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle">轮播图</label>
+                    <div class="tb_cont tb_cell cell_upload_wrap">
+                        <input type="hidden" value="" id="loadurl"/>
+                        <div class="cell_img_canvas" id="cell_img_canvas1">
+
+                        </div>
+                        <div class="cell_upload" id="cell_drag1">
+                            <div class="cell_upload_btn"><button class="btn_s3">选择文件</button><input type="file" id="fileLoader" name="files"></div>
+                            <span class="cell_upload_tip">允许上传图片格式为：png jpeg jpg gif 且图片大小不能超过2M</span>
+                        </div>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">专题类型</label>
+                    <div class="tb_cont tb_cell">
+                        <ul class="radio_wrap" id="seminarType">
+                            <li class="radio on" val="0">壁纸专题</li>
+                            <li class="radio " val="9" >广告专题</li>
+                        </ul>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle">专题简介</label>
+                    <div class="tb_cont tb_cell txt_editor_wrap"><textarea class="txt_editor"></textarea></div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap none" id="seminarAdvertisment">
+                <div class="com_tb">
+                    <label class="tb_cell align_middle">广告图</label>
+                    <div class="tb_cont tb_cell cell_upload_wrap">
+                        <input type="hidden" class="upload_adv" name="upload_adv"/>
+                        <div class="cell_img_canvas" id="cell_img_canvas2"></div>
+                        <div class="cell_upload" id="cell_drag2">
+                            <div class="cell_upload_btn"><button class="btn_s3">选择文件</button><input type="file" id="fileLoader2" name="files"></div>
+                            <span class="cell_upload_tip">允许上传图片格式为：png jpeg jpg gif 且图片大小不能超过2M</span>
+                        </div>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="bz_block_wrap">
+                <div class="line_title">选择壁纸</div>
+
+                <div class="drag_sort_wrap">
+                    <div class="drag_sort">
+                        <label>待选壁纸</label>
+                        <ul class="drag_sort_list" id="dragSortTxtPack">
+
+                        </ul>
+                        <div class="clear-fix"></div>
+                        <div><button class="btn_s3" id="packBzAdd">添加</button></div>
+                    </div><!-- drag_sort end -->
+
+                    <div class="drag_sort">
+                        <label>已选壁纸</label>
+                        <ul class="drag_sort_list" id="dragSortTxtPack2">
+
+                        </ul>
+                        <div class="clear-fix"></div>
+                        <div><button class="btn_s3" id="packBzDel">删除</button></div>
+                    </div><!-- drag_sort end -->
+
+                    <div class="drag_sort">
+                        <label>缩略图</label>
+                        <ul class="drag_sort_img" id="dragSortImgPack">
+                            <!-- 广告图片 不能被拖拽 -->
+                            <li class="fixed_elem">
+                                <img src="<?php echo $imageurl; ?>">
+                                <!--<p>一人消费.没有拖累.独立自主.拍板干脆；</p>
+                                所有收入.自己支配.花钱潇洒.单价绝对；
+                                人生短暂.自由可贵.单身无罪.脱光万岁！</p>-->
+                            </li>
+                        </ul>
+                    </div><!-- drag_sort end -->
+
+                    <div class="clear-fix"></div>
+                </div><!-- drag_sor_wrap end -->
+
+            </div><!-- bz_block_wrap end 壁纸专题内容 -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">创建时间</label>
+                    <div class="tb_cont tb_cell">
+                        <!--<input type="text" class="datepicker rd_2" readonly>-->
+                        <input type="text" value="<?php echo date("Y-m-d H:i:s", time()); ?>"  onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" readonly value='<?php echo $wallpaperinfo["wallpaper_online_time"] ?>' class="laydate-icon datepicker">
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="bnts_wrap"><button class="btn_s2" id="bzSeminarAdd02Prev">上一步</button><button class="btn_s2 pop_btn" openPopId="fixTipView">提交</button></div>
+
+
+        </div><!-- content end -->
+
+    </div>
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">您确定添加专题?</p>
+                    <div class="tip_btns">
+                        <button class="btn_s2 save_ok" id="bzSeminarAdd02GoList">确定</button>
+                        <button class="btn_s2 save_add" id="bzSeminarAdd02AddMore">取消并返回</button>
+                    </div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/vendor/load-image.all.min.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-image.js"></script>
+
+<!-- The File Upload validation plugin -->
+<script src="<?php echo $staticPath ?>jssdk/plugins/jqfile/js/jquery.fileupload-validate.js"></script>
+
+<script type="text/javascript">
+                            $(function () {
+                                $(".save_ok").click(function () {
+                                    var sname = $(".sname").val();
+                                    var screenid = $("#screenid").find(".on").attr("value");
+                                    var loadurl = $("#loadurl").val();
+                                    var txt_editor = $(".txt_editor").val();
+                                    var c_time = $(".datepicker").val();
+
+                                    var url_adv = $(".upload_adv").val();
+
+
+                                    var subjecttype = $("#seminarType").find(".on").attr("val");
+
+
+                                    var ids = $("#dragSortImgPack > li ").not(".fixed_elem").map(function () {
+                                        return $(this).attr("targetimg");
+                                    }).get().join("_");
+
+                                    var data = "sname=" + sname + "&screenid=" + screenid + "&loadurl=" + loadurl
+                                            + "&txt_editor=" + txt_editor + "&c_time=" + c_time + "&token=" + token
+                                    if (subjecttype == 9) {
+                                        data += "&url_adv=" + url_adv + "&subjecttype=" + subjecttype;
+                                    } else {
+                                        data += "&imgids=" + ids + "&subjecttype=" + subjecttype;
+                                    }
+                                    var url = "/Admin/wallpaperadminsubject/createsubject"
+
+
+                                    $.post(url, data, function (d) {
+                                        if (d) {
+                                            window.location.href = "/Admin/wallpaperadminsubject/index"
+                                        }
+                                    })
+                                })
+                            })
+</script>
+
+
+
+</body>
+</html>

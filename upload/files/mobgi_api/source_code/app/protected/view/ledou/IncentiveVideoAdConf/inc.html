@@ -1,0 +1,738 @@
+<script type="text/html" id="addTermPopUp">
+    <div class="addAD">
+    <p style="margin-bottom:20px;height:20px;">
+    <select style="margin-right:30px;" name="systemTerm">
+    <option value="default">系统默认条件</option>
+    <option value="custom_install">安装特定软件</option>
+    <option value="custom_imei">特定设备列表</option>
+    </select>
+    <select style="margin-right:30px;" name="termName">
+    <option value="条件名">条件名</option>
+    <option value="城市">城市</option>
+    <option value="时间短">时间短</option>
+    </select>
+    <select name="formula">
+    <option value="==">=</option>
+    <option value="!=">!=</option>
+    <option value=">">></option>
+    <option value=">=">>=</option>
+    <option value="<"><</option>
+    <option value="<="><=</option>
+    <option value="in">In</option>
+    <option value="not in">Not In</option>
+    <option value="not in">Like</option>
+    </select>
+    </p>
+    <div><span class="label">条件值：</span><textarea id='tj_box_value' style="width:350px;height:60px;display:none"></textarea><span  id="textbox"></span></div>
+    </div>
+    <div style="text-align:center;padding:10px 0;">
+    <a href="javascript:void(0)" class="btn" id="ok">确定</a>
+    <a href="javascript:void(0)" class="cancel">取消</a>
+    </div>
+</script>
+
+<script>
+    $(function() {
+        //全部平均
+        $("#averaged").click(function() {
+            var num = $(this).parents(".grid").find("table").find("input:text");
+            var numlength=num.length;
+            if(numlength>0){
+                 var i=1;
+                 var totalrate_num=0;
+                 $.each(num,function(){
+                      rate_num=Number((1000/numlength).toFixed(0));
+                      if(i==numlength){
+                          rate_num=1000 - totalrate_num;
+                      }else{
+                          totalrate_num=totalrate_num+rate_num;
+                      }
+                      //console.log(totalrate_num);
+                      $(this).val((rate_num/1000)).change();
+                      i++;
+                 });
+            }
+            initData();
+        });
+        $("#adList").find("input:text").change(function() {
+            initData();
+        });
+        //应用
+        var Gs = new Categorywidget_sdk({
+            interfaceName: 'Gs',
+            boxId: 'games_box',
+            ComboId: 'games_list',
+            ComboName: 'n2',
+            ComboSaveId: 'appkey',
+            ComboSaveName: 'appkey[]',
+            DataConfig: {text: 'platform_app_name', value: 'appkey'},
+            DataSourceConfig: {
+                CategoryListCombo: '{{siteUrl}}developer/retDeveloperList',
+                CategoryDataUrl: '{{siteUrl}}apps/retDevelopsApp',
+                DataType: 'dev_id'
+            }
+        });
+        //渠道
+        var Cs = new Categorywidget_sdk({
+            interfaceName: 'Cs',
+            boxId: 'channels_box',
+            ComboId: 'channels_list',
+            ComboName: 'n1',
+            ComboSaveId: 'channel_id',
+            ComboSaveName: 'channel_id[]',
+            DataConfig: {text: 'realname', value: 'identifier'},
+            DataSourceConfig: {
+                CategoryListCombo: '{{channelUrl}}sys_groups/getCategoryListCombo',
+                CategoryDataUrl: '{{channelUrl}}channels_in_groups/GetLinkChannels',
+                DataType: 'channels'
+            }
+        });
+        //新增广告 
+        function addAD(id) {
+            var id = id || "";
+            var $content = $('<div class="grid"></div>');
+            var PopUp = jDialog({
+                width: 800,
+                height: 600,
+                content: $content
+            });
+            $content.load("{{product_pop}}", {id: id}, function() {
+                $content.find("#cancel").click(function() {
+                    if (PopUp) {
+                        PopUp.close();
+                    }
+                });
+                $content.find("#ok").click(function() {
+                    var data = $.parseJSON($("input[name='products']").val()) || {};
+                    var _str = "";
+                    var isSame = false;
+                    var theSame = [];
+                    $content.find("#adListPopUp").find("input:checkbox[checked]").each(function() {
+                        var productID = $(this).parents("tr").children(":eq(0)").text();
+                        var productName = $(this).parents("tr").children(":eq(1)").text();
+                        if (data.products) {
+                            $.each(data.products, function(i, v) {
+                                if (v.productid == productID) {
+                                    theSame.push(productID);
+                                    isSame = true;
+                                }
+                            });
+                        }
+                        if($("input[name='config_lelvel']").val()!="-1"){
+                            var percent='<input type="text" class="iText required" value="">';
+                        }else{//列表广告
+                            var percent='<input type="checkbox" name="promote_type_new_'+productID+'" id="promote_type_new_'+productID+'" onchange="javascript:if($(this).is(\':checked\')){$(\'#promote_type_'+productID+'\').val(this.value);$(this).next(\'input\').attr(\'disabled\',true)}else{$(\'#promote_type_'+productID+'\').val(0);$(this).next(\'input\').attr(\'disabled\',false)}" value="1"/>New'+
+                            '<input type="checkbox" name="promote_type_hot_'+productID+'" id="promote_type_hot_'+productID+'" onchange="javascript:if($(this).is(\':checked\')){$(\'#promote_type_'+productID+'\').val(this.value);$(this).prev(\'input\').attr(\'disabled\',true)}else{$(\'#promote_type_'+productID+'\').val(0);$(this).prev(\'input\').attr(\'disabled\',false)}"  value="2"/>Hot'+
+                            '<input type="hidden" name="promote_type_'+productID+'" id="promote_type_'+productID+'" value=""/>';
+                            percent+='<input type="hidden" class="iText">';
+                        }
+                        _str += '<tr name="1">' +
+                                '<td>' + productID + '</td>' +
+                                '<td>' + productName + '</td>' +
+                                '<td>'+percent+'</td>'+
+                                '<td><a title="删除" class="del" href="javascript:void(0)"></a>' +
+                                '</td>' +
+                                '</tr>';
+                    });
+                    if (isSame) {
+                        jAlert(theSame + "是重复的产品.");
+                    } else {
+                        $("#adList").find("tbody").append(_str);
+                        $("#adList").find("input:text").change(function() {
+                            initData();
+                        })
+                        initData();
+                        if (PopUp) {
+                            PopUp.close();
+                        }
+                    }
+                });
+            });
+        }
+        $("#addAD").click(function() {
+            addAD();
+        });
+        $("#adList").find(".del").live("click", function() {
+            $(this).parents("tr").remove();
+            initData();
+        });
+        //导入
+        function addpz(type) {
+            var id = id || "";
+            var $content = $('<div class="grid"></div>');
+            var PopUp = jDialog({
+                width: 800,
+                height: 500,
+                content: $content
+            });
+            $content.load("{{adconfig_pop}}", {id: id}, function() {
+                if (type == "dz" || type=="import_config") {
+                    $content.find(".gridToolbar").children(".fr").hide();
+                    $content.find("#pzListPopUp").find("input:checkbox").hide();
+                }
+                if (type == "gx") {
+                    $content.find("#pzListPopUp").find("input:radio").hide();
+                }
+                $content.find("#cancel").click(function() {
+                    if (PopUp) {
+                        PopUp.close();
+                    }
+                });
+                $content.find("#ok").click(function() {
+                    var r = null;
+                    if (type == "dz") {
+                        r = confirm("确定要导入吗？");
+                        if (r) {
+                            var _str = "";
+                            
+                            $.each($content.find("#pzListPopUp").find("input:checked").parents("tr").children(":eq(3)").children("p"), function() {
+                                if($("input[name='config_lelvel']").val()!=-1){
+                                    percentinput='<input type="text" class="iText required" value="'+$(this).attr("percent")+'">';
+                                }else{
+                                    percentinput='<input type="hidden" class="iText" value="'+$(this).attr("percent")+'">';
+                                }
+                                _str += '<tr>' +
+                                        '<td>' + $(this).attr("id") + '</td>' +
+                                        '<td>' + $(this).text() + '</td>' +
+                                        '<td>'+percentinput+'</td>' +
+                                        '<td>' +
+                                        '<a title="删除" class="del" href="javascript:void(0)"></a>' +
+                                        '</td>' +
+                                        '</tr>';
+                            });
+                            $("#adList").find("tbody").html(_str);
+                            initData();
+                            if (PopUp) {
+                                PopUp.close();
+                            }
+                        }
+                    }
+                    if (type == "gx") {
+                        r = confirm("确定要更新吗？");
+                        if (r) {
+                            //更新到其他配置
+                            var prodcutjson=$("input[name='products']").val();
+                            var config_id=jqchk();
+                            var config_level = jqchk_configlevel();
+                            var config_type = jqchk_configtype();
+                            
+                            if (PopUp && config_id) {
+                                ajaxGET("/adconfig/import_config","prodcutjson="+prodcutjson+"&config_id="+config_id+"&config_level="+config_level+"&config_type="+config_type);
+                                PopUp.close();
+                            }
+                        }
+                    }
+                    if (type == "import_config") {//导入配置
+                        r = confirm("确定要导入吗？");
+                        if (r) {
+                            var _str = "";
+                            $.each($content.find("#pzListPopUp").find("input:checked").parents("tr").children(":eq(4)").children("input[name='config_id']"), function() {
+                                ajaxGET("/adconfig/getconfigDetail","configid="+$(this).val(),function(data){
+                                    if(data.error==0){
+                                        $("#termGrid").find("tbody").children().each(function(){
+                                            $(this).remove();
+                                        })
+                                        setTimeout(function(){
+                                            $("input[name='config_lelvel']:eq("+(Number(data.msg.configLevel) - 1)+")").attr("checked",true)
+                                            $("#config_value").val(data.msg.configDetail);
+                                            //init_config_value_data();
+                                            var configValue=$.parseJSON(data.msg.configDetail);
+                                            var html='';
+                                            var configValue=configValue.config_value
+                                            for(var j=0;j<configValue.length;j++){
+                                                html+='<tr>'+
+                                                            '<td><p class="blue"><a style="cursor: pointer" onmouseover="javascript:getConditionCount(this)">' + configValue[j].oper_type + '</a></p></td>'+
+                                                            '<td>'+configValue[j].operator+'</td>'+
+                                                            '<td>'+configValue[j].compare+'</td>'+
+                                                            '<td>'+
+                                                            '    <a href="javascript:void(0)" name="systemTerm" class="edit" title="更新"></a>'+
+                                                            '    |'+
+                                                            '    <a href="javascript:void(0)" class="del" title="删除"></a>'+
+                                                            '</td>'+
+                                                       '</tr>';
+                                            }
+                                            $("#termGrid").find("tbody").html(html);
+                                            $("#termGrid").show();
+                                        },50);
+                                    }else{
+                                        alert(data.msg);
+                                    }
+                                });
+                                
+                            });
+                            if (PopUp) {
+                                PopUp.close();
+                            }
+                        }
+                    }
+                });
+            }, "txt");
+        }
+        $(".dzad").click(function() {
+            addpz($(this).attr("type"));
+        }); 
+        //
+        $("input:radio[name='config_lelvel']").click(function() {
+            var _v = $(this).val();
+            if (_v == 1) {
+                $("input:text[name='config_value']").val('');//初级配置则清空
+                $(this).parents(".gridToolbar").find("p.fr").hide();
+                $(this).parents(".gridToolbar").next("table").hide();
+            } else {
+                $(this).parents(".gridToolbar").find("p.fr").show();
+                $(this).parents(".gridToolbar").next("table").show();
+                initData();
+            }
+        });
+        //增加条件
+        function showPopUpTerm(id, tr) {
+            var data = eval('({{condition_conf}})');
+            var formula = {
+                        number:["==","!=",">=","<="],
+                        string:["in","not in"],
+                        all:["==","!=",">=","<=","in","not in"],
+                        equipment:["==","!=","in","not in"],
+                        grep:["in","not in","like"]
+                    }
+            var $content = $('<div class="grid"></div>').append($("#addTermPopUp").html());
+            var PopUp = jDialog({
+                width: 450,
+                height: 220,
+                content: $content
+            });
+            if (tr) { //更新时填充数据
+                var opt = "";
+                var pType = '';
+                var ev = tr.find(".blue").text();
+                var termName = "";
+                $.each(data, function(parentType, itemObj){
+                    $.each(itemObj, function(k, v){
+                        if (ev == v.c_id){
+                            opt += "<option selected value='" + v.c_id + "'>" + v.name + "</option>";
+                            pType = parentType;
+                            termName = v.c_id;
+                        }else{
+                            opt += "<option value='" + v.c_id + "'>" + v.name + "</option>";
+                        }
+                    });
+                });
+                $content.find("select[name=termName]").html(opt);
+                $content.find("select[name=systemTerm]").val(pType);
+                $content.find("textarea").val(tr.children(":eq(2)").text());
+                setFormula(termName,function(){
+                    $content.find("select[name=formula]").val(tr.children(":eq(1)").text());
+                });
+            } else { 
+                var opt = "";
+                var id = $content.find("select[name=systemTerm]").first('option').val();
+                $.each(data[id], function(i, v) {
+                    opt += "<option value='" + v.c_id + "'>" + v.name + "</option>";
+                });
+                $content.find("select[name=termName]").html(opt);
+                setFormula();
+            }
+            $content.find("select[name=systemTerm]").change(function() {
+                var id = $(this).val();
+                var opt = "";
+                if (data[id]) {
+                    $.each(data[id], function(i, v) {
+                        opt += "<option value='" + v.c_id + "'>" + v.name + "</option>";
+                    });
+                    $content.find("select[name=termName]").html(opt);
+                } else {
+                    $content.find("select[name=termName]").empty();
+                }
+                if(id != "default"){
+                    setFormula("number");
+                }
+            });
+            $content.find("select[name=termName]").change(function() {
+                setFormula($(this).val());
+            });
+            
+            function setFormula(v,callback){
+                var v = v || $content.find("select[name=termName]").val();
+                switch(v){
+                    case "start_times_today":
+                    case "start_times_addup":
+                    case "start_days_addup":
+                    case "start_days_latest_interval":
+                    case "start_days_first_interval":
+                    case "app_cumulative_amount":
+                    case "cumulative_amount":
+                    case "number":
+                        var opt = "";
+                        $.each(formula.number, function(i, v) {
+                            opt += "<option value='" + v + "'>" + v + "</option>";
+                        });
+                        $content.find("select[name=formula]").html(opt);
+                        break;
+                    case "app_version":
+                    case "net_type":
+                    case "operator":
+                    case "time":
+                    case "date":
+                    case "city":
+                    case "province":
+                    case "resolution":
+                        var opt = "";
+                        $.each(formula.string, function(i, v) {
+                            opt += "<option value='" + v + "'>" + v + "</option>";
+                        });
+                        $content.find("select[name=formula]").html(opt);
+                        break;
+                    case "vendors_brand":
+                    case "device_type":
+                    case "app_type":
+                        var opt = "";
+                        $.each(formula.grep, function(i, v) {
+                            opt += "<option value='" + v + "'>" + v + "</option>";
+                        });
+                        $content.find("select[name=formula]").html(opt);
+                        break;
+                    default: //所有
+                        var opt = "";
+                        $.each(formula.all, function(i, v) {
+                            opt += "<option value='" + v + "'>" + v + "</option>";
+                        });
+                        $content.find("select[name=formula]").html(opt);
+                        break;
+                }
+                setTextType(v);
+                callback && callback();
+            }
+            function getCheckboxValue(name){
+                $("input[name='"+name+"']").click(function(){
+                                var str="";
+                                $('input[name="'+name+'"]:checked').each(function(){ 
+                                        str+=$(this).val()+",";
+                                })
+                                $("#tj_box_value").val(str.substring(0,str.length-1));
+                            })
+            }
+            function setTextType(v){
+                var v = v || $content.find("select[name=termName]").val();
+                switch(v){
+                    case "start_times_today":
+                    case "start_times_addup":
+                    case "start_days_addup":
+                    case "start_days_latest_interval":
+                    case "start_days_first_interval":
+                    case "app_cumulative_amount":
+                    case "cumulative_amount":
+                        $("#textbox").html('<input type="text" id="tj_value" value="'+$("#tj_box_value").val()+'" style="width:320px;height:20px;margin-top:20px">');
+                        break;
+                    case "net_type":
+                        $("#textbox").html('WIFI<input name="tj_net_type" type="checkbox" value="wifi"> 2G<input name="tj_net_type" type="checkbox" value="1"> 3G<input name="tj_net_type" type="checkbox" value="2"> 4G<input name="tj_net_type" type="checkbox" value="3"> Unknow<input name="tj_net_type" type="checkbox" value="unknow">');
+                        getCheckboxValue("tj_net_type");
+                        var tj=$("#tj_box_value").val();
+                        if(tj!=""){
+                            tjobj=tj.split(",");
+                            var net_type_input=$("input[name=tj_net_type]");
+                            for(var i=0;i<tjobj.length;i++){
+                                if(tjobj[i]=="wifi"){
+                                    net_type_input[0].checked=true;
+                                }
+                                if(tjobj[i]=="1"){
+                                    net_type_input[1].checked=true;
+                                }
+                                if(tjobj[i]=="2"){
+                                    net_type_input[2].checked=true;
+                                }
+                                if(tjobj[i]=="3"){
+                                    net_type_input[3].checked=true;
+                                }
+                                if(tjobj[i]=="unknow"){
+                                    net_type_input[4].checked=true;
+                                }
+                            }
+                        }
+                        break;
+                    case "operator":
+                        $("#textbox").html('中国移动<input name="tj_operator" type="checkbox" value="1" > 中国联通<input name="tj_operator" type="checkbox" value="2"> 中国电信<input name="tj_operator" type="checkbox" value="3"> 其他<input name="tj_operator" type="checkbox" value="4">');
+                        getCheckboxValue("tj_operator");
+                        var tj=$("#tj_box_value").val();
+                        if(tj!=""){
+                            tjobj=tj.split(",");
+                            var net_type_input=$("input[name=tj_operator]");
+                            for(var i=0;i<tjobj.length;i++){
+                                if(tjobj[i]=="1"){
+                                    net_type_input[0].checked=true;
+                                }
+                                if(tjobj[i]=="2"){
+                                    net_type_input[1].checked=true;
+                                }
+                                if(tjobj[i]=="3"){
+                                    net_type_input[2].checked=true;
+                                }
+                                if(tjobj[i]=="4"){
+                                    net_type_input[3].checked=true;
+                                }
+                            }
+                        }
+                        break;
+                    case "time":
+                        $("#textbox").html('<input type="text"  name="tj_start_time" size=25 class="iText">--<input type="text" name="tj_end_time" size=25 class="iText">');
+                        var tj=$("#tj_box_value").val();
+                        if(tj!=""){
+                            tjobj=tj.split(",");
+                            var net_type_input=$("input[name=tj_operator]");
+                            $("input[name='tj_start_time']").val(tjobj[0].substring(1,tjobj[0].length));
+                            $("input[name='tj_end_time']").val(tjobj[1].substring(0,tjobj[1].length-1))
+                        }
+                        break;
+                    case "date":
+                        $("#textbox").html('<input type="text"  name="tj_start_time" size=25 class="iText datepicker">--<input type="text" name="tj_end_time" size=25 class="iText datepicker">');
+                        $('.datepicker').datepicker({
+                            changeMonth:true,
+                            changeYear:true,
+                            minDate:new Date()
+                        });
+                        $('.datepicker').datepicker('option','dateFormat','yy-mm-dd');
+                        $("input[name='tj_end_time']").datepicker('option','minDate',new Date());
+                        var tj=$("#tj_box_value").val();
+                        if(tj!=""){
+                            tjobj=tj.split(",");
+                            var net_type_input=$("input[name=tj_operator]");
+                            $("input[name='tj_start_time']").val(tjobj[0].substring(1,tjobj[0].length));
+                            $("input[name='tj_end_time']").val(tjobj[1].substring(0,tjobj[1].length-1))
+                        }
+                        $("input[name='tj_end_time']").val();
+                        break;
+                    case "city":
+                        $("#textbox").html('<select id="city" multiple="multiple" style="width:350px;height:90px;"><option value="北京市">北京市</option><option value="上海市">上海市</option><option value="广州市">广州市</option><option value="深圳市">深圳市</option><option value="杭州市">杭州市</option><option value="厦门市">厦门市</option><option value="成都市">成都市</option><option value="西安市">西安市</option><option value="南京市">南京市</option><option value="沈阳市">沈阳市</option><option value="天津市">天津市</option><option value="宁波市">宁波市</option><option value="济南市">济南市</option><option value="青岛市">青岛市</option><option value="长沙市">长沙市</option><option value="南昌市">南昌市</option><option value="重庆市">重庆市</option><option value="福州市">福州市</option><option value="南宁市">南宁市</option><option value="石家庄市">石家庄市</option><option value="长春市">长春市</option><option value="武汉市">武汉市</option><option value="郑州市">郑州市</option><option value="太原市">太原市</option><option value="哈尔滨市">哈尔滨市</option></select>');
+                        setMuliOptionValue("city");
+                        break;
+                    case "province":
+                        $("#textbox").html('<select id="province" multiple="multiple" style="width:350px;height:90px;"><option value="北京市">北京市</option><option value="天津市">天津市</option><option value="重庆市">重庆市</option><option value="上海市">上海市</option><option value="河北省">河北省</option><option value="山西省">山西省</option><option value="辽宁省">辽宁省</option><option value="吉林省">吉林省</option><option value="黑龙江省">黑龙江省</option><option value="江苏省">江苏省</option><option value="浙江省">浙江省</option><option value="安徽省">安徽省</option><option value="福建省">福建省</option><option value="江西省">江西省</option><option value="山东省">山东省</option><option value="河南省">河南省</option><option value="湖北省">湖北省</option><option value="湖南省">湖南省</option><option value="广东省">广东省</option><option value="海南省">海南省</option><option value="四川省">四川省</option><option value="贵州省">贵州省</option><option value="云南省">云南省</option><option value="陕西省">陕西省</option><option value="甘肃省">甘肃省</option><option value="青海省">青海省</option><option value="台湾省">台湾省</option><option value="内蒙古自治区">内蒙古自治区</option><option value="广西壮族自治区">广西壮族自治区</option><option value="宁夏回族自治区">宁夏回族自治区</option><option value="新疆维吾尔自治区">新疆维吾尔自治区</option><option value="西藏自治区">西藏自治区</option><option value="香港特别行政区">香港特别行政区</option><option value="澳门特别行政区">澳门特别行政区</option></select>');
+                        setMuliOptionValue("province");
+                        break;
+                    case "resolution":
+                        $("#textbox").html('<select id="resolution"><option value="S">微屏</option><option value="M">小屏</option><option value="L">中屏</option><option value="XL">大屏</option></select>');
+                        $("#resolution").val($("#tj_box_value").val());
+                        break;
+                    case "vendors_brand":
+                        $("#textbox").html('<select id="vendors_brand"  multiple="multiple" style="width:350px;height:90px;"><option value="htc">htc</option><option value="samsung">samsung</option><option value="zte">zte</option><option value="sony">sony</option><option value="lenovo">lenovo</option><option value="lg">lg</option><option value="op">op</option><option value="thl">thl</option><option value="huawei">huawei</option><option value="meizu">meizu</option><option value="motorola">motorola</option><option value="xiaomi">xiaomi</option><option value="bbk">bbk</option><option value="k-touch">k-touch</option><option value="google">google</option><option value="gionee">gionee</option><option value="apple">apple</option><option value="nokia">nokia</option><option value="blackberry">blackberry</option></select>');
+                        setMuliOptionValue("vendors_brand");
+                        break;
+                    case "app_type":
+                    case "device_type":
+                    case "app_version":
+                    default: //所有
+                       $("#textbox").html('<textarea id="default_text" style="width:350px;height:60px;">'+$("#tj_box_value").val()+'</textarea>');
+                        break;
+                }
+            }
+            $content.find("#ok").click(function() {
+                var termName = $content.find("select[name=termName]").val();
+                var formula = $content.find("select[name=formula]").val();
+                var formulaV = $content.find("textarea").val();
+                var systemTerm = $content.find("select[name=systemTerm]").val();
+                if(systemTerm == "default"){
+                    switch(termName){
+                        case "start_times_today":
+                        case "start_times_addup":
+                        case "start_days_addup":
+                        case "start_days_latest_interval":
+                        case "start_days_first_interval":
+                        case "app_cumulative_amount":
+                        case "cumulative_amount":
+                            $("#tj_box_value").val($("#tj_value").val());
+                            var formulaV=$("#tj_box_value").val();
+                            var tempv = parseFloat($("#tj_box_value").val());
+                            if (isNaN(tempv)){
+                                jAlert("条件值必须为数字类型");
+                                return false;
+                            }
+                            break;
+                        case "time"://时间段
+                            var start_time=$("input[name=tj_start_time]").val();
+                            var end_time=$("input[name=tj_end_time]").val();
+                            var reg = /^(\d{1,2}):(\d{1,2})$/;
+                            if(!reg.test(start_time)||!reg.test(end_time)){
+                                alert("时间格式不正确\r\n格式为[时:分]列如20:10");
+                                return false;
+                            }
+                            var times="[";
+                            times+=start_time+",";
+                            times+=end_time;
+                            times+="]";
+                            $("#tj_box_value").val(times);
+                            formulaV=times;
+                            break;
+                        case "date":
+                            var times="[";
+                            times+=$("input[name=tj_start_time]").val()+",";
+                            times+=$("input[name=tj_end_time]").val();
+                            times+="]";
+                            $("#tj_box_value").val(times);
+                            formulaV=times;
+                            break;
+                        case "net_type":
+                            break;
+                        case "operator":
+                            break;
+                        case "resolution": //分辨率
+                            $("#tj_box_value").val($("#resolution").val());
+                            var formulaV = $content.find("textarea").val();
+                            break;
+                        case "city":
+                            $("#tj_box_value").val($("#city").val());
+                            var formulaV = $content.find("textarea").val();
+                            break;
+                        case "province":
+                            $("#tj_box_value").val($("#province").val());
+                            var formulaV = $content.find("textarea").val();
+                            break;
+                        case "vendors_brand":
+                            $("#tj_box_value").val($("#vendors_brand").val());
+                            var formulaV = $content.find("textarea").val();
+                            break;
+                        case "app_type":
+                        case "app_version":
+                        case "device_type":
+                            //字符串
+                        default: //所有
+                            $("#tj_box_value").val($("#default_text").val());
+                            var formulaV = $content.find("textarea").val();
+                            var fv = formulaV.replace(/\s*/g,"");
+                            if(!fv){
+                                jAlert("条件值不能为空");
+                                return false;
+                            }
+                            break;
+                    }
+                }else{
+                    $("#tj_box_value").val($("#default_text").val());
+                    formulaV = $content.find("textarea").val();
+                    var tempv = parseFloat(formulaV);
+                    if (isNaN(tempv)){
+                        jAlert("条件值必须为数字类型");
+                        return false;
+                    }
+                }
+                if (tr) {//更新时填充数据
+                    tr.children(":eq(0)").find("p").text(termName);
+                    tr.children(":eq(1)").text(formula);
+                    tr.children(":eq(2)").text(formulaV);
+                    tr.find(".edit").attr("name", systemTerm);
+                } else {
+                    var str = '<tr>' +
+                            '<td><p class="blue">' + termName + '</p></td>' +
+                            '<td>' + formula + '</td>' +
+                            '<td>' + formulaV + '</td>' +
+                            '<td>' +
+                            '<a title="更新" name="' + systemTerm + '" class="edit" href="javascript:void(0)"></a> | <a title="删除" class="del" href="javascript:void(0)"></a>' +
+                            '</td>' +
+                            '</tr>';
+                    $("#termGrid").find("tbody").append(str);
+                }
+                init_config_value_data();
+                if (PopUp) {
+                    PopUp.close();
+                }
+            });
+            $content.find(".cancel").click(function() {
+                if (PopUp) {
+                    PopUp.close();
+                }
+            });
+        }
+        ;
+        function setMuliOptionValue(id){
+            var tj=$("#tj_box_value").val();
+            if(tj!=""){
+                tjobj=tj.split(",");
+                option=$("#"+id).find("option")
+                if(option!=''){
+                    for(var o=0;o<option.length;o++){
+                        for(var j=0;j<tjobj.length;j++){
+                            if(tjobj[j]==option[o].text){
+                                option[o].selected=true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $("#addTerm").click(function() {
+            showPopUpTerm();
+        });
+        $("#termGrid").find(".edit").live("click", function() {
+            var tr = $(this).parents("tr");
+            showPopUpTerm($(this).attr("name"), tr);
+        });
+        $("#termGrid").find(".del").live("click", function() {
+            $(this).parents("tr").remove();
+            init_config_value_data();
+        });
+        $("#adList").tableDnD();//拖拽表格
+    });
+    //读取条件配置信息为json
+    function init_config_value_data() {
+            var data = {"config_value": []};
+            $("#termGrid").find("tbody").children().each(function() {
+                var obj = {};
+                obj["oper_type"] = $(this).children(":eq(0)").text();
+                obj["operator"] = $(this).children(":eq(1)").text();
+                obj["compare"] = $(this).children(":eq(2)").text();
+                //obj["systemTerm"] = $(this).find(".edit").attr("name");
+                data.config_value.push(obj);
+            });
+            if (data.config_value.length != 0) {
+                $("input[name='config_value']").val(obj2str(data)).change();
+            } else {
+                $("input[name='config_value']").val("").change();
+            }
+    }
+    //读取产品信息为json
+    function initData() {
+            var data = {"products": []};
+            $("#adList").find("tbody").children().each(function() {
+                var obj = {};
+                obj['productid'] = $(this).children(":eq(0)").text();
+                obj['percent'] = $(this).children(":eq(2)").find("input").val();
+                data.products.push(obj);
+            });
+            $("input[name='products']").val(obj2str(data)).change();
+            $("#adList").tableDnD();
+        }
+    $("form").submit(function(){
+        initData()
+        if($("#appkey").val()==null){
+            alert("请选择应用");
+            $("#appkey").focus();
+            return false;
+        }
+        if($("#channel_id").val()==null){
+            alert("请选择渠道");
+            $("#channel_id").focus();
+            return false;
+        }
+        var ok = true; 
+        $("#adList").each(function(){
+            var num = 0;
+            $(this).find("input:text").each(function(){
+               num = FloatAdd(num,$(this).val());
+            });
+            if(num != 1 && $("input[name='config_lelvel']").val()!="-1"){
+                jAlert("分配比例总和必须等于1");
+                ok = false;
+                return false;
+            }
+        });
+        if(!ok){
+            return false;
+        }
+    })
+    function getConditionCount(thiss){
+        var id=$(thiss).text();
+        ajaxGET("/conditionManages/getConditionInfo","condition_id="+id,function(data){
+            if(data.error==0){
+                $(thiss).attr("title",data.msg.name+"  "+data.msg.count);
+            }else{
+                $(thiss).attr("title",data.msg);
+            }
+        });
+    }
+</script>

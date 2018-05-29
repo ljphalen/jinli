@@ -1,0 +1,62 @@
+<include file="Public:header" />
+
+<div class="mainw clearfix">
+	<include file="Union:nav_left" />
+    <div class="rmain fl">
+    	<h2 class="yyname ">我的游戏</h2>
+
+        <div class="farea farea-key">
+            <div class="numsub">
+            
+            <gt name="union_apps" value="0">
+            	<div class="fl">您当前共有<em class="fblue"> {$count|default=0} </em> 款联运游戏</div>
+            <else/>
+           		<div class="fl">您当前共有<em class="fblue"> {$count} </em> 款游戏，<em class="fblue"> 0 </em> 款联运游戏</div>
+           	</gt>
+            
+        	<a href="{:U("Help/page", array("id"=>6))}" target="_help" class="btn-green fr">联运流程</a>
+        	<a href="{:U("Union/add")}" class="btn-green fr">申请密钥</a>
+            </div>
+        </div>
+        <notempty name="apps">
+    	<div class="insub gamelist">
+        	<h3>游戏列表</h3>
+            <div class="yylist mt30">
+        	<ul>
+        	<volist name="apps" id="app">
+        		<php>$apkId=D("Apks")->where(array('app_id'=>$app['id']))->order('id desc')->getField('id');</php>
+            	<li>
+					<a href="{:U("apps/manage", array("id"=>$apkId))}" title="{$app.app_name}" class="imga fl">
+					<img src="<empty name="app.icon">{:CDN("PUBLIC")}/common/images/no_photo.png<else/>{:Helper("Apk")->get_url("icon")}{$app.icon.file_path}</empty>" width="54" height="54"></a>
+					<div class="picr">
+                    	<h6 style="height: 40px;overflow: hidden;"><a href="{:U("apps/manage", array("id"=>$apkId))}">{$app.app_name}<em></em></a></h6>
+                    	<p class="fgray">上传日期 {$app["created_at"]|date="Y-m-d", ###}</p>
+                    	<div>{$app.status}
+							<if condition="$app[apk][status] eq -1">
+		                    	<php>
+		                    	$verifyRes = D("Admin://Testlog")->where(array("apk_id"=>$app[apk][id],"result_id"=>2))->field("reason_id, remarks")->order("id desc")->find();
+		                    	$reason_info = D("Reason")->order('reason_id')->where(array("type"=>1,"reason_id"=>$verifyRes['reason_id']))->field("reason_content")->find();
+		                    	</php>
+		                    	<if condition="$reason_info['reason_content'] eq '其它'">
+		                    		<p class="nopass-reason">{$verifyRes.remarks}</p>
+		                    	<else/>
+		                    		<p class="nopass-reason">{$reason_info.reason_content|trim}</p>
+		                    	</if>
+							</if>
+						</div>
+                    </div>
+                    <div class="picb">
+                    	<a href="{:U("apps/manage", array("id"=>$apkId))}" class="btn-xq2">查看详情</a>
+                    </div>
+                </li>
+            </volist>
+            </ul>
+          </div>
+        </div>
+        </notempty>
+        <div class="page">
+			{$page}
+		</div>
+    </div>
+</div>
+<include file="Public:footer" />

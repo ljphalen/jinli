@@ -1,0 +1,48 @@
+<include file="Public:header" />
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/common/css/myPage.css?{:C('JS_VERSION')}" type="text/css" rel="stylesheet" />
+<div class="mainw clearfix">
+	<include file="Apps:nav_left" />
+    <div class="rmain fl">
+    	<h2 class="yyname yyh">
+    	<eq name="user.status" value="2">
+		<label>
+            <a href="{:U('apps/ftpupload')}" target="_blank" class="btn-ftp">使用ftp工具上传</a>
+		</label>
+		</eq>
+		<label for="apkupload" class="apkuploadlable">
+	        <span class="btn-fb fr"><em>+</em>上传新应用</span>
+	        <input id="apkupload" href="#jumbotron" type="file" name="files[]"  />
+	        <input type="hidden" id="type" name="type" value="0" />
+	    </label>
+
+		您共上传了 <em class="fblue f16">{$apknum.all|default="0"}</em> 款应用</h2>
+		<include file="_uploadModal" />
+		<style>
+	    .closeBtn {margin-top: 17px;}
+	    </style>
+		
+    	<div class="yylist">
+        	<ul>
+        	<volist name="apkinfo" id="vo">
+            	<li>
+					<a href="{:U('apps/manage', array('id'=>$vo[id]) )}" title="{$vo.app_name|safe}" class="imga fl"><img src="{$vo.icon}" width="54" height="54"></a>
+					<div class="picr">
+                    	<h6 style="height: 21px;overflow: hidden;"><a href="{:U('apps/manage', array('id'=>$vo[id]) )}" title="{$vo.app_name}" alt="{$vo.app_name}">{$vo.app_name}</a></h6>
+                    	<p><em>({$vo.version_name})</em></p>
+                    	<p>{$vo.status_desc}</p>
+                    </div>
+                    <div class="picb">
+                    	<p class="fgray">上传日期：{$vo["created_at"]|date="Y-m-d", ###}</p>
+                    	<p>APPID：{$vo.app_id}</p>
+                    </div>
+                </li>
+            </volist>
+            </ul>
+        </div>
+        <if condition="$count gt $pageSize">
+        <div class="page">{$page}</div>
+        </if>
+    </div>
+</div>
+
+<include file="Public:footer" />

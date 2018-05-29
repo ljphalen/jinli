@@ -1,0 +1,60 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body>
+		<header id="iHeader" class="hd">
+			<div class="top-wrap custom">
+				<div class="title">
+					<a href="<?php echo $webroot;?>" class="back"></a>
+					<h1><?php echo Util_String::substr($topic['title'], 0, 10, '', true);?></h1>
+				</div>
+			</div>
+		</header>
+	<div id="iScroll" class="help-warp">
+		<article class="ac">
+			<div class="info" share-content="<?php echo html_entity_decode($topic['share_content']);?>" share-pic="<?php echo html_entity_decode($topic['share_pic']);?>">
+				<?php echo html_entity_decode($topic['content']);?>
+			</div>
+		</article>
+		<div class="share-bar custom">
+            <div class="wrap">
+                <a class="share J_shareSns" href="javascript:;">
+                    <i class="ico-share-small"></i>分享
+                </a>
+                <a class="praise J_vote <?php if(Gou_Service_Topic::checkParise($topic['id'])) echo 'on'; ?>" data-ajax="<?php echo $webroot;?>/api/praise/index?module=topic&item_id=<?php echo $topic['id'];?>">
+                    <i class="ico-praise"></i><span><?php echo Common::parise($topic['praise']);?></span>
+                </a>
+            </div>
+        </div>
+        <div class="modal" id="J_shareModal" style="display:none;">
+            <div class="ff-share fixed">
+                <div class="inner">
+                    <header>
+                        <em>分享到</em>
+                        <i class="ico-exit modal-cancel"></i>
+                    </header>
+                    <div class="links"
+                        data-title="<?php echo html_entity_decode($topic['share_content']);?>"
+                        data-url="<?php echo $webroot.'/story/index?id='.$topic['id'];?>"
+                        data-pic="<?php echo html_entity_decode($topic['share_pic']);?>">
+                        <span class="J_shareToSns" data-type="weixin" style="display:none;"
+                            onclick="GOU.baiduStatic('专题','专题-分享', '专题-分享-微信好友')">
+                            <img src="<?php echo $staticResPath;?>/pic/ff_ico_weixin.png" alt="">
+                            <em>微信好友</em>
+                        </span>
+                        <span class="J_shareToSns" data-type="weixinp" style="display:none;"
+                            onclick="GOU.baiduStatic('专题','专题-分享', '专题-分享-微信朋友圈')">
+                            <img src="<?php echo $staticResPath;?>/pic/ff_ico_weixinp.png" alt="">
+                            <em>微信朋友圈</em>
+                        </span>
+                        <span class="J_shareToSns" data-type="weibo" 
+                            onclick="GOU.baiduStatic('专题','专题-分享', '专题-分享-新浪微博')">
+                            <img src="<?php echo $staticResPath;?>/pic/ff_ico_weibo.png" alt="">
+                            <em>新浪微博</em>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>	
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

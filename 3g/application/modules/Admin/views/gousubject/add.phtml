@@ -1,0 +1,58 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">专题列表</a></li>
+		<li class="current"><a href="javascript:;">添加专题</a></li>
+	</ul>
+</div>
+<div class="h_a">添加专题</div>
+<form method="post" action="<?php echo $addPostUrl; ?>" id="addFrom">
+	<input name="token" id="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">开始结束时间</th>
+				<td class="td">
+					<div>
+						<input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value=""/> 至
+						<input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value=""/>
+					</div>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">专题内容</th>
+				<td class="td">
+					<textarea name="content" style="width: 800px; height: 400px;"></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js"></script>
+<script type="text/javascript">
+	//专题表单数据提交
+	$(document).ready(function () {
+		var editor;
+		KindEditor.ready(function (K) {
+			K.token = $('#token').val();
+			editor = K.create('textarea[name="content"]', {
+				resizeType: 1,
+				allowPreviewEmoticons: false,
+				allowImageUpload: true,
+				uploadJson: '<?php echo $uploadImgUrl;?>',
+				items: EDITOR_ITEMS
+			});
+		});
+
+		ajaxForm('addFrom', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Gousubject/index');
+		}, function () {
+			editor.sync();
+		});
+	})
+</script>
+
+<?php echo $this->render("layout/footer.phtml"); ?>

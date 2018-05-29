@@ -1,0 +1,76 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+<style>
+	.mainw2{*z-index: 20}
+	.mainzindex{*z-index: 10;}
+</style>
+<div class="mainw mainw2  clearfix">
+	<div class="rmain fl col-md-11 mainwk">
+		<div class="panel">
+			<h2 class="yyname"><a href="{:U('apps/index')}">我的应用</a> » {$appinfo.app_name}</h2>
+			<div class="panel-body">
+			<include file="_uploadModal" />
+				<div class="row yymain">
+					<div class="col-md-9">
+						 <div class="caption">
+							<h4>{$appinfo.app_name}</h4>
+							<h6>应用名称：{$appinfo.app_name}</h6>
+							<h6>包名称：{$appinfo.package}</h6>
+							<h6>AppID： {$appinfo.id}</h6>
+							
+							<notempty name="$appinfo['union']['api_key']">
+							<h6>API-Key：{$appinfo['union']['api_key']}</h6>
+							<h6>Secret-Key：{$appinfo['union']['secret_key']}</h6>
+							</notempty>
+						 </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="mainw mainw2 clearfix mainzindex">
+	<div class="rmain fl col-md-11 mainwk">
+		<div class="panel">
+			<h2 class="yyname">历史版本</h2>
+			<div class="panel-body oldapkrow">
+			
+			<volist name="apkinfo" id="vo">
+				<div class="row">
+					<div class="col-md-2">
+						<h5 class="oldapkzt">状态：{$vo.status_desc}</h5>
+						<div class="thumbnail wauto">
+							<a href="{$vo.detail_url}" title="{$vo.app_name}">
+								<img src="{$vo.icon_url}" width="72" height="72">
+							</a>
+						</div>
+					</div>
+					<div class="col-md-7">
+						 <div class="caption">
+							<h6>版本名称：{$vo.version_name}</h6>
+							<h6>应用名称：{$vo.app_name}</h6>
+							<h6>上传日期：{$vo.created_at|formatDate}</h6>
+							<h6>审核日期：{$vo.checked_at|formatDate}</h6>
+							<if condition="$vo['status'] eq 3">
+								<h6>上线日期：{$vo.onlined_at|formatDate}</h6>
+							</if>
+							<if condition="$vo['status'] lt -1">
+								<h6>下线日期：{$vo.offlined_at|formatDate}</h6>
+							</if>
+						 </div>
+					</div>
+					<div class="col-md-3">
+						<a class="btn btn-warning wi150 managemore" href="{$vo.detail_url}">资料查看</a>
+					</div>
+				</div>
+				
+			</volist>
+				
+			</div>
+		</div>
+	</div>
+	
+</div>
+
+<include file="Public:footer" />

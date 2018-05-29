@@ -1,0 +1,116 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">新闻列表</a></li>
+		<li class="current"><a href="javascript:;">编辑新闻</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑新闻</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort'];?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">分类</th>
+				<td class="td"><select name="type_id" id="select">
+				<?php foreach ($newstype as $key=>$value) { ?>
+						<option value="<?php echo $key;?>" <?php if($info['type_id'] == $key) echo 'selected="selected"';?>><?php echo $value;?></option>
+				<?php } ?>
+				</select></td>
+			</tr>
+			<tr class="tr" id="category" style="<?php echo ($info['type_id'] != '1') ? 'display:none' : '';?>">
+				<th class="th">类目</th>
+				<td class="td"><input type="text" class="input wc" name="category"	value="<?php echo $info['category'];?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">标题</th>
+				<td class="td"><input type="text" class="input wc" name="title"	value="<?php echo $info['title'];?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">链接地址</th>
+				<td class="td"><input type="text" class="input wc" name="link"	value="<?php echo $info['link'];?>"></td>
+			</tr>
+			<tr class="tr">
+			<th class="th">模块-平台</th>
+			<td class="td">
+				<select name="module_id">
+					<option value="">选择模块</option>
+					<?php foreach($modules as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($info['module_id'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+				
+				<select name="cid">
+					<option value="">选择平台</option>
+					<?php foreach($channel_names as $key=>$value) { ?>
+					<option value="<?php echo $value['id'];?>" <?php if($info['cid'] == $value['id']) echo  'selected="selected"';?>><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">渠道号</th>
+			<td class="td"><input type="text" class="input" name="channel_code" value="<?php echo $info['channel_code'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="NewsImg">
+						<img src="<?php echo empty($info['img']) ? $staticPath . '/img/content/nopic.jpg' : $attachPath.$info['img']; ?>"/>
+						<input type="hidden" name="img" value="<?php echo $info['img'];?>">
+					</li>
+				</ul>			
+				<p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=NewsImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td"><select name="status" class="select">
+					<option <?php if($info['status'] == 1) echo 'selected="selected"';?> value="1">开启</option>
+                	<option <?php if($info['status'] == 0) echo 'selected="selected"';?> value="0">关闭</option>
+				</select></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">发布时间</th>
+				<td class="td"><input type="text" class="input" id="pub_time"
+					name="pub_time" value="<?php echo date('Y-m-d H:i:s', $info['pub_time']);?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">开始时间</th>
+				<td class="td"><input type="text" class="input" id="start_time"
+					name="start_time" value="<?php echo date('Y-m-d H:i:s', $info['start_time']);?>"></td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script	src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//用户表单数据提交
+$('#pub_time').datetimepicker();
+$('#start_time').datetimepicker();
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/News/index?s=1');
+	});
+	$('#select').change(function(){
+		option = $(this).children('option:selected').val();
+        if(option == '1'){
+        	$('#category').show();
+        }else{
+        	$('#category').hide();
+        }        
+    });
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

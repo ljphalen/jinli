@@ -1,0 +1,803 @@
+<style>
+#gamelist{width:30%;background:#fff;border:1px solid #dedede;padding:5px;}
+#gamelist li{width:100%;height:25px;line-height:25px;text-indent:15px;
+             border-bottom:1px dashed #ccc;color:#666;cursor:pointer;}
+.sourceOff{color:#CCCCCC}
+</style>
+<script src="{{rootUrl}}/js/games.js?ver={{staticVer}}" type="text/javascript"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/float.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/ajaxfileupload.js"></script>
+<link media="screen" href="{{rootUrl}}/css/table.css" rel="stylesheet" type="text/css">
+<div class="colMain">
+            <div class="title"><p class="fl">产品信息</p></div>
+            <form action="/implantable/productsave" method="post" name="form" id="product">
+            <div class="main">
+                <div class="app-detail">
+                    <ul class="form">
+                        <li>
+                            <span class="label">客户名称：</span>
+                            <div class="fc">
+                                <select name="publishid" class="required" required id="publishid">
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">平台类型：</span>
+                            <div class="fc">
+                                <select name="platform" class="required" required id="platform">
+                                    <option value="1" <!-- if {{products.platform}}==1 -->selected<!-- endif -->>Android</option>
+                                    <option value="2" <!-- if {{products.platform}}==2 -->selected<!-- endif -->>IOS</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">产品名称：</span>
+                            <div class="fc">
+                                <input type="hidden" name="product_id" value="{{products.pid}}"/>
+                                <input type="text" id="pname" name="pname" value="{{products.product_name}}" class="iText required" />
+                                <span class="red">*</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">订单详情：</span>
+                            <div class="fc">
+                                <div class="content">
+                                    <div class="grid">
+                                        <div class="gridToolbar">
+                                            <p class="fr">
+                                                <a href="javascript:void(0)" id="addOrder" class="btn">新增</a>
+                                            </p>
+                                        </div>
+                                        <table id="orderlist">
+                                            <thead>
+                                                <tr>
+                                                    <th>序号</th>
+                                                    <th>订单号</th>
+                                                    <th>合同编号</th>
+                                                    <th>合同周期</th>
+                                                    <th>结算方式</th>
+                                                    <th>单价</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- loop orders -->
+                                                        <tr orderid="{{orders' value.orderid}}">
+                                                            <td><input type="hidden" name="index[]" value="{{orders' value.index}}"/>
+                                                                <input type="hidden" name="oid[]" value="{{orders' value.id}}"/>{{orders' value.index}}</td>
+                                                            <td><input type="hidden" name="orderid[]" value="{{orders' value.orderid}}"/>{{orders' value.orderid}}</td>
+                                                            <td><input type="hidden" name="agreementid[]" value="{{orders' value.agreementid}}"/>{{orders' value.agreementid}}</td>
+                                                            <td class="agreement_time" startTime="<?php echo format_time($v1['startdate'], 'Y-m-d'); ?>" endTime="<?php echo format_time($v1['enddate'], 'Y-m-d'); ?>">
+                                                                <input type="hidden" name="startdate[]" value="<?php echo format_time($v1['startdate'], 'Y-m-d'); ?>"/>
+                                                                <input type="hidden" name="enddate[]" value="<?php echo format_time($v1['enddate'], 'Y-m-d'); ?>"/>
+                                                                <?php echo format_time($v1['startdate'], 'Y-m-d'); ?> 至 <?php echo format_time($v1['enddate'], 'Y-m-d'); ?> </td>
+                                                            <td>
+                                                                <select name="paymethod[]" class="required" required >
+                                                                    <option value="1" <!-- if {{orders' value.paymethod}}== 1 -->selected<!-- endif -->>CPM</option>
+                                                                    <option value="2" <!-- if {{orders' value.paymethod}}== 2 -->selected<!-- endif -->>CPC</option>
+                                                                    <option value="5" <!-- if {{orders' value.paymethod}}== 5 -->selected<!-- endif -->>CPD</option>
+                                                                    <option value="4" <!-- if {{orders' value.paymethod}}== 4 -->selected<!-- endif -->>CPI</option>
+                                                                    <option value="3" <!-- if {{orders' value.paymethod}}== 3 -->selected<!-- endif -->>CPA</option>
+                                                                    <option value="6" <!-- if {{orders' value.paymethod}}== 6 -->selected<!-- endif -->>CPS</option>
+                                                                    <option value="7" <!-- if {{orders' value.paymethod}}== 7 -->selected<!-- endif -->>CPT</option>
+                                                                </select>
+                                                            </td>
+                                                            <td><input type="hidden" name="price[]" value="{{orders' value.price}}"/>{{orders' value.price}}</td>
+                                                            <td>
+                                                                <a href="javascript:void(0)" class="edit editOrder" title="编辑" 
+                                                                   index="{{orders' value.index}}" 
+                                                                   orderid="{{orders' value.orderid}}" oid="{{orders' value.id}}" agreementid="{{orders' value.agreementid}}" 
+                                                                   startdate="<?php echo format_time($v1['startdate'], 'Y-m-d'); ?>" enddate="<?php echo format_time($v1['enddate'], 'Y-m-d'); ?>" paymethod="{{orders' value.paymethod}}" 
+                                                                   price="{{orders' value.price}}"></a>
+                                                            </td>
+                                                        </tr>
+                                                <!-- endloop -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="pagination">{{pager.pages}}</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">广告内容：</span>
+                            <div class="fc">
+                                <div class="content">
+                                    <div class="grid">
+                                        <div class="gridToolbar">
+                                            <p class="fr">
+                                                <a href="javascript:void(0)" id="addSource" class="btn">新增</a>
+                                            </p>
+                                        </div>
+                                        <table id="sourcelist">
+                                            <thead>
+                                                <tr>
+                                                    <th>素材ID</th>
+                                                    <th>广告类型</th>
+                                                    <th>素材</th>
+                                                    <th>产品目标</th>
+                                                    <th>广告状态</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- loop sources -->
+                                                        <tr sourceid="{{sources' value.id}}" <!-- if {{sources' value.status}}== 0 -->class="sourceOff"<!-- endif -->>
+                                                            <td>
+                                                                <input type="hidden" value="{{sources' value.index}}" name="source_index[]">
+                                                                <input type="hidden" value="{{sources' value.id}}" name="sid[]">{{sources' value.id}}</td>
+                                                            <td><input type="hidden" value="{{sources' value.blockkey}}" name="blockkey[]">{{sources' value.appname}} - {{sources' value.blockname}}(<!-- if {{sources' value.inapp}}== 1 -->不可配置<!-- else -->可配置<!-- endif -->)</td>
+                                                            <td>
+                                                                <input type="hidden" value="{{sources' value.image_url}}" name="pic_url[]">
+                                                                <input type="hidden" value="{{sources' value.source_type}}" name="source_type[]">
+                                                                <input type="hidden" value="{{sources' value.text}}" name="source_text[]">
+                                                                <!-- if {{sources' value.source_type}}== 1 --><span  src='{{sources' value.image_url}}' style="cursor:pointer;color:blue;" class="pic_url showOriginal">图片</span> <!-- endif -->
+                                                                <!-- if {{sources' value.source_type}}== 2 --><span class='showTextContent'  style="cursor:pointer;color:blue;"  content="{{sources' value.text}}">文案</span> <!-- endif -->
+                                                                <!-- if {{sources' value.source_type}}== 3 --><span  src='{{sources' value.image_url}}' style="cursor:pointer;color:blue;" class="pic_url showOriginal">图片</span> <span class='showTextContent'  style="cursor:pointer;color:blue;"  content="{{sources' value.text}}">文案</span> <!-- endif -->
+                                                                <!-- if {{sources' value.source_type}}== 4 --><span  src='{{sources' value.image_url}}' style="cursor:pointer;color:blue;" class="pic_url showOriginal">图片</span> <span class='showTextContent'  style="cursor:pointer;color:blue;"  content="{{sources' value.text}}">文案</span><!-- endif -->
+                                                            </td>
+                                                            <td><input type="hidden" value="{{sources' value.target_url}}" name="target_url[]">{{sources' value.target_url}}</td>
+                                                            <td><input type="hidden" value="{{sources' value.status}}" name="status[]">
+                                                                <p style="width:80px;" class="onfbk">
+                                                                    <a sourceid="" class="aon setSourcestatusOn <!-- if {{sources' value.status}}== 1 -->cur<!-- endif -->">ON</a>
+                                                                    <a sourceid="" class="aoff setSourcestatusOFF <!-- if {{sources' value.status}}== 0 -->cur<!-- endif -->">OFF</a>
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                <!-- endloop -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="pagination">{{pager.pages}}</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="fc">
+                                <input type="button" onclick="confirmSubmit();" value="确定" class="submit" />
+                                <input type="button" value="取消" onclick="javascript:location.href='productlist'" class="cancel" />
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div id="imgFrame" style="position:absolute; top:40%; left:40%; z-index:1000; display:none;">
+                    <div style="float:right"><a id="imgFrameHide">关闭</a></div>
+                    <div id="imgbox"></div>
+                </div>
+                
+            </div>
+        </form>
+        </div>
+<script language="javascript" >
+    
+    function confirmSubmit()
+    {
+        //对于同一个广告类型只能有一个是打开的。
+        var numArray = {};
+        var openFlag = false;
+        var typeCn = '';
+        $("input[name='blockkey[]']").each(function(index, item){
+            blockkey = $(this).val();
+            status = $("input[name='status[]']").eq(index).val();
+            if(typeof(numArray[blockkey]) == 'undefined'){
+                numArray[blockkey] = 0;
+            }
+            if(status == 1){
+                numArray[blockkey] +=1;
+            }
+            if(numArray[blockkey] > 1){
+                openFlag = true;
+                typeCn = $(this).parent('td').text();
+                return;
+            }
+        });
+        if(openFlag){
+            jAlert('广告类型：' + typeCn + '　不能同时有两个为打开状态');
+            return false;
+        }
+        $("form").submit();
+    }
+    
+product_id = "{{products.pid}}";
+if(product_id){
+    $("#platform").attr("disabled", "disabled")
+}else{
+    $("#platform").val("1");
+}
+
+    /*
+    *比较时间段一与时间段二是否有交集
+    */
+   function isMixTime(begintime1, endtime1, begintime2, endtime2) {
+        $status = begintime2 - begintime1;
+        if ($status > 0) {
+            $status2 = begintime2 - endtime1;
+            if ($status2 > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            $status2 = begintime1 - endtime2;
+            if ($status2 > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    function autoPublish(publishid) {
+        ajaxPOST("/implantable/autoPublish", {}, function(data) {
+            var length = data.length;
+            str = '<option value="">所有</option>';
+            for (i=0; i<length; i++)
+            {
+                if_selecte='';
+                if(publishid == data[i].id)
+                {
+                    if_selecte =  'selected="selected"';
+                }   
+                str += '<option value="'+data[i].id+'" '+if_selecte+'>'+data[i].compay+'</option>'
+            }
+            $("#publishid").html(str);
+        })
+    }
+    
+    function getPaymethodSelect(paymethod){
+        str = '';
+        str = '<select name="paymethod" class="required" required >'+
+            '<option value="1"'+ ((paymethod=="1")?" selected ": "") +' >CPM</option>'+
+            '<option value="2"'+ ((paymethod=="2")?" selected ": "") +' >CPC</option>'+
+            '<option value="5"'+ ((paymethod=="5")?" selected ": "") +' >CPD</option>'+
+            '<option value="4"'+ ((paymethod=="4")?" selected ": "") +' >CPI</option>'+
+            '<option value="3"'+ ((paymethod=="3")?" selected ": "") +' >CPA</option>'+
+            '<option value="6"'+ ((paymethod=="6")?" selected ": "") +' >CPS</option>'+
+            '<option value="7"'+ ((paymethod=="7")?" selected ": "") +' >CPT</option>'+
+            '</select>'
+        return str;
+    }
+    
+    $(function(){
+        var publishid = "{{products.publishid}}";
+        autoPublish(publishid);
+    })
+    
+    /**
+     * 获取新行的索引
+     * @returns {Number|newIndex}
+     */
+    function getTrIndex(){
+        if($("#orderlist tr:last td:eq(0) input:eq(0)").length == 0){
+            return 1;
+        }
+        maxIndex = $("#orderlist tr:last td:eq(0) input:eq(0)").val();
+        newIndex = parseInt(maxIndex) + 1;
+        return newIndex;
+    }
+    
+    
+         //新增广告 
+    function addOrder(index,oid, orderid, agreementid, startdate, enddate, paymethod, price) {
+        var id = id || "";
+        var $content = $('<div class="grid"></div>');
+        var PopUp = jDialog({
+            width: 800,
+            height: 450,
+            content: $content
+        });
+        $content.load("/implantable/showOrderPop", {index: index,oid: oid,orderid: orderid,agreementid: agreementid,startdate: startdate,enddate: enddate,paymethod: paymethod,price: price}, function() {
+            newIndexFlag = false;
+            if(typeof(index) == 'undefined'){
+                newIndexFlag =true;
+                index = getTrIndex();
+            }
+            $content.find("#cancel").click(function() {
+                if (PopUp) {
+                    PopUp.close();
+                }
+            });
+            
+            $content.find("#orderid").click(function() {
+                ajaxGET("/order/createOrderKey", "", function(data) {
+                    if (data.result == 0) {
+                        $("#orderid").val(data.key);
+                    } else {
+                        alert("生成订单号失败,请重试")
+                    }
+                });
+            });
+            
+            $content.find("#ok").click(function() {
+                newStartTime = Date.parse($("#startdate").val().replace(/-/g,"/").replace(" ",""))
+                newEndTime = Date.parse($("#enddate").val().replace(/-/g,"/").replace(" ",""))
+                oldStartTime = '';
+                oldEndTime = '';
+                interTimeFlag = false;
+                $(".agreement_time").each(function(){
+                    if($(this).parent('tr').attr("orderid") != $("#orderid").val()){
+                        startTime= Date.parse($(this).attr("startTime").replace(/-/g,"/"))
+                        endTime= Date.parse($(this).attr("endTime").replace(/-/g,"/"))
+                        if(isMixTime(newStartTime, newEndTime, startTime, endTime)){
+                            oldStartTime =  $(this).attr("startTime");
+                            oldEndTime = $(this).attr("endTime");
+                            interTimeFlag = true;
+                            return false;
+                        }
+                    }
+                });
+                if(interTimeFlag){
+                    jAlert('合同时间：'+$("#startdate").val()+"~"+$("#enddate").val()+'与以前的合同时间：'+oldStartTime+"~"+oldEndTime+' 有交集');
+                    return false;
+                }
+                
+                if(!isfloat($("#price").val())){
+                    jAlert("单价请输入数值");
+                    return false;
+                 }
+                
+                if($("#orderid").val()==''){
+                    jAlert('订单号不能为空');
+                    return false;
+                }
+
+                if(!newIndexFlag){
+                    _str = '';
+                    _str += '<td><input type="hidden" name="index[]" value="'+index+'"/>' + '<input type="hidden" name="oid[]" value="'+$("#oid").val()+'"/>' +index + '</td>' +
+                            '<td><input type="hidden" name="orderid[]" value="'+$("#orderid").val()+'"/>' +$("#orderid").val() + '</td>' +
+                            '<td><input type="hidden" name="agreementid[]" value="'+$("#agreementid").val()+'"/>' + $("#agreementid").val() + '</td>' +
+                            '<td class="agreement_time" endtime="'+$("#enddate").val()+'" starttime="'+$("#startdate").val()+'"><input type="hidden" name="startdate[]" value="'+$("#startdate").val()+'"/><input type="hidden" name="enddate[]" value="'+$("#enddate").val()+'"/>'+$("#startdate").val() +' 至 '+ $("#enddate").val() +'</td>' +
+                            '<td>'+getPaymethodSelect($("#paymethod").val())+'</td>'+
+                            '<td><input type="hidden" name="price[]" value="'+$("#price").val()+'"/>'+$("#price").val()+'</td>'+
+                            '<td>' +
+                            '<a href="javascript:void(0)" class="edit editOrder" title="编辑" index="'+index+'" orderid="'+$("#orderid").val()+'" oid="'+$("#oid").val()+'" agreementid="' + $("#agreementid").val() + '" startdate="'+$("#startdate").val()+'" enddate="'+$("#enddate").val() +'" paymethod="'+$("#paymethod").val()+'"price="'+$("#price").val()+'"></a>'+
+                            '</td>';
+                    $("#orderlist").find("tr[orderid="+$("#orderid").val()+"]").html(_str);
+                }else{
+                    _str = '';
+                    _str += '<tr orderid="'+$("#orderid").val()+'">' +
+                            '<td><input type="hidden" name="index[]" value="'+index+'"/>' + '<input type="hidden" name="oid[]" value="'+$("#oid").val()+'"/>' +index + '</td>' +
+                            '<td><input type="hidden" name="orderid[]" value="'+$("#orderid").val()+'"/>' +$("#orderid").val() + '</td>' +
+                            '<td><input type="hidden" name="agreementid[]" value="'+$("#agreementid").val()+'"/>' + $("#agreementid").val() + '</td>' +
+                            '<td  class="agreement_time" endtime="'+$("#enddate").val()+'" starttime="'+$("#startdate").val()+'"><input type="hidden" name="startdate[]" value="'+$("#startdate").val()+'"/><input type="hidden" name="enddate[]" value="'+$("#enddate").val()+'"/>'+$("#startdate").val() +' 至 '+ $("#enddate").val() +'</td>' +
+                            '<td>'+getPaymethodSelect($("#paymethod").val())+'</td>'+
+                            '<td><input type="hidden" name="price[]" value="'+$("#price").val()+'"/>'+$("#price").val()+'</td>'+
+                            '<td>' +
+                            '<a href="javascript:void(0)" class="edit editOrder" title="编辑" index="'+index+'" orderid="'+$("#orderid").val()+'" oid="'+$("#oid").val()+'" agreementid="' + $("#agreementid").val() + '" startdate="'+$("#startdate").val()+'" enddate="'+$("#enddate").val() +'" paymethod="'+$("#paymethod").val()+'"price="'+$("#price").val()+'"></a>'+
+                            '</td>' +
+                            '</tr>';
+                    $("#orderlist").find("tbody").append(_str);
+                }
+                
+                if (PopUp) {
+                    PopUp.close();
+                }
+                $(".editOrder").unbind("click").click(function(){
+                    index = $(this).attr('index');
+                    oid = $(this).attr('oid');
+                    orderid = $(this).attr('orderid');
+                    agreementid = $(this).attr('agreementid');
+                    startdate = $(this).attr('startdate');
+                    enddate = $(this).attr('enddate');
+                    paymethod = $(this).attr('paymethod');
+                    price = $(this).attr('price');
+                    addOrder(index, oid, orderid, agreementid, startdate, enddate, paymethod, price);
+                });
+            });
+        });
+    }
+    $("#addOrder").click(function() {
+        addOrder();
+    });
+    
+    $(".editOrder").click(function(){
+        index = $(this).attr('index');
+        oid = $(this).attr('oid');
+        orderid = $(this).attr('orderid');
+        agreementid = $(this).attr('agreementid');
+        startdate = $(this).attr('startdate');
+        enddate = $(this).attr('enddate');
+        paymethod = $(this).attr('paymethod');
+        price = $(this).attr('price');
+        addOrder(index, oid, orderid, agreementid, startdate, enddate, paymethod, price);
+    });
+    
+    /**
+     * 获取新行的索引
+     * @returns {Number|newIndex}
+     */
+    function getSourceTrIndex(){
+        if($("#sourcelist tr:last td:eq(0) input:eq(0)").length == 0){
+            return 1;
+        }
+        maxIndex = $("#sourcelist tr:last td:eq(0) input:eq(0)").val();
+        newIndex = parseInt(maxIndex) + 1;
+        return newIndex;
+    }
+    
+    function ajaxFileUpload() {
+        $.ajaxFileUpload
+        (
+            {
+                url: '/implantable/pic_upload', //用于文件上传的服务器端请求地址
+                secureuri: false, //是否需要安全协议，一般设置为false
+                fileElementId: 'source_pic', //文件上传域的ID
+                dataType: 'json', //返回值类型 一般设置为json
+                success: function (data, status)  //服务器成功响应处理函数
+                {
+                    $("#pic_url").val(data.pic_url);
+                    if (data.code == 0) {
+                        jAlert('上传成功');
+                    }
+                    else{
+                        jAlert(data.msg)
+                    }
+                },
+                error: function (data, status, e)//服务器响应失败处理函数
+                {
+                    alert(e);
+                }
+            }
+        )
+        return false;
+    }
+    
+         //新增广告 
+    function addSource(source_index,appkey, blockkey, inapp, source_type,status) {
+        var blockJsonData = eval('({{blockJsonData}})');
+        
+        if(typeof(appkey) == 'undefined'){
+            appkey = '';
+        }
+        if(typeof(blockkey) == 'undefined'){
+            blockkey = '';
+        }
+        if(typeof(inapp) == 'undefined'){
+            inapp = '';
+        }
+        if(typeof(source_type) == 'undefined'){
+            source_type = '';
+        }
+        if(typeof(status) == 'undefined'){
+            status = '1';
+        }
+        
+        var id = id || "";
+        var $content = $('<div class="grid"></div>');
+        var PopUp = jDialog({
+            width: 800,
+            height: 550,
+            content: $content
+        });
+        $content.load("/implantable/showSourcePop", {source_index:source_index, appkey:appkey,blockkey: blockkey,inapp: inapp,source_type: source_type}, function() {
+            newIndexFlag = false;
+            if(typeof(source_index) == 'undefined'){
+                newIndexFlag =true;
+                source_index = getSourceTrIndex();
+            }
+            $content.find("#cancel").click(function() {
+                if (PopUp) {
+                    PopUp.close();
+                }
+            });
+            
+            appkey_opt = "<option value=''>请选择应用</option>";
+            $.each(blockJsonData, function(conf_appkey, itemObj){
+                appkey_opt += "<option value='" + conf_appkey + "'>" + itemObj.appname + "</option>";
+            });
+            $("#appkey").html(appkey_opt);
+            $("#appkey").val(appkey);
+            
+            block_opt = "<option value=''>请选择广告类型</option>";
+            $.each(blockJsonData, function(conf_appkey, itemObj){
+                if(appkey == conf_appkey ){
+                    $.each(itemObj, function(k, v){
+                        if (blockkey == v.blockkey){
+                            block_opt += "<option selected value='" + v.blockkey + "'>" + v.blockname + "</option>";
+                        }else{
+                            block_opt += "<option value='" + v.blockkey + "'>" + v.blockname + "</option>";
+                        }
+                    });
+                }
+            });
+            $("#blockkey").html(block_opt);
+            $("#blockkey").val(blockkey);
+            
+            $("#appkey").change(function(){
+                var selectappkey = $(this).val();
+                var opt = "";
+                if (blockJsonData[selectappkey]) {
+                    opt = '<option value="">请选择广告类型</option>';
+                    $.each(blockJsonData[selectappkey]['blocks'], function(i, v) {
+                        opt += "<option value='" + v.blockkey + "' inapp='"+v.inapp+"' source_type='"+v.source_type+"'>" +blockJsonData[selectappkey]['appname'] +  ' - ' + v.blockname + "</option>";
+                    });
+                    $("#blockkey").html(opt);
+                } else {
+                    $("#blockkey").empty();
+                }
+            });
+            
+            $("#blockkey").change(function(){
+                var select_source_type = $(this).find("option:selected").attr("source_type");
+                var select_inapp = $(this).find("option:selected").attr("inapp");
+                $("#source_type").val(select_source_type);
+                $("#inapp").val(select_inapp);
+                //图片
+                if(select_source_type == 1 ){
+                    $("#source_type_pic_li").show();
+                    $("#source_type_pic_prev_li").show();
+                    $("#source_type_text_li").hide();
+                    $("#source_text").val('')
+                }
+                //文案
+                if(select_source_type == 2 ){
+                    $("#source_type_pic_li").hide();
+                    $("#source_type_pic_prev_li").hide();
+                    $("#source_type_text_li").show();
+                }
+                //图片+文案
+                if(select_source_type == 3){
+                    $("#source_type_pic_li").show();
+                    $("#source_type_pic_prev_li").show();
+                    $("#source_type_text_li").show();
+                }
+                //其它
+                if(select_source_type == 4){
+                    $("#source_type_pic_li").show();
+                    $("#source_type_pic_prev_li").show();
+                    $("#source_type_text_li").show();
+                }
+            });
+            
+            $content.find("#upload_pic").click(function(){
+                ajaxFileUpload()
+            });
+            
+            $content.find("#ok").click(function() {
+                
+                if($("#appkey").val()==''){
+                    jAlert('请选择应用');
+                    return false;
+                }
+                
+                if($("#blockkey").val()==''){
+                    jAlert('请选择广告类型');
+                    return false;
+                }
+                
+                popBlockkey = $("#blockkey").val();
+                openFlag = false;
+                var typeCn = '';
+                $("input[name='blockkey[]']").each(function(index, item){
+                    blockkey = $(this).val();
+                    status = $("input[name='status[]']").eq(index).val();
+                    
+                    if(blockkey ==popBlockkey && status == 1){
+                        openFlag = true;
+                        typeCn = $(this).parent('td').text();
+                        return;
+                    }
+                });
+                if(openFlag){
+                    jAlert('广告类型：' + typeCn + '　不能同时有两个为打开状态');
+                    return false;
+                }
+                
+                select_source_type = $("#blockkey").find("option:selected").attr("source_type");
+                //图片
+                if((select_source_type == 1 || select_source_type == 3) && $("#pic_url").val() ==''){
+                    jAlert('请选择图片');
+                    return false;
+                }
+                //文案
+                if((select_source_type == 2 || select_source_type == 3) && $("#source_text").val() ==''){
+                    jAlert('请输入文案');
+                    return false;
+                }
+                
+//                if($("#target_url").val()==''){
+//                    jAlert('请填写产品目标');
+//                    return false;
+//                }
+                inappStr = '';
+                if($("#inapp").val() == '1'){
+                    inappStr = '不可配置';
+                }else{
+                    inappStr = '可配置';
+                }
+                
+                source_str = '';
+                if(select_source_type == 1){
+                    source_str = '<span  src="'+$("#pic_url").val()+'" style="cursor:pointer;color:blue;" class="pic_url showOriginal">图片</span>';
+                }else if(select_source_type == 2){
+                    source_str = '<span class="showTextContent"  style="cursor:pointer;color:blue;"  content="'+$("#source_text").val()+'">文案</span>';
+                }else if(select_source_type == 3){
+                    source_str = '<span  src="'+$("#pic_url").val()+'" style="cursor:pointer;color:blue;" class="pic_url showOriginal">图片</span>' + ' &nbsp; ' + '<span class="showTextContent"  style="cursor:pointer;color:blue;"  content="'+$("#source_text").val()+'">文案</span>';
+                }else if(select_source_type == 4){
+                    source_str = '';
+                }
+                
+                sourceid = '';
+                
+                status_str = '';
+                status_str +='<p class="onfbk" style="width:80px;">';
+                if(status == 1){
+                    status_str += '<a class="aon setSourcestatusOn cur" sourceid="'+sourceid+'">ON</a>';
+                    status_str += '<a class="aoff setSourcestatusOFF " sourceid="'+sourceid+'">OFF</a>';
+                }else{
+                    status_str += '<a class="aon setSourcestatusOn " sourceid="'+sourceid+'">ON</a>';
+                    status_str += '<a class="aoff setSourcestatusOFF cur" sourceid="'+sourceid+'">OFF</a>';
+                }
+                status_str += '</p>';
+                
+                _str = '';
+                _str += '<tr sourceid="'+sourceid+'">' +
+                        '<td><input type="hidden" name="source_index[]" value="'+source_index+'"/>' + '<input type="hidden" name="sid[]" value="'+sourceid+'"/>' +'' + '</td>' +
+                        '<td><input type="hidden" name="blockkey[]" value="'+$("#blockkey").val()+'"/>' + $("#blockkey").find("option:selected").text() +'('+ inappStr+')</td>' +
+                        '<td><input type="hidden" name="pic_url[]" value="'+$("#pic_url").val()+'"/>' +'<input type="hidden" name="source_type[]" value="'+$("#source_type").val()+'"/>' + '<input type="hidden" name="source_text[]" value="'+$("#source_text").val()+'"/>'+ source_str + '</td>' +
+                        '<td><input type="hidden" name="target_url[]" value="'+$("#target_url").val()+'"/>'+ $("#target_url").val() +'</td>' +
+                        '<td><input type="hidden" name="status[]" value="'+status+'"/>'  + status_str + '</td>' +
+                        '</tr>';
+                $("#sourcelist").find("tbody").append(_str);
+                
+                //重新绑定事件
+                $(".setSourcestatusOn").unbind("click").click(function(){
+                    if($(this).hasClass('cur')){
+                        return;
+                    }
+
+//                    if(!confirm("您确认要打开吗？")){
+//                        return;
+//                    }
+                    $(this).parent().find('input').val(1);
+                    $(this).addClass("cur");
+                    $(this).parent().find(".aoff").removeClass('cur');
+//                    $("a[sourceid="+$(this).attr("sourceid")+"]").attr('status', 1);
+                    $(this).parent('.onfbk').siblings('input').val(1);
+                    $(this).parents('tr').removeClass('sourceOff');
+                });
+
+                $(".setSourcestatusOFF").unbind("click").click(function(){
+                    if($(this).hasClass('cur')){
+                        return;
+                    }
+//                    if(!confirm("您确认要关闭吗？")){
+//                        return;
+//                    }
+                    $(this).parent().find('input').val(0);
+                    $(this).addClass("cur");
+                    $(this).parent().find(".aon").removeClass('cur');
+//                    $("a[sourceid="+$(this).attr("sourceid")+"]").attr('status', 0);
+                    $(this).parent('.onfbk').siblings('input').val(0);
+                    $(this).parents('tr').addClass('sourceOff');
+                });
+                
+                //点击图片显示原图
+                $(".showOriginal").unbind("click").click(function(){
+                    $("#imgFrame").show();
+                    $("#imgbox").html("<img src='" + $(this).attr("src") + "' />");
+                    var screenWidth = $(window).width(), screenHeight = $(window).height();  ///当前浏览器窗口的 宽高
+                    var scrolltop = $(document).scrollTop();///获取当前窗口距离页面顶部高度
+                    var objLeft = (screenWidth - $("#imgFrame").width())/2 ;
+                    var objTop = (screenHeight - $("#imgFrame").height())/2 + scrolltop;
+                    $("#imgFrame").css("left", objLeft).css("top", objTop);
+                    return false;
+                });
+                
+                $(".showTextContent").unbind("click").click(function(){
+                    obj = $("#imgFrame");
+                    content = $(this).attr('content');
+                    document.getElementById("imgbox").innerHTML = "<span style=\"border:solid 1px\">" + content +"<span>";
+                    var screenWidth = $(window).width(), screenHeight = $(window).height();  ///当前浏览器窗口的 宽高
+                    var scrolltop = $(document).scrollTop();///获取当前窗口距离页面顶部高度
+                    var objLeft = (screenWidth - $("#imgFrame").width())/2 ;
+                    var objTop = (screenHeight - $("#imgFrame").height())/2 + scrolltop;
+                    $("#imgFrame").css({left: objLeft + 'px', top: objTop + 'px'});
+                    document.getElementById("imgFrame").style.display = "block";
+                });
+                
+                if (PopUp) {
+                    PopUp.close();
+                }
+            });
+        });
+    }
+    $("#addSource").click(function() {
+        addSource();
+    });
+    
+    $(".addSource").click(function(){
+        appkey = $(this).attr('appkey');
+        blockkey = $(this).attr('blockkey');
+        inapp = $(this).attr('inapp');
+        source_type = $(this).attr('source_type');
+        status = $(this).attr('status');
+        addSource(source_index,appkey, blockkey, inapp, source_type, status);
+    });
+    
+    $( function(){
+        $(".setSourcestatusOn").click(function(){
+            if($(this).hasClass('cur')){
+                return;
+            }
+
+//            if(!confirm("您确认要打开吗？")){
+//                return;
+//            }
+            $(this).parent().find('input').val(1);
+            $(this).addClass("cur");
+            $(this).parent().find(".aoff").removeClass('cur');
+            $("a[sourceid="+$(this).attr("sourceid")+"]").attr('status', 1);
+            $(this).parent('.onfbk').siblings('input').val(1);
+            $(this).parents('tr').removeClass('sourceOff');
+        });
+
+        $(".setSourcestatusOFF").click(function(){
+            if($(this).hasClass('cur')){
+                return;
+            }
+//            if(!confirm("您确认要关闭吗？")){
+//                return;
+//            }
+            $(this).parent().find('input').val(0);
+            $(this).addClass("cur");
+            $(this).parent().find(".aon").removeClass('cur');
+            $("a[sourceid="+$(this).attr("sourceid")+"]").attr('status', 0);
+            $(this).parent('.onfbk').siblings('input').val(0);
+            $(this).parents('tr').addClass('sourceOff');
+        });
+        
+        //点击图片显示原图
+	    $(".showOriginal").click(function(){
+            $("#imgFrame").show();
+            $("#imgbox").html("<img src='" + $(this).attr("src") + "' />");
+            var screenWidth = $(window).width(), screenHeight = $(window).height();  ///当前浏览器窗口的 宽高
+            var scrolltop = $(document).scrollTop();///获取当前窗口距离页面顶部高度
+            var objLeft = (screenWidth - $("#imgFrame").width())/2 ;
+            var objTop = (screenHeight - $("#imgFrame").height())/2 + scrolltop;
+            $("#imgFrame").css("left", objLeft).css("top", objTop);
+            return false;
+        });
+        //窗口变形时图片重置位置
+        $(window).resize(function() {
+            screenWidth = $(window).width();
+            screenHeight = $(window).height();
+            scrolltop = $(document).scrollTop();
+            objLeft = (screenWidth - $("#imgFrame").width())/2 ;
+            objTop = (screenHeight - $("#imgFrame").height())/2 + scrolltop;
+            $("#imgFrame").css({left: objLeft + 'px', top: objTop + 'px'});
+        });
+        //浏览器有滚动条时的操作图片重置位置
+        $(window).scroll(function() {
+            screenWidth = $(window).width();
+            screenHeight = $(window).height();
+            scrolltop = $(document).scrollTop();
+            objLeft = (screenWidth - $("#imgFrame").width())/2 ;
+            objTop = (screenHeight - $("#imgFrame").height())/2 + scrolltop;
+            $("#imgFrame").css({left: objLeft + 'px', top: objTop + 'px'});
+        });
+        
+        $("#imgFrameHide").click(function(){
+            $("#imgFrame").hide();
+        });
+        
+        $("#imgbox").unbind("click").click(function(){
+            $("#imgFrame").hide();
+        });
+        
+        $(".showTextContent").click(function(){
+            obj = $("#imgFrame");
+            content = $(this).attr('content');
+            document.getElementById("imgbox").innerHTML = "<span style=\"border:solid 1px\">" + content +"<span>";
+            var screenWidth = $(window).width(), screenHeight = $(window).height();  ///当前浏览器窗口的 宽高
+            var scrolltop = $(document).scrollTop();///获取当前窗口距离页面顶部高度
+            var objLeft = (screenWidth - $("#imgFrame").width())/2 ;
+            var objTop = (screenHeight - $("#imgFrame").height())/2 + scrolltop;
+            $("#imgFrame").css({left: objLeft + 'px', top: objTop + 'px'});
+            document.getElementById("imgFrame").style.display = "block";
+        });
+    });
+    
+</script>
+

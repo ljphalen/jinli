@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>美图精选</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="stylesheet" href="<?=$staticResPath?>/mito/css/style.min.css?v=<?=$version?>" />
+</head>
+<body class="ui-pg-app">
+<div class="ui-pg-toolbar">
+    <a class="btn-back" href="<?=$prevUrl?>"></a> <span class="txt">返回</span>
+</div>
+
+<?php
+$prevLink = !empty($info['prevList'][0]['link']) ? $info['prevList'][0]['link'] : '0';
+$lastLink = !empty($info['lastList'][0]['link']) ? $info['lastList'][0]['link'] : '0';
+?>
+
+
+<div class="mod-pg-detail">
+    <div id="J_silde_wrap" class="mod-slide-wrap">
+        <div class="item" data-prev="<?=$prevLink?>" data-next="<?=$lastLink?>">
+            <?=$info['content']?>
+        </div>
+
+    </div>
+
+    <?php if (!empty($banner)): ?>
+        <div class="mod-ads-wrap">
+            <?php foreach ($banner as $val): ?>
+                <a href="<?=$val['url']?>" target="_balnk"><img border="0" src="<?=$val['img']?>" width="100%" height="100px"></a>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+</div>
+<div id="test"></div>
+<script src="<?=$staticResPath?>/mito/js/jquery.min.js?v=<?=$version?>"></script>
+<script src="<?=$staticResPath?>/mito/js/jquery.touchswipe.min.js?v=<?=$version?>"></script>
+<script src="<?=$staticResPath?>/mito/js/detail.min.js?v=<?=$version?>"></script>
+</body>
+</html>

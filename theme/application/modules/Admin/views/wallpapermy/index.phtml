@@ -1,0 +1,190 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+
+<!-- 导航栏Ajax加载 指向navagator.html menuOn表示分别需要高亮的菜单栏id
+用下划线_隔开 eg:bz_taotu_taotuPack-->
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- wp01-壁纸详情-->
+    <div id="bz_usr_wp01">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">状态</label>
+                    <div class="tb_cont tb_cell">
+                        <ul class="tag_list select_status" val="<?php echo $selstatus;?>">
+                            <?php foreach ($status as $k => $v) { ?>
+                                <li val="<?php echo $k; ?>" <?php if($selstatus == $k){ echo 'class="on"'; }?>><?php echo $v; ?></li>
+                            <?php } ?>
+                        </ul>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">标签</label>
+                    <div class="tb_cont tb_cell">
+                        <ul class="tag_list tag_one"  val="<?php echo $mainTag;?>"><!-- tag_one 一级标签 只能选中一个 -->
+                            <a href="/Admin/wallpapermy/index"><li <?php if (!$mainTag) echo "class='on'" ?>>全部</li></a>
+                            <?php foreach ($targs as $v) { ?>
+                                <li value="<?php echo $v['w_type_id'] ?>" class="<?php if ($mainTag == $v['w_type_id']) echo 'on' ?>"><?php echo $v["w_type_name"] ?></li>
+                            <?php } ?>
+                        </ul>
+                    </div>
+
+                    <div class="tb_cell">
+                        <ul class="tb_switch">
+                            <!-- <li class="txt_switch">批量管理</li>
+                             <li class="btn_switch switch_pics" openId="viewPics">宫格</li><!-- openId 表示点击时 显示哪个id下的内容 -->
+                            <li class="btn_switch switch_list on" openId="viewList">列表</li>
+                        </ul>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+            <!-- 宫格模式 admin_mode显示各子项目的管理按钮-->
+            <section class="view view_pics " id="viewPics">
+                <!-- 批量管理内容 默认隐藏 -->
+                <div class="view_admin view_pics_admin">
+                    <!-- checkClass表示 点击后 哪些class要被选中 -->
+                    <button class="btn_check btn_check_all" checkClass="btn_check_pics"></button><label>全选</label><span class="btn btn_s1 pack_del">批量删除</span>
+                </div>
+                <h1 class="block_name">全部壁纸</h1>
+                <ul class="view_pics_wrap "><!--  -->
+                    <?php foreach ($wallpaper as $v) { ?>
+
+                        <li class="view_pics_list">
+                            <div class="pic_cont">
+                                <img src="<?php echo $v['url']; ?>">
+                                <button class="btn_check btn_check_pics"></button>
+                                <div class="view_pics_btns"><button>修改</button><button>删除</button></div>
+                            </div>
+                            <p class="pic_name"><?php echo $v['wallpaper_name'] ?></p>
+                        </li>
+                    <?php } ?>
+                </ul>
+                <div class="clear-fix"></div>
+            </section>
+
+            <!-- 列表模式 -->
+            <section class="view view_list show" id="viewList">
+                <!-- 批量管理内容 默认隐藏 -->
+                <div class="view_admin view_list_admin">
+                    <!-- checkClass表示 点击后 哪些class要被选中 -->
+                    <button class="btn_check btn_check_all" checkClass="btn_check_list"></button><label>全选</label><span class="btn btn_s1 pack_approve">批量通过</span><span class="btn btn_s1 pack_del">批量删除</span>
+                </div>
+                <table class="view_list_tb">
+                    <thead>
+                        <tr><th>壁纸</th><th>名称</th><th>标签</th><th>上传时间</th><th>分辨率</th><th>操作</th><th>状态</th></tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($wallpaper as $vlist) { ?>
+                            <tr>
+                                <td>
+                                    <button class="btn_check btn_check_list"></button>
+                                    <img src="<?php echo $vlist['url']; ?>"></td>
+                                <td><?php echo $vlist['wallpaper_name']; ?></td>
+                                <td><?php echo $targLine[$vlist['wallpaper_type']] ?></td>
+                                <td><?php echo date("Y-m-d H:i:s", $v['wallpaper_updatetime']) ?></td>
+                                <td><?php echo $vlist['wallpaper_width'] . 'X' . $vlist['wallpaper_height'] ?></td>
+                                <td>
+                                    <a class="btn_txt" href="/Admin/wallpapermy/mywallpaperedit?id=<?php echo $vlist['wallpaper_id']; ?>"
+                                       >修改</a>
+                                    <a  class="btn_txt pop_btn delBtn" openPopId="fixTipView" value="<?php echo $vlist['wallpaper_id']; ?>">删除</a></td>
+
+                                <td><?php echo $status[$vlist['wallpaper_status']] ?></td>
+                            </tr>
+                        <?php } ?>
+
+                    </tbody>
+                </table>
+            </section>
+
+        </div><!-- content end -->
+
+    </div>
+</section>
+<!-- 分页模块 -->
+<?php echo $this->render("common/pageshow.phtml"); ?>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">是否删除壁纸<span></span></p>
+                    <div class="tip_btns">
+                        <button class="btn_s2 del_ok">确定</button>
+                        <button class="btn_s2 btnCancel">取消</button>
+                    </div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+
+<script type="text/javascript">
+    var token = "<?php echo $token; ?>";
+    $(function () {
+        //标签筛选
+        $(".tag_one>li").click(function(){
+            var targetId = $(this).attr('value');
+            var status = $(".select_status").attr('val');
+            var url = "/Admin/Wallpapermy/index?token="+token+"&targId="+targetId+"&status="+status; 
+            window.location.href = url;
+        });
+
+        //状态筛选
+        $(".select_status>li").click(function(){
+            var targetId = $(".tag_one").attr('val');
+            var status = $(this).attr('val');
+            var url = "/Admin/Wallpapermy/index?token="+token+"&targId="+targetId+"&status="+status; 
+            window.location.href = url;
+        });
+
+        $(".delBtn").click(function () {
+            var wallpaperid = $(this).attr("value");
+            $(".del_ok").click(function (e) {
+                var data = "wall_id=" + wallpaperid + "&token=" + token;
+
+                var url = "/Admin/Wallpapermy/delwallpaper";
+                $(".pop_wraper").removeClass("show");
+                $.post(url, data, function (d) {
+
+                    if (d) {
+                        if (urlpar[1] != 'undefined') {
+                            window.location.href = "/Admin/wallpapermy/index/" + "?" + urlpar[1];
+                        } else {
+                            window.location.href = "/Admin/wallpapermy/index/";
+                        }
+                    }
+                });
+
+                stopPropagation(e)
+            })
+        });
+    });
+
+    function mk_wallpaper_li(lidata) {
+        var html_li = '';
+
+        $(lidata).each(function (n, v) {
+
+            html_li += '<tr><td><button class="btn_check btn_check_list">gggg</button>';
+            html_li += '<img src=' + v.url + '></td>';
+            html_li += '<td>' + v.wallpaper_type + '</td>';
+            html_li += '  <td>' + v.wallpaper_show_name + '</td>';
+            html_li += '<td>< p class = "pic_name" >' + v.wallpaper_show_name + '< /p></td>';
+            html_li += ' </tr>';
+
+        });
+        return html_li;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class="current"><a href="<?php echo $logUrl; ?>">中奖日志</a></li>
+		</ul>
+	</div>
+	
+	<div class="table_full">
+		<form action="<?php echo $logUrl; ?>" method="POST" id="addForm">
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<table width="100%" cellspacing="0" cellpadding="0">
+			
+			<tr class="tr">
+					<th class="th">活动名：</th>
+					<td class="td">
+						<select name="type_id" id="type_id">
+							<option value="0">请选择</option>
+							<?php foreach ($typeList as $k => $v) { ?>
+								<option <?php echo ($v['id'] == $params['type_id']) ? 'selected="selected"' : ''; ?> value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+			
+				<tr class="tr">
+					<th class="th">奖品状态：</th>
+					<td class="td">
+						<select name="status" id="status">
+							<option value="-2"   selected="selected">请选择</option>
+							<?php foreach ($prizeStatus as $k => $v) { ?>
+								<option <?php echo isset($params['status']) && ($k == $params['status']) ? 'selected="selected"' : ''; ?> value="<?php echo $k; ?>"><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">奖品名：</th>
+					<td class="td">
+						<select name="prize_id" id="prize_id">
+							<option value="0">请选择</option>
+							<?php foreach ($prizeGoodsList as $k => $v) { ?>
+								<option <?php echo ($v['id'] == $params['prize_id']) ? 'selected="selected"' : ''; ?> value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				
+					<tr class="tr">
+					<th class="th">时间范围</th>
+					<td class="td">
+						<input class="input" type="text" maxlength="30" id="sdate" name="sdate"
+						       value="<?php echo $params['sdate']; ?>"> 至
+						<input class="input" type="text" id="edate" maxlength="30" name="edate"
+						       value="<?php echo $params['edate']; ?>">
+
+					</td>
+				</tr>
+					<tr class="tr">
+					<th class="th">用户名：</th>
+					<td class="td"><input name="username"  type="text"  class="input"  value="<?php echo $params['username'];?>" ></td>
+					</tr>
+				
+					
+			</table>
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+			</div>
+			<input type="hidden" name="export" id="export" value="0">
+
+		<div class="h_a">
+			&nbsp; <span id="total" style="color: red;font-size:14px"></span>
+			<span style="float:left;"><input type="button" value="导出" id="downLoad"></span>
+		</div>
+		</form>
+	</div>
+	
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<th class="th">ID</th>
+				<th class="th">用户ID</th>
+				<th class="th">用户名</th>
+				<th class="th">奖品ID</th>
+				<th class="th">奖品类型</th>
+				<th class="th">奖品名</th>
+				<th class="th">奖品等级</th>
+				<th class="th">奖品状态</th>
+				<th class="th">金币数/实物ID</th>
+				<th class="th">中奖时间</th>
+				<th class="th">领奖时间</th>
+				<th class="th">过期时间</th>
+				<th class="th">用户IP</th>
+			</tr>
+			<?php foreach ($data  as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?php  echo $v['id'];?></td>
+					<td class="td" align="left"><?php  echo $v['uid'];?></td>
+					<td class="td"><?php echo $v['username'];?></td>
+					<td class='td'  align="left"><?php  echo $v['prize_id'];?></td>
+					<td class="td" align="left"><?php  echo $prizeTypes[$v['prize_type']];?></td>
+					<td class='td'><?php echo $v['prize_name'];?></td>
+					<td class="td"><?php echo $v['prize_level'] ?></td>
+					<td class="td"><?php echo $prizeStatus[$v['prize_status']]; ?></td>
+					<td class="td"><?php echo $v['prize_val'] ?></td>
+					<td class="td"><?php echo date("Y-m-d H:i:s",$v['add_time']) ?></td>
+					<td class="td"><?php echo $v['get_time']?date("Y-m-d H:i:s",$v['get_time']):'------'; ?></td>
+					<td class="td"><?php echo $v['expire_time']? date('Y-m-d H:i:s',$v['expire_time']):'-----';?></td>
+					<td class="td"><?php echo $v['user_ip'] ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+	<div class="mr10 cc">
+		<?php echo $pager; ?>
+	</div>
+	
+<script type="text/javascript">
+	$("#downLoad").bind('click', function () {
+		$("#export").val(1);
+		$("#addForm").submit();
+		$("#export").val(0);
+	});
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

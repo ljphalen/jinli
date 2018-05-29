@@ -1,0 +1,71 @@
+<{config_load file="site.conf"}>
+<{include file="public/pageHead.html"}>
+<link href="/template/default/css/validate.css" rel="stylesheet" type="text/css" />
+<script src="/template/default/js/jquery.validate.js" type="text/javascript"
+	language="javascript"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#theForm").validate({
+	});	
+});
+</script>
+<h1><span class="action-span"></span>
+<span class="action-span1">系統设置</span><span id="search_id"
+	class="action-span1"> - <{$actionText}></span>
+<div style="clear: both"></div>
+</h1>
+
+<div class="main-div">
+<form action="index.php?ac=<{$ac}>" method="post" enctype="multipart/form-data" name="theForm" id="theForm">
+<table width="100%">
+	<{if $error}>
+	<tr align="center">
+		<td colspan="2" style="color: red"><{$error}></td>
+	</tr>
+	<{/if}>
+	<tr>
+    <td colspan="3">
+    <div class="main-div">
+        <h1>
+            <div class="section_title">
+                <{$actionText}>
+            </div>
+        </h1>
+        <table id="list-table__" style="border:1px;">
+            <tbody>
+                <tr>
+                  <td align="right" nowrap="nowrap">移动费率（加坏帐）：</td>
+                    <td align="left" nowrap="nowrap"><input name="yd_pay_rate" type="text" id="yd_pay_rate" maxlength="30" value="<{$yd_pay_rate|default:''}>" /></td>
+                </tr>
+                <tr>
+                  <td align="right" nowrap="nowrap">移动税率：</td>
+                    <td align="left" nowrap="nowrap"><input name="yd_pay_tax_rate" type="text" id="yd_pay_tax_rate" maxlength="30" value="<{$yd_pay_tax_rate|default:''}>" /></td>
+                </tr>
+                <tr>
+                  <td align="right" nowrap="nowrap">联通费率（加坏帐）：</td>
+                    <td align="left" nowrap="nowrap"><input name="lt_pay_rate" type="text" id="lt_pay_rate" maxlength="30" value="<{$lt_pay_rate|default:''}>" /></td>
+                </tr>
+                <tr>
+                  <td align="right" nowrap="nowrap">联通税率：</td>
+                    <td align="left" nowrap="nowrap"><input name="lt_pay_tax_rate" type="text" id="lt_pay_tax_rate" maxlength="30" value="<{$lt_pay_tax_rate|default:''}>" /></td>
+                </tr>
+                <tr>
+                  <td align="right" nowrap="nowrap">爱贝手续费率：</td>
+                    <td align="left" nowrap="nowrap"><input name="ipay_pay_rate" type="text" id="ipay_pay_rate" maxlength="30" value="<{$ipay_pay_rate|default:''}>" /></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>    </td>
+    </tr>
+    <tr>
+        <td colspan="2"><input type="submit" name="smt" id="smt" value="保存配置"
+            class="button" /></td>
+    </tr>
+  </tbody>
+</table>
+</form>
+</div>
+
+<{include file="public/pageFoot.html"}>
+<script src="/template/default/js/common.js" type="text/javascript" language="javascript"></script>

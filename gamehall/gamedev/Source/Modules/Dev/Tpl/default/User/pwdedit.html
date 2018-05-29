@@ -1,0 +1,131 @@
+<include file="Public:header" />
+
+<div class="mainw clearfix">
+<style>
+.noticeWrap{padding: 10px 0 0 10px;}
+.pswState{padding: 10px 0 0 10px;}
+</style>
+	<include file="nav_left" />
+    <div class="rmain fl">
+   	  <h2 class="yyname">修改密码</h2>
+      <div class="formd formd3">
+      <form class="form-horizontal regform pwdedit" action="__URL__/changePwd/" id="editForm" method="post" role="form">
+      	<div class="lid">
+        	<label class="tlab"><em>* </em>当前密码：</label>
+        	<div class="colr fl">
+      	 	  <input type="password" id=oldpWd name="oldpassword" class="int" />
+         	  <span id="oldpasswordTip" class="fl"></span>
+         	</div>
+        </div>
+        <div class="lid">
+        	<label class="tlab"><em>* </em>新密码：</label>
+        	<div class="colr fl">
+      	 	  <input type="password" id="pwd" name="password" class="int" />
+         	  <span id="passwordTip" class="fl"></span>
+         	</div>
+        </div>
+        <div class="lid">
+        	<label class="tlab"><em>* </em>确认密码：</label>
+        	<div class="colr fl">
+      	 	  <input type="password" id="repwd" name="repassword" class="int" />
+      	 	  <span id="repasswordTip" class="fl"></span>
+         	</div>
+        </div>
+      	<div class="btnw">
+      		<button type="submit" class="btn-bred">确认修改</button>
+      	</div>
+      </div>
+      </form>
+    </div>
+</div>
+<load href="{:cdn('PUBLIC')}/app/validate/formValidator-4.1.1.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/themes/126/js/theme.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/themes/126/style/style.css?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/app/validate/formValidatorRegex.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/common/js/validate.js?{:C('JS_VERSION')}" />
+<load href="{:cdn('PUBLIC')}/common/js/resizeImg.js?{:C('JS_VERSION')}" />
+<script type="text/javascript">
+var gioneeReg = {
+		verifyForm : function() {
+$.formValidator.initConfig({
+	theme : "126",
+	errorFocus : false,
+	formID : "editForm",
+	mode:"AutoTip"
+});
+$("#oldpWd").formValidator({
+	onShowFixText : "6~16个字符，包括字母、数字、特殊符号，区分大小写",
+	onShow : "请输入密码",
+	onFocus : "至少1个长度",
+	onCorrect : " "
+}).inputValidator({
+	min : 6,
+	max : 16,
+	empty : {
+		leftEmpty : false,
+		rightEmpty : false,
+		emptyError : "密码两边不能有空符号，请确认"
+	},
+	onError : "密码长度错误，请确认"
+}).ajaxValidator({
+	dataType : "json",
+	async : true,
+	url : "/User/checkOldPwd/ajax/1",
+	success : function(data) {
+		if (data.status == "1")
+			return true;
+		else
+			return false;
+	},
+	buttons : $("#submit,#subVerify"),
+//	error : function(jqXHR, textStatus, errorThrown) {
+//		alert("服务器没有返回数据，可能服务器忙，请重试" + errorThrown);
+//	},
+	onError : "旧密码错误，请重新填写",
+//	onWait : "正在进行合法性校验，请稍候..."
+});
+
+$("#pwd").formValidator({
+	onShowFixText : "6~16个字符，包括字母、数字、特殊符号，区分大小写",
+	onShow : "请输入密码",
+	onFocus : "至少1个长度",
+	onCorrect : " "
+}).inputValidator({
+	min : 6,
+	max : 16,
+	empty : {
+		leftEmpty : false,
+		rightEmpty : false,
+		emptyError : "密码两边不能有空符号，请确认"
+	},
+	onError : "密码长度错误，请确认"
+}).passwordValidator({
+	compareID : "login"
+});
+
+$("#repwd").formValidator({
+	onShowFixText : "请再次输入密码",
+	onShow : "输再次输入密码",
+	onFocus : "至少1个长度",
+	onCorrect : " "
+}).inputValidator({
+	min : 1,
+	empty : {
+		leftEmpty : false,
+		rightEmpty : false,
+		emptyError : "重复密码两边不能有空符号，请确认"
+	},
+	onError : "重复密码不能为空，请确认"
+}).compareValidator({
+	desID : "pwd",
+	operateor : "=",
+	onError : "2次密码不一致，请确认"
+});
+		}
+};
+jQuery(function($) {
+	gioneeReg.verifyForm();
+});
+</script>
+<include file="Public:footer" />
+

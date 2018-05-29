@@ -1,0 +1,348 @@
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="edit_form" enctype="multipart/form-data">
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr>
+			<th>名称</th>
+			<td>
+				<input style="width:250px;" type="text" class="easyui-textbox" name="name" required="true" value="<?php echo $info['name']; ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>地址</th>
+			<td>
+				<input style="width:250px;" type="text" class="easyui-textbox" name="link" value="<?php echo $info['link']; ?>">
+			</td>
+		</tr>
+
+		<tr>
+			<th>卡片</th>
+			<td>
+				<input id="type_id" name="type_id" value="<?=$info['type_id']?>">
+			</td>
+		</tr>
+
+		<tr>
+			<th>栏目</th>
+			<td>
+				<input id="column_id" name="column_id" value="<?=$info['column_id']?>" class="easyui-combobox" data-option="valueField:'value',textField:'text'" value="">
+			</td>
+		</tr>
+
+		<tr>
+			<th>颜色</th>
+			<td><input type="text" class="easyui-textbox" name="color" value="<?php echo $info['color']; ?>"></td>
+		</tr>
+
+
+		<?php $display = ($style != 'tip_link') ? 'style="display:none;"' : '' ?>
+		<tr class="styleBox" data-mid="tip_link" <?=$display?>>
+			<th>链接格式</th>
+			<td>
+				<?php
+				$icon = $color = $text = '';
+				$ext = json_decode($info['ext'], true);
+				$icon = isset($ext['icon']) ? $ext['icon'] : '';
+				$color = isset($ext['color']) ? $ext['color'] : '';
+				$text = isset($ext['text']) ? $ext['text'] : '';
+				?>
+				<select class="easyui-combobox" name="tip_link_ext[icon]">
+					<?php
+					$tipLinkOption = array(
+						'ui-tag-radius' => 'radius',
+						'ui-tag-dot'    => 'dot',
+						'ui-tag-arrow'  => 'arrow'
+					);
+					foreach ($tipLinkOption as $k => $v) {
+						$select = ($icon == $k) ? 'selected="selected"' : '';
+						echo sprintf('<option value="%s" %s>%s</option>', $k, $select, $v);
+					}
+					?>
+				</select>
+				<input type="text" id="color" style="width:60px;" class="easyui-textbox" name="tip_link_ext[color]" value="<?php echo $color; ?>">
+				<input type="text" style="width:60px;" class="easyui-textbox" name="tip_link_ext[text]" value="<?php echo $text; ?>">
+			</td>
+		</tr>
+
+		<?php $display = ($style != 'lottery') ? 'style="display:none;"' : '' ?>
+		<tr class="styleBox" data-mid="lottery" <?=$display?>>
+			<th>彩票内容</th>
+			<td>
+				<?php
+				$ext = json_decode($info['ext'], true);
+				?>
+				<select id="lotteryType" name="lottery_ext[type]">
+					<option value="">请选择</option>
+					<?php foreach ($lotteryType as $k => $v) { ?>
+						<option value="<?php echo $v['n']; ?>" <?php if ($k == $ext['type']) echo 'selected'; ?>><?php echo $v['cn']; ?></option>
+					<?php } ?>
+				</select>
+			</td>
+		</tr>
+
+		<?php $display = ($style != 'fun_text') ? 'style="display:none;"' : '' ?>
+		<tr class="styleBox" data-mid="fun_text" <?=$display?>>
+			<th>笑话段子</th>
+			<td>
+				<textarea style="width:250px;height:80px;" name="fun_text_ext" class="easyui-textareabox"><?php echo $info['ext']; ?></textarea>
+			</td>
+		</tr>
+		<?php $display = ($style != 'fun_list') ? 'style="display:none;"' : '' ?>
+		<tr class="styleBox" data-mid="fun_list" <?=$display?>>
+			<th>笑话内容</th>
+			<td>
+				<textarea style="width:250px;height:80px;" name="fun_list_ext" class="easyui-textareabox"><?php echo $info['ext']; ?></textarea>
+			</td>
+		</tr>
+
+		<?php $display = ($style != 'topic') ? 'style="display:none;"' : '' ?>
+		<tr class="styleBox" data-mid="topic" <?=$display?>>
+			<th>专题属性</th>
+			<td>
+				<?php
+				$ext = json_decode($info['ext'], true);
+				?>
+				ID:<input type="text" id="topic_ext_id" style="width:60px;" class="easyui-textbox" name="topic_ext[id]" value="<?php echo $ext['id']; ?>">
+				描述:<input type="text" id="topic_ext_desc" style="width:250px;" class="easyui-textbox" name="topic_ext[desc]" value="<?php echo $ext['desc']; ?>">
+				<br>
+				“图片”属性无效,都通过专题ID获取对应的属性数据
+			</td>
+		</tr>
+		<?php $display = ($style != 'comic') ? 'style="display:none;"' : '' ?>
+		<tr class="styleBox" data-mid="comic" <?=$display?>>
+			<th>漫画ID</th>
+			<td>
+				<?php
+				$ext = json_decode($info['ext'], true);
+
+				?>
+				<select id="comic_id" name="comic_ext[id]">
+					<option value="">请选择</option>
+					<?php foreach ($comicList as $k => $v) { ?>
+						<option value="<?php echo $k; ?>" <?php if ($k == $ext['id']) echo 'selected'; ?>><?php echo $v['name']; ?></option>
+					<?php } ?>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<th>图片</th>
+			<td>
+				<?php
+				if (!empty($info['img'])) {
+					$img = $attachPath . $info['img'];
+					if (stristr($info['img'], 'http')) {
+						$img = $info['img'];
+					}
+					echo sprintf('<img style="height:100px;" src="%s" /><br>', $img);
+				}
+				?>
+				<input type="file" id="img_upload" name="img"/>
+			</td>
+		</tr>
+		<tr>
+			<th>开始时间</th>
+			<td>
+				<input type="text" style="width: 150px" name="start_time" class="easyui-datetimebox" value="<?php echo date('Y-m-d H:i:s', !empty($info['start_time']) ? $info['start_time'] : time()); ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>结束时间</th>
+			<td>
+				<input type="text" style="width: 150px" name="end_time" class="easyui-datetimebox" value="<?php echo date('Y-m-d H:i:s', !empty($info['end_time']) ? $info['end_time'] : strtotime('+1 year')); ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>状态</th>
+			<td>
+				<?php
+				$arr = array(0 => '关闭', 1 => '开启');
+				foreach ($arr as $k => $name):
+					$checked = $info['status'] == $k ? 'checked="checked"' : '';
+					?>
+					<input type="radio" name="status" class="input" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+				<?php endforeach; ?>
+			</td>
+		</tr>
+		<tr>
+			<th>排序</th>
+			<td>
+				<input type="text" name="sort" class="easyui-numberspinner" style="width:80px" value="<?php echo $info['sort']; ?>">
+			</td>
+		</tr>
+
+		<tr class="tr">
+			<th class="th">运营类型</th>
+			<td class="td"><select name="model_type"  id="model_type">
+					<?php foreach ($operateType as $k => $v) { ?>
+						<option value="<?php echo $k; ?>"  <?php if ($info['model_type'] == $k) echo 'selected'; ?> ><?php echo $v; ?></option>
+					<?php } ?>
+				</select></td>
+		</tr>   
+		
+		<tr class="tr"   style="display: <?php echo $info['model_id']?'':'none';?>"   id="tr_model_id">
+			<th class="th">分机型运营</th>
+			<td class="td"><select name="model_id"  id="model_id">
+					<option value="0">请选择</option>
+					<?php
+						if($info['model_type'] == 1){
+							foreach ($models as $k => $v) { ?>
+									<option value="<?php echo $v['id']; ?>" <?php if ($info['model_id'] == $v['id']) echo 'selected'; ?>><?php echo $v['key'] ?></option>
+						<?php } }else if($info['model_type'] == 2){
+									foreach($imeiList as $k=>$v){?>
+										<option value="<?php echo $v['id'];?>" <?php if($v['id'] == $info['model_id']) echo 'selected';?>><?php echo $v['title']?></option>
+						<?php }}?>
+				</select></td>
+		</tr>
+		
+		<tr class="tr">
+			<th>标签分类</th>
+			<td>
+				<select name="label[]" class="easyui-combotree" style="width:200px;"
+		        data-options="url:'/Admin/localnav/ajaxGetLabelData?id=<?php echo $id;?>',method:'get'" multiple>
+				</select>
+			</td>
+		</tr>
+		
+	</table>
+</form>
+<script>
+	$(function () {
+		$('#type_id').combobox({
+			valueField: 'value',
+			textField: 'text',
+			url: '<?= $optionUrl ?>?_skip=1&t=1',
+			onSelect: function (rec) {
+				var url = '<?= $optionUrl ?>?_skip=1&t=2&id=' + rec.value;
+				$('#column_id').combobox('reload', url);
+				$('#column_id').combobox('setValue', '');
+			}
+		});
+
+		$('#column_id').combobox({
+			valueField: 'value',
+			textField: 'text',
+			url: '<?= $optionUrl ?>?_skip=1&t=2&id=<?=$info['type_id']?>'
+		});
+
+		<?php
+		$style = array();
+		foreach($columns as $k=>$v) {
+			$style['id'.$v['id']] = $v['style'];
+		}
+		$style = Common::jsonEncode($style);
+		?>
+
+		var style = <?=$style?>;
+		$('#column_id').combobox({
+			onSelect: function (param) {
+				var attrs = 'id' + param.value;
+				$('.styleBox').hide();
+				if (style[attrs]) {
+					$('.styleBox[data-mid="' + style[attrs] + '"]').show();
+				}
+			}
+		});
+	})
+
+
+	$("#first_level").bind('change', function () {
+		var parentId = $(this).val();
+		if (parentId > 0) {
+			$.ajax({
+				'type': 'post',
+				'dataType': 'json',
+				'data': {'token': '<?php echo $token;?>', 'pid': parentId},
+				'url': '/Admin/Label/ajaxGetDataByParentId',
+				'success': function (e) {
+					$("#hidden_second_level").val(e);
+
+					console.log(e);
+					var content = '';
+					$.each(e.data, function (i, m) {
+						content += '<select name="label_type[' + (+i + 1) + ']" id="label_type[' + (+i + 1) + ']" data-index="' + (1 + i) + '"><option value="0">请选择</option>';
+						content += '<option value="' + m.id + '">' + m.name + '</option>';
+						content += '</select>';
+					});
+
+					$("#span_label_wrap").html(content);
+					$("#tr_second_level").show();
+				}
+			});
+		}
+	});
+
+	$('#span_label_wrap').delegate('select', 'change', function () {
+		var that = $(this);
+		var index = $(this).data('index');
+		var pid = $(this).val();
+		$.ajax({
+			'type': 'post',
+			'dataType': 'json',
+			'data': {'token': '<?php echo $token;?>', 'pid': pid},
+			'url': '/Admin/Label/ajaxGetDataByParentId',
+			'success': function (e) {
+				var html = "";
+				$.each(e.data, function (i, m) {
+					html += "<label><input type='checkbox'  name='label_id[" + pid + "][]'  value='" + m.id + "'>" + m.name + "</label>";
+				});
+
+				if (!$('.lid_' + index)[0]) {
+					$("#td_label_id").append('<div class="lid_' + index + '"><h3>' + that.find("option:selected").text() + '</h3>' + html + '</div>');
+				}
+
+				console.log(pid);
+
+				if (pid == 0) {
+					$('.lid_' + index).remove();
+				}
+
+				$("#tr_label_id").show();
+			}
+		});
+	});
+
+
+	$("#model_type").bind('change', function () {
+		var flag = $("#model_type option:selected").val();
+		if (flag == '1') {
+			$.ajax({
+				'url': '/Admin/Ng/ajaxGetModelInfo',
+				'type': 'post',
+				'dataType': 'json',
+				'data': {'token': '<?php echo $token;?>'},
+				'success': function (e) {
+					var txt = "<option value='0' >请选择</option>";
+					$.each(e.data, function (i, m) {
+						var temp = '';
+						if (m.model)        temp += '机型  ' + m.model;
+						if (m.version)        temp += '  版本 ' + m.version;
+						if (m.operator)    temp += '  运营商  ' + m.operator;
+						if (m.province)    temp += '  省份 ' + m.province;
+						if (m.city)                temp += '  城市  ' + m.city;
+						txt += "<option  value='" + m.id + "'>" + temp + "</option>";
+					});
+					$("#model_id").html(txt);
+					$("#tr_model_id").show();
+				}
+			});
+		} else if(flag == '2'){
+			$.ajax({
+				'url': '/Admin/Ng/ajaxImeiDataList',
+				'type': 'post',
+				'dataType': 'json',
+				'data': {'token': '<?php echo $token;?>'},
+				'success': function (e) {
+					var txt = "<option value='0' >请选择</option>";
+					$.each(e.data, function (i, m) {
+						txt += "<option value='" + m.id + "'>" + m.title + "</option>";
+					});
+					$("#model_id").html(txt);
+					$("#tr_model_id").show();
+				}
+			});
+			}else {
+			$("#tr_model_id").hide();
+			$("#model_id").val(0);
+		}
+	});
+</script>

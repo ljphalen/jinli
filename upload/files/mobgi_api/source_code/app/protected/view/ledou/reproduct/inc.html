@@ -1,0 +1,1010 @@
+<script type="text/html" id="DLgridPopUp">
+<table>
+    <thead>
+        <tr>
+            <th>规则名</th>
+            <th>内容</th>
+            <th>数值</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="height:100px;" rowspan="2">
+                <select class="select">
+                <!-- loop ad_limit_item -->
+                    <option id="{{ad_limit_item' key}}" value="{{ad_limit_item' key}}">{{ad_limit_item' key}}</option>
+                <!-- endloop -->
+                </select>
+            </td>
+            <td>每天</td>
+            <td><input name="day_limit" type="text" class="iText number" /></td>
+        </tr>
+        <tr>
+            <td>总数</td>
+            <td><input name="total_limit" type="text" class="iText number" /></td>
+        </tr>
+    </tbody>
+</table>
+<div style="text-align:center;padding:10px 0;">
+    <a href="javascript:void(0)" class="btn" id="ok">确定</a>
+    <a href="javascript:void(0)" class="cancel">取消</a>
+</div>
+</script>
+<script type="text/html" id="DLJHgridPopUp">
+<div class="gridPopUp">
+<ul class="form">
+    <li style="margin-bottom:10px;">
+          <span class="label">开始时间：</span>
+          <div class="fc">
+                <input type="text" name="start_time" class="iText datepicker" />
+          </div>
+    </li>
+    <li style="margin-bottom:10px;">
+         <span class="label">结束时间：</span>
+         <div class="fc">
+              <input type="text" name="end_time"  class="iText datepicker" />
+         </div>
+    </li>
+</ul>
+</div>
+<div style="text-align:center;padding:10px 0;">
+    <a href="javascript:void(0)" class="btn" id="ok">确定</a>
+    <a href="javascript:void(0)" class="cancel">取消</a>
+</div>
+</script>
+<script type="text/html" id="clicktypePopUp">
+<div class="gridPopUp">
+<ul class="form">
+                <li>
+                            <span class="label" style="width:150px">广告目标点击类型：</span>
+                            <div class="fc">
+                                <p>
+                                    <select name="" id="adclickType">
+                                        <option value="1">和产品一致</option>
+                                        <option value="2">启动应用</option>
+                                        <option value="3">使用浏览器打开URL</option>
+                                        <option value="4">使用内建浏览器打开URL</option>
+                                        <option value="5">打开列表广告</option>
+                                        <option value="6">自定义动作</option>
+                                        <option value="100" selected>无动作</option>
+                                    </select>
+                                    <input type="hidden" style="width:800px;" class="iText" name="clictypeobj" id="adclictypeobj" value='' />
+                                </p>
+                                <div id="adclickTypeBox" style="display:none">
+                                    <div style="display:none" id="adclickType_1">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">包名：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="text" readonly class="iText" id="adpackage_name" name="product_package" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <span class="adclicktypelebel">安装包大小：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="text" readonly name="package_size" id="adpackage_size" class="iText" />
+                                                    <input type="hidden" value="自动获取" onclick="javascript:packageSize()" class="submit" />
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <span class="adclicktypelebel">文件泛MD5：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="text" readonly name="file_md5" id="adfile_md5" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="adclickType_2">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">包名：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="text" class="iText" name="package_name" id="adpackage_name_start_app" style="width:200px;" />
+                                                    <input type="text" class="iText" name="activity" id="adpactivity_start_app" style="width:211px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="adclickType_3">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">使用浏览器打开URL：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="hidden" name="direct_url_open" id="addirect_url" value="1" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="adclickType_4">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">使用内建浏览器打开URL：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="hidden" name="inner_url_open" id="adinner_url" value="1" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="adclickType_5">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">打开列表广告：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="hidden" name="ad_list_open" id="adad_list" value="1" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div style="display:none" id="adclickType_6">
+                                        <ul>
+                                            <li>
+                                                <span class="adclicktypelebel">自定义动作：</span>
+                                                <div class="adclicktypediv">
+                                                    <input type="text" name="user_action_value" id="aduser_action_value" class="iText" style="width:300px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                <li id='ad_target_box' style="display: none">
+                    <span class="label" style="width:150px" >广告目标：</span>
+                    <div class="fc">
+                        <input type="text" style="width:200px;" value="" name="ad_target" id="ad_target" class="iText">
+                    </div>
+                </li>
+            </ul>
+</div>
+<div style="text-align:center;padding:10px 0;">
+    <a href="javascript:void(0)" class="btn" id="ok">确定</a>
+    <a href="javascript:void(0)" class="cancel">取消</a>
+</div> 
+</script>
+<script type="text/html" id="pushPopUp">
+<div class="gridPopUp">
+<ul class="form">
+    <li style="margin-bottom:10px;">
+          <span class="label">文案标题：</span>
+          <div class="fc">
+                <input type="text" name="title" class="iText" />
+          </div>
+    </li>
+    <li style="margin-bottom:10px;">
+         <span class="label">文案详情：</span>
+         <div class="fc">
+              <input type="text" name="content"  class="iText" />
+         </div>
+    </li>
+</ul>
+</div>
+<div style="text-align:center;padding:10px 0;">
+    <a href="javascript:void(0)" class="btn" id="ok">确定</a>
+    <a href="javascript:void(0)" class="cancel">取消</a>
+</div>
+</script>
+</body>
+<script>
+$(function(){
+    //产品目标点击类型
+    var param = {};
+    function initParam(_v){
+        var _v = _v || $("#clickType").val();
+        if(_v == 1){
+            param = {};
+            param.inner_install_manage = {};
+        }
+        if(_v == 2){
+            param = {};
+            param.start_app = {};
+        }
+        if(_v == 3){
+            param = {};
+            param.direct_url = {};
+        }
+        if(_v == 4){
+            param = {};
+            param.inner_url = {};
+        }
+        if(_v == 5){
+            param = {};
+            param.ad_list = {};
+        }
+        if(_v == 6){
+            param = {};
+            param.user_action = {};
+        }
+         $.each($("#clickType_" + _v).find("input"),function(){
+            if($(this).hasClass("submit")){
+                return true;//跳过“自动获取”按钮的当次循环
+            }
+            if(_v == 1){
+                 param.inner_install_manage[$(this).attr("name")] = $(this).val();
+            }
+             if(_v == 2){
+                 param.start_app[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 3){
+                 param.direct_url[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 4){
+                 param.inner_url[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 5){
+                 param.ad_list[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 6){
+                 param.user_action[$(this).attr("name")] = $(this).val();
+             }
+        });
+         if(_v == 0){
+            $("input[name='clictypeobj']").val("").change();
+         }else{
+            $("input[name='clictypeobj']").val(obj2str(param)).change();
+        }
+    }
+    
+    //插图产品目标点击类型
+    $("#clickType").change(function(){
+        var _v = $(this).val();
+        if(_v != 0){
+                if(_v!=3 && _v!=4 && _v!=5 ){
+                    $("#clickTypeBox").show();
+                    $("#clickType_" + _v).show().siblings().hide();
+                }else{
+                    $("#clickTypeBox").hide();
+                }
+        }else{
+            param = {'no_action':''};
+            $("#clickTypeBox").hide();
+        }
+        initParam(_v);
+    });
+    $("#clickTypeBox").find("input:text").change(function(){
+        initParam($("#clickType").val());
+    });
+    
+    //视频产品目标点击类型
+    $("#videoClickType").change(function(){
+        var _v = $(this).val();
+        if(_v != 0){
+        	 $("#videoClickTypeBox").show();
+             $("#videoClickType_" + _v).show().siblings().hide();
+                if(_v!=3 && _v!=4 && _v!=5 && _v!=2    ){
+                    $("#videoClickTypeBox").show();
+                    $("#videoClickType_" + _v).show().siblings().hide();
+                }else{
+                    $("#videoClickTypeBox").hide();
+                }
+        }else{
+            param = {'no_action':''};
+            $("#videoClickTypeBox").hide();
+        }
+        initVideoParam(_v);
+    });
+    
+    $("#videoClickTypeBox").find("input:text").change(function(){
+    	initVideoParam($("#videoClickType").val());
+    });
+    
+    function initVideoParam(_v){
+        var _v = _v || $("#videoClickType").val();
+        if(_v == 1){
+            param = {};
+            param.video_inner_install_manage = {};
+        }
+        if(_v == 2){
+            param = {};
+            param.video_toward_market = {};
+        }
+        if(_v == 3){
+            param = {};
+            param.video_inner_url_open = {};
+        }
+        if(_v == 4){
+            param = {};
+            param.video_out_url_open = {};
+        }
+        if(_v == 5){
+            param = {};
+            param.video_ad_list_open = {};
+        }
+        if(_v == 6){
+            param = {};
+            param.video_user_action_value = {};
+        }
+         $.each($("#videoClickType_" + _v).find("input"),function(){
+            if($(this).hasClass("submit")){
+                return true;//跳过“自动获取”按钮的当次循环
+            }
+            if(_v == 1){
+                 param.video_inner_install_manage[$(this).attr("name")] = $(this).val();
+            }
+             if(_v == 2){
+                 param.video_toward_market[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 3){
+                 param.video_inner_url_open[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 4){
+                 param.video_out_url_open[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 5){
+                 param.video_ad_list_open[$(this).attr("name")] = $(this).val();
+             }
+             if(_v == 6){
+                 param.video_user_action_value[$(this).attr("name")] = $(this).val();
+             }
+        });
+         if(_v == 0){
+            $("input[name='videoclictypeobj']").val("").change();
+         }else{
+            $("input[name='videoclictypeobj']").val(obj2str(param)).change();
+        }
+    }
+    
+    //导量限制
+    function showPopUpGridDL(id,tr){
+        var data = $.parseJSON($("input[name='stat_limit']").val()) || {};
+        var $content = $('<div class="grid"></div>').append($("#DLgridPopUp").html());
+        var PopUp = jDialog({
+            width:400,
+            height:200,
+            content:$content
+        });
+        var k,day_limit,total_limit;
+        if(tr){
+            $content.find("select").val(id);
+            $content.find("input[name='day_limit']").val(tr.children(":eq(2)").text());
+            $content.find("input[name='total_limit']").val(tr.children(":eq(4)").text());
+        }
+        $content.find("#ok").click(function(){
+            k = $content.find("select").children("option[selected]").text();
+            var flag =  $content.find("select").children("option[selected]").val();
+            var check = true;
+            day_limit =  $content.find("input[name='day_limit']").val();
+            total_limit = $content.find("input[name='total_limit']").val();
+            if(day_limit=="" || total_limit==''){
+                alert("数值不能为空");
+                return false;
+            }
+            if(Number(day_limit)>999999999 ||Number(total_limit)>999999999){
+                alert("最大数值不得超过999999999");
+                return false;
+            }
+            if(Number(day_limit)>Number(total_limit)){
+                alert("每天的数值不能大于总数");
+                return false;
+            }
+            $("#DLGrid").find("tr").each(function(){
+                if($(this).children(":eq(0)").text() == k){
+                    check = false;
+                    return false;
+                }
+            });
+            if(!check){
+                alert("已有相同规则名！");
+                if(PopUp){PopUp.close();}
+                return false;
+            }
+            if(tr){
+                tr.children(":eq(0)").text(k);
+                tr.children(":eq(0)").attr("id", k);
+                tr.children(":eq(2)").text(day_limit);
+                tr.children(":eq(4)").text(total_limit);
+            }else{
+                var str = '<tr>'+
+                        '<td id="'+ flag +'">' + k + '</td>'+
+                        '<td>每天</td>'+
+                        '<td>' + day_limit + '</td>'+
+                        '<td>总数</td>'+
+                        '<td>' + total_limit + '</td>'+
+                        '<td>'+
+                            '<a title="编辑" class="edit" href="javascript:void(0)"></a> | <a title="删除" class="del" href="javascript:void(0)"></a>'+
+                        '</td>'+
+                    '</tr>';
+                $("#DLGrid").find("tbody").append(str);
+            }
+            if(PopUp){PopUp.close();}
+            initDLGridData();
+        });
+        $content.find(".cancel").click(function(){
+            if(PopUp){PopUp.close();}
+        });
+    }
+    $("#addDL").click(function(){
+        showPopUpGridDL();
+    });
+    $("#DLGrid").find(".edit").live("click",function(){
+        var tr = $(this).parents("tr");
+        showPopUpGridDL(tr.children(":eq(0)").attr("id"),tr);
+    });
+    $("#DLGrid").find(".del").live("click",function(){
+        $(this).parents("tr").remove();
+        initDLGridData();
+    });
+    function initDLGridData(){
+        var data = {};
+        $("#DLGrid").find("tbody").children().each(function(){
+            var id = $(this).children(":eq(0)").attr("id");
+            data[id] = {
+                "day_limit":$(this).children(":eq(2)").text(),
+                "total_limit":$(this).children(":eq(4)").text()
+            };
+        });
+        if($.isEmptyObject(data)){
+            $("input[name='stat_limit']").val("").change();
+        }else{
+            $("input[name='stat_limit']").val(obj2str(data)).change();
+        }
+    }
+    //导量计划
+    function showPopUpGridDLJH(id,tr){
+        var data = $.parseJSON($("input[name='stat_plan']").val()) || {};
+        var $content = $('<div class="grid"></div>').append($("#DLJHgridPopUp").html());
+        var PopUp = jDialog({
+            width:400,
+            height:200,
+            content:$content
+        });
+        $('.datepicker').datepicker({
+            changeMonth:true,
+            changeYear:true,
+            minDate:new Date()
+        });
+        $('.datepicker').datepicker('option','dateFormat','yy-mm-dd');
+        $("input[name='start_time']").change(function(){
+            var now = $(this).val();
+             $("input[name='end_time']").datepicker('option','minDate',new Date(now));
+        })
+        if(tr){
+            $content.find("input[name='start_time']").val(tr.children(":eq(1)").text());
+            $content.find("input[name='end_time']").val(tr.children(":eq(2)").text());
+        }
+        $content.find("#ok").click(function(){
+            var start_time =  $content.find("input[name='start_time']").val() || "Now";
+            var end_time =  $content.find("input[name='end_time']").val() || "Never";
+            if(id){
+                tr.children(":eq(1)").text(start_time);
+                tr.children(":eq(2)").text(end_time);
+            }else{
+                var num = $("#DLJHGrid").find("tbody").children().size();
+                var str = '<tr>'+
+                                '<td>'+(num+1)+'</td>'+
+                                '<td>'+start_time+'</td>'+
+                                '<td>'+end_time+'</td>'+
+                                '<td>'+
+                                    '<a title="更新" class="edit" href="javascript:void(0)"></a> | <a title="删除" class="del" href="javascript:void(0)"></a>'+
+                                '</td>'+
+                            '</tr>';
+                $("#DLJHGrid").find("tbody").append(str);
+            }
+            initStatPlanData();
+            if(PopUp){PopUp.close();}
+        });
+        $content.find(".cancel").click(function(){
+            if(PopUp){PopUp.close();}
+        });
+    };
+    //新增push广告
+    function showPopUpPUSH(id,tr){
+        var $content = $('<div class="grid"></div>').append($("#pushPopUp").html());
+        var PopUp = jDialog({
+            width:400,
+            height:200,
+            content:$content
+        });
+        if(tr){
+            $content.find("input[name='title']").val(tr.children(":eq(1)").text());
+            $content.find("input[name='content']").val(tr.children(":eq(2)").text());
+        }
+        $content.find("#ok").click(function(){
+            var title =  $content.find("input[name='title']").val();
+            var content =  $content.find("input[name='content']").val();
+            if(id){//修改
+                tr.children(":eq(1)").text(title);
+                tr.children(":eq(2)").text(content);
+            }else{//新增
+                var num = $("#ad_title").find("tbody tr").children().size()+1;
+                 var str = '<tr>' +
+                    '<td>'+num+'<input type="hidden" class="iText" name="pushid[]" value=""/>' +
+                    '<input type="hidden" class="iText" name="content[]" value="'+content+'"/>'+
+                    '<input type="hidden" class="iText" name="ad_type[]" value="2"/></td>'+
+                    '<td>文案</td>' +
+                    '<td>PUSH</td>' +
+                    '<td><input type="hidden" class="iText" name="push_title[]" value="'+title+'"/>' +title+ '</td>' +
+                    '<td><input type="hidden" class="iText" name="push_state[]" id="istate_push_'+num+'" value="1"/>' +
+                    ' <span><input type="radio" checked onclick="javascript:$(\'#istate_push_'+num+'\').val(this.value)" name="state_push_'+num+'" value="1" class="radio"><lable>on</lable></span>' +
+                    '<span><input type="radio"  onclick="javascript:$(\'#istate_push_'+num+'\').val(this.value)" name="state_push_'+num+'" value="0" class="radio"><lable>off</lable></span>' +
+                    '</td>' +
+                    ' <td><input type="text" class="iText required" name="push_rate[]" value="0" style="width:40px"></td>' +
+                    ' <td></td>' +
+                    ' <td></td>' +
+                    '<td>' +
+                    '<input type="hidden" class="iText" name="push_ad_target[]" value=""/><input type="hidden" class="iText" name="push_ad_click_type_object[]" value=""/><a title="自定义点击动作" class="edit editPUSH" href="javascript:void(0)"></a> | <a title="删除" class="del" href="javascript:void(0)"></a>' +
+                    '</td>' +
+                    '</tr>';
+                $("#ad_title").find("tbody").append(str);
+            }
+            //initStatPlanData();
+            if(PopUp){PopUp.close();}
+        });
+        $content.find(".cancel").click(function(){
+            if(PopUp){PopUp.close();}
+        });
+    };
+    
+    //显示产品目标点击类型
+    function showPopUpClickType(adtaret,adclicktype){
+        var $content = $('<div class="grid"></div>').append($("#clicktypePopUp").html());
+        var PopUp = jDialog({
+            width:700,
+            height:400,
+            content:$content
+        });
+        $content.find("#ok").click(function(){
+            initadparamad($("#adclickType").val(),adtaret,adclicktype);
+            if(PopUp){PopUp.close();}
+        });
+        $content.find(".cancel").click(function(){
+            if(PopUp){PopUp.close();}
+        });
+    };
+    //push
+    $(".addPUSH").click(function(){
+        showPopUpPUSH();
+    });
+    $(".editPUSH").find(".edit").live("click",function(){
+        var tr = $(this).parents("tr");
+        showPopUpPUSH(tr.children(":eq(0)").text(),tr);
+    });
+    $(".editPUSH").find(".del").live("click",function(){
+        $(this).parents("tr").remove();
+        
+        //initStatPlanData();
+    });
+    
+    //导量计划
+    $("#addDLJH").click(function(){
+        showPopUpGridDLJH();
+    });
+    $("#DLJHGrid").find(".edit").live("click",function(){
+        var tr = $(this).parents("tr");
+        showPopUpGridDLJH(tr.children(":eq(0)").text(),tr);
+    });
+    $("#DLJHGrid").find(".del").live("click",function(){
+        $(this).parents("tr").remove();
+        initStatPlanData();
+    });
+    
+    function initStatPlanData(){
+        var data = {"stat_plan":[]};
+        $("#DLJHGrid").find("tbody").children().each(function(){
+            var obj = {}
+            obj = {
+              "start_time":$(this).children(":eq(1)").text(),
+               "end_time":$(this).children(":eq(2)").text()
+            };
+            data.stat_plan.push(obj);
+        });
+        if(data.stat_plan.length == 0){
+            $("input[name='stat_plan']").val("").change();
+        }else{
+            $("input[name='stat_plan']").val(obj2str(data)).change();
+        }
+    }
+    
+    //插图全部平均
+    $(".averaged").live("click",function(){
+       for(var y=0; y<4;y++){
+            //var rateinput =  $(this).parent(".gridTtitle").next("table").find("input[name='"+adtype[y]+"_state[]'][value='1']").parent().next().find("input[name='"+adtype[y]+"_rate[]']");
+         var rateinput =  $(this).parent(".gridTtitle").next("table").find("input[name='ad_type[]'][value='"+y+"']").parent().parent().find("td:eq(4)").find("input:eq(0)[value='1']").parent().next().find("input");
+            var numlength=rateinput.length;
+            if(numlength>0){
+                 var i=1;
+                 var totalrate_num=0;
+                 $.each(rateinput,function(){
+                      rate_num=Number((1000/numlength).toFixed(0));
+                      if(i==numlength){
+                          rate_num=1000 - totalrate_num;
+                      }else{
+                          totalrate_num=totalrate_num+rate_num;
+                      }
+                      if($(this).parent().prev("td").find("input[type='hidden']").attr("value")==1){
+                         $(this).val((rate_num/1000)).change();
+                      }
+                      i++;
+                 });
+            }
+       }
+    });
+      
+    //视频全部平均
+    $(".videoAveraged").live("click",function(){
+            //var rateinput =  $(this).parent(".gridTtitle").next("table").find("input[name='"+adtype[y]+"_state[]'][value='1']").parent().next().find("input[name='"+adtype[y]+"_rate[]']");
+         var rateinput =  $(this).parent(".gridTtitle").next("table").find("input[name='incentive_video_ad_id[]']").parent().parent().find("td:eq(3)").find("input:eq(0)[value='1']").parent().next().find("input");
+            var numlength=rateinput.length;
+            // alert(numlength);
+            if(numlength>0){
+                 var i=1;
+                 var totalrate_num=0;
+                 $.each(rateinput,function(){
+                	
+                      rate_num=Number((1000/numlength).toFixed(0));
+                      if(i==numlength){
+                          rate_num=1000 - totalrate_num;
+                      }else{
+                          totalrate_num=totalrate_num+rate_num;
+                      }
+                      if($(this).parent().prev("td").find("input[type='hidden']").attr("value")==1){
+                         $(this).val((rate_num/1000)).change();
+                      }
+                      i++;
+                 });
+            }
+  
+    });
+    
+  
+    //编辑广告列表
+    $("#adList").find(".clickTypeEdit").live("click",function(){
+        var adtarget=$(this).parent().parent().find("td:eq(9) input:eq(0)");
+        var adclicktype=$(this).parent().parent().find("td:eq(9) input:eq(1)");
+        showPopUpClickType(adtarget,adclicktype);
+        $("#adclickType").change(function(){
+            selectAdClickType(adtarget,adclicktype)
+        });
+        iniadClickType(adclicktype)
+        $("#ad_target").val(adtarget.val());
+    });
+    
+    //编辑广告列表
+    $("#adList").find(".clickTypeEdit").live("click",function(){
+        var adtarget=$(this).parent().parent().find("td:eq(9) input:eq(0)");
+        var adclicktype=$(this).parent().parent().find("td:eq(9) input:eq(1)");
+        showPopUpClickType(adtarget,adclicktype);
+        $("#adclickType").change(function(){
+            selectAdClickType(adtarget,adclicktype)
+        });
+        iniadClickType(adclicktype)
+        $("#ad_target").val(adtarget.val());
+    });
+    //删除广告列表
+    $("#adList").find(".del").live("click",function(){
+        var tr = $(this).parents("tr");
+        tr.remove();
+//        if(tr.siblings().size() == 0){
+//            tr.parents(".tablebox").remove();
+//        }else{
+//            tr.remove();
+//        }
+        ajaxGET("/reproduct/addel","ad_info_id="+tr.children(":eq(0)").children(":eq(1)").val()+"&rid="+tr.children(":eq(0)").children(":eq(2)").val()+"&type"+tr.children(":eq(0)").children(":eq(3)").val(),function(data){
+                
+        });
+        return false;
+    });
+  //删除视频广告列表
+    $("#adVideoList").find(".delete").live("click",function(){
+    	var tr = $(this).parents("tr");
+    	 jConfirm("是否确定要删除？", function() {
+    	        tr.remove();
+         });    
+        return false;
+    });
+    
+    
+    iniClickType();//初始化插图点击类型
+    iniVideoClickType();//初始化视频点击类型
+});
+
+
+
+function checkaveraged(){
+        for(var y=0; y<3;y++){
+            //var rateinput =  $(this).parent(".gridTtitle").next("table").find("input[name='"+adtype[y]+"_state[]'][value='1']").parent().next().find("input[name='"+adtype[y]+"_rate[]']");
+          var rateinput =  $(".averaged").parent(".gridTtitle").next("table").find("input[name='ad_type[]'][value='"+y+"']").parent().parent().find("td:eq(4)").find("input:eq(0)[value='1']").parent().next().find("input");
+            //var rateinput =  $(".gridTtitle").next("table").find("input[name='ad_type[]'][value='"+y+"']").parent().parent().find("td:eq(4)").find("input:eq(0)[value='1']").parent().next().find("input");
+            var numlength=rateinput.length;
+            if(numlength>0){
+                 var i=1;
+                 var totalrate_num=0;
+                 $.each(rateinput,function(){
+                      if($(this).parent().prev("td").find("input[type='hidden']").attr("value")==1){
+                          totalrate_num = FloatAdd(totalrate_num,$(this).val());
+                      }
+                      i++;
+                 });
+                 if(totalrate_num!=1){
+                     return false;
+                 }
+            }
+       }
+        
+        //视频平均分配检查
+      var videorateinput   =  $(".videoAveraged").parent(".gridTtitle").next("table").find("input[name='incentive_video_ad_id[]']").parent().parent().find("td:eq(3)").find("input:eq(0)[value='1']").parent().next().find("input");
+        var videonumlength = videorateinput.length;
+        if(videonumlength>0){
+             var i=1;
+             var video_totalrate_num=0;
+             $.each(videorateinput,function(){
+                  if($(this).parent().prev("td").find("input[type='hidden']").attr("value")==1){
+                	  video_totalrate_num = FloatAdd(video_totalrate_num, $(this).val());
+                  }
+                  i++;
+             });
+             if(video_totalrate_num!=1){
+                 return false;
+             }
+        }
+       return true;
+    }
+    
+function str2json(str){ 
+    var json = (new Function("return " + str))(); 
+    return json; 
+} 
+
+function iniVideoClickType(){
+	
+    var clickobj=$("#videoclictypeobj").val();
+    if(clickobj!=''){
+     
+        $("#videoClickType_1").hide();
+        clickobj=str2json(clickobj);       
+        if(typeof clickobj.video_inner_install_manage!="undefined"){
+          
+            $("#videoClickTypeBox").show();
+            $("#videoClickType").val(1);
+            $("#videoClickType_1").show();
+            $("#video_Package_name").val(clickobj.video_inner_install_manage.video_Package_name);
+            $("#video_package_size").val(clickobj.video_inner_install_manage.video_package_size);
+            $("#video_file_md5").val(clickobj.video_inner_install_manage.video_file_md5);
+        }
+        if(typeof clickobj.video_toward_market!="undefined"){
+            $("#videoClickType").val(2);
+        }
+        if(typeof clickobj.video_inner_url_open!="undefined"){
+            $("#videoClickType").val(3);
+        }
+        if(typeof clickobj.video_out_url_open!="undefined"){
+            $("#videoClickType").val(4);
+        }
+        if(typeof clickobj.video_ad_list_open!="undefined"){
+            $("#videoClickType").val(5);
+        }
+        if(typeof clickobj.video_user_action_value!="undefined"){
+            $("#videoClickType").val(6);
+            $("#videoClickType_6").show();
+            $("#user_action_value").val(clickobj.user_action.user_action_value);
+        }
+        if(typeof clickobj.no_action!="undefined"){
+            $("#videoClickType").val(0);
+            $("#videoClickType_0").show();
+        }
+    }
+}
+
+function iniClickType(){
+        var clickobj=$("#clictypeobj").val();
+        if(clickobj!=''){
+          
+            $("#clickType_1").hide();
+            clickobj=str2json(clickobj);
+            if(typeof clickobj.inner_install_manage!="undefined"){
+            	 $("#clickTypeBox").show();
+                $("#clickType").val(1);
+                $("#clickType_1").show();
+                $("#package_name").val(clickobj.inner_install_manage.product_package);
+                $("#package_size").val(clickobj.inner_install_manage.package_size);
+                $("#file_md5").val(clickobj.inner_install_manage.file_md5);
+            }
+            if(typeof clickobj.start_app!="undefined"){
+                $("#clickType").val(2);
+                $("#clickType_2").show();
+                $("#package_name_start_app").val(clickobj.start_app.package_name);
+                $("#activity_start_app").val(clickobj.start_app.activity);
+            }
+            if(typeof clickobj.direct_url!="undefined"){
+                $("#clickType").val(3);
+            }
+            if(typeof clickobj.inner_url!="undefined"){
+                $("#clickType").val(4);
+            }
+            if(typeof clickobj.ad_list!="undefined"){
+                $("#clickType").val(5);
+            }
+            if(typeof clickobj.user_action!="undefined"){
+            	$("#clickTypeBox").show();
+                $("#clickType").val(6);
+                $("#clickType_6").show();
+                $("#user_action_value").val(clickobj.user_action.user_action_value);
+            }
+            if(typeof clickobj.no_action!="undefined"){
+            	 $("#clickTypeBox").show();
+                $("#clickType").val(0);
+                $("#clickType_0").show();
+            }
+        }
+    }
+function packageSize(type){
+	 var url ;
+	if(type == 1){
+	    url=$("#purl").val();
+        $("#package_size").val("");
+	}else{
+		 url=$("#video_product_url").val();
+	     $("#video_package_size").val("");
+	}
+    if(url==""){
+        jAlert("请先填写产品目标");
+        return false;
+    }
+    if(!CheckUrl(url)){
+        jAlert("产品目标所填写URL非法");
+        return false;
+    }
+    $.get("/product/packageSize", { url: url },function(data){
+    	if(type == 1){
+    	      $("#package_size").val(data.packagesize).change();
+    	      $("#adpackage_size").val(data.packagesize).change();
+    	}else{
+  	     	$("#video_package_size").val(data.packagesize).change();
+    	}
+  
+    }, "json");
+}
+
+function submitad(){//提交广告
+    
+    var ad_tile=$("#ad_title").val();
+    var ad_desc=$("#ad_desc").val();
+    var ad_type=$("#adType").val();
+    var ad_pic_url=$("#ad_pic_url").val();
+    
+    var show_time=$("#show_time").val();
+    
+    var screen_type=$("input:radio[name='screen_type']:checked").val();
+    var screen_ratio=$("#screen_ratio").val();
+    
+    var ad_name=$("#ad_name").val();
+    var ad_subdesc=$("#ad_subdesc").val();
+    var ad_pos=$("#ad_pos").val();
+    
+    if(ad_tile==""){
+            alert("请填写标题");
+            $("#ad_title").focus();
+            return false;
+    }
+    if(ad_desc==""){
+            alert("请填写描述");
+            $("#ad_desc").focus();
+            return false;
+    }
+    if(screen_ratio==""){
+            alert("请填写屏幕比例");
+            $("#screen_ratio").focus();
+            return false;
+    }
+    if(isNaN(screen_ratio) || screen_ratio>1){
+            alert("屏幕比例只能为数字且不能大于1");
+            $("#screen_ratio").focus();
+            return false;
+    }
+    if(ad_pic_url==""){
+            alert("请填写广告图标地址");
+            $("#ad_pic_url").focus();
+            return false;
+    }
+    if(ad_pos==null){
+            alert("该类下暂无自定义广告类型,请在左边菜单'自定义广告类型'中添加自定义广告类型后再操作");
+            $("#ad_pos").focus();
+            return false;
+    }
+    if(ad_pos=="0" || ad_pos==null){
+            alert("请选择自定义广告类型");
+            $("#ad_pos").focus();
+            return false;
+    }
+    if($("#adclickType").val()==3 || $("#adclickType").val()==4){
+        if($("#ad_target").val()==""){
+            alert("请填写广告目标")
+            $("#ad_target").focus()
+            return false;
+        }
+    }
+    
+    if(ad_type==1 || ad_type==2){
+        if(ad_name==""){
+            alert("请填写标题");
+            $("#ad_name").focus();
+            return false;
+        }
+        if(ad_subdesc==""){
+            alert("请填写描述");
+            $("#ad_subdesc").focus();
+            return false;
+        }
+    }else{
+       if(show_time==""){
+            alert("请填写显示时长");
+            $("#show_time").focus();
+            return false;
+        }
+        if(typeof screen_type=="undefined"){
+            alert("请选择屏幕支持方向");
+            $("#screen_type").focus();
+            return false;
+        } 
+    }
+    title=$("#ad_title").val();
+    if(ad_type==0){
+        if($("input[name=screen_type]").get(0).checked && title.search("横屏")==-1){//横屏
+            alert("标题与屏幕支持类型不相符");
+            return false
+        }
+        if($("input[name=screen_type]").get(1).checked && title.search("竖屏")==-1){//横屏
+            alert("标题与屏幕支持类型不相符");
+            return false
+        }
+    }
+    
+    return true;
+}
+function getAdPos(type,subtype,defaults){
+    var url="/adpostion/getpos";
+    var arg="type="+type+"&subtype="+subtype;
+    var defaults=defaults || "";
+    $.ajax({
+            type: "GET",
+            url: url,
+            data: arg,
+            dataType:"json",
+            success: function(data){
+                if(data.msg==1){
+                    option='<option value="0">请选择自定义广告类型</option>';
+                    for(var i=0;i<data.result.length;i++){
+                        if(defaults==data.result[i].pos_key){
+                            option+='<option value="'+data.result[i].pos_key+'" selected>'+data.result[i].pos_name+'</option>';
+                        }else{
+                            option+='<option value="'+data.result[i].pos_key+'">'+data.result[i].pos_name+'</option>';
+                        }
+                    }
+                    $("#ad_pos").show();
+                    $("#ad_pos").html(option);
+                }else{
+                    $("#ad_pos").hide();
+                    $("#ad_pos").html('');
+                }
+            }
+            })
+}
+//隐藏off状态广告
+function hidde_off_ad(tableid,thiss){
+    
+    $("#"+tableid).find("tbody").children().each(function(){
+        if($(thiss).text()=="隐藏"){
+            if($(this).find("input[name*=state]").val()==0){
+                $(this).hide();
+            }
+        }
+        if($(thiss).text()=="所有"){
+            $(this).show();
+        }
+    })
+    $(thiss).text($(thiss).text()=="隐藏"?"所有":"隐藏");
+}
+//选择素材
+function open_resource(url){
+    //window.open('page.html','newwindow','height=100,width=400,top=0,left=0,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no')
+    window.open(url,height=10,width=40,top=100);
+}
+
+function select_resource(id, rtype){	
+    ajaxPOST("/reproduct/get_resource", {"id":id,"rtype":rtype}, function(data) {
+    	append_resource(data);  
+    })
+}
+function select_icon(icon_url){
+    $("#picon").val(icon_url);
+}
+</script>

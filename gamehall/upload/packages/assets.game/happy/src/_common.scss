@@ -1,0 +1,147 @@
+@charset "utf-8";
+.hidden{display:none!important;}
+.invisible{visibility:hidden!important;}
+
+.clearfix:after{content:"\0020"; display:block; height:0; clear:both;}
+.clear{clear:both;}
+
+.ui-editor{
+  word-break:break-all;
+  i,em{font-style:italic!important;}
+  b{font-weight:bold!important;}
+  u{text-decoration:underline!important;}
+  s{text-decoration:line-through!important;}
+  ul li{list-style:initial; margin-left:1rem!important;}
+  ol li {list-style:decimal; margin-left:1rem!important;}
+  span,p,h1,h2,h3,h4,h5{white-space: normal!important;}
+  span,p{
+    line-height: 18px;
+  }
+  img{
+    padding-top: 5px;
+    max-width: 100%!important;
+    width: auto;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  table{margin:4px 0;max-width:300px!important;}
+  h1,h2,h3{font-size: 1.2rem!important;line-height: 1.5rem;}
+  h4,h5,h6{font-size: 1.2rem!important;line-height: 1.3rem;}
+}
+
+//字符串过长时超出部分省略号显示
+.omit{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.multi-line-omit{
+	text-overflow: -o-ellipsis-lastline;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+//position 为absolute 的元素 垂直居中
+.absolute-vCenter{
+  position: absolute;
+  margin-top:auto;
+  margin-bottom: auto;
+  top:0;
+  bottom:0;
+
+}
+
+img[src$="blank.gif"]{
+  background:rgba(0,0,0,0.03) inline-image("../img/default_bg.png") no-repeat center center!important;
+}
+
+@mixin lg($dir, $col1, $col2){
+  background-color:$col2; 
+  @include background-image(linear-gradient($dir, $col1, $col2));
+}
+
+//四个方向的雪佛龙 箭头
+@mixin chevron($cDirection:"right", $cSize: 20px, $cWidth: 1px, $cColor: black) {
+
+  display: inline-block;
+  width: $cSize;
+  height: $cSize;
+  border-top: $cWidth solid $cColor;
+  border-right: $cWidth solid $cColor;
+  border-width: $cWidth;
+    
+  @if $cDirection == 'top'    { @include rotate(-45deg);}
+  @if $cDirection == 'right'  { @include rotate(45deg);}
+  @if $cDirection == 'bottom' { @include rotate(135deg);}
+  @if $cDirection == 'left'   { @include rotate(225deg);}
+}
+//加载更多箭头
+@mixin loadAllArray($pSize: 2px,$lLeft:4px,$aSize:9px,$Color:#ff7200,$pMarginLeft:3px){
+	letter-spacing: 2px;
+	word-spacing: -8px;
+	display: inline-block;
+	.point{
+		width: $pSize;
+		height: $pSize;
+		border-radius: 100%;
+		display: inline-block;
+		vertical-align: middle;
+		background-color:$Color;
+		position: relative;
+		left: $lLeft;
+		margin-left:$pMarginLeft;
+	}
+	.arrow{
+		@include chevron(right,$aSize,1px,$Color);
+		vertical-align: middle;
+	}
+}
+@mixin arrowDown($cWidth:6px,$aColor:#ff7200){
+	width: 0; 
+	height: 0;
+	border-left: $cWidth solid transparent;
+	border-right: $cWidth solid transparent;
+	border-top: $cWidth solid $aColor;
+}
+@mixin arrowLeft($cWidth:6px,$aColor:#ff7200){
+	width: 0; 
+	height: 0;
+	border-bottom: $cWidth solid transparent;
+	border-right: $cWidth solid $aColor;
+	border-top: $cWidth solid transparent;
+}
+@mixin arrowRight($cWidth:6px,$aColor:#ff7200){
+	width: 0; 
+	height: 0;
+	border-bottom: $cWidth solid transparent;
+	border-left: $cWidth solid transparent;
+	border-top: $cWidth solid $aColor;
+}
+@mixin round($cSize:16px,$qColor:#76767e,$qWidth: 2px){
+	width:$cSize;
+	height:$cSize;
+	border-radius:100%;
+	display:inline-block;
+	border:$qWidth solid $qColor;
+}
+@mixin searchLine($qSize: 8px,$left:9px,$top:17px,$cColor: #76767e,$qWidth: 2px,$rotate:-45deg){
+	border-right: $qWidth solid $cColor;
+	@include rotate($rotate);
+	padding-left: 10px;
+	position: absolute;
+	left: $left;
+	top: $top;
+	height: $qSize;
+}
+@mixin triangle($tSize:10px,$tColor:#5bd1a3,$tDirection:'right'){
+	width: 0; 
+	height: 0;
+	@if $tDirection == 'right' {
+		border-left: $tSize solid transparent;
+		border-right: 0px solid transparent;
+		border-top: $tSize solid $tColor;
+	}
+}

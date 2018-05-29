@@ -1,0 +1,47 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $indexUrl;?>">会员列表</a></li>
+    <li class="current"><a href="javascript:;">编辑会员</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑会员</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editFrom">
+    <input name="id" value="<?php echo $userInfo['id'];?>" type="hidden"/>
+    <input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">用户名</th>
+			<td class="td"><?php echo $userInfo['username'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">姓名</th>
+			<td class="td"><?php echo $userInfo['realname'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">open_id</th>
+			<td class="td"><?php echo $userInfo['open_id'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">手机</th>
+			<td class="td"><?php echo $userInfo['phone'];?></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">注册时间</th>
+			<td class="td"><?php echo date('Y-m-d H:i:s', $userInfo['register_time']);?></td>
+		</tr>
+	</table>
+</div>
+<!-- <div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">保存</button></span></span></div> -->
+</form>
+<script type="text/javascript">
+//用户表单数据提交
+$(document).ready(function(){
+	ajaxForm('editFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Fjuser/index');
+	});
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

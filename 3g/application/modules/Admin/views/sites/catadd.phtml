@@ -1,0 +1,101 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li class=""><a href="<?php echo $indexUrl; ?>">分类列表</a></li>
+			<li class="current"><a href="<?php echo $catAddUrl; ?>">添加分类</a></li>
+			<li class=""><a href="<?php echo $contentUrl; ?>">内容列表</a></li>
+			<li class=""><a href="<?php echo $addContentUrl; ?>">添加内容</a></li>
+			<li><a href="<?php echo $importUrl; ?>">数据导入</a></li>
+			<li class=""><a href="<?php echo $tongjiUrl; ?>">统计信息</a></li>
+		</ul>
+	</div>
+	<div class="h_a">添加信息</div>
+	<form method="post" action="<?php echo $catPostUrl; ?>" id="addFrom">
+		<input name="token" id="token" value="<?php echo $token; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">上级目录</th>
+					<td class="td">
+						<select name="parent_id">
+							<option value="0"> 请选择</option>
+							<?php foreach ($parents_cat as $k => $v) { ?>
+								<option value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">名称</th>
+					<td class="td"><input type="text" name="name" class="input" style="width: 160px;"></td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">样式</th>
+					<td class="td"><select id="style" name="style">
+							<option value="0">请选择</option>
+							<?php foreach ($styles as $k => $v) { ?>
+								<option value="<?php echo $k; ?>"><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+
+				<tr class="tr">
+					<th class="th">是否显示</th>
+					<td class="td"><select name="is_show" style="width: 100px">
+							<option value="0">否</option>
+							<option value="1">是</option>
+						</select></td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">链接</th>
+					<td class="td"><input type="text" name="link" class="input" style="width: 160px;"></td>
+				</tr>
+				<tbody id="image" style="">
+				<tr class="tr">
+					<th class="th">图片</th>
+					<td class="td">
+						<ul class="uploadImg">
+							<li id="catImage">
+								<img src="<?php echo $staticPath; ?>/img/content/nopic.jpg"/>
+								<input type="hidden" name="image" value="">
+							</li>
+						</ul>
+						<p style="clear:both;">
+							<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=catImage'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tbody>
+				<tr class="tr">
+					<th class="th">排序</th>
+					<td class="td"><input type="text" class="input" name="sort" value="1" style="width: 160px"></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">状态</th>
+					<td class="td"><select name="status" style="width: 160px">
+							<option value="1">开启</option>
+							<option value="0">关闭</option>
+						</select></td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+	<script type="text/javascript">
+		//广告表单数据提交
+		$(document).ready(function () {
+			$('#start_time').datetimepicker();
+			$('#end_time').datetimepicker();
+			ajaxForm('addFrom', function (ret) {
+					ajaxRedirect(ret, baseurl + '/Admin/sites/index');
+				}
+			);
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

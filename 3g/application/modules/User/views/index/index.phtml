@@ -1,0 +1,184 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title><?=Lang::_('USER_CENTER')?></title>
+<link rel="shortcut icon" href="<?php echo $staticResPath;?>/call/img/favicon.png"/>
+<link rel="stylesheet" type="text/css" href="<?php echo $staticResPath;?>/call/css/style.min.css?ver=<?php echo $version;?>" />
+</head>
+
+<body class="ui-app">
+<div class="ui-page page1 js-active">
+	<div class="ui-page-content">
+	<?php if($showNotice){?>
+        <div class="warning" ><a href="<?php echo $webroot;?>/front/activity/notice"><?php echo $noticeTitle?$noticeTitle:'用户中心等级公告';?></a></div>
+	  <?php }?>
+	  
+	       <?php
+				$uname = '';
+				$url =  "/user/center/index";
+				if (!empty($userInfo['id'])) {	
+						$uname = 	'点击显示昵称';
+						if (!empty($userInfo['nickname'])) {
+							$uname = $userInfo['nickname'];
+						} else if (Common::checkIllPhone($userInfo['username'])) {
+							$uname = $userInfo['username'];
+						}else{
+						$url .='/?type=eidt';
+					}
+			}
+		?>
+	   <div class="ui-box">
+                   <a href="<?php echo $webroot.$url;?>" class="top-zone">
+                       	<span><img src="<?php echo $staticResPath;?>/call/img/avatar.png" /></span>
+                        <span><?php echo $uname;?> </span>
+                        <span><i class="icon-more"></i></span>
+                    </a>
+            </div>
+            <div class="ui-box">
+                <div class="ui-box-uinfo">
+                    <div class="gn-uinfo-box box-vertical">
+                        <ul class="gn-icon-box">
+
+                            <li><a href="<?php echo $webroot;?>/user/experience/index" title="我的等级"><span class="icon-grade"></span><span>Lv<?php echo  $userInfo['experience_level']?$userInfo['experience_level']:1;?></span></a></li>
+                            <li><a href="<?php echo $webroot;?>/user/center/score" title="我的金币">
+		                            <span class="icon-gold"></span>
+		                            <span id="jifenTotal"><?php echo $scoreInfo['remained_score']?$scoreInfo['remained_score']:0;?></span>
+		                            <?php
+		                            $upCoin = 5;
+		                            $show = 'style="display:none"';
+		                            if (!empty($upVerCoin)) {
+			                            $show = '';
+			                            $upCoin = $upVerCoin;
+		                            }
+		                            ?>
+		                            <span class="plus-five update-gold"  <?=$show?> >+<?=$upCoin?></span></a>
+                            </li>
+                            <li><a href="<?php echo $webroot;?>/user/center/msg" title="我的消息"><span class="icon-newMsg <?php if($unread){ ?>msg-num<?php }?>"></span><span><?php echo $unread?$unread:'0';?></span></a></li>
+                        </ul>
+                     <div class="gn-button-box">
+						<?php if(empty($sign)){?>
+							<?php if(!empty($couponFlag)){?>
+							<p><a id="J_btnBookToken" data-url="<?php echo $webroot;?>/user/activity/ajaxgetCoupon" class="ui-button ui-block ui-button-green ui-button-active" href="javascript:void(0)">领免费书券</a></p>
+							<?php }?>
+							<p  style="display: <?php echo $couponFlag?'none':'';?>"><a id="J_btnSignIn" data-url="<?php echo $webroot;?>/user/goods/sign" class="ui-button ui-block  ui-button-green ui-button-active" href="javascript:void(0)">立即签到+<?php echo $scores;?></a></p>
+						<?php }else{?>
+						<p ><a class="ui-button ui-block  ui-button-green" href="javascript:void(0)">今日已签到</a></p>
+						<?php }?>
+						<p><a class="ui-button ui-block ui-button-green" href="<?php $webroot;?>/Front/Activity/cindex"><i class="icon-call-green"></i>免费打电话</a></p>
+					</div>
+                  </div>
+                </div>
+            </div>
+		<!-- 广告区域 {如果广告不存在则隐藏} START-->
+		<?php if(!empty($ads)):?>
+		<div class="ui-box">
+		<h3 class="ui-caption">兑换中心</h3>
+			<div class="ui-box-ads"  id="ad_front_index">
+				<?php foreach ($ads as $k=>$v){?>
+				<a href="<?php echo $v['link'];?>"><img src="<?php echo $attachPath.$v['image'];?>" /></a>
+				<?php }?>
+			</div>
+		</div>
+		<?php endif;?>
+		<!-- 广告区域 END-->
+		<div class="ui-box">
+			<h3 class="ui-caption">积分中心</h3>
+			<ul class="ui-box-jifen">
+			<?php foreach ($products as $k=>$v){?>
+				<li>
+					<a href="<?php echo !empty($v['link'])?$v['link']:'javascript:void(0);';?>">
+						<span class="span-img"><img  src="<?php echo $attachPath.$v['image'];?>"></span>
+						<span class="span-txt">
+							<?php echo $v['name'];?>
+							<em><?php echo $v['description'];?></em>
+						</span>
+					</a>
+				</li>
+			<?php }?> 
+			</ul>
+		</div>
+		<div class="ui-bottom-bar ui-bottom-bar-link">
+			<?php
+			$url = $webroot.'/feedback/msg?type=2';
+			$uName = Gionee_Service_Feedbackuser::getName();
+			$tip = Gionee_Service_Feedbackuser::getNewTip($uName,2);
+			$tip_class = !empty($tip)?'class="feed-new-enter"':'';
+			?>
+			<a <?=$tip_class?> href="<?=$url?>">意见反馈</a>
+			<a href="<?php echo $webroot;?>/user/index/rule">使用说明</a>
+		</div>
+	</div>
+</div>
+
+    <div class="pop-mask-reward" style="display:<?php echo $popup?'':'none';?>">
+        <div class="popup-wrap">
+            <div class="upperhalf">
+                <div>
+                    <p>恭喜您，已经升级到Lv<?php echo $userInfo['experience_level'];?></p>
+                    <?php  echo $userInfo['experience_level']>1?'<p>获得以下特权</p>':'<p>等级越高,特权越多!</p>';?>
+                </div>
+            </div>
+            <div class="midhalf">
+                <ul>
+                <?php foreach ($levelData as $k=>$v){?>
+                    <li>
+                        <img src="<?php echo $attachPath.$v['image'];?>" alt="">
+                        <span><?php echo $v['name'];?></span>
+                    </li>
+                   <?php }?>
+                </ul>
+            </div>
+            <div class="lowerhalf">
+                <p><img src="<?php echo $staticResPath;?>/call/pic/reward-mid.xxx.png" alt=""><a href="<?php echo $webroot;?>/user/experience/index">去看看</a></p>
+                <p> <span class="i-know"></span></p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="pop-mask-upgrade" style="display:none">
+        <div>
+            <div>
+                <p>一个账号只能领取一次升级奖励</p>
+            </div>
+            <p><a href="#">查看详情</a></p>
+            <p>
+                <a href="#" class="i-know"></a>
+            </p>
+        </div>
+    </div>
+    
+<div class="pop-mask-normal"  style="display:<?php echo $prizePop?'':'none'; ?>">
+	<div class="popup-wrap"  style="width:280;height:240px">
+		<div class="popup-txt">
+            <?php if($prizeImage=='jb'){ ?>
+                <img src="<?php echo $staticResPath;?>/events/pic/20151111_pic02.png" width="106px" height="auto" />
+            <?php }else{ ?>
+			<img src="<?php  echo $attachPath.$prizeImage;?>" width="106px" height="auto" />
+            <?php } ?>
+		</div>
+		<div  class="popup-txt">
+                <p><?php echo '已领取'.$prizeName; ?></p>
+            </div>
+		<div class="btn-wrap">
+			<a id="J_btn_cancel" class="btn btn-gray" href="#" onclick="$('.pop-mask-normal').hide()">还想逛逛</a>
+			<a id="J_btn_back" class="btn btn-green" href="<?php echo $pop_back_url;?>">回活动页</a>
+		</div>
+	</div>
+</div>
+    
+<script type="text/javascript">
+	var token = "<?php echo $token;?>", version = "<?php echo $version;?>";
+</script>
+<script id="main" data-baseurl="<?php echo $staticResPath;?>/call/js" data-version="<?php echo $version;?>" src="<?php echo $staticResPath;?>/call/js/lib/require.js?v=<?php echo $version;?>"></script>
+<script>
+    require(['<?php echo $staticResPath;?>/call/js/common.js?v=<?php echo $version;?>'],function(){
+        require(['page/index']);
+    });
+</script>
+</body>
+</html>

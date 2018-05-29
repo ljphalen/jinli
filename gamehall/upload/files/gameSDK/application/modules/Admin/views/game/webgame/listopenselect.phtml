@@ -1,0 +1,243 @@
+<?php echo $this->render("layout/header2.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li class="current"><a href="javascript:;">添加开服游戏</a></li>
+	</ul>
+</div>
+
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<td class="td">
+			<input type="text" class="input wc" id="title" name="title" value="">&nbsp;<button id="searchBtn" onfocus="blur();" type="button">搜索</button>
+            <input id="curPage" name="curPage" value="1" type="hidden" />
+			</td>
+		</tr>
+	</table>
+</div>
+
+<form method="post" action="<?php echo $listOpenSelectPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="day_id" value="<?php echo $day_id;?>" type="hidden" />
+<div class="table_list">
+	<table id="table" width="100%">
+        <tr class="tr">
+			<td width="200"  valign="top">
+                <div class="h_a">游戏列表(<span id="querySize" style="color: red">0</span>条记录)</div>
+				<div style="width:100%; height: 500px; border:1px solid #ccc; overflow :auto;">
+					<table id="from" width="100%"  border="1" cellpadding="0" cellspacing="0" bordercolor="#ccc" style="border-collapse: collapse">
+    					<thead>
+    					   <tr class="hd">
+        						<td width="10"><input id="all_move" type="checkbox"></td>
+        						<td width="20">ID</td>
+        						<td width="20">图标</td>
+        						<td width="50">游戏名称</td>
+        						<td width="30">开服时间</td>
+        						<td width="30">开服名称</td>
+        						<td width="30">分类</td>
+    						</tr>
+    					</thead>
+    					<tbody>
+    					</tbody>
+    				</table>
+				</div>
+				<div id="pages" class="pages"></div>
+			</td>
+			<td width="100" style="text-align: center;">
+                <div class="mb10 tac"><span><button id="move" onfocus="blur();" type="button"> &nbsp;>&nbsp;>&nbsp; </button></span></div>
+                <div class="mb10 tac"><span><button id="delete" onfocus="blur();" type="button"> &nbsp;<&nbsp;<&nbsp; </button></span></div>
+			</td>
+			<td width="200"  valign="top">
+                <div class="h_a">已选择(<span id="selectSize" style="color: red"><?php echo count($games);?></span>条记录)</div>
+				<div style="width:100%; height: 500px; border:1px solid #ccc; overflow :auto;">
+					<table id="to" width="100%"  border="1" cellpadding="0" cellspacing="0" bordercolor="#ccc" style="border-collapse: collapse">
+    					<thead>
+    					   <tr class="hd">
+        						<td width="10"><input id="all_delete" type="checkbox"></td>
+        						<td width="20">ID</td>
+        						<td width="20">图标</td>
+        						<td width="50">游戏名称</td>
+        						<td width="30">开服时间</td>
+        						<td width="30">开服名称</td>
+        						<td width="30">分类</td>
+    						</tr>
+    					</thead>
+    					<tbody>
+		<?php foreach($games as $key => $value) {?>
+    					<tr class="ct"><td name="check"><input onclick="this.checked = !this.checked" type="checkbox"><input type="hidden" name="games[]" value="<?php echo $value['id'];?>"></td>
+							<td><?php echo $value['gameId']?></td>
+							<td><img src="<?php echo $value['gameIcon']?>" style="width:70px;height:70px;"/></td>
+							<td><?php echo $value['gameName']?></td>
+							<td><?php echo $value['open_time']?></td>
+							<td><?php echo $value['server_name']?></td>
+							<td><?php echo $value['gameCategory']?></td>
+						</tr>
+	   <?php } ?>
+    					</tbody>
+    				</table>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac">
+    <span class="btn"><span><a href="<?php echo $editUrl.'?dayId='.$day_id;?>"><button type="button">返回</button></a></span></span>
+    <span class="btn"><span><button onfocus="blur();" type="submit">下一步</button></span></span>
+</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $listOpenSortUrl.'?day_id='.$day_id;?>');
+	});
+
+	$("#preStepUrl").click(function() {
+		location.href = "<?php echo $preStepUrl;?>";
+	});
+	
+	$("#all_move").click(function() {
+		var checkboxArr = $("#from tbody :checkbox");
+		for(var i = 0; i < checkboxArr.length; i++) {
+			checkboxArr[i].checked = this.checked;
+		}
+	});
+	
+	$("#all_delete").click(function() {
+		var checkboxArr = $("#to tbody :checkbox");
+		for(var i = 0; i < checkboxArr.length; i++) {
+			checkboxArr[i].checked = this.checked;
+		}
+	});
+    
+	$("#move").click(function() {
+		var toBody = $("#to tbody");
+		var checkboxArr = $("#from tbody :checkbox");
+		var moveLength = 0;
+		for(var i = 0; i < checkboxArr.length; i++) {
+			if(checkboxArr[i].checked) {
+				moveLength++;
+			    var td = checkboxArr[i].parentNode;
+			    td.childNodes[1].name="games[]";
+				toBody.append(td.parentNode);
+			}
+		}
+	    
+		checkboxArr = $("#to tbody :checkbox");
+		for(var i = 0; i < checkboxArr.length; i++) {
+			checkboxArr[i].checked = false;
+		}
+	    $("#querySize").text(parseInt($("#querySize").text()) - moveLength);
+	    $("#selectSize").text($("#to tbody :checkbox").length);
+	    
+		$("#all_move").attr("checked",false);
+		$("#all_delete").attr("checked",false);
+		if($("#from tbody :checkbox").length == 0) {
+			search();
+		}
+	});
+	
+	$("#delete").click(function() {
+		var toBody = $("#from tbody");
+		var checkboxArr = $("#to tbody :checkbox");
+		var moveLength = 0;
+		for(var i = 0; i < checkboxArr.length; i++) {
+			if(checkboxArr[i].checked) {
+				moveLength++;
+			    var td = checkboxArr[i].parentNode;
+			    td.childNodes[1].name="game[]";
+				toBody.append(td.parentNode);
+			}
+		}
+	    
+		checkboxArr = $("#from tbody :checkbox");
+		for(var i = 0; i < checkboxArr.length; i++) {
+			checkboxArr[i].checked = false;
+		}
+		
+	    $("#querySize").text(parseInt($("#querySize").text()) + moveLength);
+	    $("#selectSize").text($("#to tbody :checkbox").length);
+	    	    
+		$("#all_move").attr("checked",false);
+		$("#all_delete").attr("checked",false);
+	});
+
+	$("#searchBtn").click(function(){
+		var title = getTitle();
+		search();
+	});
+	
+    $('#table').on('click','td[name="check"]', function(){        
+        var $checkbox = $(this).find('input[type="checkbox"]');
+        $checkbox.prop('checked',(! $checkbox.prop('checked')));
+    });
+
+    search();
+});
+
+function page(page) {
+	$("#curPage").val(page);
+	search();
+}
+
+function getTitle() {
+	var title = $("#title").val();
+	title = title.replace(/(^\s*)|(\s*$)/g, "");
+	return title;
+}
+
+function search() {
+	var title = getTitle();
+	$("#title").val(title);
+	var selectedArr = $("#to tbody input[name='games[]']");
+    var selectedId = [];
+	for(var i = 0; i < selectedArr.length; i++) {
+		selectedId[i] = selectedArr[i].value;
+	}
+	$.post("/Admin/Game_Webgame/listOpenQuery",
+		{
+	       token:"<?php echo $token;?>",
+	       name: $("#title").val(),
+	       page: $("#curPage").val(),
+	       day_id: <?php echo $day_id;?>,
+	       selected: selectedId
+		},
+	    function(result, status){
+	       if(result.success) {
+		        var total = result.data.total;
+	    	    $("#querySize").text(total);
+		        var page = result.data.page;
+	    	    $("#curPage").val(page);
+		        var pageSize = result.data.pageSize;
+		        var pageStr = "";
+	    		for(var i = 1; i <= pageSize; i++) {
+		    		if(i == page) {
+		    			pageStr += "<b>"+i+"</b>";
+			    	}else{
+			    		pageStr += "<a href='javascript:void(0);' onclick='page("+i+");'>"+i+"</a>";
+			    	}
+	    		}
+	    	    $("#pages").html(pageStr);
+	    	    
+	    	    $("#from tbody").empty();
+	    		$("#all_move").attr("checked",false);
+	    	    var str = "";
+		        var size = result.data.list.length;
+	    		for(var i = 0; i < size; i++) {
+	    			var info = result.data.list[i];
+		    	    str += '<tr class="ct"><td name="check"><input onclick="this.checked = !this.checked" type="checkbox"><input type="hidden" name="game[]" value="'+info['id']+'"></td>'+
+					'<td>'+info['gameId']+'</td>'+
+					'<td><img src="'+info['gameIcon']+'" style="width:70px;height:70px;"/></td>'+
+					'<td>'+info['gameName']+'</td>'+
+					'<td>'+info['open_time']+'</td>'+
+					'<td>'+info['server_name']+'</td>'+
+					'<td>'+info['gameCategory']+'</td>';
+	    		}
+	    	    $("#from tbody").append(str);
+	    	}else{
+	    		showMsg("提示", data.msg);
+	    	}
+	});
+}
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

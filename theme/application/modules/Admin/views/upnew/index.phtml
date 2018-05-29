@@ -1,0 +1,141 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<script type="text/javascript"
+src="<?php echo $staticPath ?>appjs/subject/index.js"></script>
+<!-- 导航栏Ajax加载 指向navagator.html
+menuOn表示分别需要高亮的菜单栏id 用下划线_隔开 eg:bz_taotu_taotuPack
+-->
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- 壁纸详情-wp01-->
+    <div id="zt_operation_04">
+        <!-- 页面内容区域 注意：每个页面无论是否有内容 必定有一个content-->
+        <div class="content">
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <label class="tb_cell">添加数量:</label>
+                    <div class="tb_cont tb_cell">
+                        <input type="text" style="width:350px;" class="rd_1 add_themes" value="<?php echo $search ?>">
+                        <button class="btn_s2 addtheme_btn">本期新主题</button>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+            <div class="com_tb_wrap">
+                <div class="com_tb">
+                    <div class="tb_cell">
+                        <ul class="tb_switch">
+                            <!-- <li class="txt_switch">批量管理</li>
+                             <li class="btn_switch switch_pics" openId="viewPics">宫格</li><!-- openId 表示点击时 显示哪个id下的内容 -->
+                            <li class="btn_switch switch_list on" openId="viewList">列表</li>
+                        </ul>
+                    </div>
+                </div><!-- com_tb end -->
+            </div><!-- com_tb_wrap end -->
+
+
+            <!-- 宫格模式 admin_mode显示各子项目的管理按钮-->
+            <section class="view view_pics " id="viewPics">
+                <!-- 批量管理内容 默认隐藏 -->
+                <div class="view_admin view_pics_admin">
+                    <!-- checkObj表示 点击后 哪些class要被选中 -->
+                    <button class="btn_check btn_check_all" checkClass="btn_check_pics"></button><label>全选</label><span class="btn btn_s1 pack_del">批量删除</span>
+                </div>
+                <div class="clear-fix"></div>
+            </section>
+
+            <!-- 列表模式 -->
+            <section class="view view_list show" id="viewList">
+                <!-- 批量管理内容 默认隐藏 -->
+                <div class="view_admin view_list_admin">
+                    <!-- checkObj表示 点击后 哪些class要被选中 -->
+                    <button class="btn_check btn_check_all" checkClass="btn_check_list"></button><label>全选</label><span class="btn btn_s1 pack_del">批量删除</span>
+                </div>
+                <table class="view_list_tb">
+                    <thead>
+                        <tr><th style="width:12rem">上新时间</th><th>上新数量</th><th>备注</th></tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($file as $v) { ?>
+                            <tr>
+                                <td><?php echo date("Y-m-d H:i:s", $v['uptime']); ?></td>
+                                <td><?php echo $v['num'] ?></td>
+                                <td> </td>
+
+                            </tr>
+                        <?php } ?>
+
+                    </tbody>
+                </table>
+
+            </section>
+
+            <!-- 添加btn --><!-- 添加class=on 出现角标 -->
+            <!-- <div class="zt_operation_btn">
+                    <span class="zt_operBtn on">添加<i class="icon_num">3</i></span> <span class="zt_operBtn" id="ztSeminarAddNext">下一步</span>
+            </div> -->
+
+        </div><!-- content end -->
+
+    </div>
+</section>
+<?php echo $this->render("common/pageshow.phtml"); ?>
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">是否删除<span>该专题</span></p>
+                    <div class="tip_btns">
+                        <button class="btn_s2 del_subject">确定</button>
+                        <button class="btn_s2 btnCancel">取消</button></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+<!-- 弹窗 图片 -->
+<div class="pop_wraper pop_style_img" id="fixPicView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 -->
+                <div class="pop_cont_img">
+                    <div class="pop_img_src"><img src="image/img02.png"></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+<script>
+    $(function () {
+        $(".addtheme_btn").on("click", function () {
+            var num = parseInt($(".add_themes").val());
+
+            if (isNaN(num)) {
+                alert("请填写有效的数字!");
+                return 0;
+            }
+            var data = "number=" + num + "&token=" + token;
+            var url = "/Admin/Upnew/addnews";
+
+
+            $.post(url, data, function (d) {
+                if (d) {
+                    window.location.href = "/Admin/Upnew/index";
+                } else {
+                    alert("网络出错，请重新提交!");
+                    window.location.href = "/Admin/Upnew/index";
+                }
+            })
+        })
+    })
+</script>
+</body>
+</html>

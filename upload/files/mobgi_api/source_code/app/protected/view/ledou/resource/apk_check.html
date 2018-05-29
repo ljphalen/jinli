@@ -1,0 +1,93 @@
+<div class="colMain">
+    <div class="title">
+        <p class="fl">安装包文件审核</p>
+    </div>
+    <div class="main">
+        <div class="app-detail">
+                <form action="../resource/apk_check_save" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" value="{{result.id}}" name="id" />
+                    <ul class="form">
+                        <li>
+                            <span class="label">平台类型：</span>
+                            <div class="fc">
+                                <select name="platform" id="platform">
+                                    <option value="0">通用</option>
+                                    <option value="1">Android</option>
+                                    <option value="2">IOS</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">所属产品：</span>
+                            <div class="fc">
+                                <input type="text" name="apk_version" class="required iText" value="{{result.product_name}}" style="width:220px;" />
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">产品版本：</span>
+                            <div class="fc">
+                                <input type="text" name="apk_version" class="iText" style="width:220px;"  value="{{result.apk_version}}"/><span id="apk_version"></span>
+                                <span id="ad_subtype_txt"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">包名：</span>
+                            <div class="fc">
+                                <input type="text" name="package" class="iText" style="width:220px;"  value="{{result.package_name}}"/><span id="package"></span>
+                                <span id="ad_subtype_txt"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">渠道：</span>
+                            <div class="fc">
+                                <input type="text" name="channel" class="iText" style="width:220px;" value="{{result.channel_id}}"/><span id="channel"></span>
+                                <span id="ad_subtype_txt"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">大小：</span>
+                            <div class="fc">
+                                <input type="text" name="size" class="iText" style="width:220px;" value="{{result.size}}"/><span id="size"></span>
+                                <span id="ad_subtype_txt"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">安装包地址：</span>
+                            <div class="fc">
+                                <a href='{{result.apk_url}}'>{{result.package_name}}</a>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="label">审核意见：</span>
+                            <div class="fc">
+                                <input type="text" name="check_msg" class="iText" style="width:220px;" value="{{result.check_msg}}"/><span id="size"></span>
+                                <span id="ad_subtype_txt"></span>
+                            </div>
+                        </li>
+                        <li class="line"></li>
+                        <li>
+                            <div class="fc">
+                                <input type="hidden" value="{{result.ischeck}}" name="ischeck" />
+                                <input type="submit" value="通过审核" class="submit" onclick="checkproduct(1)"/>
+                                <input type="button" value="审核驳回" class="cancel" onclick="checkproduct(2)"/>
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+    </div>
+</div>
+<script>
+    function checkproduct(type){
+        if(type==2 && $("input[name='check_msg']").val()==""){
+            alert("请输入审核意见");
+            $("input[name='check_msg']").focus();
+            return false;
+        }
+        $("input[name='ischeck']").val(type);
+        $('form').submit();
+    }
+    $(function(){
+        $("#platform").val('{{result.platform}}');
+    }
+</script>

@@ -1,0 +1,58 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>中奖名单</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-touch-fullscreen" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="stylesheet" href="<?php echo $staticPath;?>/apps/3g/events/s7/css/main.min.css?v=<?=$version?>" />
+</head>
+<body>
+<header class="ui_rel" id="header">
+	<img src="<?php echo $staticPath;?>/apps/3g/events/s7/pic/result-banner.jpg?v=<?=$version;?>" alt="" width="100%" />
+	<a href="http://mi.jd.com/v/P_0c3Q76oAjB.html" class="pro-detail">温馨提示：预约用户几率更高>></a>
+</header>
+
+<div class="result">
+	<?php if ($award_code): ?>
+	<h2>领取方式：</h2>
+	<ol>
+		<li>搜索“金立手机”关注金立手机微信号；</li>
+		<li>发送领奖暗号“领手机”给金立手机微信号，然后根据提示领奖。（您的领奖密码为：<?=$award_code?>）</li>
+		<li>请您在4月1号前领取，逾期视为自动放弃。</li>
+	</ol>
+	<p class="info">我们将核实您的活动信息，尽快为您发放奖品，感谢您对金立手机的支持！ （ 后面还有更给力的活动，提前搜索“金立手机”关注金立手机官方微信号吧！）</p>
+	<?php endif; ?>
+	<?php if (!empty($userList)): ?>
+	<div class="table">
+		<table>
+			<tr>
+				<th>序号</th>
+				<th>头像</th>
+				<th>昵称</th>
+			</tr>
+			<?php
+			$i = 1;
+			foreach($userList as $val): ?>
+			<tr>
+				<td><?=$i?></td>
+				<td><img src="<?=$val['face']?>" alt="<?=$val['nickname']?>" width="40" height="40" /></td>
+				<td><?=$val['nickname']?></td>
+			</tr>
+			<?php
+				$i++;
+			endforeach;
+			?>
+			
+		</table>
+	</div>
+	<?php else: ?>
+		<div class="result-tips">出奖中，请稍后查看公布结果...</div>
+	<?php endif;?>
+</div>
+</body>
+</html>

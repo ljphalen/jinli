@@ -1,0 +1,200 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">品牌列表</a></li>
+		<li><a href="<?php echo $addUrl;?>">添加品牌</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<td class="td">分类</td>
+			<td class="td">
+				<select name="category_id" class="wa">
+						<option <?php if (!$search['category_id']) echo 'selected';?>  value="">所有类型</option>
+					<?php foreach ($categorys as $key=>$value) {?>
+						<option <?php if ($search['category_id'] == $value['id']) echo 'selected = selected';?>  value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+			</td>
+			<td class="td">国家</td>
+			<td class="td">
+				<select name="country_id" class="wa" id="country_combo">
+						<option <?php if (!$search['country_id']) echo 'selected';?>  value="">所有类型</option>
+					<?php foreach ($countrys as $key=>$value) {?>
+						<option <?php if ($search['country_id'] == $value['id']) echo 'selected = selected';?>  value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
+					<?php }?>
+				</select>
+			</td>
+			
+		</tr>
+		<tr class="tr">
+			<td class="td">品牌名称</td>
+			<td class="td">
+				<input class="input wb" type="text" name="name" value="<?php echo $search['name'];?>">
+			</td>
+			<td class="td">状态</td>
+			<td class="td">
+				<select name="status" class="wa">
+					<option value="-1">所有分类</option>
+    				<option <?php if($search['status'] == 1) echo 'selected';?> value="1">开启</option>
+    				<option <?php if($search['status'] == 2) echo 'selected';?> value="2">关闭</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="30">排序</td>
+			<td width="40">品牌ID</td>
+			<td>品牌名称</td>
+			<td>分类</td>
+			<td>国家</td>
+			<td>是否推荐</td>
+			<td>logo</td>
+			<td>点击量</td>
+           <td>状态</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($brands as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['sort'];?></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['name'];?></td>
+			<td><?php echo $categorys[$value['category_id']]['name'];?></td>
+			<td><?php echo $countrys[$value['country_id']]['name'];?></td>
+			<td><?php echo $value['is_top'] == 1 ? '是' : '否';?></td>
+			<td><img src="<?php echo $attachPath.$value['logo'];?>" width="60" /></td>
+			<td><?php echo $value['hits'];?></td>
+			<td><?php echo $value['status'] == 1 ? '开启' : '关闭';?></td>
+			<td>
+				<a href="<?php echo $editUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+				<a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl;?>/?id=<?php echo $value['id'];?>', '', event);">删除</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<style>
+    .ui-button { margin-left: -1px; }
+    .ui-button { top :1.2px; }
+    .ui-button-icon-only .ui-button-text { padding: 0.36em; }
+    .ui-autocomplete-input { margin: 0; padding: 0.48em 0 0.47em 0.45em;width:275px; left:0px }
+</style>
+<script>
+    (function( $ ) {
+        $.widget( "ui.combobox", {
+            _create: function() {
+                var self = this,
+                    select = this.element.hide(),
+                    selected = select.children( ":selected" ),
+                    value = selected.val() ? selected.text() : "";
+                var input = this.input = $( "<input>" )
+                    .insertAfter( select )
+                    .val( value )
+                    .autocomplete({
+                        delay: 0,
+                        minLength: 0,
+                        source: function( request, response ) {
+                            var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+                            response( select.children( "option" ).map(function() {
+                                var text = $( this ).text();
+                                if ( this.value && ( !request.term || matcher.test(text) ) )
+                                    return {
+                                        label: text.replace(
+                                            new RegExp(
+                                                "(?![^&;]+;)(?!<[^<>]*)(" +
+                                                $.ui.autocomplete.escapeRegex(request.term) +
+                                                ")(?![^<>]*>)(?![^&;]+;)", "gi"
+                                            ), "<strong>$1</strong>" ),
+                                        value: text,
+                                        option: this
+                                    };
+                            }) );
+                        },
+                        select: function( event, ui ) {
+                            ui.item.option.selected = true;
+                            self._trigger( "selected", event, {
+                                item: ui.item.option
+                            });
+                        },
+                        change: function( event, ui ) {
+                            if ( !ui.item ) {
+                                var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( $(this).val() ) + "$", "i" ),
+                                    valid = false;
+                                select.children( "option" ).each(function() {
+                                    if ( $( this ).text().match( matcher ) ) {
+                                        this.selected = valid = true;
+                                        return false;
+                                    }
+                                });
+                                if ( !valid ) {
+                                    // remove invalid value, as it didn't match anything
+                                    $( this ).val( "" );
+                                    select.val( "" );
+                                    input.data( "autocomplete" ).term = "";
+                                    return false;
+                                }
+                            }
+                        }
+                    })
+                    .addClass( "ui-widget ui-widget-content ui-corner-left" );
+
+                input.data( "autocomplete" )._renderItem = function( ul, item ) {
+                    return $( "<li></li>" )
+                        .data( "item.autocomplete", item )
+                        .append( "<a>" + item.label + "</a>" )
+                        .appendTo( ul );
+                };
+
+                this.button = $( "<button type='button'>&nbsp;</button>" )
+                    .attr( "tabIndex", -1 )
+                    .attr( "title", "Show All Items" )
+                    .insertAfter( input )
+                    .button({
+                        icons: {
+                            primary: "ui-icon-triangle-1-s"
+                        },
+                        text: false
+                    })
+                    .removeClass( "ui-corner-all" )
+                    .addClass( "ui-corner-right ui-button-icon" )
+                    .click(function() {
+                        // close if already visible
+                        if ( input.autocomplete( "widget" ).is( ":visible" ) ) {
+                            input.autocomplete( "close" );
+                            return;
+                        }
+
+                        // work around a bug (likely same cause as #5265)
+                        $( this ).blur();
+
+                        // pass empty string as value to search for, displaying all results
+                        input.autocomplete( "search", "" );
+                        input.focus();
+                    });
+            },
+
+            destroy: function() {
+                this.input.remove();
+                this.button.remove();
+                this.element.show();
+                $.Widget.prototype.destroy.call( this );
+            }
+        });
+    })( jQuery );
+</script>
+<script>
+    //auto complete
+    $('#country_combo').combobox();
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

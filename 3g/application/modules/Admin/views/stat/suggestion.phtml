@@ -1,0 +1,60 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<form method="post" action="<?php echo $baseUrl; ?>" id="addFrom">
+	<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">选择日期</th>
+				<td class="td">
+					<input class="input" type="text" maxlength="30" id="sdate" name="sdate" value="<?php echo $date['sdate']; ?>"> 至
+					<input class="input" type="text" id="edate" maxlength="30" name="edate" value="<?php echo $date['edate']; ?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">标题</th>
+				<td class="td">
+					<input class="input" type="text" id="title" maxlength="30" name="title" value="<?php echo $title; ?>">
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<div class="table_list">
+	<table width="90%">
+		<tr class="ct">
+			<td class="th2">ID</td>
+			<td class="td">期号</td>
+			<td class="td2">专题名称</td>
+			<td class="td2">提交次数</td>
+			<td class="td2">查看详情</td>
+		</tr>
+		<?php foreach ($data as $v) { ?>
+			<tr class="ct">
+				<td class="td2"><?php echo $v['id']; ?></td>
+				<td class="td2"><?php echo $v['issue_name']; ?></td>
+				<td class="td2"><?php echo $v['title']; ?></td>
+				<td class="td2"><?php echo $v['number']; ?></td>
+				<td class="td2"><a href="<?php echo $v['detail_url']; ?>">查看</a></td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#sdate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+		$("#edate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+
+	});
+</script>

@@ -1,0 +1,29 @@
+<form method="post" action="<?php echo $addPostUrl; ?>" id="edit_form">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr class="tr">
+			<th class="th">用户名</th>
+			<td class="td"><input type="text" class="form-control" name="username" maxlength="30" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">用户Email</th>
+			<td class="td"><input type="text" maxlength="30" name="email" class="form-control"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">用户密码</th>
+			<td class="td"><input type="password" maxlength="20" name="password" class="form-control"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">重复密码</th>
+			<td class="td"><input type="password" maxlength="20" name="r_password" class="form-control"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">用户组</th>
+			<td class="td"><select name="groupid">
+					<?php foreach ($groups as $key => $value) { ?>
+						<option value="<?php echo $value['groupid']; ?>"><?php echo $value['name']; ?></option>
+					<?php } ?>
+				</select></td>
+		</tr>
+	</table>
+</form>

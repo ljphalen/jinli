@@ -1,0 +1,71 @@
+专题分两类:
+	1. 列表专题
+	2. 自定义专题
+功能拆分:
+	1) 专题信息
+		1. 表结构(主表):
+			CREATE TABLE IF NOT EXISTS `game_client_subject` (
+			  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+			  `sort` int(10) NOT NULL DEFAULT '0' COMMENT '排序',
+			  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '标题',
+			  `resume` text COMMENT '描述',
+			  `hdinfo` text COMMENT '专题活动',
+			  `icon` varchar(255) NOT NULL DEFAULT '' COMMENT '专题图标',
+			  `img` varchar(255) NOT NULL DEFAULT '' COMMENT '专题图片',
+			  `hot` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '',
+			  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:关闭,1:开启',
+			  `start_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '开始时间',
+			  `end_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '结束时间',
+			  `hits` int(10) NOT NULL DEFAULT '0' COMMENT '',
+			  `op_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			  `sub_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0：列表专题，1：自定义专题',
+			  `view_tpl` tinyint(1) NOT NULL DEFAULT '0' COMMENT '显示模板',
+			  `pgroup` int(10) NOT NULL DEFAULT '0' COMMENT '机组',
+			  PRIMARY KEY (`id`)
+			) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+		2. 说明:	
+			2.1 pgroup是在1.5.8版本中加入的功能,专题可以定向显示到不同的机组.
+			2.2 view_tpl是在1.5.8版本中加入的功能,专题信息可以配置不同的视觉模板,后台的接口是一样的.
+			2.3 sub_type分0：列表专题，1：自定义专题,自定义专题比列表专题多一个中间表game_client_subject_items.
+			2.4 1.5.8之前的版本只能显示列表专题,且后台配置的视觉模板只对1.5.8及之后版本起作用.
+			2.5 自定义专题用html实现,1.5.8之前的版本中不能出现自定义专题,所有链接到专题的接口都需要判断.
+	2) 专题游戏信息
+		1. 表结构:
+			CREATE TABLE IF NOT EXISTS `idx_game_client_subject` (
+			  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+			  `sort` int(10) NOT NULL DEFAULT '0',
+			  `resource_game_id` int(10) unsigned NOT NULL DEFAULT '0',
+			  `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+			  `game_status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+			  `subject_id` int(10) unsigned NOT NULL DEFAULT '0',
+			  `game_id` int(10) unsigned NOT NULL DEFAULT '0',
+			  `item_id` int(10) NOT NULL DEFAULT '0' COMMENT '推荐子项ID',
+			  `resume` varchar(255) DEFAULT NULL COMMENT '游戏描述',
+			  PRIMARY KEY (`id`),
+			  UNIQUE KEY `subject_id` (`subject_id`,`item_id`,`game_id`),
+			  KEY `idx_status_subject_id` (`status`,`subject_id`),
+			  KEY `idx_client_game_id` (`game_id`)
+			) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+		2. 说明:	
+			2.1 专题的所有游戏都存储在该表中.
+			2.2 1.5.8版本新增两个字段item_id和resume,item_id是关联自定义专题信息表,resume是游戏的描述,如果没有填写则调用游戏自己的描述信息.
+			2.3 resource_game_id,status在1.5.8版本后都没有用,1.5.9可以删除.
+	3) 自定义专题信息
+		1. 表结构:
+			CREATE TABLE IF NOT EXISTS `game_client_subject_items` (
+			  `item_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+			  `sub_id` int(10) unsigned NOT NULL COMMENT '推荐id',
+			  `sort` int(10) NOT NULL DEFAULT '0' COMMENT '排序',
+			  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '标题',
+			  `resume` varchar(255) NOT NULL DEFAULT '' COMMENT '描述',
+			  `view_tpl` tinyint(1) NOT NULL DEFAULT '0' COMMENT '显示模板',
+			  PRIMARY KEY (`item_id`),
+			  KEY `idx_sub_id` (`sub_id`)
+			) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='专题子项' AUTO_INCREMENT=1 ;
+		2. 说明:	
+			2.1 1.5.8版本新增的功能,该版本显示4条自定义专题.
+			2.2 sub_id与主表关联字段.
+			2.3 sort是4条自定义专题排序字段.
+			2.4 title和resume是专题相关的描述信息.
+			2.5 view_tpl是专题显示游戏的个数:1:一个游戏,6:六个游戏.
+

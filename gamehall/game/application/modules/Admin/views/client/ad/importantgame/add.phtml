@@ -1,0 +1,37 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl;?>">重点游戏列表</a></li>
+    	<li class="current"><a href="javascript:;">添加重点游戏</a></li>
+		<li><a href="<?php echo $settingsUrl;?>">设置</a></li>
+	</ul>
+</div>
+<div class="h_a">添加重点游戏</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">游戏名称</th>
+			<td class="td"><input type="text" class="input wc" name="name" value=""></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">apk包名</th>
+			<td class="td"><input type="text" class="input wc" name="package" value=""></td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//表单数据提交
+$(document).ready(function(){
+	 $('#start_time').datetimepicker();
+     $('#end_time').datetimepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Ad_Importantgame/add');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,69 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $configUrl ?>">配置管理</a>
+		<li><a href="<?php echo $focusUrl; ?>">关注送金币</a>
+	</ul>
+</div>
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="editForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+
+		<table width="100%">
+
+			<tr class="tr">
+				<th class="th">关注回复</th>
+				<td class="td">
+					<textarea style="width: 300px" name="subscribe"><?php echo $data['subscribe']; ?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">取消关注回复</th>
+				<td class="td">
+					<textarea style="width: 300px" name="unsubscribe"><?php echo $data['unsubscribe']; ?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">问题反馈</th>
+				<td class="td">
+					开始:<textarea style="width: 300px" name="interact_1_in"><?php echo $data['interact_1_in']; ?></textarea>
+					结束:<textarea style="width: 300px" name="interact_1_to"><?php echo $data['interact_1_to']; ?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">功能建议</th>
+				<td class="td">
+					开始:<textarea style="width: 300px" name="interact_2_in"><?php echo $data['interact_2_in']; ?></textarea>
+					结束:<textarea style="width: 300px" name="interact_2_to"><?php echo $data['interact_2_to']; ?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">小编陪你玩</th>
+				<td class="td">
+					<textarea style="width: 300px" name="interact_3"><?php echo $data['interact_3']; ?></textarea>
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">关注领金币</th>
+				<td class="td">
+					开始:<textarea style="width: 300px" name="activity_1_in"><?php echo $data['activity_1_in']; ?></textarea>
+					结束:<textarea style="width: 300px" name="activity_1_to"><?php echo $data['activity_1_to']; ?></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+
+</form>
+<script src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+		ajaxForm('editForm', function (ret) {
+			ajaxRedirect(ret, <?php echo $this->baseUrl; ?>);
+		});
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>
+

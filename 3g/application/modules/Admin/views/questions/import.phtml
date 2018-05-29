@@ -1,0 +1,32 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl; ?>">常见问题列表</a></li>
+		<li class="current"><a href="javascript:;">添加常见问题</a></li>
+	</ul>
+</div>
+<div class="h_a">添加常见问题</div>
+<form method="post" action="<?php echo $importPostUrl; ?>" id="addForm">
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">文件</th>
+				<td class="td">
+					<input type="file" name="content" size="30"/><br/><span style="color:red">将excel文件(文件格式：问题,答案)另存为 文本文件（制表符分隔），再用记事本打开文件，将所有的'Tab'替换成'|'</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script type="text/javascript">
+	$(document).ready(function () {
+		ajaxForm('addForm', function (ret) {
+			ajaxRedirect(ret, baseurl + '/Admin/Questions/index');
+		});
+	})
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,167 @@
+<include file="Public:header" />
+<include file="Public:bootcss" />
+<style>
+.col-sm-10 label {
+	font-weight: normal;
+}
+
+.panel-body{*width: 92%}
+.panelws select.form-control{*height: auto!important;*padding: 4px 0;*margin-top: 0px;}
+.thumbnail{*width: auto;}
+.mainw .form-horizontal .form-control-static{padding-top: 0px;}
+.panelws .form-group input{*padding-top: 8px;*height: 22px!important;margin-bottom: 0px\9;}
+.panelws .form-group textarea{*padding-top: 8px;}
+</style>
+<div class="mainw mainw2 clearfix">
+	<div class="rmain col-md-12 rmain-inf">
+		<div class="panel panelws">
+			<h2 class="yyname">修改游戏资料</h2>
+			<div class="panel-body">
+				<form class="form-horizontal app-edit" role="form" action="{:U('apps/online_edit_save')}" method="post">
+					
+					<div class="row">
+					    <div class="col-sm-12">
+					    	<h4>需填写信息</h4>
+					    </div>
+					</div>
+					
+					<div class="form-group">
+						<label for="brief" class="col-sm-2 control-label"><em>* </em>简述：</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" id="brief" name="brief" maxlength="20"
+								value="{$apkinfo['brief']}" placeholder="应用简要描述，用于前端页面列表展示，不超过20字">
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+					<div class="form-group screenup">
+						<label for="dddd" class="col-sm-2 control-label"><em>* </em>应用截图：</label>
+						<div class="col-sm-10 app-screen ">
+							<h5 class="mt0">请上传至少5张图片，尺寸：480（宽）*800（高） 格式：jpg、png 单张大小：2M以内。</h5>
+							   <volist name="screenshotinfo" id="data">
+									<div class="col-md-3 screen-unit ">
+										<button type="button" class="close deleteBtn" fileid="{$data.id}" data-dismiss="alert" aria-hidden="true">×</button>
+									   	<div class="thumbnail" >
+											<a href="javascript:void(0)"><img src="{:Helper('Apk')->get_url('screen')}{$data.file_path}" width="150" height="250"></a>
+									   	</div>
+								   	</div>
+							   </volist>
+							   <div class="col-md-3 pl0" id="screenshotdiv">
+							   		<div class="thumbnail" >
+										<label id="screenUpload">
+											<img src="{:cdn('PUBLIC')}/common/images/screenshot_add.png">
+									   	</label>
+								   	</div>
+							   </div>
+						</div>
+					</div>
+					
+					<div class="form-group iconup">
+						<label for="dddd" class="col-sm-2 control-label"><em>* </em>应用图标：</label>
+						<?php
+						$defaultIcon = cdn('PUBLIC')."/common/images/icon_add.jpg";
+						?>
+						<div class="col-sm-10">
+							<h5 class="mt0">请上传512*512尺寸图标， 格式：png</h5>
+							<div class="row icons">
+							   <div class="col-md-2">
+								   	<div class="thumbnail thumbnailicon"><label for="largeicon"><img id="largeIconImg" src="{$largeiconurl|default=$defaultIcon}"  /><input id="largeIcon" value="{$largeIconId.id}" name="largesIcon" type="hidden" /></label></div>
+								   	<div id="largeIconUpload" class="btn btn-info btn-small">上传</div>
+							   </div>
+							   
+							</div>
+					
+						</div>
+					</div>
+					
+					<div class="form-group">
+						
+						<div class="col-md-8">
+							<input type="hidden" name="version_code" id="version_code" value="{$apkinfo.version_code}">
+							<input type="hidden" name="package" id="package" value="{$apkinfo.package}">
+							<input type="hidden" name="app_id" id="app_id" value="{$apkinfo.app_id}">
+							<input type="hidden" name="apk_id" id="apk_id" value="{$apkinfo.id}">
+							<input id="icon_id" name="icon_id" type="hidden" value="" >
+				  			<input id="icon_type" name="icon_type" type="hidden" value="2">
+				  			<input id="saveSub" name="saveSub" type="hidden" value="0">
+							<button type="submit" class="btn btn-success bo128" id="saveBtn" name="edit" value="1" onclick="$('#saveSub').val(0);return true;">保存</button>
+						</div>
+					</div>
+				</form>
+				
+			</div>
+		</div>
+	</div>
+</div>
+<include file="Public:footer" />
+<include file="./Source/Tpl/Common/alertDialog.html" />
+
+<link rel="stylesheet" href="{:cdn('PUBLIC')}/app/webuploader/css/webuploader.css?{:C('JS_VERSION')}" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="{:cdn('PUBLIC')}/app/webuploader/js/webuploader.js?{:C('JS_VERSION')}"></script>
+
+<script type=text/javascript src="{:cdn('PUBLIC')}/common/js/jquery.form.js?{:C('JS_VERSION')}"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/common/js/webuploader/screen.js?{:C('JS_VERSION')}"></script>
+<script type="text/javascript" src="{:cdn('PUBLIC')}/common/js/webuploader/icon.js?{:C('JS_VERSION')}"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$("#saveBtn").click(function(){
+		var brief = $("#brief").val();
+		var screenNum = $(".app-screen .screen-unit").length;
+		var defaultIcon = '{$defaultIcon}';
+		
+		if($.trim(brief) == ""){
+			alertDialog("请填写简述");
+			return false;
+		}
+		if(screenNum < 5){
+			alertDialog("至少需要上传 5 张截图");
+			return false;
+		}
+		if($("#smallIconImg").attr("src") == defaultIcon){
+			alertDialog("请上传512*512的图标");
+			return false;
+		}
+		return true;
+	});
+});
+
+function data_filter(){
+	var _brief = $("#brief").val();
+	
+	var _data = {brief:_brief};
+	$.ajax({
+	    type: "POST",
+		url: "<php>echo U('apps/data_filter')</php>",
+		data: _data,
+		success:function(data){
+			if(data.status == 1){
+				return true;
+			}else{
+				var msg = "您提交的内容中包含非法词语";
+				if(typeof(data.keywords) != undefined)
+					msg += ":" + data.keywords;
+					
+				alertDialog(msg);
+				return false;
+			}
+		},
+		dataType:"json"
+	});
+}
+
+//敏感词过滤
+$("#saveBtn").click(function(){
+	data_filter();
+});
+$("#brief").blur(function(){
+	data_filter();
+});
+
+var screen_del = function(){
+	var _id = $(this).attr("fileid");
+	$.ajax({url:"/picture/del", data:"id="+_id});	
+}
+
+$(".deleteBtn").click(screen_del);
+</script>

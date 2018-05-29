@@ -1,0 +1,73 @@
+<include file="Public:header" />
+
+<div class="mainw clearfix">
+	<include file="Union:nav_left" />
+    <div class="rmain fl">
+    	<h2 class="yyname">申请Key</h2>
+		<div class="insub insub2 mt30">
+        	<h3>应用信息填写</h3>
+        	<form class="form-horizontal" role="form" action="{:U("union/save_appkey")}" method="post">
+            <div class="formd formd3">
+                <div class="lid">
+                    <label class="tlab">应用包名：</label>
+                    <div class="colr fl">
+                      <input type="text" name="package" maxlength="200" class="int" placeholder="com.gionee.game.am" />
+                       <span class="help-block">填写后不可修改，作为应用的唯一标示，必须以.am结尾（packagename)</span>
+                    </div>
+                </div>
+                <div class="lid">
+                    <label class="tlab">应用名称：</label>
+                    <div class="colr fl">
+                      <input type="text" name="name" class="int" placeholder="超级马力"  />
+                    </div>
+                </div>
+                <div class="lid">
+                    <label class="tlab">应用类型：</label>
+                    <div class="colr fl">
+                      <span class="spanlab"><input type="radio" name="type" value="0" checked="checked">单机</span>
+                      <span class="spanlab"><input type="radio" name="type" value="1" />网游</span>
+                    </div>
+                </div>
+                <div class="lid">
+                    <label class="tlab">申请渠道：</label>
+                    <div class="colr fl">
+						<div class="input-group">
+							<span class="input-group-addon"> <input type="radio"
+								name="channel" id="defaultChannel" value="1" checked="">
+								默认渠道
+							</span> <span type="text" class="form-control" placeholder="">游戏大厅</span>
+						</div>
+						<div class="input-group">
+						<span class="input-group-addon">
+							<input type="radio" name="channel" id="userChannel" value="0"> 其它渠道
+						</span>
+						<input type="text" class="form-int" placeholder="请填写" name="userchannel">
+				 		</div>
+						<span class="help-block">默认渠道为游戏大厅，如果不是提交到游戏大厅的版本，请勾选其他渠道后再填写</span>          	         	
+					</div>  
+                </div>
+                
+					<script>
+					$("input[name='userchannel']").focus(function(){ $("#userChannel").attr("checked", true); });
+					</script>
+					
+					<php>if(!D("Dev://Accountinfo")->isTax($uid)){</php>
+					<div class="form-group">
+						<label for="developer" class="col-sm-2 control-label">温馨提示：</label>
+						<div class="col-sm-10">
+							<span class="help-block">
+								您的税务资料还不完整，请先完善您的税务登记信息！
+								<a href="{:U('user/taxfix')}" target="_blank" class="btn btn-warning btn-sm">现在去完善资料</a>
+							</span>
+						</div>
+					</div>
+					<php>}</php>
+                
+                <div class="btnw unionaddb"><button class="btn-bred">提交申请</button></div>
+			</form>
+		</div>
+	</div>
+    </div>
+</div>
+
+<include file="Public:footer" />

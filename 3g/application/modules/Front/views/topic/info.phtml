@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<title><?php echo $info['issue_name']?$info['issue_name']:$info['title'];?></title>
+<link rel="stylesheet" type="text/css" href="<?php echo $staticResPath; ?>/navi/css/navi.min.css?v=<?php echo $version;?>">
+<script type="text/javascript">var token = '<?php echo $token;?>';</script>
+<script src="<?php echo $staticSysPath; ?>/lib/zepto/zepto.js?v=<?php echo $version;?>"></script>
+<script src="<?php echo $staticResPath; ?>/navi/js/navi.min.js?v=<?php echo $version;?>"></script>
+</head>
+<body class="bg-white">
+<div class="app <?php echo $info['color'];?>">
+<?php if($topFuncColDisplay) { ?>
+ 	<div id="hd">
+		<header>
+			<div class="hd-wrap">
+				<div class="hd-left">
+					<a class="btn-back" href="<?php echo $newRoot;?>">&lt;</a>
+				</div>
+				<div class="hd-title"><?php echo $info['title'];?></div>
+			</div>
+
+		</header>
+	</div> 
+	<?php } ?>
+
+	<?php
+	$formatTime =date('Y-m-d',$info['start_time']);
+	?>
+	<div id="content">
+		<div class="topic">
+			<div class="title">
+				<h1><?=$info['title']?></h1>
+				<p><?=$formatTime?><span><a href="<?php echo $listUrl;?>">查看往期</a></span></p>
+			</div>
+			<?php echo html_entity_decode($content);?>
+		</div>
+		<input id="topicId" name="topic_id" value="<?=$info['id']?>" type="hidden" />
+	</div>
+<?php
+
+$info['interact'] = 1;
+if($info['interact'] =='1'):?>
+	<div class="tools-wrap">
+		<div class="topic-box topic-share none">
+			<div class="bdsharebuttonbox" data-tag="share_1">
+				<a class="bds_qzone" data-cmd="weixin">朋友圈</a>
+				<a class="bds_tsina" data-cmd="tsina">新浪微博</a>
+				<a class="bds_tqq" data-cmd="tqf">QQ空间</a>
+				<a class="bds-tqq" data-cmd="tqq">腾讯微博</a>
+			</div>
+		</div>
+		<div class="tools-panel">
+			<input id="loveUrl" value="<?php echo $webroot.'/topic/like?id='.$info['id'];?>" type="hidden" />
+			<span class="btn-love" data-box="topic-love"><i class="num"><?php echo ($info['like_num']+$info['init_like']);?></i></span>
+			<!-- <span class="btn-comment"></span> -->
+			<span class="btn-share" data-box="topic-share"></span>
+			<!-- <a class="btn-more" href="<?php echo $listUrl;?>"></a> -->
+		</div>
+	</div>
+
+	<script>
+		//以下为js加载部分
+		//with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+		with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
+
+	<!-- 畅言评论 -->
+	<?php
+	$p = html_entity_decode(Gionee_Service_Config::getValue('changyan_comment_val'));
+	if (!empty($p)):
+	?>
+	<div id="SOHUCS" sid="topic_<?=$info['id']?>"></div>
+	<script id="changyan_mobile_js" charset="utf-8" type="text/javascript"
+	        src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?<?=$p?>">
+	</script>
+	<?php endif;?>
+	<!-- 畅言评论 end-->
+<?php endif; ?>
+</div>
+<div class="topic-vsuccess">提交成功</div>
+</body>
+</html>
+
+

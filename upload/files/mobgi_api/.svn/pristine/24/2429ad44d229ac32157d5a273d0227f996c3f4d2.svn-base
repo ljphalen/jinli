@@ -1,0 +1,1 @@
+ALTER TABLE `mobgi_api`.`ad_dever_pos` DROP PRIMARY KEY,ADD PRIMARY KEY (`id`),ADD `rate` FLOAT NOT NULL DEFAULT '1' COMMENT '广告位概率' AFTER updatetime;

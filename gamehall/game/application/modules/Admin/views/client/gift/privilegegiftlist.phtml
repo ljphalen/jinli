@@ -1,0 +1,33 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $gameListUrl;?>">游戏列表</a></li>
+        <li class="current"><a href="<?php echo $privilegeGiftListUrl;?>">特权礼包</a></li>
+	</ul>
+</div>
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width="150">特权礼包分类</td>
+			<td width="80">VIP限制</td>
+			<td width="200">礼包数量（未兑完数/总量）</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($privilegeGiftList as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['giftLevelTitle'].($key == 1 ? '(热门礼包)':'');?></td>
+			<td><?php echo $vipNameList[$key];?></td>
+			<td><?php echo $value['remainPrivilegeGiftNum']."/".$value['total'];?></td>
+			<td>
+			　　 <?php if($key == 1){?>
+				<a href="<?php echo $hotUrl;?>" class="mr10">管理</a>
+				<?php } else {?>
+				<a href="<?php echo $oneOfPrivilegeGiftListUrl;?>/?giftLevel=<?php echo $key;?>" class="mr10">管理</a>
+				<?php } ?>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>

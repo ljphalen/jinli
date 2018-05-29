@@ -1,0 +1,103 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">运营消息</a></li>
+	<li class="current"><a href="<?php echo $listPushUrl;?>">临时消息</a></li>
+	<li><a href="<?php echo $sysMsgUrl;?>">系统消息</a></li>
+	<li><a href="<?php echo $settingUrl;?>?type=100">消息设置</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listPushUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+				<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input" name="title" value="<?php echo $s['title'];?>"></td>	
+			<th class="th">类型</th>
+			<td class="td">
+			<select name="type" class="wa">
+			    <option value="0">全部</option>
+			    <?php foreach($msgType as $k => $v ) {?>
+				<option <?php if($s['type'] == $k) echo 'selected';?> value="<?php echo $k;?>"><?php echo $v['txt'];?></option>
+				<?php } ?>
+			</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="wa">
+			    <option  value="0">全部</option>
+			    <?php foreach(Game_Service_Msg::$status as $k => $v) {?>
+				<option <?php if($s['status']-1 == $k) echo 'selected';?> value="<?php echo $k+1;?>"><?php echo $v;?></option>
+				<?php } ?>
+			</select>
+			</td>
+			<th class="th">最后维护人</th>
+			<td class="td"><input type="text" class="input" name="last_author" value="<?php echo $s['last_author'];?>"></td>	
+		</tr>
+		<tr>
+		    <th class="th">时间</th>
+			<td class="td">
+			<input type="text" name="start_time" value="<?php echo $s['start_time'];?>" id="start_time" /> 至 
+			<input type="text" name="end_time" value="<?php echo $s['end_time'];?>" id="end_time" />			
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<form id="batchForm" action="<?php echo $batchUpdateUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<input name="action" id="action" type="hidden" value="" />
+<div class="h_a">
+	<span class="btn2"><span><button onclick="$('#action').val('open');" type="submit">批量开启</button></span></span>
+	<span class="btn2"><span><button onclick="$('#action').val('close');" type="submit">批量关闭</button></span></span>
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td><input type="checkbox" onclick="checkAll('.checkbox')"></td>
+			<td width="60">ID</td>
+			<td style="width:170px;">标题</td>
+			<td>类型</td>
+			<td style="width:250px;">内容</td>	
+			<td>生效时间</td>	
+			<td>状态</td>
+			<td>最后维护人</td>
+			<td>操作</td>
+		</tr>
+<?php foreach($msgs as $key => $value) {?>
+		<tr class="ct">
+		    <td><input class="checkbox" name="ids[]" value="<?php echo $value['id'];?>" type="checkbox"></td>
+			<td><?php echo $value['id'];?></td>
+			<td><?php echo $value['title'];?></td>
+			<td><?php echo $msgType[$value['type']]['txt'];?></td>
+			<td><?php echo $value['msg'];?></td>
+			<td><?php echo date('Y-m-d H:i:s',$value['start_time']).'<br>'.date('Y-m-d H:i:s',$value['end_time']);?></td>
+            <td><?php echo $value['status'] == 1 ? '开启' : '关闭';?></td>			<td><?php echo $value['last_author'];?></td>									
+			<td>
+			<a href="<?php echo $detailPushUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">详细</a>
+			<a href="<?php echo $editPushUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">编辑</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script>
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+    $('#end_time').datetimepicker();
+	ajaxForm('batchForm', function(data) {
+		ajaxRedirect(data, baseurl+'/Admin/Msg/indexPush');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

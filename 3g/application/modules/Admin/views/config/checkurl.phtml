@@ -1,0 +1,96 @@
+<?php echo $this->render("layout/header2.phtml"); ?>
+	<section class="main-content">
+		<header class="header navbar bg-default">
+			<ul class="nav navbar-nav">
+				<li class="active">
+					<a href="javascript:;">检测链接</a>
+				</li>
+			</ul>
+		</header>
+
+		<div class="content-wrap">
+			<div class="row">
+				<div class="col-lg-12">
+					<!-- table content start -->
+					<form id="form1" name="form1" method="post" action="/admin/Config/checkUrl">
+						<section class="panel">
+							<table class="table table-bordered table-striped no-margin">
+								<tr>
+									<td>总链接数:</td>
+									<td>
+										<?php echo $total; ?>
+									</td>
+								</tr>
+								<tr>
+									<td>单次检测条数:</td>
+									<td>
+										<input type="text" name="pageSize" id="pageSize" value="<?php echo $pageSize; ?>">
+										<input type="button" value="确定" onclick="submit()"><span>  注：单次越多，响应越慢</span>
+									</td>
+								<tr>
+									<td style="width: 100px">选择检测页码：</td>
+									<td>
+										<input type="hidden" name="token" value="<?php echo $token; ?>">
+										<?php $pages = ceil($total / $pageSize);
+										for ($i = 0; $i < $pages; $i++) {
+											?>
+											<input name="min" value="<?php echo $i * $pageSize + 1; ?>-<?php echo ($i + 1) * $pageSize;?>" type="button" onclick="check(this.value,<?php echo $i + 1;?>)">
+										<?php } ?>
+									</td>
+								</tr>
+							</table>
+						</section>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="table_list" id="content"></div>
+	</section>
+
+	<script type="text/javascript">
+		function check(value, page) {
+			$("#content").html('<span style="margin-left:300px;margin-top:50px;">数据请求中,请稍等.....</span>');
+			$.ajax({
+				url: '/Admin/config/ajaxgetCheckResult',
+				dataType: 'json',
+				data: {'value': value, 'pageSize': $("#pageSize").val(), 'page': page},
+				success: function (e) {
+					var tmp = '';
+					var empty = isEmptyValue(e);
+					if (empty) {
+						tmp += '<tr class="ct"><td class="td2">暂无异常URL</td></tr>';
+					} else {
+						tmp += '<table width="85%"><tr class="ct"><td class="td2" width="10%">序列号</td><td class="td2" width="10%">ID</td><td class="td2" width="10%">标题</td><td class="td2" width="30%">URL</td><td class="td2" width="15%">说明</td></tr>';
+						$.each(e, function (key, val) {
+							tmp += '<tr class="ct"><td class="td2">' + (key + 1) + '</td><td class="td2">' + val['id'] + '</td><td class="td2">' + val['title'] + '</td><td class="td2">' + val['url'] + '</td><td class="td2">' + val['desc'] + '</td></tr>';
+						});
+						tmp += '</table>';
+					}
+					$("#content").html(tmp);
+				}
+			})
+		}
+		function submit() {
+			$("#form1").submit();
+		}
+
+		function isEmptyValue(val) {
+			if (val == null) return true;
+			var type = Object.prototype.toString.call(val).slice(8, -1);
+			switch (type) {
+				case 'String':
+					return !$.trim(val);
+				case 'Array':
+					return !val.length;
+				case 'Object':
+					return $.isEmptyValue(val);
+				default:
+					return false;
+			}
+		}
+	</script>
+
+
+
+
+<?php echo $this->render("layout/footer.phtml"); ?>

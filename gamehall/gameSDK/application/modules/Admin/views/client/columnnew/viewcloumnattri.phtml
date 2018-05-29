@@ -1,0 +1,73 @@
+<?php echo $this->render("layout/header.phtml");?>
+<style>
+	.coloum{
+		width:200px;
+		text-align: center;
+	}
+	.inner_table tr td{
+		padding: 7px 10px 9px;
+	}
+	.inner_table tr td:hover{
+		background: none!important;
+	}
+	.handpick_mask{
+		display: none;
+	}
+</style>
+<div class="nav">
+	<ul class="cc">
+		<li><a href="<?php echo $listUrl.'/?column_version=1.5.2';?>">1.5.2</a></li>
+		<li><a href="<?php echo $listUrl.'/?column_version=1.5.3';?>">1.5.3-1.5.7</a></li>
+		<li><a href="<?php echo $listUrl.'/?column_version=1.5.8';?>">1.5.8</a></li>
+		<li><a href="<?php echo $listUrl.'/?column_version=1.5.9';?>">1.5.9</a></li>
+                <li><a href="<?php echo $listUrl.'/?column_version=1.6.0';?>">1.6.0及以上</a></li>
+		<li class="current"><a href="javascript:;">查看栏目配置</a></li>
+	</ul>
+</div>
+<div class="step mb10">
+		<ul class="cc">
+			<li style="width:25%;background: #74B88A;"  ><span class="fl"><em>设置栏目</em></span></li>
+			<li class="line" style="left:25%"></li>
+			<li style="width:25%;background: #74B88A;"  ><span class="fl"><em>设置频道</em></span></li>
+			<li class="line" style="left:50%"></li>
+			<li style="width:25%;background: #74B88A;" ><span class="fl"><em>频道排序</em></span></li>
+			<li class="line" style="left:75%"></li>
+			<li  style="width:25%" class="current"><span class="fl"><em>设置时间</em></span></li>
+		
+		</ul>
+</div>
+<div class="h_a">查看栏目的属性</div>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">名称</th>
+			<td class="td"><input type="text" class="input" name="column_name" value="<?php echo $info['column_name']?>" disabled="disabled"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+			<select name="status" class="select wa" disabled="disabled">
+                	<option value="1" <?php echo ($info['status'] == 1 )?'SELECTED':''; ?> >开启</option>
+                	<option value="0" <?php echo ($info['status'] == 0 )?'SELECTED':'' ?> >关闭</option>
+            </select></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">活动时间</th>
+			<td class="td">
+			<div>
+				<input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s',$info['start_time']);?>" disabled="disabled" /> 
+			</div>
+			</td>
+		</tr>
+	</table>	
+</div>
+<div class="mb10 tac">
+<a href="<?php echo $listUrl.'/?column_version='.$column_version; ?>" style="color: #fff;padding: 6px;display: inline-block;background: #c83f38;border-radius: 2px;width: 50px;text-decoration:none;">完成</a>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

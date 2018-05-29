@@ -1,0 +1,141 @@
+<?php
+extract($pageData);
+$mainfast = "manifest=\"/cache?cn={$cn}\"";
+$prevUrl = Common::getPrevShortUrl()."?t=";
+$typeData = str_replace(array(trim(json_encode($prevUrl), '"'), '&t_bi='), '',json_encode($data,JSON_UNESCAPED_UNICODE));
+?>
+<!DOCTYPE HTML>
+<html <?=$mainfast?>>
+<head>
+<title>nav</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="apple-touch-fullscreen" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="stylesheet" href="<?=$staticPath?>/apps/3g/outnav/css/style.source.css?v=<?=$version?>" />
+</head>
+<body>
+<script type="text/javascript">
+	var t_bi = '<?=$t_bi;?>';
+	var prevUrl = '<?=$prevUrl;?>';
+	var typeData = <?=$typeData;?>;
+	var webroot = '<?=$webroot;?>';
+</script>
+<section id="h5navi">
+	<!-- navigator cloumns modules start -->
+	<section class="nav-drapdown-wrap">
+		<section class="nav-drapdown">
+			<?php
+			$i=1;
+			foreach($types as $val):
+				$ii = str_pad($i,2,0,STR_PAD_LEFT);
+				$img = "{$staticPath}/apps/3g/outnav/pic/col_{$ii}.png";
+			?>
+			<div class="nav-drapdown-box">
+				<div class="nav-drapdown-title ui-border-b" data-ajax="<?=$webroot;?>/api/ng/list?type_id=<?=$val['id']?>" data-wrap="cinner<?=$i?>">
+					<span class="span1" style="background-image:url(<?=$img?>);"></span>
+					<span class="span2"><?=$val['name']?></span>
+					<span class="span3"></span>
+					<span class="span4"></span>
+				</div>
+				<div class="nav-drapdown-content ui-border-b">
+					<div id="cinner<?=$i?>" class="inner"></div>
+				</div>
+			</div>
+			<?php
+			$i++;
+			endforeach;
+			?>
+		</section>
+	</section>
+	<!-- navigator cloumns modules end -->
+</section>
+<!-- load script start -->
+<script type="text/javascript" src="<?=$staticPath?>/sys/lib/zepto/zepto.js?v=<?php echo $version;?>"></script>
+<script type="text/javascript" src="<?=$staticPath?>/apps/3g/outnav/js/zepto.scroll.js?v=<?php echo $version;?>"></script>
+<script type="text/javascript" src="<?=$staticPath?>/apps/3g/outnav/js/tempcore.js?v=<?php echo $version;?>"></script>
+<script type="text/javascript" src="<?=$staticPath?>/apps/3g/outnav/js/main.source.js?v=<?php echo $version;?>"></script>
+<!-- load script end -->
+<script id="tmpl_words3" type="text/html">
+	<div class="movie-link">
+		<p>
+		<%for(var i = 1; i <= list.length; i++) {%>
+			<a href="<%=prevUrl%><%=list[i-1]['link']%><%=t_bi%>"><span><%=list[i-1]['title']%></span></a>
+			<%if(i%3 == 0){%>
+				</p>
+				<%if( i != list.length){%><p><%}%>
+			<%}%>
+		<%}%>
+	</div>
+</script>
+<script id="tmpl_words5" type="text/html">
+	<div class="words5-link">
+		<p>
+		<%for(var i = 1; i <= list.length; i++) {%>
+			<a class="rline" style="color:<%=list[i-1]['color']%>" href="<%=prevUrl%><%=list[i-1]['link']%><%=t_bi%>"><span><%=list[i-1]['title']%></span></a>
+			<%if(i%5 == 0){%>
+				</p>
+				<%if( i != list.length){%><p><%}%>
+			<%}%>
+		<%}%>
+	</div>
+</script>
+
+<script id="tmpl_cols4" type="text/html">
+	<div class="icon-link icon-4-txt">
+		<% for(var i = 1; i <= list.length; i++){%>
+			<div class="item">
+				<a href="<%=prevUrl%><%=list[i-1]['link']%><%=t_bi%>">
+					<span><img src="<%=list[i-1]['img']%>" /></span>
+					<span><%=list[i-1]['title']%></span>
+				</a>
+			</div>
+			<%if(i%4 == 0){%>
+        	</div>
+            <%if( i != list.length){%><div class="icon-link icon-4-txt"><%}%>
+            <%}%>
+		<%}%>
+    </div>
+</script>
+
+<script id="tmpl_cols5" type="text/html">
+	<div class="icon-link icon-5-txt">
+		<% for(var i = 1; i <= list.length; i++){%>
+			<div class="item">
+				<a href="<%=prevUrl%><%=list[i-1]['link']%><%=t_bi%>">
+					<span><img src="<%=list[i-1]['img']%>" /></span>
+					<span><%=list[i-1]['title']%></span>
+				</a>
+			</div>
+			<%if(i%5 == 0){%>
+        	</div>
+            <%if( i != list.length){%><div class="icon-link icon-5-txt"><%}%>
+            <%}%>
+		<%}%>
+	</div>
+</script>
+
+
+<script id="tmpl_bread" type="text/html">
+    <div class="drapdown-mod">
+        <div class="title ui-border-b"><h3><span><%=list[0]['title']%></span></h3></div>
+    </div>
+</script>
+
+<script type="text/javascript">
+   function report2baidu(id,label){
+      var _hmt = window._hmt || [], actions = ['','顶部Banner广告点击','导航搜索-百度热词','导航搜索-切换','热门推荐点击'];
+      var act = typeof id === 'number' ? actions[id] : id;
+
+      _hmt.push(['_trackEvent', 'GNnav数据', act, label]);
+   }
+</script>
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9a55e0c040a4ea7e63ff3bbadf8db6c9' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</body>
+</html>

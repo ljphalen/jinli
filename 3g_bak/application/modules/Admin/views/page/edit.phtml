@@ -1,0 +1,87 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $listUrl; ?>">页面列表</a></li>
+			<li class="current"><a href="javascript:;">编辑页面</a></li>
+		</ul>
+	</div>
+	<div class="h_a">编辑页面</div>
+	<form method="post" action="<?php echo $editPostUrl; ?>" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+		<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">页面类型</th>
+					<td class="td"><select name="page_type" onchange="set(this.value,0)">
+							<?php foreach ($types as $key => $value) { ?>
+								<option <?php if ($info['page_type'] == $key) echo 'selected'; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+							<?php } ?>
+						</select></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">页面名称</th>
+					<td class="td"><input type="text" class="input" name="name" value="<?php echo $info['name']; ?>">
+					</td>
+				</tr>
+				<tr class="tr" id="url">
+					<th class="th">页面地址</th>
+					<td class="td"><input type="text" class="input wc" name="url" value="<?php echo $info['url']; ?>">
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">排序</th>
+					<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort']; ?>">（填写一个数字，数字越小越靠前）
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">是否默认页</th>
+					<td class="td">
+						<input type="hidden" name="is_default" id="is_default" value="<?php echo $info['is_default']; ?>"/>
+						<input type="checkbox" onclick="if(this.checked){$('#is_default').val(1);}else{$('#is_default').val(0);}"
+							<?php echo $info['is_default'] == 1 ? 'checked="checked"' : ''; ?> >(选中表示设置为默认页)
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">预制包</th>
+					<td class="td">
+						<ul class="uploadImg">
+							<li id="AppImg">
+								<input type="hidden" name="url_package" value="">
+							</li>
+						</ul>
+						<p style="clear:both;">
+							<iframe name="upload" src="<?php echo $uploadUrl . '/?imgId=AppImg'; ?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script type="text/javascript">
+		//表单数据提交
+		$(document).ready(function () {
+			if ('<?php echo $info['page_type'];?>' == 2) {
+				$('#url').hide();
+			} else {
+				$('#url').show();
+			}
+
+			set = function (type, chval) {
+				if (type == 2) {
+					$('#url').hide();
+				} else {
+					$('#url').show();
+				}
+			}
+
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Page/index');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

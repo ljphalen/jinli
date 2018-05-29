@@ -1,0 +1,84 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">点评列表</a></li>
+    <li class="current"><a href="javascript:;">编辑点评</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑点评</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $tj_info['id'];?>" type="hidden" />
+<input name="ntype" value="<?php echo $info['ntype'];?>" type="hidden" />
+<?php if(!$info['status']){ ?>
+<input name="status" value="<?php echo $tj_info['status'];?>" type="hidden" />
+<?php }?>
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input" name="sort" value="<?php echo $tj_info['sort']?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">标题</th>
+			<td class="td"><input type="text" class="input wc" name="title" value="<?php echo $info['title']?>" readonly='true' style='color:gray;'></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">关联游戏</th>
+			<td class="td"><input type="text" class="input wc" name="name" value="<?php echo $info['name']?>" readonly='true' style='color:gray;'></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">关联游戏ID</th>
+			<td class="td"><input type="text" class="input wc" name="game_id" value="<?php echo $info['game_id']?>" readonly='true' style='color:gray;'></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">类型</th>
+			<td class="td"><input type="text" class="input wc" name="edit_ntype" value="<?php echo $type[$info['ntype']];?>" readonly='true' style='color:gray;'></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">开始结束时间</th>
+			<td class="td">
+				<div>
+					<input class="input" type="text" maxlength="30" style="width:143px;" id="start_time" name="start_time" value="<?php echo date('Y-m-d H:i:s', $tj_info['start_time']);?>" /> 
+					至 
+					<input class="input" type="text" maxlength="30" style="width:143px;" id="end_time" name="end_time" value="<?php echo date('Y-m-d H:i:s', $tj_info['end_time']);?>" />
+				</div>
+			</td>
+		</tr>
+		<?php if($info['status'] == 1){ ?>
+		<tr class="tr">
+			<th class="th">广告状态</th>
+			<td class="td">
+			<select name="status" class="select wa">
+				<option <?php if ($tj_info['status'] == 1) echo 'selected';?> value="1">开启</option>
+				<option <?php if ($tj_info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+			</select>
+			</td>
+		</tr> 
+		<?php } else {?>
+		<tr class="tr">
+			<th class="th">广告状态</th>
+			<td class="td">
+			   <input type="text" name="edit_status" class="input wc" value="关闭" readonly='true' style='color:gray;'>
+			</td>
+	    </tr> 
+		<?php }?>
+		
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+//导购分类表单数据提交
+$(document).ready(function(){
+	$('#start_time').datetimepicker();
+    $('#end_time').datetimepicker();
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Ad_Tuijian/index');
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

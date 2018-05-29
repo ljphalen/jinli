@@ -1,0 +1,56 @@
+<div class="page">
+	<!--查询开始-->
+	<div class="pageContent">
+	
+		<!-- 列表开始 -->
+		<table class="list" width="100%" layoutH="138">
+			<thead>
+			<tr>
+				<th>id</th>
+				<th>小版本名</th>
+				<th>小版本号</th>
+				<th>大版本名</th>
+				<th>大版本号</th>
+				<th>差分包</th>
+				<th>包大小</th>
+				<th>md5</th>
+				<th>生成日期</th>
+				<th>状态</th>
+				<th>管理员</th>
+				<th>下载</th>
+				<th>操作</th>
+			</tr>
+			</thead>
+			<tbody>
+			<volist id="vo" name="patchs">
+
+				<tr target="" rel="{$vo['id']}">
+					<td>{$vo['id']}</td>
+					<td>{$vo['s_vname']}</td>
+					<td>{$vo['s_vcode']}</td>
+					<td>{$vo['b_vname']}</td>
+					<td>{$vo['b_vcode']}</td>
+					<td>{$vo['patch_path']}</td>
+					<td>{:ceil($vo['patch_size']/1024/1024)}MB</td>
+					<td>{$vo['patch_md5']}</td>
+					<td>{$vo['created_at']|date="Y-m-d H:i",###}</td>
+					<td>{:D("Bspackage")->getStatus($vo['status'])}</td>
+					<td><notempty name="vo.admin_id">{:D("Admin")->where(array("id"=>$vo['admin_id']))->getField('nickname')}</notempty></td>
+					<td><a href="{:Helper("Apk")->get_url('patch')}{$vo['patch_path']}">下载</a></td>
+					<td>
+						<gt name="vo.status" value="-2">
+							<eq name="vo.status" value="1">
+								<a href="__URL__/bs_status/status/0/pid/{$vo.id}/navTabId/app_bs_{$apk_id}" target="ajaxTodo" title="真的要下线吗"><font color="red">下线</font></a>
+								<else/>
+								<a href="__URL__/bs_status/status/1/pid/{$vo.id}/navTabId/app_bs_{$apk_id}" target="ajaxTodo" title="真的要上线吗"><font color="green">上线</font></a>
+							</eq>	
+						</eq>
+					</td>
+			</volist>
+			</tbody>
+		</table>
+		<!-- 列表结束 -->
+		
+	</div>
+	
+</div>

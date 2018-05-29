@@ -1,0 +1,77 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li class="current"><a href="javascript:;">暑假活动</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post" >
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">	
+	   <tr class="tr">
+			<th class="th">活动名称</th>
+			<td class="td"><input type="text" class="input" name=<?php echo Activity_Service_Cfg::NAME;?> value="<?php echo $search[Activity_Service_Cfg::NAME];?>"></td>
+			<th class="th">活动状态</th>
+			<td class="td">
+			 <select name=<?php echo Activity_Service_Cfg::STATUS;?> class="select wa">
+			    <option  value="2">全部</option>
+			    <option <?php if ($search[Activity_Service_Cfg::STATUS] == 1) echo 'selected';?> value="1">开启</option>
+				<option <?php if ($search[Activity_Service_Cfg::STATUS] == 0) echo 'selected';?> value="0">关闭</option>
+			 </select>
+		   </td>
+		</tr>
+		<tr class="tr">
+		    <th class="th">活动起始时间</th>
+			<td class="td" colspan="2">
+				<div>
+					<input class="input" type="text" maxlength="30" style="width:143px;" id="<?php echo Activity_Service_Cfg::START_TIME;?>" name="<?php echo Activity_Service_Cfg::START_TIME;?>" value="<?php echo $search[Activity_Service_Cfg::START_TIME] ;?>" /> 至 
+					<input class="input" type="text" maxlength="30" style="width:143px;" id="<?php echo Activity_Service_Cfg::END_TIME;?>" name="<?php echo Activity_Service_Cfg::END_TIME;?>" value="<?php echo $search[Activity_Service_Cfg::END_TIME] ;?>" />
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="h_a">
+	<span class="btn2"><span><button><a href="<?php echo $addStep1Url;?>" class="mr10" style="color:white;">添加活动</a></button></span></span>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<span>共<?php echo $total;?>条结果</span>
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="80">ID</td>
+			<td width="150">活动名称</td>
+			<td width="150">活动时间</td>
+			<td width="80">活动状态</td>
+			<td width="150">操作</td>
+		</tr>
+		<?php foreach ($items as $item):?>
+			<tr class = "ct">
+		    	<td> <?php echo $item[Activity_Service_Cfg::ID];?> </td>
+				<td> <?php echo html_entity_decode($item[Activity_Service_Cfg::NAME]);?> </td>
+				<td> <?php echo '预告：' . date('Y-m-d  H:i:s', $item[Activity_Service_Cfg::PREHEAT_TIME]) .
+				 				'<br/>开始：' . date('Y-m-d  H:i:s', $item[Activity_Service_Cfg::START_TIME]) .
+				 				'<br/>结束：' . date('Y-m-d  H:i:s', $item[Activity_Service_Cfg::END_TIME]);?> </td>
+				<td> <?php echo $item[Activity_Service_Cfg::STATUS] ? '开启' : '关闭';?> </td>
+				<td>
+					<a href="<?php echo $editStep1Url;?>/?id=<?php echo $item[Activity_Service_Cfg::ID];?>" class="mr10">编辑</a>
+					<a href="<?php echo $grantUrl;?>/?id=<?php echo $item[Activity_Service_Cfg::ID];?>" class="mr10">中奖记录</a>
+				</td>
+			</tr>
+		<?php endforeach;?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+//广告表单数据提交
+$(document).ready(function(){
+	 $('#<?php echo Activity_Service_Cfg::START_TIME;?>').datetimepicker();
+     $('#<?php echo Activity_Service_Cfg::END_TIME;?>').datetimepicker();
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

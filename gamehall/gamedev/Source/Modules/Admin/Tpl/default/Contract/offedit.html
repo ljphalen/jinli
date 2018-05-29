@@ -1,0 +1,76 @@
+<div class="page">
+	<div class="pageContent">
+	
+		<form method="post" action="__URL__/offline/navTabId/__MODULE__/callbackType/closeCurrent" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone)">
+		<div class="pageFormContent" layoutH="58">
+			<div class="unit">
+				<label>包名称： </label>
+				<span>{$vo.package}</span>
+			</div>
+			<div class="unit">
+				<label>应用名称： </label>
+				<span>{$vo.app_name}</span>
+			</div>
+			<div class="unit">
+				<label>版本： </label>
+				<span>{$vo.version_name}</span>
+			</div>
+			
+			<br>
+			<hr>
+			<div class="unit">
+				<label>下线原因：</label>
+				<select name="reason_id" id="reason_id">
+					<option value="0">--请选择--</option>
+					<php>
+					$reason_info = D("Reason")->where( array("type"=>2) )->order('reason_id')->limit(10)->select();
+				    foreach( $reason_info as $key =>$value ){
+				    	echo '<option value="'.$value['reason_id'].'">'.$value['reason_content'].'</option>';
+					}
+					</php>
+				</select>
+			</div>
+			<div class="unit">
+				<label>备注：</label>
+				<textarea placeholder="其他原因请填写" rows=5 cols=50 name="remarks" id="remarks"></textarea>
+			</div>
+			<div class="unit">
+				<label>是否通知：</label>
+				<input type="checkbox" id="notice" name="notice" value="1" checked>邮件通知开发者
+			</div>
+			
+			<div class="unit">
+				<input type=hidden value="1" id="admin_id" name="admin_id" />
+				<input type=hidden value="1" id="old_status" name="old_status" />
+				<input type=hidden value="0" id="new_status" name="new_status" />
+				<input type=hidden value="{$vo.app_name}" id="app_name" name="app_name" />
+				<input type=hidden value="{$vo.package}" id="package" name="package" />
+				<input type=hidden value="{$vo.version_name}" id="version_name" name="version_name" />
+				<input type=hidden value="{$vo.version_code}" id="version_code" name="version_code" />
+				<input type=hidden value="{$vo.id}" id="apk_id" name="apk_id" />
+				<input type="hidden" id="created_at" name="created_at" value="<php>echo time();</php>" />
+			</div>
+			
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" onclick="return checkDate();">确认下线此应用</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+	
+	</div>
+</div>
+<script type="text/javascript">
+<!--
+function checkDate(){
+	var reason_id = $.trim($("#reason_id").val());
+	if(reason_id==0 || reason_id==''){
+		alert("请选择下线的原因");
+		return false;
+	}
+	return true;
+}
+//-->
+</script>

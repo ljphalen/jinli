@@ -1,0 +1,57 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    	<li><a href="<?php echo $indexUrl;?>">活动列表</a></li>
+		<li class="current"><a href="<?php echo $addUrl;?>">添加活动</a></li>
+	</ul>
+</div>
+<div class="h_a">添加分类</div>
+<form method="post" action="<?php echo $addPostUrl;?>" id="addForm">
+	<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">名称</th>
+				<td class="td"><input type="text" class="input wc" name="title" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">奖品数量(种类)</th>
+				<td class="td"><input type="text" class="input wb" name="awards_num" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">排序</th>
+				<td class="td"><input type="text" class="input wb" name="sort" value=""></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">开始日期</th>
+				<td class="td"><input type="text" class="input wb" name="start_time" value="<?php echo date("Y-m-d");?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">结束日期</th>
+				<td class="td"><input type="text" class="input wb" name="end_time" value="<?php echo date("Y-m-d",strtotime("+1day")); ?>"></td>
+			</tr>
+			<tr class="tr">
+				<th class="th">状态</th>
+				<td class="td">
+					<select class="wa" name="status">
+						<option value="1">开启</option>
+						<option value="0">关闭</option>
+					</select>
+				</td>
+			</tr>
+			
+		</table>
+	</div>
+	<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'<?php echo $addUrl;?>');
+	});
+	$('input[name="end_time"]').datepicker();
+	$('input[name="start_time"]').datepicker();
+});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

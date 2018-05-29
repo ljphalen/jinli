@@ -1,0 +1,91 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $listUrl; ?>">分类列表</a></li>
+			<li class="current"><a href="javascript:;">编辑分类</a></li>
+		</ul>
+	</div>
+	<form method="post" action="<?php echo $editPostUrl; ?>" id="editForm">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+		<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">名称</th>
+					<td class="td"><input type="text" class="input wc" name="name" value="<?php echo $info['name']; ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">CP来源</th>
+					<td class="td"><select name="source_id">
+							<?php foreach ($types as $key => $value) { ?>
+								<option value="<?php echo $key; ?>" <?php if ($info['source_id'] == $key) echo 'selected'; ?>><?php echo $value; ?></option>
+							<?php } ?>
+						</select></td>
+				</tr>
+				<tr class="tr">
+					<th class="th">颜色</th>
+					<td class="td">
+						<input type="text" class="input" name="color" value="<?php echo $info['color']; ?>">(填写颜色值，如:#1459A3,#0F8755, 不填写则显示为默认颜色。)
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">排序</th>
+					<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort']; ?>">（填写一个数字，数字越大越靠前。）
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">位置</th>
+					<td class="td">
+						<select name="position" class="select" id="position">
+							<?php foreach ($positions as $key => $value) { ?>
+								<option value="<?php echo $key; ?>" <?php if ($info['position'] == $key) echo 'selected'; ?>><?php echo $value; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<tr class="tr">
+					<th class="th">状态</th>
+					<td class="td"><select name="status" class="select">
+							<option value="1" <?php if ($info['status'] == 1) echo 'selected'; ?>>开启</option>
+							<option value="0" <?php if ($info['status'] == 0) echo 'selected'; ?>>关闭</option>
+						</select></td>
+				</tr>
+				<tr class="tr" id="ad">
+					<th class="th">广告标题</th>
+					<td class="td"><input type="text" class="input wc" name="ad" value="<?php echo $info['ad']; ?>">
+					</td>
+				</tr>
+				<tr class="tr" id="link">
+					<th class="th">广告链接</th>
+					<td class="td"><input type="text" class="input wc" name="link" value="<?php echo $info['link']; ?>">(请以http://开头填写。)
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac">
+			<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script
+		src="<?php echo $staticPath; ?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+	<script
+		src="<?php echo $staticPath; ?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			ajaxForm('editForm', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Jhtype/index');
+			});
+
+			$('#position').bind('change', function () {
+				if ($(this).val() == 0) {
+					$('#ad,#link').show();
+				} else {
+					$('#ad,#link').hide();
+				}
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

@@ -1,0 +1,33 @@
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="edit_form">
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr>
+			<th>名称</th>
+			<td><?=$info['nickname']?></td>
+		</tr>
+		<!--
+		<tr>
+			<th>完成时间</th>
+			<td>
+				<input type="text" class="easyui-textbox" name="down_time" required="true" value="<?=date('Y-m-d H:i:s', $info['down_time'])?>">
+			</td>
+		</tr>
+		-->
+		<tr>
+			<th>开始时间</th>
+			<td>
+				<input type="text" class="easyui-textbox" name="award_code" required="true" value="<?=$info['award_code']?>">
+				<br>随机获奖码:<?php echo strtoupper(Gionee_Service_ShortUrl::genTVal($info['id'] . '' . $info['event_id'] . time(), 8)); ?>
+			</td>
+		</tr>
+	</table>
+</form>
+
+<?php
+foreach ($list as $val) {
+	$fuser = Gionee_Service_WxHelp::getDaoUser()->get($val['fuid']);
+	$t     = date('y/m/d H:i:s', $val['created_at']);
+	echo "{$t},{$fuser['nickname']},{$val['amount']}<br>";
+}
+?>

@@ -1,0 +1,10 @@
+<?php
+error_reporting(E_ALL && ~E_NOTICE);
+define("BASE_PATH", dirname(__FILE__) . "/../../");
+define ("APP_PATH", BASE_PATH . "application/");
+define("ENV", get_cfg_var('GIONEE_ENV'));
+define("DEFAULT_MODULE", 'Admin');
+$app = new Yaf_Application(BASE_PATH. "configs/application.ini", ENV);
+$app->getDispatcher()->catchException(true);
+$response = $app->bootstrap()->run();
+?>

@@ -1,0 +1,222 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $indexUrl;?>">通用配置</a></li>
+		<li><a href="<?php echo $moduleIndexUrl;?>">模块配置</a></li>
+	</ul>
+</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+	<div class="h_a">全局配置管理</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">搜索敏感词过滤</th>
+				<td class="td">
+					 <textarea name="game_search_filter" class="textarea wc" style="height:200px; width:800px"><?php echo $configs['game_search_filter'];?></textarea>
+					 <br/>
+					 <br/>
+					 <span style="color:red">多个关键字用英文竖线 "|" 分割。</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="h_a">账号配置管理</div>
+	<div class="table_full">
+		<table width="100%">
+		    <tr class="tr">
+				<th class="th">菜单账号宣传语</th>
+				<td class="td">
+				   <input name="game_account_tips" class="input wc" value="<?php echo $configs['game_account_tips'];?>"/>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">注册协议内容</th>
+				<td class="td">
+					 <textarea name="game_account_agreement_data" class="textarea" style="height:200px; width:800px"><?php echo $configs['game_account_agreement_data'];?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">注册协议地址</th>
+				<td class="td">
+				   <input name="game_account_agreement_url" class="input wc" value="<?php echo $configs['game_account_agreement_url'];?>"/>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">忘记密码地址</th>
+				<td class="td">
+				   <input name="game_account_forgetpwd" class="input wc" value="<?php echo $configs['game_account_forgetpwd'];?>"/>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="h_a">H5版本参数</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">意见反馈引导宣传语</th>
+				<td class="td">
+				   <textarea name="game_react" class="textarea wc"><?php echo $configs['game_react'];?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">客户端下载配置</th>
+				<td class="td">
+				  <input name="game_title" class="input wc" value="<?php echo $configs['game_title'];?>"><br/>
+				  <textarea name="game_link" class="textarea wc"><?php echo $configs['game_link'];?></textarea>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">最新游戏定义</th>
+				<td class="td">
+					 前<input name="game_num" class="input" value="<?php echo $configs['game_num'];?>">个
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">缓存开关</th>
+				<td class="td">
+					<label class="mr20"><input <?php if($configs['game_h5_cache']) echo 'checked';?> name="game_h5_cache" value="1" type="radio">开启</label>
+					<label class="mr20"><input <?php if(!$configs['game_h5_cache']) echo 'checked';?> name="game_h5_cache" value="0" type="radio">关闭</label>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">应用宝：艾米游戏</th>
+				<td class="td">
+					 <input name="game_aimi_url" class="input wc" value="<?php echo $configs['game_aimi_url'];?>">
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">应用宝：游戏大厅</th>
+				<td class="td">
+					 <input name="game_amgo_url" class="input wc" value="<?php echo $configs['game_amgo_url'];?>">
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="h_a">APK过滤(不显示给用户;填gameId,修改5分钟后生效)</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">1.5.2及以上外发版</th>
+				<td class="td">
+					<textarea name="game_filter_amigame" class="textarea wc" style="height:60px; width:800px"><?php echo $configs['game_filter_amigame'];?></textarea>
+					 <br/>
+					 <br/>
+					 <span style="color:red">填写金立游戏客户端1.5.2及以上版本外发版不需要的游戏id,使用“|”符号分割。</span>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">1.5.2及以上预装版</th>
+				<td class="td">
+				 	<textarea name="game_filter_gamehall" class="textarea wc" style="height:60px; width:800px"><?php echo $configs['game_filter_gamehall'];?></textarea>
+					 <br/>
+					 <br/>
+					 <span style="color:red">填写游戏大厅客户端1.5.2及以上版本预装版不需要的游戏id,使用“|”符号分割。</span>
+				</td>
+			</tr>
+		   <tr class="tr">
+				<th class="th">其他版本(1.5.1及以下版本;艾米游戏1.4.9;艾米游戏1.5.1;小辣椒1.4.5;H5网站;WEB网站)</th>
+				<td class="td">
+				 	<textarea name="game_filter_default" class="textarea wc" style="height:60px; width:800px"><?php echo $configs['game_filter_default'];?></textarea>
+					 <br/>
+					 <br/>
+					 <span style="color:red">填写全局不需要显示的游戏id,使用“|”符号分割。</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="h_a">客户端相关参数</div>
+	<div class="table_full">
+		<table width="100%">
+			<tr class="tr">
+				<th class="th">push发送时间散列值</th>
+				<td class="td">
+					 <input name="game_time" class="input" value="<?php echo $configs['game_time'];?>"> (分钟) <span><font color="#FF0000">可以不填写，填写输入大于0的整数。</font></span>
+				</td>
+			</tr>
+			
+			<tr class="tr">
+				<th class="th">游戏升级用户排行范围</th>
+				<td class="td">
+					 <input name="game_start_per" class="input" value="<?php echo $configs['game_start_per'];?>">%至
+					 <input name="game_end_per" class="input" value="<?php echo $configs['game_end_per'];?>">% <span><font color="#FF0000">可以不填写，填写输入0到100整数。</font></span>
+				</td>
+			</tr>
+
+			<tr class="tr">
+				<th class="th">礼包预警邮箱</th>
+				<td class="td">
+					 <input name="game_gift_eamil" class="input wc" style="width:950px;" value="<?php echo $configs['game_gift_eamil'];?>">
+		             <br/>
+					 <span style="color:red">多个账号要用英文逗号隔开。</span>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">礼包预警比例</th>
+				<td class="td">
+					 <input name="game_gift_num" class="input" value="<?php echo $configs['game_gift_num'];?>" />%
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">bbs分享帖子的接口地址</th>
+	        	<td class="td">
+					 <input name="bbs_share_url" class="input wc" value="<?php echo $configs['bbs_share_url'];?>" />
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">论坛分享的默认大icon</th>
+	            <td class="td">
+	                <ul class="uploadImg">
+	                <li id="img1">
+	                <img src="<?php echo ($configs['bbs_share_bimg'])?$attachPath.$configs['bbs_share_bimg']:$staticPath.'/img/content/nopic.jpg';?>" />
+	                <input type="hidden" name="bbs_share_bimg" value="<?php echo $configs['bbs_share_bimg'];?>">
+	                </li></ul>
+	                <p style="clear:both;">
+	                 <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=img1';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+	               </p>
+	            </td>
+			</tr>
+			<tr class="tr">
+				<th class="th">论坛分享的默认小icon</th>
+	            <td class="td">
+	                <ul class="uploadImg">
+	                <li id="Img2">
+	                <img src="<?php echo ($configs['bbs_share_simg'])?$attachPath.$configs['bbs_share_simg']:$staticPath.'/img/content/nopic.jpg';?>" />
+	                <input type="hidden" name="bbs_share_simg" value="<?php echo $configs['bbs_share_simg'];?>">
+	                </li></ul>
+	                <p style="clear:both;">
+	                 <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img2';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+	               </p>
+	            </td>
+			</tr>
+			<tr class="tr">
+				<th class="th">日志开关</th>
+	        	<td class="td">
+					<label class="mr20"><input <?php if($configs['log_status']) echo 'checked';?> name="log_status" value="1" type="radio">开启</label>
+					<label class="mr20"><input <?php if(!$configs['log_status']) echo 'checked';?> name="log_status" value="0" type="radio">关闭</label>
+				</td>
+				</td>
+			</tr>
+			<tr class="tr">
+				<th class="th">抢礼包日志开关</th>
+	        	<td class="td">
+					<label class="mr20"><input <?php if($configs['grab_log_status']) echo 'checked';?> name="grab_log_status" value="1" type="radio">开启</label>
+					<label class="mr20"><input <?php if(!$configs['grab_log_status']) echo 'checked';?> name="grab_log_status" value="0" type="radio">关闭</label>
+				</td>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="mb10 tac">
+		<span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+	</div>
+</form>
+<script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('editForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Config/index');
+	});
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

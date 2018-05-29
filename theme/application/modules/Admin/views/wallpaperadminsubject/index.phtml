@@ -1,0 +1,182 @@
+<?php echo $this->render("common/navigator.phtml"); ?>
+<style type="text/css">
+    .rews{
+        background-color: #cf0;
+    }
+</style>
+<!-- 导航栏Ajax加载 指向navagator.html  menuOn表示分别需要高亮的菜单栏id 用下划线_隔开 eg:bz_taotu_taotuPack-->
+<section class="navigator" menuOn="bz_seminar_seminarList">
+
+</section>
+
+<!-- 内容包裹层 根据不同页面替换里面内容-->
+<section class="ajax_wrap">
+    <!-- 页面唯一id标识符  一般情况下id=文件名  eg:bz_admin_taotu02-->
+    <div id="bz_operation_seminar_list01">
+        <div class="com_tb_wrap">
+            <div class="com_tb">
+                <label class="tb_cell">状态</label>
+                <div class="tb_cont tb_cell">
+                        <ul class="tag_list sellect_status">
+                            <?php foreach ($status as $k => $v) { ?>
+                                <li val="<?php echo $k; ?>" <?php if($selstatus == $k){ echo 'class="on"'; }?>><?php echo $v; ?></li>
+                            <?php } ?>
+                        </ul>
+                </div>
+            </div><!-- com_tb end -->
+        </div><!-- com_tb_wrap end -->
+
+        <!-- 列表模式 -->
+        <section class="view view_list show" id="viewList">
+            <!-- 批量管理内容 默认隐藏 -->
+            <div class="view_admin view_list_admin">
+                <!-- checkClass表示 点击后 哪些class要被选中 -->
+                <!--  <button class="btn_check btn_check_all" checkClass="btn_check_list"></button>
+                  <label>全选</label>
+                  <span class="btn btn_s1 pack_del">批量删除</span>-->
+            </div>
+            <table class="view_list_tb">
+                <thead>
+                    <tr><th>标题</th><th>类别</th><th>创建时间</th><th>上线时间</th><th>屏序</th><th>操作</th><th>状态</th><th>查看</th></tr>
+                </thead>
+                <tbody>
+
+                    <?php foreach ($subjectinfo as $v) { ?>
+                        <tr class="<?php if ($v['w_subject_pushlish_time'] > time()) echo "rews"; ?>">
+                            <td><button class="btn_check btn_check_list"></button>
+                                <span><?php echo $v['w_subject_name'] ?></span>
+                            </td>
+                            <td>
+                                <?php if ($v['w_subject_sub_type'] == 9) echo "广告专题"; ?>
+                                <?php if ($v['w_subject_sub_type'] == 0) echo "壁纸专题"; ?>
+                            </td>
+                            <td><?php echo date("Y-m-d", $v['w_subjet_create_time']); ?></td>
+                            <td><?php if ($v['w_subject_pushlish_time']) echo date("Y-m-d H:i:s", $v['w_subject_pushlish_time']); ?></td>
+                            <td><?php echo $v['w_subject_type']; ?></td>
+                            <td>
+                                <a class="btn_txt" href="/Admin/wallpaperadminsubject/subjectedit?sid=<?php echo $v['w_subject_id'] ?>">编辑</a>
+                                <a class="btn_txt pop_btn delBtn" openPopId="fixTipView" val="<?php echo $v['w_subject_id'] ?>">删除</a>
+                            </td>
+                            <td>
+                                <!-- 有修改权限时输出如下 -->
+                                <div class="select_box" >
+                                    <label class="select_val" val="<?php echo $v['w_subject_status'] ?>"><?php echo $status[$v['w_subject_status']] ?></label>
+                                    <ul class="select_option ch_status"
+                                        sid="<?php echo $v['w_subject_id'] ?>"
+                                        screenid="<?php echo $v['w_subject_type'] ?>"
+                                        pubtime="<?php if ($v['w_subject_pushlish_time']) echo 1; ?>">
+                                        <li val="2">已上线</li>
+                                        <li val="1">未上线</li>
+                                    </ul>
+                                </div><!-- select_box end-->
+                            </td>
+                            <td>
+                                <a class="btn_txt pop_btn prev_btn" openPopId="fixPicView" val="<?php echo $v['url'] ?>">预览</a>
+                            </td>
+                        </tr>
+                    <?php } ?>
+
+                </tbody>
+            </table>
+        </section>
+
+
+
+    </div><!-- content end -->
+
+</section>
+
+<!-- 弹窗 消息+按钮-->
+<div class="pop_wraper" id="fixTipView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_tip">
+                    <p class="tip_mes">是否删除<span>该专题</span></p>
+                    <div class="tip_btns">
+                        <button class="btn_s2 delsub">确定</button>
+                        <button class="btn_s2 btnCancel">取消</button></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+
+<!-- 弹窗 图片 pop_style_img表示是图片 带该class的 点击页面其它区域会关闭该图片-->
+<div class="pop_wraper pop_style_img" id="fixPicView">
+    <div class="pop_outer">
+        <div class="pop_inner">
+            <div class="pop_content">
+                <!-- 这里的内容根据设计调整 外层的4个pop包裹层必须要有-->
+                <div class="pop_cont_img">
+                    <div class="pop_img_src"><img src="image/test_img02.png"></div>
+                    <div class="pop_close"></div>
+                </div>
+
+            </div><!-- pop_content 结束 -->
+        </div><!-- pop-inner 结束 -->
+    </div><!-- pop-outer 结束 -->
+</div><!-- pop-wraper 结束 -->
+<?php echo $this->render("common/pageshow.phtml"); ?>
+
+
+<script type="text/javascript">
+    $(function () {
+        $(".prev_btn").click(function () {
+            var img = $(this).attr("val");
+            $(".pop_img_src >img").attr("src", img);
+        });
+
+        $(".ch_status > li").click(function () {
+            var sid = $(this).parent().attr("sid");
+            var screenid = $(this).parent().attr("screenid");
+            var vals = $(this).attr("val");
+
+            var pubtime = $(this).parent().attr("pubtime");
+
+            if (pubtime !== "1") {
+                pubtime = 0;
+            }
+
+
+            var data = "sid=" + sid + "&pubtime=" + pubtime + "&status=" + vals + "&token=" + token + "&screenid=" + screenid;
+            var url = "/Admin/wallpaperadminsubject/update_setStatus";
+            if (confirm("确定要改变当前专题的状态?")) {
+                $.post(url, data, function (d) {
+                    if (d) {
+                        // window.location.href = "/Admin/Wallpaperadminsubject/index";
+                        location.reload()
+                    }
+                });
+            }
+        });
+        //删除主题
+        $(".delBtn").click(function () {
+            var sid = $(this).attr("val");
+            $(".delsub").click(function () {
+                var data = "sid=" + sid + "&token=" + token;
+                var url = "/Admin/Wallpaperadminsubject/delsubject";
+                $(".pop_wraper").removeClass("show");
+                $.post(url, data, function (d) {
+                    if (d) {
+                        // window.location.href = "/Admin/wallpaperadminsubject/index"
+                        location.reload()
+                    }
+                })
+
+            })
+        });
+
+        $(".sellect_status >li").click(function () {
+            var val = $(this).attr("val");
+            var page = "<?php echo $apges ?>"
+            window.location.href = "/Admin/wallpaperadminsubject/index?status=" + val + "&page=" + page;
+        })
+
+    })
+</script>
+</body>
+</html>

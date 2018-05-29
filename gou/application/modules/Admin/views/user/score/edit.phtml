@@ -1,0 +1,32 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+    <ul class="cc">
+        <li><a href="<?php echo $indexUrl;?>">积分列表</a></li>
+        <li class="current"><a href="javascript:;">编辑积分</a></li>
+    </ul>
+</div>
+<div class="h_a">编辑积分</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="editScoreFrom">
+    <input name="id" value="<?php echo $summary['id'];?>" type="hidden"/>
+    <input name="token" value="<?php echo $token;?>" type="hidden" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">总积分</th>
+                <td class="td">
+                    <input type="text" class="input" name="sum_score" maxlength="30" value="<?php echo $summary['sum_score'];?>">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">保存</button></span></span></div>
+</form>
+<script type="text/javascript">
+    //用户表单数据提交
+    $(document).ready(function(){
+        ajaxForm('editScoreFrom',function(ret){
+            ajaxRedirect(ret, baseurl+'/Admin/User_Score/index?s=1');
+        });
+    })
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

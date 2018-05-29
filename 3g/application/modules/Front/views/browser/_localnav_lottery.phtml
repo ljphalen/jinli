@@ -1,0 +1,12 @@
+<?php
+$str = '<div class="caipiao">';
+$css = array('ssq' => 'ssq', 'ChaoJiDaLeTou' => 'daletou');
+foreach ($list as $val) {
+	$str .= sprintf('<div class="item"><div class="title"><span>%s</span><span>%s</span><span>第%s期</span></div><div class="content"><div class="bars %s">', $val['name'], $val['date'], $val['issue'], $css[$val['n']]);
+	foreach ($val['code'] as $code) {
+		$str .= sprintf('<span>%s</span>', $code);
+	}
+	$str .= sprintf('</div><div class="link"><a href="%s">立即投注</a></div></div></div>', $val['link']);
+}
+$str .= '</div>';
+echo $str;

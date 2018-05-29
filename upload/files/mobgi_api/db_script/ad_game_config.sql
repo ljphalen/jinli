@@ -1,0 +1,1 @@
+alter table ad_game_config add config_name VARCHAR(200) not null DEFAULT 'Î´ÃüÃûÅäÖÃ' after id

@@ -1,0 +1,143 @@
+<?php echo $this->render("layout/header.phtml");?>
+    <div class="nav">
+        <ul class="cc">
+            <li><a href="<?php echo $indexUrl;?>">问贴列表</a></li>
+            <li class="current"><a href="javascript:;">编辑问贴</a></li>
+        </ul>
+    </div>
+    <div class="h_a">编辑问贴</div>
+    <form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+        <input name="token" value="<?php echo $token;?>" type="hidden" />
+        <input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+        <input name="uid" value="<?php echo $info['uid'];?>" type="hidden" />
+        <div class="table_full">
+            <table width="100%">
+                <tr class="tr">
+                    <th class="th">问题</th>
+                    <td class="td">
+                        <textarea name="title" id="title" cols="112" rows="3" placeholder="限制为8-50个字"><?php echo $info['title']; ?></textarea>
+                    </td>
+                </tr>
+                <tr class="tr">
+                    <th class="th">描述</th>
+                    <td class="td">
+                        <textarea name="content" id="content" cols="112" rows="5" placeholder="限制为10-500字"><?php echo $info['content']; ?></textarea>
+                    </td>
+                </tr>
+                <tr class="tr">
+                    <th class="th">图片</th>
+                    <td class="td">
+                        <?php foreach($images as $key=>$value) {?>
+                            <div id="upimg<?php echo $key;?>">
+                                <ul class="uploadImg">
+                                    <li id="upImg<?php echo $key;?>">
+                                        <img src="<?php echo $attachPath.$value;?>"/>
+                                        <input type="hidden" name="upImg[<?php echo $key;?>]" value="<?php echo $value; ?>">
+                                    </li>
+                                    <li><a href="javascript:void(0)" onclick="deleteImg('<?php echo $deleteImgUrl;?>?id=<?php echo $info['id'];?>&image=<?php echo $value;?>', 'upimg<?php echo $key;?>', event);">删　除</a></li>
+                                </ul>
+                                <p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=upImg'.$key;?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>
+                            </div>
+                        <?php }?>
+                        <div id="imgs"></div>
+                        <div class="mb10"><button onclick="addupload();" onfocus="blur();" type="button" class="btn">＋添加图片</button></div>
+                    </td>
+                </tr>
+                <tr class="tr">
+                    <th class="th">用户</th>
+                    <td class="td"><?php echo $author['nickname']; ?>
+                    </td>
+                </tr>
+                <tr class="tr">
+                    <th class="th">推荐</th>
+                    <td class="td">
+                        <select name="recommend">
+                            <option value="0" <?php if($info['recommend'] == 0) echo 'select="selected"'; ?>>否</option>
+                            <option value="1" <?php if($info['recommend'] == 1) echo 'select="selected"'; ?>>是</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="tr">
+                    <th class="th">隐藏</th>
+                    <td class="td">
+                        <select name="is_hidden">
+                            <option value="0" <?php if($info['is_hidden'] == 0) echo 'select="selected"'; ?>>否</option>
+                            <option value="1" <?php if($info['is_hidden'] == 1) echo 'select="selected"'; ?>>是</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="tr">
+                    <th class="th">状态</th>
+                    <td class="td">
+                        <?php foreach($status as $sk=>$sv):?>
+                            <input type="radio" name="status" value="<?php echo $sk ?>" <?php if($info['status']==$sk) echo 'checked="checked"'; ?> /><?php echo $sv ?>
+                        <?php endforeach; ?>
+                        <select name="reason" style="margin-left: 10px;">
+                            <option value="0" selected="selected">给个理由撒?</option>
+                            <?php foreach($reason as $key => $rn): ?>
+                                <option value="<?php echo $key; ?>" <?php if($info['reason'] == $key) echo 'selected="selected"'; ?>><?php echo $rn; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="mb10 tac">
+            <span class="btn"><span><button onfocus="blur();" type="button" id="btn_preview">预览</button></span></span>
+            <span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+        </div>
+    </form>
+    <script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+    <script src="<?php echo $staticPath;?>/js/admin/kindeditor/kindeditor.js?v=<?=$version?>"></script>
+    <script type="text/javascript">
+        $(function(){
+            $('#btn_preview').click(function(){
+                var url = '<?php echo $webroot.$previewUrl; ?>'+'?preview=1&id='+<?php echo $info['id'];?>;
+                window.open(url,'_newtab');
+            });
+        });
+
+        $('#start_time').datetimepicker();
+        $(document).ready(function(){
+            ajaxForm('addForm',function(ret){
+                ajaxRedirect(ret, baseurl+'/Admin/Qa_Question/<?php echo $backurl; ?>?s=1');
+            });
+            $('#select').change(function(){
+                option = $(this).children('option:selected').val();
+                if(option == '1'){
+                    $('#category').show();
+                }else{
+                    $('#category').hide();
+                }
+            });
+
+            var imgc = <?php echo $images_count; ?>;
+            addupload  = function() {
+                if($('.uploadImg').size() > 2){
+                    alert('最多上传3张图片');
+                    return false;
+                }
+                var al = $('<ul class="uploadImg"><li id="Img'+imgc+'"><img src="<?php echo $staticPath;?>/img/content/nopic.jpg"/><input type="hidden" name="simg['+imgc+']" value=""></li></ul><p style="clear:both;"><iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=Img';?>'+imgc+'" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe></p>');
+                $('#imgs').append(al);
+                imgc++;
+            }
+            deleteImg = function(url, elid, e) {
+                showConfirm("确认删除该条信息？", function() {
+                    $.ajax({
+                        url : url,
+                        type : 'POST',
+                        dataType : 'json',
+                        data : 'token='+token,
+                        success : function(ret) {
+                            if (ret.success) {
+                                $('#'+elid).remove();
+                            } else {
+                                showError('', ret.msg);
+                            }
+                        }
+                    });
+                }, e);
+            }
+        });
+    </script>
+<?php echo $this->render("layout/footer.phtml");?>

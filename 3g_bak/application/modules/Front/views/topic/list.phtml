@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<title>往期回顾</title>
+	<link id="linkMain" rel="stylesheet" type="text/css" href="<?php echo $staticResPath; ?>/navi/css/navi.min.css?v=<?php echo $version;?>">
+</head>
+<body class="bg-white">
+<div id="hd">
+	<header>
+		<div class="hd-wrap ui-border-b">
+			<div class="hd-left">
+				<a class="btn-back" href="javascript:history.back(-1)">返回</a>
+			</div>
+			<div class="hd-title">往期回顾</div>
+			<div class="hd-right"></div>
+		</div>
+	</header>
+</div>
+<div id="content">
+	<ul class="topic-list">
+
+		<?php foreach($topics as $key=>$value){?>
+			<li class="ui-border-b">
+				<a href="<?=$value['url']?>">
+					<?php
+					if(!empty($value['img'])):
+						if (empty($value['typeimg'])) {
+							$iconimg = "{$staticPath}/apps/3g/navi/pic/icon-0{$value['type']}.png";
+						} else {
+							$iconimg = Common::getImgPath().$value['typeimg'];
+						}
+					?>
+					<div class="pic">
+						<i><img src="<?=$iconimg?>" /></i>
+						<img src="<?=$value['img']?>" />
+					</div>
+					<?php endif;?>
+					<div class="txt">
+						<p><?=$value['title']?></p>
+						<p><?=$value['desc']?></p>
+						<p><span class="link-love"><?php echo ($value['like_num']+$value['init_like']);?></span></p>
+					</div>
+				</a>
+			</li>
+		<?php }?>
+
+	</ul>
+</div>
+</body>
+</html>

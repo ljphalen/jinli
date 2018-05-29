@@ -1,0 +1,148 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li><a href="<?php echo $listUrl;?>">分类列表</a></li>
+    <li class="current"><a href="javascript:;">编辑分类</a></li>
+	</ul>
+</div>
+<div class="h_a">分类名称</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addForm">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="id" value="<?php echo $info['id'];?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">排序</th>
+			<td class="td"><input type="text" class="input wc" name="sort" value="<?php echo $info['sort'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">分类名称</th>
+			<td class="td"><input type="text" class="input wc" name="name" value="<?php echo $info['name'];?>"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">图片</th>
+			<td class="td">
+				<ul class="uploadImg">
+					<li id="ptypeImg">
+						<img src="<?php echo $attachPath.$info['icon'];?>"/>
+						<input type="hidden" name="icon" value="<?php echo $info['icon'];?>">
+					</li>
+				</ul>			
+                <p style="clear:both;">
+	                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=ptypeImg';?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+				</p></td>
+		</tr>
+		<tr class="tr">
+			<th class="th">状态</th>
+			<td class="td">
+				<select class="wa" name="status">
+					<option <?php if($info['status'] == 1) echo 'selected';?> value="1">开启</option>
+					<option <?php if($info['status'] == 0) echo 'selected';?> value="0">关闭</option>
+				</select> 
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th">推荐名称</th>
+			<td class="td">
+                <div><label for="recommend">名称：</label>
+                    <input type="text" id="recommend" class="input" name="recommend" value="<?php echo $info['recommend']; ?>"/>
+                    <label for="recommend_status">状态：</label>
+                    <select class="wa" name="recommend_status" id="recommend_status">
+                        <option <?php if($info['recommend_status'] == 1) echo 'selected';?> value="1">开启</option>
+                        <option <?php if($info['recommend_status'] == 0) echo 'selected';?> value="0">关闭</option>
+                    </select>
+                </div>
+
+            </td>
+		</tr>
+        <tr class="tr">
+            <th class="th">子类</th>
+            <td class="td">
+                <table border="0" cellpadding="25" id="child_item">
+                    <thead>
+                    <tr class="tr">
+                        <td class="td">排序</td>
+                        <td class="td">名称</td>
+                        <td class="td">状态</td>
+                        <td class="td">操作</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach($items as $k=>$i):$k++ ?>
+
+                    <tr>
+                        <td class="td"><input name="item[<?php echo $k; ?>][id]" value="<?php echo $i['id'];?>" type="hidden" /><input type="text" class="input" name="item[<?php echo $k; ?>][sort]" value="<?php echo $i['sort']; ?>"/></td>
+                        <td class="td"><input type="text" class="input" name="item[<?php echo $k; ?>][name]" value="<?php echo $i['name']; ?>"/></td>
+                        <td class="td">
+                            <select name="item[<?php echo $k; ?>][status]">
+                                <option value="0" <?php if($i['status']==0)echo 'selected="selected"'; ?> >关闭</option>
+                                <option value="1" <?php if($i['status']==1)echo 'selected="selected"'; ?> >开启</option>
+                            </select>
+                        </td>
+                        <td class="td"><a href="javascript:;" class="drop_btn" data-num="<?php echo $k; ?>" data-id="<?php echo $i['id'];?>"><span>删除</span></a></td>
+                    </tr>
+                    <?php endforeach; ?>
+                    <tr>
+                        <td class="td"><input type="text" class="input" name="item[0][sort]" value=0 /></td>
+                        <td class="td"><input type="text" class="input" name="item[0][name]" /></td>
+                        <td class="td">
+                            <select name="item[0][status]">
+                                <option value="1">开启</option>
+                                <option value="0">关闭</option>
+                            </select>
+                        </td>
+                        <td class="td"><a href="javascript:;" class="add_btn" data-num="<?php echo count($items)+1; ?>" ><span>添加</span></a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+
+    $(function(){
+        $('a.add_btn').live('click', function (e) {
+            var i = $(this).data('num');
+            var html = gethtml(i + 1, 1);
+            var btn = gethtml(i, false);
+            $("table#child_item tbody:last").append(html);
+            $(this).parent().html(btn);
+        });
+        $('a.drop_btn').live('click', function (e) {
+            if (!window.confirm("Are you sure?")) {
+                return false;
+            }
+            var id = $(this).data('id');
+            if (id) {
+                var input = '<input name="drop[]" type="hidden" value="' + id + '" />';
+                $("form#addForm").prepend(input);
+            }
+            $(this).parent().parent().remove();
+
+        });
+        function gethtml(i,type){
+            var tpl = '<tr><td class="td"><input type="text" class="input" name="item['+i+'][sort]" /></td>'
+              +'<td class="td"><input type="text" class="input" name="item['+i+'][name]" /></td>'
+              +'<td class="td"><select name="item['+i+'][status]"><option value="1">开启</option><option value="0">关闭</option></select></td>'
+              +'<td class="td"><a href="javascript:;" class="add_btn" data-num='+i+' ><span>添加</span></a></td></tr>';
+
+            var btn ='<a href="javascript:;" class="drop_btn" data-num='+i+' ><span>删除</span></a>';
+            if(type){
+                return tpl;
+            }
+            return btn;
+        }
+    });
+//广告表单数据提交
+$(document).ready(function(){
+	ajaxForm('addForm',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Type_Ptype/index');
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

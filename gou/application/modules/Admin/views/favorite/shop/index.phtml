@@ -1,0 +1,78 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">店铺收藏列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $listUrl;?>" method="get" id="searchForm" >
+<input name="token" type="hidden" value="<?php echo $token;?>"/>
+<div class="table_full">
+	<table width="100%">
+        <tr class="tr">
+            <th class="th">标题</th>
+            <td class="td"><input type="text" class="input wc" name="title" value="<?php echo $params['title'];?>"></td>
+            <th class="th">产品ID</th>
+            <td class="td"><input type="text" class="input wc" name="item_id"	value="<?php echo $params['item_id'];?>"></td>
+        </tr>
+        <tr class="tr">
+            <th class="th">ID</th>
+            <td class="td"><input type="text" class="input wc" name="id"	value="<?php echo $params['id'];?>"></td>
+            <th class="th">UID</th>
+            <td class="td"><input type="text" class="input wc" name="uid"	value="<?php echo $params['uid'];?>"></td>
+        </tr>
+        <tr class="tr">
+           	<th class="th">设备</th>
+            <td class="td"><select name="channel_id" id="select">
+                    	<option value="">请选择</option>
+                        <option value="0" <?php if($params['channel_id'] == '0') echo 'selected="selected"';?>>android</option>
+                        <option value="1" <?php if($params['channel_id'] == '1') echo 'selected="selected"';?>>ios</option>
+                </select></td>
+            <th class="th">平台</th>
+            <td class="td"><input type="text" class="input wc" name="src" value="<?php echo $params['src'];?>"></td>
+        </tr>
+	</table>
+</div>
+<div class="mb10 tac"><span style="float:left;">当前总条数：<?php echo $total;?></span><span class="btn"><span><button type="submit">搜 索</button></span></span><a href="javascript:;" class="search_btn btn btn_success export_btn">导出</a></div>
+
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+		    <td width="5%">ID</td>
+		    <td width="8%">产品ID</td>
+            <td width="10%">标题</td>
+            <td width="10%">平台</td>
+            <td width="6%">设备</td>
+            <td width="5%">LOGO</td>
+            <td width="14%">UID</td>
+            <td width="30%">URL</td>
+		</tr>
+<?php foreach($list as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['id'];?></td>
+            <td><a href="<?php echo $itemUrl."?item_id=".$value['item_id']; ?>" target="_blank"><?php echo $value['item_id'];?></a></td>
+            <td><?php echo $value['title']; ?></td>
+            <td><?php echo $value['src'];?></td>
+            <td><?php echo $value['channel_id']?'iOS':'Android';?></td>
+            <td><img src="<?php if(strpos($value['image'], 'http://') === false) {echo $attachPath.$value['image'];}else{echo $value['image'];};?>" width="25" height="25"/></td>
+            <td><?php echo $value['uid'];?></td>
+            <td><?php echo $value['url'];?></td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+</form>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+
+<?php echo $this->render("layout/footer.phtml");?>
+<script>
+    $(function(){
+        $('.export_btn').click(function(){
+            $("form#searchForm").attr('action',"<?php echo $exportUrl; ?>");
+            $("form#searchForm").submit();
+            $("form#searchForm").attr('action',"<?php echo $indexUrl; ?>");
+        });
+    });
+</script>

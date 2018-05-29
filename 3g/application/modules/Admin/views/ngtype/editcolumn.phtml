@@ -1,0 +1,89 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $listColumnUrl . '?type_id=' . $type_id; ?>">栏目列表</a></li>
+			<li class="current"><a href="javascript:;">编辑栏目</a></li>
+		</ul>
+	</div>
+	<div class="h_a">编辑栏目</div>
+	<form method="post" action="<?php echo $editColumnPostUrl; ?>" id="addFrom">
+		<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+		<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+
+		<div class="table_full">
+			<table width="100%">
+				<tr class="tr">
+					<th class="th">名称</th>
+					<td class="td"><input type="text" class="input" name="name" value="<?php echo $info['name']; ?>">
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">颜色</th>
+					<td class="td">
+						<input type="text" class="input" name="color" value="<?php echo $info['color']; ?>">(填写颜色值，如:#1459A3,#0F8755, 不填写则显示为默认颜色)
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">栏目样式</th>
+					<td class="td">
+						<select name="style" onchange="setmore(this.value)">
+							<?php foreach ($styles as $key => $value) { ?>
+								<option <?php echo ($info['style'] == $key) ? 'selected="selected"' : ''; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">分类</th>
+					<td class="td">
+						<select name="type_id">
+							<?php foreach ($types as $key => $value) { ?>
+								<option <?php echo ($info['type_id'] == $key) ? 'selected="selected"' : ''; ?>  value="<?php echo $key; ?>"><?php echo $value['name']; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+				<tr class="tr" id="more">
+					<th class="th">更多新闻链接</th>
+					<td class="td"><input type="text" class="input wc" name="more" value="<?php echo $info['more']; ?>">（填写更多新闻链接地址）
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">排序</th>
+					<td class="td"><input type="text" class="input" name="sort" value="<?php echo $info['sort']; ?>">（填写一个数字，数字越大越靠后）
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">状态</th>
+					<td class="td"><select name="status" min-width="100px">
+							<option <?php if ($info['status'] == 1) echo 'selected="selected"'; ?> value="1">开启</option>
+							<option <?php if ($info['status'] == 0) echo 'selected="selected"'; ?>value="0">关闭</option>
+						</select></td>
+				</tr>
+			</table>
+		</div>
+		<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span>
+		</div>
+	</form>
+	<script type="text/javascript">
+		//广告表单数据提交
+		$(document).ready(function () {
+			if ("<?php echo $info['style']?>" == "link") {
+				$('#more').show();
+			} else {
+				$('#more').hide();
+			}
+			setmore = function (style) {
+				if (style == "link") {
+					$("#more").show();
+				} else {
+					$("#more").hide();
+				}
+			}
+
+			ajaxForm('addFrom', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/Ngtype/column?type_id=<?php echo $type_id?>');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

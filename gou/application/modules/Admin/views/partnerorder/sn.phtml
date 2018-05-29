@@ -1,0 +1,125 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="#">订单列表</a></li>
+	</ul>
+</div>
+
+<form action="<?php echo $indexUrl;?>" method="post" id="searchForm" >
+	<input name="token" type="hidden" value="<?php echo $token;?>"/>
+	<div class="table_full">
+		<table width="100%">
+			<tr>
+				<th class="th">订单渠道:</th>
+				<td class="td">
+					<select name="channel">
+						<option value="">请选择</option>
+						<?php if(!empty($channels)): foreach ($channels as $key=>$item):?>
+							<option value="<?php echo $key;?>" <?php if ($params['channel'] == $key) echo 'selected="selected"';?>><?php echo $item['title'];?></option>
+						<?php endforeach; endif;?>
+					</select>
+				</td>
+				<th class="th">下单时间：</th>
+				<td class="td">
+					<input class="input" type="text" maxlength="30" style="width:137px;" id="search_stime" name="stime" value="<?php echo $params['stime'];?>" /> 至
+					<input class="input" type="text" maxlength="30" style="width:137px;" id="search_etime" name="etime" value="<?php echo $params['etime'];?>" />
+				</td>
+			</tr>
+			<tr>
+				<th class="th">订单号:</th>
+				<td class="td"><input class="input wb" type="text" name="order_id" value="<?php echo $params['order_id'];?>"></td>
+				<th class="th">反馈标签:</th>
+				<td class="td"><input class="input wb" type="text" name="channel_code" value="<?php echo $params['channel_code'];?>"></td>
+			</tr>
+			<tr>
+				<th class="th"></th>
+				<td class="td" colspan="3">
+					<span class="btn"><span><button type="submit">搜索</button></span></span></span>
+					<span class="btn"><span><button type="button" onclick="downloadOrder();">下载</button></span></span></span>
+				</td>
+			</tr>
+		</table>
+	</div>
+</form>
+<?php //Common::debug($params);?>
+<form action="<?php echo $downloadUrl;?>" method="post" id="DownloadForm" >
+	<input name="token" type="hidden" value="<?php echo $token;?>"/>
+	<input type="hidden" name="channel" value="<?php echo $params['channel'];?>">
+	<input type="hidden" name="stime" value="<?php echo $params['stime'];?>">
+	<input type="hidden" name="etime" value="<?php echo $params['etime'];?>">
+	<input type="hidden" name="order_id" value="<?php echo $params['order_id'];?>">
+	<input type="hidden" name="channel_code" value="<?php echo $params['channel_code'];?>">
+</form>
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>订单渠道</td>
+			<td>订单号</td>
+			<td>反馈标签</td>
+			<td>订单金额</td>
+			<td>实付金额</td>
+			<td>预付佣金</td>
+			<td>应付佣金</td>
+			<td>购买数量</td>
+			<td width="10%">商品名称</td>
+			<td width="6%">一级目录</td>
+			<td>订单状态</td>
+			<td>下单时间</td>
+		</tr>
+		<?php foreach($list as $key => $value) {$data = json_decode($value['data'], true);?>
+		<tr class="ct">
+			<td><?php echo isset($channels[$value['channel']])?$channels[$value['channel']]['title']:'';?></td>
+			<td><?php echo $value['order_id'];?></td>
+			<td><?php echo $value['channel_code'];?></td>
+			<td><?php echo $value['order_amount'];?></td>
+			<td><?php echo $data['payAmountTrue'];?></td>
+			<td><?php echo $value['ticket_amount'];?></td>
+			<td><?php echo $data['prePayCommission'];?></td>
+			<td><?php echo implode("; ", $data['saleNum']);?></td>
+			<td><?php echo implode("; ", $data['productName']);?></td>
+			<td><?php echo implode("; ", $data['cate']);?></td>
+			<td><?php echo $value['order_status'];?></td>
+			<td><?php echo $value['order_time'] ? date('Y-m-d H:i:s', $value['order_time']) : '';?></td>
+		</tr>
+		<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#search_stime').datetimepicker();
+	$('#search_etime').datetimepicker();
+})
+
+function downloadOrder(){
+	$('#DownloadForm').submit();
+}
+
+function get_order(){
+	var cateID = $('#cateID').val();
+	var start_time = $('#start_time').val();
+	var end_time = $('#end_time').val();
+	ajaxLoader.show();
+	$.ajax({
+		url:'<?php echo $exportUrl;?>',
+		type:'post',
+		dataType : 'json',
+		data : 'token='+token + '&cateID=' + cateID + '&start_time=' +
+				start_time + '&end_time=' + end_time,
+		success : function(ret) {
+			ajaxLoader.hide();
+			if (ret.success) {
+				showMsg('提示', ret.msg);
+			} else {
+				showError('提示', ret.msg);
+			}
+		}
+	});
+}
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

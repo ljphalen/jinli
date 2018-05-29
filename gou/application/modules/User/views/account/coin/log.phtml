@@ -1,0 +1,41 @@
+<?php echo $this->render("layout/newheader.phtml");?>
+<div id="page">
+		<div id="iscrollWrap">
+			<div class="mainWrap">
+				<?php if ($hasheader) {?>
+		        <header id="iHeader" class="hd">
+					<div class="top-wrap">
+						<div class="title">
+							<a href="<?php echo $webroot.'/user/account/index';?>" class="back"></a>
+							<h1>流通记录</h1>
+						</div>
+					</div>
+				</header>
+		        <?php }?>
+		        
+				<section class="precord">
+					<section class="coin-detail">
+						<div class="record-wrap">
+						<ul class="mod-item-list">
+							<li><h3>银币流通记录：</h3></li>
+							<?php foreach($logs as $key=>$value){?>
+							<li>
+								<dl class="mod-dl-list">
+									<dd><?php 
+										if (!$value['msg'] || (strlen($value['msg']) == 20)) {
+											$value['msg'] = '购买积分换购商品，使用了'.abs($value['coin']).'银币。';
+										}
+										echo $value['msg'];
+									?></dd>
+									<dd><?php echo date('Y-m-d H:i:s',$value['create_time']);?></dd>
+								</dl>
+							</li>
+							<?php } ?>
+						</ul>
+					</section>
+				</section>
+		</div>
+		</div>
+</div>
+</body>
+</html>

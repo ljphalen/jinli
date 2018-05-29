@@ -1,0 +1,69 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="wrap">
+	<div class="content">
+	<?php if ($total == 0){ ?>
+		<div class="mod_box searchList_box searchList_error">
+			<div class="hd">共0个与“<strong class="high"><?php echo $keyword; ?></strong>”相关的搜索，来自互联网</div>
+			<div class="bd">
+				<div class="search_error">
+					很遗憾,没有找到与“<?php echo $keyword; ?>”相关的内容 <br />试一下大家正在玩的游戏吧!
+				</div>
+			</div>
+		</div>
+		<!-- 试一下 s-->
+		<div class="mod_box rec_box">
+			<div class="hd"><i class="hd_ico"></i><h2 class="title">试一下</h2></div>
+			<div class="bd">
+				<ul class="game_list clearfix">
+				<?php
+				foreach($playgames as $key=>$val) {?>  
+					<li>
+						<a class="thumb" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', 'gamedetail'.$val['id'].'_gn', 'isearch_gn_gid'.$val['id'], $webroot.'/Front/Game/detail/?id='.$val['id'] );?>" title="<?php echo $val['name'];?>"><img class="lazy" data-original="<?php echo $val['img'];?>" src="<?php echo $staticResPath; ?>/images/default_icon.png?v=<?php echo $version;?>"  alt="<?php echo $val['name'];?>" title="<?php echo $val['name'];?>" /></a>
+						<h4><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', 'gamedetail'.$val['id'].'_gn', 'isearch_gn_gid'.$val['id'], $webroot.'/Front/Game/detail/?id='.$val['id'] );?>" title="<?php echo $val['name'];?>"><?php echo $val['name']?></a></h4>
+						<p class="type"><?php echo $val['category_title'];?></p>
+						<a class="download_btn" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'startdl', 'gamedetail'.$val['id'].'_gn', 'isearch_gn_gid'.$val['id'], $val['link'] );?>" title="下载">下载</a>
+					</li>
+				<?php } ?>			
+			</div>
+		</div>
+		<!-- 试一下 e-->
+	<?php } else { ?>
+			<div class="main">
+				<!-- 搜索结果列表 s-->
+				<div class="mod_box searchList_box">
+					<div class="hd">共<?php echo $total ;?>个与“<strong class="high"><?php echo $keyword ;?></strong>”相关的搜索<?php echo ($from == 'baidu')?'，来自互联网':''; ?></div>
+					<div class="bd">
+						<ul class="search_list">
+						<?php foreach($games as $key=>$val) 
+						{
+						     $temp =  ($from == 'gn')?($webroot.'/Front/Game/detail/?from='.$from.'&id='.$val['id'].'&keyword='.$keyword):($webroot.'/Front/Search/detail/?from='.$from.'&id='.$val['id'].'&keyword='.$keyword); 
+							?>  
+							    <li class=""><a class="thumb" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', 'gamedetail'.$val['id'].'_'.$from, 'isearch_'.$from.'_gid'.$val['id'],$temp );?>" title="<?php echo $val['name'];?>"><img class="lazy" data-original="<?php echo $val['img'];?>" src="<?php echo $staticResPath; ?>/images/default_icon.png?v=<?php echo $version;?>"  alt="<?php echo $val['name'];?>" title="<?php echo $val['name'];?>"/></a>
+								<h4><a href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'visit', 'gamedetail'.$val['id'].'_'.$from, 'isearch_'.$from.'_gid'.$val['id'],$temp );?>" title="<?php echo $val['name'];?>"><?php echo $val['name'];?></a></h4><span class="type"><?php echo $val['category'];?></span><span class="size">大小：<?php echo $val['size'];?>M</span>
+								<p class="con_txt">《<strong class="high"><?php echo $val['name'];?></strong>》<?php echo Util_String::substr(Common::replaceHtmlAndJs(html_entity_decode($val['descrip'])),0,60,'utf8',true);?></p>
+								<a class="download_btn" href="<?php echo Common::aimiTjUrl($tjUrl, $tj_channel, $tj_cku, 'startdl', 'gamedetail'.$val['id'].'_'.$from, 'isearch_'.$from.'_gid'.$val['id'],$val['link']);?>" title="下载">下载</a>
+							   </li>
+						<?php } ?>				
+						</ul>
+						<!-- 分页 -->
+						<?php echo $pager;?>
+					</div>
+				</div>
+			</div>
+			<div class="aside">
+				 <!-- 本周排行 s-->
+		        <?php echo $this->render("layout/download.phtml");?> 
+		        <!-- 本周排行 e-->  
+				<!-- 艾米客户端下载 s-->
+				 <?php echo $this->render("layout/client.phtml");?> 
+				<!-- 艾米客户端下载 e-->
+			</div>
+				
+	    <?php }?>	
+	    <!-- 右侧的悬浮框 -->
+	    <?php echo $this->render("layout/right.phtml");?>
+	</div>
+</div>
+<?php echo $this->render("layout/footer.phtml");?>	
+</body>
+</html>

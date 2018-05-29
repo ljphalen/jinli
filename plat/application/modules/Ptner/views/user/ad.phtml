@@ -1,0 +1,69 @@
+<?php echo $this->render("user/header.phtml");?>
+<body>
+	<div class="header">
+		<div class="container">
+			<div class="hd-name"></div>
+			<div class="hd-content"><img src="/static/img/user-logo.png" alt="麦当劳"><span>麦当劳</span><em>|</em><a href="<?php echo $logoutUrl;?>">退出</a></div>
+		</div>
+	</div>
+	<div class="main-container">
+		<?php echo $this->render("user/nav.phtml");?>
+		<div class="container">
+			<ul class="nav nav-tabs" id="myTab">
+			  <li class="active"><a href="#home" data-toggle="tab">认证页</a></li>
+			</ul>
+			<input type="hidden" name="token" value="<?php echo $token;?>">
+			  <div class="tab-content">
+				<div class="tab-pane active" id="home">
+					<a href="javascript:void(0);" class="btn_addPic">
+						<span><em>+</em>添加图片</span>
+						<input data-url="/ptner/user/upload?type=logo" img-target="logo-pic"  name="img" class="filePrew" type="file">
+					</a>
+					<div class="preview-pane">
+	                      <div class="preview-container" style="width:120px;height:120px">
+	                          <img id="logo-pic" src="<?php echo $attachPath,$ptner['logo']?>">
+	                      </div>
+                    </div>
+					<a href="javascript:void(0);" class="btn_addPic">
+						<span><em>+</em>添加图片</span>
+						<input data-url="/ptner/user/upload?type=baner" img-target="baner-pic" name="img" class="filePrew" type="file">
+					</a>
+					<div class="preview-pane">
+	                      <div class="preview-container">
+	                          <img id="baner-pic" src="<?php echo $attachPath,$ptner['baner']?>">
+	                      </div>
+                    </div>
+				</div>
+			</div>
+		</div>
+		
+	</div>	
+	
+	
+	<?php echo $this->render("user/footer.phtml");?>   
+
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="/static/js/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="/static/js/jquery.fileupload.js"></script>
+<script type="text/javascript">
+var imgt;
+$('.filePrew').bind('fileuploadsubmit', function (e, data) {
+    data.formData = {token: $("input[name=token]").val()};
+    imgt = $(this).attr("img-target");
+}).fileupload({
+    url: $(this).attr("data-url"),
+    dataType: 'json',
+    success:function(ret) {
+        if (ret.success) {
+        	$("#"+imgt).attr("src", "<?php echo $attachPath?>"+ret.data);
+        } else {
+        }
+    },
+    done: function (e, data) {
+    }
+})
+</script>
+</body>
+</html>

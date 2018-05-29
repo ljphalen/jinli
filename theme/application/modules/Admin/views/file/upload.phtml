@@ -1,0 +1,122 @@
+<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>-->
+<style type="text/css">
+    input,label
+    {
+        margin-top:10px;
+    }
+    #fileUpload
+    {
+        width:20em;
+        height:2em;
+    }
+</style>
+<?php echo $this->render("layout/header.phtml"); ?>
+<?php if ($code != 0 && !empty($msg)) { ?>
+    <font color=red><?php echo $msg; ?></font> <a href="<?echo $uploadUrl,'?fileId=',$fileId;;?>">[返回]</a>
+<?php } elseif ($code == 0 && !empty($data)) { ?>
+    <b>上传成功！</b> <a href="<?php echo $uploadUrl ?>">[上传]</a>
+<?php } else { ?>
+    <form id="form1" name="form1" method="post" action="<?php echo $uploadPostUrl; ?>" onsubmit="return ajaxSub();" enctype="multipart/form-data">
+     <!--<form id="form1" name="form1" method="post" action="<?php echo $uploadPostUrl; ?>" onsubmit="return checkFrom()" enctype="multipart/form-data">
+        -->
+        <input type="hidden" name="token" value="<?php echo $token; ?>" />
+       <!-- <input type="hidden" name="APC_UPLOAD_PROGRESS" id="progress_key"  value="<?php echo uniqid(mt_srand()) ?>"/>-->
+        <input type="hidden" name="UPLOAD_IDENTIFIER" id="progress_key"  value="<?php echo uniqid(mt_rand()) ?>"/>
+
+        <input type="file" id="file" name="file" class="mr20" style="margin-left:-18px;"/>
+        <input type="submit" name="sub" value="上传"  class="uploadbtn"> 允许上传的文件格式为：.gzn .zip 且文件大小不能超过28Ms
+    </form>
+    <!-- <div id="File"></div>
+     <p id="output1"></p>
+     <div id="progressouter" style="width:600px; height:16px; border:1.5px solid gray; display:none;">
+         <div id="progressinner" style="position:relative; height:16px; background-color:#6699ff; width:0%; ">
+         </div>
+     </div>
+     <p id="test1"></p>-->
+<?php } ?>
+<script>
+
+    // var par = /^.*?\.(gnz)$/i;
+    var par = /^.*?\.(gnz|zip)$/i;
+    var key_uid;
+    var timestamp;
+    function checkFrom() {
+        if ($("#file").val() == '') {
+            window.parent.showError('出错', '请选择要上传的文件');
+            return false;
+        } else if (!par.test($("#file").val())) {
+
+            window.parent.showError('出错', '仅支持gnz,zip文件，且文件小于28M');
+            return false;
+        } else {
+            return true;
+        }
+    }
+    var options = {
+        target: '#output1',
+        beforeSubmit: showResponse
+    };
+
+    function ajaxSub() {
+
+        key_uid = $("#progress_key").val();
+
+        timestamp = Date.parse(new Date());
+        $('#form1').ajaxSubmit(options);
+        return false;
+
+    }
+
+    /*  $(".uploadbtn").click(function() {
+     var type = checkFrom();
+     if (type) {
+     key_uid = $("#progress_key").val();
+     // showResponse();
+     }
+
+     })*/
+
+
+
+    function showResponse() {
+        if (checkFrom()) {
+            document.getElementById("progressouter").style.display = "block";
+            document.getElementById("progressinner").style.width = "10%";
+            getProgress();
+        } else {
+            return false;
+        }
+    }
+
+    function getProgress() {
+
+        $.ajax({
+            success: getStatus,
+            url: '/Admin/File/progress?progress_key=' + key_uid + '&token=' + token + "&times=" + timestamp,
+            type: 'get',
+            dataType: 'text',
+            cache: false
+        });
+    }
+
+    function getStatus(responseText, statusText) {
+        console.log(responseText + "----" + statusText);
+        var t1 = document.getElementById("test1");
+        t1.innerHTML = responseText.toString() + "%";
+        if (responseText < 100) {
+            document.getElementById("progressinner").style.width = responseText.toString() + "%";
+            setTimeout("getProgress()", 0.1);
+        }
+        else if (responseText >= 100) {
+            document.getElementById("progressinner").style.width = "100%";
+            $("#form1").css("display", "none");
+        }
+    }
+<?php if ($code == 0 && !empty($data)) { ?>
+        var o = <?php echo $data; ?>;
+        window.parent.showData(o);
+<?php } ?>
+</script>
+<?php echo $this->render("layout/footer.phtml"); ?>
+
+

@@ -1,0 +1,79 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+	<div class="module">
+	<?php if($hasheader){?>
+		<header id="iHeader" class="hd">
+			<div class="top-wrap">
+				<div class="title">
+					<a href="<?php echo $webroot;?>/amigo/order/searchlist" class="back"></a>
+					<h1>查询结果</h1>
+					<span class="voice"></span>
+				</div>
+			</div>
+		</header>
+	<?php }?>
+	
+		<section id="iScroll">
+		<?php if($order){?>
+			<div class="result-show">
+				<div class="main">
+					<span class="state">订单状态：
+					<?php switch ($order['status']) {
+								case 1:
+									echo $order['pay_type'] == 1 ? '您于'.date('Y-m-d H:i:s',$order['create_time']).'订单创建成功. 请立即支付.' : '您于'.date('Y-m-d H:i:s',$order['create_time']).'订单创建成功.';
+									break;
+								case 2:
+									echo $order['pay_type'] == 1 ? '订单已支付,请等待发货.' : '订单已确认,请等待发货.';
+									break;
+								case 3:
+									echo $order['pay_type'] == 1 ? '订单已支付,请等待发货.' : '订单已确认,请等待发货.';
+									break;
+								case 4:
+									echo '订单已发货（'.$order['express_code'].'）';
+									break;
+								case 5:
+									echo '交易成功.';
+									break;
+								case 6:
+									echo '订单已取消/关闭.';
+									break;
+								case 7:
+									echo '申请退/换货.';
+									break;
+								case 8:
+								    echo '拒收.';
+								    break;
+								case 10:
+								    echo '申请退款.';
+								    break;
+							    case 11:
+							        echo '取消退款.';
+							        break;
+					           case 12:
+					                echo '已退款.';
+					                break;
+                            case 13:
+			                        echo '退款失败.';
+			                        break;
+								default:
+									echo '未知状态.';
+					}
+					?>
+					</span>
+					<span class="detail">
+						<em>详细信息</em>
+						收货人：<?php echo $order['buyer_name'];?><br>
+						手机号：<?php echo $order['phone'];?><br>
+						创建时间：<?php echo date('Y-m-d H:i:s',$order['create_time']);?><br>
+						商品名称：<?php echo $goods['title'];?><br>
+						收货地址：<?php echo $address['adds'].$address['detail_address'];?>
+					</span>
+				</div>
+				<div class="web-btn"><a href="<?php echo $webroot;?>/amigo/goods/detail?id=<?php echo $order['goods_id'];?>" class="gray">重新购买</a><?php if($order['pay_type'] == 1 && $order['status'] == 1) {?><a href="<?php echo $webroot;?>/amigo/order/pay?out_order_no=<?php echo $order['out_trade_no'];?>">立即支付</a><?php }?></div>
+			</div>
+		<?php }?>
+		</section>
+		</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

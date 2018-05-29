@@ -1,0 +1,115 @@
+<style>
+a.softdown {
+    background: none repeat scroll 0 0 #61B509;
+    border: 1px solid #007900;
+    border-radius: 5px;
+    box-shadow: 0 0 1px #EEEEEE inset;
+    color: #FFFFFF;
+    font-size: 14px;
+    height: 32px;
+    line-height: 32px;
+    overflow: hidden;
+    padding: 0 36px;
+    text-decoration: none;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
+}
+</style>
+<div class="page">
+	<div class="pageContent">
+		 
+		<form method="post" action="__URL__/Verifyed/navTabId/__MODULE__/callbackType/closeCurrent" 
+			class="pageForm required-validate" enctype="multipart/form-data" 
+			onsubmit="return iframeCallback(this,dialogAjaxDone);">
+		<div class="pageFormContent" layoutH="58">
+			<include file="Public:apkinfo" />
+			<div class="unit">
+				<label>立即下载： </label>
+				<a class="softdown" rel="nofollow" href="{$apkUrl}{$vo['file_path']}?n={$vo.app_name|trim}{$vo.version_name|trim}.apk" target="_blank">
+					应用包下载测试 
+				</a>
+			</div>
+			<br>
+			<hr>
+			<div class="unit">
+				<label>测试结果：</label>
+				<select name="result_id" id="result_id" class="combox" onchange="if(this.value==2){ $('.Vhide').show();}else{ $('.Vhide').hide();}">
+					<option value="1">通过</option>
+					<option value="2">不通过</option>
+				</select>
+				<eq name="vo.onlinetime_type" value="1">
+					<span><font color="red">如审核通过，将自动上线</font></span>
+				</eq>
+			</div>
+			<div class="unit">
+				<label>测试人：</label>
+				<php>
+					echo $_SESSION['loginUserName'];
+				</php>
+			</div>
+			<div class="unit">
+				<label>上传审核文档：</label>
+				<input type="file" name="doc_file" id="doc_file" /> 
+			</div>
+			<div class="unit Vhide" style="display:none;">
+				<label>未通过原因：</label>
+				<select name="reason_id" id="reason_id" class="combox">
+					<option value="0">--请选择原因或填写原因--</option>
+					<php>
+					$reason_info = D("Reason")->order('reason_id')->where(array("type"=>1))->select();
+				    foreach( $reason_info as $key =>$value ){
+				    	echo '<option value="'.$value['reason_id'].'">'.$value['reason_content'].'</option>';
+					}
+					</php>
+				</select>
+			</div>
+			<div class="unit Vhide" style="display:none;">
+				<label>备注：</label>
+				<textarea placeholder="其他原因请填写" rows="5" cols="50" name="remarks" id="remarks"></textarea>
+			</div>
+			<div class="unit">
+				<label><font color="red">注意：</font></label>
+				<p><font color="red">
+				已通过审核无需填写备注信息。
+				未通过审核备注信息会展示给开发者，请简洁清楚描述未通过原因。
+				</font></p>
+			</div>
+			<div class="unit">
+				<label>是否通知：</label>
+				<input type="checkbox" id="notice" name="notice" value="1" checked>邮件通知开发者
+			</div>
+			<div class="unit">
+				<input type=hidden value="1" id="admin_id" name="admin_id" />
+				<input type=hidden value="{$vo.app_name}" id="app_name" name="app_name" />
+				<input type=hidden value="{$vo.package}" id="package" name="package" />
+				<input type=hidden value="{$vo.version_name}" id="version_name" name="version_name" />
+				<input type=hidden value="{$vo.version_code}" id="version_code" name="version_code" />
+				<input type=hidden value="{$vo.id}" id="apk_id" name="apk_id" />
+				<input type=hidden value="<php>echo time();</php>" id="checked_at" name="checked_at"/>
+				<input type=hidden value="{$vo.created_at}" id="created_at" name="created_at"/>
+			</div>
+			
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" onclick="return checkDate();">提交</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+	
+	</div>
+</div>
+<script type="text/javascript">
+<!--
+function checkDate(){
+	var reason_id = $.trim($("#reason_id").val());
+	var result_id = $.trim($("#result_id").val());
+	var remarks = $.trim($("#remarks").val());
+	if(reason_id==0 && result_id==2 && remarks.length==0){
+		alert("请选择不通过的原因");
+		return false;
+	}
+	return true;
+}
+//-->
+</script>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<?php $this->title="资讯公告";$this->hasSearch="true"; ?>
+	<title>游戏大厅</title>
+	<?php echo $this->render("layout/cssInc.phtml");?>
+</head>
+<body>
+	<?php echo $this->render("layout/header.phtml");?>
+	<div id="container">
+    </div>
+	<?php include '_footer.php';?>
+	<?php echo $this->render("layout/footer.phtml");?>
+</body>
+<?php echo $this->render("layout/scriptInc.phtml");?>
+<script type="text/javascript">
+	
+	var infoBulletinData = <?php echo $data?>;
+	React.render(
+		React.createElement(InfoBulletinList, {items: infoBulletinData})
+	  , document.getElementById('container')
+	);
+</script>
+<script src="<?php echo "$appJs/loadImg.js$timestamp";?>" type="text/javascript"></script>
+</html>

@@ -1,0 +1,97 @@
+<form id="pagerForm" action="__ACTION__" method="post">
+	<input type="hidden" name="pageNum" value="{$_REQUEST.pageNum}"/>
+	<input type="hidden" name="numPerPage" value="{$_REQUEST.numPerPage}" />
+	<input type="hidden" name="orderField" value="{$_REQUEST.orderField}" />
+	<input type="hidden" name="orderDirection" value="{$_REQUEST.orderDirection}" />
+	<input type="hidden" name="do" value="{$_REQUEST.do}">
+	<input type="hidden" name="status" value="{$_REQUEST.status}"/>	
+	<input type="hidden" name="email" value="{$_REQUEST.email}"/>
+	<input type="hidden" name="created_s" value="{$_REQUEST.created_s}"/>
+	<input type="hidden" name="created_e" value="{$_REQUEST.created_e}"/>
+	<input type="hidden" name="audit_admin_name" value="{$_REQUEST.audit_admin_name}"/>
+	<input type="hidden" name="company" value="{$_REQUEST.company}"/>
+	<input type="hidden" name="contact" value="{$_REQUEST.contact}"/>
+	<volist name="_search" key="name" id="field">
+		<input type="hidden" name="_search[{$key}]" value="{$field|safe}"/>
+	</volist>
+	<input type="hidden" name="account" value="{$_REQUEST.account}"/>
+</form>
+<div class="page">
+	<include file="Accounts:search" />
+	<div class="pageContent">
+		<div class="panelBar">
+			<ul class="toolBar">
+				<li><a class="edit" href="__URL__/details/id/{sid_user}" target="dialog" mask="true" warn="请选择操作对象"><span>编辑</span></a></li>
+				<li class="line">line</li>
+			</ul>
+		</div>
+		<table class="list" width="100%" layoutH="138">
+			<thead>
+			<tr>
+				<th >ID</th>
+				<th>注册日期</th>
+				<th>注册帐号（邮箱）</th>
+				<th>公司注册名称</th>
+				<th>联系人</th>
+				<th>类型</th>
+				<th>操作</th>
+				<th>审核记录</th>
+			</tr>	
+			</thead>
+			<tbody>
+			<volist id="vo" name="list">
+				<?php $vo['id'] = $vo['account_id']; ?>
+				<tr target="sid_user" rel="{$vo[account_id]}">
+					<td>{$vo['account_id']}</td>
+					<td class="time">{$vo['created_at']}</td>
+					<td class="email">{:AccountsModel::listTxt($vo)}</td>
+					<td class="company">{$vo['company']}</td>
+					<td>{$vo['contact']}</td>
+					<td>
+						<if condition="$vo.audit_admin_id gt 0">修改<else /> 新增</if>
+					</td>
+					<td>
+						<php>
+							$is_perfect = D('Dev://Accountinfo')->isPerfect($vo['account_id']);
+							if($vo['status'] == AccountinfoModel::STATUS_INIT  && $is_perfect):
+						</php>
+							<a height="600" width="600" target="dialog" href="__URL__/audit/id/{$vo['account_id']}">审核</a>
+						<php>endif</php> 
+					</td>
+					
+				   <td>
+						<if condition="$vo.audit_admin_id gt 0">
+						<a  rel="newPage" target="navTab" href="{:U('authlog/index',array('account_id' => $vo['account_id']) )}">审核记录	</a>
+						</if>
+					</td>
+				</tr>
+			</volist>
+			</tbody>
+		</table>
+
+		<div class="panelBar">
+			<div class="pages">
+				<span>显示</span>
+				<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+					<option value="10" <eq name="numPerPage" value="10">selected</eq>>10</option>
+					<option value="20" <eq name="numPerPage" value="20">selected</eq>>20</option>
+					<option value="50" <eq name="numPerPage" value="50">selected</eq>>50</option>
+					<option value="100" <eq name="numPerPage" value="100">selected</eq>>100</option>
+					<option value="200" <eq name="numPerPage" value="200">selected</eq>>200</option>
+				</select>
+				<span>共{$totalCount}条</span>
+				
+				<span style="padding-left:10px;">
+				帐号数量：{$totalCount} &nbsp;&nbsp;<foreach name="gruop_data" key="key" item="vo">{$status_list[$vo['status']]} : {$vo['nums']} &nbsp;&nbsp; </foreach>
+				时间段： <if condition="$_REQUEST.created_s != null" >{$_REQUEST.created_s}<else /> -- </if> 至  <if condition="$_REQUEST.created_e != null" >{$_REQUEST.created_e}<else /> -- </if>
+				</span>
+				
+			</div>
+			
+			<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="10" currentPage="{$currentPage}"></div>
+		</div>
+
+	</div>
+	
+</div>
+

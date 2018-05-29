@@ -1,0 +1,165 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+	<div class="nav">
+		<ul class="cc">
+			<li><a href="<?php echo $indexURL; ?>">列表页</a></li>
+			<li class="current"><a href="<?php echo $detailURL; ?>">订单详情</a></li>
+		</ul>
+	</div>
+	<div style="padding-top:5px;padding-left:20px;padding-bottom:20px;"><span style="font-size: 15px">订单物品信息</span>
+	</div>
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="hd">
+				<td class="th">物品ID</td>
+				<td class="th">名称</td>
+				<td class="th">单价</td>
+				<td class="th">数量</td>
+				<td class="th">消耗积分数</td>
+				<td class="th">实际消耗积分数</td>
+				<td class="th">物品属性</td>
+				<td class="th">是否为等级物品</td>
+			</tr>
+			<?php foreach ($goods as $v) { ?>
+				<tr class="ct">
+					<td class="td" align="left"><?=$v['goods_id'];?></td>
+					<td class="td" align="left"><?=$v['goods_name'];?></td>
+					<td class="td"><?php echo $v['goods_price']; ?></td>
+					<td class="td"><?php echo $v['goods_number']; ?></td>
+					<td class="td"><?php echo $v['goods_scores'] ?></td>
+					<td class="td" style="color:  blue"><?php echo $v['real_cost_scores']; ?></td>
+					<td class="td" style="color:  blue"><?php echo $v['goods_type'] == 1 ? '虚拟商品' : '实物商品'; ?></td>
+					<td class="td" style="color:  blue"><?php echo $v['is_special'] == 1 ? '是' : '否'; ?></td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+<?php if (intval($order['shipping_id'])) { ?>
+	<div style="padding-top:5px;padding-left:20px;padding-bottom:20px;"><span style="font-size: 15px">收货信息</span></div>
+	<div class="table_list">
+		<table style="width: 100%">
+			<tr class="ct">
+				<td style="width:100px ;padding-left:100px;">订单用户名：</td>
+				<td style="color:blue"><?php echo !empty($user['nickname']) ? $user['nickname'] : $user['username']; ?>
+
+			<tr class="ct">
+				<td style="width:100px ;padding-left:100px;">收货人姓名：</td>
+				<td class="td" style="color:blue"><?php echo $shippingMsg['receiver_name']; ?></td>
+			</tr>
+			<tr class="ct">
+				<td style="width:100px ;padding-left:100px;">收货地址：</td>
+				<td class="td" style="color:blue"><?php echo sprintf("%s %s %s", $shippingMsg['province'], $shippingMsg['city'], $shippingMsg['address']); ?></td>
+			</tr>
+
+			<tr class="ct">
+				<td style="width:100px ;padding-left:100px;">联系方式：</td>
+				<td class="td" style="color:blue"><?php echo $shippingMsg['mobile']; ?></td>
+			</tr>
+		</table>
+	</div>
+<?php } ?>
+
+	<form id="auth_form" action="/Admin/Order/auth" method="post" name="auth_form">
+		<div style="padding-left:20px;padding-top:30px;pading-bottom:20px"><span style="font-size: 16px">订单状态</span>
+		</div>
+		<div class="table_list">
+			<table class="table_list">
+				<tr class="ct">
+					<th class="th" style="padding-left:300px">订单状态
+					</td>
+					<td class="td" style="padding-left:100px">
+						<select name="order_status" id="order_status">
+							<?php foreach ($config['statusFlag'] as $k => $v) { ?>
+								<option value="<?php echo $k ?>" <?php if ($order['order_status'] == $k) echo 'selected'; ?>><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+					</td>
+				</tr>
+
+				<tr class="ct">
+					<th class="th" style="padding-left:300px">支付状态</th>
+					<td class="td" style="padding-left:100px">
+						<select name="pay_status" id="pay_status">
+							<?php foreach ($config['pay_status'] as $k => $v) { ?>
+								<option value="<?php echo $k ?>" <?php if ($order['pay_status'] == $k) echo 'selected'; ?>><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+				</tr>
+
+				<tr class="ct">
+					<th class="th" style="padding-left:300px">配送状态</th>
+					<td class="td" style="padding-left:100px">
+						<select name="shipping_status" id="shipping_status">
+							<?php foreach ($config['shipping_status'] as $k => $v) { ?>
+								<option value="<?php echo $k ?>" <?php if ($order['shipping_status'] == $k) echo 'selected'; ?>><?php echo $v; ?></option>
+							<?php } ?>
+						</select>
+				</tr>
+
+				<?php if ($goods[0]['goods_type'] == 2) { ?>
+					<tr class="ct">
+						<th class="th" style="padding-left:300px">快递公司</th>
+						<td class="td" style="padding-left: 100px"><select name="express_id">
+								<option value="0">请选择</option>
+								<?php foreach ($expressList as $k => $v) { ?>
+									<option value="<?php echo $k; ?>" <?php if ($order['express_id'] == $k) echo 'selected'; ?>><?php echo $v; ?></option>
+								<?php } ?>
+							</select>
+						</td>
+					<tr class="ct">
+						<td class="th" style="padding-left:300px">快递单号</td>
+						<td class="td" style="padding-left: 100px">
+							<input name="express_order" class="input" value="<?php echo $order['express_order']; ?>">
+						</td>
+					</tr>
+				<?php } ?>
+
+				<tr class="ct">
+					<th class="th" style="padding-left:300px">操作说明</th>
+					<td class="td" style="padding-left: 100px">
+						<textarea style="width:240px;height:150px" name="note"></textarea></td>
+				</tr>
+			</table>
+			<input type="hidden" name="order_id" id="order_id" value="<?php echo $order_id; ?>">
+			<input type="hidden" name="token" value="<?php echo $token; ?>">
+
+			<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">确定</button></span></span>
+			</div>
+		</div>
+	</form>
+
+	<div style="padding-left:20px;padding-top:30px;pading-bottom:20px"><span style="font-size: 16px">审核日志</span></div>
+	<div class="table_list">
+		<table style="width: 100%">
+			<?php if (empty($actions)) { ?>
+				<div style="padding-top:10px;padding-left:500px;font-size:15px;">暂无相关内容！</div>
+			<?php } else { ?>
+				<tr class="hd">
+					<td class="th" align="center" style="width:100px">操作人</d>
+					<td class="th" align="center" style="width:200px">审核时间</td>
+					<td class="th" align="center" style="width: 400px">内容</td>
+					<td class="th" align="center">说明</td>
+				</tr>
+				<?php
+				foreach ($actions as $v) {
+					?>
+					<tr class="ct">
+						<td class="td" style="width:100px" align="center"><?php echo $v['action_user'];?></td>
+						<td class="td" style="width:200px" align="center"><?php echo date('Y-m-d H:i:s', $v['add_time']);?></td>
+						<td class="td" style="width: 400px" align="center">更新后 &nbsp;&nbsp;&nbsp;订单状态：<span style="color:red"><?php echo $config['statusFlag'][$v['order_status']];?></span> &nbsp;&nbsp;&nbsp;支付状态：
+							<span style="color:red"><?php echo $config['pay_status'][$v['pay_status']];?></span> &nbsp;&nbsp;&nbsp;配送状态：<span style="color:red"><?php echo $config['shipping_status'][$v['shipping_status']];?>
+								<span></span></td>
+						<td class="td" align="center"><?php echo $v['action_note'];?></td>
+					</tr>
+				<?php }
+			} ?>
+		</table>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			ajaxForm('auth_form', function (ret) {
+				ajaxRedirect(ret, baseurl + '/Admin/order/index?type=0');
+			});
+		})
+	</script>
+<?php echo $this->render("layout/footer.phtml"); ?>

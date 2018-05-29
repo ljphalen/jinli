@@ -1,0 +1,307 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<script type="text/javascript"
+src="<?php echo $root . 'jquery.min.js' ?>"></script>
+<script type="text/javascript"
+src="<?php echo $root . 'layer/layer.min.js' ?>"></script>
+
+<style type="text/css">
+
+</style>
+<div class="nav">
+    <ul class="cc">
+        <li class="current"><a href="<?php echo $listUrl; ?>">壁纸列表</a></li>
+        <li class=""><a href="<?php echo $listimage; ?>">套图列表</a></li>
+
+    </ul>
+</div>
+<div class="h_a">壁纸列表</div>
+
+<style type="text/css">
+    .chk_style{
+        background-color:aqua;
+    }
+</style>
+
+<form action="<?php echo $listUrl; ?>" method="post" id="searchForm">
+    <input name="token" type="hidden" value="<?php echo $token; ?>" />
+    <div class="table_full">
+        <table width="100%">
+            <tr class="tr">
+                <th class="th">标题</th>
+                <td class="td">
+                    <input type="text" class="input" name="title" value="<?php echo $search['title']; ?>">
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">分类</th>
+                <td class="td">
+                    <select name="file_type">
+                        <option value="">所有分类</option>
+                        <?php foreach ($file_type as $key => $value) { ?>
+                            <option <?php echo ($search['file_type'] == $value['id']) ? 'selected="selected"' : ''; ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                        <?php } ?>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">分辨率</th>
+                <td class="td">
+                    <select name="resulution">
+                        <option value="">所分辨率</option>
+                        <?php foreach ($resolution as $key => $value) { ?>
+                            <option <?php echo ($search['resulution'] == $value['resulution']) ? 'selected="selected"' : ''; ?> value="<?php echo $value['resulution']; ?>"><?php echo $value['resulution']; ?></option>
+                        <?php } ?>
+                    </select>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="th">分类</th>
+                <td class="td">
+                    <span>fff</span>
+                </td>
+            </tr>
+
+            <tr class="tr">
+                <th class="th">查看分类</th>
+                <td class="td">
+                    <span>fff</span>
+                </td>
+            </tr>
+
+            <?php foreach ($status as $key => $value) { ?>                                                                                                                                                                                                                                                                                                                               <option <?php echo ($search['status'] == $key) ? 'selected="selected"' : ''; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+            <?php } ?>
+
+        </table>
+    </div>
+
+
+
+    <div class="mb8 tac">
+        <span  class="btn"> <span>
+                <input class ="stutus_val" type="hidden" value= 0 name="status"/>
+                <button type="submit" class="btn_sub">所有状态</button>
+            </span></span>
+        <?php foreach ($status as $key => $value) { ?>
+
+            <span class="btn">
+                <span  <?php echo ($search['status'] == $key) ? 'style="background-color: black;"' : ''; ?>>
+                    <input class ="stutus_val" type="hidden" value= <?php echo $key; ?> name="status"/>
+                    <button   type="submit" class="btn_sub" value="<?php echo $key; ?>"><?php echo $value; ?></button>
+                </span>
+            </span>
+        <?php } ?>
+
+        <span style="float:right">
+            <select name="order_by" onchange="submitForm(this.value)">
+                <!-- <option value="">排序方式</option> -->
+                <option <?php echo ($order_by == 'create_time') ? 'selected="selected"' : ''; ?> value="create_time">上传时间</option>
+                <option <?php echo ($order_by == 'update_time') ? 'selected="selected"' : ''; ?> value="update_time">修改时间</option>
+                <option <?php echo ($order_by == 'hit') ? 'selected="selected"' : ''; ?> value="hit">点击量</option>
+                <option <?php echo ($order_by == 'down') ? 'selected="selected"' : ''; ?> value="down">下载量</option>
+                <option <?php echo ($order_by == 'sort') ? 'selected="selected"' : ''; ?> value="sort">排序</option>
+            </select>
+            <select name="perpage" onchange="submitForm(this.value)">
+                <option <?php echo ($perpage == 20) ? 'selected="selected"' : ''; ?> value="20">15</option>
+                <option <?php echo ($perpage == 30) ? 'selected="selected"' : ''; ?> value="30">30</option>
+                <option <?php echo ($perpage == 50) ? 'selected="selected"' : ''; ?> value="50">50</option>
+                <option <?php echo ($perpage == 100) ? 'selected="selected"' : ''; ?> value="100">100</option>
+            </select>
+        </span>
+    </div>
+
+    <div class="table_list">
+        <table width="100%">
+            <tr class="hd">
+                <td  width="4%">选中</td>
+                <td  width="4%">id号</td>
+
+                <td  width="4%">排序</td>
+                <td >标题</td>
+                <td width="3%">类别</td>
+                <td  width="7%">大小</td>
+                <td  width="5%">分辨率</td>
+                <td  width="12%">上传时间</td>
+                <td  width="12%">修改时间</td>
+                <td  width="12%">上架时间</td>
+                <td  width="4%">点击</td>
+                <td  width="4%">下载</td>
+                <td width="4%">状态</td>
+                <td width="8%">修改</td>
+                <td width="3%">缩略图</td>
+
+            </tr>
+            <?php foreach ($files as $key => $value) { ?>
+
+                <?php
+                if ($value['package_type'] == 1) $package_type = "v1";
+                if ($value['package_type'] == 2) $package_type = "v2";
+                ?>
+                <tr class="ct"<?php if ($package_type == 'v2') echo"style='background-color:#ffe'"; ?> >
+                    <td><input type="checkbox" class="ids" value="<?php echo $value['id'] ?>"/></td>
+                    <td ><?php echo $value['id']; ?></td>
+                    <td><?php echo $value['sort']; ?></td>
+                    <td><?php echo $value['title']; ?></td>
+                    <td><?php echo $package_type; ?></td>
+                    <td><?php echo Util_File::size($value['file_size']); ?></td>
+                    <td><?php echo $value['resulution']; ?></td>
+                    <td><?php echo date('Y-m-d H:i:s', $value['create_time']); ?></td>
+                    <td><?php echo $value['update_time'] ? date('Y-m-d H:i:s', $value['update_time']) : ''; ?></td>
+                    <td><?php echo $value['open_time'] ? date('Y-m-d H:i:s', $value['open_time']) : ''; ?></td>
+                    <td><?php echo $value['hit']; ?></td>
+                    <td><?php echo $value['down']; ?></td>
+                    <td><?php echo $status[$value['status']]; ?></td>
+                    <td>
+                        <?php if ($groupid == 1 && $value['status'] != 4) { ?><a href="<?php echo $editUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a><?php } ?>
+                        <?php
+                        if ($groupid != 1) {
+                            if (($groupid == 3 && $value['status'] > 2) || ($groupid == 2 && $value['status'] < 4)) {
+                                ?>
+                                <a href="<?php echo $editStatusUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">修改状态</a><br/>
+                                <?php
+                            }
+                        }
+                        ?>
+                        <?php if ($groupid == 3) { ?><a href="<?php echo $updateUrl; ?>/?id=<?php echo $value['id']; ?>"  class="mr10">编辑</a><?php } ?>
+                        <?php if ($value['status'] != 4 && in_array($groupid, array(1, 3))) { ?><a href="javascript:" onclick="deleteOne('<?php echo $deleteUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a><?php } ?>&nbsp;
+    <!--<a href="<?php echo $detailUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">预览</a>-->
+
+                    </td>
+                    <td>  <a href="<?php echo $detailUrl; ?>/?id=<?php echo $value['id']; ?>" title="查看全部">   <img src="<?php echo $attachPath . $file_imgs[$value['id']][0]['img']; ?>" width="60" style="padding-right:10px;" /></a></td>
+                </tr>
+            <?php } ?>
+        </table>
+
+        <input type="button" class="btn_all" value="全选"/>
+        <input type="button" class="btn_not" value="反选"/>
+        <input type="button" class="btn_empty" value="取消"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <?php if ($search['status'] != 4) { ?>
+            <input type="button" class="btn_ups" value="批量上架"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <?php } ?>
+
+        <!-- <button class="btn_ups" >批量上架</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        -->
+        <?php if ($search['status'] != 5) { ?>
+            <input  type="button" class="btn_downs" value="批量下架"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <?php } ?>
+
+        <?php if ($search['status'] == 5) { ?>
+            <input type="button"  class="btn_dels" value="批量删除"/>
+        <?php } ?>
+    </div>
+</form>
+<div class="mr10 cc">
+    <?php echo $pager; ?>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+
+
+        $("input:checkbox").each(function() {
+
+            $(this).click(function() {
+                if ($(this).attr('checked')) {
+                    $(this).parent().parent().addClass('chk_style');
+                } else {
+                    $(this).parent().parent().removeClass('chk_style');
+                }
+            })
+        })
+
+        $(":submit").click(function() {
+            $(".stutus_val").val($(this).val());
+            $(this).submit();
+        });
+        $(".btn_all").click(function() {
+            $(".ids").attr("checked", true);
+            $("table tr").addClass('chk_style');
+        })
+
+        $(".btn_empty").click(function() {
+            $(".ids").attr("checked", false);
+            $("table tr").removeClass('chk_style');
+        })
+
+
+        $(".btn_not").click(function() {
+            $(".ids").each(function() {
+                if ($(this).attr("checked")) {
+                    $(this).attr("checked", false);
+                    $(this).parent().parent().removeClass('chk_style');
+                } else {
+                    $(this).attr("checked", true);
+                    $(this).parent().parent().addClass('chk_style');
+                }
+            })
+        })
+
+        //批量上架;
+        $(".btn_ups").click(function() {
+            var d = '';
+            $(".ids").each(function() {
+                if ($(this).attr("checked")) {
+                    //d.push($(this).val());
+                    d += $(this).val() + " ";
+                }
+            });
+            var usr = baseurl + '/Admin/File/editstatus_post';
+            var data = "id=" + d + "&token=" + token + "&status=" + 4 + "&ostatus=" + 5 + "&more=1";
+            $.post(usr, data, function(msg) {
+
+                alert(msg.msg);
+                document.location.reload();
+                // ajaxRedirect(ret.msg, baseurl+'/Admin/File/index?s=1');
+            }, "json");
+        })
+
+        //批量下架;
+        $(".btn_downs").click(function() {
+
+            var d = '';
+            $(".ids").each(function() {
+                if ($(this).attr("checked")) {
+                    //d.push($(this).val());
+                    d += $(this).val() + " ";
+                }
+            });
+            var usr = baseurl + '/Admin/File/editstatus_post';
+            var data = "id=" + d + "&token=" + token + "&status=" + 5 + "&ostatus=" + 4 + "&more=1";
+            $.post(usr, data, function(ret) {
+                alert(ret.msg);
+                document.location.reload();
+                //ajaxRedirect(ret, baseurl+'/Admin/File/index?s=1');
+            }, "json");
+        });
+        $(".btn_dels").click(function() {
+            if (confirm("您是否将选中的专题删除?")) {
+                var d = '';
+                $(".ids").each(function() {
+                    if ($(this).attr("checked")) {
+                        //d.push($(this).val());
+                        d += $(this).val() + " ";
+                    }
+                });
+                var usr = baseurl + '/Admin/File/moreDel_post';
+                var data = "id=" + d + "&token=" + token;
+                $.post(usr, data, function(ret) {
+                    alert(ret.msg)
+                    document.location.reload();
+                    //ajaxRedirect(ret, baseurl+'/Admin/File/index?s=1');
+                }, "json");
+            } else {
+                return false;
+            }
+            ;
+        });
+        /* submitForm = function() {
+         $("#searchForm").submit();
+         };*/
+
+
+    })
+</script>
+
+
+
+<?php echo $this->render("layout/footer.phtml"); ?>

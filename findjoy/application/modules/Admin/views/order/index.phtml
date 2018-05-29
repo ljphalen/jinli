@@ -1,0 +1,132 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+    <li class="current"><a href="<?php echo $listUrl;?>">订单列表</a></li>
+	</ul>
+</div>
+<form action="<?php echo $indexUrl;?>" method="post">
+<input name="token" type="hidden" value="<?php echo $token;?>" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<td class="td">提货人电话</td>
+			<td class="td">
+				<input class="input wb" type="text" name="phone" value="<?php echo $search['phone'];?>">
+			</td>
+			<td class="td">提货人</td>
+			<td class="td">
+				<input class="input wb" type="text" name="buyer_name" value="<?php echo $search['buyer_name'];?>">
+			</td>
+		</tr>
+		<tr class="tr">
+			<td class="td">状态</td>
+			<td class="td">
+				<select name="status" id="status">
+					<option value="">请选择</option>
+					<?php foreach($order_status as $key => $state): ?>
+					<option value="<?php echo $key; ?>" <?php if($search['status']==$key)echo "selected='selected'"?>><?php echo $state?></option>
+					<?php endforeach;?>
+				</select>
+			</td>
+
+			<td class="td">订单号</td>
+			<td class="td">
+				<input class="input wb" type="text" name="trade_no" value="<?php echo $search['trade_no'];?>">
+			</td>
+		</tr>
+		<tr class="tr">
+			<td class="td">提货码</td>
+			<td class="td">
+				<input class="input wb" type="text" name="get_token" value="<?php echo $search['get_token'];?>">
+			</td>
+
+			<th class="th">
+				<select name="time_type">
+					<option value="0" <?php if ($search['time_type'] == 0) echo 'selected="selected"';?>>选择时间</option>
+					<option value="1" <?php if ($search['time_type'] == 1) echo 'selected="selected"';?>>下单时间</option>
+					<option value="2" <?php if ($search['time_type'] == 2) echo 'selected="selected"';?>>提货时间</option>
+				</select></th>
+			<td class="td">
+				<input class="input" type="text" maxlength="30" id="from_time" name="from_time" value="<?php echo $search['from_time'];?>">
+				<input class="input" type="text" maxlength="30" id="to_time" name="to_time" value="<?php echo $search['to_time'];?>">
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button type="submit">搜 索</button></span></span></div>
+</form>
+<div class="mb10">
+	<span class="btn"><span><button type="button" id="sync">同步订单</button></span></span>
+<span class="btn"><span><button type="button" id="exportBtn">导出订单</button></span>
+
+</div>
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td width=4%>UID</td>
+			<td width=11%>open_id</td>
+			<td width=6%>提货人</td>
+			<td width=9%>提货人电话</td>
+			<td width=6%>提货码</td>
+			<td width=12%>订单号</td>
+			<td width=12%>外部订单号</td>			
+			<td width=8%>价格</td>
+			<td width=11%>创建时间</td>
+			<td width=10%>提货时间</td>
+			<td width=6%>状态</td>
+			<td >操作</td>
+		</tr>
+<?php foreach($data as $key => $value) {?>
+		<tr class="ct">
+			<td><?php echo $value['uid'];?></td>
+			<td><?php echo $value['out_uid'];?></td>
+			<td><?php echo $value['buyer_name'];?></td>
+			<td><?php echo $value['phone'];?></td>
+			<td><?php echo $value['get_token'];?></td>
+			<td><?php echo $value['trade_no'];?></td>
+			<td><?php echo $value['out_trade_no'];?></td>
+			
+			<td><?php echo $value['real_price'];?></td>
+			<td><?php if($value['create_time']) echo date('Y-m-d H:i',$value['create_time']);?></td>
+			<td><?php if($value['get_date']) echo $value['get_date'];?><br/><?php  if($value['get_time_id']) echo $get_time[$value['get_time_id']];?></td>
+			<td><?php echo $order_status[$value['status']];?></td>
+			<td>
+				<a href="<?php echo $detailUrl;?>/?id=<?php echo $value['id'];?>" class="mr10">查看</a>
+			</td>
+		</tr>
+<?php } ?>
+	</table>
+</div>
+<div class="mr10 cc">
+<?php echo $pager;?>
+</div>
+<div class="mr10 cc">
+	<form action="<?php echo $exportUrl;?>" method="post" id="exportForm">
+		<input name="token" type="hidden" value="<?php echo $token;?>" />
+		<input type="hidden" name="out_trade_no" value="<?php echo $search['out_trade_no'];?>">
+		<input type="hidden" name="trade_no" value="<?php echo $search['trade_no'];?>">
+		<input type="hidden" name="get_token" value="<?php echo $search['get_token'];?>">
+		<input type="hidden" name="phone" value="<?php echo $search['phone'];?>">
+		<input type="hidden" name="status" value="<?php echo $search['status'];?>">
+		<input type="hidden" name="time_type" value="<?php echo $search['time_type'];?>" />
+		<input type="hidden" name="from_time" value="<?php echo $search['from_time'];?>" />
+		<input type="hidden" name="to_time" value="<?php echo $search['to_time'];?>" />
+		<input type="hidden" name="buyer_name" value="<?php echo $search['buyer_name'];?>">
+	</form>
+</div>
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js?v=<?=$version?>"></script>
+<script>
+	$(function () {
+		$("#to_time").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+
+		$("#from_time").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+		$("#exportBtn").click(function(){
+			$("#exportForm").submit();
+		});
+	});
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

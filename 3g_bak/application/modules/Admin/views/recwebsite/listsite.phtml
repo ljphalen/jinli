@@ -1,0 +1,49 @@
+<?php echo $this->render("layout/header.phtml"); ?>
+<div class="nav">
+	<ul class="cc">
+		<li class="current"><a href="<?php echo $urlUrl . '?type=' . $type; ?>">站点列表</a></li>
+		<li><a href="<?php echo $editSiteUrl . '?type=' . $type; ?>">添加站点</a></li>
+	</ul>
+</div>
+
+
+<div class="table_list">
+	<table width="100%">
+		<tr class="hd">
+			<td>排序</td>
+			<td>编号</td>
+			<td>图标</td>
+			<td>标题</td>
+			<td>分组</td>
+			<td>地址</td>
+			<td>状态</td>
+			<td>添加时间</td>
+			<td>操作</td>
+		</tr>
+		<?php foreach ($list as $key => $value) {
+			$img = !empty($value['icon']) ? $attachPath . $value['icon'] : '';
+			?>
+			<tr class="ct">
+				<td><?php echo $value['sort']; ?></td>
+				<td><?php echo $value['id']; ?></td>
+				<td><?php if (!empty($img)): ?><img src="<?=$img?>" width="50"/><?php endif; ?></td>
+				<td><?php echo $value['title']; ?></td>
+				<td><?php echo $value['group_name']; ?></td>
+				<td><?php echo $value['url']; ?></td>
+				<td><?php echo $value['status'] ? '开启' : '关闭'; ?></td>
+				<td><?php echo date('Y-m-d H:i:s', $value['created_at']); ?></td>
+				<td>
+					<a href="<?php echo $editSiteUrl; ?>/?id=<?php echo $value['id']; ?>" class="mr10">编辑</a>
+					<a href="javascript:" onclick="deleteOne('<?php echo $delUrl; ?>/?id=<?php echo $value['id']; ?>', '', event);">删除</a>
+				</td>
+			</tr>
+		<?php } ?>
+	</table>
+</div>
+
+
+<div class="mr10 cc">
+	<?php echo $pager; ?>
+</div>
+
+<?php echo $this->render("layout/footer.phtml"); ?>

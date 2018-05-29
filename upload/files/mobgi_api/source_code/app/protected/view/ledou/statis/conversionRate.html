@@ -1,0 +1,76 @@
+<div class="colMain">
+    <div class="title"><p class="fl">有效转化率</p></div>
+    <div class="main">
+        <div class="toolbar">
+            <div class="search fl">
+                <form action="/Statis/conversionRate" method="GET">
+                <span><span class="label">选择日期范围：</span>
+                    <input type="text" class="iText datepicker" name="sdate" value="{{params.sdate}}"  />
+                    至
+                    <input type="text" class="iText datepicker" name="edate" value="{{params.edate}}"   />
+                    <input type="submit" value="查询" class="add" /></span>
+                </form>
+            </div>
+        </div>
+        <div id="container"></div>
+    </div>
+</div>
+<script type="text/javascript" src="{{rootUrl}}/js/highcharts.js"></script>
+<script type="text/javascript" src="{{rootUrl}}/js/hightcharts/exporting.js"></script>
+<script type="text/javascript">
+$(function(){
+    $('.datepicker').datepicker({
+        changeMonth:true,
+        changeYear:true,
+        minDate:new Date(),
+        dateFormat : "yy-mm-dd",
+        minDate: "2013-01-01"
+    });
+    $("input[name=sdate]").change(function(){
+        $("input[name=edate]").datepicker('option','minDate',$(this).val());
+    });
+    $('#container').highcharts({
+        chart: {
+            type: 'line',
+            marginRight: 25,
+            marginBottom: 50
+        },
+        title: {
+            text:"广告有效转化率",
+            x: -20 //center
+        },
+        xAxis: {
+            categories: JSON.parse('{{xlas}}')
+        },
+        yAxis: {
+            title: {
+                text: '转化率(‰)'
+            },
+            labels: {   
+                formatter: function() {
+                    return this.value +'‰'
+                }
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        legend: {
+            verticalAlign: 'bottom',
+            borderWidth: 0
+        },
+        series: [{
+            name: '网游转化率',
+            data: JSON.parse('{{olChartValue}}')
+        },{
+            name: '休闲游戏转化率',
+            data: JSON.parse('{{casualChartValue}}')
+        },{
+            name: '总转化率',
+            data: JSON.parse('{{totalChartValue}}')
+        }]
+    });
+})
+</script>

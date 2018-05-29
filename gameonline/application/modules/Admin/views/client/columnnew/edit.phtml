@@ -1,0 +1,90 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+        <li ><a href="<?php echo $listUrl;?>">栏目管理</a></li>
+		<li><a href="<?php echo $listChannelUrl;?>">频道管理</a></li>
+    	<li class="current"><a href="javascript:;">编辑栏目</a></li>
+	</ul>
+</div>
+<div class="h_a">编辑栏目</div>
+<form method="post" action="<?php echo $editPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<input name="level" value="1" type="hidden" />
+<div class="table_full">
+		<?php foreach ($info as $key=>$value) {?>
+		<input name="id<?php echo ($key+1);?>" value="<?php echo $value['id'];?>" type="hidden" />
+		<table width="100%">
+		<tr><td rowspan="4" width="50px" ><?php echo $value['name']?></td></tr>
+		<tr><td>
+			<table width="100%">
+			   <tr class="tr">
+					<th class="th">名称</th>
+					<td class="td"><input type="text" class="input wc" name="name<?php echo ($key+1);?>" value="<?php echo $value['name']?>"></td>
+				</tr>
+				 <tr class="tr">
+					<th class="th">位置</th>
+					<td class="td"><input type="text" class="input wc" name="position<?php echo ($key+1);?>" value="<?php echo $value['position']?>"></td>
+				</tr>
+				<tr class="tr" >
+					<th class="th">状态</th>
+					<td class="td">
+					<select name="status<?php echo ($key+1);?>" class="select wa">
+						<option <?php if ($value['status'] == 1) echo 'selected';?> value="1">开启</option>
+						<option <?php if ($value['status'] != 1) echo 'selected';?> value="2">关闭</option>
+					</select>
+					</td>
+				</tr>
+				<tr class="tr">
+					<th class="th">选中图片</th>
+					<td class="td">
+						<ul class="uploadImg">
+							<li id="AdImg<?php echo ($key+1) ;?>">
+								<img src="<?php echo ($value['icon_path'])?$attachPath.$value['icon_path']:$staticPath.'/img/content/nopic.jpg';?>"/>
+								<input type="hidden" name="icon_path<?php echo ($key+1);?>" value="<?php echo $value['icon_path'];?>">
+							</li>
+						</ul>			
+						<p style="clear:both;">
+			                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=AdImg'.($key+1);?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tr>
+					<tr class="tr">
+					<th class="th">默认图片</th>
+					<td class="td">
+						<ul class="uploadImg">
+							<li id="defaultImg<?php echo ($key+1) ;?>">
+								<img src="<?php echo ($value['icon_default'])?$attachPath.$value['icon_default']:$staticPath.'/img/content/nopic.jpg';?>"/>
+								<input type="hidden" name="icon_default<?php echo ($key+1);?>" value="<?php echo $value['icon_default'];?>">
+							</li>
+						</ul>			
+						<p style="clear:both;">
+			                  <iframe name="upload" src="<?php echo $uploadUrl.'/?imgId=defaultImg'.($key+1);?>" style="height:50px;width:100%;" frameborder="0" scrolling="no"></iframe>
+						</p>
+					</td>
+				</tr>
+			</table>
+		<td></tr>
+		</table>		
+		<?php }?>
+		<table width="100%">
+			<tr class="tr"><td class="td">默认打开</td>
+			<td>	
+			   <select name="default_open" class="select wa">
+			          <?php foreach ($info as $value) { ?>
+						<option <?php if ($value['default_open'] == 1) echo 'selected';?> value="<?php echo $value['id'];?>"><?php echo $value['position'];?></option>
+					 <?php }?>	
+				</select>
+		</td></tr></table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Client_Columnnew/index');
+	});
+	
+	
+})
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

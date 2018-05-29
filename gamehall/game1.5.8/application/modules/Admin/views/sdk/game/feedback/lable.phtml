@@ -1,0 +1,39 @@
+<?php echo $this->render("layout/header.phtml");?>
+
+<div class="nav">
+	<ul class="cc">    
+        <li ><a href="<?php echo $listUrl;?>">游戏反馈</a></li>
+         <li class="current"><a href="javascript:;"> 标签管理</a></li>
+	</ul>
+</div>
+<div class="h_a">标签设置</div>
+<form method="post" action="<?php echo $addLablePostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+
+		<tr class="tr">
+			<th class="th">请以英文逗号区隔每个标签</th>
+			<td class="td">
+				 <textarea  style="width:600px; height:300px" class="textarea" name="lable" id="lable" ><?php echo $lable_name; ?></textarea>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+
+<script src="<?php echo $staticPath;?>/js/common/jquery-ui-timepicker.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+     //提交表单
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Sdk_Game_Feedback/index');
+	});
+
+
+})
+
+</script>
+<?php echo $this->render("layout/footer.phtml");?>

@@ -1,0 +1,57 @@
+<?php echo $this->render("layout/webheader.phtml");?>
+<body data-pagerole="body">
+	<div class="module">
+	<?php if($hasheader){?>
+		<header id="iHeader" class="hd">
+			<div class="top-wrap">
+				<div class="title">
+					<a href="<?php echo $webroot;?>/amigo/orderreturn/searchlist" class="back"></a>
+					<h1>退/换货</h1>
+					<span class="voice"></span>
+				</div>
+			</div>
+		</header>
+	<?php }?>
+
+		<section id="iScroll">
+			<div class="edit-order">
+				<form action="<?php echo $webroot;?>/amigo/orderreturn/submit" method="post">
+					<input type="hidden" name="order_id" value="<?php echo $order_id;?>">
+					<input type="hidden" name="token" value="<?php echo $token;?>">
+					<input type="hidden" name="order_token" value="<?php echo $order_token;?>">
+					<ul>
+						<li class="J_selectType">
+							<em>*选择退/换货类型：</em>
+							<input type="radio" name="type_id" value="2"  checked="true"> <label for="">我要换货</label>
+							<input type="radio" name="type_id" value="1"> <label for="">我要退货</label>
+							
+						</li>
+						<li>
+							<em>*请选择退换货的原因：</em>
+							<span class="select J_selectReason">
+								<select>
+									<?php foreach ($reason_h as $key=>$value) {?>
+									<option value="<?php echo $value['id'];?>"><?php echo $value['reason'];?></option>
+								<?php }?>
+								</select>
+								<select name="reason">
+									<?php foreach ($reason_t as $key=>$value) {?>
+									<option value="<?php echo $value['id'];?>"><?php echo $value['reason'];?></option>
+								<?php }?>
+								</select>								
+							</span>
+						</li>
+						<li>
+							<em>留言：</em>
+							<textarea name="gbook" placeholder="您有其他对我们说的吗？请在这里留言。"></textarea>
+						</li>
+						<li><input name="check_rule" type="checkbox"  id="J_mustRead"> 已阅读<a href="<?php echo $webroot;?>/amigo/orderreturn/rule">《退/换货规则》</a></li>
+					</ul>
+					<div class="web-btn"><button  type="button" class="J_formSubmit">确认</button></div>
+				</form>
+			</div>
+		</section>
+	</div>
+	<?php echo $this->render("layout/tj.phtml");?>
+</body>
+</html>

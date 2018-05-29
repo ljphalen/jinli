@@ -1,0 +1,68 @@
+<?php echo $this->render("layout/newheader.phtml");?>
+<body class="person" data-pagerole="body">
+	<?php echo $this->render("layout/top.phtml");?>
+
+	<div id="iScroll">
+		<article class="ac">
+			<?php echo $this->render("layout/face.phtml");?>
+
+			<section class="tab-wrap">
+				<?php echo $this->render("layout/nav.phtml");?>
+				<?php if($wants) {?>
+				<div class="main img-text-list">
+					<ul>
+						<?php foreach($wants as $key=>$value){	?>
+						<li>
+							<div class="img-text"> 
+								<a href="<?php echo $webroot;?>/user/want/detail?id=<?php echo $value['id']; ?>">
+									<span class="pic"><img src="<?php
+							$img = $goods[$value['goods_type']][$value['goods_id']]['img'];
+							if(strpos($img, 'http://') === false) {
+									echo $attachPath . $img;
+							}else{
+									echo $img,'_200x200.',end(explode(".", $img));
+							};
+							?>" alt=""></span>
+									<span class="text">
+										<em><?php echo $goods[$value['goods_type']][$value['goods_id']]['title'];?></em>
+										<em>￥<b><?php echo $goods[$value['goods_type']][$value['goods_id']]['price'];?></b></em>
+										<s><?php echo $goods[$value['goods_type']][$value['goods_id']]['want'] + $goods[$value['goods_type']][$value['goods_id']]['default_want'];?>人想要</s>
+									</span>
+								</a>
+							</div>
+							<div class="now-buy"><a href="<?php echo $value['click_url'] ? $value['click_url'] : $webroot.'/user/want/detail?id='.$value['id'];?>">马上购买</a></div>
+						</li>
+						<?php }?>
+					</ul>
+					<?php if($hasnext) {?>
+					<div class="btn J_loadMore" data-ajaxUrl="<?php echo $webroot;?>/user/want/more" data-hasnext="true" data-curpage="1">
+						<span class="rount-rect gray">加载更多...</span>
+					</div>
+					<script id="templete" type="text/icat-template">
+						<%for(var i=0, len=data.list.length; i<len; i++){%>
+						<li>
+							<div class="img-text"> 
+								<a href="<%=data.list[i].link%>">
+									<span class="pic"><img src="<%=data.list[i].img%>" /></span>
+									<span class="text">
+										<em><%=data.list[i].title%></em>
+										<em>￥<b><%=data.list[i].price%></b></em>
+										<s><%=data.list[i].want%>人想要</s>
+									</span>
+								</a>
+							</div>
+							<div class="now-buy"><a href="<%=data.list[i].buy%>">马上购买</a></div>
+						</li>
+						<%}%>
+					</script>
+					<?php }?>
+				</div>
+				<?php } else {?>
+				<!-- 无清单时显示 -->
+				<div class="main no-list">亲，您还没有心愿清单，赶紧添加吧~</div>
+				<?php }?>
+			</section>
+		</article>
+	</div>
+</body>
+</html>

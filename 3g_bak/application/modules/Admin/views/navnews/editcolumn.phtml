@@ -1,0 +1,70 @@
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="edit_form">
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<input name="group" value="<?php echo $group; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr>
+			<th>名称</th>
+			<td>
+				<input type="text" style="width:250px;" class="easyui-textbox" name="title" required="true" value="<?php echo $info['title']; ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>排序</th>
+			<td>
+				<input type="text" name="sort" class="easyui-numberspinner" style="width:80px" value="<?php echo $info['sort']; ?>">
+			</td>
+		</tr>
+
+		<tr>
+			<th>是否默认显示</th>
+			<td>
+				<?php
+				$selects = array('0' => '否', '1' => '是');
+				foreach ($selects as $k => $name):
+					$checked = $info['is_selected'] == $k ? 'checked="checked"' : '';
+					?>
+					<input type="radio" name="is_selected" class="input" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+				<?php endforeach; ?>
+			</td>
+		</tr>
+		<tr>
+			<th>是否可以取消显示</th>
+			<td>
+				<?php
+				$lockeds = array('0' => '否', '1' => '是');
+				foreach ($lockeds as $k => $name):
+					$checked = $info['is_locked'] == $k ? 'checked="checked"' : '';
+					?>
+					<input type="radio" name="is_locked" class="input" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+				<?php endforeach; ?>
+			</td>
+		</tr>
+		<tr>
+	
+		
+			<th>父类</th>
+			<td>
+				<select name="pid" class="select wa"  >
+				  <option value="0">无</option>
+				<?php
+				foreach ($sourcesName as $k => $name){
+					$checked = $info['pid'] == $k ? 'selected="selected"' : '';
+					?>
+					  <option value="<?php echo $k; ?>" <?php echo $checked; ?>><?php echo $name; ?></option>
+				<?php } ?>
+			</td>
+		</tr>
+		<tr>
+			<th>状态</th>
+			<td>
+				<?php
+				foreach (Common::$status as $k => $name):
+					$checked = $info['status'] == $k ? 'checked="checked"' : '';
+					?>
+					<input type="radio" name="status" class="input" value="<?php echo $k; ?>"  <?php echo $checked; ?>><?php echo $name; ?>
+				<?php endforeach; ?>
+			</td>
+		</tr>
+	</table>
+</form>

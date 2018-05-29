@@ -1,0 +1,37 @@
+
+
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('1','夜间模式','您好，目前的版本暂时不支持夜间模式。请使用系统的亮度调节功能，将亮度调低哦。7月份会发布带有夜间模式的版本，到时候再邀请您更新版本。','1','0','1436172590','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('2','无图模式','您好，目前的版本暂时不支持无图模式，请尽量在wifi环境下打开图片较多的网站。7月初将发布新的版本升级，到时候再邀请您更新版本。','1','0','1436168803','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('3','离线网页','您好，目前的版本暂时不能支持离线网页。7月初将发布新的版本升级，到时候请更新版本哦。\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('4','不能全屏看视频','您好，由于目前的版本暂时不能支持横屏，因此不能全屏看视频，后续版本将加入横屏支持。\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('5','下载失败','如果碰到下载失败的情况，请多重试几次，或前往其他网站进行下载哦。\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('6','下载路径不可用','您好，请在高级设置的“默认下载目录”中更改下载路径哦。\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('7','下载慢','您好，软件下载的速度受到以下几方面影响：1、稳定的网络；2、下载的资源包可正常下载；3、下载资源的服务器承受力够强。以上因素都会影响下载速度哦。\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('8','网页打开很慢','您好，请清理一下您的手机内存。另外，请检查下您的网络连接是否顺畅哦。\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('9','网页图片不显示','您好，图片显示不出来时，请尝试以下做法：1、检查手机内存，清理不必要的内存；2、检查您的网络状况是否良好，有时候网络不好也会出现图片加载不出来的情况。\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('10','弹出广告','您好，给您带来不便，敬请谅解。后续版本会修复此类问题，到时候再邀请您来更新浏览器哦！\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('11','找不到网页','\"  A: 您好，请问您使用的是什么网络呢？如果是wifi，请检查下：\r  1、您链接的wifi是否是公用wifi？一般这种wifi都需要登录后才能打开网址；\r\n  2、若您链接的是家用wifi，可尝试将路由器电源拔掉，过一分钟再重新连上电源；\r\n  3、wifi是否已过期，导致不能继续使用了？若是这种情况，请前往营业厅续费哦。\"\r\n','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('16','完全免费','免费电话是金立浏览器为馈赠用户的一个福利产品，是可以真正实现免费打电话，您可以放心使用。\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('17','使用手机通讯录','目前还没实现这个功能，会在下一次的产品升级中添加，请耐心等待并及时关注我们的更新。\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('18','陌生号码来电','这个号码是我方服务台正在给您接通电话，请不用担心，接通后不会扣取您任何费用。\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('19','不能打电话','首先请确认是否已经进入免费电话的拨打页面，在正常操作情况下还是不能使用，请在用户反馈界面留下您的手机型号和浏览器版本，描述不能拨打的详细情况，我们收到后回第一时间安排处理。\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('20','漫游话费','是指您手机号码不在归属地 使用的情况下；拨打电话后，运营商（即：中国移动，联通或电信）会收入你的漫游费用，金立免费电话不收取您任何费用，建议您在使用时尽量使用本地号码进行拨打。\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('21','i钱包','i钱包是金立浏览器个人中心，用户可以户注册登录后签到获得金币，金币可兑换：手机充值卡，购物卡，流量卡和实物等超值商品。\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('22','如何获得金币','主要有以下几种方式：1、签到领金币；2、看图领金币；3、每日抽奖获得金币。','1','0','1436172039','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('25','我的金币','可进入我的帐单查看当前金币及金币明细。\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('26','兑换商品情况','兑换成功后消息中心会生成您的兑换记录。\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('27','兑换商品失败','金币若未能成功兑换，系统会自动返还兑换的金币数量。若出现金币扣除，未成功兑换，也没有返还金币的用户，请不用着急，我方客服人员，会对后台进行手动返还或充值，您也可以在用户反馈界面中，留下你的账号信息，我们会第一时间进行处理。','1','0','1436173669','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('28','金币转让','金币暂不支持转让和售卖。一个手机号码对应一个账户。','1','0','1436172165','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('29','金币买卖','金币暂不支持转让和售卖。一个手机号码对应一个账户。','1','0','1436172173','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('30','自动退出','您好，您可以清除一下程序的数据，或者升级程序的版本.\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('31','删除提问','您好，在手机设置--应用--浏览器中清除数据，这样浏览器会回到最初的样子，因为会清除掉您所有的个人记录，请谨慎操作.\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('32','无法安装软件','您好，有可能是内存满了，也有可能是您要安装的软件有问题.\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('33','按钮无响应','您好，如果只有当前按钮有问题，原因有如下几种： 1、网络较差，点击返回后，系统未能及时响应或者响应较慢，需要耐心等待. 2、按钮已置灰，为不可点击状态.','1','0','1436172355','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('36','看书付费','您好，因为一般书城的包月只是针对某些书籍，并不是全部哦，所以有些书籍还是需要您单独付费的.\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('37','弹出黄色网站广告','您好，因为目前浏览器还没有广告拦截功能，您可以联系我们的官方QQ群：274289481 进行详细描述\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('38','404页面','您好，报404意味着您请求的页面不存在或链接错误，可以重新确认下输入内容是否正确.\r','1','0','0','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('39','hi','您好，如有浏览器的相关的问题需要反馈，请留下您的QQ号，我们官方工作人员会在最短的时间内与您联系并提供解决办法哦~~~','1','0','1436166503','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('40','请问','您好，如有浏览器的相关的问题需要反馈，请留下您的QQ号，我们官方工作人员会在最短的时间内与您联系并提供解决办法哦~~~','1','0','1436166508','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('41','在','您好，如有浏览器的相关的问题需要反馈，请留下您的QQ号，我们官方工作人员会在最短的时间内与您联系并提供解决办法哦~~~','1','0','1436166518','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('42','你好','您好，如有浏览器的相关的问题需要反馈，请留下您的QQ号，我们官方工作人员会在最短的时间内与您联系并提供解决办法哦~~~','1','0','1436166528','0','0');
+insert into `3g_feedback_key` (`id`, `name`, `content`, `status`, `created_at`, `updated_at`, `sort`, `type`) values('43','您好','您好，如有浏览器的相关的问题需要反馈，请留下您的QQ号，我们官方工作人员会在最短的时间内与您联系并提供解决办法哦~~~','1','0','1436166532','0','0');

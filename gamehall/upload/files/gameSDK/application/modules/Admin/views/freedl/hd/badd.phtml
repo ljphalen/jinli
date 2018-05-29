@@ -1,0 +1,64 @@
+<?php echo $this->render("layout/header.phtml");?>
+<div class="nav">
+	<ul class="cc">
+	    <li><a href="<?php echo $listUrl;?>">免流量活动</a></li>
+		<li><a href="<?php echo $ulistUrl;?>">用户统计</a></li>
+        <li><a href="<?php echo $flistUrl;?>">流量统计</a></li>
+        <li class="current"><a href="<?php echo $blistUrl;?>">添加黑名单</a></li>
+	</ul>
+</div>
+<form method="post" action="<?php echo $baddPostUrl;?>" id="addFrom">
+<input name="token" value="<?php echo $token;?>" type="hidden" />
+<div class="table_full">
+	<table width="100%">
+		<tr class="tr">
+			<th class="th">类型</th>
+			<td class="td">
+			<select name="utype" onchange='showtd()'>
+				  <?php foreach($btype as $key=>$value) {?>
+    			  <option value="<?php echo $key;?>"><?php echo $value;?></option>
+    			<?php }?>
+			</select>
+			</td>
+		</tr>
+		<tr class="tr">
+			<th class="th" id="th_txt">IMSI</th>
+			<td class="td"><input type="text" class="input wc" name="name" value="" id="name"></td>
+		</tr>
+		<tr class="tr">
+			<th class="th" id="th_txt">活动ID</th>
+			<td class="td"><input type="text" class="input wc" name="activity_id" value="" id="activity_id"></td>
+		</tr>
+		<tr class="tr" >
+			<th class="th">添加原因</th>
+				<td class="td"><textarea style="width: 600px; height: 300px" class="textarea"
+						name="content"></textarea>
+				</td>
+		</tr>
+	</table>
+</div>
+<div class="mb10 tac"><span class="btn"><span><button onfocus="blur();" type="submit">提交</button></span></span></div>
+</form>
+<script type="text/javascript">
+function showtd(){
+	var value=$("select[name=utype]").val();
+	if (value == 1) {
+		 $("#th_txt").html('IMSI');
+		 //$("#link").addClass('wc');
+	} else if(value == 2){
+		 $("#th_txt").html('账号');
+		 //$("#link").removeClass('wc');
+	} else if(value == 3){
+		 $("#th_txt").html('IMEI');
+		 //$("#link").removeClass('wc');
+	}
+}
+$(document).ready(function(){
+	ajaxForm('addFrom',function(ret){
+		ajaxRedirect(ret, baseurl+'/Admin/Freedl_Hd/bindex');
+	});
+})
+</script>
+
+
+<?php echo $this->render("layout/footer.phtml");?>

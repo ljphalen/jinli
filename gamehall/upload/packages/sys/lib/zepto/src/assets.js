@@ -1,0 +1,1 @@
+(function(c){var a=[],b;c.fn.remove=function(){return this.each(function(){if(this.parentNode){if(this.tagName==="IMG"){a.push(this);this.src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";if(b){clearTimeout(b)}b=setTimeout(function(){a=[]},60000)}this.parentNode.removeChild(this)}})}})(Zepto);

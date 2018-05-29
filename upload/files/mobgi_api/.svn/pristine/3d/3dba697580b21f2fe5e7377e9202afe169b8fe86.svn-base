@@ -1,0 +1,97 @@
+{{pagerCss}}
+<div class="colMain">
+    <div class="title"><p class="fl">配置项列表</p></div>
+    <div class="main">
+        <div class="toolbar">
+            <div class="search fl">
+                <span>
+                    <form name="form" method="GET" action="lists">
+                        <select id="platform" name="platform">
+                            <option value="0" <!-- if {{platform}}==0 --> selected <!-- endif --> >通用</option>
+                            <option value="1" <!-- if {{platform}}==1 || {{platform}}=='' --> selected <!-- endif --> >Android</option>
+                            <option value="2" <!-- if {{platform}}==2 --> selected <!-- endif --> > IOS</option>
+                        </select>
+                        <input typt="text" id="keyword" name="keyword" value="{{keyword}}" class="iText" /><input type="submit" class="submit" value="" title="输入关键字搜索:可搜索配置名,应用名,渠道名,产品名"/>
+                    </form>
+                </span>
+            </div>
+            <a href="/adconfig/edit" class="fr add">新增</a>
+           
+            <a class="fr add thickbox" href="/adconfig/showExchangePid?TB_iframe=true&height=600&width=800" title="产品替换">替换</a>
+        </div>
+        <div class="content">
+            <div class="grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>平台类型</th>
+                            <th>配置项名称</th>
+                            <th>应用</th>
+                            <th>渠道</th>
+                            <th>产品</th>
+                            <th>级别</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- loop result -->
+                        <tr>
+                            <td><!-- if {{result' value.platform}}==1 -->Android<!-- elseif {{result' value.platform}}==2 -->IOS<!-- else -->通用<!-- endif --></td>
+                            <td><span class="blue">{{result' value.name}}</span></td>
+                            <td>
+                                <!-- if {{result' value.app}} -->
+                                    <!-- loop result' value.app -->
+                                        <p>{{result' app' value.platformCn}} {{result' app' value.app_name}}（{{result' app' value.appkey}}）</p>
+                                    <!-- endloop -->
+                                <!-- endif -->
+                            </td>
+                            <td>
+                                <!-- if {{result' value.channel}} -->
+                                    <p id="channel_{{result' value.id}}">{{result' value.channel}}</p>
+                                <!-- endif -->
+                            </td>
+                            <td>
+                                <!-- if {{result' value.prodcuct}} -->
+                                <!-- loop result' value.prodcuct -->
+                                <p>{{result' prodcuct' value.platformCn}} {{result' prodcuct' value.product_name}}&nbsp;&nbsp;&nbsp;&nbsp {{result' prodcuct' value.percent}}</p>
+                                <!-- endloop -->
+                                <!-- endif -->
+                            </td>
+                            <td>
+                                <!-- if {{result' value.type}} == "ad" -->
+                                    <!-- if {{result' value.config_detail_type}} ==1 -->初级<!-- elseif {{result' value.config_detail_type}}==2 -->中级<!-- elseif {{result' value.config_detail_type}}==3 -->高级<!-- elseif {{result' value.config_detail_type}}==-1 -->列表<!-- else -->火星级别<!-- endif --></td>
+                                <!-- elseif {{result' value.type}}== "push" -->
+                                    PUSH
+                                <!-- elseif {{result' value.type}}== "list" -->
+                                    列表
+                                <!-- else -->
+                                    未知类型
+                                <!-- endif -->
+                            <td>
+                                <a href="edit?configid={{result' value.id}}&configlevel={{result' value.config_detail_type}}&configtype={{result' value.type}}" class="edit" title="编辑"></a>
+                                |
+                                <a href="del?adid={{result' value.id}}&addetailid={{result' value.config_detail_id}}&configtype={{result' value.type}}" class="del" title="删除"></a>
+                            </td>
+                        </tr>
+                        <!-- endloop -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">{{pager.pages}}</div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="{{rootUrl}}/js/thickbox.js"></script>
+<link rel="stylesheet" href="{{rootUrl}}/css/thickbox.css" type="text/css" />
+<script language="javascript">
+    function getPlatformCn(platform){
+        if(platform==''||platform=='0'){
+            return "(T)";
+        }else if(platform == '1'){
+            return "(A)";
+        }else if(platform == '2'){
+            return "(I)";
+        }
+    }
+</script>

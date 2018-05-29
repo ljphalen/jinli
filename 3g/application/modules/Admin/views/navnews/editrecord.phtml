@@ -1,0 +1,73 @@
+<form method="post" action="<?php echo $this->baseUrl; ?>" id="edit_form" enctype="multipart/form-data">
+	<input name="id" value="<?php echo $info['id']; ?>" type="hidden"/>
+	<input name="group" value="<?php echo $group; ?>" type="hidden"/>
+	<input name="token" value="<?php echo $token; ?>" type="hidden"/>
+	<table class="editTable">
+		<tr>
+			<th>名称</th>
+			<td>
+				<input type="text" style="width:250px;" class="easyui-textbox" name="title" required="true" value="<?php echo $info['title']; ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>描述</th>
+			<td><textarea name="desc" style="width:250px;height: 50px"><?php echo $info['desc']; ?></textarea></td>
+		</tr>
+		<tr>
+			<th>内容</th>
+			<td>
+				<textarea readonly="readonly" style="width:250px;;height: 100px"><?php echo $info['content']; ?></textarea>
+			</td>
+		</tr>
+		<tr>
+			<th>排序</th>
+			<td>
+				<input type="text" name="sort" class="easyui-numberspinner" style="width:80px" value="<?php echo $info['sort']; ?>">
+			</td>
+		</tr>
+		<tr class="tr" id="pic">
+			<th class="th">图片</th>
+			<td class="td">
+				<?php
+				if (!empty($info['img'])) {
+					if (substr($info['img'], 0, 4) != 'http') {
+						$imgtype     = pathinfo($info['img'], PATHINFO_EXTENSION);
+						$info['img'] = Common::getImgPath() . $info['img'] . '_180x120.' . $imgtype;
+					}
+					echo sprintf('<img style="height:100px;" src="%s" /><br>', $info['img']);
+				}
+				?>
+				<input type="file" id="img_upload" name="img"/>
+			</td>
+		</tr>
+
+		<tr>
+			<th>地址</th>
+			<td>
+				<input type="text" style="width:250px;" class="easyui-textbox" name="link" value="<?php echo $info['link']; ?>">
+			</td>
+		</tr>
+		<tr>
+			<th>来源</th>
+			<td>
+				<select class="easyui-combobox" name="source_id">
+					<?php
+					foreach ($sources as $v):
+						$select = $info['source_id'] == $v['id'] ? 'selected="selected"' : '';
+						?>
+						<option value="<?php echo $v['id']; ?>" <?php echo $select;?>><?php echo $v['title']; ?></option>
+					<?php
+					endforeach;
+					?>
+				</select>
+			</td>
+		</tr>
+		<th class="th">状态</th>
+		<td class="td">
+			<select name="status">
+				<option <?php if ($info['status'] == 1) echo 'selected="selected"'; ?> value="1">开启</option>
+				<option <?php if ($info['status'] == 0) echo 'selected="selected"'; ?>value="0">关闭</option>
+			</select>
+		</td>
+	</table>
+</form>
